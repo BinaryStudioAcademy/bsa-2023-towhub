@@ -91,9 +91,9 @@ TBA
 
 ##### Examples
 
-- `task/sl-5-add-clinician-dashboard`
-- `task/sl-12-add-clinician-flow`
-- `fix/sl-16-fix-clinician-flow`
+- `task/th-5-add-clinician-dashboard`
+- `task/th-12-add-clinician-flow`
+- `fix/th-16-fix-clinician-flow`
 
 #### 🗂 Commit flow
 
@@ -109,9 +109,9 @@ TBA
 
 ##### Examples
 
-- `sl-5: + title for dashboard`
-- `sl-12: * dashboard title`
-- `sl-16: - dashboard title`
+- `th-5: + title for dashboard`
+- `th-12: * dashboard title`
+- `th-16: - dashboard title`
 
 ## 📦 CD
 
