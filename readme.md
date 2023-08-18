@@ -34,15 +34,13 @@ This is the repository responsible for TowHub apps.
 
 ## 🏗 Architecture
 
-![db schema](https://github-production-user-asset-6210df.s3.amazonaws.com/19575839/261530664-6140d0e8-abf8-4fb8-80c9-ff9eb7adfcb6.png)
-
 ### 🛖 Application Schema
 
 TBA
 
 ### 💽 DB Schema
 
-TBA
+![db schema](https://github-production-user-asset-6210df.s3.amazonaws.com/19575839/261530664-6140d0e8-abf8-4fb8-80c9-ff9eb7adfcb6.png)
 
 ### 🌑 Backend
 
