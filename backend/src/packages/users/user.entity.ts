@@ -1,9 +1,12 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
+import { type NullableProperties } from '~/libs/types/types.js';
+
+import { type UserEntity as UserEntityT } from './libs/types/types.js';
 
 class UserEntity implements IEntity {
   private 'id': number | null;
 
-  private 'email': string;
+  private 'phone': string;
 
   private 'passwordHash': string;
 
@@ -11,74 +14,59 @@ class UserEntity implements IEntity {
 
   private constructor({
     id,
-    email,
+    phone,
     passwordHash,
     passwordSalt,
-  }: {
-    id: number | null;
-    email: string;
-    passwordHash: string;
-    passwordSalt: string;
-  }) {
+  }: NullableProperties<UserEntityT, 'id'>) {
     this.id = id;
-    this.email = email;
+    this.phone = phone;
     this.passwordHash = passwordHash;
     this.passwordSalt = passwordSalt;
   }
 
   public static initialize({
     id,
-    email,
+    phone,
     passwordHash,
     passwordSalt,
-  }: {
-    id: number;
-    email: string;
-    passwordHash: string;
-    passwordSalt: string;
-  }): UserEntity {
+  }: Pick<
+    UserEntityT,
+    'id' | 'passwordHash' | 'passwordSalt' | 'phone'
+  >): UserEntity {
     return new UserEntity({
       id,
-      email,
+      phone,
       passwordHash,
       passwordSalt,
     });
   }
 
   public static initializeNew({
-    email,
+    phone,
     passwordHash,
     passwordSalt,
-  }: {
-    email: string;
-    passwordHash: string;
-    passwordSalt: string;
-  }): UserEntity {
+  }: Pick<UserEntityT, 'passwordHash' | 'passwordSalt' | 'phone'>): UserEntity {
     return new UserEntity({
       id: null,
-      email,
+      phone,
       passwordHash,
       passwordSalt,
     });
   }
 
-  public toObject(): {
-    id: number;
-    email: string;
-  } {
+  public toObject(): Pick<UserEntityT, 'id' | 'phone'> {
     return {
       id: this.id as number,
-      email: this.email,
+      phone: this.phone,
     };
   }
 
-  public toNewObject(): {
-    email: string;
-    passwordHash: string;
-    passwordSalt: string;
-  } {
+  public toNewObject(): Pick<
+    UserEntityT,
+    'passwordHash' | 'passwordSalt' | 'phone'
+  > {
     return {
-      email: this.email,
+      phone: this.phone,
       passwordHash: this.passwordHash,
       passwordSalt: this.passwordSalt,
     };

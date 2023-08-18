@@ -1,5 +1,5 @@
 const ProjectPrefix = {
-  APP: 'sl', // TODO rename
+  APP: 'th',
   ENVIRONMENTS: ['development', 'production'],
 } as const;
 

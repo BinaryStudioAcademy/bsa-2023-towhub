@@ -1,6 +1,5 @@
-type UserSignUpResponseDto = {
-  id: number;
-  email: string;
-};
+import { type UserEntity } from './user-entity.type.js';
+
+type UserSignUpResponseDto = Pick<UserEntity, 'id' | 'phone'>;
 
 export { type UserSignUpResponseDto };

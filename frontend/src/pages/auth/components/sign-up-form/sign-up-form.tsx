@@ -31,9 +31,9 @@ const SignUpForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
         <p>
           <Input
             type="text"
-            label="Email"
+            label="Phone"
             placeholder="Enter your email"
-            name="email"
+            name="phone"
             control={control}
             errors={errors}
           />

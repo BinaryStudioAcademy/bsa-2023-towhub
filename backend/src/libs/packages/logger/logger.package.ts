@@ -1,4 +1,5 @@
-import pino, { type Logger as TLogger } from 'pino';
+import { pino } from 'pino';
+import { type Logger as TLogger } from 'pino';
 import pretty from 'pino-pretty';
 
 import { type ILogger } from './libs/interfaces/interfaces.js';

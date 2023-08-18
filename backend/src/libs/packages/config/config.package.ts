@@ -50,12 +50,6 @@ class Config implements IConfig {
           env: 'DB_CONNECTION_STRING',
           default: null,
         },
-        DIALECT: {
-          doc: 'Database dialect',
-          format: String,
-          env: 'DB_DIALECT',
-          default: null,
-        },
         POOL_MIN: {
           doc: 'Database pool min count',
           format: Number,

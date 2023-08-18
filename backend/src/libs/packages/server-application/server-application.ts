@@ -13,6 +13,7 @@ const apiV1 = new ServerAppApi(
   ...authController.routes,
   ...userController.routes,
 );
+
 const serverApp = new ServerApp({
   config,
   logger,
@@ -20,5 +21,5 @@ const serverApp = new ServerApp({
   apis: [apiV1],
 });
 
-export { serverApp };
 export { type ServerAppRouteParameters } from './libs/types/types.js';
+export { serverApp };

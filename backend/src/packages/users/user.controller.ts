@@ -20,9 +20,8 @@ import { UsersApiPath } from './libs/enums/enums.js';
  *            type: number
  *            format: number
  *            minimum: 1
- *          email:
+ *          phone:
  *            type: string
- *            format: email
  */
 class UserController extends Controller {
   private userService: UserService;

@@ -2,10 +2,16 @@ import { config } from '~/libs/packages/config/config.js';
 import { logger } from '~/libs/packages/logger/logger.js';
 
 import { Database } from './database.package.js';
+import { drizzleConfig } from './drizzle.config.js';
+import { schema } from './schema/schema.js';
 
-const database = new Database(config, logger);
+const database = new Database({
+  config: { ...config, migrationDir: drizzleConfig.out },
+  logger,
+  schema,
+});
 
-export { database };
-export { Abstract as AbstractModel } from './abstract.model.js';
 export { DatabaseTableName } from './libs/enums/enums.js';
 export { type IDatabase } from './libs/interfaces/interfaces.js';
+export { schema } from './schema/schema.js';
+export { database };

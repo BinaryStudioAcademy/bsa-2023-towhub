@@ -1,4 +1,5 @@
 export {
+  type UserEntity,
   type UserGetAllResponseDto,
   type UserSignUpRequestDto,
   type UserSignUpResponseDto,

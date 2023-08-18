@@ -20,6 +20,7 @@ export {
 } from './libs/packages/http/http.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
+  type NullableProperties,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
@@ -29,6 +30,7 @@ export {
 } from './libs/types/types.js';
 export { AuthApiPath } from './packages/auth/auth.js';
 export {
+  type UserEntity,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
   type UserSignUpRequestDto,

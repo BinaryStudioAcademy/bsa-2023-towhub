@@ -1,20 +1,20 @@
-# SimpleLand
+# TowHub
 
 ## ℹ️ General Info
 
-This is the repository responsible for <_____> apps.
+This is the repository responsible for TowHub apps.
 
 ## 🏭 Applications
 
-- [Backend](./backend) — <_____> application backend.
+- [Backend](./backend) — TowHub application backend.
 
   _To work properly, fill in the **`.env`** file. Use the **`.env.example`** file as an example._
 
-- [Frontend](./frontend) — <_____> application frontend.
+- [Frontend](./frontend) — TowHub application frontend.
 
   _To work properly, fill in the **`.env`** file. Use the **`.env.example`** file as an example._
 
-- [Shared](./shared) — SimpleLand's application common modules for reuse.
+- [Shared](./shared) — TowHub application common modules for reuse.
 
 ## 🖍 Requirements
 
@@ -40,91 +40,12 @@ TBA
 
 ### 💽 DB Schema
 
-```mermaid
-erDiagram
-
-  users {
-    int id PK
-    dateTime created_at
-    dateTime updated_at
-    varchar email
-    text password_hash
-    text password_salt
-  }
-
-  %% mb user_details should content subscription_end_time col?
-  user_details ||--|| users : user_id
-  user_details ||--|| subscriptions : subscription_id
-  user_details {
-    int id PK
-    dateTime created_at
-    dateTime updated_at
-    int user_id FK
-    varchar first_name
-    varchar last_name
-    int subscription_id FK
-  }
-
-  sites {
-    int id PK
-    dateTime created_at
-    dateTime updated_at
-    varchar name
-    varchar published_url "may be null if site was not published to specific domain"
-  }
-
-  sections {
-    int id PK
-    dateTime created_at
-    dateTime updated_at
-    varchar name
-    text content "or would be jsonb map of content applied to section"
-  }
-
-  sites_to_sections }|--|| sections : section_id
-  sites_to_sections }|--|| sites : site_id
-  sites_to_sections {
-    int id PK
-    dateTime created_at
-    dateTime updated_at
-    int section_id FK
-    int site_id FK
-  }
-
-  projects }o--|| users : user_id
-  projects {
-    int id PK
-    dateTime created_at
-    dateTime updated_at
-    varchar name
-    int user_id FK
-  }
-
-  projects_sites }|--|| projects : project_id
-  projects_sites }|--|| sites : site_id
-  projects_sites {
-    int id PK
-    dateTime created_at
-    dateTime updated_at
-    int project_id FK
-    int site_id FK
-  }
-
-  subscriptions {
-    int id PK
-    dateTime created_at
-    dateTime updated_at
-    varchar name
-    float price "would be null for free plan?"
-  }
-
-```
+TBA
 
 ### 🌑 Backend
 
 - [Fastify](https://www.fastify.io/) — a backend framework.
-- [Knex](https://knexjs.org/) — a query builder.
-- [Objection](https://vincit.github.io/objection.js/) — an ORM.
+- [Drizzle ORM](https://orm.drizzle.team/) — a query builder and ORM
 
 ### 🌕 Frontend
 

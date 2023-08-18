@@ -1,58 +1,123 @@
-import Knex, { type Knex as TKnex } from 'knex';
-import { knexSnakeCaseMappers, Model } from 'objection';
+import { type PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import postgres from 'postgres';
 
-import { AppEnvironment } from '~/libs/enums/enums.js';
+import { DatabaseConnectionError } from '~/libs/exceptions/exceptions.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 
-import { DatabaseTableName } from './libs/enums/enums.js';
-import { type IDatabase } from './libs/interfaces/interfaces.js';
+import { type DatabaseSchema } from './schema/schema.js';
 
-class Database implements IDatabase {
-  private appConfig: IConfig;
+type DatabaseConfig = IConfig & { migrationDir: string };
+
+type Constructor = {
+  config: DatabaseConfig;
+  logger: ILogger;
+  schema: DatabaseSchema;
+};
+
+class Database {
+  private appConfig: DatabaseConfig;
 
   private logger: ILogger;
 
-  public constructor(config: IConfig, logger: ILogger) {
+  private migrationsMaxPool: 1;
+
+  private rawMigrationsConnection: postgres.Sql | undefined;
+
+  private migrationConnection: PostgresJsDatabase | undefined;
+
+  private connection: PostgresJsDatabase<DatabaseSchema> | undefined;
+
+  private rawConnection: postgres.Sql | undefined;
+
+  private schema: DatabaseSchema;
+
+  public constructor({ config, logger, schema }: Constructor) {
     this.appConfig = config;
     this.logger = logger;
+    this.migrationsMaxPool = 1;
+    this.schema = schema;
   }
 
-  public connect(): ReturnType<IDatabase['connect']> {
-    this.logger.info('Establish DB connection...');
-
-    Model.knex(Knex(this.environmentConfig));
-  }
-
-  public get environmentsConfig(): IDatabase['environmentsConfig'] {
-    return {
-      [AppEnvironment.DEVELOPMENT]: this.initialConfig,
-      [AppEnvironment.PRODUCTION]: this.initialConfig,
-    };
-  }
-
-  private get initialConfig(): TKnex.Config {
-    return {
-      client: this.appConfig.ENV.DB.DIALECT,
-      connection: this.appConfig.ENV.DB.CONNECTION_STRING,
-      pool: {
-        min: this.appConfig.ENV.DB.POOL_MIN,
-        max: this.appConfig.ENV.DB.POOL_MAX,
+  private acquireMigrationsConnection(): void {
+    this.logger.info('Acquiring DB connection for migrations.');
+    this.rawMigrationsConnection = postgres(
+      this.appConfig.ENV.DB.CONNECTION_STRING,
+      {
+        max: this.migrationsMaxPool,
       },
-      migrations: {
-        directory: 'src/db/migrations',
-        tableName: DatabaseTableName.MIGRATIONS,
-      },
-      debug: false,
-      ...knexSnakeCaseMappers({ underscoreBetweenUppercaseLetters: true }),
-    };
+    );
+
+    this.migrationConnection = drizzle(this.rawMigrationsConnection);
+
+    this.logger.info('DB connection for migrations established.');
   }
 
-  private get environmentConfig(): TKnex.Config {
-    return this.environmentsConfig[this.appConfig.ENV.APP.ENVIRONMENT];
+  private async endMigrationsConnection(): Promise<void> {
+    if (!this.rawMigrationsConnection) {
+      this.logger.info('Migrations connection isn\'t established');
+
+      return;
+    }
+
+    await this.rawMigrationsConnection.end();
+
+    this.rawMigrationsConnection = void 0;
+    this.migrationConnection = void 0;
+
+    this.logger.info('Migrations connection successfully closed.');
+  }
+
+  public async migrate(): Promise<void> {
+    this.acquireMigrationsConnection();
+
+    this.logger.info(`Running migrations at ${this.appConfig.migrationDir}`);
+    await migrate(this.migrationConnection as PostgresJsDatabase, {
+      migrationsFolder: this.appConfig.migrationDir,
+    });
+    this.logger.info('All migrations applied.');
+
+    await this.endMigrationsConnection();
+  }
+
+  public connect(): void {
+    this.logger.info('Acquiring DB connection.');
+    this.rawConnection = postgres(this.appConfig.ENV.DB.CONNECTION_STRING, {
+      max: this.appConfig.ENV.DB.POOL_MAX,
+    });
+
+    this.connection = drizzle(this.rawConnection, {
+      schema: this.schema,
+    });
+
+    this.logger.info('DB connection established.');
+  }
+
+  public async closeConnection(): Promise<void> {
+    if (!this.rawConnection) {
+      this.logger.info('Connection isn\'t established');
+
+      return;
+    }
+
+    await this.rawConnection.end();
+
+    this.rawConnection = void 0;
+    this.connection = void 0;
+
+    this.logger.info('Migrations connection successfully closed.');
+  }
+
+  public driver(): PostgresJsDatabase<DatabaseSchema> {
+    if (!this.connection) {
+      throw new DatabaseConnectionError({
+        message: 'Db connection not established.',
+      });
+    }
+
+    return this.connection;
   }
 }
 
 export { Database };
-export { DatabaseTableName } from './libs/enums/enums.js';
-export { type IDatabase } from './libs/interfaces/interfaces.js';

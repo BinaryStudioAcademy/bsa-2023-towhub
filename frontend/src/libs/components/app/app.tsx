@@ -51,7 +51,7 @@ const App: React.FC = () => {
           <h3>Status: {dataStatus}</h3>
           <ul>
             {users.map((it) => (
-              <li key={it.id}>{it.email}</li>
+              <li key={it.id}>{it.phone}</li>
             ))}
           </ul>
         </>

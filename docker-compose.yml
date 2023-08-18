@@ -6,6 +6,6 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
-      POSTGRES_DB: simpleland
+      POSTGRES_DB: towhub
     ports:
       - 5432:5432

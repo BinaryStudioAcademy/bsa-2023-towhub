@@ -16,7 +16,11 @@ class UserService implements IService {
   }
 
   public find(): ReturnType<IService['find']> {
-    return Promise.resolve(null);
+    return this.userRepository.find();
+  }
+
+  public findById(id: number): ReturnType<IService['find']> {
+    return this.userRepository.findById(id);
   }
 
   public async findAll(): Promise<UserGetAllResponseDto> {
@@ -32,7 +36,7 @@ class UserService implements IService {
   ): Promise<UserSignUpResponseDto> {
     const user = await this.userRepository.create(
       UserEntity.initializeNew({
-        email: payload.email,
+        phone: payload.phone,
         passwordSalt: 'SALT', // TODO
         passwordHash: 'HASH', // TODO
       }),

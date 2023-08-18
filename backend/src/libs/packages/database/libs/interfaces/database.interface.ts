@@ -1,11 +1,11 @@
-import { type Knex } from 'knex';
+import { type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
-import { type AppEnvironment } from '~/libs/enums/enums.js';
-import { type ValueOf } from '~/libs/types/types.js';
+import { type DatabaseSchema } from '../../schema/schema.js';
 
 interface IDatabase {
-  connect: () => void;
-  environmentsConfig: Record<ValueOf<typeof AppEnvironment>, Knex.Config>;
+  connect(): void;
+  closeConnection(): Promise<void>;
+  driver(): PostgresJsDatabase<DatabaseSchema>;
 }
 
 export { type IDatabase };
