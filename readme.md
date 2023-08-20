@@ -20,7 +20,7 @@ This is the repository responsible for TowHub apps.
 
 - [NodeJS](https://nodejs.org/en/) (18.x.x);
 - [NPM](https://www.npmjs.com/) (9.x.x);
-- [PostgreSQL](https://www.postgresql.org/) (15.2)
+- [PostgreSQL](https://www.postgresql.org/) (15.4)
 - run **`npx simple-git-hooks`** at the root of the project, before the start (it will set the [pre-commit hook](https://www.npmjs.com/package/simple-git-hooks) for any commits).
 
 ## 🏃‍♂️ Simple Start
@@ -40,7 +40,7 @@ TBA
 
 ### 💽 DB Schema
 
-TBA
+![db schema](https://github-production-user-asset-6210df.s3.amazonaws.com/19575839/261530664-6140d0e8-abf8-4fb8-80c9-ff9eb7adfcb6.png)
 
 ### 🌑 Backend
 
@@ -76,7 +76,7 @@ TBA
 
 ##### Example
 
-- `sl-5: Add Clinician Dashboard`
+- `th-5: Add Clinician Dashboard`
 
 #### 🌳 Branch flow
 
