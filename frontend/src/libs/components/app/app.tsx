@@ -1,5 +1,5 @@
 import reactLogo from '~/assets/img/react.svg';
-import { Link, RouterOutlet } from '~/libs/components/components.js';
+import { Button, Link, RouterOutlet } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
@@ -7,7 +7,17 @@ import {
   useEffect,
   useLocation,
 } from '~/libs/hooks/hooks.js';
+import { notification } from '~/libs/packages/notification/notification.js';
 import { actions as userActions } from '~/slices/users/users.js';
+
+import { Notification } from '../notification/notification.jsx';
+
+function onClick(): void {
+  notification.info('Notification sent INFO');
+  notification.success('Notification sent SUCCESS');
+  notification.warning('Notification sent WARNING');
+  notification.error('Notification sent ERROR');
+}
 
 const App: React.FC = () => {
   const { pathname } = useLocation();
@@ -27,6 +37,9 @@ const App: React.FC = () => {
 
   return (
     <>
+      <Notification />
+      <button onClick={onClick}>Send notification</button>
+
       <img src={reactLogo} className="App-logo" width="30" alt="logo" />
 
       <ul className="App-navigation-list">

@@ -2,15 +2,9 @@ import { type ToastOptions, toast } from 'react-toastify';
 
 import { theme } from '../enums/notification.theme.enum.js';
 
-const defaultNotificationOptions: ToastOptions = {
+const DEFAULT_NOTIFICATION_OPTIONS: ToastOptions = {
   position: toast.POSITION.TOP_RIGHT,
-  autoClose: 5000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
   theme: theme.LIGHT,
 };
 
-export { defaultNotificationOptions };
+export { DEFAULT_NOTIFICATION_OPTIONS };
