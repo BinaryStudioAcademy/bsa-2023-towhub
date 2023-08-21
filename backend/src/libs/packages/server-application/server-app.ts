@@ -8,6 +8,7 @@ import { type IConfig } from '~/libs/packages/config/config.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { socket } from '~/libs/packages/socket/socket.js';
 import {
   type ServerCommonErrorResponse,
   type ServerValidationErrorResponse,
@@ -45,6 +46,7 @@ class ServerApp implements IServerApp {
     this.apis = apis;
 
     this.app = Fastify();
+    socket.initialiseIo(this.app);
   }
 
   public addRoute(parameters: ServerAppRouteParameters): void {
