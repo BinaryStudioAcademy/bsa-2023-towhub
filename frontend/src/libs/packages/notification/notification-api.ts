@@ -3,9 +3,7 @@ import { type ToastOptions, toast } from 'react-toastify';
 class NotificationService {
   #options: ToastOptions;
 
-  static #instance: NotificationService | undefined;
-
-  private constructor(options: ToastOptions) {
+  public constructor(options: ToastOptions) {
     this.#options = options;
   }
 
@@ -29,14 +27,6 @@ class NotificationService {
 
   public info(message: string, options?: ToastOptions): void {
     toast.info(message, { ...this.#options, ...options });
-  }
-
-  public static getInstance(options: ToastOptions): NotificationService {
-    if (!this.#instance) {
-      this.#instance = new NotificationService(options);
-    }
-
-    return this.#instance;
   }
 }
 
