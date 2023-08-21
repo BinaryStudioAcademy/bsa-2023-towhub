@@ -1,6 +1,6 @@
 import { type ToastOptions, toast } from 'react-toastify';
 
-import { NotificationTheme } from '../enums/notification.theme.enum.js';
+import { theme } from '../enums/notification.theme.enum.js';
 
 const defaultNotificationOptions: ToastOptions = {
   position: toast.POSITION.TOP_RIGHT,
@@ -10,7 +10,7 @@ const defaultNotificationOptions: ToastOptions = {
   pauseOnHover: true,
   draggable: true,
   progress: undefined,
-  theme: NotificationTheme.LIGHT,
+  theme: theme.LIGHT,
 };
 
 export { defaultNotificationOptions };
