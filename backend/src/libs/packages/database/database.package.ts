@@ -56,7 +56,7 @@ class Database {
 
   private async endMigrationsConnection(): Promise<void> {
     if (!this.rawMigrationsConnection) {
-      this.logger.info('Migrations connection isn\'t established');
+      this.logger.info('Migrations connection is not established');
 
       return;
     }
@@ -96,7 +96,7 @@ class Database {
 
   public async closeConnection(): Promise<void> {
     if (!this.rawConnection) {
-      this.logger.info('Connection isn\'t established');
+      this.logger.info('Connection is not established');
 
       return;
     }
