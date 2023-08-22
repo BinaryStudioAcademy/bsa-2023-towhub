@@ -1,7 +1,7 @@
 name: Continuous Integration Pull Request
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - assigned
       - unassigned
@@ -31,7 +31,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
       - name: Install NodeJS
         uses: actions/setup-node@v3
