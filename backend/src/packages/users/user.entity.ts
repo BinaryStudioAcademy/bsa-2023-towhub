@@ -6,12 +6,6 @@ import { type UserEntity as UserEntityT } from './libs/types/types.js';
 class UserEntity implements IEntity {
   private 'id': number | null;
 
-  private 'name': string;
-
-  private 'surname': string;
-
-  private 'email': string;
-
   private 'phone': string;
 
   private 'passwordHash': string;
@@ -20,17 +14,11 @@ class UserEntity implements IEntity {
 
   private constructor({
     id,
-    name,
-    surname,
-    email,
     phone,
     passwordHash,
     passwordSalt,
   }: NullableProperties<UserEntityT, 'id'>) {
     this.id = id;
-    this.name = name;
-    this.surname = surname;
-    this.email = email;
     this.phone = phone;
     this.passwordHash = passwordHash;
     this.passwordSalt = passwordSalt;
@@ -38,27 +26,15 @@ class UserEntity implements IEntity {
 
   public static initialize({
     id,
-    name,
-    surname,
-    email,
     phone,
     passwordHash,
     passwordSalt,
   }: Pick<
     UserEntityT,
-    | 'id'
-    | 'passwordHash'
-    | 'passwordSalt'
-    | 'phone'
-    | 'name'
-    | 'email'
-    | 'surname'
+    'id' | 'passwordHash' | 'passwordSalt' | 'phone'
   >): UserEntity {
     return new UserEntity({
       id,
-      name,
-      surname,
-      email,
       phone,
       passwordHash,
       passwordSalt,
@@ -66,21 +42,12 @@ class UserEntity implements IEntity {
   }
 
   public static initializeNew({
-    name,
-    surname,
-    email,
     phone,
     passwordHash,
     passwordSalt,
-  }: Pick<
-    UserEntityT,
-    'passwordHash' | 'passwordSalt' | 'phone' | 'name' | 'surname' | 'email'
-  >): UserEntity {
+  }: Pick<UserEntityT, 'passwordHash' | 'passwordSalt' | 'phone'>): UserEntity {
     return new UserEntity({
       id: null,
-      name,
-      surname,
-      email,
       phone,
       passwordHash,
       passwordSalt,
