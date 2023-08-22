@@ -57,7 +57,7 @@
 
 .contained,
 .outlined {
-  box-shadow: $shadow;
+  box-shadow: $shadow, $shadow-light;
 }
 
 .text,
