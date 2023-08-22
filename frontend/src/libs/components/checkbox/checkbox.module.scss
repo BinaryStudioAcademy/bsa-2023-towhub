@@ -1,0 +1,24 @@
+@import "src/assets/css/styles.scss";
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color);
+  border-radius: 2px;
+}
+
+.checkbox::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background-color: var(--color);
+  background-image: url("src/assets/img/checkmark.svg");
+  opacity: 0;
+  transition:
+    $anim-normal opacity $anim-timing-fn-ui,
+    $anim-normal background-color $anim-timing-fn-ui;
+}
+
+.checkbox:checked::after {
+  opacity: 1;
+}

@@ -1,0 +1,32 @@
+@import "src/assets/css/styles.scss";
+
+.toggle {
+  --size: 20px;
+
+  width: calc(var(--size) * 2);
+  height: var(--size);
+  border: calc(var(--size) / 10) solid var(--color);
+  border-radius: calc(var(--size) / 2);
+}
+
+.toggle::after {
+  --radius: 6px;
+
+  content: "";
+  width: calc(var(--radius) * 2);
+  height: calc(var(--radius) * 2);
+  background-color: var(--color);
+  border-radius: var(--radius);
+  transform: translate(-10px);
+  transition:
+    $anim-normal transform $anim-timing-fn-ui,
+    $anim-normal background-color $anim-timing-fn-ui;
+}
+
+.toggle:checked::after {
+  transform: translate(10px);
+}
+
+.toggle:disabled::after {
+  --color: #{$grey};
+}

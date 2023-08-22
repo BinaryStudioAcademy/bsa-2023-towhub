@@ -1,0 +1,28 @@
+@import "src/assets/css/styles.scss";
+
+.radio {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color);
+  border-radius: 8px;
+}
+
+.radio::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background-color: var(--color);
+  border-radius: 4px;
+  opacity: 0;
+  transition:
+    $anim-normal opacity $anim-timing-fn-ui,
+    $anim-normal background-color $anim-timing-fn-ui;
+}
+
+.radio:checked::after {
+  opacity: 1;
+}
+
+.radio:disabled::after {
+  --color: #{$grey};
+}
