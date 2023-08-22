@@ -116,9 +116,7 @@
       "indexes": {
         "users_phone_unique_idx": {
           "name": "users_phone_unique_idx",
-          "columns": [
-            "phone"
-          ],
+          "columns": ["phone"],
           "isUnique": true
         }
       },
@@ -127,12 +125,8 @@
           "name": "users_group_id_groups_id_fk",
           "tableFrom": "users",
           "tableTo": "groups",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
