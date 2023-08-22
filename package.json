@@ -40,7 +40,6 @@
     "prettier": "3.0.2",
     "prettier-plugin-sql": "0.15.1",
     "simple-git-hooks": "2.9.0",
-    "stylelint": "15.10.3",
     "stylelint-config-standard": "34.0.0",
     "stylelint-order": "6.0.3",
     "tsc-alias": "1.8.2",
@@ -49,5 +48,8 @@
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
     "commit-msg": "npx commitlint --edit $1"
+  },
+  "dependencies": {
+    "stylelint": "15.10.2"
   }
 }
