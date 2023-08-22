@@ -21,7 +21,6 @@ type Properties<T extends FieldValues> = {
   isDisabled?: boolean;
 };
 
-type Status = boolean | undefined;
 const Input = <T extends FieldValues>({
   control,
   errors,
