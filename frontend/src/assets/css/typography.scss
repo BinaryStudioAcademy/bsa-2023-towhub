@@ -1,34 +1,23 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap");
-
-:root {
-  --font-family: "Plus Jakarta Sans";
-  --font-weight-regular: 400;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
-  --line-height-normal: normal;
-}
-
 .h2,
 .h3,
 .h4,
 .h5,
 .h6,
-.main-bold-tall,
-.main-bold,
-.main-regular,
-.main-regular-uppercase,
-.additional {
-  color: var(--general-dark, #222222);
-  font-family: var(--font-family);
-  line-height: normal;
+.text-base,
+.text-md,
+.text-md-bold,
+.text-sm,
+.text-xs {
+  color: $general-dark;
+  font-family: $font-family;
+  line-height: $line-height-normal;
 }
 
 .h2,
 .h3,
 .h4,
 .h5 {
-  font-weight: var(--font-weight-bold);
+  font-weight: $font-weight-bold;
 }
 
 .h2 {
@@ -38,7 +27,7 @@
 
 .h3 {
   font-size: 28px;
-  line-height: 1.3;
+  line-height: $line-height-lg;
 }
 
 .h4 {
@@ -50,33 +39,36 @@
 }
 
 .h6 {
-  font-weight: var(--font-weight-semibold);
+  font-weight: $font-weight-semibold;
   font-size: 16px;
-  line-height: 1.405;
+  line-height: $line-height-xl;
 }
 
-.main-bold-tall {
-  font-weight: var(--font-weight-regular);
+.text-base {
+  font-weight: $font-weight-regular;
   font-size: 18px;
 }
 
-.main-bold {
-  font-weight: var(--font-weight-regular);
+.text-md {
+  font-weight: $font-weight-semibold;
+  font-size: 16px;
+}
+
+.text-md-bold {
+  font-weight: $font-weight-extrabold;
+  font-size: 16px;
+}
+
+.text-sm {
+  font-weight: $font-weight-regular;
   font-size: 14px;
 }
 
-.main-regular {
-  font-weight: var(--font-weight-semibold);
-  font-size: 16px;
-}
-
-.main-regular-uppercase {
-  font-weight: var(--font-weight-extrabold);
-  font-size: 16px;
-  text-transform: uppercase;
-}
-
-.additional {
-  font-weight: var(--font-weight-regular);
+.text-xs {
+  font-weight: $font-weight-regular;
   font-size: 12px;
+}
+
+.uppercase {
+  text-transform: uppercase;
 }
