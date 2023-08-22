@@ -1,1 +1,1 @@
-export { ApplicationError } from 'shared/build/index.js' ;
+export { ApplicationError } from 'shared/build/index.js';
