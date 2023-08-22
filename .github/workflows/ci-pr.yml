@@ -49,7 +49,7 @@ jobs:
 
       - name: Lint Commits
         run: |
-          npx commitlint --from ${{ github.ref }} --to ${{ github.event.pull_request.head.sha }} --verbose
+          npx commitlint --from ${{ github.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
       - name: Lint Pull Request
         env:
