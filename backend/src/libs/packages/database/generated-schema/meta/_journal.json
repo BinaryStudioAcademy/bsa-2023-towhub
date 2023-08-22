@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1692711854142,
+      "tag": "0000_pale_romulus",
+      "breakpoints": true
+    }
+  ]
+}
