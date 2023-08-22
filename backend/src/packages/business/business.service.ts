@@ -1,4 +1,11 @@
-import { type IService } from '~/libs/interfaces/service.interface';
+import { type IService } from '~/libs/interfaces/service.interface.js';
+import { GroupKeysMocked } from '~/libs/packages/controller/controller.package.js';
+import { type UserMocked } from '~/libs/packages/controller/libs/types/api-handler-options.type.js';
+import {
+  HttpCode,
+  HttpError,
+  HttpErrorMessage,
+} from '~/libs/packages/http/http.js';
 import { type BusinessRepository } from '~/packages/business/business.repository.js';
 
 import { BusinessEntity } from './business.entity.js';
@@ -47,9 +54,49 @@ class BusinessService implements IService {
     return business ? business.toObject() : null;
   }
 
-  public async create(
-    payload: Omit<BusinessEntityT, 'id'>,
-  ): Promise<BusinessAddResponseDto> {
+  public async create({
+    payload,
+    owner,
+  }: {
+    payload: Omit<BusinessEntityT, 'id'>;
+    owner: UserMocked;
+  }): Promise<BusinessAddResponseDto> {
+    if (owner.group.key !== GroupKeysMocked.BUSINESS) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpErrorMessage.INVALID_USER_GROUP,
+      });
+    }
+
+    const existingBusiness = await this.findByOwnerId(owner.id);
+
+    if (existingBusiness) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpErrorMessage.BUSINESS_ALREADY_EXISTS,
+      });
+    }
+
+    const businessWithSameTaxNumber = await this.findByTaxNumber(
+      payload.taxNumber,
+    );
+
+    if (businessWithSameTaxNumber) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpErrorMessage.TAX_NUMBER_ALREADY_REGISTERED,
+      });
+    }
+
+    const businessWithSameName = await this.findByName(payload.companyName);
+
+    if (businessWithSameName) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpErrorMessage.NAME_ALREADY_REGISTERED,
+      });
+    }
+
     const business = await this.businessRepository.create(
       BusinessEntity.initializeNew({ ...payload }),
     );
@@ -62,15 +109,45 @@ class BusinessService implements IService {
     payload,
   }: {
     id: number;
-    payload: Partial<BusinessEntityT>;
+    payload: Pick<BusinessEntityT, 'companyName'>;
   }): Promise<BusinessUpdateResponseDto> {
-    const business = await this.businessRepository.update({ id, payload });
+    const businessToUpdate = await this.find(id);
+
+    if (!businessToUpdate) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpErrorMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    const businessWithSameName = await this.findByName(payload.companyName);
+
+    if (businessWithSameName) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpErrorMessage.NAME_ALREADY_REGISTERED,
+      });
+    }
+
+    const business = await this.businessRepository.update({
+      id: businessToUpdate.id,
+      payload,
+    });
 
     return business.toObject();
   }
 
   public async delete(id: number): Promise<BusinessDeleteResponseDto> {
-    const result = await this.businessRepository.delete(id);
+    const businessToDelete = await this.find(id);
+
+    if (!businessToDelete) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpErrorMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    const result = await this.businessRepository.delete(businessToDelete.id);
 
     return {
       result,

@@ -4,13 +4,8 @@ import {
   type ApiHandlerResponse,
   Controller,
 } from '~/libs/packages/controller/controller.js';
-import { GroupKeysMocked } from '~/libs/packages/controller/controller.package.js';
 import { type UserMocked } from '~/libs/packages/controller/libs/types/api-handler-options.type.js';
-import {
-  HttpCode,
-  HttpError,
-  HttpErrorMessage,
-} from '~/libs/packages/http/http.js';
+import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type BusinessService } from '~/packages/business/business.service.js';
 
@@ -107,52 +102,16 @@ class BusinessController extends Controller {
       user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
-    if (options.user.group.key !== GroupKeysMocked.BUSINESS) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.INVALID_USER_GROUP,
-      });
-    }
-
-    const existingBusiness = await this.businessService.findByOwnerId(
-      options.user.id,
-    );
-
-    if (existingBusiness) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.BUSINESS_ALREADY_EXISTS,
-      });
-    }
-
-    const businessWithSameTaxNumber =
-      await this.businessService.findByTaxNumber(options.body.taxNumber);
-
-    if (businessWithSameTaxNumber) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.TAX_NUMBER_ALREADY_REGISTERED,
-      });
-    }
-
-    const businessWithSameName = await this.businessService.findByName(
-      options.body.companyName,
-    );
-
-    if (businessWithSameName) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.NAME_ALREADY_REGISTERED,
-      });
-    }
-
     const payload = {
       taxNumber: options.body.taxNumber,
       companyName: options.body.companyName,
       ownerId: options.user.id,
     };
 
-    const createdBusiness = await this.businessService.create(payload);
+    const createdBusiness = await this.businessService.create({
+      payload,
+      owner: options.user,
+    });
 
     return {
       status: HttpCode.CREATED,
@@ -167,26 +126,6 @@ class BusinessController extends Controller {
       user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const businessToUpdate = await this.businessService.find(options.params.id);
-
-    if (!businessToUpdate) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.BUSINESS_DOES_NOT_EXIST,
-      });
-    }
-
-    const businessWithSameName = await this.businessService.findByName(
-      options.body.companyName,
-    );
-
-    if (businessWithSameName) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.NAME_ALREADY_REGISTERED,
-      });
-    }
-
     const updatedBusiness = await this.businessService.update({
       id: options.params.id,
       payload: options.body,
@@ -204,18 +143,7 @@ class BusinessController extends Controller {
       user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const businessToDelete = await this.businessService.find(options.params.id);
-
-    if (!businessToDelete) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.BUSINESS_DOES_NOT_EXIST,
-      });
-    }
-
-    const deletionResult = await this.businessService.delete(
-      businessToDelete.id,
-    );
+    const deletionResult = await this.businessService.delete(options.params.id);
 
     return {
       status: HttpCode.OK,
@@ -230,13 +158,6 @@ class BusinessController extends Controller {
     }>,
   ): Promise<ApiHandlerResponse> {
     const business = await this.businessService.find(options.params.id);
-
-    if (!business) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.BUSINESS_DOES_NOT_EXIST,
-      });
-    }
 
     return {
       status: HttpCode.OK,
