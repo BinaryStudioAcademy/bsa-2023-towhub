@@ -1,0 +1,22 @@
+.checkbox {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color);
+  border-radius: 2px;
+}
+
+.checkbox::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background-color: var(--color);
+  background-image: url("../../../assets/img/checkmark.svg");
+  opacity: 0;
+  transition:
+    var(--anim-normal) opacity var(--anim-timing-fn-ui),
+    var(--anim-normal) background-color var(--anim-timing-fn-ui);
+}
+
+.checkbox:checked::after {
+  opacity: 1;
+}

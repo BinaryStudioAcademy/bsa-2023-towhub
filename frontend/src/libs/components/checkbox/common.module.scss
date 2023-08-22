@@ -1,0 +1,56 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  color: #d51a52;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: calc(15.12 / 12);
+}
+
+// This hides all equal error messages for radio button group except the last one
+.container:has(input[type="radio"]):not(:last-child) .error {
+  display: none;
+}
+
+.label {
+  --color: #3563e9;
+  --color-text: #1d1d1d;
+
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: fit-content;
+  user-select: none;
+  min-height: 22.5px; // Left this instead of line-height 140% to normalize height of the element without label
+  font-weight: 600;
+  font-style: normal;
+}
+
+.labelText {
+  color: var(--color-text);
+}
+
+.label:hover {
+  --color: #527efe;
+}
+
+/* stylelint-disable */
+.label:global(.disabled) {
+  --color: #d5dce8;
+  --color-text: #90a3bf;
+}
+
+.input {
+  appearance: none;
+  display: grid;
+  align-self: center;
+  margin: 0;
+  overflow: hidden;
+  font: inherit;
+  background-color: inherit;
+  place-content: center;
+  transition: var(--anim-normal) border-color var(--anim-timing-fn-ui);
+}

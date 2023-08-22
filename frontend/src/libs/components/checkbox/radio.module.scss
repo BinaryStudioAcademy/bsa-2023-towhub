@@ -1,0 +1,26 @@
+.radio {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color);
+  border-radius: 8px;
+}
+
+.radio::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background-color: var(--color);
+  border-radius: 4px;
+  opacity: 0;
+  transition:
+    var(--anim-normal) opacity var(--anim-timing-fn-ui),
+    var(--anim-normal) background-color var(--anim-timing-fn-ui);
+}
+
+.radio:checked::after {
+  opacity: 1;
+}
+
+.radio:disabled::after {
+  --color: #90a3bf;
+}
