@@ -19,7 +19,6 @@ class SocketService {
     this.io = io;
 
     io.on(ServerSocketEvents.CONNECTION, (socket) => {
-      
       logger.info(`${socket.id} connected`);
       socket.on(ServerSocketEvents.DISCONNECT, () => {
         logger.info(`${socket.id} disconnected`);
