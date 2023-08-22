@@ -1,5 +1,5 @@
 import { Link } from '~/libs/components/components.js';
-import { AppRoute } from '~/libs/enums/app-route.enum';
+import { AppRoute } from '~/libs/enums/enums.js';
 
 const NotFound = (): JSX.Element => (
   <div>
