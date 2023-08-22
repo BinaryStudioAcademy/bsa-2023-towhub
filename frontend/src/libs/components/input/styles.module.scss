@@ -1,0 +1,72 @@
+@import "src/assets/css/variables.scss";
+
+.input {
+  width: 100%;
+  padding: 8px;
+  color: $color-dark-grey;
+  font-size: 14px;
+  background: $color-general-light;
+  border: 2px solid $color-light-grey;
+  border-radius: 4px;
+  outline: none;
+}
+
+.input.active {
+  color: $color-general-dark;
+}
+
+.input.filled,
+.input:focus {
+  border-color: $color-blue;
+  box-shadow:
+    0 2px 4px -2px rgb(0 44 132 / 6%),
+    0 4px 8px -2px rgb(0 85 255 / 16%);
+}
+
+.input.disabled {
+  color: $color-light-grey;
+}
+
+.input.error {
+  border-color: $color-red;
+}
+
+.errorMessage {
+  align-self: flex-end;
+  color: $color-red;
+  font-size: 12px;
+}
+
+.label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 327px;
+  color: $color-dark-grey;
+  font-size: 16px;
+}
+
+.label.disabled {
+  color: $color-light-grey;
+}
+
+.passwordEye {
+  position: absolute;
+  top: 30px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.textarea ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.textarea ::-webkit-scrollbar-thumb {
+  width: 4px;
+  background-color: $color-scrollbar;
+  border-radius: 50px;
+}
+
+.textarea ::-webkit-resizer {
+  display: none;
+}
