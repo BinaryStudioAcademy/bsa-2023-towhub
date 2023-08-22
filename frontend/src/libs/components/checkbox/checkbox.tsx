@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import {
   type Control,
   type FieldErrors,
@@ -6,11 +5,12 @@ import {
   type FieldValues,
 } from 'react-hook-form';
 
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useFormController } from '~/libs/hooks/hooks.js';
 
 import checkbox from './checkbox.module.scss';
 import common from './common.module.scss';
-import { type CheckboxMode } from './libs/enums/checkbox-mode.enum.js';
+import { type CheckboxMode } from './libs/types/checkbox-mode.type.js';
 import radio from './radio.module.scss';
 import toggle from './toggle.module.scss';
 
@@ -21,7 +21,7 @@ type Properties<T extends FieldValues, N extends FieldPath<T>> = {
   errors?: FieldErrors<T>;
   label?: string;
   name: N;
-  disabled?: boolean;
+  beDisabled?: boolean;
   mode?: CheckboxMode;
   value?: T[N]; // This is used internally by Radio component
 };
@@ -32,7 +32,7 @@ const Checkbox = <T extends FieldValues, N extends FieldPath<T>>({
   label,
   name,
   value,
-  disabled = false,
+  beDisabled = false,
   mode = 'checkbox',
 }: Properties<T, N>): JSX.Element => {
   const { field } = useFormController({ name, control });
@@ -43,20 +43,22 @@ const Checkbox = <T extends FieldValues, N extends FieldPath<T>>({
   const isRadio = mode === 'radio';
   const isChecked = isRadio ? field.value === value : undefined;
   const type = isRadio ? 'radio' : 'checkbox';
-  value = isRadio ? value : field.value;
+  const valueForRadio = isRadio ? value : field.value;
 
   return (
     <span className={styles.container}>
-      <label className={clsx(styles.label, disabled && 'disabled')}>
+      <label
+        className={getValidClassNames(styles.label, beDisabled && 'disabled')}
+      >
         <input
-          className={clsx(styles.input, styles[mode])}
+          className={getValidClassNames(styles.input, styles[mode])}
           {...field}
           type={type}
-          value={value}
+          value={valueForRadio}
           defaultChecked={field.value || undefined}
-          disabled={disabled || undefined}
+          disabled={beDisabled || undefined}
           checked={isChecked}
-          aria-disabled={disabled || undefined}
+          aria-disabled={beDisabled || undefined}
           aria-invalid={hasError || undefined}
         />
         {hasLabel && <span className={styles.labelText}>{label}</span>}
