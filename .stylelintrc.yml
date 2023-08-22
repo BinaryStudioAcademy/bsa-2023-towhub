@@ -11,6 +11,7 @@ rules:
   max-nesting-depth: 0
   no-descending-specificity: true
   scss/at-import-partial-extension: always
+  import-notation: string
   unit-disallowed-list:
     - em
     - rem
