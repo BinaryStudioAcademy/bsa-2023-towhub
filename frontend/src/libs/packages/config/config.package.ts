@@ -20,6 +20,7 @@ class Config implements IConfig {
       },
       API: {
         ORIGIN_URL: import.meta.env.VITE_APP_API_ORIGIN_URL as string,
+        GOOGLE_MAPS_API_KEY: import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY as string,
       },
     };
   }
