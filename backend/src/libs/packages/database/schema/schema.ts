@@ -2,7 +2,7 @@ import { business, users } from './tables-schema.js';
 
 const schema = {
   users,
-  business
+  business,
 };
 
 type DatabaseSchema = typeof schema;

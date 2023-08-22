@@ -8,6 +8,19 @@ import {
   type ControllerRouteParameters,
 } from './libs/types/types.js';
 
+const GroupKeysMocked = {
+  CUSTOMER: 'Customer',
+  BUSINESS: 'Business',
+  DRIVER: 'Driver',
+} as const;
+
+const userFromToken = {
+  id: 1,
+  group: {
+    key: GroupKeysMocked.BUSINESS,
+  },
+};
+
 class Controller implements IController {
   private logger: ILogger;
 
@@ -54,8 +67,9 @@ class Controller implements IController {
       body,
       query,
       params,
+      user: userFromToken,
     };
   }
 }
 
-export { Controller };
+export { Controller, GroupKeysMocked };
