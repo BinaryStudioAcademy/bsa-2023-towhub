@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 
-import { type HashedPass } from '../types/hashed-pass.type.ts';
+import { type HashedPass } from '../types/hashed-pass.type.js';
 
 const hashPassword = async (password: string): Promise<HashedPass> => {
   const salt: string = await bcrypt.genSalt(10);

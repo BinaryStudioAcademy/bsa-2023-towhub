@@ -4,7 +4,7 @@ import {
 } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service.js';
 
-import { type UserEntity } from '../users/user.entity.ts';
+import { type UserEntity } from '../users/user.entity.js';
 
 class AuthService {
   private userService: UserService;
