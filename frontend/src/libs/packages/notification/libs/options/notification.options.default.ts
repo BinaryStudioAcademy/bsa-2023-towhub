@@ -1,10 +1,17 @@
-import { type ToastOptions, toast } from 'react-toastify';
+import { type Theme, type ToastPosition, toast } from 'react-toastify';
 
 import { theme } from '../enums/notification.theme.enum.js';
 
-const DEFAULT_NOTIFICATION_OPTIONS: ToastOptions = {
-  position: toast.POSITION.TOP_RIGHT,
-  theme: theme.LIGHT,
+type IToastOptions = {
+  position?: ToastPosition;
+  theme?: Theme;
+  autoClose?: number;
 };
 
-export { DEFAULT_NOTIFICATION_OPTIONS };
+const DEFAULT_NOTIFICATION_OPTIONS: IToastOptions = {
+  position: toast.POSITION.TOP_RIGHT,
+  theme: theme.LIGHT,
+  autoClose: 4000,
+};
+
+export { type IToastOptions, DEFAULT_NOTIFICATION_OPTIONS };
