@@ -12,12 +12,12 @@ export {
 export { configureString } from './libs/helpers/helpers.js';
 export { type IConfig } from './libs/packages/config/config.js';
 export {
-  type HttpMethod,
   type HttpOptions,
   type IHttp,
   HttpCode,
+  HttpErrorMessage,
   HttpHeader,
-} from './libs/packages/http/http.js';
+  HttpMethod } from './libs/packages/http/http.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type NullableProperties,
@@ -29,6 +29,25 @@ export {
   type ValueOf,
 } from './libs/types/types.js';
 export { AuthApiPath } from './packages/auth/auth.js';
+export {
+  type  BusinessAddRequestDto,
+  type  BusinessAddResponseDto,
+  type  BusinessDeleteRequestParameters,
+  type  BusinessDeleteResponseDto,
+  type  BusinessEntity,
+  type  BusinessFindResponseDto,
+  type  BusinessGetRequestParameters,
+  type  BusinessUpdateRequestDto,
+  type  BusinessUpdateRequestParameters,
+  type  BusinessUpdateResponseDto,
+  businessAddDtoValidationSchema,
+  BusinessApiPath,
+  businessDeleteParametersValidationSchema,
+  businessGetParametersValidationSchema,
+  businessUpdateDtoValidationSchema,
+  businessUpdateParametersValidationSchema,
+  BusinessValidationMessage,
+} from './packages/business/business.js';
 export {
   type UserEntity,
   type UserGetAllItemResponseDto,

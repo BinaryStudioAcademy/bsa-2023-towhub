@@ -1,9 +1,10 @@
 import {
-  pgTable,
-  serial,
-  timestamp,
-  uniqueIndex,
-  varchar,
+    integer,
+    pgTable,
+    serial,
+    timestamp,
+    uniqueIndex,
+    varchar,
 } from 'drizzle-orm/pg-core';
 
 const users = pgTable(
@@ -23,4 +24,16 @@ const users = pgTable(
   },
 );
 
-export { users };
+const business = pgTable(
+    'business_details',
+    {
+        id: serial('id').primaryKey(),
+        companyName: varchar('company_name').notNull(),
+        taxNumber: varchar('tax_number').notNull(),
+        ownerId: integer('owner_id').notNull().references(()=>users.id),
+        createdAt: timestamp('created_at').notNull().defaultNow(),
+        updatedAt: timestamp('updated_at').notNull().defaultNow()
+    }
+);
+
+export { business,users };
