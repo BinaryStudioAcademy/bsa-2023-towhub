@@ -26,6 +26,17 @@ class UserRepository implements IRepository {
     return Promise.resolve([]);
   }
 
+  public async findByPhone(value: string): Promise<UserEntity[]> {
+    const result = await this.db
+      .driver()
+      .select()
+      .from(this.usersSchema)
+      .where(eq(this.usersSchema.phone, value))
+      .execute();
+
+    return result.map((it) => UserEntity.initialize(it));
+  }
+
   public findById(id: number): Promise<InferModel<typeof schema.users>[]> {
     return this.db
       .driver()

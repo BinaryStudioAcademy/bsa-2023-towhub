@@ -67,6 +67,13 @@ class AuthController extends Controller {
       body: UserSignUpRequestDto;
     }>,
   ): Promise<ApiHandlerResponse> {
+    if (await this.authService.checkExistingUser(options.body)) {
+      return {
+        status: HttpCode.CONFLICT,
+        payload: { error: 'User already exists' },
+      };
+    }
+
     return {
       status: HttpCode.CREATED,
       payload: await this.authService.signUp(options.body),
