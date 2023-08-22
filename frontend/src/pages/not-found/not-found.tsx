@@ -1,5 +1,4 @@
-import { NavLink } from 'react-router-dom';
-
+import { Link } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/app-route.enum';
 
 const NotFound = (): JSX.Element => (
@@ -10,9 +9,9 @@ const NotFound = (): JSX.Element => (
 
     <p>Let&apos;s get you back on track.</p>
 
-    <p>
-      <NavLink to={AppRoute.ROOT}>Back to Home page</NavLink>
-    </p>
+    <Link to={AppRoute.ROOT}>
+      <span>Back to Home page</span>
+    </Link>
   </div>
 );
 
