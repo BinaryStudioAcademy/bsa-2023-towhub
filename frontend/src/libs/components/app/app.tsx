@@ -8,6 +8,7 @@ import {
   useLocation,
   useState,
 } from '~/libs/hooks/hooks.js';
+import { ClientSocketEvents } from '~/libs/packages/socket/libs/enums/enum.js';
 import { socket } from '~/libs/packages/socket/socket.js';
 import { actions as userActions } from '~/slices/users/users.js';
 
@@ -25,7 +26,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const io = socket.getInstance();
 
-    io.on('connect', () => {
+    io.on(ClientSocketEvents.CONNECT, () => {
       setIsWebSocketsConnected(true);
     });
 
@@ -64,7 +65,7 @@ const App: React.FC = () => {
         <>
           <h2>Users:</h2>
           <h3>Status: {dataStatus}</h3>
-          <h3>Socket: {isWebSocketsConnected ? 'true' : 'false'}</h3>
+          <h3>Socket: {isWebSocketsConnected ? 'connected' : 'disconnected'}</h3>
           <ul>
             {users.map((it) => (
               <li key={it.id}>{it.phone}</li>

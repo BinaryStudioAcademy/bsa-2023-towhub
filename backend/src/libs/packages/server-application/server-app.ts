@@ -46,7 +46,6 @@ class ServerApp implements IServerApp {
     this.apis = apis;
 
     this.app = Fastify();
-    socket.initialiseIo(this.app);
   }
 
   public addRoute(parameters: ServerAppRouteParameters): void {
@@ -156,6 +155,8 @@ class ServerApp implements IServerApp {
 
   public async init(): Promise<void> {
     this.logger.info('Application initialization…');
+
+    socket.initializeIo(this.app);
 
     await this.initMiddlewares();
 

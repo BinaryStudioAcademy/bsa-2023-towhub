@@ -18,6 +18,10 @@ export {
   HttpCode,
   HttpHeader,
 } from './libs/packages/http/http.js';
+export {
+  ClientSocketEvents,
+  ServerSocketEvents,
+} from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type NullableProperties,
