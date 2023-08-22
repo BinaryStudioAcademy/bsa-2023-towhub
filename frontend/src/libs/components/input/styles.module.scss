@@ -1,39 +1,43 @@
-@import "src/assets/css/variables.scss";
+@import "src/assets/css/vars.scss";
 
 .input {
   width: 100%;
   padding: 8px;
-  color: $color-dark-grey;
+  color: $grey-dark;
+  font-weight: $font-weight-regular;
   font-size: 14px;
-  background: $color-general-light;
-  border: 2px solid $color-light-grey;
+  font-family: $font-family;
+  font-style: normal;
+  line-height: normal;
+  background: $white;
+  border: 2px solid $grey-light;
   border-radius: 4px;
   outline: none;
 }
 
 .input.active {
-  color: $color-general-dark;
+  color: $black;
 }
 
 .input.filled,
 .input:focus {
-  border-color: $color-blue;
+  border-color: $blue;
   box-shadow:
     0 2px 4px -2px rgb(0 44 132 / 6%),
     0 4px 8px -2px rgb(0 85 255 / 16%);
 }
 
 .input.disabled {
-  color: $color-light-grey;
+  color: $grey-light;
 }
 
 .input.error {
-  border-color: $color-red;
+  border-color: $red;
 }
 
 .errorMessage {
   align-self: flex-end;
-  color: $color-red;
+  color: $red-dark;
   font-size: 12px;
 }
 
@@ -42,12 +46,16 @@
   display: flex;
   flex-direction: column;
   max-width: 327px;
-  color: $color-dark-grey;
+  color: $grey-dark;
+  font-weight: $font-weight-semibold;
   font-size: 16px;
+  font-family: $font-family;
+  font-style: normal;
+  line-height: 140.5%;
 }
 
 .label.disabled {
-  color: $color-light-grey;
+  color: $grey-light;
 }
 
 .passwordEye {
@@ -63,7 +71,7 @@
 
 .textarea ::-webkit-scrollbar-thumb {
   width: 4px;
-  background-color: $color-scrollbar;
+  background-color: $grey-extra-light;
   border-radius: 50px;
 }
 
