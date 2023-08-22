@@ -1,6 +1,5 @@
-import { useEffect, useRef } from 'react';
-
-import { MapService } from '~/libs/packages/map/map.packages';
+import { useEffect, useRef } from '~/libs/hooks/hooks.js';
+import { MapService } from '~/libs/packages/map/map.package';
 
 type Properties = {
   center: google.maps.LatLngLiteral;
