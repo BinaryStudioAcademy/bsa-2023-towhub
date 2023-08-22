@@ -49,7 +49,9 @@ const App: React.FC = () => {
         <>
           <h2>Users:</h2>
           <h3>Status: {dataStatus}</h3>
-          <div style={{ width: '500px', height: '500px' }}><Map /></div>
+          <div style={{ width: '500px', height: '500px' }}>
+            <Map />
+          </div>
           <ul>
             {users.map((it) => (
               <li key={it.id}>{it.phone}</li>

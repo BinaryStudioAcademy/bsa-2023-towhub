@@ -1,5 +1,5 @@
 import { Status, Wrapper } from '@googlemaps/react-wrapper';
-import { type ReactElement,useCallback } from 'react';
+import { type ReactElement, useCallback } from 'react';
 
 import { config } from '~/libs/packages/config/config.js';
 
@@ -12,7 +12,6 @@ const mapProperties = {
 };
 
 const Map: React.FC = () => {
-
   const renderMap = useCallback((status: Status): ReactElement => {
     switch (status) {
       case Status.LOADING: {
@@ -27,9 +26,7 @@ const Map: React.FC = () => {
     }
   }, []);
 
-  return (
-    <Wrapper apiKey={apiMapKey} render={renderMap} />
-  );
+  return <Wrapper apiKey={apiMapKey} render={renderMap} />;
 };
 
 export { Map };
