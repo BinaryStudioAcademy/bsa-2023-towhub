@@ -6,10 +6,14 @@ import { config } from '~/libs/packages/config/config.js';
 import { MapInnerComponent } from './map-inner-component/map-inner-component.js';
 
 const apiMapKey = config.ENV.API.GOOGLE_MAPS_API_KEY;
+const mapProperties = {
+  center: { lat: 50.4501, lng: 30.5234 },
+  zoom: 10,
+};
 
 const Map: React.FC = () => {
 
-  const render = useCallback((status: Status): ReactElement => {
+  const renderMap = useCallback((status: Status): ReactElement => {
     switch (status) {
       case Status.LOADING: {
         return <div>Loading...</div>;
@@ -18,13 +22,13 @@ const Map: React.FC = () => {
         return <div>Error loading Google Maps</div>;
       }
       case Status.SUCCESS: {
-        return <MapInnerComponent center={ { lat: -4.397, lng: 15.644 }} zoom={10} />;
+        return <MapInnerComponent {...mapProperties} />;
       }
     }
   }, []);
 
   return (
-    <Wrapper apiKey={apiMapKey} render={render} />
+    <Wrapper apiKey={apiMapKey} render={renderMap} />
   );
 };
 

@@ -1,5 +1,5 @@
 import reactLogo from '~/assets/img/react.svg';
-import { Link, RouterOutlet } from '~/libs/components/components.js';
+import { Link, Map, RouterOutlet } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
@@ -49,6 +49,7 @@ const App: React.FC = () => {
         <>
           <h2>Users:</h2>
           <h3>Status: {dataStatus}</h3>
+          <div style={{ width: '500px', height: '500px' }}><Map /></div>
           <ul>
             {users.map((it) => (
               <li key={it.id}>{it.phone}</li>
