@@ -15,7 +15,7 @@ const MapInnerComponent: React.FC<Properties> = ({ center, zoom }: Properties) =
 
   useEffect(() => {
     if (mapReference.current) {
-      mapService.current = new MapService(mapReference.current, center, zoom);
+      mapService.current = new MapService({ mapElement: mapReference.current, center, zoom });
       mapService.current.addMarker(center);
     }
   }, [center, zoom]);

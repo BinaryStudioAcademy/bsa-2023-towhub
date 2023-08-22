@@ -1,13 +1,20 @@
 import { ApplicationError } from './libs/exceptions/exceptions.js';
+import { type IMapService } from './libs/interfaces/interfaces.js';
 
-class MapService {
+type Constructor = {
+  mapElement: HTMLDivElement;
+  center: google.maps.LatLngLiteral;
+  zoom: number;
+};
+
+class MapService implements IMapService {
   private map: google.maps.Map | null = null;
 
   private directionsService: google.maps.DirectionsService;
 
   private directionsRenderer: google.maps.DirectionsRenderer;
 
-  public constructor(mapElement: HTMLDivElement, center: google.maps.LatLngLiteral, zoom: number) {
+  public constructor({ mapElement, center, zoom }: Constructor) {
       this.directionsService = new google.maps.DirectionsService();
       this.directionsRenderer = new google.maps.DirectionsRenderer();
 
