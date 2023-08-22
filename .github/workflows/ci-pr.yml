@@ -1,7 +1,7 @@
 name: Continuous Integration Pull Request
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - assigned
       - unassigned
@@ -44,7 +44,7 @@ jobs:
 
       - name: Lint Commits
         run: |
-          npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+          npx commitlint --from ${{ github.event.pull_request_target.base.sha }} --to ${{ github.event.pull_request_target.head.sha }} --verbose
 
       - name: Lint Pull Request
         env:
