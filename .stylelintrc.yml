@@ -5,6 +5,7 @@ plugins:
   - stylelint-order
 
 rules:
+  import-notation: string
   selector-class-pattern: null
   color-hex-length: long
   declaration-no-important: true
