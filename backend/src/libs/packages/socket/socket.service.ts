@@ -3,6 +3,8 @@ import { Server as SocketServer } from 'socket.io';
 
 import { logger } from '~/libs/packages/logger/logger.js';
 
+import { ServerSocketEvents } from './libs/enums/enums.js';
+
 class SocketService {
   private io: SocketServer | null = null;
 
@@ -10,16 +12,17 @@ class SocketService {
     return this.io as SocketServer;
   }
 
-  public initialiseIo(app: FastifyInstance): void {
+  public initializeIo(app: FastifyInstance): void {
     const io = new SocketServer(app.server, {
       cors: { origin: '*' },
     });
     this.io = io;
 
-    io.on('connection', (socket) => {
-      logger.info(`${socket.id} successfully connected`);
-      socket.on('disconnect', () => {
-        logger.info('disconnect');
+    io.on(ServerSocketEvents.CONNECTION, (socket) => {
+      
+      logger.info(`${socket.id} connected`);
+      socket.on(ServerSocketEvents.DISCONNECT, () => {
+        logger.info(`${socket.id} disconnected`);
       });
     });
   }
