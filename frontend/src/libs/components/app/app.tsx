@@ -65,7 +65,9 @@ const App: React.FC = () => {
         <>
           <h2>Users:</h2>
           <h3>Status: {dataStatus}</h3>
-          <h3>Socket: {isWebSocketsConnected ? 'connected' : 'disconnected'}</h3>
+          <h3>
+            Socket: {isWebSocketsConnected ? 'connected' : 'disconnected'}
+          </h3>
           <ul>
             {users.map((it) => (
               <li key={it.id}>{it.phone}</li>

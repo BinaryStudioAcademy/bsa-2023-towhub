@@ -1,6 +1,6 @@
 const ServerSocketEvents = {
   CONNECTION: 'connection',
-  DISCONNECT: 'disconnect'
+  DISCONNECT: 'disconnect',
 } as const;
 
 export { ServerSocketEvents };

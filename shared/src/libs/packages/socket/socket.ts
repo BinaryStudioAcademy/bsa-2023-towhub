@@ -1,4 +1,1 @@
-export {
-  ClientSocketEvents,
-  ServerSocketEvents,
-} from './libs/enums/enum.js';
+export { ClientSocketEvents, ServerSocketEvents } from './libs/enums/enum.js';
