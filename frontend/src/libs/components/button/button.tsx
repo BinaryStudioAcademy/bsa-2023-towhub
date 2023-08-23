@@ -10,6 +10,7 @@ type Properties = {
   size?: 'sm' | 'md';
   variant?: 'contained' | 'outlined' | 'text';
   disabled?: boolean;
+  onClick?: () => void;
 };
 
 const Button: React.FC<Properties> = ({
@@ -18,11 +19,13 @@ const Button: React.FC<Properties> = ({
   variant = 'contained',
   label,
   disabled = false,
+  onClick,
 }: Properties) => (
   <button
     className={getValidClassNames(styles.btn, styles[size], styles[variant])}
     type={type}
     disabled={disabled}
+    onClick={onClick}
   >
     <Icon iconName={IconName.PLUS} />
     {label}
