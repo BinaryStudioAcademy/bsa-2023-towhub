@@ -1,4 +1,5 @@
 import { IconName } from '~/libs/enums/icon-name.enum';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 
 import { Icon } from '../components.js';
 import styles from './styles.module.scss';
@@ -19,7 +20,7 @@ const Button: React.FC<Properties> = ({
   disabled = false,
 }: Properties) => (
   <button
-    className={[styles.btn, styles[size], styles[variant]].join(' ')}
+    className={getValidClassNames(styles.btn, styles[size], styles[variant])}
     type={type}
     disabled={disabled}
   >
