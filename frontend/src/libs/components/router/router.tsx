@@ -1,6 +1,7 @@
 import { AppRoute } from '~/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
+import { Welcome } from '~/pages/welcome/welcome.js';
 
 import { App } from '../app/app.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
@@ -15,6 +16,10 @@ const Router = (): JSX.Element => (
           {
             path: AppRoute.ROOT,
             element: 'Root',
+          },
+          {
+            path: AppRoute.WELCOME,
+            element: <Welcome />,
           },
           {
             path: AppRoute.SIGN_IN,
