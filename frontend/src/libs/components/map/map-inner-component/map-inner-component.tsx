@@ -1,5 +1,5 @@
 import { useEffect, useRef } from '~/libs/hooks/hooks.js';
-import { MapService } from '~/libs/packages/map/map.package';
+import { MapService } from '~/libs/packages/map/map.js';
 
 import styles from './map.module.scss';
 
