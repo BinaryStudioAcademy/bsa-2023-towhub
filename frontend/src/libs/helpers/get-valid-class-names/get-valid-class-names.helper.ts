@@ -1,8 +1,7 @@
-import clsx from 'clsx';
+import { type ClassValue, clsx } from 'clsx';
 
-/** A wrapper for clsx tool */
-const getValidClassNames = (...inputs: clsx.ClassValue[]): string => {
-  return clsx(...inputs);
+const getValidClassNames = (...classNames: ClassValue[]): string => {
+  return clsx(...classNames);
 };
 
 export { getValidClassNames };
