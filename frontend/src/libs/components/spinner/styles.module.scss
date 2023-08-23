@@ -14,13 +14,6 @@
   background-color: white;
 }
 
-.loader,
-.loader::after {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-}
-
 .loader {
   position: relative;
   margin: auto;
@@ -29,8 +22,26 @@
   border-right: 11px solid silver;
   border-bottom: 11px solid silver;
   border-left: 11px solid black;
+  border-radius: 50%;
   transform: translateZ(0);
   animation: load 1.1s infinite linear;
+}
+
+.sm {
+  width: 60px;
+  height: 60px;
+  border-width: 9px;
+}
+
+.md {
+  width: 75px;
+  height: 75px;
+}
+
+.lg {
+  width: 90px;
+  height: 90px;
+  border-width: 13px;
 }
 
 @keyframes load {
