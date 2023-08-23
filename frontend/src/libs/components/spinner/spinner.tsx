@@ -1,3 +1,5 @@
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
+
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -9,7 +11,11 @@ const Spinner: React.FC<Properties> = ({
   isFullScreen,
   size = 'sm',
 }: Properties) => {
-  const loaderClassName = `${styles.loader} ${styles[size]}`;
+  const loaderClassName = getValidClassNames(styles.loader, {
+    [styles.sm]: size === 'sm',
+    [styles.md]: size === 'md',
+    [styles.lg]: size === 'lg',
+  });
 
   if (isFullScreen) {
     return (
