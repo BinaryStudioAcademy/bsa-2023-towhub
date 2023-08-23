@@ -34,11 +34,11 @@ createRoot(document.querySelector('#root') as HTMLElement).render(
                 path: AppRoute.SIGN_UP,
                 element: <Auth />,
               },
-              {
-                path: '/protected-route-example',
-                element: <ProtectedRoute component={App} />,
-              },
             ],
+          },
+          {
+            path: '/protected-route-example',
+            element: <ProtectedRoute component={App} />,
           },
         ]}
       />

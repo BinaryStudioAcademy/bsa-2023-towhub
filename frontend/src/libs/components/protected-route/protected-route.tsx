@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
 import { AppRoute } from '~/libs/enums/enums.js';
 
@@ -16,7 +16,14 @@ const ProtectedRoute: React.FC<Properties> = ({
     return <div>Loader</div>;
   }
 
-  return isLoggedIn > 0.5 ? <Component /> : <Navigate to={AppRoute.SIGN_IN} />;
+  return isLoggedIn > 0.5 ? (
+    <>
+      <Component />
+      <Outlet />
+    </>
+  ) : (
+    <Navigate to={AppRoute.SIGN_IN} />
+  );
 };
 
 export { ProtectedRoute };
