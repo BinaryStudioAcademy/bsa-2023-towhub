@@ -9,12 +9,12 @@ import { type UserGetAllResponseDto } from './libs/types/types.js';
 type Constructor = {
   baseUrl: string;
   http: IHttp;
-  storage: IStorage;
+  localStorage: IStorage;
 };
 
 class UserApi extends HttpApi {
-  public constructor({ baseUrl, http, storage }: Constructor) {
-    super({ path: ApiPath.USERS, baseUrl, http, storage });
+  public constructor({ baseUrl, http, localStorage }: Constructor) {
+    super({ path: ApiPath.USERS, baseUrl, http, localStorage });
   }
 
   public async getAll(): Promise<UserGetAllResponseDto> {

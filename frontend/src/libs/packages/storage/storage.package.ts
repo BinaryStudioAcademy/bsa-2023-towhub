@@ -12,24 +12,41 @@ class Storage<T> implements IStorage {
     this.store = store;
   }
 
-  public set<K extends ValueOf<typeof StorageKey>>(key: K, value: T): Promise<void> {
+  public set<K extends ValueOf<typeof StorageKey>>(
+    key: K,
+    value: T,
+  ): Promise<void> {
     try {
       const serializedValue = JSON.stringify(value);
       this.store.setItem(key as string, serializedValue);
 
       return Promise.resolve();
     } catch (error) {
-      return Promise.reject(new ApplicationError( { message:`Error setting value in storage '${key}'`, cause: error }));
+      return Promise.reject(
+        new ApplicationError({
+          message: `Error setting value in storage '${key}'`,
+          cause: error,
+        }),
+      );
     }
   }
 
-  public get<K extends ValueOf<typeof StorageKey>, R = T>(key: K): Promise<R | null> {
+  public get<K extends ValueOf<typeof StorageKey>, R = T>(
+    key: K,
+  ): Promise<R | null> {
     try {
       const value = this.store.getItem(key as string);
-  
-      return value === null ? Promise.resolve(null) : Promise.resolve(JSON.parse(value) as R);
+
+      return value === null
+        ? Promise.resolve(null)
+        : Promise.resolve(JSON.parse(value) as R);
     } catch (error) {
-      return Promise.reject(new ApplicationError( { message:`Error getting value from storage '${key}'`, cause: error }));
+      return Promise.reject(
+        new ApplicationError({
+          message: `Error getting value from storage '${key}'`,
+          cause: error,
+        }),
+      );
     }
   }
 
@@ -39,11 +56,18 @@ class Storage<T> implements IStorage {
 
       return Promise.resolve();
     } catch (error) {
-      return Promise.reject(new ApplicationError( { message:`Error removing value from storage '${key}'`, cause: error }));
+      return Promise.reject(
+        new ApplicationError({
+          message: `Error removing value from storage '${key}'`,
+          cause: error,
+        }),
+      );
     }
   }
 
-  public async has<K extends ValueOf<typeof StorageKey>>(key: K): Promise<boolean> {
+  public async has<K extends ValueOf<typeof StorageKey>>(
+    key: K,
+  ): Promise<boolean> {
     try {
       const value = await this.get(key);
 
