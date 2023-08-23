@@ -1,3 +1,5 @@
+import 'react-toastify/dist/ReactToastify.css';
+
 import reactLogo from '~/assets/img/react.svg';
 import { Link, RouterOutlet } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';

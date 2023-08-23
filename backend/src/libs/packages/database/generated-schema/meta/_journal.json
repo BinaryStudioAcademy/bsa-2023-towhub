@@ -8,6 +8,13 @@
       "when": 1692293282150,
       "tag": "0000_condemned_lilith",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1692626206950,
+      "tag": "0001_powerful_sphinx",
+      "breakpoints": true
     }
   ]
 }
