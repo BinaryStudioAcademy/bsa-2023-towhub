@@ -18,7 +18,7 @@ type Properties<T extends FieldValues, N extends FieldPath<T>> = {
   errors?: FieldErrors<T>;
   label?: string;
   name: N;
-  beDisabled?: boolean;
+  isDisabled?: boolean;
   value?: T[N];
 };
 
@@ -28,7 +28,7 @@ const Radio = <T extends FieldValues, N extends FieldPath<T>>({
   label,
   name,
   value,
-  beDisabled = false,
+  isDisabled = false,
 }: Properties<T, N>): JSX.Element => {
   const { field } = useFormController({ name, control });
 
@@ -40,16 +40,16 @@ const Radio = <T extends FieldValues, N extends FieldPath<T>>({
   return (
     <span className={styles.container}>
       <label
-        className={getValidClassNames(styles.label, beDisabled && 'disabled')}
+        className={getValidClassNames(styles.label, isDisabled && 'disabled')}
       >
         <input
           className={getValidClassNames(styles.input, styles.radio)}
           {...field}
           type="radio"
           value={value}
-          disabled={beDisabled || undefined}
+          disabled={isDisabled || undefined}
           checked={isChecked}
-          aria-disabled={beDisabled || undefined}
+          aria-disabled={isDisabled || undefined}
         />
         {hasLabel && <span className={styles.labelText}>{label}</span>}
       </label>

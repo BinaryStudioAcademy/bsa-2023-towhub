@@ -18,7 +18,7 @@ type Properties<T extends FieldValues> = {
   errors?: FieldErrors<T>;
   label?: string;
   name: FieldPath<T>;
-  beDisabled?: boolean;
+  isDisabled?: boolean;
 };
 
 const Checkbox = <T extends FieldValues>({
@@ -26,7 +26,7 @@ const Checkbox = <T extends FieldValues>({
   errors,
   label,
   name,
-  beDisabled = false,
+  isDisabled = false,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
 
@@ -37,15 +37,15 @@ const Checkbox = <T extends FieldValues>({
   return (
     <span className={styles.container}>
       <label
-        className={getValidClassNames(styles.label, beDisabled && 'disabled')}
+        className={getValidClassNames(styles.label, isDisabled && 'disabled')}
       >
         <input
           className={getValidClassNames(styles.input, styles.checkbox)}
           {...field}
           type="checkbox"
           defaultChecked={field.value || undefined}
-          disabled={beDisabled || undefined}
-          aria-disabled={beDisabled || undefined}
+          disabled={isDisabled || undefined}
+          aria-disabled={isDisabled || undefined}
           aria-invalid={hasError || undefined}
         />
         {hasLabel && <span className={styles.labelText}>{label}</span>}
