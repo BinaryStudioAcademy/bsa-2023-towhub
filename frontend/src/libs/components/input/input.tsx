@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import {
   type Control,
   type FieldErrors,
@@ -6,6 +5,7 @@ import {
   type FieldValues,
 } from 'react-hook-form';
 
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useFormController } from '~/libs/hooks/hooks.js';
 
 import styles from './styles.module.scss';
@@ -50,7 +50,7 @@ const Input = <T extends FieldValues>({
         {...field}
         type={type}
         placeholder={placeholder}
-        className={clsx(...inputStyles)}
+        className={getValidClassNames(...inputStyles)}
         disabled={isDisabled}
       />
       {type === 'password' && (
@@ -63,7 +63,7 @@ const Input = <T extends FieldValues>({
     <textarea
       {...field}
       placeholder={placeholder}
-      className={clsx(...inputStyles, styles.textarea)}
+      className={getValidClassNames(...inputStyles, styles.textarea)}
       disabled={isDisabled}
     />
   );
@@ -73,7 +73,9 @@ const Input = <T extends FieldValues>({
       <span>{label}</span>
       {type === 'textarea' ? InputArea : Input}
       {hasError && (
-        <span className={clsx(styles.errorMessage)}>{error as string}</span>
+        <span className={getValidClassNames(styles.errorMessage)}>
+          {error as string}
+        </span>
       )}
     </label>
   );
