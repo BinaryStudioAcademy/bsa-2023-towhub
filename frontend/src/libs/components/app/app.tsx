@@ -9,8 +9,6 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { actions as userActions } from '~/slices/users/users.js';
 
-import { Dropdown } from '../dropdown/dropdown.jsx';
-
 const App: React.FC = () => {
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();
@@ -51,7 +49,6 @@ const App: React.FC = () => {
         <>
           <h2>Users:</h2>
           <h3>Status: {dataStatus}</h3>
-          <Dropdown />
           <ul>
             {users.map((it) => (
               <li key={it.id}>{it.phone}</li>
