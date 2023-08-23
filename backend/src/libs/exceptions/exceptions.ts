@@ -1,2 +1,2 @@
 export { DatabaseConnectionError } from './database/database.js';
-export { ValidationError } from 'shared/build/index.js';
+export { HttpError, ValidationError } from 'shared/build/index.js';

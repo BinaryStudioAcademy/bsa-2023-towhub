@@ -6,14 +6,14 @@ import {
 
 const signUpFields: FormField<UserSignUpRequestDto>[] = [
   {
-    label: FormLabel.NAME,
-    placeholder: 'Enter your name',
-    name: FormName.NAME,
+    label: FormLabel.FIRST_NAME,
+    placeholder: 'Enter your first name',
+    name: FormName.FIRST_NAME,
   },
   {
-    label: FormLabel.SURNAME,
-    placeholder: 'Enter your surname',
-    name: FormName.SURNAME,
+    label: FormLabel.LAST_NAME,
+    placeholder: 'Enter your last name',
+    name: FormName.LAST_NAME,
   },
   {
     type: 'email',
