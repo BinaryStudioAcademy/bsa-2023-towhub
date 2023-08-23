@@ -10,40 +10,30 @@ import { useFormController } from '~/libs/hooks/hooks.js';
 
 import checkbox from './checkbox.module.scss';
 import common from './common.module.scss';
-import { type CheckboxMode } from './libs/types/checkbox-mode.type.js';
-import radio from './radio.module.scss';
-import toggle from './toggle.module.scss';
 
-const styles = { ...common, ...checkbox, ...toggle, ...radio };
+const styles = { ...common, ...checkbox };
 
-type Properties<T extends FieldValues, N extends FieldPath<T>> = {
+type Properties<T extends FieldValues> = {
   control: Control<T, null>;
   errors?: FieldErrors<T>;
   label?: string;
-  name: N;
+  name: FieldPath<T>;
   beDisabled?: boolean;
-  mode?: CheckboxMode;
-  value?: T[N]; // This is used internally by Radio component
 };
 
-const Checkbox = <T extends FieldValues, N extends FieldPath<T>>({
+const Checkbox = <T extends FieldValues>({
   control,
   errors,
   label,
   name,
-  value,
   beDisabled = false,
-  mode = 'checkbox',
-}: Properties<T, N>): JSX.Element => {
+}: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
 
-  const error = errors?.[name]?.message;
+  const error =
+    errors?.[name]?.message || errors ? undefined : 'temporary error';
   const hasLabel = Boolean(label);
   const hasError = Boolean(error);
-  const isRadio = mode === 'radio';
-  const isChecked = isRadio ? field.value === value : undefined;
-  const type = isRadio ? 'radio' : 'checkbox';
-  const valueForRadio = isRadio ? value : field.value;
 
   return (
     <span className={styles.container}>
@@ -51,13 +41,11 @@ const Checkbox = <T extends FieldValues, N extends FieldPath<T>>({
         className={getValidClassNames(styles.label, beDisabled && 'disabled')}
       >
         <input
-          className={getValidClassNames(styles.input, styles[mode])}
+          className={getValidClassNames(styles.input, styles.checkbox)}
           {...field}
-          type={type}
-          value={valueForRadio}
-          defaultChecked={(!isRadio && field.value) || undefined}
+          type="checkbox"
+          defaultChecked={field.value || undefined}
           disabled={beDisabled || undefined}
-          checked={isChecked}
           aria-disabled={beDisabled || undefined}
           aria-invalid={hasError || undefined}
         />

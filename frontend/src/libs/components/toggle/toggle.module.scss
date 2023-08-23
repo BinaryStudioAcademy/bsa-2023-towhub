@@ -4,6 +4,7 @@
   --size: 20px;
 
   width: calc(var(--size) * 2);
+  min-width: calc(var(--size) * 2);
   height: var(--size);
   border: calc(var(--size) / 10) solid var(--color);
   border-radius: calc(var(--size) / 2);

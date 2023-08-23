@@ -22,6 +22,11 @@
   ); // Disabled color for error messages
 }
 
+// This hides all equal error messages for radio button group except the last one
+.container:has(input[type="radio"]):not(:last-child) .error {
+  display: none;
+}
+
 .label {
   --color: #{$blue-dark};
   --color-text: #{$black};

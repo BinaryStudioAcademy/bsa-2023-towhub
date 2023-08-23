@@ -2,17 +2,22 @@
 
 .checkbox {
   width: 16px;
+  min-width: 16px;
   height: 16px;
   border: 2px solid var(--color);
   border-radius: 2px;
 }
 
 .checkbox::after {
-  content: "";
+  content: "\2714";
   width: 16px;
+  min-width: 16px;
   height: 16px;
+  color: white;
+  font-size: 12px;
+  text-align: center;
   background-color: var(--color);
-  background-image: url("src/assets/img/checkmark.svg");
+  transform: translateY(-8%);
   opacity: 0;
   transition:
     $anim-normal opacity $anim-timing-fn-ui,
