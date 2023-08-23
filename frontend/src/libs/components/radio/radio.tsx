@@ -8,10 +8,7 @@ import {
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useFormController } from '~/libs/hooks/hooks.js';
 
-import common from './common.module.scss';
-import radio from './radio.module.scss';
-
-const styles = { ...common, ...radio };
+import styles from './radio.module.scss';
 
 type Properties<T extends FieldValues, N extends FieldPath<T>> = {
   control: Control<T, null>;
@@ -47,9 +44,9 @@ const Radio = <T extends FieldValues, N extends FieldPath<T>>({
           {...field}
           type="radio"
           value={value}
-          disabled={isDisabled || undefined}
+          disabled={isDisabled}
           checked={isChecked}
-          aria-disabled={isDisabled || undefined}
+          aria-disabled={isDisabled}
         />
         {hasLabel && <span className={styles.labelText}>{label}</span>}
       </label>
@@ -59,7 +56,7 @@ const Radio = <T extends FieldValues, N extends FieldPath<T>>({
           !hasError && 'visually-hidden',
         )}
         role="alert"
-        aria-hidden={!hasError || undefined}
+        aria-hidden={!hasError}
       >
         {error as string}
       </div>

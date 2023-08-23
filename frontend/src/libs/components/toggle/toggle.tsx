@@ -8,10 +8,7 @@ import {
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useFormController } from '~/libs/hooks/hooks.js';
 
-import common from './common.module.scss';
-import toggle from './toggle.module.scss';
-
-const styles = { ...common, ...toggle };
+import styles from './toggle.module.scss';
 
 type Properties<T extends FieldValues> = {
   control: Control<T, null>;
@@ -43,10 +40,10 @@ const Toggle = <T extends FieldValues>({
           className={getValidClassNames(styles.input, styles.toggle)}
           {...field}
           type="checkbox"
-          defaultChecked={field.value || undefined}
-          disabled={isDisabled || undefined}
-          aria-disabled={isDisabled || undefined}
-          aria-invalid={hasError || undefined}
+          defaultChecked={field.value}
+          disabled={isDisabled}
+          aria-disabled={isDisabled}
+          aria-invalid={hasError}
         />
         {hasLabel && <span className={styles.labelText}>{label}</span>}
       </label>
@@ -56,7 +53,7 @@ const Toggle = <T extends FieldValues>({
           !hasError && 'visually-hidden',
         )}
         role="alert"
-        aria-hidden={!hasError || undefined}
+        aria-hidden={!hasError}
       >
         {error as string}
       </div>

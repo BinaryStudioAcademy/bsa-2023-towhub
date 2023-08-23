@@ -8,10 +8,7 @@ import {
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useFormController } from '~/libs/hooks/hooks.js';
 
-import checkbox from './checkbox.module.scss';
-import common from './common.module.scss';
-
-const styles = { ...common, ...checkbox };
+import styles from './checkbox.module.scss';
 
 type Properties<T extends FieldValues> = {
   control: Control<T, null>;
@@ -43,10 +40,10 @@ const Checkbox = <T extends FieldValues>({
           className={getValidClassNames(styles.input, styles.checkbox)}
           {...field}
           type="checkbox"
-          defaultChecked={field.value || undefined}
-          disabled={isDisabled || undefined}
-          aria-disabled={isDisabled || undefined}
-          aria-invalid={hasError || undefined}
+          defaultChecked={field.value}
+          disabled={isDisabled}
+          aria-disabled={isDisabled}
+          aria-invalid={hasError}
         />
         {hasLabel && <span className={styles.labelText}>{label}</span>}
       </label>
@@ -56,7 +53,7 @@ const Checkbox = <T extends FieldValues>({
           !hasError && 'visually-hidden',
         )}
         role="alert"
-        aria-hidden={!hasError || undefined}
+        aria-hidden={!hasError}
       >
         {error as string}
       </div>
