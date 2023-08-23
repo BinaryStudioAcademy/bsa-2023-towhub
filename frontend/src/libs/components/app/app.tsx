@@ -1,5 +1,5 @@
 import reactLogo from '~/assets/img/react.svg';
-import { Link, Map, RouterOutlet } from '~/libs/components/components.js';
+import { Link, RouterOutlet } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
@@ -16,10 +16,7 @@ const App: React.FC = () => {
     users: users.users,
     dataStatus: users.dataStatus,
   }));
-  const mapProperties = {
-    center: { lat: 50.4501, lng: 30.5234 },
-    zoom: 10,
-  };
+
   const isRoot = pathname === AppRoute.ROOT;
 
   useEffect(() => {
@@ -52,9 +49,6 @@ const App: React.FC = () => {
         <>
           <h2>Users:</h2>
           <h3>Status: {dataStatus}</h3>
-          <div style={{ width: '500px', height: '500px' }}>
-            <Map center={mapProperties.center} zoom={mapProperties.zoom} />
-          </div>
           <ul>
             {users.map((it) => (
               <li key={it.id}>{it.phone}</li>

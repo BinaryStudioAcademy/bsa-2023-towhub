@@ -1,2 +1,1 @@
-
-export { MapService } from './map.package.js' ;
+export { MapService } from './map.package.js';
