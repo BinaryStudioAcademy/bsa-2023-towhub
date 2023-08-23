@@ -18,6 +18,7 @@ export {
   HttpCode,
   HttpErrorMessage,
   HttpHeader,
+  HttpMessage,
 } from './libs/packages/http/http.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {

@@ -1,4 +1,5 @@
-const HttpErrorMessage = {
+const HttpMessage = {
+  USER_EXISTS: 'User already exists',
   FORBIDDEN: 'Action is forbidden',
   BUSINESS_ALREADY_EXISTS: 'Owner already has business!',
   TAX_NUMBER_ALREADY_REGISTERED:
@@ -8,4 +9,4 @@ const HttpErrorMessage = {
   BUSINESS_DOES_NOT_EXIST: 'Business does not exist!',
 } as const;
 
-export { HttpErrorMessage };
+export { HttpMessage };
