@@ -1,8 +1,10 @@
-import { type DeepPartial, type FieldValues } from 'react-hook-form';
-import { type ValidationSchema } from 'shared/build/index.js';
-
 import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
-import { type FormField } from '~/libs/types/types.js';
+import {
+  type DeepPartial,
+  type FieldValues,
+  type FormField,
+  type ValidationSchema,
+} from '~/libs/types/types.js';
 
 import { Button } from '../button/button.jsx';
 import { Input } from '../input/input.jsx';

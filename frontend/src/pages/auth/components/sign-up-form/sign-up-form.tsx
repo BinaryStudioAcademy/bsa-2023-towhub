@@ -1,10 +1,7 @@
-import { Link } from '~/libs/components/components.js';
-import { Form } from '~/libs/components/form/form.js';
-import { AppRoute } from '~/libs/enums/app-route.enum.js';
-import {
-  type UserSignUpRequestDto,
-  userSignUpValidationSchema,
-} from '~/packages/users/users.js';
+import { Form, Link } from '~/libs/components/components.js';
+import { AppRoute } from '~/libs/enums/enums.js';
+import { type UserSignUpRequestDto } from '~/libs/types/types.js';
+import { userSignUpValidationSchema } from '~/packages/users/users.js';
 
 import { DEFAULT_SIGN_UP_PAYLOAD } from './libs/constants.js';
 import { signUpFields } from './libs/fields.js';

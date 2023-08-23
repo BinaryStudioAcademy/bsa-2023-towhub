@@ -1,4 +1,4 @@
-const FormNames = {
+const FormName = {
   NAME: 'name',
   SURNAME: 'surname',
   EMAIL: 'email',
@@ -6,7 +6,7 @@ const FormNames = {
   PASSWORD: 'password',
 } as const;
 
-const FormLabels = {
+const FormLabel = {
   NAME: 'Name',
   SURNAME: 'Surname',
   EMAIL: 'Email',
@@ -14,4 +14,4 @@ const FormLabels = {
   PASSWORD: 'Password',
 } as const;
 
-export { FormLabels, FormNames };
+export { FormLabel, FormName };
