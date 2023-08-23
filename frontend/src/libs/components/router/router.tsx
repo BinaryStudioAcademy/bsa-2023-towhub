@@ -19,10 +19,10 @@ const Router = (): JSX.Element => (
               <Route path={AppRoute.SIGN_IN} element={<Auth />} />
               <Route path={AppRoute.SIGN_UP} element={<Auth />} />
             </Route>
-            <Route
-              path="/protected-route-example"
-              element={<ProtectedRoute component={App} />}
-            />
+            <Route path={AppRoute.ROOT} element={<ProtectedRoute />}>
+              <Route path="protected1" element={<div>Protected path #1</div>} />
+              <Route path="protected2" element={<div>Protected path #2</div>} />
+            </Route>
             <Route path={AppRoute.ANY} element={<NotFound />} />
           </Routes>
         ),
