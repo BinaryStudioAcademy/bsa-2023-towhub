@@ -1,0 +1,26 @@
+@import "src/assets/css/vars.scss";
+
+.card {
+  max-width: 540px;
+  padding: 27px 99px 39px 222px;
+  background-color: $white;
+  background-image: "url(../../../assets/img/welcome-page/rocket.png)";
+  background-repeat: no-repeat;
+  background-position: 25px 28px;
+  background-size: 169px 169px;
+  border-radius: 10px;
+
+  // box-shadow: 0 2px 4px 0 rgb(173, 164, 164);
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.text {
+  margin-bottom: 24px;
+  color: $grey;
+  font-weight: 700;
+  line-height: 1.5;
+}
