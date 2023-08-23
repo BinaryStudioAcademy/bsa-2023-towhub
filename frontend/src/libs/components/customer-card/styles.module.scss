@@ -1,0 +1,25 @@
+@import "src/assets/css/vars.scss";
+
+.card {
+  max-width: 540px;
+  padding: 27px 89px 39px 222px;
+  background-color: $white;
+  background-image: "url(../../../assets/img/welcome-page/customer.png)";
+  background-repeat: no-repeat;
+  background-size: 229px 229px;
+  border-radius: 10px;
+
+  // box-shadow: 0 2px 4px 0 rgb(173, 163, 163 / 15%);
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.text {
+  margin-bottom: 24px;
+  color: $grey;
+  font-weight: 700;
+  line-height: 1.5;
+}
