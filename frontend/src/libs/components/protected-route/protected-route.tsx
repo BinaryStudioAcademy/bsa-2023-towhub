@@ -1,6 +1,8 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import { AppRoute } from '~/libs/enums/enums.js';
+
+import { RouterOutlet, Spinner } from '../components.js';
 
 type Properties = {
   component: React.FC;
@@ -13,13 +15,13 @@ const ProtectedRoute: React.FC<Properties> = ({
   const isLoadingUser = Math.random();
 
   if (isLoadingUser > 0.5) {
-    return <div>Loader</div>;
+    return <Spinner size="sm" />;
   }
 
   return isLoggedIn > 0.5 ? (
     <>
       <Component />
-      <Outlet />
+      <RouterOutlet />
     </>
   ) : (
     <Navigate to={AppRoute.SIGN_IN} />
