@@ -27,15 +27,15 @@ class UserRepository implements IRepository {
   }
 
   public async findByPhone(value: string): Promise<UserEntity | undefined> {
-    const [result] = await this.db
+    const result = await this.db
       .driver()
       .select()
       .from(this.usersSchema)
       .where(eq(this.usersSchema.phone, value))
       .execute();
 
-    if (result) {
-      return UserEntity.initialize(result);
+    if (result[0]) {
+      return UserEntity.initialize(result[0]);
     }
   }
 
