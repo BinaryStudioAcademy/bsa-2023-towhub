@@ -61,7 +61,21 @@ class AuthController extends Controller {
    *            application/json:
    *              schema:
    *                $ref: '#/components/schemas/User'
+   *        409:
+   *          description: User already exists
+   *          content:
+   *            application/json:
+   *              schema:
+   *                 type: object
+   *                 properties:
+   *                   errorType:
+   *                     type: string
+   *                     example: COMMON
+   *                   message:
+   *                     type: string
+   *                     example: User already exists
    */
+
   private async signUp(
     options: ApiHandlerOptions<{
       body: UserSignUpRequestDto;
