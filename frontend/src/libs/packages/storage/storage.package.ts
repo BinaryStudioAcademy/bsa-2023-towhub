@@ -1,21 +1,16 @@
 import { ApplicationError } from 'shared/build/index.js';
 
-import { type ValueOf } from '~/libs/types/types.js';
-
 import { type StorageKey } from './libs/enums/enums.js';
 import { type IStorage } from './libs/interfaces/interfaces.js';
 
-class Storage<T> implements IStorage {
+class Storage implements IStorage {
   private store: globalThis.Storage;
 
   public constructor(store: globalThis.Storage) {
     this.store = store;
   }
 
-  public set<K extends ValueOf<typeof StorageKey>>(
-    key: K,
-    value: T,
-  ): Promise<void> {
+  public set<T>(key: keyof typeof StorageKey, value: T): Promise<void> {
     try {
       const serializedValue = JSON.stringify(value);
       this.store.setItem(key as string, serializedValue);
@@ -31,15 +26,13 @@ class Storage<T> implements IStorage {
     }
   }
 
-  public get<K extends ValueOf<typeof StorageKey>, R = T>(
-    key: K,
-  ): Promise<R | null> {
+  public get<T>(key: keyof typeof StorageKey): Promise<T | null> {
     try {
       const value = this.store.getItem(key as string);
 
       return value === null
         ? Promise.resolve(null)
-        : Promise.resolve(JSON.parse(value) as R);
+        : Promise.resolve(JSON.parse(value) as T);
     } catch (error) {
       return Promise.reject(
         new ApplicationError({
@@ -50,7 +43,7 @@ class Storage<T> implements IStorage {
     }
   }
 
-  public drop<K extends ValueOf<typeof StorageKey>>(key: K): Promise<void> {
+  public drop(key: keyof typeof StorageKey): Promise<void> {
     try {
       this.store.removeItem(key as string);
 
@@ -65,9 +58,7 @@ class Storage<T> implements IStorage {
     }
   }
 
-  public async has<K extends ValueOf<typeof StorageKey>>(
-    key: K,
-  ): Promise<boolean> {
+  public async has(key: keyof typeof StorageKey): Promise<boolean> {
     try {
       const value = await this.get(key);
 

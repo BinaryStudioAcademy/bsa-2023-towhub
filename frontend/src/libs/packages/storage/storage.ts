@@ -1,8 +1,8 @@
 import { Storage } from './storage.package.js';
 
-const localStorage = new Storage(window.localStorage);
-const sessionStorage = new Storage(window.sessionStorage);
+const LocalStorage = new Storage(window.localStorage);
+const SessionStorage = new Storage(window.sessionStorage);
 
-export { localStorage, sessionStorage };
+export { LocalStorage, SessionStorage };
 export { StorageKey } from './libs/enums/enums.js';
 export { type IStorage } from './libs/interfaces/interfaces.js';

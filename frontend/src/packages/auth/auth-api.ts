@@ -12,12 +12,12 @@ import { AuthApiPath } from './libs/enums/enums.js';
 type Constructor = {
   baseUrl: string;
   http: IHttp;
-  localStorage: IStorage;
+  storage: IStorage;
 };
 
 class AuthApi extends HttpApi {
-  public constructor({ baseUrl, http, localStorage }: Constructor) {
-    super({ path: ApiPath.AUTH, baseUrl, http, localStorage });
+  public constructor({ baseUrl, http, storage }: Constructor) {
+    super({ path: ApiPath.AUTH, baseUrl, http, storage });
   }
 
   public async signUp(

@@ -15,7 +15,7 @@ type Constructor = {
   baseUrl: string;
   path: string;
   http: IHttp;
-  localStorage: IStorage;
+  storage: IStorage;
 };
 
 class HttpApi implements IHttpApi {
@@ -27,11 +27,11 @@ class HttpApi implements IHttpApi {
 
   private storage: IStorage;
 
-  public constructor({ baseUrl, path, http, localStorage }: Constructor) {
+  public constructor({ baseUrl, path, http, storage }: Constructor) {
     this.baseUrl = baseUrl;
     this.path = path;
     this.http = http;
-    this.storage = localStorage;
+    this.storage = storage;
   }
 
   public async load(
