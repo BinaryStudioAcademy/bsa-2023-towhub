@@ -4,13 +4,7 @@ import { AppRoute } from '~/libs/enums/enums.js';
 
 import { RouterOutlet, Spinner } from '../components.js';
 
-type Properties = {
-  component: React.FC;
-};
-
-const ProtectedRoute: React.FC<Properties> = ({
-  component: Component,
-}: Properties) => {
+const ProtectedRoute = (): React.ReactElement | null => {
   const isLoggedIn = Math.random();
   const isLoadingUser = Math.random();
 
@@ -19,10 +13,7 @@ const ProtectedRoute: React.FC<Properties> = ({
   }
 
   return isLoggedIn > 0.5 ? (
-    <>
-      <Component />
-      <RouterOutlet />
-    </>
+    <RouterOutlet />
   ) : (
     <Navigate to={AppRoute.SIGN_IN} />
   );
