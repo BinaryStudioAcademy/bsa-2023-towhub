@@ -1,3 +1,5 @@
+import { Route, Routes } from 'react-router-dom';
+
 import { AppRoute } from '~/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
@@ -10,30 +12,20 @@ const Router = (): JSX.Element => (
   <RouterProvider
     routes={[
       {
-        path: AppRoute.ROOT,
-        element: <App />,
-        children: [
-          {
-            path: AppRoute.ROOT,
-            element: 'Root',
-          },
-          {
-            path: AppRoute.SIGN_IN,
-            element: <Auth />,
-          },
-          {
-            path: AppRoute.SIGN_UP,
-            element: <Auth />,
-          },
-          {
-            path: AppRoute.ANY,
-            element: <NotFound />,
-          },
-        ],
-      },
-      {
-        path: '/protected-route-example',
-        element: <ProtectedRoute component={App} />,
+        path: '*',
+        element: (
+          <Routes>
+            <Route path={AppRoute.ROOT} element={<App />}>
+              <Route path={AppRoute.SIGN_IN} element={<Auth />} />
+              <Route path={AppRoute.SIGN_UP} element={<Auth />} />
+            </Route>
+            <Route
+              path="/protected-route-example"
+              element={<ProtectedRoute component={App} />}
+            />
+            <Route path={AppRoute.ANY} element={<NotFound />} />
+          </Routes>
+        ),
       },
     ]}
   />
