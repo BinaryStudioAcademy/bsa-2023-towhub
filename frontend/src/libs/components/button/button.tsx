@@ -1,7 +1,7 @@
-import { faChevronDown, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconName } from '~/libs/enums/icon-name.enum';
 
-import styles from './button.module.scss';
+import { Icon } from '../components.js';
+import styles from './styles.module.scss';
 
 type Properties = {
   label: string;
@@ -23,9 +23,9 @@ const Button: React.FC<Properties> = ({
     type={type}
     disabled={disabled}
   >
-    <FontAwesomeIcon icon={faPlus} />
+    <Icon iconName={IconName.PLUS} />
     {label}
-    <FontAwesomeIcon icon={faChevronDown} />
+    <Icon iconName={IconName.CHEVRON_DOWN} />
   </button>
 );
 
