@@ -4,20 +4,22 @@ import {
   toast,
 } from 'react-toastify';
 
+import { type ValueOf } from '~/libs/types/types.js';
+
 import { NotificationTheme, NotificationTransition } from '../enums/enums.js';
 
-type IToastOptions = {
+type ToastOptions = {
   position?: ToastPosition;
-  theme?: (typeof NotificationTheme)[keyof typeof NotificationTheme];
+  theme?: ValueOf<typeof NotificationTheme>;
   autoClose?: number;
   transition?: ToastTransition;
 };
 
-const DEFAULT_NOTIFICATION_OPTIONS: IToastOptions = {
+const DEFAULT_NOTIFICATION_OPTIONS: ToastOptions = {
   position: toast.POSITION.TOP_RIGHT,
   theme: NotificationTheme.LIGHT,
   autoClose: 4000,
   transition: NotificationTransition.SLIDE,
 };
 
-export { type IToastOptions, DEFAULT_NOTIFICATION_OPTIONS };
+export { type ToastOptions, DEFAULT_NOTIFICATION_OPTIONS };
