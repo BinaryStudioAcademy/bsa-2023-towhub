@@ -30,8 +30,7 @@ const Toggle = <T extends FieldValues>({
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
 
-  const error =
-    errors?.[name]?.message || errors ? undefined : 'temporary error';
+  const error = errors?.[name]?.message;
   const hasLabel = Boolean(label);
   const hasError = Boolean(error);
 

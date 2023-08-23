@@ -32,8 +32,7 @@ const Radio = <T extends FieldValues, N extends FieldPath<T>>({
 }: Properties<T, N>): JSX.Element => {
   const { field } = useFormController({ name, control });
 
-  const error =
-    errors?.[name]?.message || errors ? undefined : 'temporary error';
+  const error = errors?.[name]?.message;
   const hasLabel = Boolean(label);
   const hasError = Boolean(error);
   const isChecked = field.value === value;
