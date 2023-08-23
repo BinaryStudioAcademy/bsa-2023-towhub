@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 
 import { AppRoute } from '~/libs/enums/enums.js';
 
-import { AppLogo, Button } from '../components.js';
+import { AppLogo } from '../components.js';
 import styles from './header.module.scss';
 
 type HeaderProperties = {
@@ -16,7 +16,9 @@ const Header: React.FC<HeaderProperties> = ({ onSignIn }: HeaderProperties) => (
         <AppLogo />
       </NavLink>
       <div className={styles.navMenu}>
-        <Button label="Sign In" type="button" />
+        <button type="button" onClick={onSignIn}>
+          Sign In
+        </button>
       </div>
     </div>
   </div>
