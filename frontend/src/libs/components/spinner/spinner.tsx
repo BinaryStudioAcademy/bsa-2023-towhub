@@ -1,22 +1,25 @@
-import React from 'react';
-
-import style from './spinner.module.scss';
+import styles from './spinner.module.scss';
 
 type Properties = {
   isFullScreen?: boolean;
 };
 
-const Spinner: React.FC<Properties> = ({ isFullScreen = false }) =>
-  isFullScreen ? (
-    <div className={style.wrapper}>
-      <div className={style.container}>
-        <div className={style.loader}>Loading...</div>
+const Spinner: React.FC<Properties> = ({ isFullScreen }: Properties) => {
+  if (isFullScreen) {
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.container}>
+          <div className={styles.loader}>Loading...</div>
+        </div>
       </div>
-    </div>
-  ) : (
-    <div className={style.container}>
-      <div className={style.loader}>Loading...</div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.loader}>Loading...</div>
     </div>
   );
+};
 
 export { Spinner };
