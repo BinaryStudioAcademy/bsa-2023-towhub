@@ -18,7 +18,6 @@ export {
   HttpCode,
   HttpHeader,
 } from './libs/packages/http/http.js';
-export { type IMapService } from './libs/packages/map/map.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type NullableProperties,
