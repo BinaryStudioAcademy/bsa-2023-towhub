@@ -1,9 +1,12 @@
 export { App } from './app/app.js';
 export { AppLogo } from './app-logo/app-logo.js';
 export { Button } from './button/button.js';
+export { Form } from './form/form.jsx';
 export { Header } from './header/header.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
+export { Router } from './router/router.jsx';
 export { RouterProvider } from './router-provider/router-provider.jsx';
+export { Spinner } from './spinner/spinner.js';
 export { Provider as StoreProvider } from 'react-redux';
 export { Outlet as RouterOutlet } from 'react-router-dom';
