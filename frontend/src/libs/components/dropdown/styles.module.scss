@@ -1,0 +1,49 @@
+.select,
+.select:focus-visible,
+.select:active,
+.select:hover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-top: 50px;
+  font-weight: 400;
+  font-size: 12px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  vertical-align: bottom;
+  appearance: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  outline-offset: none;
+}
+
+.select-wrapper {
+  position: relative;
+  display: block;
+  width: 126px;
+
+  //   height: 20px;
+}
+
+.select-wrapper::before {
+  content: url("../../../assets/img/dropdown-arrow.svg");
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+}
+
+.dropdown {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 16px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+
+  //   margin-bottom: 8px;
+}
