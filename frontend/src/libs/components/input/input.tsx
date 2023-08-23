@@ -46,16 +46,18 @@ const Input = <T extends FieldValues>({
   ];
   const Input = (
     <>
-      <input
-        {...field}
-        type={type}
-        placeholder={placeholder}
-        className={getValidClassNames(...inputStyles)}
-        disabled={isDisabled}
-      />
-      {type === 'password' && (
-        <span className={styles.passwordEye}>&#128065;</span>
-      )}
+      <div className={styles.inputWrapper}>
+        <input
+          {...field}
+          type={type}
+          placeholder={placeholder}
+          className={getValidClassNames(...inputStyles)}
+          disabled={isDisabled}
+        />
+        {type === 'password' && (
+          <span className={styles.passwordEye}>&#128065;</span>
+        )}
+      </div>
     </>
   );
 
@@ -68,16 +70,20 @@ const Input = <T extends FieldValues>({
     />
   );
 
-  return (
-    <label className={styles.label}>
+  const InputContent = (
+    <>
       <span>{label}</span>
       {type === 'textarea' ? InputArea : Input}
       {hasError && (
-        <span className={getValidClassNames(styles.errorMessage)}>
-          {error as string}
-        </span>
+        <span className={styles.errorMessage}>{error as string}</span>
       )}
-    </label>
+    </>
+  );
+
+  return label ? (
+    <label className={styles.label}>{InputContent}</label>
+  ) : (
+    <div className={styles.label}>{InputContent}</div>
   );
 };
 

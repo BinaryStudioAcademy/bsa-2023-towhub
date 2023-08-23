@@ -42,7 +42,6 @@
 }
 
 .label {
-  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 327px;
@@ -60,7 +59,7 @@
 
 .passwordEye {
   position: absolute;
-  top: 30px;
+  top: 8px;
   right: 15px;
   cursor: pointer;
 }
@@ -77,4 +76,9 @@
 
 .textarea ::-webkit-resizer {
   display: none;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
 }
