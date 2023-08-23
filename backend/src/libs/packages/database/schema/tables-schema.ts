@@ -22,9 +22,6 @@ const users = pgTable(
       .notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
-    firstName: varchar('first_name').notNull(),
-    lastName: varchar('last_name').notNull(),
-    email: varchar('email').notNull(),
   },
 
   (users) => {
