@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
   App,
+  ProtectedRoute,
   RouterProvider,
   StoreProvider,
 } from '~/libs/components/components.js';
@@ -32,6 +33,10 @@ createRoot(document.querySelector('#root') as HTMLElement).render(
               {
                 path: AppRoute.SIGN_UP,
                 element: <Auth />,
+              },
+              {
+                path: '/protected-route-example',
+                element: <ProtectedRoute component={App} />,
               },
             ],
           },
