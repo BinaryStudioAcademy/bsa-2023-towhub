@@ -3,7 +3,7 @@ import joi from 'joi';
 import { Regexp as REGEXP } from '../../../../libs/enums/regexp.enum.js';
 import { UserValidationMessage } from '../enums/enums.js';
 import { type UserBusinessSignUpRequestDto } from '../types/types.js';
-import { userSignUpRules } from './validation-schemas.js';
+import { userSignUpRules } from './user-sign-up.validation-schema.js';
 
 const companyNamePattern = new RegExp(REGEXP.COMPANY_NAME);
 const taxNumberPattern = new RegExp(REGEXP.TAX_NUMBER);
