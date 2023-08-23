@@ -1,9 +1,9 @@
-import reactLogo from '~/assets/img/react.svg';
-import { Link, RouterOutlet } from '~/libs/components/components.js';
+import { Header, Link, RouterOutlet } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppSelector,
+  useCallback,
   useEffect,
   useLocation,
 } from '~/libs/hooks/hooks.js';
@@ -25,9 +25,15 @@ const App: React.FC = () => {
     }
   }, [isRoot, dispatch]);
 
+  const handleSighIn = useCallback(() => {
+    return;
+  }, []);
+
   return (
     <>
-      <img src={reactLogo} className="App-logo" width="30" alt="logo" />
+      <header>
+        <Header onSignIn={handleSighIn} />
+      </header>
 
       <ul className="App-navigation-list">
         <li>
