@@ -1,5 +1,5 @@
-import { HttpCode, HttpError, HttpMessage } from 'shared/build/index.js';
-
+import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
+import { HttpError } from '~/libs/exceptions/exceptions.js';
 import {
   type UserSignUpRequestDto,
   type UserSignUpResponseDto,
@@ -18,7 +18,7 @@ class AuthService {
   private async checkExistingUser({
     phone,
   }: UserSignUpRequestDto): Promise<boolean> {
-    const existingUser: UserEntity | undefined =
+    const existingUser: UserEntity | null =
       await this.userService.findByPhone(phone);
 
     return Boolean(existingUser);
@@ -27,7 +27,9 @@ class AuthService {
   public async signUp(
     userRequestDto: UserSignUpRequestDto,
   ): Promise<UserSignUpResponseDto> {
-    if (await this.checkExistingUser(userRequestDto)) {
+    const isUserExist = await this.checkExistingUser(userRequestDto);
+
+    if (isUserExist) {
       throw new HttpError({
         message: HttpMessage.USER_EXISTS,
         status: HttpCode.CONFLICT,

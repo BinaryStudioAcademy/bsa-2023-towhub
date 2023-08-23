@@ -1,6 +1,5 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
-import { encryptService } from '~/libs/packages/encrypt/encrypt-service.js';
-import { UserEntity } from '~/packages/users/user.entity.js';
+import { encryptService } from '~/libs/packages/packages.js';
 import { type UserRepository } from '~/packages/users/user.repository.js';
 
 import {
@@ -8,6 +7,7 @@ import {
   type UserSignUpRequestDto,
   type UserSignUpResponseDto,
 } from './libs/types/types.js';
+import { UserEntity } from './user.entity.js';
 
 class UserService implements IService {
   private userRepository: UserRepository;
@@ -20,7 +20,7 @@ class UserService implements IService {
     return this.userRepository.find();
   }
 
-  public findByPhone(value: string): Promise<UserEntity | undefined> {
+  public findByPhone(value: string): Promise<UserEntity | null> {
     return this.userRepository.findByPhone(value);
   }
 

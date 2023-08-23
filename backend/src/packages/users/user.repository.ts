@@ -26,7 +26,7 @@ class UserRepository implements IRepository {
     return Promise.resolve([]);
   }
 
-  public async findByPhone(value: string): Promise<UserEntity | undefined> {
+  public async findByPhone(value: string): Promise<UserEntity | null> {
     const result = await this.db
       .driver()
       .select()
@@ -34,9 +34,7 @@ class UserRepository implements IRepository {
       .where(eq(this.usersSchema.phone, value))
       .execute();
 
-    if (result[0]) {
-      return UserEntity.initialize(result[0]);
-    }
+    return result[0] ? UserEntity.initialize(result[0]) : null;
   }
 
   public findById(id: number): Promise<InferModel<typeof schema.users>[]> {

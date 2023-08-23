@@ -70,16 +70,7 @@ class UserEntity implements IEntity {
     firstName,
     lastName,
     groupId,
-  }: Pick<
-    UserEntityT,
-    | 'passwordHash'
-    | 'passwordSalt'
-    | 'phone'
-    | 'email'
-    | 'firstName'
-    | 'lastName'
-    | 'groupId'
-  >): UserEntity {
+  }: Omit<UserEntityT, 'id'>): UserEntity {
     return new UserEntity({
       id: null,
       phone,
@@ -92,9 +83,9 @@ class UserEntity implements IEntity {
     });
   }
 
-  public toObject(): Pick<
+  public toObject(): Omit<
     UserEntityT,
-    'id' | 'phone' | 'email' | 'firstName' | 'lastName'
+    'passwordHash' | 'passwordSalt' | 'groupId'
   > {
     return {
       id: this.id as number,
@@ -105,16 +96,7 @@ class UserEntity implements IEntity {
     };
   }
 
-  public toNewObject(): Pick<
-    UserEntityT,
-    | 'passwordHash'
-    | 'passwordSalt'
-    | 'phone'
-    | 'email'
-    | 'firstName'
-    | 'lastName'
-    | 'groupId'
-  > {
+  public toNewObject(): Omit<UserEntityT, 'id'> {
     return {
       phone: this.phone,
       passwordHash: this.passwordHash,
