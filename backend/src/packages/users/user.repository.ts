@@ -26,6 +26,17 @@ class UserRepository implements IRepository {
     return Promise.resolve([]);
   }
 
+  public async findByPhone(value: string): Promise<UserEntity | null> {
+    const result = await this.db
+      .driver()
+      .select()
+      .from(this.usersSchema)
+      .where(eq(this.usersSchema.phone, value))
+      .execute();
+
+    return result[0] ? UserEntity.initialize(result[0]) : null;
+  }
+
   public findById(id: number): Promise<InferModel<typeof schema.users>[]> {
     return this.db
       .driver()
@@ -42,10 +53,17 @@ class UserRepository implements IRepository {
   }
 
   public async create(entity: UserEntity): Promise<UserEntity> {
-    const { phone, passwordSalt, passwordHash, email, firstName, lastName } =
-      entity.toNewObject();
+    const {
+      phone,
+      passwordSalt,
+      passwordHash,
+      email,
+      firstName,
+      lastName,
+      groupId,
+    } = entity.toNewObject();
 
-    const [item] = await this.db
+    const [result] = await this.db
       .driver()
       .insert(this.usersSchema)
       .values({
@@ -55,11 +73,12 @@ class UserRepository implements IRepository {
         email,
         firstName,
         lastName,
+        groupId,
       })
       .returning()
       .execute();
 
-    return UserEntity.initialize(item);
+    return UserEntity.initialize(result);
   }
 
   public update(): ReturnType<IRepository['update']> {

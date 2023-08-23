@@ -12,28 +12,32 @@ class UserEntity implements IEntity {
 
   private 'passwordSalt': string;
 
+  private 'email': string;
+
   private 'firstName': string;
 
   private 'lastName': string;
 
-  private 'email': string;
+  private 'groupId': number;
 
   private constructor({
     id,
     phone,
     passwordHash,
     passwordSalt,
+    email,
     firstName,
     lastName,
-    email,
+    groupId,
   }: NullableProperties<UserEntityT, 'id'>) {
     this.id = id;
     this.phone = phone;
     this.passwordHash = passwordHash;
     this.passwordSalt = passwordSalt;
+    this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.email = email;
+    this.groupId = groupId;
   }
 
   public static initialize({
@@ -41,27 +45,20 @@ class UserEntity implements IEntity {
     phone,
     passwordHash,
     passwordSalt,
+    email,
     firstName,
     lastName,
-    email,
-  }: Pick<
-    UserEntityT,
-    | 'id'
-    | 'passwordHash'
-    | 'passwordSalt'
-    | 'phone'
-    | 'firstName'
-    | 'lastName'
-    | 'email'
-  >): UserEntity {
+    groupId,
+  }: UserEntityT): UserEntity {
     return new UserEntity({
       id,
       phone,
       passwordHash,
       passwordSalt,
+      email,
       firstName,
       lastName,
-      email,
+      groupId,
     });
   }
 
@@ -69,45 +66,37 @@ class UserEntity implements IEntity {
     phone,
     passwordHash,
     passwordSalt,
+    email,
     firstName,
     lastName,
-    email,
-  }: Pick<
-    UserEntityT,
-    | 'passwordHash'
-    | 'passwordSalt'
-    | 'phone'
-    | 'firstName'
-    | 'lastName'
-    | 'email'
-  >): UserEntity {
+    groupId,
+  }: Omit<UserEntityT, 'id'>): UserEntity {
     return new UserEntity({
       id: null,
       phone,
       passwordHash,
       passwordSalt,
+      email,
       firstName,
       lastName,
-      email,
+      groupId,
     });
   }
 
-  public toObject(): Pick<UserEntityT, 'id' | 'phone'> {
+  public toObject(): Omit<
+    UserEntityT,
+    'passwordHash' | 'passwordSalt' | 'groupId'
+  > {
     return {
       id: this.id as number,
       phone: this.phone,
+      email: this.email,
+      firstName: this.firstName,
+      lastName: this.lastName,
     };
   }
 
-  public toNewObject(): Pick<
-    UserEntityT,
-    | 'passwordHash'
-    | 'passwordSalt'
-    | 'phone'
-    | 'email'
-    | 'firstName'
-    | 'lastName'
-  > {
+  public toNewObject(): Omit<UserEntityT, 'id'> {
     return {
       phone: this.phone,
       passwordHash: this.passwordHash,
@@ -115,6 +104,7 @@ class UserEntity implements IEntity {
       email: this.email,
       firstName: this.firstName,
       lastName: this.lastName,
+      groupId: this.groupId,
     };
   }
 }

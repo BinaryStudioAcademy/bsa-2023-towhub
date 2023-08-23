@@ -1,8 +1,8 @@
 import { type UserEntity } from './user-entity.type.js';
 
-type UserSignUpRequestDto = Pick<
+type UserSignUpRequestDto = Omit<
   UserEntity,
-  'phone' | 'firstName' | 'lastName' | 'email'
+  'id' | 'passwordHash' | 'passwordSalt'
 > & {
   password: string;
 };

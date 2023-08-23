@@ -6,6 +6,7 @@ type UserEntity = {
   email: string;
   firstName: string;
   lastName: string;
+  groupId: number;
 };
 
 export { type UserEntity };
