@@ -1,4 +1,4 @@
-import { IconName } from '~/libs/enums/icon-name.enum';
+import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 
 import { Icon } from '../components.js';
@@ -9,7 +9,7 @@ type Properties = {
   type?: 'button' | 'submit';
   size?: 'sm' | 'md';
   variant?: 'contained' | 'outlined' | 'text';
-  disabled?: boolean;
+  isDisabled?: boolean;
   onClick?: () => void;
 };
 
@@ -18,13 +18,13 @@ const Button: React.FC<Properties> = ({
   size = 'md',
   variant = 'contained',
   label,
-  disabled = false,
+  isDisabled = false,
   onClick,
 }: Properties) => (
   <button
     className={getValidClassNames(styles.btn, styles[size], styles[variant])}
     type={type}
-    disabled={disabled}
+    disabled={isDisabled}
     onClick={onClick}
   >
     <Icon iconName={IconName.PLUS} />

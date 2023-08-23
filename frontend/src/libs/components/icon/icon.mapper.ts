@@ -10,7 +10,7 @@ import {
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { IconName } from '~/libs/enums/icon-name.enum';
+import { IconName } from '~/libs/enums/icon-name.enum.js';
 
 const iconNameToSvg = {
   [IconName.ARROW_DOWN_LONG]: faArrowDownLong,
