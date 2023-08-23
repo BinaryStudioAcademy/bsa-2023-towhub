@@ -1,18 +1,19 @@
 import { Status, Wrapper } from '@googlemaps/react-wrapper';
-import { type ReactElement, useCallback } from 'react';
 
+import { useCallback } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
+import  { type MapType } from '~/libs/types/types.js';
 
 import { MapInnerComponent } from './map-inner-component/map-inner-component.js';
 
 const apiMapKey = config.ENV.API.GOOGLE_MAPS_API_KEY;
-const mapProperties = {
-  center: { lat: 50.4501, lng: 30.5234 },
-  zoom: 10,
+
+type Properties = MapType & {
+  className?: string;
 };
 
-const Map: React.FC = () => {
-  const renderMap = useCallback((status: Status): ReactElement => {
+const Map: React.FC<Properties> = ({ ...mapProperties }) => {
+  const renderMap = useCallback((status: Status): React.ReactElement => {
     switch (status) {
       case Status.LOADING: {
         return <div>Loading...</div>;
@@ -24,7 +25,7 @@ const Map: React.FC = () => {
         return <MapInnerComponent {...mapProperties} />;
       }
     }
-  }, []);
+  }, [mapProperties]);
 
   return <Wrapper apiKey={apiMapKey} render={renderMap} />;
 };
