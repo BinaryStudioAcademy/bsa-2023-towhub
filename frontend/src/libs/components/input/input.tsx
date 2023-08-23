@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import {
   type Control,
   type FieldErrors,
@@ -12,7 +13,7 @@ import styles from './styles.module.scss';
 type Properties<T extends FieldValues> = {
   control: Control<T, null>;
   errors: FieldErrors<T>;
-  label: string;
+  label?: string;
   name: FieldPath<T>;
   placeholder?: string;
   type?: 'text' | 'email' | 'password' | 'textarea';
@@ -24,7 +25,7 @@ type Properties<T extends FieldValues> = {
 const Input = <T extends FieldValues>({
   control,
   errors,
-  label,
+  label = '',
   name,
   placeholder = '',
   type = 'text',
@@ -36,57 +37,44 @@ const Input = <T extends FieldValues>({
 
   const error = errors[name]?.message;
   const hasError = Boolean(error);
-  const mapStatuses = (): string => {
-    let classNames = '';
+  const inputStyles = [
+    styles.input,
+    isActive && styles.active,
+    isFilled && styles.filled,
+    isDisabled && styles.disabled,
+    error && styles.error,
+  ];
+  const Input = (
+    <>
+      <input
+        {...field}
+        type={type}
+        placeholder={placeholder}
+        className={clsx(...inputStyles)}
+        disabled={isDisabled}
+      />
+      {type === 'password' && (
+        <span className={styles.passwordEye}>&#128065;</span>
+      )}
+    </>
+  );
 
-    if (isActive) {
-      classNames += ' ' + styles.active;
-    }
-
-    if (isFilled) {
-      classNames += ' ' + styles.filled;
-    }
-
-    if (isDisabled) {
-      classNames += ' ' + styles.disabled;
-    }
-
-    if (error) {
-      classNames += ' ' + styles.error;
-    }
-
-    return classNames;
-  };
+  const InputArea = (
+    <textarea
+      {...field}
+      placeholder={placeholder}
+      className={clsx(...inputStyles, styles.textarea)}
+      disabled={isDisabled}
+    />
+  );
 
   return (
     <label className={styles.label}>
       <span>{label}</span>
-      {type !== 'textarea' && (
-        <input
-          {...field}
-          type={type}
-          placeholder={placeholder}
-          className={`${styles.input} ${mapStatuses()}`}
-          disabled={isDisabled}
-        />
+      {type === 'textarea' ? InputArea : Input}
+      {hasError && (
+        <span className={clsx(styles.errorMessage)}>{error as string}</span>
       )}
-
-      {type === 'textarea' && (
-        <textarea
-          {...field}
-          placeholder={placeholder}
-          className={`${styles.input} ${mapStatuses()} ${styles.textarea} `}
-          disabled={isDisabled}
-        />
-      )}
-
-      {type === 'password' && (
-        <span className={styles.passwordEye}>&#128065;</span>
-      )}
-
-      <span className={`${styles.errorMessage} ${hasError ? '' : '.hidden'}`}>
-        {error as string}
-      </span>
     </label>
   );
 };
