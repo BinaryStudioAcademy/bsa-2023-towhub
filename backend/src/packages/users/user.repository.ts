@@ -42,7 +42,8 @@ class UserRepository implements IRepository {
   }
 
   public async create(entity: UserEntity): Promise<UserEntity> {
-    const { phone, passwordSalt, passwordHash } = entity.toNewObject();
+    const { phone, passwordSalt, passwordHash, email, firstName, lastName } =
+      entity.toNewObject();
 
     const [item] = await this.db
       .driver()
@@ -51,6 +52,9 @@ class UserRepository implements IRepository {
         phone,
         passwordHash,
         passwordSalt,
+        email,
+        firstName,
+        lastName,
       })
       .returning()
       .execute();

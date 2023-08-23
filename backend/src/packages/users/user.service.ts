@@ -39,6 +39,9 @@ class UserService implements IService {
         phone: payload.phone,
         passwordSalt: 'SALT', // TODO
         passwordHash: 'HASH', // TODO
+        email: payload.email,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
       }),
     );
 

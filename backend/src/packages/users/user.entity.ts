@@ -12,16 +12,28 @@ class UserEntity implements IEntity {
 
   private 'passwordSalt': string;
 
+  private 'firstName': string;
+
+  private 'lastName': string;
+
+  private 'email': string;
+
   private constructor({
     id,
     phone,
     passwordHash,
     passwordSalt,
+    firstName,
+    lastName,
+    email,
   }: NullableProperties<UserEntityT, 'id'>) {
     this.id = id;
     this.phone = phone;
     this.passwordHash = passwordHash;
     this.passwordSalt = passwordSalt;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
   }
 
   public static initialize({
@@ -29,15 +41,27 @@ class UserEntity implements IEntity {
     phone,
     passwordHash,
     passwordSalt,
+    firstName,
+    lastName,
+    email,
   }: Pick<
     UserEntityT,
-    'id' | 'passwordHash' | 'passwordSalt' | 'phone'
+    | 'id'
+    | 'passwordHash'
+    | 'passwordSalt'
+    | 'phone'
+    | 'firstName'
+    | 'lastName'
+    | 'email'
   >): UserEntity {
     return new UserEntity({
       id,
       phone,
       passwordHash,
       passwordSalt,
+      firstName,
+      lastName,
+      email,
     });
   }
 
@@ -45,12 +69,26 @@ class UserEntity implements IEntity {
     phone,
     passwordHash,
     passwordSalt,
-  }: Pick<UserEntityT, 'passwordHash' | 'passwordSalt' | 'phone'>): UserEntity {
+    firstName,
+    lastName,
+    email,
+  }: Pick<
+    UserEntityT,
+    | 'passwordHash'
+    | 'passwordSalt'
+    | 'phone'
+    | 'firstName'
+    | 'lastName'
+    | 'email'
+  >): UserEntity {
     return new UserEntity({
       id: null,
       phone,
       passwordHash,
       passwordSalt,
+      firstName,
+      lastName,
+      email,
     });
   }
 
@@ -63,12 +101,20 @@ class UserEntity implements IEntity {
 
   public toNewObject(): Pick<
     UserEntityT,
-    'passwordHash' | 'passwordSalt' | 'phone'
+    | 'passwordHash'
+    | 'passwordSalt'
+    | 'phone'
+    | 'email'
+    | 'firstName'
+    | 'lastName'
   > {
     return {
       phone: this.phone,
       passwordHash: this.passwordHash,
       passwordSalt: this.passwordSalt,
+      email: this.email,
+      firstName: this.firstName,
+      lastName: this.lastName,
     };
   }
 }

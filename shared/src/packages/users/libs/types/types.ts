@@ -1,3 +1,4 @@
+export { type UserBusinessSignUpRequestDto } from './user-business-sign-up-request-dto.type.js';
 export { type UserEntity } from './user-entity.type.js';
 export { type UserGetAllItemResponseDto } from './user-get-all-item-response-dto.type.js';
 export { type UserGetAllResponseDto } from './user-get-all-response-dto.type.js';
