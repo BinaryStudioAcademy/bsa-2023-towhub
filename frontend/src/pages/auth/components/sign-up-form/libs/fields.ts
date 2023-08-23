@@ -1,31 +1,32 @@
-import { type UserSignUpRequestDto } from 'shared/build';
-
-import { FormLabels, FormNames } from '~/libs/enums/form.enum';
-import { type FormField } from '~/libs/types/form.type.js';
+import { FormLabel, FormName } from '~/libs/enums/enums.js';
+import {
+  type FormField,
+  type UserSignUpRequestDto,
+} from '~/libs/types/types.js';
 
 const signUpFields: FormField<UserSignUpRequestDto>[] = [
   {
-    label: FormLabels.NAME,
+    label: FormLabel.NAME,
     placeholder: 'Enter your name',
-    name: FormNames.NAME,
+    name: FormName.NAME,
   },
   {
-    label: FormLabels.SURNAME,
+    label: FormLabel.SURNAME,
     placeholder: 'Enter your surname',
-    name: FormNames.SURNAME,
+    name: FormName.SURNAME,
   },
   {
     type: 'email',
-    label: FormLabels.EMAIL,
+    label: FormLabel.EMAIL,
     placeholder: 'Enter your email',
-    name: FormNames.EMAIL,
+    name: FormName.EMAIL,
   },
-  { label: FormLabels.PHONE, placeholder: 'Enter your phone', name: 'phone' },
+  { label: FormLabel.PHONE, placeholder: 'Enter your phone', name: 'phone' },
   {
     type: 'password',
-    label: FormLabels.PASSWORD,
+    label: FormLabel.PASSWORD,
     placeholder: 'Enter your password',
-    name: FormNames.PASSWORD,
+    name: FormName.PASSWORD,
   },
 ];
 
