@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type ValueOf } from 'shared/build/index.js';
 
 import { type IconName, type IconSize } from '~/libs/enums/enums.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
 import { iconNameToSvg } from './icon.mapper.js';
 
