@@ -24,34 +24,34 @@ class BusinessService implements IService {
     this.businessRepository = businessRepository;
   }
 
-  public async find(id: number): Promise<BusinessFindResponseDto | null> {
+  public async find(id: number): Promise<BusinessFindResponseDto> {
     const business = await this.businessRepository.find(id);
 
-    return business ? business.toObject() : null;
+    return { result: business ? business.toObject() : null };
   }
 
   public async findByOwnerId(
     ownerId: number,
-  ): Promise<BusinessFindResponseDto | null> {
+  ): Promise<BusinessFindResponseDto> {
     const business = await this.businessRepository.findByOwnerId(ownerId);
 
-    return business ? business.toObject() : null;
+    return { result: business ? business.toObject() : null };
   }
 
   public async findByTaxNumber(
     taxNumber: string,
-  ): Promise<BusinessFindResponseDto | null> {
+  ): Promise<BusinessFindResponseDto> {
     const business = await this.businessRepository.findByTaxNumber(taxNumber);
 
-    return business ? business.toObject() : null;
+    return { result: business ? business.toObject() : null };
   }
 
-  public async findByName(
+  public async findByCompanyName(
     companyName: string,
-  ): Promise<BusinessFindResponseDto | null> {
+  ): Promise<BusinessFindResponseDto> {
     const business = await this.businessRepository.findByName(companyName);
 
-    return business ? business.toObject() : null;
+    return { result: business ? business.toObject() : null };
   }
 
   public async create({
@@ -68,29 +68,29 @@ class BusinessService implements IService {
       });
     }
 
-    const existingBusiness = await this.findByOwnerId(owner.id);
+    const searchByOwnerId = await this.findByOwnerId(owner.id);
 
-    if (existingBusiness) {
+    if (searchByOwnerId.result) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpErrorMessage.BUSINESS_ALREADY_EXISTS,
       });
     }
 
-    const businessWithSameTaxNumber = await this.findByTaxNumber(
-      payload.taxNumber,
-    );
+    const searchByTaxNumber = await this.findByTaxNumber(payload.taxNumber);
 
-    if (businessWithSameTaxNumber) {
+    if (searchByTaxNumber.result) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpErrorMessage.TAX_NUMBER_ALREADY_REGISTERED,
       });
     }
 
-    const businessWithSameName = await this.findByName(payload.companyName);
+    const searchByCompanyName = await this.findByCompanyName(
+      payload.companyName,
+    );
 
-    if (businessWithSameName) {
+    if (searchByCompanyName.result) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpErrorMessage.NAME_ALREADY_REGISTERED,
@@ -111,18 +111,20 @@ class BusinessService implements IService {
     id: number;
     payload: Pick<BusinessEntityT, 'companyName'>;
   }): Promise<BusinessUpdateResponseDto> {
-    const businessToUpdate = await this.find(id);
+    const searchById = await this.find(id);
 
-    if (!businessToUpdate) {
+    if (!searchById.result) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpErrorMessage.BUSINESS_DOES_NOT_EXIST,
       });
     }
 
-    const businessWithSameName = await this.findByName(payload.companyName);
+    const searchByCompanyName = await this.findByCompanyName(
+      payload.companyName,
+    );
 
-    if (businessWithSameName) {
+    if (searchByCompanyName.result) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpErrorMessage.NAME_ALREADY_REGISTERED,
@@ -130,7 +132,7 @@ class BusinessService implements IService {
     }
 
     const business = await this.businessRepository.update({
-      id: businessToUpdate.id,
+      id: searchById.result.id,
       payload,
     });
 
@@ -138,16 +140,16 @@ class BusinessService implements IService {
   }
 
   public async delete(id: number): Promise<BusinessDeleteResponseDto> {
-    const businessToDelete = await this.find(id);
+    const searchById = await this.find(id);
 
-    if (!businessToDelete) {
+    if (!searchById.result) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpErrorMessage.BUSINESS_DOES_NOT_EXIST,
       });
     }
 
-    const result = await this.businessRepository.delete(businessToDelete.id);
+    const result = await this.businessRepository.delete(searchById.result.id);
 
     return {
       result,

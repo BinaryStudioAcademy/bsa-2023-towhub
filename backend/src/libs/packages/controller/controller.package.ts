@@ -15,7 +15,7 @@ const GroupKeysMocked = {
 } as const;
 
 const userFromToken = {
-  id: 1,
+  id: 2,
   group: {
     key: GroupKeysMocked.BUSINESS,
   },
