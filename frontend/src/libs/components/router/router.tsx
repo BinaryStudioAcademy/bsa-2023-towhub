@@ -3,6 +3,7 @@ import { Auth } from '~/pages/auth/auth.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 
 import { App } from '../app/app.js';
+import { ProtectedRoute } from '../components.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => (
@@ -29,6 +30,10 @@ const Router = (): JSX.Element => (
             element: <NotFound />,
           },
         ],
+      },
+      {
+        path: '/protected-route-example',
+        element: <ProtectedRoute component={App} />,
       },
     ]}
   />
