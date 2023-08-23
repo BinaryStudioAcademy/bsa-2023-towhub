@@ -1,5 +1,7 @@
 export { App } from './app/app.js';
+export { BusinessCard } from './business-card/business-card.js';
 export { Button } from './button/button.js';
+export { CustomerCard } from './customer-card/customer-card.js';
 export { Form } from './form/form.jsx';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
