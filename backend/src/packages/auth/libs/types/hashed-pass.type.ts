@@ -1,5 +1,5 @@
 type HashedPass = {
-  salt: string;
-  hashedPass: string;
+  passwordSalt: string;
+  passwordHash: string;
 };
 export { type HashedPass };

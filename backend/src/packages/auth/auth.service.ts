@@ -1,10 +1,12 @@
+import { HttpCode, HttpError, HttpMessage } from 'shared/build/index.js';
+
 import {
   type UserSignUpRequestDto,
   type UserSignUpResponseDto,
 } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service.js';
 
-import { type UserEntity } from '../users/user.entity.ts';
+import { type UserEntity } from '../users/user.entity.js';
 
 class AuthService {
   private userService: UserService;
@@ -13,20 +15,26 @@ class AuthService {
     this.userService = userService;
   }
 
-  public async checkExistingUser(
-    userRequestDto: UserSignUpRequestDto,
-  ): Promise<boolean> {
-    const existingUser: UserEntity[] = await this.userService.findByPhone(
-      userRequestDto.phone,
-    );
+  private async checkExistingUser({
+    phone,
+  }: UserSignUpRequestDto): Promise<boolean> {
+    const existingUser: UserEntity | undefined =
+      await this.userService.findByPhone(phone);
 
-    return existingUser.length > 0;
+    return Boolean(existingUser);
   }
 
-  public signUp(
+  public async signUp(
     userRequestDto: UserSignUpRequestDto,
   ): Promise<UserSignUpResponseDto> {
-    return this.userService.create(userRequestDto);
+    if (await this.checkExistingUser(userRequestDto)) {
+      throw new HttpError({
+        message: HttpMessage.USER_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
+
+    return await this.userService.create(userRequestDto);
   }
 }
 
