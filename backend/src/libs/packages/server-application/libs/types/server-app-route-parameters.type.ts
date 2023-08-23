@@ -1,11 +1,11 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify';
 
 import { type HttpMethod } from '~/libs/packages/http/http.js';
-import { type ValidationSchema, type ValueOf } from '~/libs/types/types.js';
+import { type ValidationSchema } from '~/libs/types/types.js';
 
 type ServerAppRouteParameters = {
   path: string;
-  method: ValueOf<typeof HttpMethod>;
+  method: HttpMethod;
   handler: (
     request: FastifyRequest,
     reply: FastifyReply,

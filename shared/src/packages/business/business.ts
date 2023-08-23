@@ -15,9 +15,9 @@ export {
   type BusinessUpdateResponseDto,
 } from './libs/types/types.js';
 export {
-  businessAddDtoValidationSchema,
-  businessDeleteParametersValidationSchema,
-  businessGetParametersValidationSchema,
-  businessUpdateDtoValidationSchema,
-  businessUpdateParametersValidationSchema,
+  businessAddRequestBody,
+  businessDeleteParameters,
+  businessGetParameters,
+  businessUpdateParameters,
+  businessUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';

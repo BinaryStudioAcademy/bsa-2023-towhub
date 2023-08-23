@@ -1,10 +1,9 @@
 import joi from 'joi';
 
-import { type BusinessAddRequestDto } from '~/packages/business/libs/types/request/business-add-request-dto.type';
+import { BusinessValidationMessage } from '../enums/enums.js';
+import { type BusinessAddRequestDto } from '../types/types.js';
 
-import { BusinessValidationMessage } from '../enums/business-validation-message.enum.js';
-
-const businessAddDtoValidationSchema = joi.object<BusinessAddRequestDto, true>({
+const businessAddRequestBody = joi.object<BusinessAddRequestDto, true>({
   companyName: joi.string().trim().required().messages({
     'string.empty': BusinessValidationMessage.COMPANY_NAME_REQUIRED,
   }),
@@ -18,4 +17,4 @@ const businessAddDtoValidationSchema = joi.object<BusinessAddRequestDto, true>({
     }),
 });
 
-export { businessAddDtoValidationSchema };
+export { businessAddRequestBody };

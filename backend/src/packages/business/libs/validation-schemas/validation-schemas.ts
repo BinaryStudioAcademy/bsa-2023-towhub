@@ -1,7 +1,7 @@
 export {
-  businessAddDtoValidationSchema,
-  businessDeleteParametersValidationSchema,
-  businessGetParametersValidationSchema,
-  businessUpdateDtoValidationSchema,
-  businessUpdateParametersValidationSchema,
+  businessAddRequestBody,
+  businessDeleteParameters,
+  businessGetParameters,
+  businessUpdateParameters,
+  businessUpdateRequestBody,
 } from 'shared/build/index.js';

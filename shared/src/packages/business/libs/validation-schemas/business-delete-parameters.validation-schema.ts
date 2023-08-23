@@ -1,10 +1,10 @@
 import joi from 'joi';
 
 import { BusinessValidationMessage } from '../enums/enums.js';
-import { type BusinessUpdateRequestParameters } from '../types/types.js';
+import { type BusinessDeleteRequestParameters } from '../types/types.js';
 
-const businessUpdateParameters = joi.object<
-  BusinessUpdateRequestParameters,
+const businessDeleteParameters = joi.object<
+  BusinessDeleteRequestParameters,
   true
 >({
   id: joi.number().required().messages({
@@ -12,4 +12,4 @@ const businessUpdateParameters = joi.object<
   }),
 });
 
-export { businessUpdateParameters };
+export { businessDeleteParameters };

@@ -1,10 +1,10 @@
-import { type UserEntity as UserEntityT } from '~/packages/users/libs/types/user-entity.type';
+import { type UserEntity } from '~/packages/users/libs/types/types.js';
 
 type BusinessEntity = {
   id: number;
   companyName: string;
   taxNumber: string;
-  ownerId: UserEntityT['id'];
+  ownerId: UserEntity['id'];
 };
 
 export { type BusinessEntity };

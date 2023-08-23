@@ -1,4 +1,4 @@
-import { ApiPath, HttpMethod } from '~/libs/enums/enums.js';
+import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
   type ApiHandlerResponse,
@@ -18,11 +18,11 @@ import {
   type BusinessUpdateRequestParameters,
 } from './libs/types/types.js';
 import {
-  businessAddDtoValidationSchema,
-  businessDeleteParametersValidationSchema,
-  businessGetParametersValidationSchema,
-  businessUpdateDtoValidationSchema,
-  businessUpdateParametersValidationSchema,
+  businessAddRequestBody,
+  businessDeleteParameters,
+  businessGetParameters,
+  businessUpdateParameters,
+  businessUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';
 
 class BusinessController extends Controller {
@@ -35,9 +35,9 @@ class BusinessController extends Controller {
 
     this.addRoute({
       path: BusinessApiPath.ROOT,
-      method: HttpMethod.POST,
+      method: 'POST',
       validation: {
-        body: businessAddDtoValidationSchema,
+        body: businessAddRequestBody,
       },
       handler: (options) =>
         this.create(
@@ -50,10 +50,10 @@ class BusinessController extends Controller {
 
     this.addRoute({
       path: BusinessApiPath.$ID,
-      method: HttpMethod.PUT,
+      method: 'PUT',
       validation: {
-        body: businessUpdateDtoValidationSchema,
-        params: businessUpdateParametersValidationSchema,
+        body: businessUpdateRequestBody,
+        params: businessUpdateParameters,
       },
       handler: (options) =>
         this.update(
@@ -67,9 +67,9 @@ class BusinessController extends Controller {
 
     this.addRoute({
       path: BusinessApiPath.$ID,
-      method: HttpMethod.DELETE,
+      method: 'DELETE',
       validation: {
-        params: businessDeleteParametersValidationSchema,
+        params: businessDeleteParameters,
       },
       handler: (options) =>
         this.delete(
@@ -82,9 +82,9 @@ class BusinessController extends Controller {
 
     this.addRoute({
       path: BusinessApiPath.$ID,
-      method: HttpMethod.GET,
+      method: 'GET',
       validation: {
-        params: businessGetParametersValidationSchema,
+        params: businessGetParameters,
       },
       handler: (options) =>
         this.find(
