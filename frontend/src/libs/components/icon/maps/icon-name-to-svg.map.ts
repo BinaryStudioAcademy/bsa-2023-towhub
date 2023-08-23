@@ -1,3 +1,4 @@
+import { type IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import {
   faArrowDownLong,
   faCaretDown,
@@ -11,8 +12,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { IconName } from '~/libs/enums/icon-name.enum.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
-const iconNameToSvg = {
+const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.ARROW_DOWN_LONG]: faArrowDownLong,
   [IconName.PLUS]: faPlus,
   [IconName.CARET_DOWN]: faCaretDown,
