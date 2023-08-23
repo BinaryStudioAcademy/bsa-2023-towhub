@@ -1,4 +1,4 @@
-import styles from './spinner.module.scss';
+import styles from './styles.module.scss';
 
 type Properties = {
   isFullScreen?: boolean;
