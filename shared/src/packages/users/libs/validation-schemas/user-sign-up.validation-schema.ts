@@ -22,7 +22,7 @@ const userSignUpRules = {
   email: joi
     .string()
     .trim()
-    .min(3)
+    .min(5)
     .max(254)
     .email({ tlds: { allow: false } })
     .required()
