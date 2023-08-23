@@ -16,19 +16,19 @@ VALUES
 
 --> statement-breakpoint
 ALTER TABLE "users"
-ADD COLUMN "email" varchar;
+ADD COLUMN "email" varchar NOT NULL;
 
 --> statement-breakpoint
 ALTER TABLE "users"
-ADD COLUMN "first_name" varchar;
+ADD COLUMN "first_name" varchar NOT NULL;
 
 --> statement-breakpoint
 ALTER TABLE "users"
-ADD COLUMN "last_name" varchar;
+ADD COLUMN "last_name" varchar NOT NULL;
 
 --> statement-breakpoint
 ALTER TABLE "users"
-ADD COLUMN "group_id" integer;
+ADD COLUMN "group_id" integer NOT NULL;
 
 --> statement-breakpoint
 DO $$ BEGIN

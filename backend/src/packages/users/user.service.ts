@@ -1,8 +1,8 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
+import { encryptService } from '~/libs/packages/encrypt/encrypt-service.js';
 import { UserEntity } from '~/packages/users/user.entity.js';
 import { type UserRepository } from '~/packages/users/user.repository.js';
 
-import { hashPassword } from '../auth/libs/hash/hash-password.js';
 import {
   type UserGetAllResponseDto,
   type UserSignUpRequestDto,
@@ -20,8 +20,8 @@ class UserService implements IService {
     return this.userRepository.find();
   }
 
-  public async findByPhone(value: string): Promise<UserEntity[]> {
-    return await this.userRepository.findByPhone(value);
+  public findByPhone(value: string): Promise<UserEntity | undefined> {
+    return this.userRepository.findByPhone(value);
   }
 
   public findById(id: number): ReturnType<IService['find']> {
@@ -39,13 +39,19 @@ class UserService implements IService {
   public async create(
     payload: UserSignUpRequestDto,
   ): Promise<UserSignUpResponseDto> {
-    const { hashedPass, salt } = await hashPassword(payload.password);
+    const { phone, email, password, firstName, lastName, groupId } = payload;
+    const { passwordHash, passwordSalt } =
+      await encryptService.encrypt(password);
 
     const user = await this.userRepository.create(
       UserEntity.initializeNew({
-        phone: payload.phone,
-        passwordSalt: salt,
-        passwordHash: hashedPass,
+        phone,
+        email,
+        firstName,
+        lastName,
+        groupId,
+        passwordSalt,
+        passwordHash,
       }),
     );
 

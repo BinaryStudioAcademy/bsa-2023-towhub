@@ -61,19 +61,26 @@ class AuthController extends Controller {
    *            application/json:
    *              schema:
    *                $ref: '#/components/schemas/User'
+   *        409:
+   *          description: User already exists
+   *          content:
+   *            application/json:
+   *              schema:
+   *                 type: object
+   *                 properties:
+   *                   errorType:
+   *                     type: string
+   *                     example: COMMON
+   *                   message:
+   *                     type: string
+   *                     example: User already exists
    */
+
   private async signUp(
     options: ApiHandlerOptions<{
       body: UserSignUpRequestDto;
     }>,
   ): Promise<ApiHandlerResponse> {
-    if (await this.authService.checkExistingUser(options.body)) {
-      return {
-        status: HttpCode.CONFLICT,
-        payload: { error: 'User already exists' },
-      };
-    }
-
     return {
       status: HttpCode.CREATED,
       payload: await this.authService.signUp(options.body),

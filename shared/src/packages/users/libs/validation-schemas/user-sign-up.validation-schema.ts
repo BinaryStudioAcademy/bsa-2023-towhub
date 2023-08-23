@@ -8,6 +8,10 @@ const userSignUp = joi.object<UserSignUpRequestDto, true>({
     'string.empty': UserValidationMessage.PHONE_REQUIRED,
   }),
   password: joi.string().trim().required(),
+  email: joi.string().trim().email().required(),
+  firstName: joi.string().trim().required(),
+  lastName: joi.string().trim().required(),
+  groupId: joi.number().required(),
 });
 
 export { userSignUp };

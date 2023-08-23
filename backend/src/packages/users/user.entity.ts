@@ -12,16 +12,32 @@ class UserEntity implements IEntity {
 
   private 'passwordSalt': string;
 
+  private 'email': string;
+
+  private 'firstName': string;
+
+  private 'lastName': string;
+
+  private 'groupId': number;
+
   private constructor({
     id,
     phone,
     passwordHash,
     passwordSalt,
+    email,
+    firstName,
+    lastName,
+    groupId,
   }: NullableProperties<UserEntityT, 'id'>) {
     this.id = id;
     this.phone = phone;
     this.passwordHash = passwordHash;
     this.passwordSalt = passwordSalt;
+    this.email = email;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.groupId = groupId;
   }
 
   public static initialize({
@@ -29,15 +45,20 @@ class UserEntity implements IEntity {
     phone,
     passwordHash,
     passwordSalt,
-  }: Pick<
-    UserEntityT,
-    'id' | 'passwordHash' | 'passwordSalt' | 'phone'
-  >): UserEntity {
+    email,
+    firstName,
+    lastName,
+    groupId,
+  }: UserEntityT): UserEntity {
     return new UserEntity({
       id,
       phone,
       passwordHash,
       passwordSalt,
+      email,
+      firstName,
+      lastName,
+      groupId,
     });
   }
 
@@ -45,30 +66,63 @@ class UserEntity implements IEntity {
     phone,
     passwordHash,
     passwordSalt,
-  }: Pick<UserEntityT, 'passwordHash' | 'passwordSalt' | 'phone'>): UserEntity {
+    email,
+    firstName,
+    lastName,
+    groupId,
+  }: Pick<
+    UserEntityT,
+    | 'passwordHash'
+    | 'passwordSalt'
+    | 'phone'
+    | 'email'
+    | 'firstName'
+    | 'lastName'
+    | 'groupId'
+  >): UserEntity {
     return new UserEntity({
       id: null,
       phone,
       passwordHash,
       passwordSalt,
+      email,
+      firstName,
+      lastName,
+      groupId,
     });
   }
 
-  public toObject(): Pick<UserEntityT, 'id' | 'phone'> {
+  public toObject(): Pick<
+    UserEntityT,
+    'id' | 'phone' | 'email' | 'firstName' | 'lastName'
+  > {
     return {
       id: this.id as number,
       phone: this.phone,
+      email: this.email,
+      firstName: this.firstName,
+      lastName: this.lastName,
     };
   }
 
   public toNewObject(): Pick<
     UserEntityT,
-    'passwordHash' | 'passwordSalt' | 'phone'
+    | 'passwordHash'
+    | 'passwordSalt'
+    | 'phone'
+    | 'email'
+    | 'firstName'
+    | 'lastName'
+    | 'groupId'
   > {
     return {
       phone: this.phone,
       passwordHash: this.passwordHash,
       passwordSalt: this.passwordSalt,
+      email: this.email,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      groupId: this.groupId,
     };
   }
 }

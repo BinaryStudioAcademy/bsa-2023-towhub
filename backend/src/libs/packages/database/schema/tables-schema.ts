@@ -12,12 +12,14 @@ const users = pgTable(
   {
     id: serial('id').primaryKey(),
     phone: varchar('phone').notNull(),
-    email: varchar('email'),
-    firstName: varchar('first_name'),
-    lastName: varchar('last_name'),
+    email: varchar('email').notNull(),
+    firstName: varchar('first_name').notNull(),
+    lastName: varchar('last_name').notNull(),
     passwordHash: varchar('password_hash').notNull(),
     passwordSalt: varchar('password_salt').notNull(),
-    groupId: integer('group_id').references(() => groups.id),
+    groupId: integer('group_id')
+      .references(() => groups.id)
+      .notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
   },
