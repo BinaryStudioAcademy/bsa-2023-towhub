@@ -1,12 +1,13 @@
 import clsx from 'clsx';
 
 import { useEffect, useRef } from '~/libs/hooks/hooks.js';
-import { MapService } from '~/libs/packages/map/map.js';
-import { type MapType } from '~/libs/types/types.js';
+import { MapService } from '~/libs/packages/map/map.package';
 
 import styles from './map.module.scss';
 
-type Properties = MapType & {
+type Properties = {
+  center: google.maps.LatLngAltitude;
+  zoom: number;
   className?: string;
 };
 
