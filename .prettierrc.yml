@@ -16,3 +16,6 @@ overrides:
   - files: '*.html'
     options:
       printWidth: 9999
+  - files: '*.sql'
+    options:
+      language: postgresql
