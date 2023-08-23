@@ -1,6 +1,6 @@
 const FormName = {
-  NAME: 'name',
-  SURNAME: 'surname',
+  NAME: 'firstName',
+  SURNAME: 'lastName',
   EMAIL: 'email',
   PHONE: 'phone',
   PASSWORD: 'password',

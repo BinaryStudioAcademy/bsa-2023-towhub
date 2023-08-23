@@ -2,7 +2,7 @@ import { type UserEntity } from './user-entity.type.js';
 
 type UserSignUpRequestDto = Pick<
   UserEntity,
-  'phone' | 'firstName' | 'lastName' | 'email' | 'firstName' | 'lastName'
+  'phone' | 'firstName' | 'lastName' | 'email'
 > & {
   password: string;
 };
