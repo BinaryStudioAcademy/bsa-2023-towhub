@@ -16,7 +16,7 @@ type Properties<T extends FieldValues> = {
   label?: string;
   name: FieldPath<T>;
   placeholder?: string;
-  type?: 'text' | 'email' | 'password' | 'textarea';
+  type?: 'text' | 'email' | 'password';
   isActive?: boolean;
   isFilled?: boolean;
   isDisabled?: boolean;
@@ -44,8 +44,10 @@ const Input = <T extends FieldValues>({
     isDisabled && styles.disabled,
     error && styles.error,
   ];
-  const Input = (
+
+  const InputContent = (
     <>
+      <span>{label}</span>
       <div className={styles.inputWrapper}>
         <input
           {...field}
@@ -58,22 +60,6 @@ const Input = <T extends FieldValues>({
           <span className={styles.passwordEye}>&#128065;</span>
         )}
       </div>
-    </>
-  );
-
-  const InputArea = (
-    <textarea
-      {...field}
-      placeholder={placeholder}
-      className={getValidClassNames(...inputStyles, styles.textarea)}
-      disabled={isDisabled}
-    />
-  );
-
-  const InputContent = (
-    <>
-      <span>{label}</span>
-      {type === 'textarea' ? InputArea : Input}
       {hasError && (
         <span className={styles.errorMessage}>{error as string}</span>
       )}

@@ -64,20 +64,6 @@
   cursor: pointer;
 }
 
-.textarea ::-webkit-scrollbar {
-  width: 6px;
-}
-
-.textarea ::-webkit-scrollbar-thumb {
-  width: 4px;
-  background-color: $grey-extra-light;
-  border-radius: 50px;
-}
-
-.textarea ::-webkit-resizer {
-  display: none;
-}
-
 .inputWrapper {
   position: relative;
   width: 100%;
