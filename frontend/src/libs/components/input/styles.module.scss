@@ -95,5 +95,6 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
 
 .inputWrapper {
   position: relative;
+  display: block;
   width: 100%;
 }

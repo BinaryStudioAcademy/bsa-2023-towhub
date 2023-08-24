@@ -43,9 +43,9 @@ const Input = <T extends FieldValues>({
   ];
 
   return (
-    <div className={styles.inputComponentWrapper}>
+    <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
-      <div className={styles.inputWrapper}>
+      <span className={styles.inputWrapper}>
         <input
           {...field}
           type={type}
@@ -56,11 +56,11 @@ const Input = <T extends FieldValues>({
         {type === 'password' && (
           <span className={styles.passwordEye}>&#128065;</span>
         )}
-      </div>
+      </span>
       {hasError && (
         <span className={styles.errorMessage}>{error as string}</span>
       )}
-    </div>
+    </label>
   );
 };
 
