@@ -60,6 +60,7 @@ const Dropdown: React.FC<Properties> = ({
       options={options}
       classNamePrefix="react-select"
       styles={stylesConfig}
+      isSearchable={false}
       menuIsOpen={isMenuOpen}
       onMenuOpen={onMenuOpen}
       onMenuClose={onMenuClose}
