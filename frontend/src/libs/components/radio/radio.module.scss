@@ -1,0 +1,94 @@
+@use "sass:color";
+
+@import "src/assets/css/styles.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  font-family: $font-family;
+}
+
+.error {
+  color: $red-dark;
+  font-weight: $font-weight-regular;
+  font-size: 12px;
+  line-height: calc(15.12 / 12);
+}
+
+.label:global(.disabled) + .error {
+  color: color.adjust($red-dark, $lightness: 35%);
+}
+
+// This hides all equal error messages for radio button group except the last one
+.container:has(input[type="radio"]):not(:last-child) .error {
+  display: none;
+}
+
+.label {
+  --color: #{$blue-dark};
+  --color-text: #{$black};
+
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: fit-content;
+  user-select: none;
+  min-height: $line-height-xl * 16px; // Left this instead of line-height 140% to normalize height of the element without label
+  font-weight: $font-weight-semibold;
+  font-style: normal;
+}
+
+.labelText {
+  color: var(--color-text);
+  transition: $anim-normal color $anim-timing-fn-ui;
+}
+
+.label:hover {
+  --color: #{$blue-light};
+  --color-text: #{color.adjust($black, $lightness: 20%)};
+}
+
+.label:global(.disabled) {
+  --color: #{$grey-light};
+  --color-text: #{$grey};
+}
+
+.input {
+  appearance: none;
+  display: grid;
+  align-self: center;
+  margin: 0;
+  overflow: hidden;
+  font: inherit;
+  background-color: inherit;
+  place-content: center;
+  transition: $anim-normal border-color $anim-timing-fn-ui;
+}
+
+.radio {
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  border: 2px solid var(--color);
+  border-radius: 8px;
+}
+
+.radio::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background-color: var(--color);
+  border-radius: 4px;
+  opacity: 0;
+  transition:
+    $anim-normal opacity $anim-timing-fn-ui,
+    $anim-normal background-color $anim-timing-fn-ui;
+}
+
+.radio:checked::after {
+  opacity: 1;
+}
+
+.radio:disabled::after {
+  --color: #{$grey};
+}
