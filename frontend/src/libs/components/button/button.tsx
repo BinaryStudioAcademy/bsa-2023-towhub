@@ -1,5 +1,6 @@
-import { IconName } from '~/libs/enums/icon-name.enum.js';
+import { type IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
 import { Icon } from '../components.js';
 import styles from './styles.module.scss';
@@ -10,6 +11,8 @@ type Properties = {
   size?: 'sm' | 'md';
   variant?: 'contained' | 'outlined' | 'text';
   isDisabled?: boolean;
+  frontIcon?: ValueOf<typeof IconName>;
+  backIcon?: ValueOf<typeof IconName>;
   onClick?: () => void;
 };
 
@@ -19,6 +22,8 @@ const Button: React.FC<Properties> = ({
   variant = 'contained',
   label,
   isDisabled = false,
+  frontIcon,
+  backIcon,
   onClick,
 }: Properties) => (
   <button
@@ -27,9 +32,9 @@ const Button: React.FC<Properties> = ({
     disabled={isDisabled}
     onClick={onClick}
   >
-    <Icon iconName={IconName.PLUS} />
+    {frontIcon && <Icon iconName={frontIcon} />}
     {label}
-    <Icon iconName={IconName.CHEVRON_DOWN} />
+    {backIcon && <Icon iconName={backIcon} />}
   </button>
 );
 
