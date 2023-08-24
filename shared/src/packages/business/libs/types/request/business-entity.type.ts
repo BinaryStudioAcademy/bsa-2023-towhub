@@ -2,7 +2,7 @@ type BusinessEntity = {
   id: number;
   companyName: string;
   taxNumber: string;
-  ownerId: string;
+  userId: number;
 };
 
 export { type BusinessEntity };

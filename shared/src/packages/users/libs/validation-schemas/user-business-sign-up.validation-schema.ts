@@ -1,8 +1,8 @@
 import joi from 'joi';
 
-import { Regexp as REGEXP } from '../../../../libs/enums/regexp.enum.js';
-import { UserValidationMessage } from '../enums/enums.js';
 import { type UserBusinessSignUpRequestDto } from '../types/types.js';
+import { Regexp as REGEXP } from './enums/regexp.enum.js';
+import { UserValidationMessage } from './enums/user-validation-message.enum.js';
 import { userSignUpRules } from './user-sign-up.validation-schema.js';
 
 const companyNamePattern = new RegExp(REGEXP.COMPANY_NAME);

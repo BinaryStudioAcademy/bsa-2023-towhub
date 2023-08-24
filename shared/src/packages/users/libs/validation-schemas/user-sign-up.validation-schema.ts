@@ -1,8 +1,8 @@
 import joi from 'joi';
 
-import { Regexp as REGEXP } from '../../../../libs/enums/regexp.enum.js';
-import { UserValidationMessage } from '../enums/enums.js';
 import { type UserSignUpRequestDto } from '../types/types.js';
+import { Regexp as REGEXP } from './enums/regexp.enum.js';
+import { UserValidationMessage } from './enums/user-validation-message.enum.js';
 
 const passwordPattern = new RegExp(REGEXP.PASSWORD);
 const namePattern = new RegExp(REGEXP.NAME);
