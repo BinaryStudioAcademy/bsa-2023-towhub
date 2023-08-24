@@ -1,7 +1,7 @@
 @import "src/assets/css/vars.scss";
 
 .section {
-  padding: 154px 147px 0 189px;
+  padding: 154px 24px 0;
   background-color: $background-color-grey;
 }
 
@@ -17,8 +17,21 @@
 
 .list {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   gap: 24px;
   padding-left: 0;
   list-style-type: none;
+}
+
+@media (width >= 768px) {
+  .list {
+    flex-direction: row;
+  }
+}
+
+@media (width >= 950px) {
+  .section {
+    padding: 154px 36px 0;
+  }
 }

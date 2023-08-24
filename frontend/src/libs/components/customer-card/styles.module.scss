@@ -1,25 +1,49 @@
 @import "src/assets/css/vars.scss";
 
 .card {
-  max-width: 540px;
-  padding: 27px 89px 39px 222px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 20px 18px 29px;
   background-color: $white;
-  background-image: url("../../../assets/img/welcome-page/customer.png");
-  background-repeat: no-repeat;
-  background-size: 229px 229px;
   border-radius: 10px;
+  box-shadow: 0 1px 5px 0 rgb(173 164 164 / 28%);
+}
 
-  // box-shadow: 0 2px 4px 0 rgb(173, 163, 163 / 15%);
+.image {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 .title {
   margin: 0;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .text {
+  max-width: 216px;
   margin-bottom: 24px;
   color: $grey;
   font-weight: 700;
   line-height: 1.5;
+}
+
+@media (width >= 768px) {
+  .card {
+    flex-direction: row;
+    width: 540px;
+    max-width: 540px;
+  }
+}
+
+@media (width >= 950px) {
+  .card {
+    padding: 27px 25px 39px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
 }
