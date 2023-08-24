@@ -9,26 +9,17 @@ import { ProtectedRoute } from '../components.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => (
-  <RouterProvider
-    routes={[
-      {
-        path: '*',
-        element: (
-          <Routes>
-            <Route path={AppRoute.ROOT} element={<App />}>
-              <Route path={AppRoute.SIGN_IN} element={<Auth />} />
-              <Route path={AppRoute.SIGN_UP} element={<Auth />} />
-            </Route>
-            <Route path={AppRoute.ROOT} element={<ProtectedRoute />}>
-              <Route path="protected1" element={<div>Protected path #1</div>} />
-              <Route path="protected2" element={<div>Protected path #2</div>} />
-            </Route>
-            <Route path={AppRoute.ANY} element={<NotFound />} />
-          </Routes>
-        ),
-      },
-    ]}
-  />
+  <RouterProvider>
+    <Route path={AppRoute.ROOT} element={<App />}>
+      <Route path={AppRoute.SIGN_IN} element={<Auth />} />
+      <Route path={AppRoute.SIGN_UP} element={<Auth />} />
+    </Route>
+    <Route path={AppRoute.ROOT} element={<ProtectedRoute />}>
+      <Route path="protected1" element={<div>Protected path #1</div>} />
+      <Route path="protected2" element={<div>Protected path #2</div>} />
+    </Route>
+    <Route path={AppRoute.ANY} element={<NotFound />} />
+  </RouterProvider>
 );
 
 export { Router };
