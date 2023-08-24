@@ -6,8 +6,8 @@ shared: 'shared/**/*'
 
 backend:
   - any:
-      - 'backend/**/*'
-      - '!backend/.env.example'
+    - 'backend/**/*'
+    - '!backend/.env.example'
 
 frontend:
   - any:
