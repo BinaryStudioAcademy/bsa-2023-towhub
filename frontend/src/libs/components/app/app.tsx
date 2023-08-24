@@ -8,18 +8,34 @@ import {
   useAppSelector,
   useEffect,
   useLocation,
+  useState,
 } from '~/libs/hooks/hooks.js';
+import { ClientSocketEvent } from '~/libs/packages/socket/libs/enums/enum.js';
+import { socket } from '~/libs/packages/socket/socket.js';
 import { actions as userActions } from '~/slices/users/users.js';
 
 const App: React.FC = () => {
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();
+  const [isWebSocketsConnected, setIsWebSocketsConnected] = useState(false);
   const { users, dataStatus } = useAppSelector(({ users }) => ({
     users: users.users,
     dataStatus: users.dataStatus,
   }));
 
   const isRoot = pathname === AppRoute.ROOT;
+
+  useEffect(() => {
+    const io = socket.getInstance();
+
+    io.on(ClientSocketEvent.CONNECT, () => {
+      setIsWebSocketsConnected(true);
+    });
+
+    return () => {
+      io.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (isRoot) {
@@ -51,6 +67,9 @@ const App: React.FC = () => {
         <>
           <h2>Users:</h2>
           <h3>Status: {dataStatus}</h3>
+          <h3>
+            Socket: {isWebSocketsConnected ? 'connected' : 'disconnected'}
+          </h3>
           <ul>
             {users.map((it) => (
               <li key={it.id}>{it.phone}</li>
