@@ -1,4 +1,3 @@
-// import '~/assets/css/typography.scss';
 import customer from '~/assets/img/welcome-page/customer.png';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 
@@ -21,7 +20,6 @@ const CustomerCard: React.FC<Properties> = ({ onClick }: Properties) => {
           I am a customer
         </h3>
 
-        {/* <h3 className={`h4 ${styles.title}`}>I am a customer</h3> */}
         <p className={getValidClassNames(styles.text, 'text-sm')}>
           Create an account for additional features such as orders history, tow
           truck reviews, etc.
