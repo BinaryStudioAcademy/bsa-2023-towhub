@@ -1,4 +1,5 @@
-import { ApplicationError } from './libs/exceptions/exceptions.js';
+import { ApplicationError } from '~/libs/exceptions/exceptions.js';
+
 import { type IMapService } from './libs/interfaces/interfaces.js';
 
 type Constructor = {
@@ -67,7 +68,7 @@ class MapService implements IMapService {
       }
 
       return duration;
-    } catch (error) {
+    } catch (error: unknown) {
       throw new ApplicationError({
         message: 'Error fetching directions',
         cause: error,
@@ -100,7 +101,7 @@ class MapService implements IMapService {
       }
 
       return distance;
-    } catch (error) {
+    } catch (error: unknown) {
       throw new ApplicationError({
         message: 'Error fetching distance',
         cause: error,
