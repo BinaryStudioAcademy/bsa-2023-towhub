@@ -22,12 +22,14 @@ const Dropdown: React.FC<Properties> = ({
       height: '20px',
       minHeight: '20px',
       border: 'none',
+      boxShadow: 'none',
       outline: 'none',
     }),
     option: (styles) => ({
       ...styles,
       padding: '10px',
       margin: '-4px 0',
+      
     }),
     valueContainer: (styles) => ({
       ...styles,
