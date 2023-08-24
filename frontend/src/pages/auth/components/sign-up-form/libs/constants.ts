@@ -6,7 +6,6 @@ const DEFAULT_SIGN_UP_PAYLOAD: UserSignUpRequestDto = {
   password: '',
   firstName: '',
   lastName: '',
-  groupId: 1,
 };
 
 export { DEFAULT_SIGN_UP_PAYLOAD };

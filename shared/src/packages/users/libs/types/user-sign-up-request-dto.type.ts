@@ -2,7 +2,7 @@ import { type UserEntity } from './user-entity.type.js';
 
 type UserSignUpRequestDto = Omit<
   UserEntity,
-  'id' | 'passwordHash' | 'passwordSalt'
+  'id' | 'passwordHash' | 'passwordSalt' | 'groupId'
 > & {
   password: string;
 };

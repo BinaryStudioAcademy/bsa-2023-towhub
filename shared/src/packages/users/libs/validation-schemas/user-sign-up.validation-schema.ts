@@ -1,7 +1,5 @@
 import joi from 'joi';
 
-import { UserGroup } from '~/libs/enums/user-group.enum.js';
-
 import { Regexp as REGEXP } from '../../../../libs/enums/regexp.enum.js';
 import { UserValidationMessage } from '../enums/enums.js';
 import { type UserSignUpRequestDto } from '../types/types.js';
@@ -40,7 +38,6 @@ const userSignUpRules = {
     'string.empty': UserValidationMessage.REQUIRED,
     'string.pattern.base': UserValidationMessage.NAME_NOT_VALID,
   }),
-  groupId: joi.number().valid(UserGroup.CUSTOMER).required(),
 };
 
 const userSignUp = joi.object<UserSignUpRequestDto, true>(userSignUpRules);

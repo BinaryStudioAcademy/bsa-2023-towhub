@@ -1,7 +1,5 @@
 import joi from 'joi';
 
-import { UserGroup } from '~/libs/enums/user-group.enum.js';
-
 import { Regexp as REGEXP } from '../../../../libs/enums/regexp.enum.js';
 import { UserValidationMessage } from '../enums/enums.js';
 import { type UserBusinessSignUpRequestDto } from '../types/types.js';
@@ -26,11 +24,6 @@ const userBusinessSignUpRules = {
     'string.pattern.base': UserValidationMessage.TAX_NUMBER_NOT_VALID,
   }),
 };
-
-userBusinessSignUpRules.groupId = joi
-  .number()
-  .valid(UserGroup.BUSINESS)
-  .required();
 
 const userBusinessSignUp = joi.object<UserBusinessSignUpRequestDto, true>(
   userBusinessSignUpRules,

@@ -38,8 +38,9 @@ class UserService implements IService {
 
   public async create(
     payload: UserSignUpRequestDto,
+    groupId = 1, //TEMPORARY MOCK
   ): Promise<UserSignUpResponseDto> {
-    const { phone, email, password, firstName, lastName, groupId } = payload;
+    const { phone, email, password, firstName, lastName } = payload;
     const { passwordHash, passwordSalt } =
       await encryptService.encrypt(password);
 
