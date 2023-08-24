@@ -2,18 +2,12 @@
 
 $error-font-size: 14px;
 $line-height-coefficient: 1.54;
-$error-message-top-margin: 5px;
-$error-message-bottom: calc(
-  -1 * ($error-font-size * $line-height-coefficient + $error-message-top-margin)
-);
 $error-message-height: calc($error-font-size * $line-height-coefficient);
 
 .inputComponentWrapper {
-  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 327px;
-  margin-top: 21px;
   color: $grey-dark;
   font-weight: $font-weight-semibold;
   font-size: 16px;
@@ -37,7 +31,7 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   outline: none;
 }
 
-.input.active {
+.input.filled {
   color: $black;
 }
 
@@ -57,13 +51,11 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
 }
 
 .errorMessage {
-  position: absolute;
-  bottom: $error-message-bottom;
   display: block;
   flex-grow: 1;
   width: 100%;
   height: $error-message-height;
-  margin-top: $error-message-top-margin;
+  margin-top: 5px;
   overflow: hidden;
   color: $red-dark;
   font-weight: $font-weight-regular;
@@ -73,6 +65,11 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   white-space: nowrap;
   text-align: end;
   text-overflow: ellipsis;
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
 }
 
 .label {
