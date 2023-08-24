@@ -1,5 +1,27 @@
 @import "src/assets/css/vars.scss";
 
+$error-font-size: 14px;
+$line-height-coefficient: 1.54;
+$error-message-top-margin: 5px;
+$error-message-bottom: calc(
+  -1 * ($error-font-size * $line-height-coefficient + $error-message-top-margin)
+);
+$error-message-height: calc($error-font-size * $line-height-coefficient);
+
+.inputComponentWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 327px;
+  margin-top: 21px;
+  color: $grey-dark;
+  font-weight: $font-weight-semibold;
+  font-size: 16px;
+  font-family: $font-family;
+  font-style: normal;
+  line-height: 140.5%;
+}
+
 .input {
   width: 100%;
   padding: 8px;
@@ -19,7 +41,6 @@
   color: $black;
 }
 
-.input.filled,
 .input:focus {
   border-color: $blue;
   box-shadow:
@@ -36,24 +57,32 @@
 }
 
 .errorMessage {
-  align-self: flex-end;
+  position: absolute;
+  bottom: $error-message-bottom;
+  display: block;
+  flex-grow: 1;
+  width: 100%;
+  height: $error-message-height;
+  margin-top: $error-message-top-margin;
+  overflow: hidden;
   color: $red-dark;
-  font-size: 12px;
+  font-weight: $font-weight-regular;
+  font-size: $error-font-size;
+  font-family: $font-family;
+  line-height: normal;
+  white-space: nowrap;
+  text-align: end;
+  text-overflow: ellipsis;
 }
 
 .label {
-  display: flex;
-  flex-direction: column;
-  max-width: 327px;
-  color: $grey-dark;
-  font-weight: $font-weight-semibold;
-  font-size: 16px;
-  font-family: $font-family;
-  font-style: normal;
-  line-height: 140.5%;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.label.disabled {
+.disabled .label {
   color: $grey-light;
 }
 
