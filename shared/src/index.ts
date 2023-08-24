@@ -30,6 +30,7 @@ export {
   type ValueOf,
 } from './libs/types/types.js';
 export { AuthApiPath } from './packages/auth/auth.js';
+export { type TruckEntity } from './packages/trucks/trucks.js';
 export {
   type UserEntity,
   type UserGetAllItemResponseDto,
