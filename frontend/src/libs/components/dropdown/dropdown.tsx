@@ -48,6 +48,7 @@ const Dropdown: React.FC<Properties> = ({
     }),
     menu: (styles) => ({
       ...styles,
+      overflow: 'hidden',
       padding: 0,
     }),
   };
