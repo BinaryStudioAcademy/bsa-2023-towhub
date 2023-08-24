@@ -19,7 +19,6 @@ const Dropdown: React.FC<Properties> = ({
   const stylesConfig: StylesConfig = {
     control: (styles) => ({
       ...styles,
-      width: '126px',
       height: '20px',
       minHeight: '20px',
       border: 'none',
@@ -27,17 +26,13 @@ const Dropdown: React.FC<Properties> = ({
     }),
     option: (styles) => ({
       ...styles,
-      margin: '0',
-      padding: '2px 0',
+      padding: '10px',
+      margin: '-4px 0',
     }),
     valueContainer: (styles) => ({
       ...styles,
       padding: '0',
-    }),
-    input: (styles) => ({
-      ...styles,
-      margin: '0',
-      padding: '0',
+      paddingLeft: '5px',
     }),
     dropdownIndicator: (styles) => ({
       ...styles,
@@ -51,7 +46,7 @@ const Dropdown: React.FC<Properties> = ({
     }),
     menu: (styles) => ({
       ...styles,
-      width: '126px',
+      padding: 0,
     }),
   };
 
