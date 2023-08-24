@@ -250,15 +250,12 @@ class BusinessController extends Controller {
       user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const payload = {
-      taxNumber: options.body.taxNumber,
-      companyName: options.body.companyName,
-      ownerId: options.user.id,
-    };
-
     const createdBusiness = await this.businessService.create({
-      payload,
-      owner: options.user,
+      payload: options.body,
+      owner: {
+        id: options.user.id,
+        groupId: options.user.groupId,
+      },
     });
 
     return {

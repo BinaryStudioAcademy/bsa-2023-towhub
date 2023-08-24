@@ -1,24 +1,18 @@
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type ServerAppRouteParameters } from '~/libs/packages/server-application/server-application.js';
+import { UserGroupIds } from '~/packages/users/libs/enums/enums.js';
 
 import { type IController } from './libs/interfaces/interface.js';
 import {
   type ApiHandler,
   type ApiHandlerOptions,
   type ControllerRouteParameters,
+  type UserMocked,
 } from './libs/types/types.js';
 
-const GroupKeysMocked = {
-  CUSTOMER: 'Customer',
-  BUSINESS: 'Business',
-  DRIVER: 'Driver',
-} as const;
-
-const userFromToken = {
-  id: 2,
-  group: {
-    key: GroupKeysMocked.BUSINESS,
-  },
+const userFromToken: UserMocked = {
+  id: 1,
+  groupId: UserGroupIds.BUSINESS,
 };
 
 class Controller implements IController {
@@ -72,4 +66,4 @@ class Controller implements IController {
   }
 }
 
-export { Controller, GroupKeysMocked };
+export { Controller };

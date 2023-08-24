@@ -1,11 +1,7 @@
 type UserMocked = {
   id: number;
-  group: {
-    key: string;
-  };
+  groupId: number;
 };
-
-export { type UserMocked };
 
 type DefaultApiHandlerOptions = {
   body?: unknown;
@@ -23,4 +19,4 @@ type ApiHandlerOptions<
   user: T['user'];
 };
 
-export { type ApiHandlerOptions };
+export { type ApiHandlerOptions, type UserMocked };

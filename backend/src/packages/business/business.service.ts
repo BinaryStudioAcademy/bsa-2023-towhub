@@ -1,19 +1,14 @@
-import { type IService } from '~/libs/interfaces/service.interface.js';
-import { GroupKeysMocked } from '~/libs/packages/controller/controller.package.js';
-import { type UserMocked } from '~/libs/packages/controller/libs/types/api-handler-options.type.js';
-import {
-  HttpCode,
-  HttpError,
-  HttpErrorMessage,
-} from '~/libs/packages/http/http.js';
+import { type IService } from '~/libs/interfaces/interfaces.js';
+import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
+import { type OperationResult } from '~/libs/types/types.js';
 import { type BusinessRepository } from '~/packages/business/business.repository.js';
 
+import { UserGroupIds } from '../users/libs/enums/enums.js';
 import { BusinessEntity } from './business.entity.js';
 import {
   type BusinessAddResponseDto,
-  type BusinessDeleteResponseDto,
+  type BusinessCreatePayload,
   type BusinessEntity as BusinessEntityT,
-  type BusinessFindResponseDto,
   type BusinessUpdateResponseDto,
 } from './libs/types/types.js';
 
@@ -24,32 +19,10 @@ class BusinessService implements IService {
     this.businessRepository = businessRepository;
   }
 
-  public async find(id: number): Promise<BusinessFindResponseDto> {
+  public async find(
+    id: number,
+  ): Promise<OperationResult<BusinessEntityT | null>> {
     const business = await this.businessRepository.find(id);
-
-    return { result: business ? business.toObject() : null };
-  }
-
-  public async findByOwnerId(
-    ownerId: number,
-  ): Promise<BusinessFindResponseDto> {
-    const business = await this.businessRepository.findByOwnerId(ownerId);
-
-    return { result: business ? business.toObject() : null };
-  }
-
-  public async findByTaxNumber(
-    taxNumber: string,
-  ): Promise<BusinessFindResponseDto> {
-    const business = await this.businessRepository.findByTaxNumber(taxNumber);
-
-    return { result: business ? business.toObject() : null };
-  }
-
-  public async findByCompanyName(
-    companyName: string,
-  ): Promise<BusinessFindResponseDto> {
-    const business = await this.businessRepository.findByName(companyName);
 
     return { result: business ? business.toObject() : null };
   }
@@ -57,48 +30,30 @@ class BusinessService implements IService {
   public async create({
     payload,
     owner,
-  }: {
-    payload: Omit<BusinessEntityT, 'id'>;
-    owner: UserMocked;
-  }): Promise<BusinessAddResponseDto> {
-    if (owner.group.key !== GroupKeysMocked.BUSINESS) {
+  }: BusinessCreatePayload): Promise<BusinessAddResponseDto> {
+    if (owner.groupId !== UserGroupIds.BUSINESS) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.INVALID_USER_GROUP,
+        message: HttpMessage.INVALID_USER_GROUP,
       });
     }
 
-    const searchByOwnerId = await this.findByOwnerId(owner.id);
-
-    if (searchByOwnerId.result) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.BUSINESS_ALREADY_EXISTS,
+    const { result: doesBusinessExist } =
+      await this.businessRepository.checkExists({
+        id: owner.id,
+        taxNumber: payload.taxNumber,
+        companyName: payload.companyName,
       });
-    }
 
-    const searchByTaxNumber = await this.findByTaxNumber(payload.taxNumber);
-
-    if (searchByTaxNumber.result) {
+    if (doesBusinessExist) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.TAX_NUMBER_ALREADY_REGISTERED,
-      });
-    }
-
-    const searchByCompanyName = await this.findByCompanyName(
-      payload.companyName,
-    );
-
-    if (searchByCompanyName.result) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.NAME_ALREADY_REGISTERED,
+        message: HttpMessage.BUSINESS_ALREADY_EXISTS,
       });
     }
 
     const business = await this.businessRepository.create(
-      BusinessEntity.initializeNew({ ...payload }),
+      BusinessEntity.initializeNew({ ...payload, ownerId: owner.id }),
     );
 
     return business.toObject();
@@ -111,45 +66,46 @@ class BusinessService implements IService {
     id: number;
     payload: Pick<BusinessEntityT, 'companyName'>;
   }): Promise<BusinessUpdateResponseDto> {
-    const searchById = await this.find(id);
+    const { result: foundBusinessById } = await this.find(id);
 
-    if (!searchById.result) {
+    if (!foundBusinessById) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.BUSINESS_DOES_NOT_EXIST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
       });
     }
 
-    const searchByCompanyName = await this.findByCompanyName(
-      payload.companyName,
-    );
+    const { result: doesBusinessExist } =
+      await this.businessRepository.checkExists({
+        companyName: payload.companyName,
+      });
 
-    if (searchByCompanyName.result) {
+    if (doesBusinessExist) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.NAME_ALREADY_REGISTERED,
+        message: HttpMessage.NAME_ALREADY_REGISTERED,
       });
     }
 
     const business = await this.businessRepository.update({
-      id: searchById.result.id,
+      id: foundBusinessById.id,
       payload,
     });
 
     return business.toObject();
   }
 
-  public async delete(id: number): Promise<BusinessDeleteResponseDto> {
-    const searchById = await this.find(id);
+  public async delete(id: number): Promise<OperationResult<boolean>> {
+    const { result: foundBusiness } = await this.find(id);
 
-    if (!searchById.result) {
+    if (!foundBusiness) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
-        message: HttpErrorMessage.BUSINESS_DOES_NOT_EXIST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
       });
     }
 
-    const result = await this.businessRepository.delete(searchById.result.id);
+    const result = await this.businessRepository.delete(id);
 
     return {
       result,

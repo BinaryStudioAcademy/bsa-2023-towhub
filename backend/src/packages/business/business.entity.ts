@@ -59,6 +59,14 @@ class BusinessEntity implements IEntity {
       ownerId: this.ownerId,
     };
   }
+
+  public toNewObject(): Omit<BusinessEntityT, 'id'> {
+    return {
+      companyName: this.companyName,
+      taxNumber: this.taxNumber,
+      ownerId: this.ownerId,
+    };
+  }
 }
 
 export { BusinessEntity };

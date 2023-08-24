@@ -1,1 +1,1 @@
-export { UsersApiPath } from 'shared/build/index.js';
+export { UserGroupIds, UsersApiPath } from 'shared/build/index.js';

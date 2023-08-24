@@ -1,6 +1,7 @@
 export {
   ApiPath,
   AppEnvironment,
+  AppErrorMessage,
   ContentType,
   ServerErrorType,
 } from './libs/enums/enums.js';
@@ -16,13 +17,13 @@ export {
   type HttpOptions,
   type IHttp,
   HttpCode,
-  HttpErrorMessage,
   HttpHeader,
   HttpMessage,
 } from './libs/packages/http/http.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type NullableProperties,
+  type OperationResult,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
@@ -34,10 +35,9 @@ export { AuthApiPath } from './packages/auth/auth.js';
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,
+  type BusinessCreatePayload,
   type BusinessDeleteRequestParameters,
-  type BusinessDeleteResponseDto,
   type BusinessEntity,
-  type BusinessFindResponseDto,
   type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,
@@ -56,6 +56,7 @@ export {
   type UserGetAllResponseDto,
   type UserSignUpRequestDto,
   type UserSignUpResponseDto,
+  UserGroupIds,
   UsersApiPath,
   userSignUpValidationSchema,
 } from './packages/users/users.js';
