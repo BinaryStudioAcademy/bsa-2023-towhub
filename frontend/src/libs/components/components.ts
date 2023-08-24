@@ -2,6 +2,7 @@ export { App } from './app/app.js';
 export { Button } from './button/button.js';
 export { Checkbox } from './checkbox/checkbox.js';
 export { Form } from './form/form.jsx';
+export { Icon } from './icon/icon.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
 export { Radio } from './radio/radio.js';
