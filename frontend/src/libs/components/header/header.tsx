@@ -1,9 +1,7 @@
-import { NavLink } from 'react-router-dom';
-
 import { AppRoute } from '~/libs/enums/enums.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
 
-import { AppLogo } from '../components.js';
+import { AppLogo, Link } from '../components.js';
 import styles from './header.module.scss';
 
 const Header: React.FC = () => {
@@ -14,9 +12,9 @@ const Header: React.FC = () => {
   return (
     <header className={styles.container}>
       <div className={styles.content}>
-        <NavLink className={styles.logoContainer} to={AppRoute.ROOT}>
+        <Link className={styles.logoContainer} to={AppRoute.ROOT}>
           <AppLogo />
-        </NavLink>
+        </Link>
         <div className={styles.navMenu}>
           <button type="button" onClick={handleSignIn}>
             Sign In
