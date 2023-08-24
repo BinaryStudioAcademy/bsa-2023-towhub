@@ -1,9 +1,10 @@
-import { ApplicationError } from 'shared/build/index.js';
+import { ApplicationError } from '~/libs/exceptions/exceptions.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
 import { type StorageKey } from './libs/enums/enums.js';
 import { type IStorage } from './libs/interfaces/interfaces.js';
 
-type StorageKeyValue = keyof typeof StorageKey;
+type StorageKeyValue = ValueOf<typeof StorageKey>;
 
 class Storage implements IStorage {
   private store: globalThis.Storage;
@@ -15,10 +16,10 @@ class Storage implements IStorage {
   public set<T>(key: StorageKeyValue, value: T): Promise<void> {
     try {
       const serializedValue = JSON.stringify(value);
-      this.store.setItem(key as string, serializedValue);
+      this.store.setItem(key, serializedValue);
 
       return Promise.resolve();
-    } catch (error) {
+    } catch (error: unknown) {
       return Promise.reject(
         new ApplicationError({
           message: `Error setting value in storage '${key}'`,
@@ -30,12 +31,10 @@ class Storage implements IStorage {
 
   public get<T>(key: StorageKeyValue): Promise<T | null> {
     try {
-      const value = this.store.getItem(key as string);
+      const value = this.store.getItem(key) as string;
 
-      return value === null
-        ? Promise.resolve(null)
-        : Promise.resolve(JSON.parse(value) as T);
-    } catch (error) {
+      return Promise.resolve(JSON.parse(value) as T);
+    } catch (error: unknown) {
       return Promise.reject(
         new ApplicationError({
           message: `Error getting value from storage '${key}'`,
@@ -47,10 +46,10 @@ class Storage implements IStorage {
 
   public drop(key: StorageKeyValue): Promise<void> {
     try {
-      this.store.removeItem(key as string);
+      this.store.removeItem(key);
 
       return Promise.resolve();
-    } catch (error) {
+    } catch (error: unknown) {
       return Promise.reject(
         new ApplicationError({
           message: `Error removing value from storage '${key}'`,
