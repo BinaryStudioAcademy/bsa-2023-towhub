@@ -4,6 +4,7 @@ export { type DeepPartial, type FieldValues } from 'react-hook-form';
 export {
   type ServerErrorDetail,
   type ServerErrorResponse,
+  type UserSignInRequestDto,
   type UserSignUpRequestDto,
   type ValidationSchema,
   type ValueOf,
