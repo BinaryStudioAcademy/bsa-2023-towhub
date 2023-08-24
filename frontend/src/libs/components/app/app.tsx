@@ -10,8 +10,7 @@ import {
   useLocation,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { ClientSocketEvent } from '~/libs/packages/socket/libs/enums/enum.js';
-import { socket } from '~/libs/packages/socket/socket.js';
+import { SocketService } from '~/libs/packages/socket/socket.service';
 import { actions as userActions } from '~/slices/users/users.js';
 
 const App: React.FC = () => {
@@ -26,14 +25,14 @@ const App: React.FC = () => {
   const isRoot = pathname === AppRoute.ROOT;
 
   useEffect(() => {
-    const io = socket.getInstance();
+    const socketService = new SocketService();
 
-    io.on(ClientSocketEvent.CONNECT, () => {
+    socketService.addListener('CONNECT', () => {
       setIsWebSocketsConnected(true);
     });
 
     return () => {
-      io.disconnect();
+      socketService.disconnect();
     };
   }, []);
 
