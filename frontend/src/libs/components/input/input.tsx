@@ -37,7 +37,7 @@ const Input = <T extends FieldValues>({
   const hasLabel = Boolean(label);
   const inputStyles = [
     styles.input,
-    hasValue && styles.active,
+    hasValue && styles.filled,
     isDisabled && styles.disabled,
     error && styles.error,
   ];
@@ -57,9 +57,15 @@ const Input = <T extends FieldValues>({
           <span className={styles.passwordEye}>&#128065;</span>
         )}
       </span>
-      {hasError && (
-        <span className={styles.errorMessage}>{error as string}</span>
-      )}
+
+      <span
+        className={getValidClassNames(
+          styles.errorMessage,
+          hasError && styles.visible,
+        )}
+      >
+        {error as string}
+      </span>
     </label>
   );
 };
