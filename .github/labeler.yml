@@ -11,8 +11,8 @@ backend:
 
 frontend:
   - any:
-      - 'frontend/**/*'
-      - '!frontend/.env.example'
+    - 'frontend/**/*'
+    - '!frontend/.env.example'
 
 ENV:
   - 'backend/.env.example'
