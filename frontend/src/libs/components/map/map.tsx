@@ -8,14 +8,11 @@ import { MapInnerComponent } from './map-inner-component/map-inner-component.js'
 
 const apiMapKey = config.ENV.API.GOOGLE_MAPS_API_KEY;
 
-type MapType = {
+type Properties = {
   center: google.maps.LatLngLiteral;
   zoom: number;
   origin?: google.maps.LatLngLiteral;
   destination?: google.maps.LatLngLiteral;
-};
-
-type Properties = MapType & {
   className?: string;
 };
 

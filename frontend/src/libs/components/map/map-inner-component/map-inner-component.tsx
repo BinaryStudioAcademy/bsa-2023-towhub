@@ -4,14 +4,11 @@ import { MapService } from '~/libs/packages/map/map.js';
 
 import styles from './map.module.scss';
 
-type MapType = {
+type Properties = {
   center: google.maps.LatLngLiteral;
   zoom: number;
   origin?: google.maps.LatLngLiteral;
   destination?: google.maps.LatLngLiteral;
-};
-
-type Properties = MapType & {
   className?: string;
 };
 
