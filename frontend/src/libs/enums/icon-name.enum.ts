@@ -8,6 +8,8 @@ const IconName = {
   MAP: 'map',
   PLUS: 'plus',
   STAR: 'star',
+  BARS: 'bars',
+  XMARK: 'xmark',
 } as const;
 
 export { IconName };

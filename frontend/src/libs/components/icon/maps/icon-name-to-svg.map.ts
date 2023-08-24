@@ -1,4 +1,8 @@
-import { type IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import {
+  type IconDefinition,
+  faBars,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 import {
   faArrowDownLong,
   faCaretDown,
@@ -24,6 +28,8 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.STAR]: faStar,
   [IconName.LOCATION_DOT]: faLocationDot,
   [IconName.MAP]: faMap,
+  [IconName.BARS]: faBars,
+  [IconName.XMARK]: faXmark,
 };
 
 export { iconNameToSvg };
