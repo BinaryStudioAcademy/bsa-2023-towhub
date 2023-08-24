@@ -39,7 +39,7 @@ const Input = <T extends FieldValues>({
     styles.input,
     hasValue && styles.filled,
     isDisabled && styles.disabled,
-    error && styles.error,
+    hasError && styles.error,
   ];
 
   return (
