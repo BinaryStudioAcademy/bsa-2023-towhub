@@ -30,7 +30,7 @@
   line-height: 1.5;
 }
 
-@media (width >= 768px) {
+@media (width >= $screen-size-lg) {
   .card {
     flex-direction: row;
     width: 540px;
@@ -38,7 +38,7 @@
   }
 }
 
-@media (width >= 950px) {
+@media (width >= $screen-size-xl) {
   .card {
     padding: 27px 25px 39px;
   }

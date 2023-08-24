@@ -24,13 +24,13 @@
   list-style-type: none;
 }
 
-@media (width >= 768px) {
+@media (width >= $screen-size-lg) {
   .list {
     flex-direction: row;
   }
 }
 
-@media (width >= 950px) {
+@media (width >= $screen-size-xl) {
   .section {
     padding: 154px 36px 0;
   }
