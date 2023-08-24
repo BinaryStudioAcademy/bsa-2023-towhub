@@ -5,7 +5,6 @@ import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppSelector,
-  useCallback,
   useEffect,
   useLocation,
 } from '~/libs/hooks/hooks.js';
@@ -27,15 +26,9 @@ const App: React.FC = () => {
     }
   }, [isRoot, dispatch]);
 
-  const handleSighIn = useCallback(() => {
-    return;
-  }, []);
-
   return (
     <>
-      <header>
-        <Header onSignIn={handleSighIn} />
-      </header>
+      <Header />
 
       <ul className="App-navigation-list">
         <li>
