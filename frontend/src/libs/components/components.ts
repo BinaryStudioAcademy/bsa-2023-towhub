@@ -1,4 +1,5 @@
 export { App } from './app/app.js';
+export { BurgerMenu } from './burger-menu/burger-menu.js';
 export { Button } from './button/button.js';
 export { Checkbox } from './checkbox/checkbox.js';
 export { Form } from './form/form.jsx';
