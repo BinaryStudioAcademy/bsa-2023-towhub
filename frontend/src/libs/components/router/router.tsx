@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import { AppRoute } from '~/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
