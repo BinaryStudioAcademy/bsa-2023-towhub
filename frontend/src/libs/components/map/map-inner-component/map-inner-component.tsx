@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { useEffect, useRef } from '~/libs/hooks/hooks.js';
 import { MapService } from '~/libs/packages/map/map.js';
 import { type MapType } from '~/libs/types/types.js';
@@ -11,10 +13,11 @@ type Properties = MapType & {
 const MapInnerComponent: React.FC<Properties> = ({
   center,
   zoom,
+  className,
 }: Properties) => {
   const mapReference = useRef<HTMLDivElement>(null);
   const mapService = useRef<MapService | null>(null);
-  // const mapClasses = clsx(styles.map, className);
+  const mapClasses = clsx(styles.map, className);
 
   useEffect(() => {
     if (mapReference.current) {
@@ -27,7 +30,7 @@ const MapInnerComponent: React.FC<Properties> = ({
     }
   }, [center, zoom]);
 
-  return <div ref={mapReference} id="map" className={styles.map} />;
+  return <div ref={mapReference} id="map" className={mapClasses} />;
 };
 
 export { MapInnerComponent };
