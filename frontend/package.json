@@ -15,6 +15,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "6.4.2",
+    "@fortawesome/free-solid-svg-icons": "6.4.2",
+    "@fortawesome/react-fontawesome": "0.2.0",
     "@hookform/resolvers": "2.9.11",
     "@reduxjs/toolkit": "1.9.3",
     "clsx": "2.0.0",
