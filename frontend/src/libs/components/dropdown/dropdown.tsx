@@ -1,6 +1,6 @@
 import Select, { type StylesConfig } from 'react-select';
 
-import { useCallback, useState } from '~/libs/hooks/hooks.js';
+import { useCallback, useMemo, useState } from '~/libs/hooks/hooks.js';
 
 type Option = { label: string; value: string };
 
@@ -8,15 +8,8 @@ type Properties = {
   options: Option[];
 };
 
-const Dropdown: React.FC<Properties> = ({
-  options,
-}: Properties): JSX.Element => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const onMenuOpen = useCallback(() => setIsMenuOpen(true), []);
-  const onMenuClose = useCallback(() => setIsMenuOpen(false), []);
-
-  const stylesConfig: StylesConfig = {
+const getStyles = (isMenuOpen: boolean): StylesConfig => {
+  return {
     control: (styles) => ({
       ...styles,
       height: '20px',
@@ -51,6 +44,19 @@ const Dropdown: React.FC<Properties> = ({
       padding: 0,
     }),
   };
+};
+
+const Dropdown: React.FC<Properties> = ({
+  options,
+}: Properties): JSX.Element => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = useCallback(
+    () => setIsMenuOpen((previous) => !previous),
+    [],
+  );
+
+  const stylesConfig = useMemo(() => getStyles(isMenuOpen), [isMenuOpen]);
 
   return (
     <Select
@@ -59,8 +65,8 @@ const Dropdown: React.FC<Properties> = ({
       styles={stylesConfig}
       isSearchable={false}
       menuIsOpen={isMenuOpen}
-      onMenuOpen={onMenuOpen}
-      onMenuClose={onMenuClose}
+      onMenuOpen={toggleMenu}
+      onMenuClose={toggleMenu}
     />
   );
 };
