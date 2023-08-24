@@ -3,6 +3,8 @@ import { ApplicationError } from 'shared/build/index.js';
 import { type StorageKey } from './libs/enums/enums.js';
 import { type IStorage } from './libs/interfaces/interfaces.js';
 
+type StorageKeyValue = keyof typeof StorageKey;
+
 class Storage implements IStorage {
   private store: globalThis.Storage;
 
@@ -10,7 +12,7 @@ class Storage implements IStorage {
     this.store = store;
   }
 
-  public set<T>(key: keyof typeof StorageKey, value: T): Promise<void> {
+  public set<T>(key: StorageKeyValue, value: T): Promise<void> {
     try {
       const serializedValue = JSON.stringify(value);
       this.store.setItem(key as string, serializedValue);
@@ -26,7 +28,7 @@ class Storage implements IStorage {
     }
   }
 
-  public get<T>(key: keyof typeof StorageKey): Promise<T | null> {
+  public get<T>(key: StorageKeyValue): Promise<T | null> {
     try {
       const value = this.store.getItem(key as string);
 
@@ -43,7 +45,7 @@ class Storage implements IStorage {
     }
   }
 
-  public drop(key: keyof typeof StorageKey): Promise<void> {
+  public drop(key: StorageKeyValue): Promise<void> {
     try {
       this.store.removeItem(key as string);
 
@@ -58,7 +60,7 @@ class Storage implements IStorage {
     }
   }
 
-  public async has(key: keyof typeof StorageKey): Promise<boolean> {
+  public async has(key: StorageKeyValue): Promise<boolean> {
     try {
       const value = await this.get(key);
 
