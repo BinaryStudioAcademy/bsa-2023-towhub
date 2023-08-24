@@ -29,7 +29,6 @@ const Dropdown: React.FC<Properties> = ({
       ...styles,
       padding: '10px',
       margin: '-4px 0',
-      
     }),
     valueContainer: (styles) => ({
       ...styles,
