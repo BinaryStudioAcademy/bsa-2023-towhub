@@ -2,8 +2,8 @@ import { type SQL, eq, or } from 'drizzle-orm';
 
 import { AppErrorMessage } from '~/libs/enums/enums.js';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
-import { type IRepository } from '~/libs/interfaces/repository.interface';
-import { type IDatabase } from '~/libs/packages/database/libs/interfaces/database.interface';
+import { type IRepository } from '~/libs/interfaces/repository.interface.js';
+import { type IDatabase } from '~/libs/packages/database/libs/interfaces/database.interface.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { type OperationResult } from '~/libs/types/types.js';
 
@@ -30,7 +30,7 @@ class BusinessRepository implements IRepository {
       .from(this.businessSchema)
       .where(eq(this.businessSchema.id, id));
 
-    return result.length === 0 ? BusinessEntity.initialize(result[0]) : null;
+    return result.length === 0 ? null : BusinessEntity.initialize(result[0]);
   }
 
   public async checkExists({

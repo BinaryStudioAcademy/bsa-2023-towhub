@@ -1,5 +1,5 @@
 export {
-  UserGroupIds,
+  UserGroupKey,
   UsersApiPath,
   UserValidationMessage,
 } from './libs/enums/enums.js';

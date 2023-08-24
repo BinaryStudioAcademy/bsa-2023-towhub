@@ -7,7 +7,7 @@ const businessUpdateParameters = joi.object<
   BusinessUpdateRequestParameters,
   true
 >({
-  id: joi.number().required().messages({
+  id: joi.number().integer().positive().required().messages({
     'number': BusinessValidationMessage.ID_MUST_BE_NUMBER,
   }),
 });

@@ -1,9 +1,10 @@
+import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type OperationResult } from '~/libs/types/types.js';
 import { type BusinessRepository } from '~/packages/business/business.repository.js';
 
-import { UserGroupIds } from '../users/libs/enums/enums.js';
+import { UserGroupKey } from '../users/libs/enums/enums.js';
 import { BusinessEntity } from './business.entity.js';
 import {
   type BusinessAddResponseDto,
@@ -31,7 +32,7 @@ class BusinessService implements IService {
     payload,
     owner,
   }: BusinessCreatePayload): Promise<BusinessAddResponseDto> {
-    if (owner.groupId !== UserGroupIds.BUSINESS) {
+    if (owner.group.key !== UserGroupKey.BUSINESS) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpMessage.INVALID_USER_GROUP,
@@ -69,10 +70,7 @@ class BusinessService implements IService {
     const { result: foundBusinessById } = await this.find(id);
 
     if (!foundBusinessById) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
-      });
+      throw new NotFoundError({});
     }
 
     const { result: doesBusinessExist } =
@@ -99,10 +97,7 @@ class BusinessService implements IService {
     const { result: foundBusiness } = await this.find(id);
 
     if (!foundBusiness) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
-      });
+      throw new NotFoundError({});
     }
 
     const result = await this.businessRepository.delete(id);

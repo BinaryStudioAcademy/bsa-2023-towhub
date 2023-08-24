@@ -252,10 +252,7 @@ class BusinessController extends Controller {
   ): Promise<ApiHandlerResponse> {
     const createdBusiness = await this.businessService.create({
       payload: options.body,
-      owner: {
-        id: options.user.id,
-        groupId: options.user.groupId,
-      },
+      owner: options.user,
     });
 
     return {

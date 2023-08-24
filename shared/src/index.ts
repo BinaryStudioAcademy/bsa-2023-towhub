@@ -8,6 +8,7 @@ export {
 export {
   ApplicationError,
   HttpError,
+  NotFoundError,
   ValidationError,
 } from './libs/exceptions/exceptions.js';
 export { configureString } from './libs/helpers/helpers.js';
@@ -56,7 +57,7 @@ export {
   type UserGetAllResponseDto,
   type UserSignUpRequestDto,
   type UserSignUpResponseDto,
-  UserGroupIds,
+  UserGroupKey,
   UsersApiPath,
   userSignUpValidationSchema,
 } from './packages/users/users.js';

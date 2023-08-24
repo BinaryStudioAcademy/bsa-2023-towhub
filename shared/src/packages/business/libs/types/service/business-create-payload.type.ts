@@ -4,7 +4,7 @@ import { type BusinessEntity as BusinessEntityT } from '../request/request.js';
 
 type BusinessCreatePayload = {
   payload: Omit<BusinessEntityT, 'id' | 'ownerId'>;
-  owner: Pick<UserEntityT, 'id' | 'groupId'>;
+  owner: Pick<UserEntityT, 'id'> & { group: { key: string } };
 };
 
 export { type BusinessCreatePayload };

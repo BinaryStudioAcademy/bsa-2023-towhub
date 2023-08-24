@@ -1,6 +1,11 @@
+import { type ValueOf } from '~/libs/types/types.js';
+import { type UserGroupKey } from '~/packages/users/libs/enums/enums.js';
+
 type UserMocked = {
   id: number;
-  groupId: number;
+  group: {
+    key: ValueOf<typeof UserGroupKey>;
+  };
 };
 
 type DefaultApiHandlerOptions = {

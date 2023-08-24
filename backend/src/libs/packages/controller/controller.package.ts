@@ -1,6 +1,6 @@
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type ServerAppRouteParameters } from '~/libs/packages/server-application/server-application.js';
-import { UserGroupIds } from '~/packages/users/libs/enums/enums.js';
+import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { type IController } from './libs/interfaces/interface.js';
 import {
@@ -12,7 +12,9 @@ import {
 
 const userFromToken: UserMocked = {
   id: 1,
-  groupId: UserGroupIds.BUSINESS,
+  group: {
+    key: UserGroupKey.BUSINESS,
+  },
 };
 
 class Controller implements IController {

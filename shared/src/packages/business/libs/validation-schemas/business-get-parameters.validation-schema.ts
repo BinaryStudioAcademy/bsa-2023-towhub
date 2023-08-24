@@ -4,7 +4,7 @@ import { BusinessValidationMessage } from '../enums/enums.js';
 import { type BusinessGetRequestParameters } from '../types/types.js';
 
 const businessGetParameters = joi.object<BusinessGetRequestParameters, true>({
-  id: joi.number().required().messages({
+  id: joi.number().integer().positive().required().messages({
     'number': BusinessValidationMessage.OWNER_ID_MUST_BE_NUMBER,
   }),
 });
