@@ -7,6 +7,7 @@ type EnvironmentSchema = {
   };
   API: {
     ORIGIN_URL: string;
+    SERVER_URL: string;
   };
 };
 
