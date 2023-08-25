@@ -40,7 +40,132 @@ TBA
 
 ### 💽 DB Schema
 
-![db schema](https://github-production-user-asset-6210df.s3.amazonaws.com/19575839/261530664-6140d0e8-abf8-4fb8-80c9-ff9eb7adfcb6.png)
+\`\`\`mermaid
+
+erDiagram
+
+erDiagram
+
+USERS {
+id serial PK "not null"
+phone varchar "not null"
+email varchar "not null"
+first_name varchar "not null"
+last_name varchar "not null"
+password_hash varchar "not null"
+password_salt varchar "not null"
+created_at timestamp "not null"
+updated_at timestamp "not null"
+group_id integer FK "not null"
+}
+
+    GROUPS {
+        id serial PK "not null"
+        name varchar "not null"
+        key varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
+
+    groups_permissions {
+        group_id integer FK "not null"
+        permission_id integer FK "not null"
+    }
+
+    PERMISSIONS {
+        id serial PK "not null"
+        name varchar "not null"
+        key varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
+
+    ORDERS {
+        id serial PK "not null"
+        price integer "not null"
+        scheduled_time timestamp "not null"
+        start_point varchar "not null"
+        destination varchar "not null"
+        status varchar "not null"
+        customer_name varchar "nullable"
+        customer_phone varchar "nullable"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        user_id integer FK "nullable"
+    }
+
+    CUSTOMER_DETAILS {
+        id serial PK "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        user_id integer FK "not null"
+    }
+
+    BUSINESS_DETAILS {
+        id serial PK "not null"
+        company_name varchar "not null"
+        tax_number varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        user_id integer FK "not null"
+    }
+
+    DRIVER_DETAILS {
+        id serial PK "not null"
+        driver_license_number varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        user_id integer FK "not null"
+    }
+
+    FILES {
+        id serial PK "not null"
+        url varchar "not null"
+        content_type varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        driver_details_id integer FK "??"
+    }
+
+    TRUCKS {
+        id serial PK "not null"
+        manufacturer varchar "not null"
+        capacity integer "not null"
+        price_per_km integer "not null"
+        license_plate_number varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        business_id integer FK "not null"
+    }
+
+    users_trucks {
+        truck_id integer FK "not null"
+        user_id integer FK "not null"
+    }
+
+    SHIFTS {
+        id serial PK "not null"
+        start_date timestamp "not null"
+        driver_id integer "not null"
+        end_date timestamp "nullable"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        truck_id integer FK "not null"
+    }
+
+    USERS zero or one -- zero or many ORDERS:  "USERS(id) CREATES ORDERS(user_id)"
+    USERS one -- zero or one CUSTOMER_DETAILS: "USERS(id) HAS CUSTOMER_DETAILS(user_id)"
+    USERS one -- zero or one BUSINESS_DETAILS: "USERS(id) HAS BUSINESS_DETAILS(user_id)"
+    USERS one -- zero or one DRIVER_DETAILS: "USERS(id) HAS DRIVER_DETAILS(user_id)"
+    FILES one or more -- one DRIVER_DETAILS: "FILES(id) BELONGS TO DRIVER_DETAILS(driver_details_id)"
+    USERS one or more -- only one GROUPS:  "USERS(group_id) BELONGS TO GROUPS(id)"
+    GROUPS only one -- one or more groups_permissions: "PPK, GROUPS(id) -> groups_permissions(group_id)"
+    PERMISSIONS only one -- one or more groups_permissions: "PPK, PERMISSIONS(id) -> groups_permissions(group_id)"
+    SHIFTS zero or many -- one TRUCKS: "SHIFTS(truck_id) IS BOOKED BY TRUCKS(id)"
+    users_trucks  zero or many -- one USERS: "PPK, USERS(id) -> users_trucks(user_id)"
+    TRUCKS one -- zero or many users_trucks: "PPK, TRUCKS(id) -> users_trucks(user_id)"
+
+\`\`\`
 
 ### 🌑 Backend
 
