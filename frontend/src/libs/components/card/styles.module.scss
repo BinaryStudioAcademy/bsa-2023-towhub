@@ -1,0 +1,157 @@
+$row-gap-sm: 0.5vmin;
+$row-gap-md: 1vmin;
+$row-gap-lg: 2vmin;
+$shadow-dark: 0 4px 4px #00000021;
+$grey-darker: #7e818f;
+$violet-shallow: #93a1ff;
+$blue-shallower: #6c91f9;
+$blue-shallow: #becee8;
+
+@import "../../../assets/css/styles.scss";
+
+.container {
+  $side-padding: 4.25vmin;
+
+  display: flex;
+  width: 75vmin;
+  height: min-content;
+  padding: 0 $side-padding 6vmin $side-padding;
+  border-radius: 5%;
+  box-shadow: $shadow-dark;
+}
+
+.card_layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+}
+
+.horizontal_bar {
+  display: grid;
+  place-content: center;
+  margin: 2.25vmin 0;
+}
+
+.header {
+  $side-padding: 2.25vmin;
+
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 3fr;
+  padding: 0 $side-padding 0 $side-padding;
+  column-gap: 2.25vmin;
+}
+
+.header_image_container {
+  display: grid;
+  place-content: center;
+  justify-self: center;
+  width: min-content;
+}
+
+.profileImage {
+  $size: 11vmin;
+
+  width: $size;
+  height: $size;
+  border-radius: 55px;
+}
+
+.header_info_container {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  row-gap: $row-gap-md;
+}
+
+.header_title_container {
+  display: grid;
+  align-items: end;
+}
+
+.header_subtitle_container {
+  display: grid;
+  align-items: start;
+}
+
+.subtitle {
+  $color: $grey-dark;
+}
+
+.body {
+  display: grid;
+  grid-template-rows: 0.9fr 1fr 0.6fr;
+  padding-top: 4.5vmin;
+  column-gap: 2vmin;
+}
+
+.location_container {
+  display: grid;
+  grid-template-columns: min-content auto;
+  align-items: center;
+  row-gap: $row-gap-md;
+  height: max-content;
+  column-gap: 1.7vmin;
+}
+
+.location_dot {
+  height: 20px;
+  color: $violet-shallow;
+}
+
+.location {
+  $color: $grey-dark;
+}
+
+.last_update {
+  $color: $grey;
+
+  grid-column: 2 / span 1;
+}
+
+.routes_container {
+  display: grid;
+  grid-template-rows: repeat(3, min-content);
+}
+
+.route_point {
+  display: grid;
+  grid-template-columns: 3.3vmin auto;
+  align-items: center;
+  column-gap: 1.7vmin;
+}
+
+.route_info {
+  display: inline-block;
+  overflow: hidden;
+  color: $grey-darker;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.route_dot {
+  display: inline-block;
+  justify-self: center;
+}
+
+.route_arrow {
+  display: grid;
+  justify-content: center;
+}
+
+.distance_container {
+  display: grid;
+  grid-template-columns: min-content max-content;
+  align-items: end;
+  align-self: end;
+  column-gap: 0.7vmin;
+}
+
+.distance_icon {
+  display: grid;
+  padding-right: 1vmin;
+}
+
+.distance_info {
+  color: $grey-darker;
+}

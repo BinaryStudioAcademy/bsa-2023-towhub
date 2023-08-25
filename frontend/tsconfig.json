@@ -1,6 +1,6 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["src"],
+  "include": ["src", "react-component.d.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ESNext",

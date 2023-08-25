@@ -1,10 +1,12 @@
 export { App } from './app/app.js';
 export { Button } from './button/button.js';
+export { Card } from './card/card.jsx';
 export { Checkbox } from './checkbox/checkbox.js';
 export { Form } from './form/form.jsx';
 export { Icon } from './icon/icon.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
+export { PlainSvgIcon } from './plain-svg-icon/plain-svg-icon.jsx';
 export { Radio } from './radio/radio.js';
 export { Router } from './router/router.jsx';
 export { RouterProvider } from './router-provider/router-provider.jsx';

@@ -21,7 +21,11 @@ const signUpFields: FormField<UserSignUpRequestDto>[] = [
     placeholder: 'Enter your email',
     name: FormName.EMAIL,
   },
-  { label: FormLabel.PHONE, placeholder: 'Enter your phone', name: 'phone' },
+  {
+    label: FormLabel.PHONE,
+    placeholder: 'Enter your phone',
+    name: 'phone',
+  },
   {
     type: 'password',
     label: FormLabel.PASSWORD,
