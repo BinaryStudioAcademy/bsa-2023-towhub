@@ -10,7 +10,7 @@ import {
   useLocation,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { SocketService } from '~/libs/packages/socket/socket.service';
+import { SocketService } from '~/libs/packages/socket/socket.package.js';
 import { actions as userActions } from '~/slices/users/users.js';
 
 const App: React.FC = () => {

@@ -1,1 +1,1 @@
-export { ClientSocketEvent, ServerSocketEvent } from './libs/enums/enum.js';
+export { ClientSocketEvent, ServerSocketEvent } from './libs/enums/enums.js';

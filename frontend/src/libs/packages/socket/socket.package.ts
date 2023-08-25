@@ -1,11 +1,25 @@
-import { type Socket as BaseSocket, io } from 'socket.io-client';
+import { type Socket } from 'socket.io-client';
 
-import { config } from '~/libs/packages/config/config.js';
+import { ClientSocketEvent } from './libs/enums/enums.js';
+import { socket } from './socket.js';
 
-class Socket {
-  public getInstance(): BaseSocket {
-    return io(config.ENV.API.SERVER_URL);
+class SocketService {
+  private io: Socket;
+
+  public constructor() {
+    this.io = socket.getInstance();
+  }
+
+  public addListener(
+    event: keyof typeof ClientSocketEvent,
+    listener: () => void,
+  ): void {
+    this.io.on(ClientSocketEvent[event], listener);
+  }
+
+  public disconnect(): void {
+    this.io.disconnect();
   }
 }
 
-export { Socket };
+export { SocketService };
