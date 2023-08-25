@@ -1,5 +1,4 @@
 interface IRepository<T = unknown> {
-  findAll(): Promise<T[]>;
   find(id: unknown): Promise<T>;
   create(entity: unknown): Promise<T>;
   update(parameters: { id: unknown; payload: unknown }): Promise<T>;

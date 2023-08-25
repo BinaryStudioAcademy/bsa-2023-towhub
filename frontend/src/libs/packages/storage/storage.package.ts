@@ -1,7 +1,10 @@
+import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
 import { type StorageKey } from './libs/enums/enums.js';
 import { type IStorage } from './libs/interfaces/interfaces.js';
+
+type StorageKeyValue = ValueOf<typeof StorageKey>;
 
 class Storage implements IStorage {
   private store: globalThis.Storage;
@@ -10,26 +13,60 @@ class Storage implements IStorage {
     this.store = store;
   }
 
-  public set(key: ValueOf<typeof StorageKey>, value: string): Promise<void> {
-    this.store.setItem(key as string, value);
+  public set<T>(key: StorageKeyValue, value: T): Promise<void> {
+    try {
+      const serializedValue = JSON.stringify(value);
+      this.store.setItem(key, serializedValue);
 
-    return Promise.resolve();
+      return Promise.resolve();
+    } catch (error: unknown) {
+      return Promise.reject(
+        new ApplicationError({
+          message: `Error setting value in storage '${key}'`,
+          cause: error,
+        }),
+      );
+    }
   }
 
-  public get<R = string>(key: ValueOf<typeof StorageKey>): Promise<R | null> {
-    return Promise.resolve(this.store.getItem(key as string) as R);
+  public get<T>(key: StorageKeyValue): Promise<T | null> {
+    try {
+      const value = this.store.getItem(key) as string;
+
+      return Promise.resolve(JSON.parse(value) as T);
+    } catch (error: unknown) {
+      return Promise.reject(
+        new ApplicationError({
+          message: `Error getting value from storage '${key}'`,
+          cause: error,
+        }),
+      );
+    }
   }
 
-  public drop(key: ValueOf<typeof StorageKey>): Promise<void> {
-    this.store.removeItem(key as string);
+  public drop(key: StorageKeyValue): Promise<void> {
+    try {
+      this.store.removeItem(key);
 
-    return Promise.resolve();
+      return Promise.resolve();
+    } catch (error: unknown) {
+      return Promise.reject(
+        new ApplicationError({
+          message: `Error removing value from storage '${key}'`,
+          cause: error,
+        }),
+      );
+    }
   }
 
-  public async has(key: ValueOf<typeof StorageKey>): Promise<boolean> {
-    const value = await this.get(key);
+  public async has(key: StorageKeyValue): Promise<boolean> {
+    try {
+      const value = await this.get(key);
 
-    return Boolean(value);
+      return Boolean(value);
+    } catch {
+      return false;
+    }
   }
 }
 

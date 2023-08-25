@@ -1,0 +1,117 @@
+@import "../../../assets/css/vars.scss";
+
+.btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  font-weight: $font-weight-extrabold;
+  font-size: 16px;
+  font-family: $font-family;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sm {
+  gap: 8px;
+  height: 32px;
+  padding: 4px 16px;
+}
+
+.md {
+  gap: 10px;
+  height: 48px;
+  padding: 8px 24px;
+}
+
+.contained {
+  color: $white;
+}
+
+.contained.sm {
+  background-color: $red-dark;
+}
+
+.contained.sm:hover {
+  background-color: $red;
+}
+
+.contained.md {
+  background-color: $red;
+}
+
+.contained.md:hover {
+  background-color: $red-light;
+}
+
+.contained.sm:disabled,
+.contained.md:disabled {
+  background-color: $grey-light;
+  cursor: default;
+}
+
+.contained,
+.outlined {
+  box-shadow: $shadow, $shadow-light;
+}
+
+.text,
+.outlined {
+  background-color: transparent;
+}
+
+.text.sm,
+.outlined.sm {
+  color: $blue;
+}
+
+.text.md,
+.outlined.md {
+  color: $blue-dark;
+}
+
+.outlined {
+  border-width: 2px;
+  border-style: solid;
+}
+
+.outlined.sm {
+  border-color: $blue;
+}
+
+.outlined.sm:hover {
+  border-color: $blue-light;
+}
+
+.outlined.md {
+  border-color: $blue-dark;
+}
+
+.outlined.md:hover {
+  border-color: $blue-light;
+}
+
+.text.sm:hover,
+.outlined.sm:hover {
+  color: $blue-light;
+}
+
+.text.md:hover,
+.outlined.md:hover {
+  color: $blue-light;
+}
+
+.text.sm:disabled,
+.text.md:disabled,
+.outlined.sm:disabled,
+.outlined.md:disabled {
+  color: $grey-light;
+  cursor: default;
+}
+
+.outlined.sm:disabled,
+.outlined.md:disabled {
+  border-color: $grey-light;
+}

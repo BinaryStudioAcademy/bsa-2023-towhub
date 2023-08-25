@@ -1,6 +1,7 @@
 export {
   ApiPath,
   AppEnvironment,
+  AppErrorMessage,
   ContentType,
   ServerErrorType,
 } from './libs/enums/enums.js';
@@ -21,7 +22,9 @@ export {
 } from './libs/packages/http/http.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
+  type CapitalizeEnum,
   type NullableProperties,
+  type OperationResult,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
@@ -30,13 +33,35 @@ export {
   type ValueOf,
 } from './libs/types/types.js';
 export { AuthApiPath } from './packages/auth/auth.js';
+export {
+  type BusinessAddRequestDto,
+  type BusinessAddResponseDto,
+  type BusinessCreatePayload,
+  type BusinessDeleteRequestParameters,
+  type BusinessEntityT,
+  type BusinessGetRequestParameters,
+  type BusinessUpdateRequestDto,
+  type BusinessUpdateRequestParameters,
+  type BusinessUpdateResponseDto,
+  businessAddRequestBody,
+  BusinessApiPath,
+  businessDeleteParameters,
+  businessGetParameters,
+  businessUpdateParameters,
+  businessUpdateRequestBody,
+  BusinessValidationMessage,
+} from './packages/business/business.js';
 export { type TruckEntity } from './packages/trucks/trucks.js';
 export {
-  type UserEntity,
+  type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
+  type UserGroupEntityT,
+  type UserGroupKeyT,
+  type UserGroupNameT,
   type UserSignUpRequestDto,
   type UserSignUpResponseDto,
+  UserGroupKey,
   UsersApiPath,
   userSignUpValidationSchema,
 } from './packages/users/users.js';

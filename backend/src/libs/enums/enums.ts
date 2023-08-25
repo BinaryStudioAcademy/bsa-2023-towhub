@@ -1,6 +1,7 @@
 export {
   ApiPath,
   AppEnvironment,
+  AppErrorMessage,
   HttpCode,
   HttpMessage,
   ServerErrorType,
