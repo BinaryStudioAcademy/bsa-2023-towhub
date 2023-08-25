@@ -1,5 +1,7 @@
 export { App } from './app/app.js';
+export { Background } from './background/background.js';
 export { Button } from './button/button.js';
+export { Container } from './container/container.js';
 export { Form } from './form/form.jsx';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';

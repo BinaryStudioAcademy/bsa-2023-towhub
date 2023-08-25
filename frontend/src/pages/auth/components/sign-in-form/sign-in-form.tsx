@@ -1,12 +1,15 @@
 import { Form, Link } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/app-route.enum';
-import { userSignInValidationSchema } from '~/packages/users/users.js';
+import {
+  type UserSignInRequestDto,
+  userSignInValidationSchema,
+} from '~/packages/users/users.js';
 
 import { DEFAULT_SIGN_IN_PAYLOAD } from './libs/constants.js';
 import { signInFields } from './libs/fields.js';
 
 type Properties = {
-  onSubmit: () => void;
+  onSubmit: (payload: UserSignInRequestDto) => void;
 };
 
 const SignInForm: React.FC<Properties> = ({ onSubmit }: Properties) => (
