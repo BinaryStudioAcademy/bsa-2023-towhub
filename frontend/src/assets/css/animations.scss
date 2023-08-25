@@ -1,0 +1,11 @@
+$anim-timing-fn-ui: ease-in-out;
+$anim-fast: 70ms;
+$anim-normal: 120ms;
+$anim-slow: 200ms;
+
+/* Apply reduced motion styles */
+@media (prefers-reduced-motion: reduce) {
+  $anim-fast: 0ms;
+  $anim-normal: 0ms;
+  $anim-slow: 0ms;
+}
