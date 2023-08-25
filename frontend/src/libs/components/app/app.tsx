@@ -10,7 +10,7 @@ import {
   useLocation,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { SocketService } from '~/libs/packages/socket/socket.package.js';
+import { socket as socketService } from '~/libs/packages/socket/socket.js';
 import { actions as userActions } from '~/slices/users/users.js';
 
 const App: React.FC = () => {
@@ -25,7 +25,7 @@ const App: React.FC = () => {
   const isRoot = pathname === AppRoute.ROOT;
 
   useEffect(() => {
-    const socketService = new SocketService();
+    socketService.connect();
 
     socketService.addListener('CONNECT', () => {
       setIsWebSocketsConnected(true);

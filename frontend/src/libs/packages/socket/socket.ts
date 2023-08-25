@@ -1,13 +1,5 @@
-import { type Socket as BaseSocket, io } from 'socket.io-client';
+import { SocketService } from './socket.package.js';
 
-import { config } from '~/libs/packages/config/config.js';
-
-class Socket {
-  public getInstance(): BaseSocket {
-    return io(config.ENV.API.SERVER_URL);
-  }
-}
-
-const socket = new Socket();
+const socket = new SocketService();
 
 export { socket };
