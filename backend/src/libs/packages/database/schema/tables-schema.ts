@@ -2,6 +2,7 @@ import {
   integer,
   pgTable,
   primaryKey,
+  real,
   serial,
   timestamp,
   uniqueIndex,
@@ -58,8 +59,8 @@ const trucks = pgTable(
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
     manufacturer: varchar('manufacturer').notNull(),
-    capacity: varchar('capacity').notNull(),
-    pricePerKm: varchar('price_per_km').notNull(),
+    capacity: integer('capacity').notNull(),
+    pricePerKm: real('price_per_km').notNull(),
     licensePlateNumber: varchar('license_plate_number').notNull(),
   },
   (trucks) => {

@@ -3,8 +3,8 @@ type TruckEntity = {
   createdAt: Date;
   updatedAt: Date;
   manufacturer: string;
-  capacity: string;
-  pricePerKm: string;
+  capacity: number;
+  pricePerKm: number;
   licensePlateNumber: string;
 };
 

@@ -12,9 +12,9 @@ class TruckEntity implements IEntity {
 
   private manufacturer: string;
 
-  private capacity: string;
+  private capacity: number;
 
-  private pricePerKm: string;
+  private pricePerKm: number;
 
   private licensePlateNumber: string;
 
