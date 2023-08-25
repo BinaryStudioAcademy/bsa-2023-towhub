@@ -36,7 +36,7 @@ const Button: React.FC<Properties> = ({
         styles.btn,
         styles[size],
         styles[variant],
-        isFullWidth ? styles.fullWidth : null,
+        isFullWidth && styles.fullWidth,
         className,
       )}
       type={type}
