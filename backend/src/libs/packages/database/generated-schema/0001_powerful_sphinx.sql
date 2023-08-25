@@ -11,7 +11,7 @@ INSERT INTO
   "groups" (name, key)
 VALUES
   ('Customer', 'customer'),
-  ('Buisness', 'business'),
+  ('Business', 'business'),
   ('Driver', 'driver');
 
 --> statement-breakpoint
