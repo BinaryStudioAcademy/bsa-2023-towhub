@@ -39,4 +39,15 @@ const groups = pgTable('groups', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export { groups, users };
+const business = pgTable('business_details', {
+  id: serial('id').primaryKey(),
+  companyName: varchar('company_name').unique().notNull(),
+  taxNumber: varchar('tax_number').unique().notNull(),
+  ownerId: integer('owner_id')
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export { business, groups, users };

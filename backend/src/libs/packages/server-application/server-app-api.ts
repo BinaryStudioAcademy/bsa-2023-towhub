@@ -39,6 +39,11 @@ class ServerAppApi implements IServerAppApi {
           title: 'Hello World',
           version: `${this.version}.0.0`,
         },
+        servers: [
+          {
+            url: `http://localhost:3001/api/${this.version}`,
+          },
+        ],
       },
       apis: [`src/packages/**/*.controller.${controllerExtension}`],
     });
