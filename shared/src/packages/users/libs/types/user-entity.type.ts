@@ -9,4 +9,4 @@ type UserEntity = {
   groupId: number;
 };
 
-export { type UserEntity };
+export { type UserEntity as UserEntityT };
