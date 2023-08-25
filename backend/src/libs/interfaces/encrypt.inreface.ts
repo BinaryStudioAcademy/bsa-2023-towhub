@@ -1,4 +1,4 @@
-import { type HashedPass } from '~/packages/auth/libs/types/hashed-pass.type';
+import { type HashedPass } from '~/packages/auth/libs/types/hashed-pass.type.js';
 
 interface IEncryptService {
   encrypt(password: string): Promise<HashedPass>;
