@@ -1,0 +1,42 @@
+@import "../../../assets/css/vars.scss";
+
+.burgerMenu {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.menuIcon {
+  color: $red;
+  font-size: 24px;
+}
+
+.open .menuIcon {
+  color: $red-light;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+  overflow: hidden;
+  background-color: $blue-dark;
+  border: none;
+  border-radius: 16px;
+  box-shadow: $shadow;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  padding: 10px 20px;
+}
+
+li:hover {
+  background-color: $blue;
+}

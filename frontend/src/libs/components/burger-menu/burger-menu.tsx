@@ -12,6 +12,7 @@ import {
 
 import { Button } from '../components.js';
 import { iconNameToSvg } from '../icon/maps/maps.js';
+import styles from './burger-menu.module.scss';
 
 const BurgerMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,17 +42,18 @@ const BurgerMenu: React.FC = () => {
   const isMobile = window.innerWidth <= 768;
 
   return (
-    <div className={`burger-menu ${isOpen ? 'open' : ''}`}>
+    <div className={`${styles.burgerMenu} ${isOpen ? styles.open : ''}`}>
       {isMobile ? (
         <FontAwesomeIcon
           icon={isOpen ? iconNameToSvg.xmark : iconNameToSvg.bars}
           onClick={toggleMenu}
+          className={styles.menuIcon}
         />
       ) : (
         <Button label="User menu" onClick={toggleMenu} />
       )}
       {isOpen && (
-        <div className="menu">
+        <div className={styles.menu}>
           <ul>
             {menuItems.map((item, index) => (
               <li key={index}>
