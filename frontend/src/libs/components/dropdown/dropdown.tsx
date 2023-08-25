@@ -51,10 +51,9 @@ const Dropdown: React.FC<Properties> = ({
 }: Properties): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = useCallback(
-    () => setIsMenuOpen((previous) => !previous),
-    [],
-  );
+  const handleToggleMenu = useCallback(() => {
+    setIsMenuOpen((previous) => !previous);
+  }, []);
 
   const stylesConfig = useMemo(() => getStyles(isMenuOpen), [isMenuOpen]);
 
@@ -65,8 +64,8 @@ const Dropdown: React.FC<Properties> = ({
       styles={stylesConfig}
       isSearchable={false}
       menuIsOpen={isMenuOpen}
-      onMenuOpen={toggleMenu}
-      onMenuClose={toggleMenu}
+      onMenuOpen={handleToggleMenu}
+      onMenuClose={handleToggleMenu}
     />
   );
 };
