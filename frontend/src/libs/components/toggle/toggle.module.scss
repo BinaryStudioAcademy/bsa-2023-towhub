@@ -1,0 +1,92 @@
+@use "sass:color";
+
+@import "src/assets/css/styles.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  font-family: $font-family;
+}
+
+.error {
+  color: $red-dark;
+  font-weight: $font-weight-regular;
+  font-size: 12px;
+  line-height: calc(15.12 / 12);
+}
+
+.label:global(.disabled) + .error {
+  color: color.adjust($red-dark, $lightness: 35%);
+}
+
+.label {
+  --color: #{$blue-dark};
+  --color-text: #{$black};
+
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: fit-content;
+  user-select: none;
+  min-height: $line-height-xl * 16px; // Left this instead of line-height 140% to normalize height of the element without label
+  font-weight: $font-weight-semibold;
+  font-style: normal;
+}
+
+.labelText {
+  color: var(--color-text);
+  transition: $anim-normal color $anim-timing-fn-ui;
+}
+
+.label:hover {
+  --color: #{$blue-light};
+  --color-text: #{color.adjust($black, $lightness: 20%)};
+}
+
+.label:global(.disabled) {
+  --color: #{$grey-light};
+  --color-text: #{$grey};
+}
+
+.input {
+  appearance: none;
+  display: grid;
+  align-self: center;
+  margin: 0;
+  overflow: hidden;
+  font: inherit;
+  background-color: inherit;
+  place-content: center;
+  transition: $anim-normal border-color $anim-timing-fn-ui;
+}
+
+$size: 20px;
+$radius: 6px;
+
+.toggle {
+  width: $size * 2;
+  min-width: $size * 2;
+  height: $size;
+  border: $size * 0.1 solid var(--color);
+  border-radius: $size * 0.5;
+}
+
+.toggle::after {
+  content: "";
+  width: $radius * 2;
+  height: $radius * 2;
+  background-color: var(--color);
+  border-radius: $radius;
+  transform: translateX(-$size * 0.5);
+  transition:
+    $anim-normal transform $anim-timing-fn-ui,
+    $anim-normal background-color $anim-timing-fn-ui;
+}
+
+.toggle:checked::after {
+  transform: translateX($size * 0.5);
+}
+
+.toggle:disabled::after {
+  --color: #{$grey};
+}

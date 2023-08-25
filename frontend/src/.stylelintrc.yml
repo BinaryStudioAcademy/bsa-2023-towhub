@@ -4,3 +4,20 @@ extends:
 
 plugins:
   - stylelint-scss
+
+rules:
+  # allow using @use
+  at-rule-no-unknown:
+    - true
+    - ignoreAtRules:
+        - use
+  # allow @use to precede @import
+  no-invalid-position-at-import-rule:
+    - true
+    - ignoreAtRules:
+        - use
+  # allow :global which is specific pseudo class, available in .module.css
+  selector-pseudo-class-no-unknown:
+    - true
+    - ignorePseudoClasses:
+        - global
