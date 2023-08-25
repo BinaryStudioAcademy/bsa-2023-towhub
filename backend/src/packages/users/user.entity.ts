@@ -1,7 +1,7 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import { type UserEntity as UserEntityT } from './libs/types/types.js';
+import { type UserEntityT } from './libs/types/types.js';
 
 class UserEntity implements IEntity {
   private 'id': number | null;
