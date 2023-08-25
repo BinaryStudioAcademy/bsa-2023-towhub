@@ -59,25 +59,16 @@ const trucks = pgTable(
   },
 );
 
-const usersTrucks = pgTable(
-  'users_trucks',
-  {
-    id: serial('id').primaryKey(),
-    userId: integer('user_id')
-      .references(() => users.id)
-      .notNull(),
-    truckId: integer('truck_id')
-      .references(() => trucks.id)
-      .notNull(),
-  },
-  (usersTrucks) => {
-    return {
-      uniqueUsersTrucks: uniqueIndex('unique_users_trucks').on(
-        usersTrucks.userId,
-        usersTrucks.truckId,
-      ),
-    };
-  },
-);
+const usersTrucks = pgTable('users_trucks', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull()
+    .unique(),
+  truckId: integer('truck_id')
+    .references(() => trucks.id, { onDelete: 'cascade' })
+    .notNull()
+    .unique(),
+});
 
 export { groups, trucks, users, usersTrucks };
