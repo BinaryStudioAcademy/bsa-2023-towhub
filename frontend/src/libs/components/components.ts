@@ -5,6 +5,7 @@ export { Checkbox } from './checkbox/checkbox.js';
 export { CustomerCard } from './customer-card/customer-card.js';
 export { Form } from './form/form.jsx';
 export { Icon } from './icon/icon.js';
+export { Image } from './image/image.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
 export { Radio } from './radio/radio.js';
