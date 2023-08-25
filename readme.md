@@ -40,24 +40,22 @@ TBA
 
 ### 💽 DB Schema
 
-\`\`\`mermaid
+```mermaid
 
 erDiagram
 
-erDiagram
-
-USERS {
-id serial PK "not null"
-phone varchar "not null"
-email varchar "not null"
-first_name varchar "not null"
-last_name varchar "not null"
-password_hash varchar "not null"
-password_salt varchar "not null"
-created_at timestamp "not null"
-updated_at timestamp "not null"
-group_id integer FK "not null"
-}
+    USERS {
+        id serial PK "not null"
+        phone varchar "not null"
+        email varchar "not null"
+        first_name varchar "not null"
+        last_name varchar "not null"
+        password_hash varchar "not null"
+        password_salt varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        group_id integer FK "not null"
+    }
 
     GROUPS {
         id serial PK "not null"
@@ -165,7 +163,7 @@ group_id integer FK "not null"
     users_trucks  zero or many -- one USERS: "PPK, USERS(id) -> users_trucks(user_id)"
     TRUCKS one -- zero or many users_trucks: "PPK, TRUCKS(id) -> users_trucks(user_id)"
 
-\`\`\`
+```
 
 ### 🌑 Backend
 
