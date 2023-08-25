@@ -44,20 +44,18 @@ TBA
 
 erDiagram
 
-erDiagram
-
-USERS {
-id serial PK "not null"
-phone varchar "not null"
-email varchar "not null"
-first_name varchar "not null"
-last_name varchar "not null"
-password_hash varchar "not null"
-password_salt varchar "not null"
-created_at timestamp "not null"
-updated_at timestamp "not null"
-group_id integer FK "not null"
-}
+    USERS {
+        id serial PK "not null"
+        phone varchar "not null"
+        email varchar "not null"
+        first_name varchar "not null"
+        last_name varchar "not null"
+        password_hash varchar "not null"
+        password_salt varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        group_id integer FK "not null"
+    }
 
     GROUPS {
         id serial PK "not null"
