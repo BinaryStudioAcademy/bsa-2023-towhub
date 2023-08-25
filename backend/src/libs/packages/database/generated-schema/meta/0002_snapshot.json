@@ -98,9 +98,7 @@
       "indexes": {
         "trucks_license_plate_number_idx": {
           "name": "trucks_license_plate_number_idx",
-          "columns": [
-            "license_plate_number"
-          ],
+          "columns": ["license_plate_number"],
           "isUnique": true
         }
       },
@@ -178,9 +176,7 @@
       "indexes": {
         "users_phone_unique_idx": {
           "name": "users_phone_unique_idx",
-          "columns": [
-            "phone"
-          ],
+          "columns": ["phone"],
           "isUnique": true
         }
       },
@@ -189,12 +185,8 @@
           "name": "users_group_id_groups_id_fk",
           "tableFrom": "users",
           "tableTo": "groups",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -231,12 +223,8 @@
           "name": "users_trucks_user_id_users_id_fk",
           "tableFrom": "users_trucks",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -244,12 +232,8 @@
           "name": "users_trucks_truck_id_trucks_id_fk",
           "tableFrom": "users_trucks",
           "tableTo": "trucks",
-          "columnsFrom": [
-            "truck_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["truck_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -259,16 +243,12 @@
         "users_trucks_user_id_unique": {
           "name": "users_trucks_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         },
         "users_trucks_truck_id_unique": {
           "name": "users_trucks_truck_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "truck_id"
-          ]
+          "columns": ["truck_id"]
         }
       }
     }
