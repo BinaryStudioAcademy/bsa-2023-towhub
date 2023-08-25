@@ -1,6 +1,5 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { encryptService } from '~/libs/packages/packages.js';
-import { type UserRepository } from '~/packages/users/user.repository.js';
 
 import {
   type UserGetAllResponseDto,
@@ -8,6 +7,7 @@ import {
   type UserSignUpResponseDto,
 } from './libs/types/types.js';
 import { UserEntity } from './user.entity.js';
+import { type UserRepository } from './user.repository.js';
 
 class UserService implements IService {
   private userRepository: UserRepository;
