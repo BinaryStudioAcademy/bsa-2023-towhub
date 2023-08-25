@@ -12,11 +12,9 @@ CREATE TABLE IF NOT EXISTS
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS
   "users_trucks" (
-    "id" serial PRIMARY KEY NOT NULL,
     "user_id" integer NOT NULL,
     "truck_id" integer NOT NULL,
-    CONSTRAINT "users_trucks_user_id_unique" UNIQUE ("user_id"),
-    CONSTRAINT "users_trucks_truck_id_unique" UNIQUE ("truck_id")
+    CONSTRAINT users_trucks_user_id_truck_id PRIMARY KEY ("user_id", "truck_id")
   );
 
 --> statement-breakpoint

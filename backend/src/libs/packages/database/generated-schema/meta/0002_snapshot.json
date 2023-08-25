@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "0456dbe7-89ab-42b7-b212-53a973a9e095",
+  "id": "57822779-a10e-4bbc-93ae-18eea23e0d05",
   "prevId": "7773db4d-0369-4f74-8c23-78b76371e4db",
   "tables": {
     "groups": {
@@ -198,12 +198,6 @@
       "name": "users_trucks",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
         "user_id": {
           "name": "user_id",
           "type": "integer",
@@ -238,19 +232,13 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "users_trucks_user_id_unique": {
-          "name": "users_trucks_user_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["user_id"]
-        },
-        "users_trucks_truck_id_unique": {
-          "name": "users_trucks_truck_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["truck_id"]
+      "compositePrimaryKeys": {
+        "users_trucks_user_id_truck_id": {
+          "name": "users_trucks_user_id_truck_id",
+          "columns": ["user_id", "truck_id"]
         }
-      }
+      },
+      "uniqueConstraints": {}
     }
   },
   "enums": {},

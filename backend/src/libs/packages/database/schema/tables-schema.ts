@@ -1,6 +1,7 @@
 import {
   integer,
   pgTable,
+  primaryKey,
   serial,
   timestamp,
   uniqueIndex,
@@ -59,16 +60,21 @@ const trucks = pgTable(
   },
 );
 
-const usersTrucks = pgTable('users_trucks', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id')
-    .references(() => users.id, { onDelete: 'cascade' })
-    .notNull()
-    .unique(),
-  truckId: integer('truck_id')
-    .references(() => trucks.id, { onDelete: 'cascade' })
-    .notNull()
-    .unique(),
-});
+const usersTrucks = pgTable(
+  'users_trucks',
+  {
+    userId: integer('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    truckId: integer('truck_id')
+      .references(() => trucks.id, { onDelete: 'cascade' })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      pk: primaryKey(table.userId, table.truckId),
+    };
+  },
+);
 
 export { groups, trucks, users, usersTrucks };
