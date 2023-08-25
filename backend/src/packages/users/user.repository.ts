@@ -37,6 +37,17 @@ class UserRepository implements IRepository {
     return result[0] ? UserEntity.initialize(result[0]) : null;
   }
 
+  public async findByEmail(value: string): Promise<UserEntity | null> {
+    const result = await this.db
+      .driver()
+      .select()
+      .from(this.usersSchema)
+      .where(eq(this.usersSchema.email, value.toLowerCase()))
+      .execute();
+
+    return result[0] ? UserEntity.initialize(result[0]) : null;
+  }
+
   public findById(id: number): Promise<InferModel<typeof schema.users>[]> {
     return this.db
       .driver()
@@ -70,7 +81,7 @@ class UserRepository implements IRepository {
         phone,
         passwordHash,
         passwordSalt,
-        email,
+        email: email.toLowerCase(),
         firstName,
         lastName,
         groupId,

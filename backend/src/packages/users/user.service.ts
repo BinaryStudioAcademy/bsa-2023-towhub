@@ -24,6 +24,10 @@ class UserService implements IService {
     return this.userRepository.findByPhone(value);
   }
 
+  public findByEmail(value: string): Promise<UserEntity | null> {
+    return this.userRepository.findByEmail(value);
+  }
+
   public findById(id: number): ReturnType<IService['find']> {
     return this.userRepository.findById(id);
   }

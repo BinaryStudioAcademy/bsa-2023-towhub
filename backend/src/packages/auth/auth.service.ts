@@ -17,9 +17,11 @@ class AuthService {
 
   private async checkExistingUser({
     phone,
+    email,
   }: UserSignUpRequestDto): Promise<boolean> {
     const existingUser: UserEntity | null =
-      await this.userService.findByPhone(phone);
+      (await this.userService.findByPhone(phone)) ??
+      (await this.userService.findByEmail(email));
 
     return Boolean(existingUser);
   }

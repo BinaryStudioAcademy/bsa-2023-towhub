@@ -22,6 +22,13 @@
       "when": 1692883039255,
       "tag": "0002_misty_starbolt",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1692989587191,
+      "tag": "0003_absent_night_thrasher",
+      "breakpoints": true
     }
   ]
 }
