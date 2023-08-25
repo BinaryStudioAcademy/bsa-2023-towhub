@@ -1,10 +1,13 @@
-import { type UserEntity as UserEntityT } from '~/packages/users/libs/types/types.js';
+import {
+  type UserEntityT,
+  type UserGroupEntityT,
+} from '~/packages/users/libs/types/types.js';
 
-import { type BusinessEntity as BusinessEntityT } from '../request/request.js';
+import { type BusinessEntityT } from '../business-entity.type.js';
 
 type BusinessCreatePayload = {
-  payload: Omit<BusinessEntityT, 'id' | 'ownerId'>;
-  owner: Pick<UserEntityT, 'id'> & { group: { key: string } };
+  payload: Pick<BusinessEntityT, 'companyName' | 'taxNumber'>;
+  owner: Pick<UserEntityT, 'id'> & { group: UserGroupEntityT };
 };
 
 export { type BusinessCreatePayload };

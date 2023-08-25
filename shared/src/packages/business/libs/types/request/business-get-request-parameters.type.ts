@@ -1,5 +1,5 @@
-import { type BusinessEntity } from './business-entity.type.js';
+import { type BusinessEntityT } from '../business-entity.type.js';
 
-type BusinessGetRequestParameters = Pick<BusinessEntity, 'id'>;
+type BusinessGetRequestParameters = Pick<BusinessEntityT, 'id'>;
 
 export { type BusinessGetRequestParameters };

@@ -1,8 +1,6 @@
-import { AppErrorMessage } from '~/libs/enums/enums.js';
-import { HttpCode } from '~/libs/packages/http/http.js';
-import { type ValueOf } from '~/libs/types/value-of.type.js';
-
-import { ApplicationError } from '../application-error/application-error.exception.js';
+import { AppErrorMessage, HttpCode } from '../../enums/enums.js';
+import { type ValueOf } from '../../types/types.js';
+import { ApplicationError } from '../exceptions.js';
 
 type Constructor = {
   message?: string;

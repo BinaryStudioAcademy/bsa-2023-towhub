@@ -1,12 +1,4 @@
-import { type ValueOf } from '~/libs/types/types.js';
-import { type UserGroupKey } from '~/packages/users/libs/enums/enums.js';
-
-type UserMocked = {
-  id: number;
-  group: {
-    key: ValueOf<typeof UserGroupKey>;
-  };
-};
+import { type UserMocked } from './user-mocked.type.js';
 
 type DefaultApiHandlerOptions = {
   body?: unknown;
@@ -24,4 +16,4 @@ type ApiHandlerOptions<
   user: T['user'];
 };
 
-export { type ApiHandlerOptions, type UserMocked };
+export { type ApiHandlerOptions };

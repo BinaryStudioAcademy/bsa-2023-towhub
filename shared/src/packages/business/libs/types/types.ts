@@ -1,7 +1,7 @@
+export { type BusinessEntityT } from './business-entity.type.js';
 export {
   type BusinessAddRequestDto,
   type BusinessDeleteRequestParameters,
-  type BusinessEntity,
   type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,

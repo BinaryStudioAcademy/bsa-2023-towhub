@@ -2,14 +2,14 @@ import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type OperationResult } from '~/libs/types/types.js';
-import { type BusinessRepository } from '~/packages/business/business.repository.js';
+import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
-import { UserGroupKey } from '../users/libs/enums/enums.js';
 import { BusinessEntity } from './business.entity.js';
+import { type BusinessRepository } from './business.repository.js';
 import {
   type BusinessAddResponseDto,
   type BusinessCreatePayload,
-  type BusinessEntity as BusinessEntityT,
+  type BusinessEntityT,
   type BusinessUpdateResponseDto,
 } from './libs/types/types.js';
 

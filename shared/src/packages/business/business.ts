@@ -7,7 +7,7 @@ export {
   type BusinessAddResponseDto,
   type BusinessCreatePayload,
   type BusinessDeleteRequestParameters,
-  type BusinessEntity,
+  type BusinessEntityT,
   type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,

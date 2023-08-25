@@ -14,6 +14,8 @@ const userFromToken: UserMocked = {
   id: 1,
   group: {
     key: UserGroupKey.BUSINESS,
+    id: 2,
+    name: 'Business',
   },
 };
 

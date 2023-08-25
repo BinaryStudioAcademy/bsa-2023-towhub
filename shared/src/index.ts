@@ -8,7 +8,6 @@ export {
 export {
   ApplicationError,
   HttpError,
-  NotFoundError,
   ValidationError,
 } from './libs/exceptions/exceptions.js';
 export { configureString } from './libs/helpers/helpers.js';
@@ -23,6 +22,7 @@ export {
 } from './libs/packages/http/http.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
+  type CapitalizeEnum,
   type NullableProperties,
   type OperationResult,
   type ServerCommonErrorResponse,
@@ -38,7 +38,7 @@ export {
   type BusinessAddResponseDto,
   type BusinessCreatePayload,
   type BusinessDeleteRequestParameters,
-  type BusinessEntity,
+  type BusinessEntityT,
   type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,
@@ -52,9 +52,12 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
-  type UserEntity,
+  type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
+  type UserGroupEntityT,
+  type UserGroupKeyT,
+  type UserGroupNameT,
   type UserSignUpRequestDto,
   type UserSignUpResponseDto,
   UserGroupKey,

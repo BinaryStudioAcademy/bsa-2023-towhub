@@ -1,5 +1,5 @@
-import { type BusinessEntity } from './business-entity.type.js';
+import { type BusinessEntityT } from '../business-entity.type.js';
 
-type BusinessDeleteRequestParameters = Pick<BusinessEntity, 'id'>;
+type BusinessDeleteRequestParameters = Pick<BusinessEntityT, 'id'>;
 
 export { type BusinessDeleteRequestParameters };

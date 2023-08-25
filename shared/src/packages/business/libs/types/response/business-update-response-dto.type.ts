@@ -1,4 +1,4 @@
-import { type BusinessEntity as BusinessEntityT } from '~/packages/business/libs/types/request/business-entity.type';
+import { type BusinessEntityT } from '../business-entity.type.js';
 
 type BusinessUpdateResponseDto = BusinessEntityT;
 
