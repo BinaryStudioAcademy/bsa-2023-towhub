@@ -1,7 +1,7 @@
 import rocket from '~/assets/img/welcome-page/rocket.png';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 
-import { Button } from '../components.js';
+import { Button, Image } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -12,7 +12,7 @@ const BusinessCard: React.FC<Properties> = ({ onClick }: Properties) => {
   return (
     <li className={styles.card}>
       <div>
-        <img src={rocket} alt="rocket" className={styles.image} />
+        <Image src={rocket} alt="rocket" />
       </div>
 
       <div>

@@ -1,7 +1,7 @@
 import customer from '~/assets/img/welcome-page/customer.png';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 
-import { Button } from '../components.js';
+import { Button, Image } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -12,7 +12,7 @@ const CustomerCard: React.FC<Properties> = ({ onClick }: Properties) => {
   return (
     <li className={styles.card}>
       <div>
-        <img src={customer} alt="rocket" className={styles.image} />
+        <Image src={customer} alt="customer" />
       </div>
 
       <div>
