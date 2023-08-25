@@ -1,6 +1,6 @@
-import { type UserEntity } from './user-entity.type.js';
+import { type UserEntityT } from './user-entity.type.js';
 
-type UserSignInRequestDto = Pick<UserEntity, 'email'> & {
+type UserSignInRequestDto = Pick<UserEntityT, 'email'> & {
   password: string;
 };
 

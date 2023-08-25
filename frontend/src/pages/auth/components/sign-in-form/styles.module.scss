@@ -1,0 +1,32 @@
+@import "../../../../assets/css/vars.scss";
+
+.form-wrapper {
+  max-width: 446px;
+  padding: 30px 60px 50px;
+  background-color: $white;
+  border-radius: 8px;
+}
+
+.title {
+  margin: 0 0 17px;
+  color: $title-color;
+  font-weight: $font-weight-bold;
+  font-size: 24px;
+  font-family: $font-family;
+  text-transform: uppercase;
+}
+
+.text {
+  margin: 25px 0 0;
+  color: $grey;
+  font-weight: $font-weight-regular;
+  font-size: 14px;
+  font-family: $font-family;
+}
+
+.link {
+  color: inherit;
+  font-weight: $font-weight-semibold;
+  text-align: center;
+  text-decoration: none;
+}

@@ -1,5 +1,5 @@
-import { type UserEntity } from './user-entity.type.js';
+import { type UserEntityT } from './user-entity.type.js';
 
-type UserGetAllItemResponseDto = Pick<UserEntity, 'id' | 'phone'>;
+type UserGetAllItemResponseDto = Pick<UserEntityT, 'id' | 'phone'>;
 
 export { type UserGetAllItemResponseDto };

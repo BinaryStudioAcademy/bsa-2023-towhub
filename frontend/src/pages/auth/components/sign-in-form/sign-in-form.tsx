@@ -7,14 +7,15 @@ import {
 
 import { DEFAULT_SIGN_IN_PAYLOAD } from './libs/constants.js';
 import { signInFields } from './libs/fields.js';
+import styles from './styles.module.scss';
 
 type Properties = {
   onSubmit: (payload: UserSignInRequestDto) => void;
 };
 
 const SignInForm: React.FC<Properties> = ({ onSubmit }: Properties) => (
-  <>
-    <h3>Sign In</h3>
+  <div className={styles['form-wrapper']}>
+    <h3 className={styles.title}>Sign in</h3>
     <Form
       defaultValues={DEFAULT_SIGN_IN_PAYLOAD}
       validationSchema={userSignInValidationSchema}
@@ -22,11 +23,14 @@ const SignInForm: React.FC<Properties> = ({ onSubmit }: Properties) => (
       btnLabel="Sign In"
       fields={signInFields}
     />
-    <p>
+    <p className={styles.text}>
       Don`t have an account yet?
-      <Link to={AppRoute.SIGN_UP}>Sing up</Link>
+      <Link to={AppRoute.SIGN_UP} className={styles.link}>
+        {' '}
+        Sing up
+      </Link>
     </p>
-  </>
+  </div>
 );
 
 export { SignInForm };

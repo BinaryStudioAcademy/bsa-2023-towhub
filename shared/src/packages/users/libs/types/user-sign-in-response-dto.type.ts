@@ -1,7 +1,7 @@
-import { type UserEntity } from './user-entity.type.js';
+import { type UserEntityT } from './user-entity.type.js';
 
 type UserSignInResponseDto = Omit<
-  UserEntity,
+  UserEntityT,
   'passwordHash' | 'passwordSalt'
 > & {
   token: string;
