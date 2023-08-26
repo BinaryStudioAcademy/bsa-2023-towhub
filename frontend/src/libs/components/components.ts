@@ -1,9 +1,11 @@
 export { App } from './app/app.js';
+export { AppLogo } from './app-logo/app-logo.js';
 export { Background } from './background/background.js';
 export { Button } from './button/button.js';
 export { Checkbox } from './checkbox/checkbox.js';
 export { Container } from './container/container.js';
 export { Form } from './form/form.jsx';
+export { Header } from './header/header.js';
 export { Icon } from './icon/icon.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
