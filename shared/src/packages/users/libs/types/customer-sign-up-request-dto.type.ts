@@ -1,10 +1,10 @@
 import { type UserEntityT } from './user-entity.type.js';
 
-type UserSignUpRequestDto = Omit<
+type CustomerSignUpRequestDto = Omit<
   UserEntityT,
   'id' | 'passwordHash' | 'passwordSalt' | 'groupId'
 > & {
   password: string;
 };
 
-export { type UserSignUpRequestDto };
+export { type CustomerSignUpRequestDto };

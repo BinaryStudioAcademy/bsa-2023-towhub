@@ -2,9 +2,9 @@ import { type IService } from '~/libs/interfaces/interfaces.js';
 import { encryptService } from '~/libs/packages/packages.js';
 
 import {
+  type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
   type UserGetAllResponseDto,
-  type UserSignUpRequestDto,
-  type UserSignUpResponseDto,
 } from './libs/types/types.js';
 import { UserEntity } from './user.entity.js';
 import { type UserRepository } from './user.repository.js';
@@ -37,9 +37,9 @@ class UserService implements IService {
   }
 
   public async create(
-    payload: UserSignUpRequestDto,
+    payload: CustomerSignUpRequestDto,
     groupId = 1, //TEMPORARY MOCK
-  ): Promise<UserSignUpResponseDto> {
+  ): Promise<CustomerSignUpResponseDto> {
     const { phone, email, password, firstName, lastName } = payload;
     const { passwordHash, passwordSalt } =
       await encryptService.encrypt(password);
