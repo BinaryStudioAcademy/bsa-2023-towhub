@@ -15,16 +15,22 @@ const BusinessCard: React.FC<Properties> = ({ onClick }: Properties) => {
         <Image src={rocket} alt="rocket" />
       </div>
 
-      <div>
-        <h3 className={getValidClassNames('h4', styles.title)}>
-          I am an entrepreneur
-        </h3>
-        <p className={getValidClassNames('text-sm', styles.text)}>
-          You can easily add your service to our platform and get your first
-          customers in just a few minutes.
-        </p>
+      <div className={styles['card-container']}>
+        <div>
+          <h3 className={getValidClassNames('h4', styles.title)}>
+            I am an entrepreneur
+          </h3>
+          <p className={getValidClassNames('text-sm', styles.text)}>
+            You can easily add your service to our platform and get your first
+            customers in just a few minutes.
+          </p>
+        </div>
 
-        <Button onClick={onClick} label={'Continue'} />
+        <Button
+          onClick={onClick}
+          label={'Continue'}
+          className={styles.button}
+        />
       </div>
     </li>
   );

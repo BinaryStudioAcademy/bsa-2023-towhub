@@ -15,17 +15,23 @@ const CustomerCard: React.FC<Properties> = ({ onClick }: Properties) => {
         <Image src={customer} alt="customer" />
       </div>
 
-      <div>
-        <h3 className={getValidClassNames('h4', styles.title)}>
-          I am a customer
-        </h3>
+      <div className={styles['card-container']}>
+        <div>
+          <h3 className={getValidClassNames('h4', styles.title)}>
+            I am a customer
+          </h3>
 
-        <p className={getValidClassNames(styles.text, 'text-sm')}>
-          Create an account for additional features such as orders history, tow
-          truck reviews, etc.
-        </p>
+          <p className={getValidClassNames(styles.text, 'text-sm')}>
+            Create an account for additional features such as orders history,
+            tow truck reviews, etc.
+          </p>
+        </div>
 
-        <Button onClick={onClick} label={'Continue'} />
+        <Button
+          onClick={onClick}
+          label={'Continue'}
+          className={styles.button}
+        />
       </div>
     </li>
   );

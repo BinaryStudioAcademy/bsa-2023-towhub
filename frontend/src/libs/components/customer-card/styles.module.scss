@@ -11,17 +11,30 @@
   box-shadow: 0 1px 5px 0 rgb(173 164 164 / 28%);
 }
 
+.card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
 .title {
   margin: 0;
   font-size: 16px;
 }
 
 .text {
-  max-width: 216px;
+  max-width: 250px;
   margin-bottom: 24px;
   color: $grey;
   font-weight: 700;
   line-height: 1.5;
+}
+
+.button {
+  width: max-content;
 }
 
 @media (width >= $screen-size-lg) {
@@ -29,6 +42,15 @@
     flex-direction: row;
     width: 540px;
     max-width: 540px;
+  }
+
+  .card-container {
+    align-items: flex-start;
+    text-align: start;
+  }
+
+  .text {
+    max-width: 216px;
   }
 }
 
