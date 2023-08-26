@@ -18,9 +18,11 @@
     "@fortawesome/fontawesome-svg-core": "6.4.2",
     "@fortawesome/free-solid-svg-icons": "6.4.2",
     "@fortawesome/react-fontawesome": "0.2.0",
+    "@googlemaps/react-wrapper": "1.1.35",
     "@hookform/resolvers": "2.9.11",
     "@reduxjs/toolkit": "1.9.3",
     "clsx": "2.0.0",
+    "modern-normalize": "2.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "7.43.5",
@@ -30,6 +32,7 @@
     "socket.io-client": "4.7.2"
   },
   "devDependencies": {
+    "@types/google.maps": "3.54.0",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",
     "@vitejs/plugin-react": "4.0.4",
