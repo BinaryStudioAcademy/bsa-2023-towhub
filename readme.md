@@ -76,8 +76,8 @@ erDiagram
         updated_at timestamp "not null"
     }
 
-    USERS one -- zero or one BUSINESS_DETAILS: "USERS(id) HAS BUSINESS_DETAILS(owner_id)"
-    USERS one or more -- only one GROUPS:  "USERS(group_id) BELONGS TO GROUPS(id)"
+    USERS one or many -- one GROUPS: "USERS(group_id) BELONGS TO GROUPS(id)"
+    BUSINESS_DETAILS one or many -- one USERS: "BUSINESS_DETAILS(owner_id) BELONGS TO USERS(id)"
 
 ```
 
