@@ -8,6 +8,6 @@ export {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-export { useCallback, useEffect, useMemo, useState } from 'react';
+export { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 export { useController as useFormController } from 'react-hook-form';
 export { useLocation } from 'react-router-dom';
