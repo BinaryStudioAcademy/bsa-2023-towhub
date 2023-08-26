@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.horizontal {
+  flex-direction: row;
+  aspect-ratio: 186 / 54;
+}
+
+.horizontal .logoSymbol {
+  height: 100%;
+}
+
+.horizontal .logoBrand {
+  width: calc(124 / 186 * 100%);
+}
+
+.vertical {
+  flex-direction: column;
+  aspect-ratio: 124 / 92;
+}
+
+.vertical .logoSymbol {
+  height: calc(54 / 92 * 100%);
+}
+
+.vertical .logoBrand {
+  width: 100%;
+}
