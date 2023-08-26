@@ -46,7 +46,7 @@ TBA
 
 erDiagram
 
-    USERS {
+    users {
         id serial PK "not null"
         phone varchar "not null, unique"
         email varchar "not null"
@@ -59,7 +59,7 @@ erDiagram
         updated_at timestamp "not null"
     }
 
-    GROUPS {
+    groups {
         id serial PK "not null"
         name varchar "not null"
         key varchar "not null"
@@ -67,7 +67,7 @@ erDiagram
         updated_at timestamp "not null"
     }
 
-    BUSINESS_DETAILS {
+    business_details {
         id serial PK "not null"
         company_name varchar "not null, unique"
         tax_number varchar "not null, unique"
@@ -76,8 +76,8 @@ erDiagram
         updated_at timestamp "not null"
     }
 
-    USERS one or many -- one GROUPS: "USERS(group_id) BELONGS TO GROUPS(id)"
-    BUSINESS_DETAILS one or many -- one USERS: "BUSINESS_DETAILS(owner_id) BELONGS TO USERS(id)"
+    users one or many -- one groups: "users(group_id) belongs to groups(id)"
+    business_details one or many -- one users: "business_details(owner_id) belongs to users(id)"
 
 ```
 
