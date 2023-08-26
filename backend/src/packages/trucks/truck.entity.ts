@@ -1,7 +1,10 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import { type TruckEntity as TruckEntityT } from './libs/types/types.js';
+import {
+  type TruckEntity as TruckEntityT,
+  type TruckEntityDatabase,
+} from './libs/types/types.js';
 
 class TruckEntity implements IEntity {
   private id: number | null;
@@ -29,7 +32,7 @@ class TruckEntity implements IEntity {
     pricePerKm,
     licensePlateNumber,
     year,
-  }: NullableProperties<TruckEntityT, 'id'>) {
+  }: NullableProperties<TruckEntityDatabase, 'id'>) {
     this.id = id;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
@@ -52,8 +55,8 @@ class TruckEntity implements IEntity {
   }: TruckEntityT): TruckEntity {
     return new TruckEntity({
       id,
-      createdAt,
-      updatedAt,
+      createdAt: new Date(createdAt),
+      updatedAt: new Date(updatedAt),
       manufacturer,
       capacity,
       pricePerKm,
@@ -81,8 +84,11 @@ class TruckEntity implements IEntity {
     });
   }
 
-  public toObject(): Omit<TruckEntityT, 'id' | 'createdAt' | 'updatedAt'> {
+  public toObject(): TruckEntityT {
     return {
+      id: this.id as number,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
       manufacturer: this.manufacturer,
       capacity: this.capacity,
       pricePerKm: this.pricePerKm,
@@ -91,9 +97,8 @@ class TruckEntity implements IEntity {
     };
   }
 
-  public toNewObject(): Omit<TruckEntityT, 'id' | 'createdAt'> {
+  public toNewObject(): Omit<TruckEntityT, 'id' | 'createdAt' | 'updatedAt'> {
     return {
-      updatedAt: new Date(),
       manufacturer: this.manufacturer,
       capacity: this.capacity,
       pricePerKm: this.pricePerKm,

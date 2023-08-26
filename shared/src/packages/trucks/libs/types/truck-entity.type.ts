@@ -1,7 +1,7 @@
 type TruckEntity = {
   id: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   manufacturer: string;
   capacity: number;
   pricePerKm: number;
