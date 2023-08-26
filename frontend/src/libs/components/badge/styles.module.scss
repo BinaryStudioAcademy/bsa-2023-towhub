@@ -1,0 +1,35 @@
+@import "src/assets/css/vars.scss";
+
+.badge {
+  border: 1px solid red;
+}
+
+$colors: (
+  black: $black,
+  grey-dark: $grey-dark,
+  red-dark: $red-dark,
+  blue-dark: $blue-dark,
+  grey: $grey,
+  red: $red,
+  blue: $blue,
+  white: $white,
+  red-light: $red-light,
+  blue-light: $blue-light,
+  grey-light: $grey-light,
+  grey-extra-light: $grey-extra-light,
+  green: $green,
+);
+
+@each $color, $value in $colors {
+  .badge[class*="background-#{'' + $color}"] {
+    background-color: $value;
+  }
+}
+
+.textColorLight {
+  color: $white;
+}
+
+.textColorDark {
+  color: $black;
+}
