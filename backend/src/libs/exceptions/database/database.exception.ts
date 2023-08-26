@@ -1,6 +1,6 @@
 import { type Constructor } from '~/libs/types/types.js';
 
-class DatabaseConnectionError extends Error {
+class DatabaseError extends Error {
   public constructor({ message, cause }: Constructor) {
     super(message, {
       cause,
@@ -8,4 +8,4 @@ class DatabaseConnectionError extends Error {
   }
 }
 
-export { DatabaseConnectionError };
+export { DatabaseError };
