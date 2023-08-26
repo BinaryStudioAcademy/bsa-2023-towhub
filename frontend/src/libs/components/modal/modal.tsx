@@ -1,7 +1,7 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
+import { createPortal } from 'react-dom';
+
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 
-import { Portal } from '../portal/portal.jsx';
 import { useModal } from './hooks/hooks.js';
 import styles from './styles.module.scss';
 
@@ -18,7 +18,11 @@ const Modal: React.FC<Properties> = ({
   onClose,
   children,
 }: Properties) => {
-  const { handleDisableContentContainerClick, handleOutsideClick } = useModal({
+  const {
+    handleDisableContentContainerClick,
+    handleOutsideClick,
+    handleExitKeydown,
+  } = useModal({
     onClose,
   });
 
@@ -26,27 +30,32 @@ const Modal: React.FC<Properties> = ({
     return null;
   }
 
-  return (
-    <Portal>
+  const modalElement = (
+    <div
+      className={getValidClassNames(
+        styles.modal,
+        isCentered && styles.centered,
+      )}
+      onClick={handleOutsideClick}
+      onKeyDown={handleExitKeydown}
+      role="button"
+      tabIndex={0}
+    >
       <div
-        className={getValidClassNames(
-          styles.modal,
-          isCentered && styles.centered,
-        )}
-        onClick={handleOutsideClick}
+        className={styles.content}
+        onClick={handleDisableContentContainerClick}
+        onKeyDown={handleExitKeydown}
         role="button"
         tabIndex={0}
       >
-        <div
-          className={styles.content}
-          onClick={handleDisableContentContainerClick}
-          role="button"
-          tabIndex={0}
-        >
-          {children}
-        </div>
+        {children}
       </div>
-    </Portal>
+    </div>
+  );
+
+  return createPortal(
+    modalElement,
+    document.querySelector('#modal-root') as Element,
   );
 };
 

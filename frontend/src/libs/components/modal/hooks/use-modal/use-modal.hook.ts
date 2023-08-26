@@ -9,10 +9,21 @@ const useModal = ({
 }: Properties): {
   handleOutsideClick: React.MouseEventHandler<HTMLDivElement>;
   handleDisableContentContainerClick: React.MouseEventHandler<HTMLDivElement>;
+  handleExitKeydown: React.KeyboardEventHandler<HTMLDivElement>;
 } => {
   const handleOutsideClick = useCallback(() => {
     onClose();
   }, [onClose]);
+
+  const handleExitKeydown: React.KeyboardEventHandler<HTMLDivElement> =
+    useCallback(
+      (event) => {
+        if (event.key === 'Escape') {
+          onClose();
+        }
+      },
+      [onClose],
+    );
 
   const handleDisableContentContainerClick: React.MouseEventHandler<HTMLDivElement> =
     useCallback((event) => {
@@ -22,6 +33,7 @@ const useModal = ({
   return {
     handleOutsideClick,
     handleDisableContentContainerClick,
+    handleExitKeydown,
   };
 };
 
