@@ -15,6 +15,13 @@
       "when": 1692626206950,
       "tag": "0001_powerful_sphinx",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1692883039255,
+      "tag": "0002_misty_starbolt",
+      "breakpoints": true
     }
   ]
 }
