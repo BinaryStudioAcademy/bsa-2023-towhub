@@ -1,7 +1,8 @@
-import { type HttpMethod } from './http-method.type.js';
+import { type HttpMethod } from '~/libs/packages/http/libs/enums/http-method.enum.js';
+import { type ValueOf } from '~/libs/types/value-of.type';
 
 type HttpOptions = {
-  method: HttpMethod;
+  method: ValueOf<typeof HttpMethod>;
   payload: BodyInit | null;
   headers: Headers;
 };
