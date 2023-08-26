@@ -1,5 +1,5 @@
 import { type InferModel } from 'drizzle-orm';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import {
@@ -8,6 +8,8 @@ import {
 } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { UserEntity } from '~/packages/users/user.entity.js';
+
+import { type UserEntityT } from './libs/types/types.js';
 
 class UserRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -26,27 +28,37 @@ class UserRepository implements IRepository {
     return Promise.resolve([]);
   }
 
-  public async findByPhone(value: string): Promise<UserEntity | null> {
-    const result = await this.db
+  public async findByPhoneAndEmail({
+    phone,
+    email,
+  }: Pick<UserEntityT, 'phone' | 'email'>): Promise<
+    (UserEntityT & { createdAt: Date; updatedAt: Date }) | null
+  > {
+    const [user = null] = await this.db
       .driver()
       .select()
       .from(this.usersSchema)
-      .where(eq(this.usersSchema.phone, value))
+      .where(
+        and(
+          eq(this.usersSchema.phone, phone),
+          eq(this.usersSchema.email, email),
+        ),
+      )
       .execute();
 
-    return result[0] ? UserEntity.initialize(result[0]) : null;
+    return user;
   }
 
-  public async findByEmail(value: string): Promise<UserEntity | null> {
-    const result = await this.db
-      .driver()
-      .select()
-      .from(this.usersSchema)
-      .where(eq(this.usersSchema.email, value.toLowerCase()))
-      .execute();
+  // public async findByEmail(value: string): Promise<UserEntity | null> {
+  //   const result = await this.db
+  //     .driver()
+  //     .select()
+  //     .from(this.usersSchema)
+  //     .where(eq(this.usersSchema.email, value.toLowerCase()))
+  //     .execute();
 
-    return result[0] ? UserEntity.initialize(result[0]) : null;
-  }
+  //   return result[0] ? UserEntity.initialize(result[0]) : null;
+  // }
 
   public findById(id: number): Promise<InferModel<typeof schema.users>[]> {
     return this.db
@@ -63,33 +75,17 @@ class UserRepository implements IRepository {
     return users.map((it) => UserEntity.initialize(it));
   }
 
-  public async create(entity: UserEntity): Promise<UserEntity> {
-    const {
-      phone,
-      passwordSalt,
-      passwordHash,
-      email,
-      firstName,
-      lastName,
-      groupId,
-    } = entity.toNewObject();
-
-    const [result] = await this.db
+  public async create(
+    entity: Omit<UserEntityT, 'id'>,
+  ): Promise<(UserEntityT & { createdAt: Date; updatedAt: Date }) | null> {
+    const [user = null] = await this.db
       .driver()
       .insert(this.usersSchema)
-      .values({
-        phone,
-        passwordHash,
-        passwordSalt,
-        email: email.toLowerCase(),
-        firstName,
-        lastName,
-        groupId,
-      })
+      .values(entity)
       .returning()
       .execute();
 
-    return UserEntity.initialize(result);
+    return user;
   }
 
   public update(): ReturnType<IRepository['update']> {

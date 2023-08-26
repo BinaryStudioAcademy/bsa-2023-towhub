@@ -1,12 +1,10 @@
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
-import { HttpError } from '~/libs/exceptions/exceptions.js';
+import { ApplicationError, HttpError } from '~/libs/exceptions/exceptions.js';
 import {
   type UserSignUpRequestDto,
   type UserSignUpResponseDto,
 } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service.js';
-
-import { type UserEntity } from '../users/user.entity.js';
 
 class AuthService {
   private userService: UserService;
@@ -15,13 +13,11 @@ class AuthService {
     this.userService = userService;
   }
 
-  private async checkExistingUser({
-    phone,
-    email,
-  }: UserSignUpRequestDto): Promise<boolean> {
-    const existingUser: UserEntity | null =
-      (await this.userService.findByPhone(phone)) ??
-      (await this.userService.findByEmail(email));
+  private async checkIsExistingUser(
+    userRequest: UserSignUpRequestDto,
+  ): Promise<boolean> {
+    const existingUser =
+      await this.userService.findByPhoneAndEmail(userRequest);
 
     return Boolean(existingUser);
   }
@@ -29,16 +25,24 @@ class AuthService {
   public async signUp(
     userRequestDto: UserSignUpRequestDto,
   ): Promise<UserSignUpResponseDto> {
-    const isUserExist = await this.checkExistingUser(userRequestDto);
+    const isExistingUser = await this.checkIsExistingUser(userRequestDto);
 
-    if (isUserExist) {
+    if (isExistingUser) {
       throw new HttpError({
         message: HttpMessage.USER_EXISTS,
         status: HttpCode.CONFLICT,
       });
     }
 
-    return await this.userService.create(userRequestDto);
+    const createdUser = await this.userService.create(userRequestDto);
+
+    if (!createdUser) {
+      throw new ApplicationError({
+        message: 'Mistake', //Change!
+      });
+    }
+
+    return createdUser;
   }
 }
 
