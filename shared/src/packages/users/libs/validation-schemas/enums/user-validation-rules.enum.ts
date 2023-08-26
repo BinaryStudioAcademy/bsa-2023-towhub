@@ -1,4 +1,4 @@
-const UserValidationRule = {
+const UserValidationRules = {
   PASSWORD: /^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$/,
   NAME: /^['A-Za-z-]{1,40}$/,
   PHONE: /^\+\d{8,19}$/,
@@ -8,4 +8,4 @@ const UserValidationRule = {
   EMAIL_MAX_LENGTH: 254,
 } as const;
 
-export { UserValidationRule };
+export { UserValidationRules };
