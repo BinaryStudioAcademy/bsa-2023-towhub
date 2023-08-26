@@ -1,0 +1,32 @@
+@import "../../../assets/css/styles.scss";
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.dots {
+  margin: 0 5px;
+  color: $red-dark;
+  font-size: 22px;
+}
+
+.btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  margin: 1px;
+  color: $red-dark;
+  font-weight: $font-weight-extrabold;
+  font-size: 16px;
+  font-family: $font-family;
+  border: 1px solid $red-dark;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.active {
+  color: white;
+  background-color: $red-dark;
+}

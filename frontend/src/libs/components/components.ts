@@ -5,6 +5,7 @@ export { Form } from './form/form.jsx';
 export { Icon } from './icon/icon.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
+export { Pagination } from './pagination/pagination.js';
 export { Radio } from './radio/radio.js';
 export { Router } from './router/router.jsx';
 export { RouterProvider } from './router-provider/router-provider.jsx';

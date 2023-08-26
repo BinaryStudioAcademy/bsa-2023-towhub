@@ -21,3 +21,6 @@ rules:
     - true
     - ignorePseudoClasses:
         - global
+  # allow limit the depth of nesting
+  max-nesting-depth:
+    - 2
