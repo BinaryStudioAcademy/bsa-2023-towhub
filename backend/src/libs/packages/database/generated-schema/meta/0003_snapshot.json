@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "c4c05292-c03f-49fe-b776-720da2291a96",
+  "id": "ffcc394c-24a9-4b13-9d19-f476b9bdfdcf",
   "prevId": "480273b5-cb72-4195-9c84-dee9c2947870",
   "tables": {
     "business_details": {
@@ -159,6 +159,12 @@
         },
         "license_plate_number": {
           "name": "license_plate_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year": {
+          "name": "year",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true

@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS
     "manufacturer" varchar NOT NULL,
     "capacity" integer NOT NULL,
     "price_per_km" real NOT NULL,
-    "license_plate_number" varchar NOT NULL
+    "license_plate_number" varchar NOT NULL,
+    "year" varchar NOT NULL
   );
 
 --> statement-breakpoint

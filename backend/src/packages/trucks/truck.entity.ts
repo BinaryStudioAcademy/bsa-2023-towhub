@@ -18,6 +18,8 @@ class TruckEntity implements IEntity {
 
   private licensePlateNumber: string;
 
+  private year: string;
+
   private constructor({
     id,
     createdAt,
@@ -26,6 +28,7 @@ class TruckEntity implements IEntity {
     capacity,
     pricePerKm,
     licensePlateNumber,
+    year,
   }: NullableProperties<TruckEntityT, 'id'>) {
     this.id = id;
     this.createdAt = createdAt;
@@ -34,6 +37,7 @@ class TruckEntity implements IEntity {
     this.capacity = capacity;
     this.pricePerKm = pricePerKm;
     this.licensePlateNumber = licensePlateNumber;
+    this.year = year;
   }
 
   public static initialize({
@@ -44,6 +48,7 @@ class TruckEntity implements IEntity {
     capacity,
     pricePerKm,
     licensePlateNumber,
+    year,
   }: TruckEntityT): TruckEntity {
     return new TruckEntity({
       id,
@@ -53,6 +58,7 @@ class TruckEntity implements IEntity {
       capacity,
       pricePerKm,
       licensePlateNumber,
+      year,
     });
   }
 
@@ -61,6 +67,7 @@ class TruckEntity implements IEntity {
     capacity,
     pricePerKm,
     licensePlateNumber,
+    year,
   }: Omit<TruckEntityT, 'id' | 'createdAt' | 'updatedAt'>): TruckEntity {
     return new TruckEntity({
       id: null,
@@ -70,6 +77,7 @@ class TruckEntity implements IEntity {
       capacity,
       pricePerKm,
       licensePlateNumber,
+      year,
     });
   }
 
@@ -79,6 +87,7 @@ class TruckEntity implements IEntity {
       capacity: this.capacity,
       pricePerKm: this.pricePerKm,
       licensePlateNumber: this.licensePlateNumber,
+      year: this.year,
     };
   }
 
@@ -89,6 +98,7 @@ class TruckEntity implements IEntity {
       capacity: this.capacity,
       pricePerKm: this.pricePerKm,
       licensePlateNumber: this.licensePlateNumber,
+      year: this.year,
     };
   }
 }

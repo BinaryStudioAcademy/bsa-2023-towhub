@@ -55,6 +55,7 @@ class TruckRepository implements IRepository {
         capacity,
         pricePerKm,
         licensePlateNumber,
+        year,
       }: NewTruckData = entity;
 
       const [result] = await this.db
@@ -65,6 +66,7 @@ class TruckRepository implements IRepository {
           capacity,
           pricePerKm,
           licensePlateNumber,
+          year,
         })
         .returning()
         .execute();
@@ -124,6 +126,7 @@ class TruckRepository implements IRepository {
             ilike(this.trucksSchema.capacity, `%${query}%`),
             ilike(this.trucksSchema.pricePerKm, `%${query}%`),
             ilike(this.trucksSchema.licensePlateNumber, `%${query}%`),
+            ilike(this.trucksSchema.year, `%${query}%`),
           ),
         );
 
