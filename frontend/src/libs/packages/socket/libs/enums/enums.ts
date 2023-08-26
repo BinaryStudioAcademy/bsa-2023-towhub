@@ -1,1 +1,1 @@
-export { ClientSocketEvent } from 'shared/build/index';
+export { ClientSocketEvent } from 'shared/build/index.js';
