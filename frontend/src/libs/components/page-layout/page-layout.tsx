@@ -32,7 +32,7 @@ const PageLayout: FC<Properties> = ({
     <div
       className={getValidClassNames(
         styles.container,
-        isBackgroundBlue ? styles.background_blue : styles.background_light,
+        isBackgroundBlue && styles.background_blue,
       )}
     >
       {!isHeaderHidden && (
