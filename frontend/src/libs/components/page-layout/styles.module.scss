@@ -1,0 +1,30 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  display: grid;
+  grid-template: "header header" auto "sidebar content" 1fr / auto 1fr;
+  flex-grow: 1;
+  max-height: 100vh;
+}
+
+.background_light {
+  background-color: $grey-cultured;
+}
+
+.background_blue {
+  background-color: $blue-dark;
+}
+
+.header {
+  grid-area: header;
+}
+
+.sidebar {
+  grid-area: sidebar;
+  overflow-y: scroll;
+}
+
+.content {
+  grid-area: content;
+  overflow-y: scroll;
+}

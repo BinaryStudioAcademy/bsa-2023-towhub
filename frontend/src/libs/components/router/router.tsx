@@ -1,5 +1,6 @@
 import { AppRoute } from '~/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
+import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 
 import { App } from '../app/app.js';
@@ -29,6 +30,10 @@ const Router = (): JSX.Element => (
             element: <NotFound />,
           },
         ],
+      },
+      {
+        path: AppRoute.DASHBOARD,
+        element: <Dashboard />,
       },
     ]}
   />
