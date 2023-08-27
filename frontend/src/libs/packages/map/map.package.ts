@@ -1,3 +1,5 @@
+import truckImg from 'src/assets/img/tow-truck.png';
+
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 
 import { type IMapService } from './libs/interfaces/interfaces.js';
@@ -30,6 +32,7 @@ class MapService implements IMapService {
     this.map = new google.maps.Map(mapElement, {
       center,
       zoom,
+      mapId: '2db763871084f8b6',
     });
   }
 
@@ -116,6 +119,7 @@ class MapService implements IMapService {
       position,
       label,
       map: this.map,
+      icon: truckImg,
     });
   }
 }
