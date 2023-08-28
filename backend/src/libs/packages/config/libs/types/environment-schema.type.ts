@@ -11,6 +11,12 @@ type EnvironmentSchema = {
     POOL_MIN: number;
     POOL_MAX: number;
   };
+  MAILER: {
+    SENDGRID_API_KEY: string;
+    SENDGRID_USER: string;
+    SMTP_TLS: boolean;
+    SENDGRID_SENDER_EMAIL: string;
+  };
 };
 
 export { type EnvironmentSchema };

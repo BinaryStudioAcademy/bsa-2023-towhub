@@ -7,11 +7,12 @@ export {
 } from './libs/enums/enums.js';
 export {
   ApplicationError,
+  ConfigValidationError,
   HttpError,
   ValidationError,
 } from './libs/exceptions/exceptions.js';
 export { configureString } from './libs/helpers/helpers.js';
-export { type IConfig } from './libs/packages/config/config.js';
+export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
 export {
   type HttpMethod,
   type HttpOptions,
