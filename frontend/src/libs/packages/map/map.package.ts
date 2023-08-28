@@ -3,6 +3,7 @@ import truckImg from 'src/assets/img/tow-truck.png';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 
 import { type IMapService } from './libs/interfaces/interfaces.js';
+import mapStyle from './map.config.json';
 
 type Constructor = {
   mapElement: HTMLDivElement;
@@ -32,7 +33,7 @@ class MapService implements IMapService {
     this.map = new google.maps.Map(mapElement, {
       center,
       zoom,
-      mapId: '2db763871084f8b6',
+      styles: mapStyle as google.maps.MapTypeStyle[],
     });
   }
 
