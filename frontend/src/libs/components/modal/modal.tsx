@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
 import { createPortal } from 'react-dom';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
@@ -41,7 +42,7 @@ const Modal: React.FC<Properties> = ({
       role="button"
       tabIndex={0}
     >
-      <div
+      <dialog
         className={styles.content}
         onClick={handleDisableContentContainerClick}
         onKeyDown={handleExitKeydown}
@@ -49,7 +50,7 @@ const Modal: React.FC<Properties> = ({
         tabIndex={0}
       >
         {children}
-      </div>
+      </dialog>
     </div>
   );
 

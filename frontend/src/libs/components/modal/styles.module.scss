@@ -14,43 +14,14 @@
 }
 
 .content {
-  width: 100%;
+  display: block;
   margin-top: 16px;
   padding: 24px;
   background: white;
+  border: none;
   border-radius: 5px;
 }
 
 .centered {
   align-items: center;
-}
-
-@media only screen and (width < 768px) {
-  .content {
-    width: 95%;
-  }
-}
-
-@media only screen and (width > 768px) {
-  .content {
-    width: 88%;
-  }
-}
-
-@media only screen and (width > 992px) {
-  .content {
-    width: 850px;
-  }
-}
-
-@media only screen and (width > 1200px) {
-  .content {
-    width: 900px;
-  }
-}
-
-@media only screen and (width > 1920px) {
-  .content {
-    width: 950px;
-  }
 }
