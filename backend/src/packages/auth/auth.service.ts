@@ -1,5 +1,5 @@
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
-import { ApplicationError, HttpError } from '~/libs/exceptions/exceptions.js';
+import { HttpError } from '~/libs/exceptions/exceptions.js';
 import {
   type UserSignUpRequestDto,
   type UserSignUpResponseDto,
@@ -34,15 +34,7 @@ class AuthService {
       });
     }
 
-    const createdUser = await this.userService.create(userRequestDto);
-
-    if (!createdUser) {
-      throw new ApplicationError({
-        message: 'Mistake', //Change!
-      });
-    }
-
-    return createdUser;
+    return await this.userService.create(userRequestDto);
   }
 }
 

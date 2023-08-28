@@ -52,28 +52,21 @@ class UserService implements IService {
 
   public async create(
     payload: UserSignUpRequestDto,
-  ): Promise<UserSignUpResponseDto | null> {
-    const { phone, email, password, firstName, lastName, groupId } = payload;
+  ): Promise<UserSignUpResponseDto> {
+    const { email: userEmail, password, ...newUser } = payload;
     const { passwordHash, passwordSalt } =
       await encryptService.encrypt(password);
 
     const user = await this.userRepository.create({
-      phone,
-      email: email.toLowerCase(),
-      firstName,
-      lastName,
-      groupId,
+      ...newUser,
+      email: userEmail.toLowerCase(),
       passwordSalt,
       passwordHash,
     });
 
-    if (user) {
-      const { id, phone, email, firstName, lastName, groupId } = user;
+    const { id, phone, email, firstName, lastName, groupId } = user;
 
-      return { id, phone, email, firstName, lastName, groupId };
-    }
-
-    return null;
+    return { id, phone, email, firstName, lastName, groupId };
   }
 
   public update(): ReturnType<IService['update']> {

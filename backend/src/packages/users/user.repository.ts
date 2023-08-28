@@ -1,5 +1,5 @@
 import { type InferModel } from 'drizzle-orm';
-import { and, eq } from 'drizzle-orm';
+import { eq, or } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import {
@@ -39,7 +39,7 @@ class UserRepository implements IRepository {
       .select()
       .from(this.usersSchema)
       .where(
-        and(
+        or(
           eq(this.usersSchema.phone, phone),
           eq(this.usersSchema.email, email),
         ),
@@ -48,17 +48,6 @@ class UserRepository implements IRepository {
 
     return user;
   }
-
-  // public async findByEmail(value: string): Promise<UserEntity | null> {
-  //   const result = await this.db
-  //     .driver()
-  //     .select()
-  //     .from(this.usersSchema)
-  //     .where(eq(this.usersSchema.email, value.toLowerCase()))
-  //     .execute();
-
-  //   return result[0] ? UserEntity.initialize(result[0]) : null;
-  // }
 
   public findById(id: number): Promise<InferModel<typeof schema.users>[]> {
     return this.db
@@ -77,8 +66,8 @@ class UserRepository implements IRepository {
 
   public async create(
     entity: Omit<UserEntityT, 'id'>,
-  ): Promise<(UserEntityT & { createdAt: Date; updatedAt: Date }) | null> {
-    const [user = null] = await this.db
+  ): Promise<UserEntityT & { createdAt: Date; updatedAt: Date }> {
+    const [user] = await this.db
       .driver()
       .insert(this.usersSchema)
       .values(entity)
