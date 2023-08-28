@@ -1,7 +1,7 @@
 import Select, { type StylesConfig } from 'react-select';
 
 import { useCallback, useMemo, useState } from '~/libs/hooks/hooks.js';
-import { type SelectOption } from '~/libs/types/select-option.type';
+import { type SelectOption } from '~/libs/types/select-option.type.js';
 
 type Properties = {
   options: SelectOption[];
