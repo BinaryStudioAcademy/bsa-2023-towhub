@@ -33,6 +33,7 @@ const Button: React.FC<Properties> = ({
   return (
     <button
       className={getValidClassNames(
+        'uppercase',
         styles.btn,
         styles[size],
         styles[variant],
