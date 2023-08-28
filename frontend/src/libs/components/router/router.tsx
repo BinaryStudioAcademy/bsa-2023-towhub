@@ -4,6 +4,7 @@ import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 
 import { App } from '../app/app.js';
+import { PageLayout } from '../page-layout/page-layout.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => (
@@ -33,7 +34,11 @@ const Router = (): JSX.Element => (
       },
       {
         path: AppRoute.DASHBOARD,
-        element: <Dashboard />,
+        element: (
+          <PageLayout>
+            <Dashboard />
+          </PageLayout>
+        ),
       },
     ]}
   />
