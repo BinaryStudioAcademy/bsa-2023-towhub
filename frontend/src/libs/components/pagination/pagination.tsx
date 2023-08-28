@@ -2,6 +2,7 @@ import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useState } from '~/libs/hooks/hooks.js';
 
 import { Button } from '../button/button.jsx';
+import { DEFAULT_LENGTH } from './libs/constant.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -12,31 +13,39 @@ type Properties = {
 
 const Pagination: React.FC<Properties> = ({
   pagesRange,
-  paginationLength = pagesRange > 5 ? 5 : pagesRange,
+  paginationLength = pagesRange > DEFAULT_LENGTH ? DEFAULT_LENGTH : pagesRange,
   onClick,
 }: Properties) => {
   const [currentPage, setCurrentPage] = useState(1);
   const middleValue = Math.floor((paginationLength - 1) / 2);
 
+  const isFirstPage = currentPage === 1;
+  const isLastPage = currentPage === pagesRange;
+
+  const isHiddenFirstPage =
+    currentPage >= paginationLength && paginationLength < pagesRange;
+  const isHiddenLastPage =
+    currentPage + middleValue < pagesRange && paginationLength < pagesRange;
+
   const handlePageClick = useCallback(
     (event_: React.MouseEvent) => {
       const target = event_.target as HTMLButtonElement;
-      const index = target.textContent;
 
-      if (index) {
-        onClick(+index - 1);
-        setCurrentPage((currentPage) => (index ? +index : currentPage));
+      if (target.textContent) {
+        const index = +target.textContent;
+        onClick(index - 1);
+        setCurrentPage(index);
       }
     },
     [onClick],
   );
   const handlePreviousClick = useCallback(() => {
-    onClick(+currentPage - 2);
+    onClick(currentPage - 2);
     setCurrentPage((currentPage) => currentPage - 1);
   }, [currentPage, onClick]);
 
   const handleNextClick = useCallback(() => {
-    onClick(+currentPage);
+    onClick(currentPage);
     setCurrentPage((currentPage) => currentPage + 1);
   }, [currentPage, onClick]);
 
@@ -60,15 +69,19 @@ const Pagination: React.FC<Properties> = ({
   );
 
   const showButtons = (): JSX.Element[] => {
-    const startIndex = currentPage - middleValue;
+    let startIndex = currentPage - middleValue;
     const endIndex = currentPage + middleValue;
 
     if (currentPage < paginationLength) {
-      return createButtons(1, paginationLength);
+      startIndex = 1;
+
+      return createButtons(startIndex, paginationLength);
     }
 
     if (startIndex + paginationLength > pagesRange) {
-      return createButtons(pagesRange - paginationLength + 1, pagesRange);
+      startIndex = pagesRange - paginationLength + 1;
+
+      return createButtons(startIndex, pagesRange);
     }
 
     return createButtons(startIndex, endIndex);
@@ -80,21 +93,16 @@ const Pagination: React.FC<Properties> = ({
         label="Prev"
         size="sm"
         onClick={handlePreviousClick}
-        isDisabled={currentPage === 1}
+        isDisabled={isFirstPage}
       />
-      {currentPage >= paginationLength && paginationLength < pagesRange ? (
-        <div className={styles.dots}>...</div>
-      ) : null}
+      {isHiddenFirstPage ? <div className={styles.dots}>...</div> : null}
       {showButtons()}
-      {currentPage + middleValue < pagesRange &&
-      paginationLength < pagesRange ? (
-        <div className={styles.dots}>...</div>
-      ) : null}
+      {isHiddenLastPage ? <div className={styles.dots}>...</div> : null}
       <Button
         label="Next"
         size="sm"
         onClick={handleNextClick}
-        isDisabled={currentPage === pagesRange}
+        isDisabled={isLastPage}
       />
     </div>
   );
