@@ -24,23 +24,22 @@ const Badge: React.FC<Properties> = ({
   children,
   className,
   color = defaultColor,
-  onClick: handleClick,
+  onClick,
 }: Properties): JSX.Element => {
-  const isEvent = Boolean(handleClick);
-  const isColorInPalette = Boolean(paletteColors[color]);
-  const backgroundColor = isColorInPalette ? color : defaultColor;
+  const hasEvent = Boolean(onClick);
+  const backgroundColor = paletteColors[color] ? color : defaultColor;
   const isBackgroundDark = Boolean(darkColors[backgroundColor]);
-  const isClassName = Boolean(className);
+  const hasClassName = Boolean(className);
   const badgeStyles = [
     styles.badge,
     `background-${backgroundColor}`,
     isBackgroundDark ? styles.textColorLight : styles.textColorDark,
-    isEvent && styles.pointer,
-    isClassName && className,
+    hasEvent && styles.pointer,
+    hasClassName && className,
   ];
 
   return (
-    <button className={getValidClassNames(badgeStyles)} onClick={handleClick}>
+    <button className={getValidClassNames(badgeStyles)} onClick={onClick}>
       {children}
     </button>
   );
