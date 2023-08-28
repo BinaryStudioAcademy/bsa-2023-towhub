@@ -1,30 +1,31 @@
 import { Icon } from '~/libs/components/components.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
+import { TabNames } from '~/libs/enums/sidebar-tabs.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
-import { type TabsName, type TabsType } from '~/libs/types/types.js';
+import { type TabName, type TabsType } from '~/libs/types/types.js';
 
 import styles from './styles.module.scss';
 
 const TABS: TabsType[] = [
   {
-    name: 'orders',
+    name: TabNames.ORDERS,
     icon: IconName.LIST,
   },
   {
-    name: 'trucks',
+    name: TabNames.TRUCKS,
     icon: IconName.TRUCK,
   },
   {
-    name: 'drivers',
+    name: TabNames.DRIVERS,
     icon: IconName.USERS,
   },
 ];
 
 type Properties = {
   isCollapsed?: boolean;
-  selectedTab: TabsName | null;
-  onTabClick: (tabName: TabsName) => void;
+  selectedTab: TabName | null;
+  onTabClick: (tabName: TabName) => void;
 };
 
 const Sidebar: React.FC<Properties> = ({
@@ -33,7 +34,7 @@ const Sidebar: React.FC<Properties> = ({
   onTabClick,
 }: Properties) => {
   const handleTabClick = useCallback(
-    (tabName: TabsName) => () => onTabClick(tabName),
+    (tabName: TabName) => () => onTabClick(tabName),
     [onTabClick],
   );
 

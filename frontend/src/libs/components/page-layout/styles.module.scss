@@ -7,16 +7,13 @@
   max-height: 100vh;
 }
 
-.background_blue {
-  background-color: $blue-dark;
-}
-
 .header {
   grid-area: header;
 }
 
 .sidebar {
   grid-area: sidebar;
+  margin-left: 6px;
   overflow-y: scroll;
 }
 
