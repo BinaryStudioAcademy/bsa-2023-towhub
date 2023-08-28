@@ -1,5 +1,5 @@
 import { Form, Link } from '~/libs/components/components.js';
-import { AppRoute } from '~/libs/enums/app-route.enum';
+import { AppRoute } from '~/libs/enums/app-route.enum.js';
 import {
   type UserSignInRequestDto,
   userSignInValidationSchema,

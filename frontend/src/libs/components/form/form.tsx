@@ -39,9 +39,7 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
-      // <p key={index}>
       <Input {...field} control={control} errors={errors} key={index} />
-      // </p>
     ));
   };
 
