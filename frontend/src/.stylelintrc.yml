@@ -22,7 +22,6 @@ rules:
     - ignoreAtRules:
         - use
   # allow :global which is specific pseudo class, available in .module.css
-  # allow :export which is specific pseudo class, available in .module.css
   selector-pseudo-class-no-unknown:
     - true
     - ignorePseudoClasses:
