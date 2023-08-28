@@ -4,11 +4,11 @@ import { type BusinessSignUpRequestDto } from '../types/types.js';
 import { commonSignUpRules } from './common-rules/common-rules.js';
 import {
   UserValidationMessage as Message,
-  UserValidationRules as Rules,
+  UserValidationRule as Rule,
 } from './enums/enums.js';
 
-const companyNamePattern = new RegExp(Rules.COMPANY_NAME);
-const taxNumberPattern = new RegExp(Rules.TAX_NUMBER);
+const companyNamePattern = new RegExp(Rule.COMPANY_NAME);
+const taxNumberPattern = new RegExp(Rule.TAX_NUMBER);
 
 const userBusinessSignUpRules = {
   ...commonSignUpRules,

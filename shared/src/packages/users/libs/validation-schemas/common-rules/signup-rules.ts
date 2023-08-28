@@ -2,12 +2,12 @@ import joi from 'joi';
 
 import {
   UserValidationMessage as Message,
-  UserValidationRules as Rules,
+  UserValidationRule as Rule,
 } from '../enums/enums.js';
 
-const passwordPattern = new RegExp(Rules.PASSWORD);
-const namePattern = new RegExp(Rules.NAME);
-const phonePattern = new RegExp(Rules.PHONE);
+const passwordPattern = new RegExp(Rule.PASSWORD);
+const namePattern = new RegExp(Rule.NAME);
+const phonePattern = new RegExp(Rule.PHONE);
 
 const signUpRules = {
   phone: joi.string().trim().required().pattern(phonePattern).messages({
@@ -21,8 +21,8 @@ const signUpRules = {
   email: joi
     .string()
     .trim()
-    .min(5)
-    .max(254)
+    .min(Rule.EMAIL_MIN_LENGTH)
+    .max(Rule.EMAIL_MAX_LENGTH)
     .email({ tlds: { allow: false } })
     .required()
     .messages({
