@@ -26,6 +26,7 @@ export {
   type CapitalizeEnum,
   type NullableProperties,
   type OperationResult,
+  type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,

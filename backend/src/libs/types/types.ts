@@ -1,6 +1,7 @@
 export {
   type NullableProperties,
   type OperationResult,
+  type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorResponse,
   type ServerValidationErrorResponse,
