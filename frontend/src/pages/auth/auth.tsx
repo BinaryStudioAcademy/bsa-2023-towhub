@@ -1,8 +1,6 @@
-import { Background, Container } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
-  // useAppSelector,
   useCallback,
   useLocation,
 } from '~/libs/hooks/hooks.js';
@@ -13,12 +11,11 @@ import {
 import { actions as authActions } from '~/slices/auth/auth.js';
 
 import { SignInForm, SignUpForm } from './components/components.js';
+import styles from './styles.module.css';
 
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
-  // const { dataStatus } = useAppSelector(({ auth }) => ({
-  //   dataStatus: auth.dataStatus,
-  // }));
+
   const { pathname } = useLocation();
 
   const handleSignInSubmit = useCallback(
@@ -48,15 +45,7 @@ const Auth: React.FC = () => {
     return null;
   };
 
-  return (
-    <main>
-      <Container>
-        <Background />
-        {/* state: {dataStatus} */}
-        {getScreen(pathname)}
-      </Container>
-    </main>
-  );
+  return <div className={styles.page}>{getScreen(pathname)}</div>;
 };
 
 export { Auth };

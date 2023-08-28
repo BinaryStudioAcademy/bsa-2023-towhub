@@ -14,7 +14,7 @@ type Properties = {
 };
 
 const SignInForm: React.FC<Properties> = ({ onSubmit }: Properties) => (
-  <div className={styles['form-wrapper']}>
+  <div className={styles.formWrapper}>
     <h3 className={styles.title}>Sign in</h3>
     <Form
       defaultValues={DEFAULT_SIGN_IN_PAYLOAD}
@@ -27,7 +27,7 @@ const SignInForm: React.FC<Properties> = ({ onSubmit }: Properties) => (
       Don`t have an account yet?
       <Link to={AppRoute.SIGN_UP} className={styles.link}>
         {' '}
-        Sing up
+        Sign up
       </Link>
     </p>
   </div>

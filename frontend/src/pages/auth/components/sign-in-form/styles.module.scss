@@ -1,7 +1,8 @@
-@import "../../../../assets/css/vars.scss";
+@import "src/assets/css/vars.scss";
 
-.form-wrapper {
-  max-width: 446px;
+.formWrapper {
+  width: 100%;
+  max-width: 448px;
   padding: 30px 60px 50px;
   background-color: $white;
   border-radius: 8px;
