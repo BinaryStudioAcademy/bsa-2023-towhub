@@ -1,3 +1,4 @@
+import 'modern-normalize/modern-normalize.css';
 import '~/assets/css/styles.scss';
 
 import { StrictMode } from 'react';
