@@ -10,6 +10,9 @@ const IconName = {
   STAR: 'star',
   BARS: 'bars',
   XMARK: 'xmark',
+  CLOCK_ROTATE_LEFT: 'clock rotate left',
+  USER_PEN: 'user pen',
+  RIGHT_FROM_BRACKET: 'right from bracket',
 } as const;
 
 export { IconName };

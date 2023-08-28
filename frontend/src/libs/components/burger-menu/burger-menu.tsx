@@ -1,12 +1,11 @@
+import { type IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { AppRoute } from '~/libs/enums/app-route.enum.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
   useEffect,
   useLocation,
-  useMemo,
-  useNavigate,
   useState,
 } from '~/libs/hooks/hooks.js';
 
@@ -14,9 +13,18 @@ import { Button } from '../components.js';
 import { iconNameToSvg } from '../icon/maps/maps.js';
 import styles from './burger-menu.module.scss';
 
-const BurgerMenu: React.FC = () => {
+type MenuItem = {
+  label: string;
+  onClick: () => void;
+  icon: IconProp;
+};
+
+type Properties = {
+  menuItems: MenuItem[];
+};
+
+const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation();
 
   const toggleMenu = useCallback(() => {
@@ -27,37 +35,36 @@ const BurgerMenu: React.FC = () => {
     setIsOpen(false);
   }, [location]);
 
-  const menuItems = useMemo(
-    () => [
-      {
-        label: 'View history',
-        onClick: () => navigate(AppRoute.ORDER_HISTORY),
-      },
-      { label: 'Edit profile', onClick: () => navigate(AppRoute.EDIT_PROFILE) },
-      { label: 'Log out', onClick: () => navigate(AppRoute.SIGN_IN) },
-    ],
-    [navigate],
-  );
-
   const isMobile = window.innerWidth <= 768;
 
   return (
-    <div className={`${styles.burgerMenu} ${isOpen ? styles.open : ''}`}>
-      {isMobile ? (
-        <FontAwesomeIcon
-          icon={isOpen ? iconNameToSvg.xmark : iconNameToSvg.bars}
-          onClick={toggleMenu}
-          className={styles.menuIcon}
-        />
-      ) : (
-        <Button label="User menu" onClick={toggleMenu} />
-      )}
+    <div
+      className={getValidClassNames(styles.burgerMenu, isOpen && styles.open)}
+    >
+      <FontAwesomeIcon
+        icon={isOpen ? iconNameToSvg.xmark : iconNameToSvg.bars}
+        onClick={toggleMenu}
+        className={styles.menuIcon}
+      />
+
       {isOpen && (
         <div className={styles.menu}>
           <ul>
             {menuItems.map((item, index) => (
               <li key={index}>
-                <Button label={item.label} onClick={item.onClick} />
+                {isMobile ? (
+                  <FontAwesomeIcon
+                    icon={item.icon}
+                    onClick={item.onClick}
+                    className={styles.menuIcon}
+                  />
+                ) : (
+                  <Button
+                    isFullWidth={true}
+                    label={item.label}
+                    onClick={item.onClick}
+                  />
+                )}
               </li>
             ))}
           </ul>

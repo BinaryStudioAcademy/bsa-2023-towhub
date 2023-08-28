@@ -1,18 +1,19 @@
-import {
-  type IconDefinition,
-  faBars,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
+import { type IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import {
   faArrowDownLong,
+  faBars,
   faCaretDown,
   faChevronDown,
   faChevronLeft,
+  faClockRotateLeft,
   faGear,
   faLocationDot,
   faMap,
   faPlus,
+  faRightFromBracket,
   faStar,
+  faUserPen,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { IconName } from '~/libs/enums/icon-name.enum.js';
@@ -30,6 +31,9 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.MAP]: faMap,
   [IconName.BARS]: faBars,
   [IconName.XMARK]: faXmark,
+  [IconName.CLOCK_ROTATE_LEFT]: faClockRotateLeft,
+  [IconName.USER_PEN]: faUserPen,
+  [IconName.RIGHT_FROM_BRACKET]: faRightFromBracket,
 };
 
 export { iconNameToSvg };
