@@ -9,4 +9,4 @@ type DarkColor =
   | 'grey'
   | 'grey-dark';
 
-export  { type DarkColor };
+export { type DarkColor };
