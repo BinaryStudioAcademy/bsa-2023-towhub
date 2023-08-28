@@ -6,12 +6,12 @@
   justify-content: center;
   align-items: center;
   font-weight: $font-weight-extrabold;
-  font-size: 16px;
-  font-family: $font-family;
-  text-transform: uppercase;
-  border: none;
+  line-height: 1.25;
   border-radius: 4px;
-  cursor: pointer;
+}
+
+.btn:disabled {
+  cursor: default;
 }
 
 .fullWidth {
@@ -20,38 +20,17 @@
 
 .sm {
   gap: 8px;
-  padding: 5px 16px;
+  padding: 6px 16px;
 }
 
 .md {
   gap: 10px;
-  padding: 12px 24px;
+  padding: 14px 24px;
 }
 
 .contained {
   color: $white;
-}
-
-.contained.sm {
-  background-color: $red-dark;
-}
-
-.contained.sm:hover {
   background-color: $red;
-}
-
-.contained.md {
-  background-color: $red;
-}
-
-.contained.md:hover {
-  background-color: $red-light;
-}
-
-.contained.sm:disabled,
-.contained.md:disabled {
-  background-color: $grey-light;
-  cursor: default;
 }
 
 .contained,
@@ -59,61 +38,40 @@
   box-shadow: $shadow, $shadow-light;
 }
 
+.contained:hover {
+  background-color: $red-light;
+}
+
 .text,
 .outlined {
-  background-color: transparent;
-}
-
-.text.sm,
-.outlined.sm {
-  color: $blue;
-}
-
-.text.md,
-.outlined.md {
   color: $blue-dark;
+  background-color: transparent;
 }
 
 .outlined {
   border-width: 2px;
   border-style: solid;
-}
-
-.outlined.sm {
-  border-color: $blue;
-}
-
-.outlined.sm:hover {
-  border-color: $blue-light;
-}
-
-.outlined.md {
   border-color: $blue-dark;
 }
 
-.outlined.md:hover {
+.text:hover,
+.outlined:hover {
+  color: $blue-light;
+}
+
+.outlined:hover {
   border-color: $blue-light;
 }
 
-.text.sm:hover,
-.outlined.sm:hover {
-  color: $blue-light;
-}
-
-.text.md:hover,
-.outlined.md:hover {
-  color: $blue-light;
-}
-
-.text.sm:disabled,
-.text.md:disabled,
-.outlined.sm:disabled,
-.outlined.md:disabled {
+.text:disabled,
+.outlined:disabled {
   color: $grey-light;
-  cursor: default;
 }
 
-.outlined.sm:disabled,
-.outlined.md:disabled {
+.outlined:disabled {
   border-color: $grey-light;
+}
+
+.contained:disabled {
+  background-color: $grey-light;
 }
