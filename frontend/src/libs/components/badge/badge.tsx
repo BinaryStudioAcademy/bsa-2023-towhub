@@ -3,18 +3,20 @@ import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import darkColors from './dark-colors.module.scss';
 import lightColors from './light-colors.module.scss';
 import styles from './styles.module.scss';
+import { type DarkColor, type LightColor } from './types/color.type.js';
 
-const PaletteColors = [
-  ...Object.keys(darkColors),
-  ...Object.keys(lightColors),
-] as const;
+type Color = DarkColor | LightColor;
 
-const defaultColor = 'green';
+const paletteColors = {
+  ...(darkColors as { [K in DarkColor]: string }),
+  ...(lightColors as { [K in LightColor]: string }),
+};
+const [defaultColor] = Object.keys(paletteColors) as Color[];
 
 type Properties = {
   children: string;
   className?: string;
-  color?: (typeof PaletteColors)[number];
+  color?: Color;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
@@ -25,7 +27,7 @@ const Badge: React.FC<Properties> = ({
   onClick: handleClick,
 }: Properties): JSX.Element => {
   const isEvent = Boolean(handleClick);
-  const isColorInPalette = PaletteColors.includes(color);
+  const isColorInPalette = Boolean(paletteColors[color]);
   const backgroundColor = isColorInPalette ? color : defaultColor;
   const isBackgroundDark = Boolean(darkColors[backgroundColor]);
   const isClassName = Boolean(className);
