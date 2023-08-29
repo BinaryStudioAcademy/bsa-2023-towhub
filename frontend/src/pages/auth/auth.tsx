@@ -19,6 +19,7 @@ const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const location: Location = useLocation();
+  const mode = location.state as string;
 
   const handleSignInSubmit = useCallback(
     (payload: UserSignInRequestDto): void => {
@@ -29,9 +30,9 @@ const Auth: React.FC = () => {
 
   const handleSignUpSubmit = useCallback(
     (payload: CustomerSignUpRequestDto): void => {
-      void dispatch(authActions.signUp(payload));
+      void dispatch(authActions.signUp({ payload, mode }));
     },
-    [dispatch],
+    [dispatch, mode],
   );
 
   const getScreen = (screen: string): React.ReactNode => {
@@ -40,12 +41,7 @@ const Auth: React.FC = () => {
         return <SignInForm onSubmit={handleSignInSubmit} />;
       }
       case AppRoute.SIGN_UP: {
-        return (
-          <SignUpForm
-            onSubmit={handleSignUpSubmit}
-            mode={location.state as string}
-          />
-        );
+        return <SignUpForm onSubmit={handleSignUpSubmit} mode={mode} />;
       }
     }
 

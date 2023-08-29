@@ -52,6 +52,8 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
+  type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserEntityT,

@@ -10,6 +10,7 @@ import {
   DEFAULT_SIGN_UP_PAYLOAD_CUSTOMER,
 } from './libs/constants.js';
 import { signUpBusinessFields, signUpCustomerFields } from './libs/fields.js';
+import styles from './styles.module.scss';
 
 type Properties = {
   onSubmit: (payload: CustomerSignUpRequestDto) => void;
@@ -18,8 +19,8 @@ type Properties = {
 
 const SignUpForm: React.FC<Properties> = ({ onSubmit, mode }: Properties) => {
   return (
-    <>
-      <h3>Sign Up</h3>
+    <div className={styles.formWrapper}>
+      <h3 className={styles.title}>Sign Up</h3>
       {mode === AuthMode.CUSTOMER ? (
         <Form
           defaultValues={DEFAULT_SIGN_UP_PAYLOAD_CUSTOMER}
@@ -38,10 +39,13 @@ const SignUpForm: React.FC<Properties> = ({ onSubmit, mode }: Properties) => {
         />
       )}
 
-      <p>
-        Already have an account? Go to <Link to={AppRoute.SIGN_IN}>Log in</Link>
+      <p className={styles.text}>
+        Already have an account? Go to{' '}
+        <Link to={AppRoute.SIGN_IN} className={styles.link}>
+          Log in
+        </Link>
       </p>
-    </>
+    </div>
   );
 };
 

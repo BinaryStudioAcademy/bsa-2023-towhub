@@ -1,5 +1,7 @@
 export { UserGroupKey, UsersApiPath } from './libs/enums/enums.js';
 export {
+  type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserEntityT,
