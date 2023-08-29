@@ -13,7 +13,10 @@ import {
   type ServerValidationErrorResponse,
   type ValidationSchema,
 } from '~/libs/types/types.js';
+import { authPlugin } from '~/packages/auth/auth.js';
+import { userService } from '~/packages/users/users.js';
 
+import { encryptService } from '../packages.js';
 import {
   type IServerApp,
   type IServerAppApi,
@@ -153,8 +156,18 @@ class ServerApp implements IServerApp {
     );
   }
 
+  private async initPlugins(): Promise<void> {
+    await this.app.register(authPlugin, {
+      config: this.config,
+      userService: userService,
+      encryptService: encryptService
+    });
+  }
+
   public async init(): Promise<void> {
     this.logger.info('Application initialization…');
+
+    await this.initPlugins();
 
     await this.initMiddlewares();
 
@@ -178,8 +191,7 @@ class ServerApp implements IServerApp {
       });
 
     this.logger.info(
-      `Application is listening on PORT – ${this.config.ENV.APP.PORT.toString()}, on ENVIRONMENT – ${
-        this.config.ENV.APP.ENVIRONMENT as string
+      `Application is listening on PORT – ${this.config.ENV.APP.PORT.toString()}, on ENVIRONMENT – ${this.config.ENV.APP.ENVIRONMENT as string
       }.`,
     );
   }
