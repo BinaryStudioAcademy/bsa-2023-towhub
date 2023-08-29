@@ -3,8 +3,8 @@ import { HttpApi } from '~/libs/packages/api/api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 import {
-  type UserSignUpRequestDto,
-  type UserSignUpResponseDto,
+  type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
 } from '~/packages/users/users.js';
 
 import { AuthApiPath } from './libs/enums/enums.js';
@@ -21,8 +21,8 @@ class AuthApi extends HttpApi {
   }
 
   public async signUp(
-    payload: UserSignUpRequestDto,
-  ): Promise<UserSignUpResponseDto> {
+    payload: CustomerSignUpRequestDto,
+  ): Promise<CustomerSignUpResponseDto> {
     const response = await this.load(
       this.getFullEndpoint(AuthApiPath.SIGN_UP, {}),
       {
@@ -33,7 +33,7 @@ class AuthApi extends HttpApi {
       },
     );
 
-    return await response.json<UserSignUpResponseDto>();
+    return await response.json<CustomerSignUpResponseDto>();
   }
 }
 
