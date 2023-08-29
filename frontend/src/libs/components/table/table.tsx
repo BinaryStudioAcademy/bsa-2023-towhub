@@ -80,7 +80,7 @@ const Table = <T,>({
         {createThead()}
         {createTbody()}
       </table>
-      <Pagination pagesRange={pagesRange} onClick={onClick} />
+      <Pagination pageCount={pagesRange} onClick={onClick} />
     </div>
   );
 };

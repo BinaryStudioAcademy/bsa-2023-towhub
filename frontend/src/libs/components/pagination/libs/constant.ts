@@ -1,3 +1,3 @@
-const DEFAULT_LENGTH = 5;
+const DEFAULT_SIZE = 5;
 
-export { DEFAULT_LENGTH };
+export { DEFAULT_SIZE };
