@@ -27,3 +27,6 @@ rules:
     - ignorePseudoClasses:
         - global
         - export
+  media-query-no-invalid:
+    - null
+
