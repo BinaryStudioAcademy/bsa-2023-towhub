@@ -362,7 +362,7 @@ class BusinessController extends Controller {
 
     return {
       status: HttpCode.OK,
-      payload: deletionResult,
+      payload: { result: deletionResult },
     };
   }
 
@@ -396,11 +396,11 @@ class BusinessController extends Controller {
       user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const findBusinessById = await this.businessService.find(options.params.id);
+    const findBusinessById = await this.businessService.findById(options.params.id);
 
     return {
       status: HttpCode.OK,
-      payload: findBusinessById,
+      payload: { result: findBusinessById },
     };
   }
 }

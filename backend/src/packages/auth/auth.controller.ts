@@ -1,3 +1,5 @@
+import { type UserGroupKey, type ValueOf } from 'shared/build/index.js';
+
 import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
@@ -32,6 +34,7 @@ class AuthController extends Controller {
         this.signUp(
           options as ApiHandlerOptions<{
             body: CustomerSignUpRequestDto;
+            params: { groupName: ValueOf<typeof UserGroupKey> }
           }>,
         ),
     });
@@ -79,11 +82,12 @@ class AuthController extends Controller {
   private async signUp(
     options: ApiHandlerOptions<{
       body: CustomerSignUpRequestDto;
+      params: { groupName: ValueOf<typeof UserGroupKey> }
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
       status: HttpCode.CREATED,
-      payload: await this.authService.signUp(options.body),
+      payload: await this.authService.signUp(options.params.groupName, options.body),
     };
   }
 }

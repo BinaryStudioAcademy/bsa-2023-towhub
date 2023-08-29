@@ -32,7 +32,7 @@ export {
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
-export { AuthApiPath } from './packages/auth/auth.js';
+export { type JwtPayload, AuthApiPath } from './packages/auth/auth.js';
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,
@@ -60,6 +60,8 @@ export {
   type UserGroupEntityT,
   type UserGroupKeyT,
   type UserGroupNameT,
+  type UserSignInRequestDto,
+  type UserSignInResponseDto,
   businessSignUpValidationSchema,
   customerSignUpValidationSchema,
   UserGroupKey,

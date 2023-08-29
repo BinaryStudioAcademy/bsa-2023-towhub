@@ -54,9 +54,14 @@ class UserController extends Controller {
    *                  $ref: '#/components/schemas/User'
    */
   private async findAll(): Promise<ApiHandlerResponse> {
+    const result = await this.userService.findAll();
+
     return {
       status: HttpCode.OK,
-      payload: await this.userService.findAll(),
+      payload: {
+        items: result,
+        totalCount: result.length
+      }
     };
   }
 }

@@ -20,12 +20,12 @@ class BusinessService implements IService {
     this.businessRepository = businessRepository;
   }
 
-  public async find(
+  public async findById(
     id: number,
-  ): Promise<OperationResult<BusinessEntityT | null>> {
-    const business = await this.businessRepository.find(id);
+  ): Promise<BusinessEntityT | null> {
+    const result = await this.businessRepository.find({ id });
 
-    return { result: business ? business.toObject() : null };
+    return result.length === 1 ? BusinessEntity.initialize(result[0]).toObject() : null;
   }
 
   public async create({
@@ -67,7 +67,7 @@ class BusinessService implements IService {
     id: number;
     payload: Pick<BusinessEntityT, 'companyName'>;
   }): Promise<BusinessUpdateResponseDto> {
-    const { result: foundBusinessById } = await this.find(id);
+    const foundBusinessById = await this.findById(id);
 
     if (!foundBusinessById) {
       throw new NotFoundError({});
@@ -93,18 +93,14 @@ class BusinessService implements IService {
     return business.toObject();
   }
 
-  public async delete(id: number): Promise<OperationResult<boolean>> {
-    const { result: foundBusiness } = await this.find(id);
+  public async delete(id: number): Promise<boolean> {
+    const foundBusiness = await this.findById(id);
 
     if (!foundBusiness) {
       throw new NotFoundError({});
     }
 
-    const result = await this.businessRepository.delete(id);
-
-    return {
-      result,
-    };
+    return await this.businessRepository.delete(id);
   }
 }
 
