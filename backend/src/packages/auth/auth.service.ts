@@ -1,7 +1,7 @@
-import { type UserGroupKey, type ValueOf } from 'shared/build';
-import { HttpCode, HttpMessage } from 'shared/build';
 
+import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import { HttpError } from '~/libs/exceptions/exceptions.js';
+import { type ValueOf } from '~/libs/types/types.js';
 import {
   type CustomerSignUpRequestDto,
   type UserEntityObjectWithGroupT
@@ -9,6 +9,7 @@ import {
 import { type UserService } from '~/packages/users/user.service.js';
 
 import { type GroupService } from '../groups/group.service.js';
+import { type UserGroupKey } from '../groups/groups.js';
 
 class AuthService {
   private userService: UserService;
@@ -20,7 +21,7 @@ class AuthService {
     this.groupService = groupService;
   }
 
-  public async signUp(groupName: ValueOf<typeof UserGroupKey>,
+  public async signUp(groupKey: ValueOf<typeof UserGroupKey>,
     payload: CustomerSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupT> {
     const user = await this.userService.findByEmail(payload.email);
@@ -32,7 +33,7 @@ class AuthService {
       });
     }
 
-    const group = await this.groupService.findByKey(groupName);
+    const group = await this.groupService.findByKey(groupKey);
 
     if (!group) {
       throw new HttpError({
@@ -42,7 +43,7 @@ class AuthService {
     }
     const result = await this.userService.create({ ...payload, groupId: group.id });
 
-    return { ...result, group };
+    return { ...result, groups: group };
 
   }
 

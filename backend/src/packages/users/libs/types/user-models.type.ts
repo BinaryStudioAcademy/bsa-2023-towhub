@@ -1,14 +1,14 @@
 import { type InferModel } from 'drizzle-orm';
-import { type UserEntityT } from 'shared/build/index.js';
 
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { type GroupDatabaseModel, type GroupEntityObjectT } from '~/packages/groups/groups.js';
 
 import { type UserEntity } from '../../user.entity.js';
+import { type UserEntityT } from './types.js';
 
 type UserDatabaseModel = InferModel<DatabaseSchema['users']>;
 
-type UserDatabaseModelWithGroup = UserDatabaseModel & { group: GroupDatabaseModel };
+type UserDatabaseModelWithGroup = UserDatabaseModel & { groups: GroupDatabaseModel };
 
 type UserDatabaseModelCreateUpdate = InferModel<DatabaseSchema['users'], 'insert'>;
 
@@ -18,13 +18,13 @@ type UserEntityCreateUpdate = Omit<UserEntityT, 'id' | 'passwordHash' | 'passwor
 
 type UserEntityObjectT = ReturnType<UserEntity['toObject']>;
 
-type UserEntityObjectWithGroupT = (UserEntityObjectT & { group: GroupEntityObjectT }) | null;
+type UserEntityObjectWithGroupT = UserEntityObjectT & { groups: GroupEntityObjectT };
 
 export {
   type UserDatabaseModel,
   type UserDatabaseModelCreateUpdate,
   type UserDatabaseModelWithGroup,
+  type UserEntityCreateUpdate,
   type UserEntityObjectT,
   type UserEntityObjectWithGroupT
 };
-export { type UserEntityCreateUpdate };

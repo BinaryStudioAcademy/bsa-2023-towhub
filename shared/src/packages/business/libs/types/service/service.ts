@@ -1,1 +1,1 @@
-export { type BusinessCreatePayload } from './business-create-payload.type.js';
+export { type BusinessCreatePayload } from '../../../../../../../backend/src/packages/business/libs/types/business-create-payload.type.js';

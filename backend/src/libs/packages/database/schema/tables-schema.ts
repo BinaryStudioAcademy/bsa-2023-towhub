@@ -46,7 +46,7 @@ const groupsRelations = relations(groups, ({ many }) => ({
 }));
 
 const usersRelations = relations(users, ({ one }) => ({
-  group: one(groups, {
+  groups: one(groups, {
     fields: [users.groupId],
     references: [groups.id],
   }),

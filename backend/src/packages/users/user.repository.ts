@@ -39,7 +39,7 @@ class UserRepository implements IRepository<UserDatabaseModel> {
     return this.db
       .driver().query.users.findMany({
         where: finalQuery,
-        with: { group: true }
+        with: { groups: true }
       })
       .execute();
   }

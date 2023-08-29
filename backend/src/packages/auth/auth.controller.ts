@@ -1,6 +1,3 @@
-import { type UserGroupKey, type UserSignInRequestDto, type ValueOf } from 'shared/build/index.js';
-import { userSignInValidationSchema } from 'shared/build/index.js';
-
 import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
@@ -9,6 +6,7 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { type ValueOf } from '~/libs/types/types.js';
 import {
   type CustomerSignUpRequestDto,
   customerSignUpValidationSchema,
@@ -17,6 +15,8 @@ import {
 import { type UserEntityObjectWithGroupT } from '../users/libs/types/user-models.type.js';
 import { type AuthService } from './auth.service.js';
 import { AuthApiPath, AuthStrategy } from './libs/enums/enums.js';
+import { type UserGroupKey, type UserSignInRequestDto } from './libs/types/types.js';
+import { userSignInValidationSchema } from './libs/validation-schemas/user-sign-in.validation-schema.js';
 
 class AuthController extends Controller {
   private authService: AuthService;

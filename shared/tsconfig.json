@@ -1,6 +1,9 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["src"],
+  "include": [
+    "src",
+    "../backend/src/packages/business/libs/types/business-create-payload.type.ts"
+  ],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ESNext",

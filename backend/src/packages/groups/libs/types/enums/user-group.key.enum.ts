@@ -1,1 +1,1 @@
-export { UserGroupKey } from 'shared/build';
+export { UserGroupKey } from 'shared/build/index.js';

@@ -1,7 +1,6 @@
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
-import { type OperationResult } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { BusinessEntity } from './business.entity.js';
@@ -23,16 +22,16 @@ class BusinessService implements IService {
   public async findById(
     id: number,
   ): Promise<BusinessEntityT | null> {
-    const result = await this.businessRepository.find({ id });
+    const [business = null] = await this.businessRepository.find({ id });
 
-    return result.length === 1 ? BusinessEntity.initialize(result[0]).toObject() : null;
+    return business ? BusinessEntity.initialize(business).toObject() : null;
   }
 
   public async create({
     payload,
     owner,
   }: BusinessCreatePayload): Promise<BusinessAddResponseDto> {
-    if (owner.group.key !== UserGroupKey.BUSINESS) {
+    if (owner.groups.key !== UserGroupKey.BUSINESS) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpMessage.INVALID_USER_GROUP,

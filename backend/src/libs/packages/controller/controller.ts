@@ -3,5 +3,4 @@ export {
   type ApiHandlerOptions,
   type ApiHandlerResponse,
   type AuthStrategyHandler,
-  type UserMocked
 } from './libs/types/types.js';

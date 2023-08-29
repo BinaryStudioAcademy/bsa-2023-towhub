@@ -25,58 +25,64 @@ class UserService implements IService<UserEntityObjectT> {
     return result.map(item => UserEntity.initialize(item).toObject());
   }
 
-  public async findByPhone(phone: UserEntityT['phone']): Promise<UserEntityObjectWithGroupT> {
-    const result = await this.userRepository.find({ phone });
+  public async findByPhone(phone: UserEntityT['phone']): Promise<UserEntityObjectWithGroupT | null> {
+    const [user = null] = await this.userRepository.find({ phone });
 
-    if (result.length === 1) {
-      return {
-        ...UserEntity.initialize(result[0]).toObject(),
-        group: GroupEntity.initialize(result[0].group).toObject()
-      };
+    if (!user) {
+      return null;
     }
 
-    return null;
+    const { groups, ...pureUser } = user;
+
+    return {
+      ...UserEntity.initialize(pureUser).toObject(),
+      groups: GroupEntity.initialize(groups).toObject()
+    };
   }
 
-  public async findByEmail(email: UserEntityT['email']): Promise<UserEntityObjectWithGroupT> {
-    const result = await this.userRepository.find({ email });
+  public async findByEmail(email: UserEntityT['email']): Promise<UserEntityObjectWithGroupT | null> {
+    const [user = null] = await this.userRepository.find({ email });
 
-    if (result.length === 1) {
-      return {
-        ...UserEntity.initialize(result[0]).toObject(),
-        group: GroupEntity.initialize(result[0].group).toObject()
-      };
+    if (!user) {
+      return null;
     }
 
-    return null;
+    const { groups, ...pureUser } = user;
+
+    return {
+      ...UserEntity.initialize(pureUser).toObject(),
+      groups: GroupEntity.initialize(groups).toObject()
+    };
   }
 
   public async findByEmailRaw(email: UserEntityT['email']): Promise<UserDatabaseModelWithGroup | null> {
-    const result = await this.userRepository.find({ email });
+    const [user = null] = await this.userRepository.find({ email });
 
-    return result.length === 1 ? result[0] : null;
+    return user;
   }
 
-  public async findByAccessToken(accessToken: NonNullable<UserEntityT['accessToken']>): Promise<UserEntityObjectWithGroupT> {
-    const result = await this.userRepository.find({ accessToken });
+  public async findByAccessToken(accessToken: NonNullable<UserEntityT['accessToken']>): Promise<UserEntityObjectWithGroupT | null> {
+    const [user = null] = await this.userRepository.find({ accessToken });
 
-    if (result.length === 1) {
-      return {
-        ...UserEntity.initialize(result[0]).toObject(),
-        group: GroupEntity.initialize(result[0].group).toObject()
-      };
+    if (!user) {
+      return null;
     }
 
-    return null;
+    const { groups, ...pureUser } = user;
+
+    return {
+      ...UserEntity.initialize(pureUser).toObject(),
+      groups: GroupEntity.initialize(groups).toObject()
+    };
   }
 
-  public async findById(id: UserEntityT['id']): Promise<UserEntityObjectWithGroupT> {
+  public async findById(id: UserEntityT['id']): Promise<UserEntityObjectWithGroupT | null> {
     const result = await this.userRepository.find({ id });
 
     if (result.length === 1) {
       return {
         ...UserEntity.initialize(result[0]).toObject(),
-        group: GroupEntity.initialize(result[0].group).toObject()
+        groups: GroupEntity.initialize(result[0].groups).toObject()
       };
     }
 

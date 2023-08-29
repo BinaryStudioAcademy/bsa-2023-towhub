@@ -15,22 +15,16 @@ class GroupService implements IService<GroupEntityObjectT> {
     this.groupRepository = groupRepository;
   }
 
-  public async findByName(name: GroupEntityT['name']): Promise<GroupEntityObjectT | null> {
-    const result = await this.groupRepository.find({ name });
-
-    return result.length === 1 ? GroupEntity.initialize(result[0]).toObject() : null;
-  }
-
   public async findByKey(key: GroupEntityT['key']): Promise<GroupEntityObjectT | null> {
-    const result = await this.groupRepository.find({ key });
+    const [group = null] = await this.groupRepository.find({ key });
 
-    return result.length === 1 ? GroupEntity.initialize(result[0]).toObject() : null;
+    return group ? GroupEntity.initialize(group).toObject() : null;
   }
 
   public async findById(id: GroupEntityT['id']): ReturnType<IService<GroupEntityObjectT>['findById']> {
-    const result = await this.groupRepository.find({ id });
+    const [group = null] = await this.groupRepository.find({ id });
 
-    return result.length === 1 ? GroupEntity.initialize(result[0]).toObject() : null;
+    return group ? GroupEntity.initialize(group).toObject() : null;
   }
 
   public async create(

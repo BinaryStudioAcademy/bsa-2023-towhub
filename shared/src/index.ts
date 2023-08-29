@@ -36,7 +36,6 @@ export { type JwtPayload, AuthApiPath } from './packages/auth/auth.js';
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,
-  type BusinessCreatePayload,
   type BusinessDeleteRequestParameters,
   type BusinessEntityT,
   type BusinessGetRequestParameters,

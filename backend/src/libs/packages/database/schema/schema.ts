@@ -1,9 +1,17 @@
-import { business, groups, users } from './tables-schema.js';
+import {
+  business,
+  groups,
+  groupsRelations,
+  users,
+  usersRelations
+} from './tables-schema.js';
 
 const schema = {
   users,
   groups,
   business,
+  groupsRelations,
+  usersRelations
 };
 
 type DatabaseSchema = typeof schema;
