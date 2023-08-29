@@ -58,6 +58,11 @@ export {
   type DriverDeleteRequestParameters,
   type DriverEntityT,
   type DriverGetRequestParameters,
+  type DriverUpdatePayload,
+  type DriverUpdateRequestDto,
+  type DriverUpdateRequestParameters,
+  type DriverUpdateResponseDto,
+  DriverApiPath,
 } from './packages/drivers/drivers.js';
 export {
   type UserEntityT,
