@@ -1,6 +1,6 @@
 import { createSecretKey } from 'node:crypto';
 
-import { jwtVerify, SignJWT } from 'jose-node-cjs-runtime';
+import { jwtVerify, SignJWT } from 'jose';
 
 import { type IJwtService } from '~/libs/interfaces/interfaces.js';
 

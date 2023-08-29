@@ -34,7 +34,7 @@
     "drizzle-orm": "0.28.2",
     "fastify": "4.21.0",
     "fastify-plugin": "4.5.1",
-    "jose-node-cjs-runtime": "4.14.4",
+    "jose": "4.14.4",
     "pg": "8.11.3",
     "pino": "8.15.0",
     "pino-pretty": "10.2.0",

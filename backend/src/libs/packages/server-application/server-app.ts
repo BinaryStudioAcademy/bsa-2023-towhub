@@ -21,7 +21,7 @@ import { authPlugin } from '~/packages/auth/auth.js';
 import { userService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
-import { encryptService } from '../packages.js';
+import { jwtService } from '../jwt/jwt.js';
 import {
   type IServerApp,
   type IServerAppApi,
@@ -183,7 +183,7 @@ class ServerApp implements IServerApp {
     await this.app.register(authPlugin, {
       config: this.config,
       userService: userService,
-      encryptService: encryptService,
+      jwtService: jwtService,
     });
   }
 
