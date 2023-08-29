@@ -56,6 +56,9 @@ const drivers = pgTable('driver_details', {
   userId: integer('user_id')
     .notNull()
     .references(() => users.id),
+  businessId: integer('business_id')
+    .notNull()
+    .references(() => business.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
