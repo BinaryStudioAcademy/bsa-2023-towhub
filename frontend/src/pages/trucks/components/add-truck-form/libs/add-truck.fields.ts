@@ -43,6 +43,7 @@ const ADD_TRUCK_FIELDS: FormField<TruckAddRequestDto>[] = [
     type: 'number',
     label: FormLabel.CAPACITY,
     name: FormName.CAPACITY,
+    min: 0,
   },
   {
     type: 'number',
