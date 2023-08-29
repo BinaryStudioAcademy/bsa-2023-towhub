@@ -1,8 +1,8 @@
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import { HttpError } from '~/libs/exceptions/exceptions.js';
 import {
-  type UserSignUpRequestDto,
-  type UserSignUpResponseDto,
+  type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
 } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service.js';
 
@@ -17,7 +17,7 @@ class AuthService {
 
   private async checkExistingUser({
     phone,
-  }: UserSignUpRequestDto): Promise<boolean> {
+  }: CustomerSignUpRequestDto): Promise<boolean> {
     const existingUser: UserEntity | null =
       await this.userService.findByPhone(phone);
 
@@ -25,8 +25,8 @@ class AuthService {
   }
 
   public async signUp(
-    userRequestDto: UserSignUpRequestDto,
-  ): Promise<UserSignUpResponseDto> {
+    userRequestDto: CustomerSignUpRequestDto,
+  ): Promise<CustomerSignUpResponseDto> {
     const isUserExist = await this.checkExistingUser(userRequestDto);
 
     if (isUserExist) {
