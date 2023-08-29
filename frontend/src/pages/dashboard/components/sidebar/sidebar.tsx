@@ -37,7 +37,7 @@ const Sidebar: React.FC<Properties> = ({
               className={[
                 'h5',
                 styles.btn,
-                selectedTab === tab.name && styles.active,
+                { [styles.active]: selectedTab === tab.name },
               ]}
               frontIcon={tab.icon}
               variant="text"
