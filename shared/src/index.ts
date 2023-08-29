@@ -66,4 +66,5 @@ export {
   customerSignUpValidationSchema,
   UserGroupKey,
   UsersApiPath,
+  userSignInValidationSchema,
 } from './packages/users/users.js';

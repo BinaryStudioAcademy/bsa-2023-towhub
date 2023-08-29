@@ -1,4 +1,5 @@
-import { type UserGroupKey, type ValueOf } from 'shared/build/index.js';
+import { type UserGroupKey, type UserSignInRequestDto, type ValueOf } from 'shared/build/index.js';
+import { userSignInValidationSchema } from 'shared/build/index.js';
 
 import { ApiPath } from '~/libs/enums/enums.js';
 import {
@@ -13,6 +14,7 @@ import {
   customerSignUpValidationSchema,
 } from '~/packages/users/users.js';
 
+import { type UserEntityObjectWithGroupT } from '../users/libs/types/user-models.type.js';
 import { type AuthService } from './auth.service.js';
 import { AuthApiPath } from './libs/enums/enums.js';
 
@@ -35,6 +37,21 @@ class AuthController extends Controller {
           options as ApiHandlerOptions<{
             body: CustomerSignUpRequestDto;
             params: { groupName: ValueOf<typeof UserGroupKey> }
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: AuthApiPath.SIGN_IN,
+      method: 'POST',
+      validation: {
+        body: userSignInValidationSchema,
+      },
+      handler: (options) =>
+        this.signIn(
+          options as ApiHandlerOptions<{
+            body: UserSignInRequestDto;
+            user: UserEntityObjectWithGroupT
           }>,
         ),
     });
@@ -88,6 +105,18 @@ class AuthController extends Controller {
     return {
       status: HttpCode.CREATED,
       payload: await this.authService.signUp(options.params.groupName, options.body),
+    };
+  }
+
+  private signIn(
+    options: ApiHandlerOptions<{
+      body: UserSignInRequestDto;
+      user: UserEntityObjectWithGroupT
+    }>,
+  ): ApiHandlerResponse {
+    return {
+      status: HttpCode.CREATED,
+      payload: options.user,
     };
   }
 }

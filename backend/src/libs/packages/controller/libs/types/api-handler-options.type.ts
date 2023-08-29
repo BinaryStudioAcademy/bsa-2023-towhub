@@ -1,10 +1,8 @@
-import { type UserMocked } from './user-mocked.type.js';
-
 type DefaultApiHandlerOptions = {
   body?: unknown;
   query?: unknown;
   params?: unknown;
-  user?: UserMocked;
+  user?: unknown;
 };
 
 type ApiHandlerOptions<
