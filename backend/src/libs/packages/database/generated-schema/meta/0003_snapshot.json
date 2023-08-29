@@ -53,12 +53,8 @@
           "name": "business_details_owner_id_users_id_fk",
           "tableFrom": "business_details",
           "tableTo": "users",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -68,16 +64,12 @@
         "business_details_company_name_unique": {
           "name": "business_details_company_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "company_name"
-          ]
+          "columns": ["company_name"]
         },
         "business_details_tax_number_unique": {
           "name": "business_details_tax_number_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "tax_number"
-          ]
+          "columns": ["tax_number"]
         }
       }
     },
@@ -199,9 +191,7 @@
       "indexes": {
         "users_phone_unique_idx": {
           "name": "users_phone_unique_idx",
-          "columns": [
-            "phone"
-          ],
+          "columns": ["phone"],
           "isUnique": true
         }
       },
@@ -210,12 +200,8 @@
           "name": "users_group_id_groups_id_fk",
           "tableFrom": "users",
           "tableTo": "groups",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
