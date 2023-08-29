@@ -4,9 +4,9 @@ export { type SelectOption } from './select-option.type.js';
 export { type ColumnDef } from '@tanstack/react-table';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
 export {
+  type CustomerSignUpRequestDto,
   type ServerErrorDetail,
   type ServerErrorResponse,
-  type UserSignUpRequestDto,
   type ValidationSchema,
   type ValueOf,
 } from 'shared/build/index.js';

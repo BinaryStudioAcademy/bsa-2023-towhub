@@ -1,10 +1,10 @@
 import { FormLabel, FormName } from '~/libs/enums/enums.js';
 import {
+  type CustomerSignUpRequestDto,
   type FormField,
-  type UserSignUpRequestDto,
 } from '~/libs/types/types.js';
 
-const signUpFields: FormField<UserSignUpRequestDto>[] = [
+const signUpFields: FormField<CustomerSignUpRequestDto>[] = [
   {
     label: FormLabel.FIRST_NAME,
     placeholder: 'Enter your first name',
