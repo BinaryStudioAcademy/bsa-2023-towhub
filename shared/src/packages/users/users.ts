@@ -1,9 +1,15 @@
-export { UsersApiPath, UserValidationMessage } from './libs/enums/enums.js';
+export { UserGroupKey, UsersApiPath } from './libs/enums/enums.js';
 export {
-  type UserEntity,
+  type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
+  type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
-  type UserSignUpRequestDto,
-  type UserSignUpResponseDto,
+  type UserGroupEntityT,
+  type UserGroupKeyT,
+  type UserGroupNameT,
 } from './libs/types/types.js';
-export { userSignUp as userSignUpValidationSchema } from './libs/validation-schemas/validation-schemas.js';
+export {
+  businessSignUp as businessSignUpValidationSchema,
+  customerSignUp as customerSignUpValidationSchema,
+} from './libs/validation-schemas/validation-schemas.js';
