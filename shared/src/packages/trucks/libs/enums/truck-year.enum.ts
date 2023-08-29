@@ -1,12 +1,10 @@
-const START_YEAR = 2011;
-const END_YEAR = 2023;
+const startYear = 2011;
+const endYear = 2023;
 
-const TruckYear = Object.fromEntries(
-  Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, index) => {
-    const year = START_YEAR + index;
+const TruckYear: Record<number, string> = {};
 
-    return [`${year}`, year.toString()];
-  }),
-);
+for (let year = startYear; year <= endYear; year++) {
+  TruckYear[year] = year.toString();
+}
 
 export { TruckYear };
