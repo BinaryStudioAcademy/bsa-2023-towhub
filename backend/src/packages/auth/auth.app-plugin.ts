@@ -1,5 +1,6 @@
+import { type FastifyAuthFunction } from '@fastify/auth';
 import jwt from '@fastify/jwt';
-import { type DoneFuncWithErrOrRes, type FastifyReply, type FastifyRequest } from 'fastify';
+import { type FastifyReply, type FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
 import { type UserEntityT, type UserSignInRequestDto, HttpMessage } from 'shared/build/index.js';
 
@@ -16,12 +17,20 @@ declare module '@fastify/jwt' {
     user: UserEntityObjectWithGroupT;
   }
 }
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    [AuthStrategy.VERIFY_JWT]: FastifyAuthFunction
+    [AuthStrategy.VERIFY_USER_CREDENTIALS]: FastifyAuthFunction
+  }
+}
+
 const authPlugin = fp<AuthPluginOptions>(async (fastify, options) => {
   const { userService, config, encryptService } = options;
 
   await fastify.register(jwt, { secret: config.ENV.JWT.SECRET });
 
-  fastify.decorate(AuthStrategy.VERIFY_JWT, async (request: FastifyRequest, _: FastifyReply, done: DoneFuncWithErrOrRes): Promise<void> => {
+  fastify.decorate(AuthStrategy.VERIFY_JWT, async (request: FastifyRequest, _: FastifyReply, done: (error?: Error) => void): Promise<void> => {
     try {
       const token = request.headers.authorization?.replace('Bearer ', '');
 
@@ -43,7 +52,7 @@ const authPlugin = fp<AuthPluginOptions>(async (fastify, options) => {
         return done(createUnauthorizedError(HttpMessage.INVALID_JWT));
       }
 
-      fastify.decorate('user', user);
+      fastify.decorateRequest('user', user);
 
       // Async should not call done() unless error
       // return done()
@@ -53,7 +62,7 @@ const authPlugin = fp<AuthPluginOptions>(async (fastify, options) => {
     }
   });
 
-  fastify.decorate(AuthStrategy.VERIFY_USER_CREDENTIALS, async (request: FastifyRequest, reply: FastifyReply, done: DoneFuncWithErrOrRes): Promise<void> => {
+  fastify.decorate(AuthStrategy.VERIFY_USER_CREDENTIALS, async (request: FastifyRequest, reply: FastifyReply, done: (error?: Error) => void): Promise<void> => {
     try {
       const { email, password } = request.body as UserSignInRequestDto;
 

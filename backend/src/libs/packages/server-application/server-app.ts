@@ -1,6 +1,7 @@
+import fastifyAuth from '@fastify/auth';
 import swagger, { type StaticDocumentSpec } from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
-import Fastify, { type FastifyError } from 'fastify';
+import Fastify, { type FastifyError, type preHandlerHookHandler } from 'fastify';
 
 import { ServerErrorType } from '~/libs/enums/enums.js';
 import { type ValidationError } from '~/libs/exceptions/exceptions.js';
@@ -16,6 +17,7 @@ import {
 import { authPlugin } from '~/packages/auth/auth.js';
 import { userService } from '~/packages/users/users.js';
 
+import { type AuthStrategyHandler } from '../controller/controller.js';
 import { encryptService } from '../packages.js';
 import {
   type IServerApp,
@@ -51,12 +53,13 @@ class ServerApp implements IServerApp {
   }
 
   public addRoute(parameters: ServerAppRouteParameters): void {
-    const { path, method, handler, validation } = parameters;
+    const { path, method, handler, validation, authStrategy } = parameters;
 
     this.app.route({
       url: path,
       method,
       handler,
+      preHandler: this.resolveAuthStrategy(authStrategy),
       schema: {
         body: validation?.body,
         params: validation?.params,
@@ -64,6 +67,18 @@ class ServerApp implements IServerApp {
     });
 
     this.logger.info(`Route: ${method as string} ${path} is registered`);
+  }
+
+  private resolveAuthStrategy(strategy?: AuthStrategyHandler): undefined | preHandlerHookHandler {
+    if (Array.isArray(strategy)) {
+      return this.app.auth(strategy);
+    }
+
+    if (typeof strategy === 'string' && strategy in this.app) {
+      return this.app.auth([this.app[strategy]]);
+    }
+
+    return undefined;
   }
 
   public addRoutes(parameters: ServerAppRouteParameters[]): void {
@@ -157,6 +172,7 @@ class ServerApp implements IServerApp {
   }
 
   private async initPlugins(): Promise<void> {
+    await this.app.register(fastifyAuth);
     await this.app.register(authPlugin, {
       config: this.config,
       userService: userService,
@@ -167,9 +183,9 @@ class ServerApp implements IServerApp {
   public async init(): Promise<void> {
     this.logger.info('Application initialization…');
 
-    await this.initPlugins();
-
     await this.initMiddlewares();
+
+    await this.initPlugins();
 
     this.initValidationCompiler();
 

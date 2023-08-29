@@ -16,7 +16,7 @@ import {
 
 import { type UserEntityObjectWithGroupT } from '../users/libs/types/user-models.type.js';
 import { type AuthService } from './auth.service.js';
-import { AuthApiPath } from './libs/enums/enums.js';
+import { AuthApiPath, AuthStrategy } from './libs/enums/enums.js';
 
 class AuthController extends Controller {
   private authService: AuthService;
@@ -47,6 +47,7 @@ class AuthController extends Controller {
       validation: {
         body: userSignInValidationSchema,
       },
+      authStrategy: AuthStrategy.VERIFY_USER_CREDENTIALS,
       handler: (options) =>
         this.signIn(
           options as ApiHandlerOptions<{
