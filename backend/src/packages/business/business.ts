@@ -3,10 +3,14 @@ import { logger } from '~/libs/packages/logger/logger.js';
 import { BusinessRepository } from '~/packages/business/business.repository.js';
 import { BusinessService } from '~/packages/business/business.service.js';
 
+import { driverRepository } from '../drivers/drivers.js';
 import { BusinessController } from './business.controller.js';
 
 const businessRepository = new BusinessRepository(database, schema.business);
-const businessService = new BusinessService(businessRepository);
+const businessService = new BusinessService(
+  businessRepository,
+  driverRepository,
+);
 
 const businessController = new BusinessController(logger, businessService);
 

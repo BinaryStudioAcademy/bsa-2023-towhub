@@ -6,7 +6,7 @@ import {
 import { type DriverEntityT } from '../driver-entity.type.js';
 
 type DriverCreatePayload = {
-  payload: Pick<DriverEntityT, 'driverLicenseNumber'>;
+  payload: Pick<DriverEntityT, 'driverLicenseNumber' | 'userId'>;
   owner: Pick<UserEntityT, 'id'> & { group: UserGroupEntityT };
 };
 

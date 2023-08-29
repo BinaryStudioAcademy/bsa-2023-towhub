@@ -35,16 +35,10 @@ class DriverRepository implements IRepository {
   }
 
   public async checkExists({
-    id,
     driverLicenseNumber,
     userId,
-    businessId,
   }: Partial<DriverEntityT>): Promise<OperationResult<boolean>> {
     const filterClause: SQL[] = [];
-
-    if (id) {
-      filterClause.push(eq(this.driverSchema.id, id));
-    }
 
     if (driverLicenseNumber) {
       filterClause.push(
@@ -54,10 +48,6 @@ class DriverRepository implements IRepository {
 
     if (userId) {
       filterClause.push(eq(this.driverSchema.userId, userId));
-    }
-
-    if (businessId) {
-      filterClause.push(eq(this.driverSchema.businessId, businessId));
     }
 
     if (filterClause.length === 0) {

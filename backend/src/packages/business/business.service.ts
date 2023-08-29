@@ -4,6 +4,12 @@ import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type OperationResult } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
+import { DriverEntity } from '../drivers/driver.entity.js';
+import { type DriverRepository } from '../drivers/driver.repository.js';
+import {
+  type DriverAddResponseDto,
+  type DriverCreatePayload,
+} from '../drivers/libs/types/types.js';
 import { BusinessEntity } from './business.entity.js';
 import { type BusinessRepository } from './business.repository.js';
 import {
@@ -16,8 +22,14 @@ import {
 class BusinessService implements IService {
   private businessRepository: BusinessRepository;
 
-  public constructor(businessRepository: BusinessRepository) {
+  private driverRepository: DriverRepository;
+
+  public constructor(
+    businessRepository: BusinessRepository,
+    driverRepository: DriverRepository,
+  ) {
     this.businessRepository = businessRepository;
+    this.driverRepository = driverRepository;
   }
 
   public async find(
@@ -58,6 +70,38 @@ class BusinessService implements IService {
     );
 
     return business.toObject();
+  }
+
+  public async createDriver({
+    payload,
+    owner,
+  }: DriverCreatePayload): Promise<DriverAddResponseDto> {
+    if (owner.group.key !== UserGroupKey.BUSINESS) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.INVALID_USER_GROUP,
+      });
+    }
+
+    const { result: doesDriverExist } = await this.driverRepository.checkExists(
+      {
+        driverLicenseNumber: payload.driverLicenseNumber,
+        userId: payload.userId,
+      },
+    );
+
+    if (doesDriverExist) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_ALREADY_EXISTS,
+      });
+    }
+
+    const driver = await this.driverRepository.create(
+      DriverEntity.initializeNew({ ...payload, businessId: owner.id }),
+    );
+
+    return driver.toObject();
   }
 
   public async update({
