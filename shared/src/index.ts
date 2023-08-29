@@ -52,6 +52,8 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
+  type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
@@ -60,10 +62,9 @@ export {
   type UserGroupNameT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
-  type UserSignUpRequestDto,
-  type UserSignUpResponseDto,
+  businessSignUpValidationSchema,
+  customerSignUpValidationSchema,
   UserGroupKey,
   UsersApiPath,
   userSignInValidationSchema,
-  userSignUpValidationSchema,
 } from './packages/users/users.js';
