@@ -32,7 +32,7 @@ export {
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
-export { AuthApiPath } from './packages/auth/auth.js';
+export { AuthApiPath, AuthMode } from './packages/auth/auth.js';
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,

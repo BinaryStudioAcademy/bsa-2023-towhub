@@ -6,6 +6,7 @@ export { IconSize } from './icon-size.enum.js';
 export {
   ApiPath,
   AppEnvironment,
+  AuthMode,
   ContentType,
   ServerErrorType,
 } from 'shared/build/index.js';

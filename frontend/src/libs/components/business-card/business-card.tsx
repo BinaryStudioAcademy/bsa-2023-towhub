@@ -1,14 +1,21 @@
+import { AuthMode } from 'src/libs/enums/enums.js';
+
 import rocket from '~/assets/img/welcome-page/rocket.png';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { useCallback } from '~/libs/hooks/hooks.js';
 
 import { Button, Image } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onClick: () => void;
+  onClick: (mode: string) => void;
 };
 
 const BusinessCard: React.FC<Properties> = ({ onClick }: Properties) => {
+  const handleClick = useCallback((): void => {
+    onClick(AuthMode.BUSINESS);
+  }, [onClick]);
+
   return (
     <li className={styles.card}>
       <div>
@@ -27,7 +34,7 @@ const BusinessCard: React.FC<Properties> = ({ onClick }: Properties) => {
         </div>
 
         <Button
-          onClick={onClick}
+          onClick={handleClick}
           label={'Continue'}
           className={styles.button}
         />

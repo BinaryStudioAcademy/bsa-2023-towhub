@@ -1,3 +1,5 @@
+import { type Location } from 'react-router';
+
 import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
@@ -16,7 +18,7 @@ import styles from './styles.module.css';
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const { pathname } = useLocation();
+  const location: Location = useLocation();
 
   const handleSignInSubmit = useCallback(
     (payload: UserSignInRequestDto): void => {
@@ -38,14 +40,19 @@ const Auth: React.FC = () => {
         return <SignInForm onSubmit={handleSignInSubmit} />;
       }
       case AppRoute.SIGN_UP: {
-        return <SignUpForm onSubmit={handleSignUpSubmit} />;
+        return (
+          <SignUpForm
+            onSubmit={handleSignUpSubmit}
+            mode={location.state as string}
+          />
+        );
       }
     }
 
     return null;
   };
 
-  return <div className={styles.page}>{getScreen(pathname)}</div>;
+  return <div className={styles.page}>{getScreen(location.pathname)}</div>;
 };
 
 export { Auth };
