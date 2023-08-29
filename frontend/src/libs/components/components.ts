@@ -1,8 +1,13 @@
 export { App } from './app/app.js';
+export { AppLogo } from './app-logo/app-logo.js';
+export { BusinessCard } from './business-card/business-card.js';
 export { Button } from './button/button.js';
 export { Checkbox } from './checkbox/checkbox.js';
+export { CustomerCard } from './customer-card/customer-card.js';
 export { Form } from './form/form.jsx';
+export { Header } from './header/header.js';
 export { Icon } from './icon/icon.js';
+export { Image } from './image/image.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
 export { Radio } from './radio/radio.js';

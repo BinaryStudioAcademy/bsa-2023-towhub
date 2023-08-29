@@ -7,8 +7,8 @@ import {
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import {
-  type UserSignUpRequestDto,
-  userSignUpValidationSchema,
+  type CustomerSignUpRequestDto,
+  customerSignUpValidationSchema,
 } from '~/packages/users/users.js';
 
 import { type AuthService } from './auth.service.js';
@@ -26,12 +26,12 @@ class AuthController extends Controller {
       path: AuthApiPath.SIGN_UP,
       method: 'POST',
       validation: {
-        body: userSignUpValidationSchema,
+        body: customerSignUpValidationSchema,
       },
       handler: (options) =>
         this.signUp(
           options as ApiHandlerOptions<{
-            body: UserSignUpRequestDto;
+            body: CustomerSignUpRequestDto;
           }>,
         ),
     });
@@ -78,7 +78,7 @@ class AuthController extends Controller {
 
   private async signUp(
     options: ApiHandlerOptions<{
-      body: UserSignUpRequestDto;
+      body: CustomerSignUpRequestDto;
     }>,
   ): Promise<ApiHandlerResponse> {
     return {

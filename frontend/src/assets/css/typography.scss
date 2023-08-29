@@ -1,3 +1,5 @@
+@import "./vars.scss";
+
 .h2,
 .h3,
 .h4,
@@ -8,8 +10,6 @@
 .text-md-bold,
 .text-sm,
 .text-xs {
-  color: $black;
-  font-family: $font-family;
   line-height: $line-height-normal;
 }
 

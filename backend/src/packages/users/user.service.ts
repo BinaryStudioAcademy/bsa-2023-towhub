@@ -2,10 +2,10 @@ import { type IService } from '~/libs/interfaces/interfaces.js';
 import { encryptService } from '~/libs/packages/packages.js';
 
 import {
+  type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
   type UserEntityT,
   type UserGetAllResponseDto,
-  type UserSignUpRequestDto,
-  type UserSignUpResponseDto,
 } from './libs/types/types.js';
 import { type UserRepository } from './user.repository.js';
 
@@ -23,7 +23,7 @@ class UserService implements IService {
   public async findByPhoneOrEmail({
     phone,
     email,
-  }: UserSignUpRequestDto): Promise<
+  }: CustomerSignUpRequestDto): Promise<
     (UserEntityT & { createdAt: Date; updatedAt: Date }) | null
   > {
     return await this.userRepository.findByPhoneOrEmail({
@@ -45,14 +45,14 @@ class UserService implements IService {
   }
 
   public async create(
-    payload: UserSignUpRequestDto,
-  ): Promise<UserSignUpResponseDto> {
+    payload: CustomerSignUpRequestDto,
+  ): Promise<CustomerSignUpResponseDto> {
     const { email: userEmail, password, ...newUser } = payload;
     const { passwordHash, passwordSalt } =
       await encryptService.encrypt(password);
-
     const user = await this.userRepository.create({
       ...newUser,
+      groupId: 1, //TEMPORARY MOCK
       email: userEmail.toLowerCase(),
       passwordSalt,
       passwordHash,
