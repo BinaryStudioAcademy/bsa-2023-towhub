@@ -1,24 +1,52 @@
 
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import { HttpError } from '~/libs/exceptions/exceptions.js';
+import { type IEncryptService } from '~/libs/interfaces/encrypt.interface.js';
+import { type IJwtService } from '~/libs/interfaces/jwt.inteface.js';
+import { type IConfig } from '~/libs/packages/config/config.js';
 import { type ValueOf } from '~/libs/types/types.js';
+import { type GroupService } from '~/packages/groups/group.service.js';
+import { type UserGroupKey, GroupEntity } from '~/packages/groups/groups.js';
 import {
   type CustomerSignUpRequestDto,
   type UserEntityObjectWithGroupT
 } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service.js';
 
-import { type GroupService } from '../groups/group.service.js';
-import { type UserGroupKey } from '../groups/groups.js';
+import { createUnauthorizedError } from './libs/helpers/helpers.js';
+import { type UserSignInRequestDto } from './libs/types/types.js';
+
+type AuthServiceConstructorProperties = {
+  userService: UserService,
+  groupService: GroupService,
+  jwtService: IJwtService,
+  encryptService: IEncryptService,
+  config: IConfig['ENV']['JWT']
+};
 
 class AuthService {
-  private userService: UserService;
+  private userService: AuthServiceConstructorProperties['userService'];
 
-  private groupService: GroupService;
+  private groupService: AuthServiceConstructorProperties['groupService'];
 
-  public constructor(userService: UserService, groupService: GroupService) {
+  private jwtService: AuthServiceConstructorProperties['jwtService'];
+
+  private encryptService: AuthServiceConstructorProperties['encryptService'];
+
+  private config: AuthServiceConstructorProperties['config'];
+
+  public constructor({
+    userService,
+    groupService,
+    jwtService,
+    encryptService,
+    config
+  }: AuthServiceConstructorProperties) {
     this.userService = userService;
     this.groupService = groupService;
+    this.jwtService = jwtService;
+    this.encryptService = encryptService;
+    this.config = config;
   }
 
   public async signUp(groupKey: ValueOf<typeof UserGroupKey>,
@@ -45,6 +73,33 @@ class AuthService {
 
     return { ...result, groups: group };
 
+  }
+
+  public async signIn(credentials: UserSignInRequestDto): Promise<UserEntityObjectWithGroupT> {
+    const { email, password } = credentials;
+
+    const user = await this.userService.findByEmailRaw(email);
+
+    if (!user) {
+      throw createUnauthorizedError(HttpMessage.WRONG_EMAIL);
+    }
+
+    const passwordsAreEqual = await this.encryptService.compare(password, user.passwordHash);
+
+    if (!passwordsAreEqual) {
+      throw createUnauthorizedError(HttpMessage.WRONG_PASSWORD);
+    }
+
+    const userId = user.id;
+    const jwtPayload = { id: userId };
+    const newToken = await this.jwtService.createToken(jwtPayload, this.config.ACCESS_LIFETIME);
+    const updatedUser = await this.userService.setAccessToken(userId, newToken);
+
+    return {
+      ...updatedUser,
+      // Had to take group from raw because setAccessToken does not return this
+      groups: GroupEntity.initialize(user.groups).toObject()
+    };
   }
 
 }

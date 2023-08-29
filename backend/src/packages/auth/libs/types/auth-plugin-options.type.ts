@@ -1,11 +1,11 @@
+import { type IJwtService } from '~/libs/interfaces/interfaces.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
-import { type EncryptService } from '~/libs/packages/encrypt/encrypt.package.js';
 import { type UserService } from '~/packages/users/user.service.js';
 
 type AuthPluginOptions = {
   config: IConfig;
   userService: UserService;
-  encryptService: EncryptService;
+  jwtService: IJwtService;
 };
 
 export { type AuthPluginOptions };

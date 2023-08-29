@@ -7,8 +7,9 @@ type EnvironmentSchema = {
     ENVIRONMENT: ValueOf<typeof AppEnvironment>;
   };
   JWT: {
-    SECRET: string
-    ACCESS_LIFETIME: string
+    SECRET: string;
+    ISSUER: string;
+    ACCESS_LIFETIME: string;
   },
   DB: {
     CONNECTION_STRING: string;

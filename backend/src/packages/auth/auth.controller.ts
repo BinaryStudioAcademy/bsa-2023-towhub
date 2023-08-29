@@ -7,14 +7,14 @@ import {
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type ValueOf } from '~/libs/types/types.js';
+import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/user-models.type.js';
 import {
   type CustomerSignUpRequestDto,
   customerSignUpValidationSchema,
 } from '~/packages/users/users.js';
 
-import { type UserEntityObjectWithGroupT } from '../users/libs/types/user-models.type.js';
 import { type AuthService } from './auth.service.js';
-import { AuthApiPath, AuthStrategy } from './libs/enums/enums.js';
+import { AuthApiPath } from './libs/enums/enums.js';
 import { type UserGroupKey, type UserSignInRequestDto } from './libs/types/types.js';
 import { userSignInValidationSchema } from './libs/validation-schemas/user-sign-in.validation-schema.js';
 
@@ -47,7 +47,6 @@ class AuthController extends Controller {
       validation: {
         body: userSignInValidationSchema,
       },
-      authStrategy: AuthStrategy.VERIFY_USER_CREDENTIALS,
       handler: (options) =>
         this.signIn(
           options as ApiHandlerOptions<{
@@ -109,15 +108,14 @@ class AuthController extends Controller {
     };
   }
 
-  private signIn(
+  private async signIn(
     options: ApiHandlerOptions<{
       body: UserSignInRequestDto;
-      user: UserEntityObjectWithGroupT
     }>,
-  ): ApiHandlerResponse {
+  ): Promise<ApiHandlerResponse> {
     return {
-      status: HttpCode.CREATED,
-      payload: options.user,
+      status: HttpCode.OK,
+      payload: await this.authService.signIn(options.body)
     };
   }
 }

@@ -50,6 +50,12 @@ class Config implements IConfig {
           env: 'JWT_SECRET',
           default: null
         },
+        ISSUER: {
+          doc: 'Issuer of token processing',
+          format: String,
+          env: 'JWT_ISSUER',
+          default: null
+        },
         ACCESS_LIFETIME: {
           doc: 'Jwt key lifetime',
           format: String,
