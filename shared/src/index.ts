@@ -20,6 +20,10 @@ export {
   HttpHeader,
   HttpMessage,
 } from './libs/packages/http/http.js';
+export {
+  ClientSocketEvent,
+  ServerSocketEvent,
+} from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type CapitalizeEnum,
