@@ -51,7 +51,16 @@ export {
   businessUpdateRequestBody,
   BusinessValidationMessage,
 } from './packages/business/business.js';
-export { type TruckEntity } from './packages/trucks/trucks.js';
+export {
+  type TruckAddRequestDto,
+  type TruckEntity,
+  FormLabel,
+  FormName,
+  TowTruckType,
+  truckAddValidationSchema,
+  TruckManufacturer,
+  TruckYear,
+} from './packages/trucks/trucks.js';
 export {
   type UserEntityT,
   type UserGetAllItemResponseDto,
