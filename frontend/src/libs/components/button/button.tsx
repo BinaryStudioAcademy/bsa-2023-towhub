@@ -15,7 +15,7 @@ type Properties = {
   isFullWidth?: boolean;
   frontIcon?: ValueOf<typeof IconName>;
   backIcon?: ValueOf<typeof IconName>;
-  children: JSX.Element;
+  children?: JSX.Element;
   onClick?: () => void;
 };
 
