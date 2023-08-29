@@ -17,13 +17,13 @@ import {
   type DriverUpdateRequestDto,
   type DriverUpdateRequestParameters,
 } from './libs/types/types.js';
-// import {
-//   driverAddRequestBody,
-//   driverDeleteParameters,
-//   driverGetParameters,
-//   driverUpdateParameters,
-//   driverUpdateRequestBody,
-// } from './libs/validation-schemas/validation-schemas.js';
+import {
+  driverAddRequestBody,
+  driverDeleteParameters,
+  driverGetParameters,
+  driverUpdateParameters,
+  driverUpdateRequestBody,
+} from './libs/validation-schemas/validation-schemas.js';
 
 /**
  * @swagger
@@ -139,9 +139,9 @@ class DriverController extends Controller {
     this.addRoute({
       path: DriverApiPath.ROOT,
       method: 'POST',
-      //   validation: {
-      //     body: driverAddRequestBody,
-      //   },
+      validation: {
+        body: driverAddRequestBody,
+      },
       handler: (options) =>
         this.create(
           options as ApiHandlerOptions<{
@@ -154,10 +154,10 @@ class DriverController extends Controller {
     this.addRoute({
       path: DriverApiPath.$ID,
       method: 'PUT',
-      //   validation: {
-      //     body: driverUpdateRequestBody,
-      //     params: driverUpdateParameters,
-      //   },
+      validation: {
+        body: driverUpdateRequestBody,
+        params: driverUpdateParameters,
+      },
       handler: (options) =>
         this.update(
           options as ApiHandlerOptions<{
@@ -171,9 +171,9 @@ class DriverController extends Controller {
     this.addRoute({
       path: DriverApiPath.$ID,
       method: 'DELETE',
-      //   validation: {
-      //     params: driverDeleteParameters,
-      //   },
+      validation: {
+        params: driverDeleteParameters,
+      },
       handler: (options) =>
         this.delete(
           options as ApiHandlerOptions<{
@@ -186,9 +186,9 @@ class DriverController extends Controller {
     this.addRoute({
       path: DriverApiPath.$ID,
       method: 'GET',
-      //   validation: {
-      //     params: driverGetParameters,
-      //   },
+      validation: {
+        params: driverGetParameters,
+      },
       handler: (options) =>
         this.find(
           options as ApiHandlerOptions<{
@@ -196,6 +196,12 @@ class DriverController extends Controller {
             user: UserMocked;
           }>,
         ),
+    });
+
+    this.addRoute({
+      path: DriverApiPath.ROOT,
+      method: 'GET',
+      handler: () => this.findAll(),
     });
   }
 
@@ -395,6 +401,28 @@ class DriverController extends Controller {
     return {
       status: HttpCode.OK,
       payload: findDriverById,
+    };
+  }
+
+  /**
+   * @swagger
+   * /driver:
+   *    get:
+   *      description: Returns an array of drivers
+   *      responses:
+   *        200:
+   *          description: A list of drivers
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: array
+   *                items:
+   *                  $ref: '#/components/schemas/Driver'
+   */
+  private async findAll(): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.driverService.findAll(),
     };
   }
 }

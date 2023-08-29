@@ -7,7 +7,7 @@ import { type DriverEntityT } from '../driver-entity.type.js';
 
 type DriverUpdatePayload = {
   id: number;
-  payload: Pick<DriverEntityT, 'driverLicenseNumber'>;
+  payload: Pick<DriverEntityT, 'driverLicenseNumber' | 'userId'>;
   owner: Pick<UserEntityT, 'id'> & { group: UserGroupEntityT };
 };
 

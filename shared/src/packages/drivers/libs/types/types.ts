@@ -1,4 +1,4 @@
-export { DriverApiPath } from '../enums/enums.js';
+export { DriverApiPath, DriverValidationMessage } from '../enums/enums.js';
 export { type DriverEntityT } from './driver-entity.type.js';
 export {
   type DriverAddRequestDto,
@@ -9,6 +9,7 @@ export {
 } from './request/request.js';
 export {
   type DriverAddResponseDto,
+  type DriverGetAllResponseDto,
   type DriverUpdateResponseDto,
 } from './response/response.js';
 export {

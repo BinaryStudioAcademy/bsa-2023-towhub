@@ -10,6 +10,7 @@ import {
   type DriverAddResponseDto,
   type DriverCreatePayload,
   type DriverEntityT,
+  type DriverGetAllResponseDto,
   type DriverUpdatePayload,
   type DriverUpdateResponseDto,
 } from '../drivers/libs/types/types.js';
@@ -27,6 +28,14 @@ class DriverService implements IService {
     const driver = await this.driverRepository.find(id);
 
     return { result: driver ? driver.toObject() : null };
+  }
+
+  public async findAll(): Promise<DriverGetAllResponseDto> {
+    const items = await this.driverRepository.findAll();
+
+    return {
+      items: items.map((it) => it.toObject()),
+    };
   }
 
   public async create({
@@ -82,6 +91,7 @@ class DriverService implements IService {
     const { result: doesDriverExist } = await this.driverRepository.checkExists(
       {
         driverLicenseNumber: payload.driverLicenseNumber,
+        userId: payload.userId,
       },
     );
 
