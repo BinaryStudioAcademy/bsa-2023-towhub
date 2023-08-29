@@ -42,6 +42,45 @@ TBA
 
 ![db schema](https://github-production-user-asset-6210df.s3.amazonaws.com/19575839/261530664-6140d0e8-abf8-4fb8-80c9-ff9eb7adfcb6.png)
 
+```mermaid
+
+erDiagram
+
+    users {
+        id serial PK "not null"
+        phone varchar "not null, unique"
+        email varchar "not null"
+        first_name varchar "not null"
+        last_name varchar "not null"
+        password_hash varchar "not null"
+        password_salt varchar "not null"
+        group_id integer FK "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
+
+    groups {
+        id serial PK "not null"
+        name varchar "not null"
+        key varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
+
+    business_details {
+        id serial PK "not null"
+        company_name varchar "not null, unique"
+        tax_number varchar "not null, unique"
+        owner_id integer FK "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
+
+    users one or many -- one groups: "users(group_id) belongs to groups(id)"
+    business_details one or many -- one users: "business_details(owner_id) belongs to users(id)"
+
+```
+
 ### 🌑 Backend
 
 - [Fastify](https://www.fastify.io/) — a backend framework.
