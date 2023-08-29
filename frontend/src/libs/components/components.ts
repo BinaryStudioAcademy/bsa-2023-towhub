@@ -11,6 +11,7 @@ export { Icon } from './icon/icon.js';
 export { Image } from './image/image.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
+export { LocationInput } from './location-input/location-input.js';
 export { Radio } from './radio/radio.js';
 export { Router } from './router/router.jsx';
 export { RouterProvider } from './router-provider/router-provider.jsx';
