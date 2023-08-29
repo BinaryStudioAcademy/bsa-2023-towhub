@@ -21,3 +21,5 @@ rules:
     - true
     - ignorePseudoClasses:
         - global
+  media-query-no-invalid:
+    - null
