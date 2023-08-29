@@ -7,6 +7,7 @@ import {
 } from '~/libs/types/types.js';
 
 import { Button } from '../button/button.jsx';
+import { Dropdown } from '../dropdown/dropdown.js';
 import { Input } from '../input/input.jsx';
 
 type Properties<T extends FieldValues> = {
@@ -38,9 +39,13 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
-      <p key={index}>
-        <Input {...field} control={control} errors={errors} />
-      </p>
+      <div key={index}>
+        {field.type === 'dropdown' && field.options ? (
+          <Dropdown options={field.options} />
+        ) : (
+          <Input {...field} control={control} errors={errors} />
+        )}
+      </div>
     ));
   };
 
