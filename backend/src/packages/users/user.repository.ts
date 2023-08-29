@@ -28,7 +28,7 @@ class UserRepository implements IRepository {
     return Promise.resolve([]);
   }
 
-  public async findByPhoneAndEmail({
+  public async findByPhoneOrEmail({
     phone,
     email,
   }: Pick<UserEntityT, 'phone' | 'email'>): Promise<

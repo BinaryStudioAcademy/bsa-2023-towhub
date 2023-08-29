@@ -20,23 +20,17 @@ class UserService implements IService {
     return this.userRepository.find();
   }
 
-  public async findByPhoneAndEmail({
+  public async findByPhoneOrEmail({
     phone,
     email,
   }: UserSignUpRequestDto): Promise<
     (UserEntityT & { createdAt: Date; updatedAt: Date }) | null
   > {
-    const user = await this.userRepository.findByPhoneAndEmail({
+    return await this.userRepository.findByPhoneOrEmail({
       phone,
       email,
     });
-
-    return user ?? null;
   }
-
-  // public findByEmail(value: string): Promise<UserEntity | null> {
-  //   return this.userRepository.findByEmail(value);
-  // }
 
   public findById(id: number): ReturnType<IService['find']> {
     return this.userRepository.findById(id);

@@ -16,8 +16,7 @@ class AuthService {
   private async checkIsExistingUser(
     userRequest: UserSignUpRequestDto,
   ): Promise<boolean> {
-    const existingUser =
-      await this.userService.findByPhoneAndEmail(userRequest);
+    const existingUser = await this.userService.findByPhoneOrEmail(userRequest);
 
     return Boolean(existingUser);
   }
