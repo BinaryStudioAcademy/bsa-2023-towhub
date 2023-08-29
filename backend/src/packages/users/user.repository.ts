@@ -7,7 +7,7 @@ import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import {
   type UserDatabaseModel,
   type UserDatabaseModelCreateUpdate,
-  type UserDatabaseModelWithGroup
+  type UserDatabaseModelWithGroup,
 } from './libs/types/types.js';
 
 class UserRepository implements IRepository<UserDatabaseModel> {
@@ -27,24 +27,30 @@ class UserRepository implements IRepository<UserDatabaseModel> {
     return this.db.driver().select().from(this.usersSchema);
   }
 
-  public find(partial: Partial<UserDatabaseModel>):
-    ReturnType<IRepository<UserDatabaseModelWithGroup>['find']> {
-    const queries = Object.entries(partial).map(([key, value]) => eq(
-      this.usersSchema[key as keyof typeof partial],
-      value as NonNullable<typeof value>
-    ));
+  public find(
+    partial: Partial<UserDatabaseModel>,
+  ): ReturnType<IRepository<UserDatabaseModelWithGroup>['find']> {
+    const queries = Object.entries(partial).map(([key, value]) =>
+      eq(
+        this.usersSchema[key as keyof typeof partial],
+        value as NonNullable<typeof value>,
+      ),
+    );
 
     const finalQuery = queries.length === 1 ? queries[0] : and(...queries);
 
     return this.db
-      .driver().query.users.findMany({
+      .driver()
+      .query.users.findMany({
         where: finalQuery,
-        with: { groups: true }
+        with: { groups: true },
       })
       .execute();
   }
 
-  public async create(entity: UserDatabaseModelCreateUpdate): ReturnType<IRepository<UserDatabaseModel>['create']> {
+  public async create(
+    entity: UserDatabaseModelCreateUpdate,
+  ): ReturnType<IRepository<UserDatabaseModel>['create']> {
     const [result] = await this.db
       .driver()
       .insert(this.usersSchema)
@@ -57,7 +63,7 @@ class UserRepository implements IRepository<UserDatabaseModel> {
 
   public async update(
     id: UserDatabaseModel['id'],
-    updated: Partial<UserDatabaseModelCreateUpdate>
+    updated: Partial<UserDatabaseModelCreateUpdate>,
   ): ReturnType<IRepository<UserDatabaseModel>['update']> {
     const [result] = await this.db
       .driver()
@@ -70,7 +76,9 @@ class UserRepository implements IRepository<UserDatabaseModel> {
     return result;
   }
 
-  public async delete(id: UserDatabaseModel['id']): ReturnType<IRepository<UserDatabaseModel>['delete']> {
+  public async delete(
+    id: UserDatabaseModel['id'],
+  ): ReturnType<IRepository<UserDatabaseModel>['delete']> {
     await this.db
       .driver()
       .delete(this.usersSchema)

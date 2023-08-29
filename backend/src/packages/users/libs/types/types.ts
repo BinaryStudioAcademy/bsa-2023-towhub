@@ -4,7 +4,7 @@ export {
   type UserDatabaseModelWithGroup,
   type UserEntityCreateUpdate,
   type UserEntityObjectT,
-  type UserEntityObjectWithGroupT
+  type UserEntityObjectWithGroupT,
 } from './user-models.type.js';
 export {
   type CustomerSignUpRequestDto,

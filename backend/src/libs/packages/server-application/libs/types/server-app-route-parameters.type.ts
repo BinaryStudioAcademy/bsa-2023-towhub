@@ -7,7 +7,7 @@ import { type ValidationSchema } from '~/libs/types/types.js';
 type ServerAppRouteParameters = {
   path: string;
   method: HttpMethod;
-  authStrategy?: AuthStrategyHandler
+  authStrategy?: AuthStrategyHandler;
   handler: (
     request: FastifyRequest,
     reply: FastifyReply,

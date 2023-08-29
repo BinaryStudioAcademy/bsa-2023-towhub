@@ -8,7 +8,7 @@ type ControllerRouteParameters = {
   path: string;
   method: HttpMethod;
   handler: ApiHandler;
-  authStrategy?: AuthStrategyHandler
+  authStrategy?: AuthStrategyHandler;
   validation?: {
     body?: ValidationSchema;
     params?: ValidationSchema;

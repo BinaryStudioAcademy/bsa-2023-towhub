@@ -16,7 +16,10 @@ class JwtService implements IJwtService {
     this.issuer = issuer;
   }
 
-  public async createToken(payload: Record<string, unknown>, expirationTime: string): Promise<string> {
+  public async createToken(
+    payload: Record<string, unknown>,
+    expirationTime: string,
+  ): Promise<string> {
     return await new SignJWT(payload)
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()

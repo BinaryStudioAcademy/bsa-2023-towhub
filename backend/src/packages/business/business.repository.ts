@@ -23,17 +23,21 @@ class BusinessRepository implements IRepository {
     this.businessSchema = businessSchema;
   }
 
-  public find(partial: Partial<BusinessEntityT>):
-    ReturnType<IRepository<BusinessEntityT>['find']> {
-    const queries = Object.entries(partial).map(([key, value]) => eq(
-      this.businessSchema[key as keyof typeof partial],
-      value as NonNullable<typeof value>
-    ));
+  public find(
+    partial: Partial<BusinessEntityT>,
+  ): ReturnType<IRepository<BusinessEntityT>['find']> {
+    const queries = Object.entries(partial).map(([key, value]) =>
+      eq(
+        this.businessSchema[key as keyof typeof partial],
+        value as NonNullable<typeof value>,
+      ),
+    );
 
     const finalQuery = queries.length === 1 ? queries[0] : and(...queries);
 
     return this.db
-      .driver().query.business.findMany({ where: finalQuery })
+      .driver()
+      .query.business.findMany({ where: finalQuery })
       .execute();
   }
 

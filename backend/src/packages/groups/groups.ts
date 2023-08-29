@@ -12,6 +12,6 @@ export {
   type GroupDatabaseModel,
   type GroupDatabaseModelCreateUpdate,
   type GroupEntityObjectT,
-  type GroupEntityT
+  type GroupEntityT,
 } from './libs/types/types.js';
 export { groupService };

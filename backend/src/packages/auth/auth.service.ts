@@ -1,4 +1,3 @@
-
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import { HttpError } from '~/libs/exceptions/exceptions.js';
 import { type IEncryptService } from '~/libs/interfaces/encrypt.interface.js';
@@ -9,7 +8,7 @@ import { type GroupService } from '~/packages/groups/group.service.js';
 import { type UserGroupKey, GroupEntity } from '~/packages/groups/groups.js';
 import {
   type CustomerSignUpRequestDto,
-  type UserEntityObjectWithGroupT
+  type UserEntityObjectWithGroupT,
 } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service.js';
 
@@ -17,11 +16,11 @@ import { createUnauthorizedError } from './libs/helpers/helpers.js';
 import { type UserSignInRequestDto } from './libs/types/types.js';
 
 type AuthServiceConstructorProperties = {
-  userService: UserService,
-  groupService: GroupService,
-  jwtService: IJwtService,
-  encryptService: IEncryptService,
-  config: IConfig['ENV']['JWT']
+  userService: UserService;
+  groupService: GroupService;
+  jwtService: IJwtService;
+  encryptService: IEncryptService;
+  config: IConfig['ENV']['JWT'];
 };
 
 class AuthService {
@@ -40,7 +39,7 @@ class AuthService {
     groupService,
     jwtService,
     encryptService,
-    config
+    config,
   }: AuthServiceConstructorProperties) {
     this.userService = userService;
     this.groupService = groupService;
@@ -49,7 +48,8 @@ class AuthService {
     this.config = config;
   }
 
-  public async signUp(groupKey: ValueOf<typeof UserGroupKey>,
+  public async signUp(
+    groupKey: ValueOf<typeof UserGroupKey>,
     payload: CustomerSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupT> {
     const user = await this.userService.findByEmail(payload.email);
@@ -66,16 +66,20 @@ class AuthService {
     if (!group) {
       throw new HttpError({
         message: HttpMessage.INVALID_GROUP,
-        status: HttpCode.BAD_REQUEST
+        status: HttpCode.BAD_REQUEST,
       });
     }
-    const result = await this.userService.create({ ...payload, groupId: group.id });
+    const result = await this.userService.create({
+      ...payload,
+      groupId: group.id,
+    });
 
     return { ...result, groups: group };
-
   }
 
-  public async signIn(credentials: UserSignInRequestDto): Promise<UserEntityObjectWithGroupT> {
+  public async signIn(
+    credentials: UserSignInRequestDto,
+  ): Promise<UserEntityObjectWithGroupT> {
     const { email, password } = credentials;
 
     const user = await this.userService.findByEmailRaw(email);
@@ -84,7 +88,10 @@ class AuthService {
       throw createUnauthorizedError(HttpMessage.WRONG_EMAIL);
     }
 
-    const passwordsAreEqual = await this.encryptService.compare(password, user.passwordHash);
+    const passwordsAreEqual = await this.encryptService.compare(
+      password,
+      user.passwordHash,
+    );
 
     if (!passwordsAreEqual) {
       throw createUnauthorizedError(HttpMessage.WRONG_PASSWORD);
@@ -92,16 +99,18 @@ class AuthService {
 
     const userId = user.id;
     const jwtPayload = { id: userId };
-    const newToken = await this.jwtService.createToken(jwtPayload, this.config.ACCESS_LIFETIME);
+    const newToken = await this.jwtService.createToken(
+      jwtPayload,
+      this.config.ACCESS_LIFETIME,
+    );
     const updatedUser = await this.userService.setAccessToken(userId, newToken);
 
     return {
       ...updatedUser,
       // Had to take group from raw because setAccessToken does not return this
-      groups: GroupEntity.initialize(user.groups).toObject()
+      groups: GroupEntity.initialize(user.groups).toObject(),
     };
   }
-
 }
 
 export { AuthService };

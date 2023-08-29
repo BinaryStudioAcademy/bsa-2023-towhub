@@ -387,7 +387,9 @@ class BusinessController extends Controller {
       params: BusinessGetRequestParameters;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const findBusinessById = await this.businessService.findById(options.params.id);
+    const findBusinessById = await this.businessService.findById(
+      options.params.id,
+    );
 
     return {
       status: HttpCode.OK,

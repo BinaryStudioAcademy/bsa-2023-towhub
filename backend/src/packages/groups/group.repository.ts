@@ -22,21 +22,27 @@ class GroupRepository implements IRepository<GroupDatabaseModel> {
     this.groupsSchema = groupsSchema;
   }
 
-  public find(partial: Partial<GroupDatabaseModel>):
-    ReturnType<IRepository<GroupDatabaseModel>['find']> {
-    const queries = Object.entries(partial).map(([key, value]) => eq(
-      this.groupsSchema[key as keyof typeof partial],
-      value as NonNullable<typeof value>
-    ));
+  public find(
+    partial: Partial<GroupDatabaseModel>,
+  ): ReturnType<IRepository<GroupDatabaseModel>['find']> {
+    const queries = Object.entries(partial).map(([key, value]) =>
+      eq(
+        this.groupsSchema[key as keyof typeof partial],
+        value as NonNullable<typeof value>,
+      ),
+    );
 
     const finalQuery = queries.length === 1 ? queries[0] : and(...queries);
 
     return this.db
-      .driver().query.groups.findMany({ where: finalQuery })
+      .driver()
+      .query.groups.findMany({ where: finalQuery })
       .execute();
   }
 
-  public async create(entity: GroupDatabaseModelCreateUpdate): ReturnType<IRepository<GroupDatabaseModel>['create']> {
+  public async create(
+    entity: GroupDatabaseModelCreateUpdate,
+  ): ReturnType<IRepository<GroupDatabaseModel>['create']> {
     const [result] = await this.db
       .driver()
       .insert(this.groupsSchema)
@@ -49,7 +55,7 @@ class GroupRepository implements IRepository<GroupDatabaseModel> {
 
   public async update(
     id: GroupDatabaseModel['id'],
-    updated: Partial<GroupDatabaseModelCreateUpdate>
+    updated: Partial<GroupDatabaseModelCreateUpdate>,
   ): ReturnType<IRepository<GroupDatabaseModel>['update']> {
     const [result] = await this.db
       .driver()
@@ -62,7 +68,9 @@ class GroupRepository implements IRepository<GroupDatabaseModel> {
     return result;
   }
 
-  public async delete(id: GroupDatabaseModel['id']): ReturnType<IRepository<GroupDatabaseModel>['delete']> {
+  public async delete(
+    id: GroupDatabaseModel['id'],
+  ): ReturnType<IRepository<GroupDatabaseModel>['delete']> {
     await this.db
       .driver()
       .delete(this.groupsSchema)

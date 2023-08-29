@@ -2,5 +2,5 @@ export {
   type GroupDatabaseModel,
   type GroupDatabaseModelCreateUpdate,
   type GroupEntityObjectT,
-  type GroupEntityT
+  type GroupEntityT,
 } from './group-models.type.js';

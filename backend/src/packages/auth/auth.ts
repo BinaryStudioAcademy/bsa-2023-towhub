@@ -13,7 +13,7 @@ const authService = new AuthService({
   groupService,
   jwtService,
   encryptService,
-  config: config.ENV.JWT
+  config: config.ENV.JWT,
 });
 
 const authController = new AuthController(logger, authService);

@@ -6,7 +6,10 @@ import { type GroupEntity } from '../../group.entity.js';
 
 type GroupDatabaseModel = InferModel<DatabaseSchema['groups']>;
 
-type GroupDatabaseModelCreateUpdate = InferModel<DatabaseSchema['groups'], 'insert'>;
+type GroupDatabaseModelCreateUpdate = InferModel<
+  DatabaseSchema['groups'],
+  'insert'
+>;
 
 type GroupEntityT = Omit<GroupDatabaseModel, 'createdAt' | 'updatedAt'>;
 
@@ -16,5 +19,5 @@ export {
   type GroupDatabaseModel,
   type GroupDatabaseModelCreateUpdate,
   type GroupEntityObjectT,
-  type GroupEntityT
+  type GroupEntityT,
 };

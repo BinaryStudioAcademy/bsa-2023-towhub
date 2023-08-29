@@ -15,13 +15,17 @@ class GroupService implements IService<GroupEntityObjectT> {
     this.groupRepository = groupRepository;
   }
 
-  public async findByKey(key: GroupEntityT['key']): Promise<GroupEntityObjectT | null> {
+  public async findByKey(
+    key: GroupEntityT['key'],
+  ): Promise<GroupEntityObjectT | null> {
     const [group = null] = await this.groupRepository.find({ key });
 
     return group ? GroupEntity.initialize(group).toObject() : null;
   }
 
-  public async findById(id: GroupEntityT['id']): ReturnType<IService<GroupEntityObjectT>['findById']> {
+  public async findById(
+    id: GroupEntityT['id'],
+  ): ReturnType<IService<GroupEntityObjectT>['findById']> {
     const [group = null] = await this.groupRepository.find({ id });
 
     return group ? GroupEntity.initialize(group).toObject() : null;
@@ -35,13 +39,18 @@ class GroupService implements IService<GroupEntityObjectT> {
     return GroupEntity.initialize(result).toObject();
   }
 
-  public async update(id: GroupEntityT['id'], payload: Partial<GroupDatabaseModelCreateUpdate>): ReturnType<IService<GroupEntityObjectT>['update']> {
+  public async update(
+    id: GroupEntityT['id'],
+    payload: Partial<GroupDatabaseModelCreateUpdate>,
+  ): ReturnType<IService<GroupEntityObjectT>['update']> {
     const result = await this.groupRepository.update(id, payload);
 
     return GroupEntity.initialize(result).toObject();
   }
 
-  public delete(id: GroupEntityT['id']): ReturnType<IService<GroupEntityObjectT>['delete']> {
+  public delete(
+    id: GroupEntityT['id'],
+  ): ReturnType<IService<GroupEntityObjectT>['delete']> {
     return this.groupRepository.delete(id);
   }
 }

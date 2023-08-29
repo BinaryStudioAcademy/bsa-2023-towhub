@@ -60,8 +60,8 @@ class UserController extends Controller {
       status: HttpCode.OK,
       payload: {
         items: result,
-        totalCount: result.length
-      }
+        totalCount: result.length,
+      },
     };
   }
 }

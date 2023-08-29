@@ -19,9 +19,7 @@ class BusinessService implements IService {
     this.businessRepository = businessRepository;
   }
 
-  public async findById(
-    id: number,
-  ): Promise<BusinessEntityT | null> {
+  public async findById(id: number): Promise<BusinessEntityT | null> {
     const [business = null] = await this.businessRepository.find({ id });
 
     return business ? BusinessEntity.initialize(business).toObject() : null;

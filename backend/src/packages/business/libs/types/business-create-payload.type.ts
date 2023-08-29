@@ -1,4 +1,3 @@
-
 import { type UserEntityObjectWithGroupT } from '~/packages/users/users.js';
 
 import { type BusinessEntityT } from './types.js';

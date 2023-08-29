@@ -9,7 +9,7 @@ export {
   type UserGroupKeyT,
   type UserGroupNameT,
   type UserSignInRequestDto,
-  type UserSignInResponseDto
+  type UserSignInResponseDto,
 } from './libs/types/types.js';
 export {
   businessSignUp as businessSignUpValidationSchema,

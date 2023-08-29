@@ -64,7 +64,7 @@ class UserEntity implements IEntity {
       firstName,
       lastName,
       groupId,
-      accessToken
+      accessToken,
     });
   }
 
@@ -86,7 +86,7 @@ class UserEntity implements IEntity {
       firstName,
       lastName,
       groupId,
-      accessToken: null
+      accessToken: null,
     });
   }
 
@@ -100,7 +100,7 @@ class UserEntity implements IEntity {
       email: this.email,
       firstName: this.firstName,
       lastName: this.lastName,
-      accessToken: this.accessToken
+      accessToken: this.accessToken,
     };
   }
 
@@ -113,7 +113,7 @@ class UserEntity implements IEntity {
       firstName: this.firstName,
       lastName: this.lastName,
       groupId: this.groupId,
-      accessToken: null
+      accessToken: null,
     };
   }
 }

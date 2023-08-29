@@ -12,49 +12,54 @@ import { type AuthPluginOptions } from './libs/types/auth-plugin-options.type.js
 
 declare module 'fastify' {
   interface FastifyInstance {
-    [AuthStrategy.VERIFY_JWT]: FastifyAuthFunction
+    [AuthStrategy.VERIFY_JWT]: FastifyAuthFunction;
   }
 
   interface FastifyRequest {
-    user: UserEntityObjectWithGroupT
+    user: UserEntityObjectWithGroupT;
   }
 }
 
 const authPlugin = fp<AuthPluginOptions>((fastify, options) => {
   const { userService, jwtService } = options;
 
-  fastify.decorate(AuthStrategy.VERIFY_JWT, async (request: FastifyRequest, _: FastifyReply, done: (error?: Error) => void): Promise<void> => {
-    try {
-      const token = request.headers.authorization?.replace('Bearer ', '');
+  fastify.decorate(
+    AuthStrategy.VERIFY_JWT,
+    async (
+      request: FastifyRequest,
+      _: FastifyReply,
+      done: (error?: Error) => void,
+    ): Promise<void> => {
+      try {
+        const token = request.headers.authorization?.replace('Bearer ', '');
 
-      if (!token) {
-        return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED));
+        if (!token) {
+          return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED));
+        }
+
+        const payload = await jwtService.verifyToken(token);
+
+        const decoded = assertJwtPayload(payload);
+
+        if (!decoded) {
+          return done(createUnauthorizedError(HttpMessage.INVALID_JWT));
+        }
+
+        const user = await userService.findById(payload.id);
+
+        if (!user) {
+          return done(createUnauthorizedError(HttpMessage.INVALID_JWT));
+        }
+
+        fastify.decorateRequest('user', user);
+
+        // Async should not call done() unless error
+        // return done()
+      } catch (error) {
+        return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED, error));
       }
-
-      const payload = await jwtService.verifyToken(token);
-
-      const decoded = assertJwtPayload(payload);
-
-      if (!decoded) {
-        return done(createUnauthorizedError(HttpMessage.INVALID_JWT));
-      }
-
-      const user = await userService.findById(payload.id);
-
-      if (!user) {
-        return done(createUnauthorizedError(HttpMessage.INVALID_JWT));
-      }
-
-      fastify.decorateRequest('user', user);
-
-      // Async should not call done() unless error
-      // return done()
-
-    } catch (error) {
-      return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED, error));
-    }
-  });
-
+    },
+  );
 });
 
 export { authPlugin };

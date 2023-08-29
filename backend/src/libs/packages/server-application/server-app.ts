@@ -1,7 +1,10 @@
 import fastifyAuth from '@fastify/auth';
 import swagger, { type StaticDocumentSpec } from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
-import Fastify, { type FastifyError, type preHandlerHookHandler } from 'fastify';
+import Fastify, {
+  type FastifyError,
+  type preHandlerHookHandler,
+} from 'fastify';
 
 import { ServerErrorType } from '~/libs/enums/enums.js';
 import { type ValidationError } from '~/libs/exceptions/exceptions.js';
@@ -69,7 +72,9 @@ class ServerApp implements IServerApp {
     this.logger.info(`Route: ${method as string} ${path} is registered`);
   }
 
-  private resolveAuthStrategy(strategy?: AuthStrategyHandler): undefined | preHandlerHookHandler {
+  private resolveAuthStrategy(
+    strategy?: AuthStrategyHandler,
+  ): undefined | preHandlerHookHandler {
     if (Array.isArray(strategy)) {
       return this.app.auth(strategy);
     }
@@ -178,7 +183,7 @@ class ServerApp implements IServerApp {
     await this.app.register(authPlugin, {
       config: this.config,
       userService: userService,
-      encryptService: encryptService
+      encryptService: encryptService,
     });
   }
 
@@ -209,7 +214,8 @@ class ServerApp implements IServerApp {
       });
 
     this.logger.info(
-      `Application is listening on PORT – ${this.config.ENV.APP.PORT.toString()}, on ENVIRONMENT – ${this.config.ENV.APP.ENVIRONMENT as string
+      `Application is listening on PORT – ${this.config.ENV.APP.PORT.toString()}, on ENVIRONMENT – ${
+        this.config.ENV.APP.ENVIRONMENT as string
       }.`,
     );
   }

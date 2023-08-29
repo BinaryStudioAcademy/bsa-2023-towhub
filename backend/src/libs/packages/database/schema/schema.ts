@@ -3,7 +3,7 @@ import {
   groups,
   groupsRelations,
   users,
-  usersRelations
+  usersRelations,
 } from './tables-schema.js';
 
 const schema = {
@@ -11,7 +11,7 @@ const schema = {
   groups,
   business,
   groupsRelations,
-  usersRelations
+  usersRelations,
 };
 
 type DatabaseSchema = typeof schema;

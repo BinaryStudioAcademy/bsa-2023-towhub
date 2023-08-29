@@ -1,7 +1,4 @@
-
-export {
-  type BusinessCreatePayload,
-} from './business-create-payload.type.js';
+export { type BusinessCreatePayload } from './business-create-payload.type.js';
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,

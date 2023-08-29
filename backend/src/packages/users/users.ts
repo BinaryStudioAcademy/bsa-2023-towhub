@@ -14,7 +14,7 @@ export {
   type CustomerSignUpResponseDto,
   type UserEntityObjectT,
   type UserEntityObjectWithGroupT,
-  type UserEntityT
+  type UserEntityT,
 } from './libs/types/types.js';
 export { customerSignUpValidationSchema } from './libs/validation-schemas/validation-schemas.js';
 export { userController, userService };

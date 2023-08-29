@@ -15,7 +15,10 @@ import {
 
 import { type AuthService } from './auth.service.js';
 import { AuthApiPath } from './libs/enums/enums.js';
-import { type UserGroupKey, type UserSignInRequestDto } from './libs/types/types.js';
+import {
+  type UserGroupKey,
+  type UserSignInRequestDto,
+} from './libs/types/types.js';
 import { userSignInValidationSchema } from './libs/validation-schemas/user-sign-in.validation-schema.js';
 
 class AuthController extends Controller {
@@ -36,7 +39,7 @@ class AuthController extends Controller {
         this.signUp(
           options as ApiHandlerOptions<{
             body: CustomerSignUpRequestDto;
-            params: { groupName: ValueOf<typeof UserGroupKey> }
+            params: { groupName: ValueOf<typeof UserGroupKey> };
           }>,
         ),
     });
@@ -51,7 +54,7 @@ class AuthController extends Controller {
         this.signIn(
           options as ApiHandlerOptions<{
             body: UserSignInRequestDto;
-            user: UserEntityObjectWithGroupT
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -99,12 +102,15 @@ class AuthController extends Controller {
   private async signUp(
     options: ApiHandlerOptions<{
       body: CustomerSignUpRequestDto;
-      params: { groupName: ValueOf<typeof UserGroupKey> }
+      params: { groupName: ValueOf<typeof UserGroupKey> };
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
       status: HttpCode.CREATED,
-      payload: await this.authService.signUp(options.params.groupName, options.body),
+      payload: await this.authService.signUp(
+        options.params.groupName,
+        options.body,
+      ),
     };
   }
 
@@ -115,7 +121,7 @@ class AuthController extends Controller {
   ): Promise<ApiHandlerResponse> {
     return {
       status: HttpCode.OK,
-      payload: await this.authService.signIn(options.body)
+      payload: await this.authService.signIn(options.body),
     };
   }
 }
