@@ -1,26 +1,10 @@
-import { Icon } from '~/libs/components/components.js';
-import { IconName } from '~/libs/enums/icon-name.enum.js';
-import { TabNames } from '~/libs/enums/sidebar-tabs.enum.js';
+import { Button } from '~/libs/components/components.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
-import { type TabName, type TabsType } from '~/libs/types/types.js';
+import { type TabName } from '~/libs/types/types.js';
 
 import styles from './styles.module.scss';
-
-const TABS: TabsType[] = [
-  {
-    name: TabNames.ORDERS,
-    icon: IconName.LIST,
-  },
-  {
-    name: TabNames.TRUCKS,
-    icon: IconName.TRUCK,
-  },
-  {
-    name: TabNames.DRIVERS,
-    icon: IconName.USERS,
-  },
-];
+import { TABS } from './tabs.js';
 
 type Properties = {
   isCollapsed?: boolean;
@@ -47,25 +31,20 @@ const Sidebar: React.FC<Properties> = ({
     >
       <ul className={styles.list}>
         {TABS.map((tab) => (
-          <li className={styles.list__item} key={tab.name}>
-            <button
-              className={getValidClassNames(
+          <li key={tab.name}>
+            <Button
+              label={isCollapsed ? '' : tab.name}
+              className={[
                 'h5',
                 styles.btn,
                 selectedTab === tab.name && styles.active,
-              )}
+              ]}
+              frontIcon={tab.icon}
+              variant="text"
               onClick={handleTabClick(tab.name)}
             >
-              <Icon iconName={tab.icon} />
-              <span
-                className={getValidClassNames(
-                  styles.tab_name,
-                  isCollapsed && 'visually-hidden',
-                )}
-              >
-                {tab.name}
-              </span>
-            </button>
+              <span className={'visually-hidden'}>{tab.name}</span>
+            </Button>
           </li>
         ))}
       </ul>
