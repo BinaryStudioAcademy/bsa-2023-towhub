@@ -59,6 +59,7 @@ export {
   TowTruckType,
   truckAddValidationSchema,
   TruckManufacturer,
+  TrucksApiPath,
   TruckYear,
 } from './packages/trucks/trucks.js';
 export {
