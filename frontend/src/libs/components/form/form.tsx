@@ -41,7 +41,12 @@ const Form = <T extends FieldValues = FieldValues>({
     return fields.map((field, index) => (
       <div key={index}>
         {field.type === 'dropdown' && field.options ? (
-          <Dropdown options={field.options} />
+          <Dropdown
+            options={field.options}
+            name={field.name}
+            control={control}
+            errors={errors}
+          />
         ) : (
           <Input {...field} control={control} errors={errors} />
         )}

@@ -1,10 +1,23 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import {
-  type TruckEntity as TruckEntityT,
-  type TruckEntityDatabase,
-} from './libs/types/types.js';
+type TruckEntityT = {
+  id: number | null;
+  createdAt: string;
+  updatedAt: string;
+  manufacturer: {
+    label: string;
+    value: string;
+  };
+  capacity: number;
+  pricePerKm: number;
+  licensePlateNumber: string;
+  year: string;
+  towType: {
+    label: string;
+    value: string;
+  };
+};
 
 class TruckEntity implements IEntity {
   private id: number | null;
@@ -13,7 +26,10 @@ class TruckEntity implements IEntity {
 
   private updatedAt: Date;
 
-  private manufacturer: string;
+  private manufacturer: {
+    label: string;
+    value: string;
+  };
 
   private capacity: number;
 
@@ -22,6 +38,11 @@ class TruckEntity implements IEntity {
   private licensePlateNumber: string;
 
   private year: string;
+
+  private towType: {
+    label: string;
+    value: string;
+  };
 
   private constructor({
     id,
@@ -32,15 +53,17 @@ class TruckEntity implements IEntity {
     pricePerKm,
     licensePlateNumber,
     year,
-  }: NullableProperties<TruckEntityDatabase, 'id'>) {
+    towType,
+  }: NullableProperties<TruckEntityT, 'id'>) {
     this.id = id;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
+    this.createdAt = new Date(createdAt);
+    this.updatedAt = new Date(updatedAt);
     this.manufacturer = manufacturer;
     this.capacity = capacity;
     this.pricePerKm = pricePerKm;
     this.licensePlateNumber = licensePlateNumber;
     this.year = year;
+    this.towType = towType;
   }
 
   public static initialize({
@@ -52,16 +75,18 @@ class TruckEntity implements IEntity {
     pricePerKm,
     licensePlateNumber,
     year,
+    towType,
   }: TruckEntityT): TruckEntity {
     return new TruckEntity({
       id,
-      createdAt: new Date(createdAt),
-      updatedAt: new Date(updatedAt),
+      createdAt,
+      updatedAt,
       manufacturer,
       capacity,
       pricePerKm,
       licensePlateNumber,
       year,
+      towType,
     });
   }
 
@@ -71,16 +96,18 @@ class TruckEntity implements IEntity {
     pricePerKm,
     licensePlateNumber,
     year,
+    towType,
   }: Omit<TruckEntityT, 'id' | 'createdAt' | 'updatedAt'>): TruckEntity {
     return new TruckEntity({
       id: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       manufacturer,
       capacity,
       pricePerKm,
       licensePlateNumber,
       year,
+      towType,
     });
   }
 
@@ -94,6 +121,7 @@ class TruckEntity implements IEntity {
       pricePerKm: this.pricePerKm,
       licensePlateNumber: this.licensePlateNumber,
       year: this.year,
+      towType: this.towType,
     };
   }
 
@@ -104,6 +132,7 @@ class TruckEntity implements IEntity {
       pricePerKm: this.pricePerKm,
       licensePlateNumber: this.licensePlateNumber,
       year: this.year,
+      towType: this.towType,
     };
   }
 }

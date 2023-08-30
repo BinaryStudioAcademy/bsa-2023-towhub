@@ -4,8 +4,8 @@ import { type TruckAddRequestDto } from '~/packages/trucks/libs/types/types.js';
 import {
   FormLabel,
   FormName,
-  TowTruckType,
   TruckManufacturer,
+  TruckTowType,
   TruckYear,
 } from '~/packages/trucks/trucks.js';
 
@@ -22,12 +22,6 @@ const convertToSelectOptions = (
 
 const ADD_TRUCK_FIELDS: FormField<TruckAddRequestDto>[] = [
   {
-    type: 'text',
-    label: FormLabel.LICENSE_PLATE,
-    placeholder: PLACEHOLDER_LICENSE_PLATE,
-    name: FormName.LICENSE_PLATE,
-  },
-  {
     type: 'dropdown',
     label: FormLabel.MANUFACTURER,
     name: FormName.MANUFACTURER,
@@ -35,9 +29,21 @@ const ADD_TRUCK_FIELDS: FormField<TruckAddRequestDto>[] = [
   },
   {
     type: 'dropdown',
+    label: FormLabel.TOW_TYPE,
+    name: FormName.TOW_TYPE,
+    options: convertToSelectOptions(TruckTowType),
+  },
+  {
+    type: 'dropdown',
     label: FormLabel.YEAR,
     name: FormName.YEAR,
     options: convertToSelectOptions(TruckYear),
+  },
+  {
+    type: 'text',
+    label: FormLabel.LICENSE_PLATE,
+    placeholder: PLACEHOLDER_LICENSE_PLATE,
+    name: FormName.LICENSE_PLATE,
   },
   {
     type: 'number',
@@ -51,19 +57,13 @@ const ADD_TRUCK_FIELDS: FormField<TruckAddRequestDto>[] = [
     name: FormName.PRICE_PER_KM,
     min: 1,
     max: 100,
-    currency: '$',
+    step: '0.10',
   },
   {
     type: 'text',
     label: FormLabel.DRIVERS,
     name: FormName.DRIVERS,
     options: [],
-  },
-  {
-    type: 'dropdown',
-    label: FormLabel.TOW_TYPE,
-    name: FormName.TOW_TYPE,
-    options: convertToSelectOptions(TowTruckType),
   },
 ];
 

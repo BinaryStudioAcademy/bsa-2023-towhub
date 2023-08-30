@@ -1,9 +1,9 @@
 export {
   FormLabel,
   FormName,
-  TowTruckType,
   TruckManufacturer,
   TrucksApiPath,
+  TruckTowType,
   TruckYear,
 } from './libs/enums/enums.js';
 export {

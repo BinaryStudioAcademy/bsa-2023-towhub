@@ -12,7 +12,7 @@ type Constructor = {
   storage: IStorage;
 };
 
-class TrucksApi extends HttpApi {
+class TruckApi extends HttpApi {
   public constructor({ baseUrl, http, storage }: Constructor) {
     super({ path: ApiPath.TRUCKS, baseUrl, http, storage });
   }
@@ -26,7 +26,7 @@ class TrucksApi extends HttpApi {
         method: 'POST',
         contentType: ContentType.JSON,
         payload: JSON.stringify(payload),
-        hasAuth: true,
+        hasAuth: false,
       },
     );
 
@@ -34,4 +34,4 @@ class TrucksApi extends HttpApi {
   }
 }
 
-export { TrucksApi };
+export { TruckApi };

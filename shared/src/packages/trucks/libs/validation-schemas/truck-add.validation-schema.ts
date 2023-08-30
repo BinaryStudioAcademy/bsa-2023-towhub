@@ -2,21 +2,20 @@ import joi from 'joi';
 
 import {
   FormLabel,
-  TowTruckType,
   TruckManufacturer,
+  TruckTowType,
   TruckYear,
 } from '../enums/enums.js';
 import { type TruckAddRequestDto } from '../types/truck-add-request-dto.type.js';
 
 const truckAddValidationSchema = joi.object<TruckAddRequestDto>({
-  manufacturer: joi
-    .string()
-    .valid(...Object.keys(TruckManufacturer))
-    .required()
-    .messages({
+  manufacturer: joi.object({
+    label: joi.string().required(),
+    value: joi.valid(...Object.values(TruckManufacturer)).messages({
       'any.only': `Invalid ${FormLabel.MANUFACTURER}`,
       'any.required': `${FormLabel.MANUFACTURER} is required`,
     }),
+  }),
 
   capacity: joi
     .number()
@@ -29,7 +28,7 @@ const truckAddValidationSchema = joi.object<TruckAddRequestDto>({
 
   pricePerKm: joi
     .number()
-    .precision(2)
+    .precision(1)
     .min(1)
     .max(100)
     .required()
@@ -49,23 +48,21 @@ const truckAddValidationSchema = joi.object<TruckAddRequestDto>({
       'string.pattern.base': `Invalid ${FormLabel.LICENSE_PLATE}`,
     }),
 
-  year: joi
-    .string()
-    .valid(...Object.keys(TruckYear))
-    .required()
-    .messages({
+  year: joi.object({
+    label: joi.string().required(),
+    value: joi.valid(...Object.values(TruckYear)).messages({
       'any.only': `Invalid ${FormLabel.YEAR}`,
       'any.required': `${FormLabel.YEAR} is required`,
     }),
+  }),
 
-  towType: joi
-    .string()
-    .valid(...Object.keys(TowTruckType))
-    .required()
-    .messages({
+  towType: joi.object({
+    label: joi.string().required(),
+    value: joi.valid(...Object.values(TruckTowType)).messages({
       'any.only': `Invalid ${FormLabel.TOW_TYPE}`,
       'any.required': `${FormLabel.TOW_TYPE} is required`,
     }),
+  }),
 
   drivers: joi.any(),
 });

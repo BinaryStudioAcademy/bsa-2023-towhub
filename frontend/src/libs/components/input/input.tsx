@@ -20,6 +20,7 @@ type Properties<T extends FieldValues> = {
   isDisabled?: boolean;
   min?: number;
   max?: number;
+  step?: string;
 };
 
 const Input = <T extends FieldValues>({
@@ -32,6 +33,7 @@ const Input = <T extends FieldValues>({
   isDisabled,
   min,
   max,
+  step,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
 
@@ -58,6 +60,7 @@ const Input = <T extends FieldValues>({
           disabled={isDisabled}
           min={min}
           max={max}
+          step={step}
         />
         {type === 'password' && (
           <span className={styles.passwordEye}>&#128065;</span>

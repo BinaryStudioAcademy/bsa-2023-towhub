@@ -5,7 +5,16 @@ import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
-import { type TruckEntityDatabase } from './libs/types/types.js';
+type TruckEntityDatabase = {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  manufacturer: string;
+  capacity: number;
+  pricePerKm: number;
+  licensePlateNumber: string;
+  year: string;
+};
 
 class TruckRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -26,7 +35,7 @@ class TruckRepository implements IRepository {
 
   public async find(id: number): Promise<TruckEntityDatabase | null> {
     try {
-      const [truck = null]: TruckEntityDatabase[] | [null] = await this.db
+      const [truck = null] = await this.db
         .driver()
         .select()
         .from(this.trucksSchema)

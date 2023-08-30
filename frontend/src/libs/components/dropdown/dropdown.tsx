@@ -1,10 +1,24 @@
+import {
+  type Control,
+  type FieldErrors,
+  type FieldPath,
+  type FieldValues,
+} from 'react-hook-form';
 import Select, { type StylesConfig } from 'react-select';
 
-import { useCallback, useMemo, useState } from '~/libs/hooks/hooks.js';
+import {
+  useCallback,
+  useFormController,
+  useMemo,
+  useState,
+} from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 
-type Properties = {
+type Properties<T extends FieldValues> = {
   options: SelectOption[];
+  name: FieldPath<T>;
+  control: Control<T, null>;
+  errors: FieldErrors<T>;
 };
 
 const getStyles = (isMenuOpen: boolean): StylesConfig => {
@@ -45,10 +59,13 @@ const getStyles = (isMenuOpen: boolean): StylesConfig => {
   };
 };
 
-const Dropdown: React.FC<Properties> = ({
+const Dropdown = <T extends FieldValues>({
   options,
-}: Properties): JSX.Element => {
+  name,
+  control,
+}: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { field } = useFormController({ name, control });
 
   const handleOpenMenu = useCallback(() => {
     setIsMenuOpen(true);
@@ -62,6 +79,7 @@ const Dropdown: React.FC<Properties> = ({
 
   return (
     <Select
+      {...field}
       options={options}
       classNamePrefix="react-select"
       styles={stylesConfig}

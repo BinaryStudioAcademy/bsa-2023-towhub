@@ -20,6 +20,10 @@ export {
   HttpHeader,
   HttpMessage,
 } from './libs/packages/http/http.js';
+export {
+  ClientSocketEvent,
+  ServerSocketEvent,
+} from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type CapitalizeEnum,
@@ -56,22 +60,23 @@ export {
   type TruckEntity,
   FormLabel,
   FormName,
-  TowTruckType,
   truckAddValidationSchema,
   TruckManufacturer,
   TrucksApiPath,
+  TruckTowType,
   TruckYear,
 } from './packages/trucks/trucks.js';
 export {
+  type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
   type UserGroupEntityT,
   type UserGroupKeyT,
   type UserGroupNameT,
-  type UserSignUpRequestDto,
-  type UserSignUpResponseDto,
+  businessSignUpValidationSchema,
+  customerSignUpValidationSchema,
   UserGroupKey,
   UsersApiPath,
-  userSignUpValidationSchema,
 } from './packages/users/users.js';

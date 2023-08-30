@@ -1,25 +1,39 @@
-import {
-  type TruckAddRequestDto,
-  truckAddValidationSchema,
-} from 'shared/build/index.js';
-
 import { Form } from '~/libs/components/components.js';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useCallback,
+} from '~/libs/hooks/hooks.js';
+import { type TruckAddRequestDto } from '~/packages/trucks/libs/types/types.js';
+import { truckAddValidationSchema } from '~/packages/trucks/libs/validation-schemas/validation-schemas.js';
+import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { ADD_TRUCK_FIELDS } from './libs/add-truck.fields.js';
 import { DEFAULT_TRUCK_PAYLOAD } from './libs/constants.js';
 
-type Properties = {
-  onSubmit: (payload: TruckAddRequestDto) => void;
-};
+const AddTruckForm: React.FC = () => {
+  const dispatch = useAppDispatch();
 
-const AddTruckForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
+  const handleFormSubmit = useCallback(
+    (payload: TruckAddRequestDto): void => {
+      void dispatch(truckActions.addTruck(payload));
+    },
+    [dispatch],
+  );
+
+  const { dataStatus } = useAppSelector(({ trucks }) => ({
+    dataStatus: trucks.dataStatus,
+  }));
+
   return (
     <div>
+      state: {dataStatus}
       <Form
         fields={ADD_TRUCK_FIELDS}
         defaultValues={DEFAULT_TRUCK_PAYLOAD}
         validationSchema={truckAddValidationSchema}
-        onSubmit={onSubmit}
+        onSubmit={handleFormSubmit}
+        btnLabel="ADD"
       />
     </div>
   );

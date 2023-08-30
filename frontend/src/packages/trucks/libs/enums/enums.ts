@@ -1,8 +1,8 @@
 export {
   FormLabel,
   FormName,
-  TowTruckType,
   TruckManufacturer,
   TrucksApiPath,
+  TruckTowType,
   TruckYear,
 } from 'shared/build/index.js';
