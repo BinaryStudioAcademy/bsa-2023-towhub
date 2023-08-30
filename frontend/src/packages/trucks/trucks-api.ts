@@ -3,7 +3,7 @@ import { HttpApi } from '~/libs/packages/api/api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 
-import { TrucksApiPath } from './libs/enums/enums.js';
+import { TruckApiPath } from './libs/enums/enums.js';
 import { type TruckAddRequestDto } from './libs/types/types.js';
 
 type Constructor = {
@@ -21,7 +21,7 @@ class TruckApi extends HttpApi {
     payload: TruckAddRequestDto,
   ): Promise<TruckAddRequestDto> {
     const response = await this.load(
-      this.getFullEndpoint(TrucksApiPath.ROOT, {}),
+      this.getFullEndpoint(TruckApiPath.ROOT, {}),
       {
         method: 'POST',
         contentType: ContentType.JSON,

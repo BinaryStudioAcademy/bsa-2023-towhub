@@ -1,5 +1,5 @@
-const TrucksApiPath = {
+const TruckApiPath = {
   ROOT: '/',
 } as const;
 
-export { TrucksApiPath };
+export { TruckApiPath };
