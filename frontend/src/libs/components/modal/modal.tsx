@@ -32,7 +32,7 @@ const Modal: React.FC<Properties> = ({
   }
 
   const modalElement = (
-    <div
+    <dialog
       className={getValidClassNames(
         styles.modal,
         isCentered && styles.centered,
@@ -42,7 +42,7 @@ const Modal: React.FC<Properties> = ({
       role="button"
       tabIndex={0}
     >
-      <dialog
+      <div
         className={styles.content}
         onClick={handleDisableContentContainerClick}
         onKeyDown={handleExitKeydown}
@@ -50,8 +50,8 @@ const Modal: React.FC<Properties> = ({
         tabIndex={0}
       >
         {children}
-      </dialog>
-    </div>
+      </div>
+    </dialog>
   );
 
   return createPortal(
