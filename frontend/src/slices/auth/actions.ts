@@ -1,21 +1,39 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import { type AuthMode } from '~/libs/enums/enums.js';
+import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
 import {
-  type UserSignUpRequestDto,
-  type UserSignUpResponseDto,
+  type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
+  type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
+  type UserSignInRequestDto,
+  type UserSignInResponseDto,
 } from '~/packages/users/users.js';
 
 import { name as sliceName } from './auth.slice.js';
 
 const signUp = createAsyncThunk<
-  UserSignUpResponseDto,
-  UserSignUpRequestDto,
+  CustomerSignUpResponseDto | BusinessSignUpResponseDto,
+  {
+    payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto;
+    mode: ValueOf<typeof AuthMode>;
+  },
   AsyncThunkConfig
->(`${sliceName}/sign-up`, (registerPayload, { extra }) => {
+>(`${sliceName}/sign-up`, ({ payload, mode }, { extra }) => {
   const { authApi } = extra;
 
-  return authApi.signUp(registerPayload);
+  return authApi.signUp(payload, mode);
 });
 
-export { signUp };
+const signIn = createAsyncThunk<
+  UserSignInResponseDto,
+  UserSignInRequestDto,
+  AsyncThunkConfig
+>(`${sliceName}/sign-in`, (signInPayload, { extra }) => {
+  const { authApi } = extra;
+
+  return authApi.signIn(signInPayload);
+});
+
+export { signIn, signUp };

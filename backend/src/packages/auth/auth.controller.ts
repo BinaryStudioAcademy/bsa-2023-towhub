@@ -6,13 +6,17 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { type ValueOf } from '~/libs/types/types.js';
+import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/user-models.type.js';
 import {
-  type UserSignUpRequestDto,
-  userSignUpValidationSchema,
+  type CustomerSignUpRequestDto,
+  customerSignUpValidationSchema,
 } from '~/packages/users/users.js';
 
 import { type AuthService } from './auth.service.js';
-import { AuthApiPath } from './libs/enums/enums.js';
+import { type UserGroupKey, AuthApiPath } from './libs/enums/enums.js';
+import { type UserSignInRequestDto } from './libs/types/types.js';
+import { userSignInValidationSchema } from './libs/validation-schemas/validation-schemas.js';
 
 class AuthController extends Controller {
   private authService: AuthService;
@@ -23,15 +27,31 @@ class AuthController extends Controller {
     this.authService = authService;
 
     this.addRoute({
-      path: AuthApiPath.SIGN_UP,
+      path: AuthApiPath.SIGN_UP_CUSTOMER,
       method: 'POST',
       validation: {
-        body: userSignUpValidationSchema,
+        body: customerSignUpValidationSchema,
       },
       handler: (options) =>
         this.signUp(
           options as ApiHandlerOptions<{
-            body: UserSignUpRequestDto;
+            body: CustomerSignUpRequestDto;
+            params: { groupName: ValueOf<typeof UserGroupKey> };
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: AuthApiPath.SIGN_IN,
+      method: 'POST',
+      validation: {
+        body: userSignInValidationSchema,
+      },
+      handler: (options) =>
+        this.signIn(
+          options as ApiHandlerOptions<{
+            body: UserSignInRequestDto;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -78,12 +98,27 @@ class AuthController extends Controller {
 
   private async signUp(
     options: ApiHandlerOptions<{
-      body: UserSignUpRequestDto;
+      body: CustomerSignUpRequestDto;
+      params: { groupName: ValueOf<typeof UserGroupKey> };
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
       status: HttpCode.CREATED,
-      payload: await this.authService.signUp(options.body),
+      payload: await this.authService.signUp(
+        options.params.groupName,
+        options.body,
+      ),
+    };
+  }
+
+  private async signIn(
+    options: ApiHandlerOptions<{
+      body: UserSignInRequestDto;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.authService.signIn(options.body),
     };
   }
 }
