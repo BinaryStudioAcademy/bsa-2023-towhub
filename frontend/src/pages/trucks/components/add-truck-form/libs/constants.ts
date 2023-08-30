@@ -1,13 +1,17 @@
 import { type TruckAddRequestDto } from '~/packages/trucks/libs/types/types.js';
 
-const DEFAULT_TRUCK_PAYLOAD: TruckAddRequestDto = {
+const DEFAULT_TRUCK_PAYLOAD: Omit<
+  TruckAddRequestDto,
+  'manufacture' | 'year' | 'towType'
+> = {
   licensePlateNumber: '',
-  manufacturer: null,
-  year: null,
   capacity: 0,
   pricePerKm: 1,
   drivers: '',
-  towType: null,
+  manufacturer: {
+    label: '',
+    value: 'miller_industries',
+  },
 };
 
 export { DEFAULT_TRUCK_PAYLOAD };
