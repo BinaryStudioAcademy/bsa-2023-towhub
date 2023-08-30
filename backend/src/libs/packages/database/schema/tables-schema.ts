@@ -72,6 +72,7 @@ const trucks = pgTable(
     pricePerKm: real('price_per_km').notNull(),
     licensePlateNumber: varchar('license_plate_number').notNull(),
     year: varchar('year').notNull(),
+    towType: varchar('tow_type').notNull(),
   },
   (trucks) => {
     return {
