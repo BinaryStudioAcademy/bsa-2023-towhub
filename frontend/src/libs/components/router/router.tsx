@@ -1,10 +1,12 @@
 import { AppRoute } from '~/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
+import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 import { Truck } from '~/pages/trucks/truck.js';
 import { WelcomePage } from '~/pages/welcome/welcome.js';
 
 import { App } from '../app/app.js';
+import { PageLayout } from '../page-layout/page-layout.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => (
@@ -39,6 +41,14 @@ const Router = (): JSX.Element => (
             element: <NotFound />,
           },
         ],
+      },
+      {
+        path: AppRoute.DASHBOARD,
+        element: (
+          <PageLayout>
+            <Dashboard />
+          </PageLayout>
+        ),
       },
     ]}
   />

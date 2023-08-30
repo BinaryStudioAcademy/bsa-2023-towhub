@@ -10,4 +10,3 @@ export {
   type BusinessAddResponseDto,
   type BusinessUpdateResponseDto,
 } from './response/response.js';
-export { type BusinessCreatePayload } from './service/service.js';
