@@ -1,25 +1,29 @@
 import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
-  useAppSelector,
   useCallback,
   useLocation,
 } from '~/libs/hooks/hooks.js';
-import { type CustomerSignUpRequestDto } from '~/packages/users/users.js';
+import {
+  type CustomerSignUpRequestDto,
+  type UserSignInRequestDto,
+} from '~/packages/users/users.js';
 import { actions as authActions } from '~/slices/auth/auth.js';
 
 import { SignInForm, SignUpForm } from './components/components.js';
+import styles from './styles.module.css';
 
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { dataStatus } = useAppSelector(({ auth }) => ({
-    dataStatus: auth.dataStatus,
-  }));
+
   const { pathname } = useLocation();
 
-  const handleSignInSubmit = useCallback((): void => {
-    // handle sign in
-  }, []);
+  const handleSignInSubmit = useCallback(
+    (payload: UserSignInRequestDto): void => {
+      void dispatch(authActions.signIn(payload));
+    },
+    [dispatch],
+  );
 
   const handleSignUpSubmit = useCallback(
     (payload: CustomerSignUpRequestDto): void => {
@@ -41,12 +45,7 @@ const Auth: React.FC = () => {
     return null;
   };
 
-  return (
-    <>
-      state: {dataStatus}
-      {getScreen(pathname)}
-    </>
-  );
+  return <div className={styles.page}>{getScreen(pathname)}</div>;
 };
 
 export { Auth };

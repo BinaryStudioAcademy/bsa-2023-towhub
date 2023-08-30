@@ -6,6 +6,7 @@ export {
   type CustomerSignUpRequestDto,
   type ServerErrorDetail,
   type ServerErrorResponse,
+  type UserSignInRequestDto,
   type ValidationSchema,
   type ValueOf,
 } from 'shared/build/index.js';
