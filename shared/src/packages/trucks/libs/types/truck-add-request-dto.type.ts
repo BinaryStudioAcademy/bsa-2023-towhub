@@ -7,12 +7,21 @@ import {
 } from '../enums/enums.js';
 
 type TruckAddRequestDto = {
-  manufacturer: ValueOf<typeof TruckManufacturer> | null;
+  manufacturer: {
+    label: string;
+    value: ValueOf<typeof TruckManufacturer>;
+  } | null;
   capacity: number;
   pricePerKm: number;
   licensePlateNumber: string;
-  year: ValueOf<typeof TruckYear> | null;
-  towType: ValueOf<typeof TruckTowType> | null;
+  year: {
+    label: string;
+    value: ValueOf<typeof TruckYear>;
+  } | null;
+  towType: {
+    label: string;
+    value: ValueOf<typeof TruckTowType>;
+  } | null;
   drivers: string;
 };
 
