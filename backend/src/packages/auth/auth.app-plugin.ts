@@ -1,12 +1,12 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
-import { jwtPayloadSchema } from 'shared/build/index.js';
 
 import { HttpMessage } from '~/libs/packages/http/http.js';
 
 import { AuthStrategy } from './auth.js';
 import { createUnauthorizedError } from './libs/helpers/create-unauthorized-error.helper.js';
 import { type AuthPluginOptions } from './libs/types/auth-plugin-options.type.js';
+import { jwtPayloadSchema } from './libs/validation-schemas/validation-schemas.js';
 
 const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
   const { userService, jwtService } = options;

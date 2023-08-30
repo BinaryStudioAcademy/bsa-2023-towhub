@@ -41,10 +41,6 @@ const groups = pgTable('groups', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-const groupsRelations = relations(groups, ({ many }) => ({
-  users: many(users),
-}));
-
 const usersRelations = relations(users, ({ one }) => ({
   group: one(groups, {
     fields: [users.groupId],
@@ -63,4 +59,4 @@ const business = pgTable('business_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export { business, groups, groupsRelations, users, usersRelations };
+export { business, groups, users, usersRelations };
