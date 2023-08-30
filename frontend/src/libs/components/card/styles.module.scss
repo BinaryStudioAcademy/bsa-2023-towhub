@@ -7,7 +7,7 @@ $violet-shallow: #93a1ff;
 $blue-shallower: #6c91f9;
 $blue-shallow: #becee8;
 
-@import "../../../assets/css/styles.scss";
+@import "src/assets/css/styles.scss";
 
 .container {
   $side-padding: 4.25vmin;
@@ -20,14 +20,14 @@ $blue-shallow: #becee8;
   box-shadow: $shadow-dark;
 }
 
-.card_layout {
+.cardLayout {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: auto;
 }
 
-.horizontal_bar {
+.horizontalBar {
   display: grid;
   place-content: center;
   margin: 2.25vmin 0;
@@ -43,7 +43,7 @@ $blue-shallow: #becee8;
   column-gap: 2.25vmin;
 }
 
-.header_image_container {
+.headerImageContainer {
   display: grid;
   place-content: center;
   justify-self: center;
@@ -58,18 +58,18 @@ $blue-shallow: #becee8;
   border-radius: 55px;
 }
 
-.header_info_container {
+.headerInfoContainer {
   display: grid;
   grid-template-rows: 1fr 1fr;
   row-gap: $row-gap-md;
 }
 
-.header_title_container {
+.headerTitleContainer {
   display: grid;
   align-items: end;
 }
 
-.header_subtitle_container {
+.headerSubtitleContainer {
   display: grid;
   align-items: start;
 }
@@ -85,7 +85,7 @@ $blue-shallow: #becee8;
   column-gap: 2vmin;
 }
 
-.location_container {
+.locationContainer {
   display: grid;
   grid-template-columns: min-content auto;
   align-items: center;
@@ -94,7 +94,7 @@ $blue-shallow: #becee8;
   column-gap: 1.7vmin;
 }
 
-.location_dot {
+.locationDot {
   height: 20px;
   color: $violet-shallow;
 }
@@ -103,25 +103,25 @@ $blue-shallow: #becee8;
   $color: $grey-dark;
 }
 
-.last_update {
+.lastUpdate {
   $color: $grey;
 
   grid-column: 2 / span 1;
 }
 
-.routes_container {
+.routesContainer {
   display: grid;
   grid-template-rows: repeat(3, min-content);
 }
 
-.route_point {
+.routePoint {
   display: grid;
   grid-template-columns: 3.3vmin auto;
   align-items: center;
   column-gap: 1.7vmin;
 }
 
-.route_info {
+.routeInfo {
   display: inline-block;
   overflow: hidden;
   color: $grey-darker;
@@ -129,17 +129,17 @@ $blue-shallow: #becee8;
   text-overflow: ellipsis;
 }
 
-.route_dot {
+.routeDot {
   display: inline-block;
   justify-self: center;
 }
 
-.route_arrow {
+.routeArrow {
   display: grid;
   justify-content: center;
 }
 
-.distance_container {
+.distanceContainer {
   display: grid;
   grid-template-columns: min-content max-content;
   align-items: end;
@@ -147,11 +147,11 @@ $blue-shallow: #becee8;
   column-gap: 0.7vmin;
 }
 
-.distance_icon {
+.distanceIcon {
   display: grid;
   padding-right: 1vmin;
 }
 
-.distance_info {
+.distanceInfo {
   color: $grey-darker;
 }

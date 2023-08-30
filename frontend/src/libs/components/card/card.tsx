@@ -32,23 +32,23 @@ const Card: React.FC<Properties> = ({
   currentStatus: { timespanLastUpdated, location, distanceLeft, timespanLeft },
 }: Properties) => (
   <div className={style.container}>
-    <div className={style.card_layout}>
-      <div className={style.horizontal_bar}>
+    <div className={style.cardLayout}>
+      <div className={style.horizontalBar}>
         <div>
           <PlainSvgIcon name={PlainSvgIconName.HORIZONTAL_BAR} />
         </div>
       </div>
       <div className={style.header}>
-        <div className={style.header_image_container}>
+        <div className={style.headerImageContainer}>
           <img className={style.profileImage} src={profileURL} alt="header" />
         </div>
-        <div className={style.header_info_container}>
-          <div className={style.header_title_container}>
-            <span className={getValidClassNames('text-md')}>
+        <div className={style.headerInfoContainer}>
+          <div className={style.headerTitleContainer}>
+            <span className='text-md'>
               {firstName} {lastName}
             </span>
           </div>
-          <div className={style.header_subtitle_container}>
+          <div className={style.headerSubtitleContainer}>
             <span className={getValidClassNames(style.subtitle, 'text-sm')}>
               {licensePlate}
             </span>
@@ -56,43 +56,43 @@ const Card: React.FC<Properties> = ({
         </div>
       </div>
       <div className={style.body}>
-        <div className={style.location_container}>
-          <div className={style.location_dot}>
+        <div className={style.locationContainer}>
+          <div className={style.locationDot}>
             <PlainSvgIcon name={PlainSvgIconName.LOCATION_DOT} />
           </div>
           <span className={getValidClassNames(style.location, 'text-sm')}>
             {location}
           </span>
-          <span className={getValidClassNames(style.last_update, 'text-sm')}>
+          <span className={getValidClassNames(style.lastUpdate, 'text-sm')}>
             last updated {timespanLastUpdated} ago
           </span>
         </div>
-        <div className={style.routes_container}>
-          <div className={style.route_point}>
-            <div className={style.route_dot}>
+        <div className={style.routesContainer}>
+          <div className={style.routePoint}>
+            <div className={style.routeDot}>
               <PlainSvgIcon name={PlainSvgIconName.BLUE_CIRCLE} />
             </div>
-            <span className={getValidClassNames(style.route_info, 'text-sm')}>
+            <span className={getValidClassNames(style.routeInfo, 'text-sm')}>
               {startLocation}
             </span>
           </div>
-          <div className={style.route_point}>
-            <div className={style.route_arrow}>
+          <div className={style.routePoint}>
+            <div className={style.routeArrow}>
               <PlainSvgIcon name={PlainSvgIconName.ARROW_DOWN} />
             </div>
           </div>
-          <div className={style.route_point}>
-            <div className={style.route_dot}>
+          <div className={style.routePoint}>
+            <div className={style.routeDot}>
               <PlainSvgIcon name={PlainSvgIconName.RED_CIRCLE} />
             </div>
-            <span className={style.route_info}>{endLocation}</span>
+            <span className={style.routeInfo}>{endLocation}</span>
           </div>
         </div>
-        <div className={style.distance_container}>
-          <div className={style.distance_icon}>
+        <div className={style.distanceContainer}>
+          <div className={style.distanceIcon}>
             <PlainSvgIcon name={PlainSvgIconName.MAP} />
           </div>
-          <span className={getValidClassNames(style.distance_info, 'text-md')}>
+          <span className={getValidClassNames(style.distanceInfo, 'text-md')}>
             {distanceLeft} km{distanceLeft > 1 && 's'}, {timespanLeft}
           </span>
         </div>
