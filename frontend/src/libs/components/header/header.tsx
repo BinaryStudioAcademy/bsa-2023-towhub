@@ -2,7 +2,7 @@ import { AppRoute } from '~/libs/enums/enums.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
 
 import { AppLogo, Link } from '../components.js';
-import styles from './header.module.scss';
+import styles from './styles.module.scss';
 
 const Header: React.FC = () => {
   const handleSignIn = useCallback(() => {
