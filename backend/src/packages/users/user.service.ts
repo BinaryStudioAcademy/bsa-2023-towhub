@@ -25,6 +25,7 @@ class UserService implements IService<UserEntityObjectT> {
     return result.map((item) => UserEntity.initialize(item).toObject());
   }
 
+  // TODO: Do we need this?
   public async findByPhone(
     phone: UserEntityT['phone'],
   ): Promise<UserEntityObjectWithGroupT | null> {
@@ -59,29 +60,15 @@ class UserService implements IService<UserEntityObjectT> {
     };
   }
 
+  // This returns a raw database entity instead of entity.toObject
+  // Currently we need it to propertly authenticate user
+  // Because otherwise it is impossible to get the password
   public async findByEmailRaw(
     email: UserEntityT['email'],
   ): Promise<UserDatabaseModelWithGroup | null> {
     const [user = null] = await this.userRepository.find({ email });
 
     return user;
-  }
-
-  public async findByAccessToken(
-    accessToken: NonNullable<UserEntityT['accessToken']>,
-  ): Promise<UserEntityObjectWithGroupT | null> {
-    const [user = null] = await this.userRepository.find({ accessToken });
-
-    if (!user) {
-      return null;
-    }
-
-    const { groups, ...pureUser } = user;
-
-    return {
-      ...UserEntity.initialize(pureUser).toObject(),
-      groups: GroupEntity.initialize(groups).toObject(),
-    };
   }
 
   public async findById(
