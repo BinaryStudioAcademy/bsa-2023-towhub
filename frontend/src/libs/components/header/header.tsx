@@ -1,13 +1,15 @@
 import { AppRoute } from '~/libs/enums/enums.js';
-import { useCallback } from '~/libs/hooks/hooks.js';
+import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 
 import { AppLogo, Link } from '../components.js';
 import styles from './styles.module.scss';
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
+
   const handleSignIn = useCallback(() => {
-    return;
-  }, []);
+    navigate(AppRoute.WELCOME);
+  }, [navigate]);
 
   return (
     <header className={styles.container}>
