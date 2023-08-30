@@ -20,7 +20,7 @@ declare module 'fastify' {
   }
 }
 
-const authPlugin = fp<AuthPluginOptions>((fastify, options) => {
+const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
   const { userService, jwtService } = options;
 
   fastify.decorate(
@@ -47,11 +47,11 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options) => {
 
         const user = await userService.findById(payload.id);
 
-        if (!user) {
+        if (!user || user.accessToken !== token) {
           return done(createUnauthorizedError(HttpMessage.INVALID_JWT));
         }
 
-        fastify.decorateRequest('user', user);
+        request.user = user;
 
         // Async should not call done() unless error
         // return done()
@@ -60,6 +60,8 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options) => {
       }
     },
   );
+
+  done();
 });
 
 export { authPlugin };

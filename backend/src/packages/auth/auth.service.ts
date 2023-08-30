@@ -8,7 +8,9 @@ import { type GroupService } from '~/packages/groups/group.service.js';
 import { type UserGroupKey, GroupEntity } from '~/packages/groups/groups.js';
 import {
   type CustomerSignUpRequestDto,
+  type UserEntityObjectT,
   type UserEntityObjectWithGroupT,
+  type UserEntityT,
 } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service.js';
 
@@ -69,12 +71,17 @@ class AuthService {
         status: HttpCode.BAD_REQUEST,
       });
     }
-    const result = await this.userService.create({
+
+    const newUser = await this.userService.create({
       ...payload,
       groupId: group.id,
     });
 
-    return { ...result, groups: group };
+    const userWithToken = await this.generateAccessTokenAndUpdateUser(
+      newUser.id,
+    );
+
+    return { ...userWithToken, groups: group };
   }
 
   public async signIn(
@@ -97,19 +104,26 @@ class AuthService {
       throw createUnauthorizedError(HttpMessage.WRONG_PASSWORD);
     }
 
-    const userId = user.id;
-    const jwtPayload = { id: userId };
-    const newToken = await this.jwtService.createToken(
-      jwtPayload,
-      this.config.ACCESS_LIFETIME,
-    );
-    const updatedUser = await this.userService.setAccessToken(userId, newToken);
+    const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
 
     return {
       ...updatedUser,
       // Had to take group from raw because setAccessToken does not return this
       groups: GroupEntity.initialize(user.groups).toObject(),
     };
+  }
+
+  public async generateAccessTokenAndUpdateUser(
+    userId: UserEntityT['id'],
+  ): Promise<UserEntityObjectT> {
+    const jwtPayload = { id: userId };
+
+    const accessToken = await this.jwtService.createToken(
+      jwtPayload,
+      this.config.ACCESS_LIFETIME,
+    );
+
+    return await this.userService.setAccessToken(userId, accessToken);
   }
 }
 

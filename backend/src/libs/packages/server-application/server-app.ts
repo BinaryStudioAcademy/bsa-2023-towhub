@@ -182,8 +182,8 @@ class ServerApp implements IServerApp {
     await this.app.register(fastifyAuth);
     await this.app.register(authPlugin, {
       config: this.config,
-      userService: userService,
-      jwtService: jwtService,
+      userService,
+      jwtService,
     });
   }
 
