@@ -5,10 +5,13 @@ import {
   faChevronDown,
   faChevronLeft,
   faGear,
+  faListUl,
   faLocationDot,
   faMap,
   faPlus,
   faStar,
+  faTruckPickup,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { IconName } from '~/libs/enums/icon-name.enum.js';
@@ -22,8 +25,11 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.CHEVRON_LEFT]: faChevronLeft,
   [IconName.GEAR]: faGear,
   [IconName.STAR]: faStar,
+  [IconName.LIST]: faListUl,
   [IconName.LOCATION_DOT]: faLocationDot,
   [IconName.MAP]: faMap,
+  [IconName.TRUCK]: faTruckPickup,
+  [IconName.USERS]: faUsers,
 };
 
 export { iconNameToSvg };

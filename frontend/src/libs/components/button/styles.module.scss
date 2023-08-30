@@ -38,7 +38,8 @@
   box-shadow: $shadow, $shadow-light;
 }
 
-.contained:hover {
+.contained:hover,
+.contained:focus {
   background-color: $red-light;
 }
 
@@ -55,11 +56,14 @@
 }
 
 .text:hover,
-.outlined:hover {
+.outlined:hover,
+.text:focus,
+.outlined:focus {
   color: $blue-light;
 }
 
-.outlined:hover {
+.outlined:hover,
+.outlined:focus {
   border-color: $blue-light;
 }
 

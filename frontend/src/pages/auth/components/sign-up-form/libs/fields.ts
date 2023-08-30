@@ -1,10 +1,11 @@
 import { FormLabel, FormName } from '~/libs/enums/enums.js';
 import {
+  type BusinessSignUpRequestDto,
+  type CustomerSignUpRequestDto,
   type FormField,
-  type UserSignUpRequestDto,
 } from '~/libs/types/types.js';
 
-const signUpFields: FormField<UserSignUpRequestDto>[] = [
+const signUpCustomerFields: FormField<CustomerSignUpRequestDto>[] = [
   {
     label: FormLabel.FIRST_NAME,
     placeholder: 'Enter your first name',
@@ -24,7 +25,7 @@ const signUpFields: FormField<UserSignUpRequestDto>[] = [
   {
     label: FormLabel.PHONE,
     placeholder: 'Enter your phone',
-    name: 'phone',
+    name: FormName.PHONE,
   },
   {
     type: 'password',
@@ -34,4 +35,44 @@ const signUpFields: FormField<UserSignUpRequestDto>[] = [
   },
 ];
 
-export { signUpFields };
+const signUpBusinessFields: FormField<BusinessSignUpRequestDto>[] = [
+  {
+    label: FormLabel.FIRST_NAME,
+    placeholder: 'Enter your first name',
+    name: FormName.FIRST_NAME,
+  },
+  {
+    label: FormLabel.LAST_NAME,
+    placeholder: 'Enter your last name',
+    name: FormName.LAST_NAME,
+  },
+  {
+    type: 'email',
+    label: FormLabel.EMAIL,
+    placeholder: 'Enter your email',
+    name: FormName.EMAIL,
+  },
+  {
+    label: FormLabel.PHONE,
+    placeholder: 'Enter your phone',
+    name: FormName.PHONE,
+  },
+  {
+    label: FormLabel.COMPANY_NAME,
+    placeholder: 'Enter the name of company',
+    name: FormName.COMPANY_NAME,
+  },
+  {
+    label: FormLabel.TAX_NUMBER,
+    placeholder: 'Enter the tax number of company',
+    name: FormName.TAX_NUMBER,
+  },
+  {
+    type: 'password',
+    label: FormLabel.PASSWORD,
+    placeholder: 'Enter your password',
+    name: FormName.PASSWORD,
+  },
+];
+
+export { signUpBusinessFields, signUpCustomerFields };

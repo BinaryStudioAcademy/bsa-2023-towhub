@@ -6,11 +6,16 @@ plugins:
   - stylelint-scss
 
 rules:
-  # allow using @use
+  # allow using @use, @each
   at-rule-no-unknown:
     - true
     - ignoreAtRules:
         - use
+        - each
+  property-no-unknown:
+    - true
+    - ignoreSelectors:
+        - :export
   # allow @use to precede @import
   no-invalid-position-at-import-rule:
     - true
@@ -21,3 +26,7 @@ rules:
     - true
     - ignorePseudoClasses:
         - global
+        - export
+  media-query-no-invalid:
+    - null
+

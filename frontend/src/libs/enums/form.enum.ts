@@ -4,6 +4,8 @@ const FormName = {
   EMAIL: 'email',
   PHONE: 'phone',
   PASSWORD: 'password',
+  COMPANY_NAME: 'companyName',
+  TAX_NUMBER: 'taxNumber',
 } as const;
 
 const FormLabel = {
@@ -12,6 +14,8 @@ const FormLabel = {
   EMAIL: 'Email',
   PHONE: 'Phone',
   PASSWORD: 'Password',
+  COMPANY_NAME: 'Company name',
+  TAX_NUMBER: 'Tax number',
 } as const;
 
 export { FormLabel, FormName };
