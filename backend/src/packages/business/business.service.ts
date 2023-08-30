@@ -29,7 +29,7 @@ class BusinessService implements IService {
     payload,
     owner,
   }: BusinessCreatePayload): Promise<BusinessAddResponseDto> {
-    if (owner.groups.key !== UserGroupKey.BUSINESS) {
+    if (owner.group.key !== UserGroupKey.BUSINESS) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpMessage.INVALID_USER_GROUP,

@@ -84,7 +84,7 @@ class AuthService {
       newUser.id,
     );
 
-    return { ...userWithToken, groups: group };
+    return { ...userWithToken, group };
   }
 
   public async signIn(
@@ -112,7 +112,7 @@ class AuthService {
     return {
       ...updatedUser,
       // Had to take group from raw because setAccessToken does not return this
-      groups: GroupEntity.initialize(user.groups).toObject(),
+      group: GroupEntity.initialize(user.group).toObject(),
     };
   }
 

@@ -34,11 +34,11 @@ class UserService implements IService<UserEntityObjectT> {
       return null;
     }
 
-    const { groups, ...pureUser } = user;
+    const { group, ...pureUser } = user;
 
     return {
       ...UserEntity.initialize(pureUser).toObject(),
-      groups: GroupEntity.initialize(groups).toObject(),
+      group: GroupEntity.initialize(group).toObject(),
     };
   }
 
@@ -51,11 +51,11 @@ class UserService implements IService<UserEntityObjectT> {
       return null;
     }
 
-    const { groups, ...pureUser } = user;
+    const { group, ...pureUser } = user;
 
     return {
       ...UserEntity.initialize(pureUser).toObject(),
-      groups: GroupEntity.initialize(groups).toObject(),
+      group: GroupEntity.initialize(group).toObject(),
     };
   }
 
@@ -73,16 +73,18 @@ class UserService implements IService<UserEntityObjectT> {
   public async findById(
     id: UserEntityT['id'],
   ): Promise<UserEntityObjectWithGroupT | null> {
-    const result = await this.userRepository.find({ id });
+    const [user = null] = await this.userRepository.find({ id });
 
-    if (result.length === 1) {
-      return {
-        ...UserEntity.initialize(result[0]).toObject(),
-        groups: GroupEntity.initialize(result[0].groups).toObject(),
-      };
+    if (!user) {
+      return null;
     }
 
-    return null;
+    const { group, ...pureUser } = user;
+
+    return {
+      ...UserEntity.initialize(pureUser).toObject(),
+      group: GroupEntity.initialize(group).toObject(),
+    };
   }
 
   public async create(

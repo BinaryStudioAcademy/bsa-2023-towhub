@@ -12,7 +12,7 @@ import { type UserEntityT } from './types.js';
 type UserDatabaseModel = InferModel<DatabaseSchema['users']>;
 
 type UserDatabaseModelWithGroup = UserDatabaseModel & {
-  groups: GroupDatabaseModel;
+  group: GroupDatabaseModel;
 };
 
 type UserDatabaseModelCreateUpdate = InferModel<
@@ -30,7 +30,7 @@ type UserEntityCreateUpdate = Omit<
 type UserEntityObjectT = ReturnType<UserEntity['toObject']>;
 
 type UserEntityObjectWithGroupT = UserEntityObjectT & {
-  groups: GroupEntityObjectT;
+  group: GroupEntityObjectT;
 };
 
 export {
