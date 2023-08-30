@@ -61,8 +61,8 @@ export {
   FormLabel,
   FormName,
   truckAddValidationSchema,
+  TruckApiPath,
   TruckManufacturer,
-  TrucksApiPath,
   TruckTowType,
   TruckYear,
 } from './packages/trucks/trucks.js';

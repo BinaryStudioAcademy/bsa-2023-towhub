@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "ffcc394c-24a9-4b13-9d19-f476b9bdfdcf",
+  "id": "cb5f9ad9-ab2e-4573-ac74-58eb4aa7c9ba",
   "prevId": "480273b5-cb72-4195-9c84-dee9c2947870",
   "tables": {
     "business_details": {
@@ -165,6 +165,12 @@
         },
         "year": {
           "name": "year",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tow_type": {
+          "name": "tow_type",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true

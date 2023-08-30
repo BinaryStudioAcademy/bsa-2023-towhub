@@ -1,6 +1,4 @@
 export {
-  FormLabel,
-  FormName,
   TruckApiPath,
   TruckManufacturer,
   TruckTowType,
