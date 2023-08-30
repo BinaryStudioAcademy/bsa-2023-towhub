@@ -36,11 +36,15 @@ export {
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
-export { AuthApiPath } from './packages/auth/auth.js';
+export {
+  type JwtPayload,
+  AuthApiPath,
+  AuthMode,
+  jwtPayloadSchema,
+} from './packages/auth/auth.js';
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,
-  type BusinessCreatePayload,
   type BusinessDeleteRequestParameters,
   type BusinessEntityT,
   type BusinessGetRequestParameters,
@@ -56,6 +60,8 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
+  type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserEntityT,
