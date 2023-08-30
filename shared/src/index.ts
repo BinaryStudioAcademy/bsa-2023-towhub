@@ -64,8 +64,11 @@ export {
   type UserGroupEntityT,
   type UserGroupKeyT,
   type UserGroupNameT,
+  type UserSignInRequestDto,
+  type UserSignInResponseDto,
   businessSignUpValidationSchema,
   customerSignUpValidationSchema,
   UserGroupKey,
   UsersApiPath,
+  userSignInValidationSchema,
 } from './packages/users/users.js';
