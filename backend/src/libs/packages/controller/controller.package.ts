@@ -1,23 +1,12 @@
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type ServerAppRouteParameters } from '~/libs/packages/server-application/server-application.js';
-import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { type IController } from './libs/interfaces/interface.js';
 import {
   type ApiHandler,
   type ApiHandlerOptions,
   type ControllerRouteParameters,
-  type UserMocked,
 } from './libs/types/types.js';
-
-const userFromToken: UserMocked = {
-  id: 1,
-  group: {
-    key: UserGroupKey.BUSINESS,
-    id: 2,
-    name: 'Business',
-  },
-};
 
 class Controller implements IController {
   private logger: ILogger;
@@ -59,13 +48,13 @@ class Controller implements IController {
   private mapRequest(
     request: Parameters<ServerAppRouteParameters['handler']>[0],
   ): ApiHandlerOptions {
-    const { body, query, params } = request;
+    const { body, query, params, user } = request;
 
     return {
       body,
       query,
       params,
-      user: userFromToken,
+      user,
     };
   }
 }
