@@ -1,0 +1,49 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  width: 200px;
+  height: 100%;
+  overflow: hidden;
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+}
+
+.collapsed {
+  width: 60px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+}
+
+.btn {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 16px 0;
+  color: $black-light;
+  font-weight: $font-weight-bold;
+  text-transform: capitalize;
+  box-shadow: none;
+}
+
+.btn:hover,
+.btn:focus {
+  background-color: $black-light-transparent;
+}
+
+.active {
+  color: $blue-dark;
+}
+
+.active::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: $blue-dark;
+  content: "";
+}
