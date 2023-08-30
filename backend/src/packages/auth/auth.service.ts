@@ -5,18 +5,20 @@ import {
   type IJwtService,
 } from '~/libs/interfaces/interfaces.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
-import { type ValueOf } from '~/libs/types/types.js';
 import { type GroupService } from '~/packages/groups/group.service.js';
 import { GroupEntity } from '~/packages/groups/groups.js';
 import {
+  type BusinessSignUpRequestDto,
   type CustomerSignUpRequestDto,
   type UserEntityObjectT,
+  type UserEntityObjectWithGroupAndBusinessT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
 } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service.js';
 
-import { type UserGroupKey } from './libs/enums/enums.js';
+import { type BusinessService } from '../business/business.service.js';
+import { UserGroupKey } from './libs/enums/enums.js';
 import { createUnauthorizedError } from './libs/helpers/helpers.js';
 import { type UserSignInRequestDto } from './libs/types/types.js';
 
@@ -25,6 +27,7 @@ type AuthServiceConstructorProperties = {
   groupService: GroupService;
   jwtService: IJwtService;
   encryptService: IEncryptService;
+  businessService: BusinessService;
   config: IConfig['ENV']['JWT'];
 };
 
@@ -37,6 +40,8 @@ class AuthService {
 
   private encryptService: AuthServiceConstructorProperties['encryptService'];
 
+  private businessService: AuthServiceConstructorProperties['businessService'];
+
   private config: AuthServiceConstructorProperties['config'];
 
   public constructor({
@@ -44,29 +49,43 @@ class AuthService {
     groupService,
     jwtService,
     encryptService,
+    businessService,
     config,
   }: AuthServiceConstructorProperties) {
     this.userService = userService;
     this.groupService = groupService;
     this.jwtService = jwtService;
     this.encryptService = encryptService;
+    this.businessService = businessService;
     this.config = config;
   }
 
-  public async signUp(
-    groupKey: ValueOf<typeof UserGroupKey>,
+  private async checkIsExistingUser({
+    email,
+    phone,
+  }: CustomerSignUpRequestDto | BusinessSignUpRequestDto): Promise<boolean> {
+    const existingUser =
+      (await this.userService.findByEmail(email)) ??
+      (await this.userService.findByPhone(phone));
+
+    return Boolean(existingUser);
+  }
+
+  public async signUpCustomer(
     payload: CustomerSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupT> {
-    const user = await this.userService.findByEmail(payload.email);
+    const isExistingUser = await this.checkIsExistingUser(payload);
 
-    if (user) {
+    // const { phone, email, firstName, lastName, password } = payload;
+
+    if (isExistingUser) {
       throw new HttpError({
         message: HttpMessage.USER_EXISTS,
         status: HttpCode.CONFLICT,
       });
     }
 
-    const group = await this.groupService.findByKey(groupKey);
+    const group = await this.groupService.findByKey(UserGroupKey.CUSTOMER);
 
     if (!group) {
       throw new HttpError({
@@ -85,6 +104,61 @@ class AuthService {
     );
 
     return { ...userWithToken, group };
+  }
+
+  public async signUpBusiness(
+    payload: BusinessSignUpRequestDto,
+  ): Promise<UserEntityObjectWithGroupAndBusinessT> {
+    const isExistingUser = await this.checkIsExistingUser(payload);
+
+    const {
+      phone,
+      email,
+      firstName,
+      lastName,
+      password,
+      companyName,
+      taxNumber,
+    } = payload;
+
+    if (isExistingUser) {
+      throw new HttpError({
+        message: HttpMessage.USER_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
+
+    const group = await this.groupService.findByKey(UserGroupKey.BUSINESS);
+
+    if (!group) {
+      throw new HttpError({
+        message: HttpMessage.INVALID_GROUP,
+        status: HttpCode.BAD_REQUEST,
+      });
+    }
+
+    const newUser = await this.userService.create({
+      phone,
+      email,
+      firstName,
+      lastName,
+      password,
+      groupId: group.id,
+    });
+
+    const userWithToken = await this.generateAccessTokenAndUpdateUser(
+      newUser.id,
+    );
+
+    const newBusiness = await this.businessService.create({
+      payload: {
+        companyName,
+        taxNumber,
+      },
+      owner: { ...newUser, group },
+    });
+
+    return { ...userWithToken, group, business: [newBusiness] };
   }
 
   public async signIn(
