@@ -9,6 +9,7 @@ import {
 import { Button } from '../button/button.jsx';
 import { Dropdown } from '../dropdown/dropdown.js';
 import { Input } from '../input/input.jsx';
+import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
   fields: FormField<T>[];
@@ -55,12 +56,10 @@ const Form = <T extends FieldValues = FieldValues>({
   };
 
   return (
-    <>
-      <form onSubmit={handleFormSubmit}>
-        {createInputs()}
-        <Button type="submit" label={btnLabel ?? 'Submit'} />
-      </form>
-    </>
+    <form onSubmit={handleFormSubmit} className={styles.form}>
+      {createInputs()}
+      <Button type="submit" label={btnLabel ?? 'Submit'} isFullWidth />
+    </form>
   );
 };
 
