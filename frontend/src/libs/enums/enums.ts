@@ -7,6 +7,7 @@ export { TabsName } from './sidebar-tabs.enum.js';
 export {
   ApiPath,
   AppEnvironment,
+  AuthMode,
   ContentType,
   ServerErrorType,
 } from 'shared/build/index.js';

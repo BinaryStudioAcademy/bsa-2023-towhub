@@ -27,7 +27,7 @@ class AuthController extends Controller {
     this.authService = authService;
 
     this.addRoute({
-      path: AuthApiPath.SIGN_UP,
+      path: AuthApiPath.SIGN_UP_CUSTOMER,
       method: 'POST',
       validation: {
         body: customerSignUpValidationSchema,

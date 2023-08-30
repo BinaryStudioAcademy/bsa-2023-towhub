@@ -8,9 +8,12 @@ import styles from './styles.module.scss';
 const WelcomePage: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleClick = useCallback(() => {
-    navigate(AppRoute.SIGN_UP);
-  }, [navigate]);
+  const handleClick = useCallback(
+    (mode: string) => {
+      navigate(AppRoute.SIGN_UP, { state: mode });
+    },
+    [navigate],
+  );
 
   return (
     <section className={styles.section}>

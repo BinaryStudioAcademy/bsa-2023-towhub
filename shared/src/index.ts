@@ -39,6 +39,7 @@ export {
 export {
   type JwtPayload,
   AuthApiPath,
+  AuthMode,
   jwtPayloadSchema,
 } from './packages/auth/auth.js';
 export {
@@ -59,6 +60,8 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
+  type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserEntityT,

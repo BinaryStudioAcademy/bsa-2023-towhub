@@ -4,6 +4,7 @@ export { type SelectOption } from './select-option.type.js';
 export { type TabName, type TabsType } from './sidebar.type.js';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
 export {
+  type BusinessSignUpRequestDto,
   type CustomerSignUpRequestDto,
   type ServerErrorDetail,
   type ServerErrorResponse,
