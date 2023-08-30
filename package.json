@@ -11,7 +11,6 @@
     "frontend"
   ],
   "scripts": {
-    "postinstall": "npm run build:shared",
     "build:shared": "npm run build -w shared",
     "build:frontend": "npm run build -w frontend",
     "build:backend": "npm run build -w backend",
@@ -22,7 +21,12 @@
     "lint:css": "npm run lint:css --workspaces --if-present",
     "lint:prettify": "prettier --check \"**/*.{ts,tsx,json,md,scss,html,sql}\"",
     "lint": "npm run lint:editor && npm run lint:fs && npm run lint:prettify && npm run lint:type && npm run lint:js && npm run lint:css",
-    "prettify": "prettier --write \"**/*.{ts,tsx,json,md,scss,html,sql}\""
+    "prettify": "prettier --write \"**/*.{ts,tsx,json,md,scss,html,sql}\"",
+    "build": "npm run build:shared && npm run build:frontend && npm run build:backend && npm run prepare-build",
+    "prepare-build": "sh ./prepare-build.sh",
+    "install:build": "cd ./build/shared/build && npm install --ignore-scripts && cd ../../backend && npm install",
+    "prestart": "npm run build",
+    "start": "cd ./build/backend && npm start"
   },
   "devDependencies": {
     "@commitlint/cli": "17.4.4",
