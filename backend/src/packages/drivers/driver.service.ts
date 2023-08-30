@@ -30,8 +30,10 @@ class DriverService implements IService {
     return { result: driver ? driver.toObject() : null };
   }
 
-  public async findAll(): Promise<DriverGetAllResponseDto> {
-    const items = await this.driverRepository.findAll();
+  public async findAllByBusinessId(
+    businessId: number,
+  ): Promise<DriverGetAllResponseDto> {
+    const items = await this.driverRepository.findAllByBusinessId(businessId);
 
     return {
       items: items.map((it) => it.toObject()),
@@ -41,6 +43,7 @@ class DriverService implements IService {
   public async create({
     payload,
     owner,
+    user,
   }: DriverCreatePayload): Promise<DriverAddResponseDto> {
     if (owner.group.key !== UserGroupKey.BUSINESS) {
       throw new HttpError({
@@ -52,7 +55,6 @@ class DriverService implements IService {
     const { result: doesDriverExist } = await this.driverRepository.checkExists(
       {
         driverLicenseNumber: payload.driverLicenseNumber,
-        userId: payload.userId,
       },
     );
 
@@ -64,7 +66,11 @@ class DriverService implements IService {
     }
 
     const driver = await this.driverRepository.create(
-      DriverEntity.initializeNew({ ...payload, businessId: owner.id }),
+      DriverEntity.initializeNew({
+        ...payload,
+        businessId: owner.id,
+        userId: user.id,
+      }),
     );
 
     return driver.toObject();
@@ -91,7 +97,6 @@ class DriverService implements IService {
     const { result: doesDriverExist } = await this.driverRepository.checkExists(
       {
         driverLicenseNumber: payload.driverLicenseNumber,
-        userId: payload.userId,
       },
     );
 

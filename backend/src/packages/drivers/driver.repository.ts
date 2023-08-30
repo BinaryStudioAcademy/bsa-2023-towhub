@@ -34,8 +34,14 @@ class DriverRepository implements IRepository {
     return result.length === 0 ? null : DriverEntity.initialize(result[0]);
   }
 
-  public async findAll(): Promise<DriverEntity[]> {
-    const drivers = await this.db.driver().select().from(this.driverSchema);
+  public async findAllByBusinessId(
+    businessId: number,
+  ): Promise<DriverEntity[]> {
+    const drivers = await this.db
+      .driver()
+      .select()
+      .from(this.driverSchema)
+      .where(eq(this.driverSchema.businessId, businessId));
 
     return drivers.map((it) => DriverEntity.initialize(it));
   }

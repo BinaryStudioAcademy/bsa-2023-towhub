@@ -78,6 +78,7 @@ export {
 export {
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type DriverSignUpRequestDto,
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
@@ -86,6 +87,7 @@ export {
   type UserGroupNameT,
   businessSignUpValidationSchema,
   customerSignUpValidationSchema,
+  driverSignUpValidationSchema,
   UserGroupKey,
   UsersApiPath,
 } from './packages/users/users.js';

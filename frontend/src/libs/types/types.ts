@@ -4,6 +4,7 @@ export { type SelectOption } from './select-option.type.js';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
 export {
   type CustomerSignUpRequestDto,
+  type DriverSignUpRequestDto,
   type ServerErrorDetail,
   type ServerErrorResponse,
   type ValidationSchema,

@@ -44,7 +44,6 @@ const App: React.FC = () => {
   return (
     <>
       <Header />
-
       <ul className="App-navigation-list">
         <li>
           <Link to={AppRoute.ROOT}>Root</Link>

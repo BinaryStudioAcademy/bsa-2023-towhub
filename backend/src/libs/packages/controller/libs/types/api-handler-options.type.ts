@@ -5,6 +5,7 @@ type DefaultApiHandlerOptions = {
   query?: unknown;
   params?: unknown;
   user?: UserMocked;
+  owner?: UserMocked;
 };
 
 type ApiHandlerOptions<
@@ -14,6 +15,7 @@ type ApiHandlerOptions<
   query: T['query'];
   params: T['params'];
   user: T['user'];
+  owner: T['owner'];
 };
 
 export { type ApiHandlerOptions };

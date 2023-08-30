@@ -48,7 +48,7 @@ const Form = <T extends FieldValues = FieldValues>({
     <>
       <form onSubmit={handleFormSubmit}>
         {createInputs()}
-        <Button type="submit" label={btnLabel ?? 'Submit'} />
+        <Button type="submit" isFullWidth label={btnLabel ?? 'Submit'} />
       </form>
     </>
   );

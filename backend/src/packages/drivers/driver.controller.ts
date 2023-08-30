@@ -132,7 +132,7 @@ class DriverController extends Controller {
   private driverService: DriverService;
 
   public constructor(logger: ILogger, driverService: DriverService) {
-    super(logger, ApiPath.BUSINESS);
+    super(logger, ApiPath.DRIVERS);
 
     this.driverService = driverService;
 
@@ -147,6 +147,7 @@ class DriverController extends Controller {
           options as ApiHandlerOptions<{
             body: DriverAddRequestDto;
             user: UserMocked;
+            owner: UserMocked;
           }>,
         ),
     });
@@ -164,6 +165,7 @@ class DriverController extends Controller {
             body: DriverUpdateRequestDto;
             params: DriverUpdateRequestParameters;
             user: UserMocked;
+            owner: UserMocked;
           }>,
         ),
     });
@@ -201,7 +203,12 @@ class DriverController extends Controller {
     this.addRoute({
       path: DriverApiPath.ROOT,
       method: 'GET',
-      handler: () => this.findAll(),
+      handler: (options) =>
+        this.findAllByBusinessId(
+          options as ApiHandlerOptions<{
+            owner: UserMocked;
+          }>,
+        ),
     });
   }
 
@@ -220,13 +227,9 @@ class DriverController extends Controller {
    *              type: object
    *              required:
    *               - driverLicenseNumber
-   *               - userId
    *              properties:
    *                driverLicenseNumber:
    *                  $ref: '#/components/schemas/Driver/properties/driverLicenseNumber'
-   *              properties:
-   *                userId:
-   *                  $ref: '#/components/schemas/Driver/properties/userId'
    *      responses:
    *        201:
    *          description: Successful driver creation.
@@ -246,12 +249,14 @@ class DriverController extends Controller {
   private async create(
     options: ApiHandlerOptions<{
       body: DriverAddRequestDto;
+      owner: UserMocked;
       user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
     const createdDriver = await this.driverService.create({
       payload: options.body,
-      owner: options.user,
+      owner: options.owner,
+      user: options.user,
     });
 
     return {
@@ -306,12 +311,14 @@ class DriverController extends Controller {
       body: DriverUpdateRequestDto;
       params: DriverUpdateRequestParameters;
       user: UserMocked;
+      owner: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
     const updatedDriver = await this.driverService.update({
       id: options.params.id,
       payload: options.body,
-      owner: options.user,
+      owner: options.owner,
+      user: options.user,
     });
 
     return {
@@ -408,10 +415,13 @@ class DriverController extends Controller {
    * @swagger
    * /driver:
    *    get:
+   *      tags:
+   *       - driver
    *      description: Returns an array of drivers
+   *      summary: Find drivers by businessId
    *      responses:
    *        200:
-   *          description: A list of drivers
+   *          description: A list of drivers for business
    *          content:
    *            application/json:
    *              schema:
@@ -419,10 +429,14 @@ class DriverController extends Controller {
    *                items:
    *                  $ref: '#/components/schemas/Driver'
    */
-  private async findAll(): Promise<ApiHandlerResponse> {
+  private async findAllByBusinessId(
+    options: ApiHandlerOptions<{
+      owner: UserMocked;
+    }>,
+  ): Promise<ApiHandlerResponse> {
     return {
       status: HttpCode.OK,
-      payload: await this.driverService.findAll(),
+      payload: await this.driverService.findAllByBusinessId(options.owner.id),
     };
   }
 }

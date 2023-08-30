@@ -10,12 +10,21 @@ import {
   type UserMocked,
 } from './libs/types/types.js';
 
-const userFromToken: UserMocked = {
-  id: 1,
+const ownerFromToken: UserMocked = {
+  id: 3,
   group: {
     key: UserGroupKey.BUSINESS,
     id: 2,
     name: 'Business',
+  },
+};
+
+const userFromToken: UserMocked = {
+  id: 1,
+  group: {
+    key: UserGroupKey.DRIVER,
+    id: 3,
+    name: 'Driver',
   },
 };
 
@@ -66,6 +75,7 @@ class Controller implements IController {
       query,
       params,
       user: userFromToken,
+      owner: ownerFromToken,
     };
   }
 }

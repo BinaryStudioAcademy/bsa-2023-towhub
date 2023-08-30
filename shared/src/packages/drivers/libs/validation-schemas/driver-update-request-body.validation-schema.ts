@@ -12,9 +12,6 @@ const driverUpdateRequestBody = joi.object<DriverUpdateRequestDto, true>({
     .messages({
       'string.empty': DriverValidationMessage.DRIVER_LICENSE_NUMBER_REQUIRED,
     }),
-  userId: joi.number().integer().positive().required().messages({
-    'number': DriverValidationMessage.USER_ID_MUST_BE_NUMBER,
-  }),
 });
 
 export { driverUpdateRequestBody };
