@@ -22,7 +22,17 @@
     "lint:css": "npm run lint:css --workspaces --if-present",
     "lint:prettify": "prettier --check \"**/*.{ts,tsx,json,md,scss,html,sql}\"",
     "lint": "npm run lint:editor && npm run lint:fs && npm run lint:prettify && npm run lint:type && npm run lint:js && npm run lint:css",
-    "prettify": "prettier --write \"**/*.{ts,tsx,json,md,scss,html,sql}\""
+    "prettify": "prettier --write \"**/*.{ts,tsx,json,md,scss,html,sql}\"",
+    "install:shared": "cd shared && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && npm install",
+    "install:all": "npm install && npm run install:shared && npm run build:shared && npm run install:frontend && npm run install:backend",
+    "build": "npm run build:shared && npm run build:frontend && npm run build:backend && npm run prepare-build",
+    "prebuild": "npm run install:all",
+    "prepare-build": "sh ./prepare-build.sh",
+    "install:build": "cd ./build/shared/build && npm install --ignore-scripts && cd ../../backend && npm install",
+    "prestart": "npm run build",
+    "start": "cd ./build/backend && npm start"
   },
   "devDependencies": {
     "@commitlint/cli": "17.4.4",

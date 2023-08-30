@@ -12,7 +12,12 @@
     "start:dev": "nodemon --exec \"node --loader ts-paths-esm-loader\" src/index.ts",
     "migrate:generate": "drizzle-kit generate:pg --schema=./src/libs/packages/database/schema/tables-schema.ts --out=./src/libs/packages/database/generated-schema",
     "migrate:dev": "node --loader ts-paths-esm-loader ./src/libs/packages/database/migrate-up.ts",
-    "build": "tsc && tsc-alias"
+    "migrate:prod": "node ./libs/packages/database/migrate-up.js",
+    "build:ts": "tsc && tsc-alias -p tsconfig.json",
+    "build:copy": "cp -r package.json build && cp -r ./src/libs/packages/database/generated-schema ./build/libs/packages/database/",
+    "build": "npm run build:ts && npm run build:copy",
+    "prestart": "npm run migrate:prod",
+    "start": "node index.js"
   },
   "devDependencies": {
     "@types/bcryptjs": "2.4.2",
@@ -24,6 +29,7 @@
     "tsconfig-paths": "4.2.0"
   },
   "dependencies": {
+    "@fastify/static": "6.10.2",
     "@fastify/auth": "4.3.0",
     "@fastify/swagger": "8.9.0",
     "@fastify/swagger-ui": "1.9.3",

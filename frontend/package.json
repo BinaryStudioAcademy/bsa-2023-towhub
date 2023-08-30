@@ -12,7 +12,7 @@
     "lint:type": "npx tsc --noEmit",
     "stylelint:fix": "npx stylelint \"src/**/*.scss\" --fix",
     "start:dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc --build --clean && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
