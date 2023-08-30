@@ -1,8 +1,10 @@
 export { App } from './app/app.js';
+export { AppLogo } from './app-logo/app-logo.js';
 export { Button } from './button/button.js';
 export { Card } from './card/card.jsx';
 export { Checkbox } from './checkbox/checkbox.js';
 export { Form } from './form/form.jsx';
+export { Header } from './header/header.js';
 export { Icon } from './icon/icon.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';

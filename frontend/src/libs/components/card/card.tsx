@@ -44,7 +44,7 @@ const Card: React.FC<Properties> = ({
         </div>
         <div className={style.headerInfoContainer}>
           <div className={style.headerTitleContainer}>
-            <span className='text-md'>
+            <span className="text-md">
               {firstName} {lastName}
             </span>
           </div>
