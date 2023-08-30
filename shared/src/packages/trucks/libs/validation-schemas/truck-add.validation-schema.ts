@@ -8,7 +8,7 @@ import {
 } from '../enums/enums.js';
 import { type TruckAddRequestDto } from '../types/truck-add-request-dto.type.js';
 
-const truckAddValidationSchema = joi.object<TruckAddRequestDto>({
+const truckAddValidationSchema = joi.object<TruckAddRequestDto, true>({
   manufacturer: joi.object({
     label: joi.string().required(),
     value: joi.valid(...Object.values(TruckManufacturer)).messages({
@@ -64,7 +64,7 @@ const truckAddValidationSchema = joi.object<TruckAddRequestDto>({
     }),
   }),
 
-  drivers: joi.any(),
+  drivers: joi.string(),
 });
 
 export { truckAddValidationSchema };

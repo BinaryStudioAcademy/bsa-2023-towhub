@@ -10,18 +10,18 @@ type TruckAddRequestDto = {
   manufacturer: {
     label: string;
     value: ValueOf<typeof TruckManufacturer>;
-  } | null;
+  };
   capacity: number;
   pricePerKm: number;
   licensePlateNumber: string;
   year: {
     label: string;
     value: ValueOf<typeof TruckYear>;
-  } | null;
+  };
   towType: {
     label: string;
     value: ValueOf<typeof TruckTowType>;
-  } | null;
+  };
   drivers: string;
 };
 
