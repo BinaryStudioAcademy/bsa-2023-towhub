@@ -1,4 +1,4 @@
-import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/user-models.type';
+import { type UserEntityObjectWithGroupT } from '~/packages/users/users.js';
 
 type DefaultApiHandlerOptions = {
   body?: unknown;

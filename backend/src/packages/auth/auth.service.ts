@@ -1,11 +1,13 @@
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import { HttpError } from '~/libs/exceptions/exceptions.js';
-import { type IEncryptService } from '~/libs/interfaces/encrypt.interface.js';
-import { type IJwtService } from '~/libs/interfaces/jwt.inteface.js';
+import {
+  type IEncryptService,
+  type IJwtService,
+} from '~/libs/interfaces/interfaces.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type GroupService } from '~/packages/groups/group.service.js';
-import { type UserGroupKey, GroupEntity } from '~/packages/groups/groups.js';
+import { GroupEntity } from '~/packages/groups/groups.js';
 import {
   type CustomerSignUpRequestDto,
   type UserEntityObjectT,
@@ -14,6 +16,7 @@ import {
 } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service.js';
 
+import { type UserGroupKey } from './libs/enums/enums.js';
 import { createUnauthorizedError } from './libs/helpers/helpers.js';
 import { type UserSignInRequestDto } from './libs/types/types.js';
 

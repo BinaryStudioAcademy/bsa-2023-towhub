@@ -25,7 +25,6 @@ class UserService implements IService<UserEntityObjectT> {
     return result.map((item) => UserEntity.initialize(item).toObject());
   }
 
-  // TODO: Do we need this?
   public async findByPhone(
     phone: UserEntityT['phone'],
   ): Promise<UserEntityObjectWithGroupT | null> {

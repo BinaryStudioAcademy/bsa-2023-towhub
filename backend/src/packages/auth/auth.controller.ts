@@ -14,12 +14,9 @@ import {
 } from '~/packages/users/users.js';
 
 import { type AuthService } from './auth.service.js';
-import { AuthApiPath } from './libs/enums/enums.js';
-import {
-  type UserGroupKey,
-  type UserSignInRequestDto,
-} from './libs/types/types.js';
-import { userSignInValidationSchema } from './libs/validation-schemas/user-sign-in.validation-schema.js';
+import { type UserGroupKey, AuthApiPath } from './libs/enums/enums.js';
+import { type UserSignInRequestDto } from './libs/types/types.js';
+import { userSignInValidationSchema } from './libs/validation-schemas/validation-schemas.js';
 
 class AuthController extends Controller {
   private authService: AuthService;

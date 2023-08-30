@@ -1,1 +1,4 @@
-export { userSignInValidationSchema } from './user-sign-in.validation-schema.js';
+export {
+  jwtPayloadSchema,
+  userSignInValidationSchema,
+} from 'shared/build/index.js';

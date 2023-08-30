@@ -36,7 +36,11 @@ export {
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
-export { type JwtPayload, AuthApiPath } from './packages/auth/auth.js';
+export {
+  type JwtPayload,
+  AuthApiPath,
+  jwtPayloadSchema,
+} from './packages/auth/auth.js';
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,

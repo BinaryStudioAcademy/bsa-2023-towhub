@@ -1,8 +1,10 @@
 import { and, eq } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
-import { type IDatabase } from '~/libs/packages/database/database.js';
-import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
+import {
+  type DatabaseSchema,
+  type IDatabase,
+} from '~/libs/packages/database/database.js';
 
 import {
   type GroupDatabaseModel,
