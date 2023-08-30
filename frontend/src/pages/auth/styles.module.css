@@ -1,0 +1,11 @@
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #3563e9;
+  height: 100vh;
+  background-image: url('src/assets/img/auth-page-bg.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
