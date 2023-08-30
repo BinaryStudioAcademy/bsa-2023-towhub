@@ -8,6 +8,7 @@ import { type IConfig } from '~/libs/packages/config/config.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { socket as socketService } from '~/libs/packages/socket/socket.js';
 import {
   type ServerCommonErrorResponse,
   type ServerValidationErrorResponse,
@@ -155,6 +156,8 @@ class ServerApp implements IServerApp {
 
   public async init(): Promise<void> {
     this.logger.info('Application initialization…');
+
+    socketService.initializeIo(this.app);
 
     await this.initMiddlewares();
 
