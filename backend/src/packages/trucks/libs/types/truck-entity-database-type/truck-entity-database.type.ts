@@ -1,8 +1,13 @@
-import { type TruckEntity as TruckEntityT } from '../types.js';
-
-type TruckEntityDatabase = Omit<TruckEntityT, 'createdAt' | 'updatedAt'> & {
+type TruckEntityDatabase = {
+  id: number;
   createdAt: Date;
   updatedAt: Date;
+  manufacturer: string;
+  capacity: number;
+  pricePerKm: number;
+  licensePlateNumber: string;
+  year: string;
+  towType: string;
 };
 
 export { type TruckEntityDatabase };

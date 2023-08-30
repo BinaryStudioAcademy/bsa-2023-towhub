@@ -1,12 +1,19 @@
+import { type ValueOf } from '~/libs/types/value-of.type.js';
+
+import {
+  type TruckManufacturer,
+  type TruckTowType,
+  type TruckYear,
+} from '../enums/enums.js';
+
 type TruckEntity = {
   id: number;
-  createdAt: string;
-  updatedAt: string;
-  manufacturer: string;
+  manufacturer: ValueOf<typeof TruckManufacturer>;
+  towType: ValueOf<typeof TruckTowType>;
+  year: ValueOf<typeof TruckYear>;
+  licensePlateNumber: string;
   capacity: number;
   pricePerKm: number;
-  licensePlateNumber: string;
-  year: string;
 };
 
 export { type TruckEntity };

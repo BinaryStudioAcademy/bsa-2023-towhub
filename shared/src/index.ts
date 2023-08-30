@@ -61,6 +61,11 @@ export {
 } from './packages/business/business.js';
 export { type TruckEntity } from './packages/trucks/trucks.js';
 export {
+  TruckManufacturer,
+  TruckTowType,
+  TruckYear,
+} from './packages/trucks/trucks.js';
+export {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
