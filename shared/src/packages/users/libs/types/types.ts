@@ -1,4 +1,5 @@
 export { type BusinessSignUpRequestDto } from './business-sign-up-request-dto.type.js';
+export { type BusinessSignUpResponseDto } from './business-sign-up-response-dto.type.js';
 export { type CustomerSignUpRequestDto } from './customer-sign-up-request-dto.type.js';
 export { type CustomerSignUpResponseDto } from './customer-sign-up-response-dto.type.js';
 export { type UserEntityT } from './user-entity.type.js';

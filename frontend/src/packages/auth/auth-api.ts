@@ -1,8 +1,11 @@
-import { ApiPath, ContentType } from '~/libs/enums/enums.js';
+import { ApiPath, AuthMode, ContentType } from '~/libs/enums/enums.js';
 import { HttpApi } from '~/libs/packages/api/api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
+import { type ValueOf } from '~/libs/types/types.js';
 import {
+  type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserSignInRequestDto,
@@ -23,19 +26,23 @@ class AuthApi extends HttpApi {
   }
 
   public async signUp(
-    payload: CustomerSignUpRequestDto,
-  ): Promise<CustomerSignUpResponseDto> {
-    const response = await this.load(
-      this.getFullEndpoint(AuthApiPath.SIGN_UP, {}),
-      {
-        method: 'POST',
-        contentType: ContentType.JSON,
-        payload: JSON.stringify(payload),
-        hasAuth: false,
-      },
-    );
+    payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto,
+    mode: ValueOf<typeof AuthMode>,
+  ): Promise<CustomerSignUpResponseDto | BusinessSignUpResponseDto> {
+    const path =
+      mode === AuthMode.CUSTOMER
+        ? AuthApiPath.SIGN_UP_CUSTOMER
+        : AuthApiPath.SIGN_UP_BUSINESS;
+    const response = await this.load(this.getFullEndpoint(path, {}), {
+      method: 'POST',
+      contentType: ContentType.JSON,
+      payload: JSON.stringify(payload),
+      hasAuth: false,
+    });
 
-    return await response.json<CustomerSignUpResponseDto>();
+    return await response.json<
+      CustomerSignUpResponseDto | BusinessSignUpResponseDto
+    >();
   }
 
   public async signIn(
