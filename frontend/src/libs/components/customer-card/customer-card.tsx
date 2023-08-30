@@ -1,6 +1,5 @@
-import { AuthMode } from 'src/libs/enums/enums.js';
-
 import customer from '~/assets/img/welcome-page/customer.png';
+import { AuthMode } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
 

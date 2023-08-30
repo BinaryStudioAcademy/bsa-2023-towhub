@@ -2,7 +2,10 @@ import { ApiPath, AuthMode, ContentType } from '~/libs/enums/enums.js';
 import { HttpApi } from '~/libs/packages/api/api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
+import { type ValueOf } from '~/libs/types/types.js';
 import {
+  type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserSignInRequestDto,
@@ -23,9 +26,9 @@ class AuthApi extends HttpApi {
   }
 
   public async signUp(
-    payload: CustomerSignUpRequestDto,
-    mode: string,
-  ): Promise<CustomerSignUpResponseDto> {
+    payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto,
+    mode: ValueOf<typeof AuthMode>,
+  ): Promise<CustomerSignUpResponseDto | BusinessSignUpResponseDto> {
     const path =
       mode === AuthMode.CUSTOMER
         ? AuthApiPath.SIGN_UP_CUSTOMER
@@ -37,7 +40,9 @@ class AuthApi extends HttpApi {
       hasAuth: false,
     });
 
-    return await response.json<CustomerSignUpResponseDto>();
+    return await response.json<
+      CustomerSignUpResponseDto | BusinessSignUpResponseDto
+    >();
   }
 
   public async signIn(

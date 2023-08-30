@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import { type AuthMode } from '~/libs/enums/enums.js';
+import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
 import {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
@@ -16,7 +17,7 @@ const signUp = createAsyncThunk<
   CustomerSignUpResponseDto | BusinessSignUpResponseDto,
   {
     payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto;
-    mode: string;
+    mode: ValueOf<typeof AuthMode>;
   },
   AsyncThunkConfig
 >(`${sliceName}/sign-up`, ({ payload, mode }, { extra }) => {

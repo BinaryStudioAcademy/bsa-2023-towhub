@@ -9,20 +9,13 @@
 }
 
 .title {
-  margin: 0 0 17px;
+  margin-bottom: 17px;
   color: $title-color;
-  font-weight: $font-weight-bold;
-  font-size: 24px;
-  font-family: $font-family;
-  text-transform: uppercase;
 }
 
 .text {
-  margin: 25px 0 0;
+  margin-top: 25px;
   color: $grey;
-  font-weight: $font-weight-regular;
-  font-size: 14px;
-  font-family: $font-family;
   text-align: center;
 }
 

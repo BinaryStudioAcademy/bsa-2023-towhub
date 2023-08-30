@@ -1,6 +1,7 @@
-import { type BusinessSignUpRequestDto } from 'shared/build/packages/users/libs/types/business-sign-up-request-dto.type';
-
-import { type CustomerSignUpRequestDto } from '~/packages/users/users.js';
+import {
+  type BusinessSignUpRequestDto,
+  type CustomerSignUpRequestDto,
+} from '~/packages/users/users.js';
 
 const DEFAULT_SIGN_UP_PAYLOAD_CUSTOMER: CustomerSignUpRequestDto = {
   email: '',

@@ -1,9 +1,14 @@
-import { businessSignUpValidationSchema } from 'shared/build/index.js';
-
 import { Form, Link } from '~/libs/components/components.js';
 import { AppRoute, AuthMode } from '~/libs/enums/enums.js';
-import { type CustomerSignUpRequestDto } from '~/libs/types/types.js';
-import { customerSignUpValidationSchema } from '~/packages/users/users.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import {
+  type CustomerSignUpRequestDto,
+  type ValueOf,
+} from '~/libs/types/types.js';
+import {
+  businessSignUpValidationSchema,
+  customerSignUpValidationSchema,
+} from '~/packages/users/users.js';
 
 import {
   DEFAULT_SIGN_UP_PAYLOAD_BUSINESS,
@@ -14,13 +19,15 @@ import styles from './styles.module.scss';
 
 type Properties = {
   onSubmit: (payload: CustomerSignUpRequestDto) => void;
-  mode: string;
+  mode: ValueOf<typeof AuthMode>;
 };
 
 const SignUpForm: React.FC<Properties> = ({ onSubmit, mode }: Properties) => {
   return (
     <div className={styles.formWrapper}>
-      <h3 className={styles.title}>Sign Up</h3>
+      <h3 className={getValidClassNames('h4', 'uppercase', styles.title)}>
+        Sign Up
+      </h3>
       {mode === AuthMode.CUSTOMER ? (
         <Form
           defaultValues={DEFAULT_SIGN_UP_PAYLOAD_CUSTOMER}
@@ -39,7 +46,7 @@ const SignUpForm: React.FC<Properties> = ({ onSubmit, mode }: Properties) => {
         />
       )}
 
-      <p className={styles.text}>
+      <p className={getValidClassNames('text-sm', styles.text)}>
         Already have an account? Go to{' '}
         <Link to={AppRoute.SIGN_IN} className={styles.link}>
           Log in

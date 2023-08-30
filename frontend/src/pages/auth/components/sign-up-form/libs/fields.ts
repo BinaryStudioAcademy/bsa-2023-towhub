@@ -1,7 +1,6 @@
-import { type BusinessSignUpRequestDto } from 'shared/build/packages/users/libs/types/business-sign-up-request-dto.type';
-
 import { FormLabel, FormName } from '~/libs/enums/enums.js';
 import {
+  type BusinessSignUpRequestDto,
   type CustomerSignUpRequestDto,
   type FormField,
 } from '~/libs/types/types.js';
@@ -23,7 +22,11 @@ const signUpCustomerFields: FormField<CustomerSignUpRequestDto>[] = [
     placeholder: 'Enter your email',
     name: FormName.EMAIL,
   },
-  { label: FormLabel.PHONE, placeholder: 'Enter your phone', name: 'phone' },
+  {
+    label: FormLabel.PHONE,
+    placeholder: 'Enter your phone',
+    name: FormName.PHONE,
+  },
   {
     type: 'password',
     label: FormLabel.PASSWORD,
@@ -49,7 +52,11 @@ const signUpBusinessFields: FormField<BusinessSignUpRequestDto>[] = [
     placeholder: 'Enter your email',
     name: FormName.EMAIL,
   },
-  { label: FormLabel.PHONE, placeholder: 'Enter your phone', name: 'phone' },
+  {
+    label: FormLabel.PHONE,
+    placeholder: 'Enter your phone',
+    name: FormName.PHONE,
+  },
   {
     label: FormLabel.COMPANY_NAME,
     placeholder: 'Enter the name of company',

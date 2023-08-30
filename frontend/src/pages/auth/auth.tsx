@@ -1,11 +1,12 @@
 import { type Location } from 'react-router';
 
-import { AppRoute } from '~/libs/enums/enums.js';
+import { type AuthMode, AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useCallback,
   useLocation,
 } from '~/libs/hooks/hooks.js';
+import { type ValueOf } from '~/libs/types/types.js';
 import {
   type CustomerSignUpRequestDto,
   type UserSignInRequestDto,
@@ -19,7 +20,7 @@ const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const location: Location = useLocation();
-  const mode = location.state as string;
+  const mode = location.state as ValueOf<typeof AuthMode>;
 
   const handleSignInSubmit = useCallback(
     (payload: UserSignInRequestDto): void => {

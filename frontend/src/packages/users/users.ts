@@ -22,6 +22,7 @@ export {
   type UserSignInResponseDto,
 } from './libs/types/types.js';
 export {
+  businessSignUpValidationSchema,
   customerSignUpValidationSchema,
   userSignInValidationSchema,
 } from './libs/validation-schemas/validation-schemas.js';
