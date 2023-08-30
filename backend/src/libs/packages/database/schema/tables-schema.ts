@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm';
 import {
   integer,
   pgTable,
@@ -20,6 +21,7 @@ const users = pgTable(
     groupId: integer('group_id')
       .references(() => groups.id)
       .notNull(),
+    accessToken: varchar('access_token'),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
   },
@@ -39,6 +41,13 @@ const groups = pgTable('groups', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+const usersRelations = relations(users, ({ one }) => ({
+  group: one(groups, {
+    fields: [users.groupId],
+    references: [groups.id],
+  }),
+}));
+
 const business = pgTable('business_details', {
   id: serial('id').primaryKey(),
   companyName: varchar('company_name').unique().notNull(),
@@ -50,4 +59,4 @@ const business = pgTable('business_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export { business, groups, users };
+export { business, groups, users, usersRelations };

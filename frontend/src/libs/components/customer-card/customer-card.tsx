@@ -1,14 +1,20 @@
 import customer from '~/assets/img/welcome-page/customer.png';
+import { AuthMode } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { useCallback } from '~/libs/hooks/hooks.js';
 
 import { Button, Image } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onClick: () => void;
+  onClick: (mode: string) => void;
 };
 
 const CustomerCard: React.FC<Properties> = ({ onClick }: Properties) => {
+  const handleClick = useCallback((): void => {
+    onClick(AuthMode.CUSTOMER);
+  }, [onClick]);
+
   return (
     <li className={styles.card}>
       <div>
@@ -28,7 +34,7 @@ const CustomerCard: React.FC<Properties> = ({ onClick }: Properties) => {
         </div>
 
         <Button
-          onClick={onClick}
+          onClick={handleClick}
           label={'Continue'}
           className={styles.button}
         />
