@@ -4,10 +4,13 @@ const IconName = {
   CHEVRON_DOWN: 'chevron down',
   CHEVRON_LEFT: 'chevron left',
   GEAR: 'gear',
+  LIST: 'list',
   LOCATION_DOT: 'location dot',
   MAP: 'map',
   PLUS: 'plus',
   STAR: 'star',
+  TRUCK: 'truck',
+  USERS: 'users',
 } as const;
 
 export { IconName };
