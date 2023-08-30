@@ -14,8 +14,8 @@ class TruckService implements IService {
     this.repository = repository;
   }
 
-  public async find(id: number): Promise<TruckEntityDatabase | null> {
-    return await this.repository.find(id);
+  public async findById(id: number): Promise<TruckEntityDatabase | null> {
+    return await this.repository.findById(id);
   }
 
   public async create(

@@ -27,7 +27,7 @@ class TruckRepository implements IRepository {
     this.usersTrucksSchema = usersTrucksSchema;
   }
 
-  public async find(id: number): Promise<TruckEntityDatabase | null> {
+  public async findById(id: number): Promise<TruckEntityDatabase | null> {
     try {
       const [truck = null] = await this.db
         .driver()
@@ -109,7 +109,7 @@ class TruckRepository implements IRepository {
     }
   }
 
-  public async search(query: string): Promise<TruckEntityDatabase[]> {
+  public async find(query: string): Promise<TruckEntityDatabase[]> {
     try {
       return await this.db
         .driver()
@@ -127,33 +127,6 @@ class TruckRepository implements IRepository {
     } catch (error: unknown) {
       throw new DatabaseError({
         message: `An error occurred while searching ${query} for trucks`,
-        cause: error,
-      });
-    }
-  }
-
-  public async getTrucksByOwner(
-    ownerId: number,
-  ): Promise<TruckEntityDatabase[]> {
-    try {
-      const result = await this.db
-        .driver()
-        .select()
-        .from(this.trucksSchema)
-        .leftJoin(
-          this.usersTrucksSchema,
-          eq(this.trucksSchema.id, this.usersTrucksSchema.truckId),
-        )
-        .where(eq(this.usersTrucksSchema.userId, ownerId))
-        .orderBy(this.trucksSchema.id)
-        .execute();
-
-      const mappedResult: TruckEntityDatabase[] = result.map((it) => it.trucks);
-
-      return mappedResult;
-    } catch (error) {
-      throw new DatabaseError({
-        message: `Failed to fetch trucks by owner (ownerId: ${ownerId})`,
         cause: error,
       });
     }
