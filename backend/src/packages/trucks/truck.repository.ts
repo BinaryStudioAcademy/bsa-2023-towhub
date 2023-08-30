@@ -5,16 +5,10 @@ import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
-type TruckEntityDatabase = {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-  manufacturer: string;
-  capacity: number;
-  pricePerKm: number;
-  licensePlateNumber: string;
-  year: string;
-};
+import {
+  type TruckEntity as TruckEntityT,
+  type TruckEntityDatabase,
+} from './libs/types/types.js';
 
 class TruckRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -61,9 +55,7 @@ class TruckRepository implements IRepository {
     }
   }
 
-  public async create(
-    entity: TruckEntityDatabase,
-  ): Promise<TruckEntityDatabase> {
+  public async create(entity: TruckEntityT): Promise<TruckEntityDatabase> {
     try {
       const [result] = await this.db
         .driver()
