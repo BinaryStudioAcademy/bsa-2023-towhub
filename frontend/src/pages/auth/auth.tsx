@@ -18,7 +18,6 @@ import styles from './styles.module.css';
 
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
-
   const location: Location = useLocation();
   const mode = location.state as ValueOf<typeof AuthMode>;
 
@@ -50,6 +49,7 @@ const Auth: React.FC = () => {
   };
 
   return <div className={styles.page}>{getScreen(location.pathname)}</div>;
+
 };
 
 export { Auth };
