@@ -1,4 +1,4 @@
-type TruckEntityDatabase = {
+type TruckEntity = {
   id: number;
   createdAt: Date;
   updatedAt: Date;
@@ -10,4 +10,4 @@ type TruckEntityDatabase = {
   towType: string;
 };
 
-export { type TruckEntityDatabase };
+export { type TruckEntity };

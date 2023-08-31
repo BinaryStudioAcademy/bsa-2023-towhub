@@ -5,10 +5,7 @@ import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
-import {
-  type TruckEntity as TruckEntityT,
-  type TruckEntityDatabase,
-} from './libs/types/types.js';
+import { type TruckEntity, type TruckEntityT } from './libs/types/types.js';
 
 class TruckRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -27,15 +24,13 @@ class TruckRepository implements IRepository {
     this.usersTrucksSchema = usersTrucksSchema;
   }
 
-  public async findById(id: number): Promise<TruckEntityDatabase | null> {
+  public async findById(id: number): Promise<TruckEntity[]> {
     try {
-      const [truck = null] = await this.db
+      return await this.db
         .driver()
         .select()
         .from(this.trucksSchema)
         .where(eq(this.trucksSchema.id, id));
-
-      return truck;
     } catch (error: unknown) {
       throw new DatabaseError({
         message: 'An error occurred while fetching the truck from the database',
@@ -44,7 +39,7 @@ class TruckRepository implements IRepository {
     }
   }
 
-  public async findAll(): Promise<TruckEntityDatabase[]> {
+  public async findAll(): Promise<TruckEntity[]> {
     try {
       return await this.db.driver().select().from(this.trucksSchema);
     } catch (error: unknown) {
@@ -57,16 +52,14 @@ class TruckRepository implements IRepository {
 
   public async create(
     entity: Omit<TruckEntityT, 'id'>,
-  ): Promise<TruckEntityDatabase> {
+  ): Promise<TruckEntity[]> {
     try {
-      const [result] = await this.db
+      return await this.db
         .driver()
         .insert(this.trucksSchema)
         .values(entity)
         .returning()
         .execute();
-
-      return result;
     } catch (error: unknown) {
       throw new DatabaseError({
         message: 'Failed to create a new truck',
@@ -80,8 +73,8 @@ class TruckRepository implements IRepository {
     payload,
   }: {
     id: number;
-    payload: Partial<TruckEntityDatabase>;
-  }): Promise<TruckEntityDatabase> {
+    payload: Partial<TruckEntity>;
+  }): Promise<TruckEntity> {
     const [result] = await this.db
       .driver()
       .update(this.trucksSchema)
@@ -95,14 +88,14 @@ class TruckRepository implements IRepository {
 
   public async delete(id: number): Promise<boolean> {
     try {
-      const [item] = await this.db
-        .driver()
-        .delete(this.trucksSchema)
-        .where(eq(this.trucksSchema.id, id))
-        .returning()
-        .execute();
-
-      return Boolean(item);
+      return Boolean(
+        await this.db
+          .driver()
+          .delete(this.trucksSchema)
+          .where(eq(this.trucksSchema.id, id))
+          .returning()
+          .execute(),
+      );
     } catch (error: unknown) {
       throw new DatabaseError({
         message: `Failed to update truck with ID ${id}`,
@@ -111,7 +104,7 @@ class TruckRepository implements IRepository {
     }
   }
 
-  public async find(query: string): Promise<TruckEntityDatabase[]> {
+  public async find(query: string): Promise<TruckEntity[]> {
     try {
       return await this.db
         .driver()

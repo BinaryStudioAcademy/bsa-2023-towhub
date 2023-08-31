@@ -5,7 +5,7 @@ import {
   type TruckManufacturer,
   type TruckTowType,
 } from './libs/enums/enums.js';
-import { type TruckEntity as TruckEntityT } from './libs/types/types.js';
+import { type TruckEntityT } from './libs/types/types.js';
 
 class TruckEntity implements IEntity {
   private id: TruckEntityT['id'] | null;
