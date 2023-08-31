@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { type UserStore } from 'shared/build/packages/users/users.js';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
 import { signIn, signUp } from './actions.js';
-import { type User } from './libs/types/user.type.js';
 
 type State = {
   dataStatus: ValueOf<typeof DataStatus>;
-  user: User | null;
+  user: UserStore | null;
   token: string | null;
 };
 
