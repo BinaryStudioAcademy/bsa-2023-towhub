@@ -4,7 +4,7 @@ import { type UserEntityT } from './user-entity.type.js';
 
 // import { type UserGroupEntityT } from './user-group-entity.type.js';
 
-//temporary type!!!
+// TODO: refactor the type!
 type GroupEntityT = { id: number; name: string; key: string };
 
 type BusinessSignUpResponseDto = Omit<

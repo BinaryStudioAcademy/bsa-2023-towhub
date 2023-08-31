@@ -30,7 +30,7 @@ const Auth: React.FC = () => {
     dataStatus: auth.dataStatus,
   }));
 
-  // TEMPORARY!
+  // TODO: refactor after the global state is ready
   useEffect(() => {
     if (dataStatus === 'fulfilled') {
       navigate(AppRoute.DASHBOARD);

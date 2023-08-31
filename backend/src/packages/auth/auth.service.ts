@@ -76,8 +76,6 @@ class AuthService {
   ): Promise<UserEntityObjectWithGroupT> {
     const isExistingUser = await this.checkIsExistingUser(payload);
 
-    // const { phone, email, firstName, lastName, password } = payload;
-
     if (isExistingUser) {
       throw new HttpError({
         message: HttpMessage.USER_EXISTS,
