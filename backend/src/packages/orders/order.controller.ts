@@ -28,7 +28,12 @@ class OrderController extends Controller {
     this.addRoute({
       path: OrdersApiPath.ROOT,
       method: 'GET',
-      handler: () => this.findAllOrdersByUser(),
+      handler: (options) =>
+        this.findAllOrdersByFilter(
+          options as ApiHandlerOptions<{
+            query: { businessId: string; userId: string };
+          }>,
+        ),
     });
 
     this.addRoute({
@@ -114,10 +119,18 @@ class OrderController extends Controller {
     };
   }
 
-  private async findAllOrdersByUser(): Promise<ApiHandlerResponse> {
+  private async findAllOrdersByFilter(
+    options: ApiHandlerOptions<{
+      query: { businessId: string; userId: string };
+    }>,
+  ): Promise<ApiHandlerResponse> {
+
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findAllOrdersByUser(),
+      payload: await this.orderService.findAllOrdersByFilter({
+        userId: options.query.userId,
+        businessId: options.query.businessId,
+      }),
     };
   }
 

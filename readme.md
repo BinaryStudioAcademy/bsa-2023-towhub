@@ -83,7 +83,9 @@ erDiagram
         start_point varchar "not null"
         end_point varchar "not null"
         status enum "not null"
-        user_id integer FK "not null"
+        user_id integer FK "nullable"
+        business_id integer FK "nullable"
+        driver_id integer FK "nullable"
         customer_name varchar "nullable"
         customer_phone varchar "nullable"
         created_at timestamp "not null"
@@ -91,9 +93,11 @@ erDiagram
     }
 
 
-    users one -- one or many orders: "users(id) has orders(user_id)"
+    users one -- zero or many orders: "users(id) has orders(user_id)"
     users one or many -- one groups: "users(group_id) belongs to groups(id)"
+    business_details one -- zero or many orders: "business_details(id) has orders(business_id)"
     business_details one or many -- one users: "business_details(owner_id) belongs to users(id)"
+
 
 ```
 
