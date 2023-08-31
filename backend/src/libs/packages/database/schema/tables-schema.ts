@@ -23,6 +23,7 @@ const users = pgTable(
     groupId: integer('group_id')
       .references(() => groups.id)
       .notNull(),
+    accessToken: varchar('access_token'),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
   },
@@ -41,6 +42,14 @@ const groups = pgTable('groups', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
+
+const usersRelations = relations(users, ({ one, many }) => ({
+  group: one(groups, {
+    fields: [users.groupId],
+    references: [groups.id],
+  }),
+  orders: many(orders),
+}));
 
 const business = pgTable('business_details', {
   id: serial('id').primaryKey(),
@@ -75,10 +84,6 @@ const orders = pgTable('orders', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
-
-const usersRelations = relations(users, ({ many }) => ({
-  orders: many(orders),
-}));
 
 const ordersRelations = relations(orders, ({ one }) => ({
   user: one(users, {

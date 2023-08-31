@@ -78,20 +78,14 @@ class OrderService implements IService {
     };
   }
 
-  public async delete(
-    id: OrderEntityT['id'],
-  ): Promise<OperationResult<boolean>> {
+  public async delete(id: OrderEntityT['id']): Promise<boolean> {
     const { result: foundBusiness } = await this.findById(id);
 
     if (!foundBusiness) {
       throw new NotFoundError({});
     }
 
-    const result = await this.orderRepository.delete(id);
-
-    return {
-      result,
-    };
+    return await this.orderRepository.delete(id);
   }
 }
 

@@ -1,9 +1,16 @@
-import { business, groups, orders, users } from './tables-schema.js';
+import {
+  business,
+  groups,
+  orders,
+  users,
+  usersRelations,
+} from './tables-schema.js';
 
 const schema = {
   users,
   groups,
   business,
+  usersRelations,
   orders,
 };
 

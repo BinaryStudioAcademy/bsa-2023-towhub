@@ -2,7 +2,6 @@ import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
   type ApiHandlerResponse,
-  type UserMocked,
   Controller,
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
@@ -154,7 +153,6 @@ class BusinessController extends Controller {
         this.create(
           options as ApiHandlerOptions<{
             body: BusinessAddRequestDto;
-            user: UserMocked;
           }>,
         ),
     });
@@ -171,7 +169,6 @@ class BusinessController extends Controller {
           options as ApiHandlerOptions<{
             body: BusinessUpdateRequestDto;
             params: BusinessUpdateRequestParameters;
-            user: UserMocked;
           }>,
         ),
     });
@@ -186,7 +183,6 @@ class BusinessController extends Controller {
         this.delete(
           options as ApiHandlerOptions<{
             params: BusinessDeleteRequestParameters;
-            user: UserMocked;
           }>,
         ),
     });
@@ -201,7 +197,6 @@ class BusinessController extends Controller {
         this.find(
           options as ApiHandlerOptions<{
             params: BusinessGetRequestParameters;
-            user: UserMocked;
           }>,
         ),
     });
@@ -247,7 +242,6 @@ class BusinessController extends Controller {
   private async create(
     options: ApiHandlerOptions<{
       body: BusinessAddRequestDto;
-      user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
     const createdBusiness = await this.businessService.create({
@@ -306,7 +300,6 @@ class BusinessController extends Controller {
     options: ApiHandlerOptions<{
       body: BusinessUpdateRequestDto;
       params: BusinessUpdateRequestParameters;
-      user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
     const updatedBusiness = await this.businessService.update({
@@ -355,14 +348,13 @@ class BusinessController extends Controller {
   private async delete(
     options: ApiHandlerOptions<{
       params: BusinessDeleteRequestParameters;
-      user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
     const deletionResult = await this.businessService.delete(options.params.id);
 
     return {
       status: HttpCode.OK,
-      payload: deletionResult,
+      payload: { result: deletionResult },
     };
   }
 
@@ -393,14 +385,15 @@ class BusinessController extends Controller {
   private async find(
     options: ApiHandlerOptions<{
       params: BusinessGetRequestParameters;
-      user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const findBusinessById = await this.businessService.find(options.params.id);
+    const findBusinessById = await this.businessService.findById(
+      options.params.id,
+    );
 
     return {
       status: HttpCode.OK,
-      payload: findBusinessById,
+      payload: { result: findBusinessById },
     };
   }
 }
