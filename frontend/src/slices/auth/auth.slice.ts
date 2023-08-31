@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { type User } from 'shared/build/packages/users/libs/types/types.js';
+import { type User } from 'shared/build/index.js';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';

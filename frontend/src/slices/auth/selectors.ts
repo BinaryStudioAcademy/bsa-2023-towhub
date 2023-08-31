@@ -1,4 +1,4 @@
-import { type User } from 'shared/build';
+import { type User } from 'shared/build/index.js';
 
 import { type DataStatus } from '~/libs/enums/data-status.enum.js';
 import { type RootState, type ValueOf } from '~/libs/types/types.js';
