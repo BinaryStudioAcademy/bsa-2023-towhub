@@ -122,7 +122,6 @@ class AuthService {
     return {
       ...updatedUser,
       business: userBusiness,
-      // Had to take group from raw because setAccessToken does not return this
       group: GroupEntity.initialize(user.group).toObject(),
     };
   }
