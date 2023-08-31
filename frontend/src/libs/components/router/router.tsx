@@ -1,7 +1,7 @@
 import { Route } from 'react-router-dom';
-import { UserGroupKey } from 'shared/build/index.js';
 
 import { AppRoute } from '~/libs/enums/enums.js';
+import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
 import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
@@ -37,3 +37,4 @@ const Router = (): JSX.Element => (
 );
 
 export { Router };
+export { Navigate, Outlet as RouterOutlet } from 'react-router-dom';
