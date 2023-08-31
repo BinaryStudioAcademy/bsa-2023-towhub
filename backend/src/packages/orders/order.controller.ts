@@ -124,7 +124,6 @@ class OrderController extends Controller {
       query: { businessId: string; userId: string };
     }>,
   ): Promise<ApiHandlerResponse> {
-
     return {
       status: HttpCode.OK,
       payload: await this.orderService.findAllOrdersByFilter({
