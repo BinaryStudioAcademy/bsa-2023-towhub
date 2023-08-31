@@ -4,13 +4,13 @@ import { type UserSignInResponseDto } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 type AuthNavigateHook = {
-  authNavigate: (user: UserSignInResponseDto) => void;
+  navigateAuthUser: (user: UserSignInResponseDto) => void;
 };
 
 const useAuthNavigate = (): AuthNavigateHook => {
   const navigate = useNavigate();
 
-  const authNavigate = (user: UserSignInResponseDto): void => {
+  const navigateAuthUser = (user: UserSignInResponseDto): void => {
     switch (user.group.key) {
       case UserGroupKey.BUSINESS: {
         navigate(AppRoute.DASHBOARD);
@@ -28,7 +28,7 @@ const useAuthNavigate = (): AuthNavigateHook => {
     }
   };
 
-  return { authNavigate };
+  return { navigateAuthUser };
 };
 
 export { useAuthNavigate };

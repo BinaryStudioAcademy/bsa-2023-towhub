@@ -19,7 +19,7 @@ import styles from './styles.module.css';
 
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { authNavigate } = useAuthNavigate();
+  const { navigateAuthUser } = useAuthNavigate();
 
   const location: Location = useLocation();
   const mode = location.state as ValueOf<typeof AuthMode>;
@@ -29,10 +29,10 @@ const Auth: React.FC = () => {
       void dispatch(authActions.signIn(payload))
         .unwrap()
         .then((user) => {
-          authNavigate(user);
+          navigateAuthUser(user);
         });
     },
-    [dispatch, authNavigate],
+    [dispatch, navigateAuthUser],
   );
 
   const handleSignUpSubmit = useCallback(
