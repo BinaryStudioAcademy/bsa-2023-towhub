@@ -3,8 +3,11 @@ import { type Location } from 'react-router';
 import { type AuthMode, AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
+  useAppSelector,
   useCallback,
+  useEffect,
   useLocation,
+  useNavigate,
 } from '~/libs/hooks/hooks.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import {
@@ -18,9 +21,21 @@ import styles from './styles.module.css';
 
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const location: Location = useLocation();
   const mode = location.state as ValueOf<typeof AuthMode>;
+
+  const { dataStatus } = useAppSelector(({ auth }) => ({
+    dataStatus: auth.dataStatus,
+  }));
+
+  // TEMPORARY!
+  useEffect(() => {
+    if (dataStatus === 'fulfilled') {
+      navigate(AppRoute.DASHBOARD);
+    }
+  }, [dataStatus, navigate]);
 
   const handleSignInSubmit = useCallback(
     (payload: UserSignInRequestDto): void => {

@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
+import { getErrorMessage } from '~/libs/helpers/get-error-message.js';
 import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
 import {
   type BusinessSignUpRequestDto,
@@ -14,16 +15,20 @@ import {
 import { name as sliceName } from './auth.slice.js';
 
 const signUp = createAsyncThunk<
-  CustomerSignUpResponseDto | BusinessSignUpResponseDto,
+  CustomerSignUpResponseDto | BusinessSignUpResponseDto | undefined,
   {
     payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto;
     mode: ValueOf<typeof AuthMode>;
   },
   AsyncThunkConfig
->(`${sliceName}/sign-up`, ({ payload, mode }, { extra }) => {
-  const { authApi } = extra;
+>(`${sliceName}/sign-up`, async ({ payload, mode }, { extra }) => {
+  const { authApi, notification } = extra;
 
-  return authApi.signUp(payload, mode);
+  try {
+    return await authApi.signUp(payload, mode);
+  } catch (error) {
+    notification.warning(getErrorMessage(error));
+  }
 });
 
 const signIn = createAsyncThunk<
