@@ -3,6 +3,7 @@ import { type Location } from 'react-router';
 import { type AuthMode, AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
+  useAuthNavigate,
   useCallback,
   useLocation,
 } from '~/libs/hooks/hooks.js';
@@ -18,15 +19,20 @@ import styles from './styles.module.css';
 
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { authNavigate } = useAuthNavigate();
 
   const location: Location = useLocation();
   const mode = location.state as ValueOf<typeof AuthMode>;
 
   const handleSignInSubmit = useCallback(
     (payload: UserSignInRequestDto): void => {
-      void dispatch(authActions.signIn(payload));
+      void dispatch(authActions.signIn(payload))
+        .unwrap()
+        .then((user) => {
+          authNavigate(user);
+        });
     },
-    [dispatch],
+    [dispatch, authNavigate],
   );
 
   const handleSignUpSubmit = useCallback(
