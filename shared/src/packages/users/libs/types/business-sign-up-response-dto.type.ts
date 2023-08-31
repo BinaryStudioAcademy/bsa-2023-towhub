@@ -10,6 +10,6 @@ type GroupEntityT = { id: number; name: string; key: string };
 type BusinessSignUpResponseDto = Omit<
   UserEntityT,
   'passwordHash' | 'passwordSalt' | 'groupId'
-> & { group: GroupEntityT } & { business: BusinessEntityT[] };
+> & { group: GroupEntityT } & { business: BusinessEntityT };
 
 export { type BusinessSignUpResponseDto };

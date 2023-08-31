@@ -150,7 +150,7 @@ class AuthService {
       newUser.id,
     );
 
-    const newBusiness = await this.businessService.create({
+    const business = await this.businessService.create({
       payload: {
         companyName,
         taxNumber,
@@ -158,7 +158,7 @@ class AuthService {
       owner: { ...newUser, group },
     });
 
-    return { ...userWithToken, group, business: [newBusiness] };
+    return { ...userWithToken, group, business };
   }
 
   public async signIn(

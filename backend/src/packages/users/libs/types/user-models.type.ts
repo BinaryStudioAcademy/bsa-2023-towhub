@@ -35,7 +35,7 @@ type UserEntityObjectWithGroupT = UserEntityObjectT & {
 };
 
 type UserEntityObjectWithGroupAndBusinessT = UserEntityObjectWithGroupT & {
-  business: BusinessEntityT[];
+  business: BusinessEntityT;
 };
 
 export {
