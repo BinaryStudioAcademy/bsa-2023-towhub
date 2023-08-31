@@ -1,4 +1,4 @@
-import { type SQL, eq, or } from 'drizzle-orm';
+import { type SQL, and, eq, or } from 'drizzle-orm';
 
 import { AppErrorMessage } from '~/libs/enums/enums.js';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
@@ -23,14 +23,22 @@ class BusinessRepository implements IRepository {
     this.businessSchema = businessSchema;
   }
 
-  public async find(id: number): Promise<BusinessEntity | null> {
-    const result: BusinessEntityT[] = await this.db
-      .driver()
-      .select()
-      .from(this.businessSchema)
-      .where(eq(this.businessSchema.id, id));
+  public find(
+    partial: Partial<BusinessEntityT>,
+  ): ReturnType<IRepository<BusinessEntityT>['find']> {
+    const queries = Object.entries(partial).map(([key, value]) =>
+      eq(
+        this.businessSchema[key as keyof typeof partial],
+        value as NonNullable<typeof value>,
+      ),
+    );
 
-    return result.length === 0 ? null : BusinessEntity.initialize(result[0]);
+    const finalQuery = queries.length === 1 ? queries[0] : and(...queries);
+
+    return this.db
+      .driver()
+      .query.business.findMany({ where: finalQuery })
+      .execute();
   }
 
   public async checkExists({

@@ -24,4 +24,4 @@ class EncryptService implements IEncryptService {
 
 const encryptService = new EncryptService();
 
-export { encryptService };
+export { type EncryptService, encryptService };
