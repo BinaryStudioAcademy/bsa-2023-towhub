@@ -1,18 +1,27 @@
 import { Navigate } from 'react-router-dom';
 
-import { AppRoute } from '~/libs/enums/enums.js';
+import { type UserGroup, AppRoute, DataStatus } from '~/libs/enums/enums.js';
+import { useAppSelector } from '~/libs/hooks/hooks.js';
+import { type ValueOf } from '~/libs/types/types.js';
+import { selectIsLoading, selectUser } from '~/slices/auth/selectors.js';
 
 import { RouterOutlet, Spinner } from '../components.js';
 
-const ProtectedRoute = (): React.ReactElement | null => {
-  const isLoggedIn = Math.random();
-  const isLoadingUser = Math.random();
+type Properties = {
+  allowedUserGroup: ValueOf<typeof UserGroup>;
+};
 
-  if (isLoadingUser > 0.5) {
+const ProtectedRoute = ({
+  allowedUserGroup,
+}: Properties): React.ReactElement | null => {
+  const isLoading = useAppSelector(selectIsLoading);
+  const user = useAppSelector(selectUser);
+
+  if (isLoading === DataStatus.PENDING) {
     return <Spinner size="sm" />;
   }
 
-  return isLoggedIn > 0.5 ? (
+  return user && allowedUserGroup === user.group.key ? (
     <RouterOutlet />
   ) : (
     <Navigate to={AppRoute.SIGN_IN} />

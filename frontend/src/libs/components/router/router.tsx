@@ -1,6 +1,6 @@
 import { Route } from 'react-router-dom';
 
-import { AppRoute } from '~/libs/enums/enums.js';
+import { AppRoute, UserGroup } from '~/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
 import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
@@ -19,16 +19,17 @@ const Router = (): JSX.Element => (
       <Route path={AppRoute.SIGN_UP} element={<Auth />} />
     </Route>
     <Route
-      path={AppRoute.DASHBOARD}
-      element={
-        <PageLayout>
-          <Dashboard />
-        </PageLayout>
-      }
-    />
-    <Route path={AppRoute.ROOT} element={<ProtectedRoute />}>
-      <Route path="protected1" element={<div>Protected path #1</div>} />
-      <Route path="protected2" element={<div>Protected path #2</div>} />
+      path={AppRoute.ROOT}
+      element={<ProtectedRoute allowedUserGroup={UserGroup.BUSINESS} />}
+    >
+      <Route
+        path={AppRoute.DASHBOARD}
+        element={
+          <PageLayout>
+            <Dashboard />
+          </PageLayout>
+        }
+      />
     </Route>
     <Route path={AppRoute.ANY} element={<NotFound />} />
   </RouterProvider>
