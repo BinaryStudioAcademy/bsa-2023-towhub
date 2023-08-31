@@ -9,7 +9,9 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/user-models.type.js';
 import {
   type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
   businessSignUpValidationSchema,
   customerSignUpValidationSchema,
 } from '~/packages/users/users.js';
@@ -114,7 +116,7 @@ class AuthController extends Controller {
     options: ApiHandlerOptions<{
       body: CustomerSignUpRequestDto;
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<CustomerSignUpResponseDto>> {
     return {
       status: HttpCode.CREATED,
       payload: await this.authService.signUpCustomer(options.body),
@@ -125,7 +127,7 @@ class AuthController extends Controller {
     options: ApiHandlerOptions<{
       body: BusinessSignUpRequestDto;
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<BusinessSignUpResponseDto>> {
     return {
       status: HttpCode.CREATED,
       payload: await this.authService.signUpBusiness(options.body),

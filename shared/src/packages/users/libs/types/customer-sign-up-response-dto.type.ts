@@ -1,8 +1,13 @@
 import { type UserEntityT } from './user-entity.type.js';
 
-type CustomerSignUpResponseDto = Pick<
+// import { type UserGroupEntityT } from './user-group-entity.type.js';
+
+//temporary type!!!
+type GroupEntityT = { id: number; name: string; key: string };
+
+type CustomerSignUpResponseDto = Omit<
   UserEntityT,
-  'id' | 'phone' | 'accessToken'
->;
+  'passwordHash' | 'passwordSalt' | 'groupId'
+> & { group: GroupEntityT };
 
 export { type CustomerSignUpResponseDto };
