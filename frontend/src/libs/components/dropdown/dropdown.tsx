@@ -6,6 +6,7 @@ import {
 } from 'react-hook-form';
 import Select, { type StylesConfig } from 'react-select';
 
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
   useFormController,
@@ -14,11 +15,14 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 
+import styles from './styles.module.scss';
+
 type Properties<T extends FieldValues> = {
   options: SelectOption[];
   name: FieldPath<T>;
   control: Control<T, null>;
   errors: FieldErrors<T>;
+  label?: string;
 };
 
 const getStyles = (isMenuOpen: boolean): StylesConfig => {
@@ -63,9 +67,14 @@ const Dropdown = <T extends FieldValues>({
   options,
   name,
   control,
+  label,
+  errors,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { field } = useFormController({ name, control });
+  const error = errors[name]?.message;
+  const hasLabel = Boolean(label);
+  const hasError = Boolean(error);
 
   const handleOpenMenu = useCallback(() => {
     setIsMenuOpen(true);
@@ -76,18 +85,33 @@ const Dropdown = <T extends FieldValues>({
   }, []);
 
   const stylesConfig = useMemo(() => getStyles(isMenuOpen), [isMenuOpen]);
+  const inputStyles = [styles.input, hasError && styles.error];
 
   return (
-    <Select
-      {...field}
-      options={options}
-      classNamePrefix="react-select"
-      styles={stylesConfig}
-      isSearchable={false}
-      menuIsOpen={isMenuOpen}
-      onMenuOpen={handleOpenMenu}
-      onMenuClose={handleCloseMenu}
-    />
+    <label className={styles.inputComponentWrapper}>
+      {hasLabel && <span className={styles.label}>{label}</span>}
+      <span className={styles.inputWrapper}>
+        <Select
+          {...field}
+          options={options}
+          classNamePrefix="react-select"
+          className={getValidClassNames(inputStyles)}
+          styles={stylesConfig}
+          isSearchable={false}
+          menuIsOpen={isMenuOpen}
+          onMenuOpen={handleOpenMenu}
+          onMenuClose={handleCloseMenu}
+        />
+      </span>
+      <span
+        className={getValidClassNames(
+          styles.errorMessage,
+          hasError && styles.visible,
+        )}
+      >
+        {error as string}
+      </span>
+    </label>
   );
 };
 

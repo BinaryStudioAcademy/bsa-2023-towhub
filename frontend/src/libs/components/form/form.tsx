@@ -47,6 +47,7 @@ const Form = <T extends FieldValues = FieldValues>({
             name={field.name}
             control={control}
             errors={errors}
+            label={field.label}
           />
         ) : (
           <Input {...field} control={control} errors={errors} />
