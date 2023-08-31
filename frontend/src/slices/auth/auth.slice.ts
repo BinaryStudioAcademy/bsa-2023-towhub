@@ -4,21 +4,7 @@ import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
 import { signIn, signUp } from './actions.js';
-
-type User = {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  group: { id: number; key: string; name: string };
-  business: {
-    id: number;
-    taxNumber: string;
-    companyName: string;
-    ownerId: number;
-  } | null;
-};
+import { type User } from './libs/types/user.type.js';
 
 type State = {
   dataStatus: ValueOf<typeof DataStatus>;
