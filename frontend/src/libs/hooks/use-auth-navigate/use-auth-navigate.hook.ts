@@ -1,6 +1,7 @@
-import { type UserSignInResponseDto } from 'shared/build';
-
+import { AppRoute } from '~/libs/enums/enums.js';
 import { useNavigate } from '~/libs/hooks/hooks.js';
+import { type UserSignInResponseDto } from '~/libs/types/types.js';
+import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 type AuthNavigateHook = {
   authNavigate: (user: UserSignInResponseDto) => void;
@@ -11,14 +12,14 @@ const useAuthNavigate = (): AuthNavigateHook => {
 
   const authNavigate = (user: UserSignInResponseDto): void => {
     switch (user.group.key) {
-      case 'business': {
-        navigate('/dashboard');
+      case UserGroupKey.BUSINESS: {
+        navigate(AppRoute.DASHBOARD);
         break;
       }
-      case 'customer': {
+      case UserGroupKey.CUSTOMER: {
         break;
       }
-      case 'driver': {
+      case UserGroupKey.DRIVER: {
         break;
       }
       default: {
