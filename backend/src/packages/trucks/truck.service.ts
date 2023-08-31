@@ -30,7 +30,7 @@ class TruckService implements IService {
       licensePlateNumber: payload.licensePlateNumber,
     });
 
-    return await this.repository.create(newTruckEntity.toObject());
+    return await this.repository.create(newTruckEntity.toNewObject());
   }
 
   public async update(parameters: {

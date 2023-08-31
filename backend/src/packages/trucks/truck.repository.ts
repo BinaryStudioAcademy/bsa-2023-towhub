@@ -55,7 +55,9 @@ class TruckRepository implements IRepository {
     }
   }
 
-  public async create(entity: TruckEntityT): Promise<TruckEntityDatabase> {
+  public async create(
+    entity: Omit<TruckEntityT, 'id'>,
+  ): Promise<TruckEntityDatabase> {
     try {
       const [result] = await this.db
         .driver()

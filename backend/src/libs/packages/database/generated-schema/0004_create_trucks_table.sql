@@ -1,14 +1,14 @@
 CREATE TABLE IF NOT EXISTS
   "trucks" (
     "id" serial PRIMARY KEY NOT NULL,
-    "created_at" timestamp DEFAULT now() NOT NULL,
-    "updated_at" timestamp DEFAULT now() NOT NULL,
     "manufacturer" varchar NOT NULL,
     "capacity" integer NOT NULL,
     "price_per_km" real NOT NULL,
     "license_plate_number" varchar NOT NULL,
     "year" varchar NOT NULL,
-    "tow_type" varchar NOT NULL
+    "tow_type" varchar NOT NULL,
+    "created_at" timestamp DEFAULT now() NOT NULL,
+    "updated_at" timestamp DEFAULT now() NOT NULL
   );
 
 --> statement-breakpoint
