@@ -6,36 +6,52 @@ import { Icon } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
+  className?: Parameters<typeof getValidClassNames>[0];
   label: string;
   type?: 'button' | 'submit';
   size?: 'sm' | 'md';
   variant?: 'contained' | 'outlined' | 'text';
   isDisabled?: boolean;
+  isFullWidth?: boolean;
   frontIcon?: ValueOf<typeof IconName>;
   backIcon?: ValueOf<typeof IconName>;
+  children?: JSX.Element;
   onClick?: () => void;
 };
 
 const Button: React.FC<Properties> = ({
+  className,
   type = 'button',
   size = 'md',
   variant = 'contained',
   label,
   isDisabled = false,
+  isFullWidth = false,
   frontIcon,
   backIcon,
+  children,
   onClick,
-}: Properties) => (
-  <button
-    className={getValidClassNames(styles.btn, styles[size], styles[variant])}
-    type={type}
-    disabled={isDisabled}
-    onClick={onClick}
-  >
-    {frontIcon && <Icon iconName={frontIcon} />}
-    {label}
-    {backIcon && <Icon iconName={backIcon} />}
-  </button>
-);
+}: Properties) => {
+  return (
+    <button
+      className={getValidClassNames(
+        'uppercase',
+        styles.btn,
+        styles[size],
+        styles[variant],
+        isFullWidth && styles.fullWidth,
+        className,
+      )}
+      type={type}
+      disabled={isDisabled}
+      onClick={onClick}
+    >
+      {frontIcon && <Icon iconName={frontIcon} />}
+      {label}
+      {backIcon && <Icon iconName={backIcon} />}
+      {children}
+    </button>
+  );
+};
 
 export { Button };

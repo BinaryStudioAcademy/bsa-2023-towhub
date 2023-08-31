@@ -1,7 +1,7 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import { type UserEntity as UserEntityT } from './libs/types/types.js';
+import { type UserEntityT } from './libs/types/types.js';
 
 class UserEntity implements IEntity {
   private 'id': number | null;
@@ -20,6 +20,8 @@ class UserEntity implements IEntity {
 
   private 'groupId': number;
 
+  private 'accessToken': string | null;
+
   private constructor({
     id,
     phone,
@@ -29,7 +31,8 @@ class UserEntity implements IEntity {
     firstName,
     lastName,
     groupId,
-  }: NullableProperties<UserEntityT, 'id'>) {
+    accessToken,
+  }: NullableProperties<UserEntityT, 'id' | 'accessToken'>) {
     this.id = id;
     this.phone = phone;
     this.passwordHash = passwordHash;
@@ -38,6 +41,7 @@ class UserEntity implements IEntity {
     this.firstName = firstName;
     this.lastName = lastName;
     this.groupId = groupId;
+    this.accessToken = accessToken;
   }
 
   public static initialize({
@@ -49,6 +53,7 @@ class UserEntity implements IEntity {
     firstName,
     lastName,
     groupId,
+    accessToken,
   }: UserEntityT): UserEntity {
     return new UserEntity({
       id,
@@ -59,6 +64,7 @@ class UserEntity implements IEntity {
       firstName,
       lastName,
       groupId,
+      accessToken,
     });
   }
 
@@ -70,7 +76,7 @@ class UserEntity implements IEntity {
     firstName,
     lastName,
     groupId,
-  }: Omit<UserEntityT, 'id'>): UserEntity {
+  }: Omit<UserEntityT, 'id' | 'accessToken'>): UserEntity {
     return new UserEntity({
       id: null,
       phone,
@@ -80,6 +86,7 @@ class UserEntity implements IEntity {
       firstName,
       lastName,
       groupId,
+      accessToken: null,
     });
   }
 
@@ -93,6 +100,7 @@ class UserEntity implements IEntity {
       email: this.email,
       firstName: this.firstName,
       lastName: this.lastName,
+      accessToken: this.accessToken,
     };
   }
 
@@ -105,6 +113,7 @@ class UserEntity implements IEntity {
       firstName: this.firstName,
       lastName: this.lastName,
       groupId: this.groupId,
+      accessToken: null,
     };
   }
 }

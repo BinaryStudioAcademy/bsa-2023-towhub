@@ -7,6 +7,7 @@ type UserEntity = {
   firstName: string;
   lastName: string;
   groupId: number;
+  accessToken: string | null;
 };
 
-export { type UserEntity };
+export { type UserEntity as UserEntityT };

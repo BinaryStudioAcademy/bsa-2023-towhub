@@ -1,15 +1,15 @@
+@import "./vars.scss";
+
 .h2,
 .h3,
 .h4,
 .h5,
 .h6,
-.text-base,
-.text-md,
-.text-md-bold,
-.text-sm,
-.text-xs {
-  color: $black;
-  font-family: $font-family;
+.textBase,
+.textMd,
+.textMdBold,
+.textSm,
+.textXs {
   line-height: $line-height-normal;
 }
 
@@ -44,27 +44,27 @@
   line-height: $line-height-xl;
 }
 
-.text-base {
+.textBase {
   font-weight: $font-weight-regular;
   font-size: 18px;
 }
 
-.text-md {
+.textMd {
   font-weight: $font-weight-semibold;
   font-size: 16px;
 }
 
-.text-md-bold {
+.textMdBold {
   font-weight: $font-weight-extrabold;
   font-size: 16px;
 }
 
-.text-sm {
+.textSm {
   font-weight: $font-weight-regular;
   font-size: 14px;
 }
 
-.text-xs {
+.textXs {
   font-weight: $font-weight-regular;
   font-size: 12px;
 }

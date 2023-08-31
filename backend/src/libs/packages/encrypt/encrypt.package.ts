@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 
-import { type IEncryptService } from '~/libs/interfaces/encrypt.interface';
-import { type HashedPass } from '~/packages/auth/libs/types/hashed-pass.type';
+import { type IEncryptService } from '~/libs/interfaces/encrypt.interface.js';
+import { type HashedPass } from '~/packages/auth/libs/types/hashed-pass.type.js';
 
 const { compare: comparePass, genSalt, hash } = bcrypt;
 
@@ -24,4 +24,4 @@ class EncryptService implements IEncryptService {
 
 const encryptService = new EncryptService();
 
-export { encryptService };
+export { type EncryptService, encryptService };

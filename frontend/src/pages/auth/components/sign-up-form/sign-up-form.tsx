@@ -1,30 +1,58 @@
 import { Form, Link } from '~/libs/components/components.js';
-import { AppRoute } from '~/libs/enums/enums.js';
-import { type UserSignUpRequestDto } from '~/libs/types/types.js';
-import { userSignUpValidationSchema } from '~/packages/users/users.js';
+import { AppRoute, AuthMode } from '~/libs/enums/enums.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import {
+  type CustomerSignUpRequestDto,
+  type ValueOf,
+} from '~/libs/types/types.js';
+import {
+  businessSignUpValidationSchema,
+  customerSignUpValidationSchema,
+} from '~/packages/users/users.js';
 
-import { DEFAULT_SIGN_UP_PAYLOAD } from './libs/constants.js';
-import { signUpFields } from './libs/fields.js';
+import {
+  DEFAULT_SIGN_UP_PAYLOAD_BUSINESS,
+  DEFAULT_SIGN_UP_PAYLOAD_CUSTOMER,
+} from './libs/constants.js';
+import { signUpBusinessFields, signUpCustomerFields } from './libs/fields.js';
+import styles from './styles.module.scss';
 
 type Properties = {
-  onSubmit: (payload: UserSignUpRequestDto) => void;
+  onSubmit: (payload: CustomerSignUpRequestDto) => void;
+  mode: ValueOf<typeof AuthMode>;
 };
 
-const SignUpForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
+const SignUpForm: React.FC<Properties> = ({ onSubmit, mode }: Properties) => {
   return (
-    <>
-      <h3>Sign Up</h3>
-      <Form
-        defaultValues={DEFAULT_SIGN_UP_PAYLOAD}
-        validationSchema={userSignUpValidationSchema}
-        onSubmit={onSubmit}
-        btnLabel="Create Account"
-        fields={signUpFields}
-      />
-      <p>
-        Already have an account? Go to <Link to={AppRoute.SIGN_IN}>Log in</Link>
+    <div className={styles.formWrapper}>
+      <h3 className={getValidClassNames('h4', 'uppercase', styles.title)}>
+        Sign Up
+      </h3>
+      {mode === AuthMode.CUSTOMER ? (
+        <Form
+          defaultValues={DEFAULT_SIGN_UP_PAYLOAD_CUSTOMER}
+          validationSchema={customerSignUpValidationSchema}
+          onSubmit={onSubmit}
+          btnLabel="Create Account"
+          fields={signUpCustomerFields}
+        />
+      ) : (
+        <Form
+          defaultValues={DEFAULT_SIGN_UP_PAYLOAD_BUSINESS}
+          validationSchema={businessSignUpValidationSchema}
+          onSubmit={onSubmit}
+          btnLabel="Create Account"
+          fields={signUpBusinessFields}
+        />
+      )}
+
+      <p className={getValidClassNames('text-sm', styles.text)}>
+        Already have an account? Go to{' '}
+        <Link to={AppRoute.SIGN_IN} className={styles.link}>
+          Log in
+        </Link>
       </p>
-    </>
+    </div>
   );
 };
 
