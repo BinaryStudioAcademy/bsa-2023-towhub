@@ -11,6 +11,13 @@ type User = {
   firstName: string;
   lastName: string;
   phone: string;
+  group: { id: number; key: string; name: string };
+  business: {
+    id: number;
+    taxNumber: string;
+    companyName: string;
+    ownerId: number;
+  } | null;
 };
 
 type State = {
@@ -49,6 +56,8 @@ const { reducer, actions, name } = createSlice({
         firstName: action.payload.firstName,
         lastName: action.payload.lastName,
         phone: action.payload.phone,
+        group: action.payload.group,
+        business: action.payload.business,
       };
       state.token = action.payload.accessToken;
       state.dataStatus = DataStatus.FULFILLED;

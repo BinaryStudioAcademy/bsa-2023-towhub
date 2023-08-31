@@ -1,4 +1,5 @@
 import { type InferModel } from 'drizzle-orm';
+import { type BusinessEntityT } from 'shared/build/index.js';
 
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import {
@@ -31,6 +32,7 @@ type UserEntityObjectT = ReturnType<UserEntity['toObject']>;
 
 type UserEntityObjectWithGroupT = UserEntityObjectT & {
   group: GroupEntityObjectT;
+  business?: BusinessEntityT | null;
 };
 
 export {
