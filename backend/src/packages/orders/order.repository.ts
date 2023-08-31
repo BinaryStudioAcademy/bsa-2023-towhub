@@ -9,6 +9,7 @@ import {
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { OrderEntity } from '~/packages/orders/order.entity.js';
 
+import { combineFilters } from './libs/helpers/combine-filters.js';
 import { getResultIfTruthy } from './libs/helpers/get-result-if-truthy.js';
 import { type OrderEntityT } from './libs/types/types.js';
 
@@ -37,14 +38,16 @@ class OrderRepository implements IRepository {
     return (result ?? null) && OrderEntity.initialize(result as OrderEntityT);
   }
 
-  public async findAllOrdersByUser(
-    userId: OrderEntityT['userId'],
+  public async findAllOrdersByFilter(
+    searchBy: Partial<OrderEntityT>,
   ): Promise<OrderEntity[]> {
     const orders = await this.db
       .driver()
       .select()
       .from(this.ordersSchema)
-      .where(eq(this.ordersSchema.userId, userId));
+      .where(
+        combineFilters<DatabaseSchema['orders']>(this.ordersSchema, searchBy),
+      );
 
     return orders.map((it) => OrderEntity.initialize(it as OrderEntityT));
   }
@@ -57,6 +60,8 @@ class OrderRepository implements IRepository {
       endPoint,
       status,
       userId,
+      businessId,
+      driverId,
       customerName,
       customerPhone,
     } = entity.toNewObject();
@@ -71,6 +76,8 @@ class OrderRepository implements IRepository {
         endPoint,
         status,
         userId,
+        businessId,
+        driverId,
         customerName,
         customerPhone,
       })

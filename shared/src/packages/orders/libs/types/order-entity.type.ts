@@ -8,6 +8,8 @@ type OrderEntity = {
   endPoint: string;
   status: OrderStatusT;
   userId: number;
+  businessId: number;
+  driverId: number;
   customerName?: string;
   customerPhone?: string;
 };

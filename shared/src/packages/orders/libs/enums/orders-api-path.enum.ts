@@ -1,5 +1,5 @@
 const OrdersApiPath = {
-  ROOT: '/',
+  ROOT: '',
   $ID: '/:id',
 } as const;
 

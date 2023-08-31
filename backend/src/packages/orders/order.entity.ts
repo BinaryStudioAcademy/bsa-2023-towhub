@@ -18,6 +18,10 @@ class OrderEntity implements IEntity {
 
   private userId: OrderEntityT['userId'];
 
+  private businessId: OrderEntityT['businessId'];
+
+  private driverId: OrderEntityT['driverId'];
+
   private customerName: OrderEntityT['customerName'] | undefined;
 
   private customerPhone: OrderEntityT['customerPhone'] | undefined;
@@ -30,6 +34,8 @@ class OrderEntity implements IEntity {
     endPoint,
     status,
     userId,
+    businessId,
+    driverId,
     customerName,
     customerPhone,
   }: NullableProperties<OrderEntityT, 'id'>) {
@@ -40,6 +46,8 @@ class OrderEntity implements IEntity {
     this.endPoint = endPoint;
     this.status = status;
     this.userId = userId;
+    this.businessId = businessId;
+    this.driverId = driverId;
     this.customerName = customerName;
     this.customerPhone = customerPhone;
   }
@@ -52,6 +60,8 @@ class OrderEntity implements IEntity {
     endPoint,
     status,
     userId,
+    businessId,
+    driverId,
     customerName,
     customerPhone,
   }: OrderEntityT): OrderEntity {
@@ -63,6 +73,8 @@ class OrderEntity implements IEntity {
       endPoint,
       status,
       userId,
+      businessId,
+      driverId,
       customerName,
       customerPhone,
     });
@@ -75,6 +87,8 @@ class OrderEntity implements IEntity {
     endPoint,
     status,
     userId,
+    businessId,
+    driverId,
     customerName,
     customerPhone,
   }: Omit<OrderEntityT, 'id'>): OrderEntity {
@@ -86,6 +100,8 @@ class OrderEntity implements IEntity {
       endPoint,
       status,
       userId,
+      businessId,
+      driverId,
       customerName,
       customerPhone,
     });
@@ -100,6 +116,8 @@ class OrderEntity implements IEntity {
       endPoint: this.endPoint,
       status: this.status,
       userId: this.userId,
+      businessId: this.businessId,
+      driverId: this.driverId,
       customerName: this.customerName,
       customerPhone: this.customerPhone,
     };
@@ -113,6 +131,8 @@ class OrderEntity implements IEntity {
       endPoint: this.endPoint,
       status: this.status,
       userId: this.userId,
+      businessId: this.businessId,
+      driverId: this.driverId,
       customerName: this.customerName,
       customerPhone: this.customerPhone,
     };

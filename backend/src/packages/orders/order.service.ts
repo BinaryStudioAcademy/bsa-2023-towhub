@@ -25,8 +25,15 @@ class OrderService implements IService {
   ): Promise<OrderCreateResponseDto> {
     const price = 100; //Mock
     const status = OrderStatus.PENDING;
-    const { scheduledTime, startPoint, endPoint, customerName, customerPhone } =
-      payload;
+    const {
+      scheduledTime,
+      startPoint,
+      endPoint,
+      customerName,
+      customerPhone,
+      businessId,
+      driverId,
+    } = payload;
     const order = await this.orderRepository.create(
       OrderEntity.initializeNew({
         price,
@@ -35,6 +42,8 @@ class OrderService implements IService {
         endPoint,
         status,
         userId,
+        businessId,
+        driverId,
         customerName,
         customerPhone,
       }),
@@ -68,10 +77,17 @@ class OrderService implements IService {
     return updatedOrder.toObject();
   }
 
-  public async findAllOrdersByUser(
-    userId: OrderEntityT['userId'] = 2, //Mock, get from JWT
-  ): Promise<{ items: OrderEntityT[] }> {
-    const usersOrders = await this.orderRepository.findAllOrdersByUser(userId);
+  public async findAllOrdersByFilter({
+    userId,
+    businessId,
+  }: {
+    userId: string;
+    businessId: string;
+  }): Promise<{ items: OrderEntityT[] }> {
+    const usersOrders = await this.orderRepository.findAllOrdersByFilter({
+      userId: Number(userId),
+      businessId: Number(businessId),
+    });
 
     return {
       items: usersOrders.map((it) => it.toObject()),

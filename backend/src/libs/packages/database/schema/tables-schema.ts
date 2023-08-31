@@ -62,6 +62,10 @@ const business = pgTable('business_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+const businessRelations = relations(users, ({ many }) => ({
+  orders: many(orders),
+}));
+
 const orderStatuses = Object.values(OrderStatus as Record<number, string>) as [
   string,
   ...string[],
@@ -76,9 +80,9 @@ const orders = pgTable('orders', {
   startPoint: varchar('start_point').notNull(),
   endPoint: varchar('end_point').notNull(),
   status: statusEnum('status').notNull(),
-  userId: integer('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
+  userId: integer('user_id').references(() => users.id),
+  businessId: integer('business_id').references(() => business.id),
+  driverId: integer('driver_id'),
   customerName: varchar('customer_name'),
   customerPhone: varchar('customer_phone'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -86,14 +90,19 @@ const orders = pgTable('orders', {
 });
 
 const ordersRelations = relations(orders, ({ one }) => ({
-  user: one(users, {
+  customer: one(users, {
     fields: [orders.userId],
     references: [users.id],
+  }),
+  business: one(business, {
+    fields: [orders.businessId],
+    references: [business.id],
   }),
 }));
 
 export {
   business,
+  businessRelations,
   groups,
   orders,
   ordersRelations,
