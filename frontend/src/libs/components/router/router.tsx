@@ -1,6 +1,7 @@
 import { Route } from 'react-router-dom';
+import { UserGroupKey } from 'shared/build/index.js';
 
-import { AppRoute, UserGroup } from '~/libs/enums/enums.js';
+import { AppRoute } from '~/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
 import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
@@ -20,7 +21,7 @@ const Router = (): JSX.Element => (
     </Route>
     <Route
       path={AppRoute.ROOT}
-      element={<ProtectedRoute allowedUserGroup={UserGroup.BUSINESS} />}
+      element={<ProtectedRoute allowedUserGroup={UserGroupKey.BUSINESS} />}
     >
       <Route
         path={AppRoute.DASHBOARD}

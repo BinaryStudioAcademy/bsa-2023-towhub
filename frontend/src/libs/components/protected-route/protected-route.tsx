@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
+import { type UserGroupKey } from 'shared/build/index.js';
 
-import { type UserGroup, AppRoute, DataStatus } from '~/libs/enums/enums.js';
+import { AppRoute, DataStatus } from '~/libs/enums/enums.js';
 import { useAppSelector } from '~/libs/hooks/hooks.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { selectIsLoading, selectUser } from '~/slices/auth/selectors.js';
@@ -8,7 +9,7 @@ import { selectIsLoading, selectUser } from '~/slices/auth/selectors.js';
 import { RouterOutlet, Spinner } from '../components.js';
 
 type Properties = {
-  allowedUserGroup: ValueOf<typeof UserGroup>;
+  allowedUserGroup: ValueOf<typeof UserGroupKey>;
 };
 
 const ProtectedRoute = ({
