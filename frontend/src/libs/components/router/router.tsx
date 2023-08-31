@@ -25,11 +25,19 @@ const Router = (): JSX.Element => (
           },
           {
             path: AppRoute.SIGN_IN,
-            element: <Auth />,
+            element: (
+              <PageLayout isSidebarHidden>
+                <Auth />
+              </PageLayout>
+            ),
           },
           {
             path: AppRoute.SIGN_UP,
-            element: <Auth />,
+            element: (
+              <PageLayout isSidebarHidden>
+                <Auth />
+              </PageLayout>
+            ),
           },
           {
             path: AppRoute.ANY,
