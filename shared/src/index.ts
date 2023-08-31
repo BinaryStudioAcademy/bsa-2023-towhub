@@ -56,6 +56,15 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
+  type OrderCreateRequestDto,
+  type OrderCreateResponseDto,
+  type OrderEntityT,
+  type OrderStatusT,
+  type OrderUpdateRequestDto,
+  type OrderUpdateResponseDto,
+} from './packages/orders/orders.js';
+export { OrdersApiPath, OrderStatus } from './packages/orders/orders.js';
+export {
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserEntityT,

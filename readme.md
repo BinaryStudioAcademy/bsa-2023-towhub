@@ -76,6 +76,22 @@ erDiagram
         updated_at timestamp "not null"
     }
 
+    orders {
+        id serial PK "not null"
+        price integer "not null"
+        scheduled_time timestamp "not null"
+        start_point varchar "not null"
+        end_point varchar "not null"
+        status enum "not null"
+        user_id integer FK "not null"
+        customer_name varchar "nullable"
+        customer_phone varchar "nullable"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
+
+
+    users one -- one or many orders: "users(id) has orders(user_id)"
     users one or many -- one groups: "users(group_id) belongs to groups(id)"
     business_details one or many -- one users: "business_details(owner_id) belongs to users(id)"
 

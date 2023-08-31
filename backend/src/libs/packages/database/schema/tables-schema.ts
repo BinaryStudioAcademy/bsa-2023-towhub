@@ -1,11 +1,14 @@
+import { relations } from 'drizzle-orm';
 import {
   integer,
+  pgEnum,
   pgTable,
   serial,
   timestamp,
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
+import { OrderStatus } from 'shared/build/index.js';
 
 const users = pgTable(
   'users',
@@ -50,4 +53,46 @@ const business = pgTable('business_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export { business, groups, users };
+const orderStatuses = Object.values(OrderStatus as Record<number, string>) as [
+  string,
+  ...string[],
+];
+
+const statusEnum = pgEnum('status_enum', orderStatuses);
+
+const orders = pgTable('orders', {
+  id: serial('id').primaryKey(),
+  price: integer('price').notNull(),
+  scheduledTime: timestamp('scheduled_time', { mode: 'string' }).notNull(),
+  startPoint: varchar('start_point').notNull(),
+  endPoint: varchar('end_point').notNull(),
+  status: statusEnum('status').notNull(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  customerName: varchar('customer_name'),
+  customerPhone: varchar('customer_phone'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+const usersRelations = relations(users, ({ many }) => ({
+  orders: many(orders),
+}));
+
+const ordersRelations = relations(orders, ({ one }) => ({
+  user: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
+  }),
+}));
+
+export {
+  business,
+  groups,
+  orders,
+  ordersRelations,
+  statusEnum,
+  users,
+  usersRelations,
+};
