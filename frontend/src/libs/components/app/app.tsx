@@ -44,7 +44,6 @@ const App: React.FC = () => {
   return (
     <>
       <Header />
-
       <div>
         <RouterOutlet />
       </div>
