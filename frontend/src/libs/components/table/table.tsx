@@ -2,7 +2,6 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
-  useCallback,
   useReactTable,
 } from '~/libs/hooks/hooks.js';
 import { type ColumnDef } from '~/libs/types/types.js';
@@ -13,15 +12,23 @@ import styles from './styles.module.scss';
 type Properties<T> = {
   data: T[];
   columns: ColumnDef<T>[];
-  pageSize?: number;
+  pageSize: number;
+  totalRow: number;
+  pageIndex: number;
+  changePageIndex: React.Dispatch<React.SetStateAction<number>>;
+  changePageSize: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const Table = <T,>({
   data,
   columns,
-  pageSize = 10,
+  totalRow,
+  pageSize,
+  pageIndex,
+  changePageIndex,
+  changePageSize,
 }: Properties<T>): JSX.Element => {
-  const pagesRange = Math.ceil(data.length / pageSize);
+  const pagesRange = Math.ceil(totalRow / pageSize);
   const table = useReactTable({
     data,
     columns,
@@ -33,13 +40,6 @@ const Table = <T,>({
       },
     },
   });
-
-  const onClick = useCallback(
-    (index: number) => {
-      table.setPageIndex(index);
-    },
-    [table],
-  );
 
   const createThead = (): JSX.Element => (
     <thead className={styles.thead}>
@@ -80,7 +80,13 @@ const Table = <T,>({
         {createThead()}
         {createTbody()}
       </table>
-      <Pagination pageCount={pagesRange} onClick={onClick} />
+      <Pagination
+        pageCount={pagesRange}
+        onClick={changePageIndex}
+        onChangePageSize={changePageSize}
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+      />
     </div>
   );
 };
