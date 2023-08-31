@@ -9,13 +9,11 @@ import { signIn, signUp } from './actions.js';
 type State = {
   dataStatus: ValueOf<typeof DataStatus>;
   user: UserStore | null;
-  token: string | null;
 };
 
 const initialState: State = {
   dataStatus: DataStatus.IDLE,
   user: null,
-  token: null,
 };
 
 const { reducer, actions, name } = createSlice({
@@ -45,7 +43,6 @@ const { reducer, actions, name } = createSlice({
         group: action.payload.group,
         business: action.payload.business,
       };
-      state.token = action.payload.accessToken;
       state.dataStatus = DataStatus.FULFILLED;
     });
     builder.addCase(signIn.rejected, (state) => {
