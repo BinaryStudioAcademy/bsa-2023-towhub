@@ -1,14 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { type UserStore } from 'shared/build/packages/users/users.js';
 
 import { DataStatus } from '~/libs/enums/enums.js';
-import { type ValueOf } from '~/libs/types/types.js';
+import {
+  type UserSignInResponseDto,
+  type ValueOf,
+} from '~/libs/types/types.js';
 
 import { signIn, signUp } from './actions.js';
 
 type State = {
   dataStatus: ValueOf<typeof DataStatus>;
-  user: UserStore | null;
+  user: UserSignInResponseDto | null;
 };
 
 const initialState: State = {
@@ -34,15 +36,7 @@ const { reducer, actions, name } = createSlice({
       state.dataStatus = DataStatus.PENDING;
     });
     builder.addCase(signIn.fulfilled, (state, action) => {
-      state.user = {
-        id: action.payload.id,
-        email: action.payload.email,
-        firstName: action.payload.firstName,
-        lastName: action.payload.lastName,
-        phone: action.payload.phone,
-        group: action.payload.group,
-        business: action.payload.business,
-      };
+      state.user = action.payload;
       state.dataStatus = DataStatus.FULFILLED;
     });
     builder.addCase(signIn.rejected, (state) => {

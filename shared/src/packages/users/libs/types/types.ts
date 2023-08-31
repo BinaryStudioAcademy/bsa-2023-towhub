@@ -10,4 +10,3 @@ export { type UserGroupKeyT } from './user-group-key.type.js';
 export { type UserGroupNameT } from './user-group-name.type.js';
 export { type UserSignInRequestDto } from './user-sign-in-request-dto.type.js';
 export { type UserSignInResponseDto } from './user-sign-in-response-dto.type.js';
-export { type UserStore } from './user-store.type.js';

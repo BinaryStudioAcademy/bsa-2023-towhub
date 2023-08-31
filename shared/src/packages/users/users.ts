@@ -12,7 +12,6 @@ export {
   type UserGroupNameT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
-  type UserStore,
 } from './libs/types/types.js';
 export {
   businessSignUp as businessSignUpValidationSchema,
