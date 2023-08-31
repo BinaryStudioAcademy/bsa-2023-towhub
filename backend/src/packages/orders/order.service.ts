@@ -21,7 +21,7 @@ class OrderService implements IService {
 
   public async create(
     payload: OrderCreateRequestDto,
-    userId = 1, //Mock, get from JWT
+    userId = 1, //Mock, get from JWT token
   ): Promise<OrderCreateResponseDto> {
     const price = 100; //Mock
     const status = OrderStatus.PENDING;
