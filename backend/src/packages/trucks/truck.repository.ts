@@ -1,4 +1,4 @@
-import { eq, ilike, or } from 'drizzle-orm';
+import { eq, placeholder, sql } from 'drizzle-orm';
 
 import { DatabaseError } from '~/libs/exceptions/exceptions.js';
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
@@ -33,7 +33,7 @@ class TruckRepository implements IRepository {
         .where(eq(this.trucksSchema.id, id));
     } catch (error: unknown) {
       throw new DatabaseError({
-        message: 'An error occurred while fetching the truck from the database',
+        message: `Truck with ID ${id} was not found in the database`,
         cause: error,
       });
     }
@@ -54,12 +54,14 @@ class TruckRepository implements IRepository {
     entity: Omit<TruckEntityT, 'id'>,
   ): Promise<TruckEntity[]> {
     try {
-      return await this.db
+      const preparedInsert = this.db
         .driver()
         .insert(this.trucksSchema)
         .values(entity)
         .returning()
-        .execute();
+        .prepare('createTruck');
+
+      return await preparedInsert.execute();
     } catch (error: unknown) {
       throw new DatabaseError({
         message: 'Failed to create a new truck',
@@ -68,22 +70,26 @@ class TruckRepository implements IRepository {
     }
   }
 
-  public async update({
-    id,
-    payload,
-  }: {
-    id: number;
-    payload: Partial<TruckEntity>;
-  }): Promise<TruckEntity> {
-    const [result] = await this.db
-      .driver()
-      .update(this.trucksSchema)
-      .set(payload)
-      .where(eq(this.trucksSchema.id, id))
-      .returning()
-      .execute();
+  public async update(
+    id: number,
+    payload: Partial<TruckEntity>,
+  ): Promise<TruckEntity[]> {
+    try {
+      const preparedUpdate = this.db
+        .driver()
+        .update(this.trucksSchema)
+        .set(payload)
+        .where(sql`${this.trucksSchema.id} = ${placeholder('id')}`)
+        .returning()
+        .prepare('updateTruck');
 
-    return result;
+      return await preparedUpdate.execute({ id });
+    } catch (error: unknown) {
+      throw new DatabaseError({
+        message: 'An error occurred while updating the truck in the database',
+        cause: error,
+      });
+    }
   }
 
   public async delete(id: number): Promise<boolean> {
@@ -106,19 +112,18 @@ class TruckRepository implements IRepository {
 
   public async find(query: string): Promise<TruckEntity[]> {
     try {
-      return await this.db
+      const preparedQuery = this.db
         .driver()
         .select()
         .from(this.trucksSchema)
         .where(
-          or(
-            ilike(this.trucksSchema.manufacturer, `%${query}%`),
-            ilike(this.trucksSchema.capacity, `%${query}%`),
-            ilike(this.trucksSchema.pricePerKm, `%${query}%`),
-            ilike(this.trucksSchema.licensePlateNumber, `%${query}%`),
-            ilike(this.trucksSchema.year, `%${query}%`),
-          ),
-        );
+          sql`lower(${
+            this.trucksSchema.licensePlateNumber
+          }) ilike ${placeholder('query')}`,
+        )
+        .prepare('findTrucks');
+
+      return await preparedQuery.execute({ query: `%${query}%` });
     } catch (error: unknown) {
       throw new DatabaseError({
         message: `An error occurred while searching ${query} for trucks`,
