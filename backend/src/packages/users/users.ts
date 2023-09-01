@@ -15,6 +15,7 @@ export {
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserEntityObjectT,
+  type UserEntityObjectWithGroupAndBusinessT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
 } from './libs/types/types.js';

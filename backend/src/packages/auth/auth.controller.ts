@@ -6,12 +6,12 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
-import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/user-models.type.js';
 import {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type UserEntityObjectWithGroupT,
   businessSignUpValidationSchema,
   customerSignUpValidationSchema,
 } from '~/packages/users/users.js';

@@ -1,10 +1,10 @@
 import { type InferModel } from 'drizzle-orm';
 
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
-import { type BusinessEntityT } from '~/packages/business/business.js';
+// import { type BusinessEntityT } from '~/packages/business/business.js';
 import {
   type GroupDatabaseModel,
-  type GroupEntityObjectT,
+  // type GroupEntityObjectT,
 } from '~/packages/groups/groups.js';
 import { type UserEntity } from '~/packages/users/user.entity.js';
 
@@ -30,13 +30,13 @@ type UserEntityCreateUpdate = Omit<
 
 type UserEntityObjectT = ReturnType<UserEntity['toObject']>;
 
-type UserEntityObjectWithGroupT = UserEntityObjectT & {
-  group: GroupEntityObjectT;
-};
+// type UserEntityObjectWithGroupT = UserEntityObjectT & {
+//   group: GroupEntityObjectT;
+// };
 
-type UserEntityObjectWithGroupAndBusinessT = UserEntityObjectWithGroupT & {
-  business: BusinessEntityT;
-};
+// type UserEntityObjectWithGroupAndBusinessT = UserEntityObjectWithGroupT & {
+//   business: BusinessEntityT;
+// };
 
 export {
   type UserDatabaseModel,
@@ -44,6 +44,4 @@ export {
   type UserDatabaseModelWithGroup,
   type UserEntityCreateUpdate,
   type UserEntityObjectT,
-  type UserEntityObjectWithGroupAndBusinessT,
-  type UserEntityObjectWithGroupT,
 };
