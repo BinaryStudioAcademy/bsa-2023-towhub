@@ -7,17 +7,20 @@
     "npm": "9.x.x"
   },
   "scripts": {
+    "prebuild": "npm install",
     "lint:type": "npx tsc --noEmit",
     "lint:js": "npx eslint \"src/**/*.ts\"",
     "start:dev": "nodemon --exec \"node --loader ts-paths-esm-loader\" src/index.ts",
     "migrate:generate": "drizzle-kit generate:pg --schema=./src/libs/packages/database/schema/tables-schema.ts --out=./src/libs/packages/database/generated-schema",
     "migrate:dev": "node --loader ts-paths-esm-loader ./src/libs/packages/database/migrate-up.ts",
-    "build": "tsc && tsc-alias"
+    "migrate:prod": "node ./libs/packages/database/migrate-up.js",
+    "build:ts": "npx tsc && tsc-alias -p tsconfig.json",
+    "build:copy": "cp -r package.json build && cp -r ./src/libs/packages/database/generated-schema ./build/libs/packages/database/",
+    "build": "npm run build:ts && npm run build:copy",
+    "prestart": "npm run migrate:prod",
+    "start": "node index.js"
   },
   "devDependencies": {
-    "@types/bcryptjs": "2.4.2",
-    "@types/convict": "6.1.3",
-    "@types/swagger-jsdoc": "6.0.1",
     "nodemon": "3.0.1",
     "ts-node": "10.9.1",
     "ts-paths-esm-loader": "1.4.3",
@@ -25,8 +28,12 @@
   },
   "dependencies": {
     "@fastify/auth": "4.3.0",
+    "@fastify/static": "6.10.2",
     "@fastify/swagger": "8.9.0",
     "@fastify/swagger-ui": "1.9.3",
+    "@types/bcryptjs": "2.4.3",
+    "@types/convict": "6.1.3",
+    "@types/swagger-jsdoc": "6.0.1",
     "bcryptjs": "2.4.3",
     "convict": "6.2.4",
     "dotenv": "16.3.1",
