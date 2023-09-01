@@ -5,7 +5,9 @@ export { type TabName, type TabsType } from './sidebar.type.js';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
 export {
   type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
   type ServerErrorDetail,
   type ServerErrorResponse,
   type UserSignInRequestDto,

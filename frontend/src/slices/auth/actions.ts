@@ -23,10 +23,14 @@ const signUp = createAsyncThunk<
   },
   AsyncThunkConfig
 >(`${sliceName}/sign-up`, async ({ payload, mode }, { extra }) => {
-  const { authApi, notification } = extra;
+  const { authApi, notification, localStorage } = extra;
 
   try {
-    return await authApi.signUp(payload, mode);
+    const result = await authApi.signUp(payload, mode);
+
+    await localStorage.set(StorageKey.TOKEN, result.accessToken);
+
+    return result;
   } catch (error) {
     notification.warning(getErrorMessage(error));
     throw error;

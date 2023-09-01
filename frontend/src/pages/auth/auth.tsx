@@ -3,12 +3,9 @@ import { type Location } from 'react-router';
 import { type AuthMode, AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
-  useAppSelector,
   useAuthNavigate,
   useCallback,
-  useEffect,
   useLocation,
-  useNavigate,
 } from '~/libs/hooks/hooks.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import {
@@ -22,22 +19,10 @@ import styles from './styles.module.css';
 
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { navigateAuthUser } = useAuthNavigate();
 
   const location: Location = useLocation();
   const mode = location.state as ValueOf<typeof AuthMode>;
-
-  const { dataStatus } = useAppSelector(({ auth }) => ({
-    dataStatus: auth.dataStatus,
-  }));
-
-  // TODO: refactor after the global state is ready
-  useEffect(() => {
-    if (dataStatus === 'fulfilled') {
-      navigate(AppRoute.DASHBOARD);
-    }
-  }, [dataStatus, navigate]);
 
   const handleSignInSubmit = useCallback(
     (payload: UserSignInRequestDto): void => {
@@ -52,9 +37,13 @@ const Auth: React.FC = () => {
 
   const handleSignUpSubmit = useCallback(
     (payload: CustomerSignUpRequestDto): void => {
-      void dispatch(authActions.signUp({ payload, mode }));
+      void dispatch(authActions.signUp({ payload, mode }))
+        .unwrap()
+        .then((user) => {
+          navigateAuthUser(user);
+        });
     },
-    [dispatch, mode],
+    [dispatch, mode, navigateAuthUser],
   );
 
   const getScreen = (screen: string): React.ReactNode => {
