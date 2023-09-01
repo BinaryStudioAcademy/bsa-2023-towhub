@@ -25,7 +25,7 @@ This is the repository responsible for TowHub apps.
 
 ## 🏃‍♂️ Simple Start
 
-1. **`npm install`** at the root
+1. **`npm run install:all`** at the root
 2. Fill ENVs
 3. **`npx simple-git-hooks`** at the root
 4. **`cd backend && npm run migrate:dev`**
