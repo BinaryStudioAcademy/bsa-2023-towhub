@@ -86,7 +86,6 @@ const Pagination: React.FC<Properties> = ({
             className={buttonClass}
             onClick={handlePageClick}
             key={index}
-            background={index === pageIndex ? 'red' : 'white'}
             label={`${convertToNumber(index)}`}
           ></Button>,
         );

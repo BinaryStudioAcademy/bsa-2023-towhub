@@ -24,12 +24,13 @@
   margin: 1px;
   padding: 5px;
   color: $red-dark;
+  background-color: $white;
   border: 1px solid $red-dark;
 }
 
 .active {
   color: white;
-  background-color: $red-dark;
+  background-color: $red;
 }
 
 .size {

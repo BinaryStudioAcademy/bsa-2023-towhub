@@ -7,29 +7,8 @@
   align-items: center;
   font-weight: $font-weight-extrabold;
   line-height: 1.25;
+  background-color: $red;
   border-radius: 4px;
-}
-
-$colors: (
-  black: $black,
-  grey-dark: $grey-dark,
-  red-dark: $red-dark,
-  blue-dark: $blue-dark,
-  grey: $grey,
-  red: $red,
-  blue: $blue,
-  white: $white,
-  red-light: $red-light,
-  blue-light: $blue-light,
-  grey-light: $grey-light,
-  grey-extra-light: $grey-extra-light,
-  green: $green,
-);
-
-@each $color, $value in $colors {
-  .btn[class*="background-#{'' + $color}"] {
-    background-color: $value;
-  }
 }
 
 .btn:disabled {
