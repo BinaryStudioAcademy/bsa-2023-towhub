@@ -24,7 +24,7 @@ const ProtectedRoute = ({
   return user && allowedUserGroup === user.group.key ? (
     <RouterOutlet />
   ) : (
-    <Navigate to={AppRoute.SIGN_IN} />
+    <Navigate to={AppRoute.ANY} />
   );
 };
 
