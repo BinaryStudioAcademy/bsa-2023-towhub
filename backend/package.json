@@ -24,6 +24,7 @@
     "tsconfig-paths": "4.2.0"
   },
   "dependencies": {
+    "@fastify/auth": "4.3.0",
     "@fastify/swagger": "8.9.0",
     "@fastify/swagger-ui": "1.9.3",
     "@types/nodemailer": "6.4.9",
@@ -33,12 +34,15 @@
     "drizzle-kit": "0.19.12",
     "drizzle-orm": "0.28.2",
     "fastify": "4.21.0",
+    "fastify-plugin": "4.5.1",
+    "jose": "4.14.4",
     "handlebars": "4.7.8",
     "nodemailer": "6.9.4",
     "pg": "8.11.3",
     "pino": "8.15.0",
     "pino-pretty": "10.2.0",
     "postgres": "3.3.5",
+    "socket.io": "4.7.2",
     "swagger-jsdoc": "6.2.8"
   }
 }

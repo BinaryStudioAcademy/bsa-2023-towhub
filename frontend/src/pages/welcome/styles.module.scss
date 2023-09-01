@@ -1,0 +1,37 @@
+@import "src/assets/css/vars.scss";
+
+.section {
+  padding: 154px 24px 0;
+  background-color: $background-color-grey;
+}
+
+.title {
+  margin: 0;
+  margin-bottom: 78px;
+  text-align: center;
+}
+
+.accent {
+  color: $blue-dark;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  padding-left: 0;
+  list-style-type: none;
+}
+
+@media (width >= $screen-size-lg) {
+  .list {
+    flex-direction: row;
+  }
+}
+
+@media (width >= $screen-size-xl) {
+  .section {
+    padding: 154px 36px 0;
+  }
+}

@@ -1,0 +1,65 @@
+@import "src/assets/css/vars.scss";
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 20px 18px 29px;
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px 0 rgb(173 163 163 / 15%);
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.text {
+  max-width: 250px;
+  margin-bottom: 24px;
+  color: $grey;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.button {
+  width: max-content;
+}
+
+@media (width >= $screen-size-lg) {
+  .card {
+    flex-direction: row;
+    width: 540px;
+    max-width: 540px;
+  }
+
+  .card-container {
+    align-items: flex-start;
+    text-align: start;
+  }
+
+  .text {
+    max-width: 216px;
+  }
+}
+
+@media (width >= $screen-size-xl) {
+  .card {
+    padding: 27px 25px 39px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+}

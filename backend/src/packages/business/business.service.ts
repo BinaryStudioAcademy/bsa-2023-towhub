@@ -1,7 +1,6 @@
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
-import { type OperationResult } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { BusinessEntity } from './business.entity.js';
@@ -20,12 +19,16 @@ class BusinessService implements IService {
     this.businessRepository = businessRepository;
   }
 
-  public async find(
-    id: number,
-  ): Promise<OperationResult<BusinessEntityT | null>> {
-    const business = await this.businessRepository.find(id);
+  public async findById(id: number): Promise<BusinessEntityT | null> {
+    const [business = null] = await this.businessRepository.find({ id });
 
-    return { result: business ? business.toObject() : null };
+    return business ? BusinessEntity.initialize(business).toObject() : null;
+  }
+
+  public async findByOwnerId(ownerId: number): Promise<BusinessEntityT | null> {
+    const [business = null] = await this.businessRepository.find({ ownerId });
+
+    return business ? BusinessEntity.initialize(business).toObject() : null;
   }
 
   public async create({
@@ -67,7 +70,7 @@ class BusinessService implements IService {
     id: number;
     payload: Pick<BusinessEntityT, 'companyName'>;
   }): Promise<BusinessUpdateResponseDto> {
-    const { result: foundBusinessById } = await this.find(id);
+    const foundBusinessById = await this.findById(id);
 
     if (!foundBusinessById) {
       throw new NotFoundError({});
@@ -93,18 +96,14 @@ class BusinessService implements IService {
     return business.toObject();
   }
 
-  public async delete(id: number): Promise<OperationResult<boolean>> {
-    const { result: foundBusiness } = await this.find(id);
+  public async delete(id: number): Promise<boolean> {
+    const foundBusiness = await this.findById(id);
 
     if (!foundBusiness) {
       throw new NotFoundError({});
     }
 
-    const result = await this.businessRepository.delete(id);
-
-    return {
-      result,
-    };
+    return await this.businessRepository.delete(id);
   }
 }
 

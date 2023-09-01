@@ -15,6 +15,7 @@ type Properties = {
   isFullWidth?: boolean;
   frontIcon?: ValueOf<typeof IconName>;
   backIcon?: ValueOf<typeof IconName>;
+  children?: JSX.Element;
   onClick?: () => void;
 };
 
@@ -28,11 +29,13 @@ const Button: React.FC<Properties> = ({
   isFullWidth = false,
   frontIcon,
   backIcon,
+  children,
   onClick,
 }: Properties) => {
   return (
     <button
       className={getValidClassNames(
+        'uppercase',
         styles.btn,
         styles[size],
         styles[variant],
@@ -46,6 +49,7 @@ const Button: React.FC<Properties> = ({
       {frontIcon && <Icon iconName={frontIcon} />}
       {label}
       {backIcon && <Icon iconName={backIcon} />}
+      {children}
     </button>
   );
 };

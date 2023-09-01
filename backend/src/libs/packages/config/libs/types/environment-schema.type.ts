@@ -6,6 +6,11 @@ type EnvironmentSchema = {
     PORT: number;
     ENVIRONMENT: ValueOf<typeof AppEnvironment>;
   };
+  JWT: {
+    SECRET: string;
+    ISSUER: string;
+    ACCESS_LIFETIME: string;
+  };
   DB: {
     CONNECTION_STRING: string;
     POOL_MIN: number;
