@@ -1,4 +1,3 @@
-import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/service.interface';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
@@ -51,13 +50,9 @@ class TruckService implements IService {
     const truck = await this.findById(id);
 
     if (!truck) {
-      throw new NotFoundError({ message: 'Truck not found' });
-    }
-
-    if (truck.licensePlateNumber === payload.licensePlateNumber) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.TRUCK_EXISTS,
+        message: HttpMessage.NOT_FOUND,
       });
     }
 

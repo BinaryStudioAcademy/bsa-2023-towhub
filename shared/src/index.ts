@@ -70,6 +70,7 @@ export {
   TruckManufacturer,
   truckRequestBodyValidationSchema,
   TruckTowType,
+  truckUpdateRequestBodyValidationSchema,
   TruckYear,
 } from './packages/trucks/trucks.js';
 export {

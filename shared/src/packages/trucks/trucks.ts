@@ -14,4 +14,5 @@ export {
   truckAddValidationSchema,
   truckIdParameterValidationSchema,
   truckRequestBodyValidationSchema,
+  truckUpdateRequestBodyValidationSchema,
 } from './libs/validation-schemas/validation-schema.js';

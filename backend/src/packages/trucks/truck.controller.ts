@@ -12,6 +12,7 @@ import { type TruckEntityT } from './libs/types/types.js';
 import {
   truckIdParameterValidationSchema,
   truckRequestBodyValidationSchema,
+  truckUpdateRequestBodyValidationSchema,
 } from './libs/validation-schema/validation-schemas.js';
 import { type TruckService } from './truck.service.js';
 
@@ -140,7 +141,7 @@ class TruckController extends Controller {
       path: TruckApiPath.$ID,
       method: 'PUT',
       validation: {
-        body: truckRequestBodyValidationSchema,
+        body: truckUpdateRequestBodyValidationSchema,
         params: truckIdParameterValidationSchema,
       },
       handler: (request) =>
@@ -276,7 +277,7 @@ class TruckController extends Controller {
 
   /**
    * @swagger
-   * /trucks:
+   * /trucks/:
    *   get:
    *     summary: Get all trucks
    *     tags:

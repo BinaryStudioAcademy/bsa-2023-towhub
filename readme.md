@@ -80,21 +80,25 @@ erDiagram
     business_details one or many -- one users: "business_details(owner_id) belongs to users(id)"
 
     trucks {
-        id serial PK not null,
-        manufacturer varchar not null,
-        capacity integer not null,
-        price_per_km real not null,
-        license_plate_number varchar not null,
-        year varchar not null,
-        tow_type varchar not null,
-        created_at timestamp default now() not null,
-        updated_at timestamp default now() not null
+        id serial PK "not null"
+        manufacturer varchar "not null"
+        capacity integer "not null"
+        price_per_km real "not null"
+        license_plate_number varchar "not null"
+        year varchar "not null"
+        tow_type varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
     }
 
     users_trucks {
-        user_id integer FK not null,
-        truck_id integer FK not null,
+        user_id integer FK "not null"
+        truck_id integer FK "not null"
     }
+
+    users_trucks one or many -- one trucks: "users_trucks(truck_id) belongs to trucks(id)"
+    users_trucks one or many -- one users: "users_trucks(user_id) belongs to users(id)"
+
 
 ```
 
