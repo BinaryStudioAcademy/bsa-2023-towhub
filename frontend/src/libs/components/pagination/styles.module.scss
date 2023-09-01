@@ -1,4 +1,4 @@
-@import "../../../assets/css/styles.scss";
+@import "src/assets/css/styles.scss";
 
 .container {
   display: flex;
@@ -20,19 +20,11 @@
 }
 
 .btn {
-  display: inline-flex;
-  flex-shrink: 0;
-  justify-content: center;
-  align-items: center;
+  min-width: 22px;
   margin: 1px;
   padding: 5px;
   color: $red-dark;
-  font-weight: $font-weight-extrabold;
-  font-size: 16px;
-  font-family: $font-family;
   border: 1px solid $red-dark;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
 .active {

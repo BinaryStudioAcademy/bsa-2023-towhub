@@ -1,14 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { type AppThunk } from '~/libs/types/types.js';
+import { type AppThunk, type EntityPagination } from '~/libs/types/types.js';
 
 import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
-
-type EntityPagination<T> = {
-  items: T[];
-  total: number;
-};
 
 type Properties<T> = {
   tableFetchCall: (a: {

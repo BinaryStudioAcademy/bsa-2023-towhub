@@ -2,44 +2,54 @@ import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
 
 import { Button } from '../button/button.jsx';
+import { Dropdown } from '../components.js';
 import { DEFAULT_SIZE } from './libs/constant.js';
-import { getMiddle } from './libs/helper.js';
+import {
+  convertToIndex,
+  convertToNumber,
+  createOption,
+  createOptions,
+  getMiddle,
+} from './libs/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   pageCount: number;
   pageIndex: number;
   pageSize: number;
-  size?: number;
+  paginationSize?: number;
   onClick: (n: number) => void;
-  onChangePageSize: (n: number) => void;
+  onChangePageSize?: (n: number) => void;
 };
 
 const Pagination: React.FC<Properties> = ({
   pageCount,
   pageIndex,
   pageSize,
-  size = pageCount > DEFAULT_SIZE ? DEFAULT_SIZE : pageCount,
+  paginationSize = pageCount > DEFAULT_SIZE ? DEFAULT_SIZE : pageCount,
   onClick,
   onChangePageSize,
 }: Properties) => {
-  const middleValue = getMiddle(size);
+  const middleValue = getMiddle(paginationSize);
 
   const isFirstPage = pageIndex === 0;
-  const isLastPage = pageIndex === pageCount - 1;
+  const isLastPage = pageIndex === convertToIndex(pageCount);
 
   const isHiddenFirstPage =
-    pageIndex >= size - 1 && size < pageCount && pageIndex > 0;
+    pageIndex >= convertToIndex(paginationSize) &&
+    paginationSize < pageCount &&
+    pageIndex > 0;
 
   const isHiddenLastPage =
-    pageIndex + middleValue < pageCount - 1 && size < pageCount;
+    pageIndex + middleValue < convertToIndex(pageCount) &&
+    paginationSize < pageCount;
 
   const handlePageClick = useCallback(
     (event_: React.MouseEvent) => {
       const target = event_.target as HTMLButtonElement;
 
       if (target.textContent) {
-        const index = +target.textContent - 1;
+        const index = convertToIndex(+target.textContent);
         onClick(index);
       }
     },
@@ -47,10 +57,10 @@ const Pagination: React.FC<Properties> = ({
   );
 
   const handleChangePageSize = useCallback(
-    (event_: React.ChangeEvent) => {
-      const target = event_.target as HTMLSelectElement;
-      const value = +target.value;
-      onChangePageSize(value);
+    (value: string | undefined) => {
+      if (value && !Number.isNaN(+value) && onChangePageSize) {
+        onChangePageSize(+value);
+      }
     },
     [onChangePageSize],
   );
@@ -72,9 +82,13 @@ const Pagination: React.FC<Properties> = ({
           [styles.active]: index === pageIndex,
         });
         buttons.push(
-          <button className={buttonClass} onClick={handlePageClick} key={index}>
-            {index + 1}
-          </button>,
+          <Button
+            className={buttonClass}
+            onClick={handlePageClick}
+            key={index}
+            background={index === pageIndex ? 'red' : 'white'}
+            label={`${convertToNumber(index)}`}
+          ></Button>,
         );
       }
 
@@ -86,28 +100,20 @@ const Pagination: React.FC<Properties> = ({
   const showButtons = (): JSX.Element[] => {
     let startIndex = pageIndex - middleValue;
     let endIndex = pageIndex + middleValue;
+    const lastPageIndex = convertToIndex(pageCount);
+    const lastPaginationIndex = convertToIndex(paginationSize);
 
-    if (startIndex + size > pageCount - 1) {
-      startIndex = pageCount - size;
-      endIndex = pageCount - 1;
+    if (startIndex + paginationSize > lastPageIndex) {
+      startIndex = pageCount - paginationSize;
+      endIndex = lastPageIndex;
     }
 
-    if (pageIndex < size - 1) {
+    if (pageIndex < lastPaginationIndex) {
       startIndex = 0;
-      endIndex = size - 1;
+      endIndex = lastPaginationIndex;
     }
 
     return createButtons(startIndex, endIndex);
-  };
-
-  const createPageSizeOptions = (): JSX.Element[] => {
-    const options: JSX.Element[] = [];
-    for (let index = 1; index < 5; index++) {
-      const value = pageSize * index;
-      options.push(<option value={value}>{value}</option>);
-    }
-
-    return options;
   };
 
   return (
@@ -129,16 +135,16 @@ const Pagination: React.FC<Properties> = ({
           isDisabled={isLastPage}
         />
       </div>
-      <div className={styles.size}>
-        <label htmlFor="pageSize">Page size:</label>
-        <select
-          name="pageSize"
-          onChange={handleChangePageSize}
-          className={styles.select}
-        >
-          {createPageSizeOptions()}
-        </select>
-      </div>
+      {onChangePageSize && (
+        <div className={styles.size}>
+          <label htmlFor="pageSize">Page size:</label>
+          <Dropdown
+            options={createOptions([5, 10, 20, 50, 100])}
+            defaultValue={createOption(pageSize)}
+            onChange={handleChangePageSize}
+          />
+        </div>
+      )}
     </div>
   );
 };

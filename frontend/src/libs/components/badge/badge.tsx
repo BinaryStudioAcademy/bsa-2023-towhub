@@ -1,9 +1,10 @@
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import darkColors from 'src/libs/palette/dark-colors.module.scss';
+import lightColors from 'src/libs/palette/light-colors.module.scss';
 
-import darkColors from './dark-colors.module.scss';
-import lightColors from './light-colors.module.scss';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { type DarkColor, type LightColor } from '~/libs/types/types.js';
+
 import styles from './styles.module.scss';
-import { type DarkColor, type LightColor } from './types/color.type.js';
 
 type Color = DarkColor | LightColor;
 
