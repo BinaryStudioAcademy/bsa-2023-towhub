@@ -4,7 +4,6 @@ export {
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
-  type User,
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
