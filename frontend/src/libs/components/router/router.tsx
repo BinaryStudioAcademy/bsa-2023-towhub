@@ -37,4 +37,4 @@ const Router = (): JSX.Element => (
 );
 
 export { Router };
-export { Navigate, Outlet as RouterOutlet } from 'react-router-dom';
+export { Outlet as RouterOutlet } from 'react-router-dom';

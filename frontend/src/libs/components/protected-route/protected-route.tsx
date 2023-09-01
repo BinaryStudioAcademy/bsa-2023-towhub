@@ -1,10 +1,11 @@
-import { AppRoute, DataStatus } from '~/libs/enums/enums.js';
+import { DataStatus } from '~/libs/enums/enums.js';
 import { useAppSelector } from '~/libs/hooks/hooks.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type UserGroupKey } from '~/packages/users/libs/enums/enums.js';
+import { NotFound } from '~/pages/not-found/not-found.js';
 import { selectIsLoading, selectUser } from '~/slices/auth/selectors.js';
 
-import { Navigate, RouterOutlet } from '../router/router.js';
+import { RouterOutlet } from '../router/router.js';
 import { Spinner } from '../spinner/spinner.js';
 
 type Properties = {
@@ -24,7 +25,7 @@ const ProtectedRoute = ({
   return user && allowedUserGroup === user.group.key ? (
     <RouterOutlet />
   ) : (
-    <Navigate to={AppRoute.ANY} />
+    <NotFound />
   );
 };
 
