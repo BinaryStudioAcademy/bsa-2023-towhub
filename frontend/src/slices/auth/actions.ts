@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
-import { LocalStorage } from '~/libs/packages/storage/storage.js';
 import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
 import {
   type BusinessSignUpRequestDto,
@@ -32,7 +31,7 @@ const signIn = createAsyncThunk<
   UserSignInRequestDto,
   AsyncThunkConfig
 >(`${sliceName}/sign-in`, async (signInPayload, { extra }) => {
-  const { authApi } = extra;
+  const { authApi, LocalStorage } = extra;
 
   const result = await authApi.signIn(signInPayload);
 
