@@ -1,0 +1,55 @@
+@import "src/assets/css/vars.scss";
+
+.wrapper {
+  width: 90vmin;
+  padding: 7vmin;
+  background: $white;
+  border-radius: 1.2vmin;
+  box-shadow: $shadowLight;
+}
+
+.wrapper .inputWrapper {
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 35vmin;
+  margin: 6.5vmin 0;
+  border: 0.5vmin dashed $blueLight;
+  border-radius: 1.2vmin;
+  cursor: pointer;
+}
+
+.inputWrapper.disabled {
+  color: $greyDark;
+  border-color: $greyDark;
+  cursor: default;
+}
+
+.inputWrapper :where(.icon, p) {
+  color: $blueLight;
+}
+
+.inputWrapper .icon {
+  font-size: 50px;
+}
+
+.icon.disabled {
+  color: $greyDark;
+  border-color: $greyDark;
+}
+
+.label {
+  margin-top: 3vmin;
+}
+
+.label.disabled {
+  color: $greyDark;
+  border-color: $greyDark;
+}
+
+.errorMessage {
+  margin-top: 0.9vmin;
+  color: $redDark;
+}

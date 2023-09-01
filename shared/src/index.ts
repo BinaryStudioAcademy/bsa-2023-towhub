@@ -10,7 +10,7 @@ export {
   HttpError,
   ValidationError,
 } from './libs/exceptions/exceptions.js';
-export { configureString } from './libs/helpers/helpers.js';
+export { configureString, getFileExtension } from './libs/helpers/helpers.js';
 export { type IConfig } from './libs/packages/config/config.js';
 export {
   type HttpMethod,
@@ -59,6 +59,11 @@ export {
   businessUpdateRequestBody,
   BusinessValidationMessage,
 } from './packages/business/business.js';
+export {
+  type FileEntityT,
+  type FileUploadResponseDto,
+  FilesApiPath,
+} from './packages/files/files.js';
 export {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,

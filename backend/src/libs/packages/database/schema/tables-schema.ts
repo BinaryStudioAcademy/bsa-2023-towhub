@@ -59,4 +59,12 @@ const business = pgTable('business_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export { business, groups, users, usersRelations };
+const files = pgTable('files', {
+  id: serial('id').primaryKey(),
+  key: varchar('key').unique().notNull(),
+  contentType: varchar('content_type').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export { business, files, groups, users, usersRelations };

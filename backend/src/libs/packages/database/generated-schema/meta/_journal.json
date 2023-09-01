@@ -29,6 +29,13 @@
       "when": 1693315084230,
       "tag": "0003_add_access_token_to_users",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1693572761094,
+      "tag": "0004_add_files_schema",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,36 @@
+@import "src/assets/css/vars.scss";
+@import "src/assets/css/typography.scss";
+
+.uploadedArea {
+  overflow-y: scroll;
+}
+
+.uploadedArea::-webkit-scrollbar {
+  width: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2vmin;
+  padding: 4vmin;
+  list-style: none;
+  background: $greyExtraLight;
+  border-radius: 1.2vmin;
+}
+
+.rowContent {
+  display: flex;
+  align-items: center;
+}
+
+.rowContentDetails {
+  display: flex;
+  flex-direction: column;
+  margin-left: 3vmin;
+}
+
+.rowIcon {
+  color: $blueLight;
+}
