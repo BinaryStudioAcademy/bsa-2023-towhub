@@ -1,10 +1,10 @@
-import { type UserMocked } from './user-mocked.type.js';
+import { type UserEntityObjectWithGroupT } from '~/packages/users/users.js';
 
 type DefaultApiHandlerOptions = {
   body?: unknown;
   query?: unknown;
   params?: unknown;
-  user?: UserMocked;
+  user?: UserEntityObjectWithGroupT;
 };
 
 type ApiHandlerOptions<
@@ -13,7 +13,9 @@ type ApiHandlerOptions<
   body: T['body'];
   query: T['query'];
   params: T['params'];
-  user: T['user'];
+  user: T['user'] extends unknown
+    ? NonNullable<DefaultApiHandlerOptions['user']>
+    : T['user'];
 };
 
 export { type ApiHandlerOptions };

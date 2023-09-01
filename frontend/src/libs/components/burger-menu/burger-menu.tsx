@@ -1,4 +1,3 @@
-import { type IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
@@ -8,19 +7,14 @@ import {
   useLocation,
   useState,
 } from '~/libs/hooks/hooks.js';
+import { type MenuItem } from '~/libs/types/types.js';
 
 import { Button } from '../components.js';
 import { iconNameToSvg } from '../icon/maps/maps.js';
-import styles from './burger-menu.module.scss';
-
-type MenuItem = {
-  label: string;
-  onClick: () => void;
-  icon: IconProp;
-};
+import styles from './styles.module.scss';
 
 type Properties = {
-  menuItems: MenuItem[];
+  menuItems?: MenuItem[];
 };
 
 const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
@@ -44,13 +38,13 @@ const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
       <FontAwesomeIcon
         icon={isOpen ? iconNameToSvg.xmark : iconNameToSvg.bars}
         onClick={toggleMenu}
-        className={styles.menuIcon}
+        className={styles.burgerIcon}
       />
 
       {isOpen && (
         <div className={styles.menu}>
           <ul>
-            {menuItems.map((item, index) => (
+            {menuItems?.map((item, index) => (
               <li key={index}>
                 {isMobile ? (
                   <FontAwesomeIcon

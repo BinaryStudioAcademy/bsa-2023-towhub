@@ -4,6 +4,7 @@ const IconName = {
   CHEVRON_DOWN: 'chevron down',
   CHEVRON_LEFT: 'chevron left',
   GEAR: 'gear',
+  LIST: 'list',
   LOCATION_DOT: 'location dot',
   MAP: 'map',
   PLUS: 'plus',
@@ -13,6 +14,8 @@ const IconName = {
   CLOCK_ROTATE_LEFT: 'clock rotate left',
   USER_PEN: 'user pen',
   RIGHT_FROM_BRACKET: 'right from bracket',
+  TRUCK: 'truck',
+  USERS: 'users',
 } as const;
 
 export { IconName };

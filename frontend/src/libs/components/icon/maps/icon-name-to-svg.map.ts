@@ -7,12 +7,15 @@ import {
   faChevronLeft,
   faClockRotateLeft,
   faGear,
+  faListUl,
   faLocationDot,
   faMap,
   faPlus,
   faRightFromBracket,
   faStar,
+  faTruckPickup,
   faUserPen,
+  faUsers,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -27,6 +30,7 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.CHEVRON_LEFT]: faChevronLeft,
   [IconName.GEAR]: faGear,
   [IconName.STAR]: faStar,
+  [IconName.LIST]: faListUl,
   [IconName.LOCATION_DOT]: faLocationDot,
   [IconName.MAP]: faMap,
   [IconName.BARS]: faBars,
@@ -34,6 +38,8 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.CLOCK_ROTATE_LEFT]: faClockRotateLeft,
   [IconName.USER_PEN]: faUserPen,
   [IconName.RIGHT_FROM_BRACKET]: faRightFromBracket,
+  [IconName.TRUCK]: faTruckPickup,
+  [IconName.USERS]: faUsers,
 };
 
 export { iconNameToSvg };

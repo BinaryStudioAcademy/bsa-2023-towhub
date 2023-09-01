@@ -1,28 +1,24 @@
-import { type IconProp } from '@fortawesome/fontawesome-svg-core';
-
 import { AppRoute } from '~/libs/enums/enums.js';
-import { useCallback } from '~/libs/hooks/hooks.js';
+import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
+import { type MenuItem } from '~/libs/types/types.js';
 
 import { AppLogo, BurgerMenu, Link } from '../components.js';
-import styles from './header.module.scss';
-
-type MenuItem = {
-  label: string;
-  onClick: () => void;
-  icon: IconProp;
-};
+import styles from './styles.module.scss';
 
 type Properties = {
-  menuItems: MenuItem[];
+  menuItems?: MenuItem[];
   isAuth: boolean;
 };
+
 const Header: React.FC<Properties> = ({
   menuItems,
   isAuth = false,
 }: Properties) => {
+  const navigate = useNavigate();
+
   const handleSignIn = useCallback(() => {
-    return;
-  }, []);
+    navigate(AppRoute.WELCOME);
+  }, [navigate]);
 
   return (
     <header className={styles.container}>
