@@ -1,4 +1,4 @@
-import { type SQL, eq, or } from 'drizzle-orm';
+import { type SQL, and, eq, or } from 'drizzle-orm';
 
 import { AppErrorMessage } from '~/libs/enums/enums.js';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
@@ -24,14 +24,22 @@ class DriverRepository implements IRepository {
     this.driverSchema = driverSchema;
   }
 
-  public async find(id: number): Promise<DriverEntity | null> {
-    const result: DriverEntityT[] = await this.db
-      .driver()
-      .select()
-      .from(this.driverSchema)
-      .where(eq(this.driverSchema.id, id));
+  public find(
+    partial: Partial<DriverEntityT>,
+  ): ReturnType<IRepository<DriverEntityT>['find']> {
+    const queries = Object.entries(partial).map(([key, value]) =>
+      eq(
+        this.driverSchema[key as keyof typeof partial],
+        value as NonNullable<typeof value>,
+      ),
+    );
 
-    return result.length === 0 ? null : DriverEntity.initialize(result[0]);
+    const finalQuery = queries.length === 1 ? queries[0] : and(...queries);
+
+    return this.db
+      .driver()
+      .query.drivers.findMany({ where: finalQuery })
+      .execute();
   }
 
   public async findAllByBusinessId(

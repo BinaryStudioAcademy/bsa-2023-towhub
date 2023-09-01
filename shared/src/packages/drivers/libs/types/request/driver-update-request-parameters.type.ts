@@ -1,5 +1,3 @@
-import { type DriverEntityT } from '../driver-entity.type.js';
-
-type DriverUpdateRequestParameters = Pick<DriverEntityT, 'id'>;
+type DriverUpdateRequestParameters = { driverId: number };
 
 export { type DriverUpdateRequestParameters };

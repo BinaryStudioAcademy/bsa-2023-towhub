@@ -1,5 +1,5 @@
 export {
   businessSignUpValidationSchema,
   customerSignUpValidationSchema,
-  driverSignUpValidationSchema,
+  userSignInValidationSchema,
 } from 'shared/build/index.js';

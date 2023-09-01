@@ -1,1 +1,1 @@
-export { AuthApiPath } from 'shared/build/index.js';
+export { AuthApiPath, AuthMode } from 'shared/build/index.js';

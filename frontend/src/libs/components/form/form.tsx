@@ -8,6 +8,7 @@ import {
 
 import { Button } from '../button/button.jsx';
 import { Input } from '../input/input.jsx';
+import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
   fields: FormField<T>[];
@@ -38,19 +39,15 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
-      <p key={index}>
-        <Input {...field} control={control} errors={errors} />
-      </p>
+      <Input {...field} control={control} errors={errors} key={index} />
     ));
   };
 
   return (
-    <>
-      <form onSubmit={handleFormSubmit}>
-        {createInputs()}
-        <Button type="submit" isFullWidth label={btnLabel ?? 'Submit'} />
-      </form>
-    </>
+    <form onSubmit={handleFormSubmit} className={styles.form}>
+      {createInputs()}
+      <Button type="submit" label={btnLabel ?? 'Submit'} isFullWidth />
+    </form>
   );
 };
 

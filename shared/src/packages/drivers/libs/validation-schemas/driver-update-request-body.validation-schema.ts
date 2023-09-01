@@ -1,9 +1,15 @@
 import joi from 'joi';
 
+import { commonSignUpRules } from '~/packages/users/libs/validation-schemas/common-rules/common-rules.js';
+
 import { DriverValidationMessage } from '../enums/enums.js';
 import { type DriverUpdateRequestDto } from '../types/types.js';
 
-const driverUpdateRequestBody = joi.object<DriverUpdateRequestDto, true>({
+const driverUpdateRequestBody = joi.object<
+  Omit<DriverUpdateRequestDto, 'businessId'>,
+  true
+>({
+  ...commonSignUpRules,
   driverLicenseNumber: joi
     .string()
     .trim()

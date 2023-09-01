@@ -36,11 +36,15 @@ export {
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
-export { AuthApiPath } from './packages/auth/auth.js';
+export {
+  type JwtPayload,
+  AuthApiPath,
+  AuthMode,
+  jwtPayloadSchema,
+} from './packages/auth/auth.js';
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,
-  type BusinessCreatePayload,
   type BusinessDeleteRequestParameters,
   type BusinessEntityT,
   type BusinessGetRequestParameters,
@@ -58,6 +62,7 @@ export {
 export {
   type DriverAddRequestDto,
   type DriverAddResponseDto,
+  type DriverAllByBusinessRequestParameters,
   type DriverCreatePayload,
   type DriverDeleteRequestParameters,
   type DriverEntityT,
@@ -76,18 +81,21 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
+  type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
-  type DriverSignUpRequestDto,
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
   type UserGroupEntityT,
   type UserGroupKeyT,
   type UserGroupNameT,
+  type UserSignInRequestDto,
+  type UserSignInResponseDto,
   businessSignUpValidationSchema,
   customerSignUpValidationSchema,
-  driverSignUpValidationSchema,
   UserGroupKey,
   UsersApiPath,
+  userSignInValidationSchema,
 } from './packages/users/users.js';

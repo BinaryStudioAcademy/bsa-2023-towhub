@@ -1,33 +1,41 @@
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
-import { type OperationResult } from '~/libs/types/types.js';
-import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { DriverEntity } from '../drivers/driver.entity.js';
 import { type DriverRepository } from '../drivers/driver.repository.js';
 import {
-  type DriverAddResponseDto,
+  type DriverAddResponseWithGroup,
   type DriverCreatePayload,
   type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverUpdatePayload,
   type DriverUpdateResponseDto,
 } from '../drivers/libs/types/types.js';
+import { type GroupService } from '../groups/group.service.js';
+import { type UserService } from '../users/user.service.js';
 
 class DriverService implements IService {
   private driverRepository: DriverRepository;
 
-  public constructor(driverRepository: DriverRepository) {
+  private userService: UserService;
+
+  private groupService: GroupService;
+
+  public constructor(
+    driverRepository: DriverRepository,
+    userService: UserService,
+    groupService: GroupService,
+  ) {
     this.driverRepository = driverRepository;
+    this.userService = userService;
+    this.groupService = groupService;
   }
 
-  public async find(
-    id: number,
-  ): Promise<OperationResult<DriverEntityT | null>> {
-    const driver = await this.driverRepository.find(id);
+  public async findById(id: number): Promise<DriverEntityT | null> {
+    const [driver = null] = await this.driverRepository.find({ id });
 
-    return { result: driver ? driver.toObject() : null };
+    return driver ? DriverEntity.initialize(driver).toObject() : null;
   }
 
   public async findAllByBusinessId(
@@ -42,19 +50,15 @@ class DriverService implements IService {
 
   public async create({
     payload,
-    owner,
-    user,
-  }: DriverCreatePayload): Promise<DriverAddResponseDto> {
-    if (owner.group.key !== UserGroupKey.BUSINESS) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.INVALID_USER_GROUP,
-      });
-    }
+    groupKey,
+    id,
+  }: DriverCreatePayload): Promise<DriverAddResponseWithGroup> {
+    const { password, email, lastName, firstName, phone, driverLicenseNumber } =
+      payload;
 
     const { result: doesDriverExist } = await this.driverRepository.checkExists(
       {
-        driverLicenseNumber: payload.driverLicenseNumber,
+        driverLicenseNumber,
       },
     );
 
@@ -64,31 +68,42 @@ class DriverService implements IService {
         message: HttpMessage.DRIVER_ALREADY_EXISTS,
       });
     }
+    const group = await this.groupService.findByKey(groupKey);
+
+    if (!group) {
+      throw new HttpError({
+        message: HttpMessage.INVALID_GROUP,
+        status: HttpCode.BAD_REQUEST,
+      });
+    }
+
+    const user = await this.userService.create({
+      password,
+      email,
+      lastName,
+      firstName,
+      phone,
+      groupId: group.id,
+    });
 
     const driver = await this.driverRepository.create(
       DriverEntity.initializeNew({
-        ...payload,
-        businessId: owner.id,
+        driverLicenseNumber,
+        businessId: id,
         userId: user.id,
       }),
     );
 
-    return driver.toObject();
+    const driverObject = driver.toObject();
+
+    return { ...user, group, driver: driverObject };
   }
 
   public async update({
-    id,
+    driverId,
     payload,
-    owner,
   }: DriverUpdatePayload): Promise<DriverUpdateResponseDto> {
-    if (owner.group.key !== UserGroupKey.BUSINESS) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.INVALID_USER_GROUP,
-      });
-    }
-
-    const { result: foundDriverById } = await this.find(id);
+    const foundDriverById = await this.findById(driverId);
 
     if (!foundDriverById) {
       throw new NotFoundError({});
@@ -107,26 +122,35 @@ class DriverService implements IService {
       });
     }
 
-    const business = await this.driverRepository.update({
+    const user = await this.userService.update(driverId, payload);
+
+    const driver = await this.driverRepository.update({
       id: foundDriverById.id,
       payload,
     });
 
-    return business.toObject();
+    const driverObject = driver.toObject();
+
+    return { ...user, driver: driverObject };
   }
 
-  public async delete(id: number): Promise<OperationResult<boolean>> {
-    const { result: foundDriver } = await this.find(id);
+  public async delete(id: number): Promise<boolean> {
+    const foundDriver = await this.findById(id);
 
     if (!foundDriver) {
       throw new NotFoundError({});
     }
 
-    const result = await this.driverRepository.delete(id);
+    const isDriverDeleted = await this.driverRepository.delete(id);
 
-    return {
-      result,
-    };
+    if (isDriverDeleted) {
+      return await this.userService.delete(foundDriver.userId);
+    } else {
+      throw new HttpError({
+        message: HttpMessage.CANNOT_DELETE,
+        status: HttpCode.BAD_REQUEST,
+      });
+    }
   }
 }
 

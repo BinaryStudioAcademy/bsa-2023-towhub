@@ -2,12 +2,27 @@ import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
   type ApiHandlerResponse,
-  type UserMocked,
   Controller,
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
+import {
+  type DriverAddRequestDto,
+  type DriverAllByBusinessRequestParameters,
+  type DriverDeleteRequestParameters,
+  type DriverUpdateRequestDto,
+  type DriverUpdateRequestParameters,
+} from '../drivers/drivers.js';
+import {
+  driverAddRequestBody,
+  driverDeleteParameters,
+  driverGetParameters,
+  driverUpdateParameters,
+  driverUpdateRequestBody,
+} from '../drivers/libs/validation-schemas/validation-schemas.js';
+import { type UserGroupKey } from '../users/libs/enums/enums.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 import {
@@ -31,108 +46,197 @@ import {
  *   name: business
  *   description: Business API
  * components:
- *    securitySchemes:
- *      bearerAuth:
- *        type: http
- *        scheme: bearer
- *        bearerFormat: JWT
- *    schemas:
- *      ErrorType:
- *        type: object
- *        properties:
- *          errorType:
- *            type: string
- *            example: COMMON
- *            enum:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *   schemas:
+ *     ErrorType:
+ *       type: object
+ *       properties:
+ *         errorType:
+ *           type: string
+ *           example: COMMON
+ *           enum:
  *             - COMMON
  *             - VALIDATION
- *
- *      BusinessAlreadyExists:
- *        allOf:
- *          - $ref: '#/components/schemas/ErrorType'
- *          - type: object
- *            properties:
- *              message:
- *                type: string
- *                enum:
+ *     BusinessAlreadyExists:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
  *                 - Owner already has business!
- *      TaxNumberAlreadyRegistered:
- *        allOf:
- *          - $ref: '#/components/schemas/ErrorType'
- *          - type: object
- *            properties:
- *              message:
- *                type: string
- *                enum:
+ *     TaxNumberAlreadyRegistered:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
  *                 - Business with such tax number already exists!
- *      NameAlreadyRegistered:
- *        allOf:
- *          - $ref: '#/components/schemas/ErrorType'
- *          - type: object
- *            properties:
- *              message:
- *                type: string
- *                enum:
+ *     NameAlreadyRegistered:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
  *                 - Business with such name already exists!
- *      InvalidUserGroup:
- *        allOf:
- *          - $ref: '#/components/schemas/ErrorType'
- *          - type: object
- *            properties:
- *              message:
- *                type: string
- *                enum:
- *                 - User of the group cannot create business!
- *      BusinessDoesNotExist:
- *        allOf:
- *          - $ref: '#/components/schemas/ErrorType'
- *          - type: object
- *            properties:
- *              message:
- *                type: string
- *                enum:
+ *     InvalidUserGroup:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - User of the group cannot create this!
+ *     BusinessDoesNotExist:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
  *                 - Business does not exist!
- *
- *      BusinessDeletionResult:
- *        type: object
- *        required:
- *          - result
- *        properties:
- *          result:
- *            type: boolean
- *            example: true
- *            description: true, if deletion successful
- *
- *      BusinessFindResult:
- *        type: object
- *        properties:
- *          result:
- *            oneOf:
- *              - $ref: '#/components/schemas/Business'
- *            nullable: true
- *
- *      Business:
- *        type: object
- *        properties:
- *          id:
- *            type: number
- *            format: number
- *            minimum: 1
- *          companyName:
- *            type: string
- *            minLength: 1
- *            example: Tow Inc.
- *          taxNumber:
- *            type: string
- *            pattern: ^\d{10}$
- *            description: Consists of 10 digits
- *            example: 1234567890
- *          ownerId:
- *            type: number
- *            format: number
- *            minimum: 1
- *            description: User id to which the business belongs
- *            example: 1
+ *     DriverAlreadyExists:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - Owner already has this driver!
+ *     DriverLicenseNumberAlreadyRegistered:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - Driver with such license number already exists
+ *     DriverDoesNotExist:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - Driver does not exist!
+ *     BusinessDeletionResult:
+ *       type: object
+ *       required:
+ *         - result
+ *       properties:
+ *         result:
+ *           type: boolean
+ *           example: true
+ *           description: true, if deletion successful
+ *     AllDriverFindResult:
+ *       type: array
+ *       properties:
+ *         result:
+ *           allOf:
+ *             - $ref: '#/components/schemas/Driver'
+ *           nullable: true
+ *     DriverDeletionResult:
+ *       type: object
+ *       required:
+ *         - result
+ *       properties:
+ *         result:
+ *           type: boolean
+ *           example: true
+ *           description: true, if deletion successful
+ *     DriverFindResult:
+ *       type: object
+ *       properties:
+ *         result:
+ *           oneOf:
+ *             - $ref: '#/components/schemas/Driver'
+ *           nullable: true
+ *     Business:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: number
+ *           format: number
+ *           minimum: 1
+ *         companyName:
+ *           type: string
+ *           minLength: 1
+ *           example: Tow Inc.
+ *         taxNumber:
+ *           type: string
+ *           pattern: ^\d{10}$
+ *           description: Consists of 10 digits
+ *           example: 1234567890
+ *         ownerId:
+ *           type: number
+ *           format: number
+ *           minimum: 1
+ *           description: User id to which the business belongs
+ *           example: 1
+ *     Driver:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: number
+ *           format: number
+ *           minimum: 1
+ *         phone:
+ *           type: string
+ *           pattern: /^\+\d{8,19}$/
+ *           example: +380988000777
+ *         email:
+ *           type: string
+ *           minLength: 5
+ *           maxLength: 254
+ *         firstName:
+ *           type: string
+ *           format: text
+ *         lastName:
+ *           type: string
+ *           format: text
+ *         groupId:
+ *           type: number
+ *           format: number
+ *           minimum: 1
+ *           description: Group id to which the driver belomgs
+ *           example: 1
+ *         driver:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: number
+ *               format: number
+ *               minimum: 1
+ *             driverLicenseNumber:
+ *               type: string
+ *               minLength: 10
+ *               example: AAA 123456
+ *             userId:
+ *               type: number
+ *               format: number
+ *               minimum: 1
+ *               description: User id to which the driver belongs
+ *               example: 1
+ *             businessId:
+ *               type: number
+ *               format: number
+ *               minimum: 1
+ *               description: Business id to which the driver belongs
+ *               example: 1
  * security:
  *   - bearerAuth: []
  */
@@ -154,7 +258,6 @@ class BusinessController extends Controller {
         this.create(
           options as ApiHandlerOptions<{
             body: BusinessAddRequestDto;
-            user: UserMocked;
           }>,
         ),
     });
@@ -171,7 +274,6 @@ class BusinessController extends Controller {
           options as ApiHandlerOptions<{
             body: BusinessUpdateRequestDto;
             params: BusinessUpdateRequestParameters;
-            user: UserMocked;
           }>,
         ),
     });
@@ -186,7 +288,6 @@ class BusinessController extends Controller {
         this.delete(
           options as ApiHandlerOptions<{
             params: BusinessDeleteRequestParameters;
-            user: UserMocked;
           }>,
         ),
     });
@@ -201,7 +302,69 @@ class BusinessController extends Controller {
         this.find(
           options as ApiHandlerOptions<{
             params: BusinessGetRequestParameters;
-            user: UserMocked;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.DRIVERS,
+      method: 'POST',
+      authStrategy: 'verifyJWT',
+      validation: {
+        body: driverAddRequestBody,
+      },
+      handler: (options) =>
+        this.createDriver(
+          options as ApiHandlerOptions<{
+            body: DriverAddRequestDto;
+            params: { id: number; groupName: ValueOf<typeof UserGroupKey> };
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.DRIVER_$ID,
+      method: 'PUT',
+      authStrategy: 'verifyJWT',
+      validation: {
+        body: driverUpdateRequestBody,
+        params: driverUpdateParameters,
+      },
+      handler: (options) =>
+        this.updateDriver(
+          options as ApiHandlerOptions<{
+            body: DriverUpdateRequestDto;
+            params: DriverUpdateRequestParameters;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.DRIVERS,
+      method: 'GET',
+      authStrategy: 'verifyJWT',
+      validation: {
+        params: driverGetParameters,
+      },
+      handler: (options) =>
+        this.findAllDrivers(
+          options as ApiHandlerOptions<{
+            params: DriverAllByBusinessRequestParameters;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.DRIVER_$ID,
+      method: 'DELETE',
+      authStrategy: 'verifyJWT',
+      validation: {
+        params: driverDeleteParameters,
+      },
+      handler: (options) =>
+        this.deleteDriver(
+          options as ApiHandlerOptions<{
+            params: DriverDeleteRequestParameters;
           }>,
         ),
     });
@@ -247,7 +410,6 @@ class BusinessController extends Controller {
   private async create(
     options: ApiHandlerOptions<{
       body: BusinessAddRequestDto;
-      user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
     const createdBusiness = await this.businessService.create({
@@ -306,7 +468,6 @@ class BusinessController extends Controller {
     options: ApiHandlerOptions<{
       body: BusinessUpdateRequestDto;
       params: BusinessUpdateRequestParameters;
-      user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
     const updatedBusiness = await this.businessService.update({
@@ -355,14 +516,13 @@ class BusinessController extends Controller {
   private async delete(
     options: ApiHandlerOptions<{
       params: BusinessDeleteRequestParameters;
-      user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
     const deletionResult = await this.businessService.delete(options.params.id);
 
     return {
       status: HttpCode.OK,
-      payload: deletionResult,
+      payload: { result: deletionResult },
     };
   }
 
@@ -393,14 +553,249 @@ class BusinessController extends Controller {
   private async find(
     options: ApiHandlerOptions<{
       params: BusinessGetRequestParameters;
-      user: UserMocked;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const findBusinessById = await this.businessService.find(options.params.id);
+    const findBusinessById = await this.businessService.findById(
+      options.params.id,
+    );
 
     return {
       status: HttpCode.OK,
-      payload: findBusinessById,
+      payload: { result: findBusinessById },
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/{id}/driver:
+   *    post:
+   *      tags:
+   *       - business/driver
+   *      summary: Create driver
+   *      description: Create driver
+   *      parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the business to create driver
+   *         example: 1
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              required:
+   *               - phone
+   *               - email
+   *               - firstName
+   *               - lastName
+   *               - driverLicenseNumber
+   *              properties:
+   *                phone:
+   *                  $ref: '#/components/schemas/Business/properties/phone'
+   *                email:
+   *                  $ref: '#/components/schemas/Business/properties/email'
+   *                firstName:
+   *                  $ref: '#/components/schemas/Business/properties/firstName'
+   *                lastName:
+   *                  $ref: '#/components/schemas/Business/properties/lastName'
+   *                driverLicenseNumber:
+   *                  $ref: '#/components/schemas/Driver/properties/driver/driverLicensename'
+   *      responses:
+   *        201:
+   *          description: Successful driver creation.
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Driver'
+   *        400:
+   *          description:
+   *            User is not of 'Business' group, or already driver exists,
+   *            or driver with such driver license number already exists
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/DriverAlreadyExists'
+   */
+
+  private async createDriver(
+    options: ApiHandlerOptions<{
+      body: DriverAddRequestDto;
+      params: { id: number; groupName: ValueOf<typeof UserGroupKey> };
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const createdDriver = await this.businessService.createDriver({
+      payload: options.body,
+      groupKey: options.params.groupName,
+      id: options.params.id,
+    });
+
+    return {
+      status: HttpCode.CREATED,
+      payload: createdDriver,
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/{id}/driver/{driverId}:
+   *    put:
+   *      tags:
+   *       - business/driver
+   *      summary: Update driver
+   *      description: Update driver
+   *      parameters:
+   *       - in: path
+   *         name: driverId
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the driver to update
+   *         example: 1
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              required:
+   *               - phone
+   *               - email
+   *               - firstName
+   *               - lastName
+   *               - driverLicenseNumber
+   *              properties:
+   *                phone:
+   *                  $ref: '#/components/schemas/Business/properties/phone'
+   *                email:
+   *                  $ref: '#/components/schemas/Business/properties/email'
+   *                firstName:
+   *                  $ref: '#/components/schemas/Business/properties/firstName'
+   *                lastName:
+   *                  $ref: '#/components/schemas/Business/properties/lastName'
+   *                driverLicenseNumber:
+   *                  $ref: '#/components/schemas/Driver/properties/driver/driverLicensename'
+   *      responses:
+   *        200:
+   *          description: Successful driver update.
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Driver'
+   *        400:
+   *          description:
+   *            Driver with such ID does not exist or driver license number is already registered
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/DriverDoesNotExist'
+   */
+
+  private async updateDriver(
+    options: ApiHandlerOptions<{
+      body: DriverUpdateRequestDto;
+      params: DriverUpdateRequestParameters;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const updatedDriver = await this.businessService.updateDriver({
+      driverId: options.params.driverId,
+      payload: options.body,
+    });
+
+    return {
+      status: HttpCode.OK,
+      payload: updatedDriver,
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/{id}/driver:
+   *    get:
+   *      tags:
+   *       - business/driver
+   *      summary: Find all drivers
+   *      description: Find all drivers
+   *      parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the business to create driver
+   *         example: 1
+   *      responses:
+   *        200:
+   *          description: Successful find all drivers
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: array
+   *                items:
+   *                  $ref: '#/components/schemas/Driver'
+   */
+
+  private async findAllDrivers(
+    options: ApiHandlerOptions<{
+      params: DriverAllByBusinessRequestParameters;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const findDrivers = await this.businessService.findAllDriversById(
+      options.params.id,
+    );
+
+    return {
+      status: HttpCode.OK,
+      payload: findDrivers,
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/{id}/driver/{driverId}:
+   *    delete:
+   *      tags:
+   *       - business/driver
+   *      summary: Delete driver
+   *      description: Delete driver
+   *      parameters:
+   *       - in: path
+   *         name: driverId
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the driver to delete
+   *         example: 1
+   *      responses:
+   *        200:
+   *          description: Successful driver deletion.
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/DriverDeletionResult'
+   *        400:
+   *          description:
+   *            Driver with such ID does not exist
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/DriverDoesNotExist'
+   *
+   */
+
+  private async deleteDriver(
+    options: ApiHandlerOptions<{
+      params: DriverDeleteRequestParameters;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const deletionResult = await this.businessService.deleteDriver(
+      options.params.driverId,
+    );
+
+    return {
+      status: HttpCode.OK,
+      payload: deletionResult,
     };
   }
 }

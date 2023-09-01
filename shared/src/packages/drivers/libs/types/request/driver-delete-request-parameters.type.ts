@@ -1,5 +1,3 @@
-import { type DriverEntityT } from '../driver-entity.type.js';
-
-type DriverDeleteRequestParameters = Pick<DriverEntityT, 'id'>;
+type DriverDeleteRequestParameters = { driverId: number };
 
 export { type DriverDeleteRequestParameters };

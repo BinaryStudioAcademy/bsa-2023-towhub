@@ -3,14 +3,16 @@ import { logger } from '~/libs/packages/logger/logger.js';
 import { BusinessRepository } from '~/packages/business/business.repository.js';
 import { BusinessService } from '~/packages/business/business.service.js';
 
+import { driverService } from '../drivers/drivers.js';
+import { userService } from '../users/users.js';
 import { BusinessController } from './business.controller.js';
 
 const businessRepository = new BusinessRepository(database, schema.business);
-const businessService = new BusinessService(businessRepository);
+const businessService = new BusinessService(businessRepository, driverService);
 
 const businessController = new BusinessController(logger, businessService);
 
-export { businessController, businessService };
+export { businessController, businessRepository, businessService };
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,

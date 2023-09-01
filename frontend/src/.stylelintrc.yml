@@ -29,4 +29,3 @@ rules:
         - export
   media-query-no-invalid:
     - null
-
