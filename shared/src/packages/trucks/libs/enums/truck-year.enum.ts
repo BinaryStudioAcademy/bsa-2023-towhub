@@ -1,4 +1,4 @@
-const startYear = 2011;
+const startYear = 2000;
 const endYear = 2023;
 
 const TruckYear: Record<string, string> = {};

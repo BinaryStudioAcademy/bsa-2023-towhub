@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { type TruckEntity } from 'shared/build/index.js';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
-import { type TruckAddRequestDto } from '~/packages/trucks/trucks.js';
 
 import { addTruck } from './actions.js';
 
 type State = {
-  trucks: TruckAddRequestDto[];
+  trucks: TruckEntity[];
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
