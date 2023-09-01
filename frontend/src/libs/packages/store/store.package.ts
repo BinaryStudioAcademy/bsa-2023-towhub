@@ -15,6 +15,7 @@ import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 import { reducer as usersReducer } from '~/slices/users/users.js';
 
 import { notification } from '../notification/notification.js';
+import { LocalStorage } from '../storage/storage.js';
 
 type RootReducer = {
   auth: ReturnType<typeof authReducer>;
@@ -27,6 +28,7 @@ type ExtraArguments = {
   userApi: typeof userApi;
   notification: typeof notification;
   truckApi: typeof truckApi;
+  localStorage: typeof LocalStorage;
 };
 
 class Store {
@@ -62,6 +64,7 @@ class Store {
       userApi,
       notification,
       truckApi,
+      localStorage: LocalStorage,
     };
   }
 }
