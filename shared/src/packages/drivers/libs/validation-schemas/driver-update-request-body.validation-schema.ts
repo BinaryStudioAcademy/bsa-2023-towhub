@@ -1,6 +1,7 @@
 import joi from 'joi';
 
 import { commonSignUpRules } from '~/packages/users/libs/validation-schemas/common-rules/common-rules.js';
+import { UserValidationRule } from '~/packages/users/libs/validation-schemas/enums/enums.js';
 
 import { DriverValidationMessage } from '../enums/enums.js';
 import { type DriverUpdateRequestDto } from '../types/types.js';
@@ -13,7 +14,7 @@ const driverUpdateRequestBody = joi.object<
   driverLicenseNumber: joi
     .string()
     .trim()
-    .regex(/^[A-Z]{3} \d{6}$/)
+    .regex(UserValidationRule.DRIVER_LICENSE_NUMBER)
     .required()
     .messages({
       'string.empty': DriverValidationMessage.DRIVER_LICENSE_NUMBER_REQUIRED,

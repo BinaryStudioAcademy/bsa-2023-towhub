@@ -4,7 +4,6 @@ import { BusinessRepository } from '~/packages/business/business.repository.js';
 import { BusinessService } from '~/packages/business/business.service.js';
 
 import { driverService } from '../drivers/drivers.js';
-import { userService } from '../users/users.js';
 import { BusinessController } from './business.controller.js';
 
 const businessRepository = new BusinessRepository(database, schema.business);
