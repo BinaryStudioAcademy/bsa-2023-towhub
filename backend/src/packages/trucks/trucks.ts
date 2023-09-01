@@ -5,11 +5,7 @@ import { TruckController } from './truck.controller.js';
 import { TruckRepository } from './truck.repository.js';
 import { TruckService } from './truck.service.js';
 
-const truckRepository = new TruckRepository(
-  database,
-  schema.trucks,
-  schema.usersTrucks,
-);
+const truckRepository = new TruckRepository(database, schema.trucks);
 const truckService = new TruckService(truckRepository);
 
 const truckController = new TruckController(logger, truckService);

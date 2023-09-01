@@ -67,6 +67,7 @@ export {
   truckAddValidationSchema,
   TruckApiPath,
   TruckManufacturer,
+  truckRequestBodyValidationSchema,
   TruckTowType,
   TruckYear,
 } from './packages/trucks/trucks.js';

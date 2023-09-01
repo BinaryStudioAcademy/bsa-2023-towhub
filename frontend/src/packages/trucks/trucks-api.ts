@@ -4,7 +4,7 @@ import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 
 import { TruckApiPath } from './libs/enums/enums.js';
-import { type TruckAddRequestDto } from './libs/types/types.js';
+import { type TruckEntity } from './libs/types/types.js';
 
 type Constructor = {
   baseUrl: string;
@@ -18,8 +18,8 @@ class TruckApi extends HttpApi {
   }
 
   public async addTruck(
-    payload: TruckAddRequestDto,
-  ): Promise<TruckAddRequestDto> {
+    payload: Omit<TruckEntity, 'id'>,
+  ): Promise<TruckEntity> {
     const response = await this.load(
       this.getFullEndpoint(TruckApiPath.ROOT, {}),
       {
@@ -30,7 +30,7 @@ class TruckApi extends HttpApi {
       },
     );
 
-    return await response.json<TruckAddRequestDto>();
+    return await response.json<TruckEntity>();
   }
 }
 

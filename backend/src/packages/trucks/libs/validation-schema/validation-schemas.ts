@@ -1,1 +1,4 @@
-export { truckAddValidationSchema } from 'shared/build/index.js';
+export {
+  truckAddValidationSchema,
+  truckRequestBodyValidationSchema,
+} from 'shared/build/index.js';

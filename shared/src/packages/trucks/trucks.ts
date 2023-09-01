@@ -10,4 +10,7 @@ export {
   type TruckAddRequestDto,
   type TruckEntity,
 } from './libs/types/types.js';
-export { truckAddValidationSchema } from './libs/validation-schemas/truck-add.validation-schema.js';
+export {
+  truckAddValidationSchema,
+  truckRequestBodyValidationSchema,
+} from './libs/validation-schemas/validation-schema.js';

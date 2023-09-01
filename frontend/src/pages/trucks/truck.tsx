@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 
-import { AddTruckForm } from './components/add-truck-form/libs/add-truck-form/add-truck-form.js';
-import styles from './styles.module.css';
+import { AddTruckForm } from './components/add-truck-form/add-truck-form.js';
+import styles from './styles.module.scss';
 
 const Truck: React.FC = () => {
   const location = useLocation();
