@@ -12,16 +12,12 @@ class TruckRepository implements IRepository {
 
   private trucksSchema: DatabaseSchema['trucks'];
 
-  private usersTrucksSchema: DatabaseSchema['usersTrucks'];
-
   public constructor(
     database: Pick<IDatabase, 'driver'>,
     trucksSchema: DatabaseSchema['trucks'],
-    usersTrucksSchema: DatabaseSchema['usersTrucks'],
   ) {
     this.db = database;
     this.trucksSchema = trucksSchema;
-    this.usersTrucksSchema = usersTrucksSchema;
   }
 
   public async findById(id: number): Promise<TruckEntity[]> {
