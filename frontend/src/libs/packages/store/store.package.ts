@@ -24,7 +24,7 @@ type ExtraArguments = {
   authApi: typeof authApi;
   userApi: typeof userApi;
   notification: typeof notification;
-  LocalStorage: typeof LocalStorage
+  LocalStorage: typeof LocalStorage;
 };
 
 class Store {
@@ -58,7 +58,7 @@ class Store {
       authApi,
       userApi,
       notification,
-      LocalStorage
+      LocalStorage,
     };
   }
 }

@@ -6,7 +6,6 @@ import {
 } from '~/libs/interfaces/interfaces.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type ValueOf } from '~/libs/types/types.js';
-import { type BusinessService } from '~/packages/business/business.service.js';
 import { type GroupService } from '~/packages/groups/group.service.js';
 import { GroupEntity } from '~/packages/groups/groups.js';
 import {
@@ -24,7 +23,6 @@ import { type UserSignInRequestDto } from './libs/types/types.js';
 type AuthServiceConstructorProperties = {
   userService: UserService;
   groupService: GroupService;
-  businessService: BusinessService;
   jwtService: IJwtService;
   encryptService: IEncryptService;
   config: IConfig['ENV']['JWT'];
@@ -32,8 +30,6 @@ type AuthServiceConstructorProperties = {
 
 class AuthService {
   private userService: AuthServiceConstructorProperties['userService'];
-
-  private businessService: AuthServiceConstructorProperties['businessService'];
 
   private groupService: AuthServiceConstructorProperties['groupService'];
 
@@ -45,14 +41,12 @@ class AuthService {
 
   public constructor({
     userService,
-    businessService,
     groupService,
     jwtService,
     encryptService,
     config,
   }: AuthServiceConstructorProperties) {
     this.userService = userService;
-    this.businessService = businessService;
     this.groupService = groupService;
     this.jwtService = jwtService;
     this.encryptService = encryptService;
@@ -90,7 +84,7 @@ class AuthService {
       newUser.id,
     );
 
-    return { ...userWithToken, group, business: null };
+    return { ...userWithToken, group };
   }
 
   public async signIn(
@@ -115,13 +109,8 @@ class AuthService {
 
     const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
 
-    const userBusiness = await this.businessService.findByOwnerId(
-      updatedUser.id,
-    );
-
     return {
       ...updatedUser,
-      business: userBusiness,
       group: GroupEntity.initialize(user.group).toObject(),
     };
   }

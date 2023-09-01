@@ -2,7 +2,6 @@ import { config } from '~/libs/packages/config/config.js';
 import { jwtService } from '~/libs/packages/jwt/jwt.js';
 import { logger } from '~/libs/packages/logger/logger.js';
 import { encryptService } from '~/libs/packages/packages.js';
-import { businessService } from '~/packages/business/business.js';
 import { userService } from '~/packages/users/users.js';
 
 import { groupService } from '../groups/groups.js';
@@ -11,7 +10,6 @@ import { AuthService } from './auth.service.js';
 
 const authService = new AuthService({
   userService,
-  businessService,
   groupService,
   jwtService,
   encryptService,

@@ -32,7 +32,6 @@ type UserEntityObjectT = ReturnType<UserEntity['toObject']>;
 
 type UserEntityObjectWithGroupT = UserEntityObjectT & {
   group: GroupEntityObjectT;
-  business?: BusinessEntityT | null;
 };
 
 export {
