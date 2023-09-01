@@ -10,12 +10,7 @@ const createOption = (value: number): SelectOption => {
 };
 
 const createOptions = (array: number[]): SelectOption[] => {
-  const result: SelectOption[] = [];
-  for (const value of array) {
-    result.push(createOption(value));
-  }
-
-  return result;
+  return array.map((value) => createOption(value));
 };
 
 export {

@@ -2,7 +2,7 @@ import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
 
 import { Button } from '../button/button.jsx';
-import { Dropdown } from '../components.js';
+import { Dropdown } from '../dropdown/dropdown.js';
 import { DEFAULT_SIZE } from './libs/constant.js';
 import {
   convertToIndex,

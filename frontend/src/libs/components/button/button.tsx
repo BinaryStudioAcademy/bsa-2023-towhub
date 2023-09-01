@@ -1,8 +1,7 @@
-import darkColors from 'src/libs/palette/dark-colors.module.scss';
-import lightColors from 'src/libs/palette/light-colors.module.scss';
-
 import { type IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import darkColors from '~/libs/palette/dark-colors.module.scss';
+import lightColors from '~/libs/palette/light-colors.module.scss';
 import {
   type DarkColor,
   type LightColor,
