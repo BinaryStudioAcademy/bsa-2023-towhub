@@ -12,5 +12,6 @@ export {
 } from './libs/types/types.js';
 export {
   truckAddValidationSchema,
+  truckIdParameterValidationSchema,
   truckRequestBodyValidationSchema,
 } from './libs/validation-schemas/validation-schema.js';

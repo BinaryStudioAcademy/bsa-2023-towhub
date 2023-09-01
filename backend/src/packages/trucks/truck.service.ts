@@ -74,6 +74,12 @@ class TruckService implements IService {
   public async delete(id: number): Promise<boolean> {
     return await this.repository.delete(id);
   }
+
+  public async getAll(): Promise<TruckEntityT[]> {
+    const result = await this.repository.findAll();
+
+    return result.map((element) => transformTruckEntity(element));
+  }
 }
 
 export { TruckService };

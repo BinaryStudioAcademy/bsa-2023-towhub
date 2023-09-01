@@ -66,6 +66,7 @@ export {
   FormName,
   truckAddValidationSchema,
   TruckApiPath,
+  truckIdParameterValidationSchema,
   TruckManufacturer,
   truckRequestBodyValidationSchema,
   TruckTowType,
