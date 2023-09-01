@@ -1,5 +1,6 @@
+import { type ValueOf } from '~/libs/types/types.js';
+
 import { AppErrorMessage, HttpCode } from '../../enums/enums.js';
-import { type ValueOf } from '../../types/types.js';
 import { ApplicationError } from '../exceptions.js';
 
 type Constructor = {

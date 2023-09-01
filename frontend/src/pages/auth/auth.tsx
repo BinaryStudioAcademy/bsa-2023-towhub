@@ -1,31 +1,45 @@
-import { AppRoute } from '~/libs/enums/enums.js';
+import { type Location } from 'react-router';
+
+import { type AuthMode, AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
-  useAppSelector,
+  useAuthNavigate,
   useCallback,
   useLocation,
 } from '~/libs/hooks/hooks.js';
-import { type CustomerSignUpRequestDto } from '~/packages/users/users.js';
+import { type ValueOf } from '~/libs/types/types.js';
+import {
+  type CustomerSignUpRequestDto,
+  type UserSignInRequestDto,
+} from '~/packages/users/users.js';
 import { actions as authActions } from '~/slices/auth/auth.js';
 
 import { SignInForm, SignUpForm } from './components/components.js';
+import styles from './styles.module.css';
 
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { dataStatus } = useAppSelector(({ auth }) => ({
-    dataStatus: auth.dataStatus,
-  }));
-  const { pathname } = useLocation();
+  const { navigateAuthUser } = useAuthNavigate();
 
-  const handleSignInSubmit = useCallback((): void => {
-    // handle sign in
-  }, []);
+  const location: Location = useLocation();
+  const mode = location.state as ValueOf<typeof AuthMode>;
+
+  const handleSignInSubmit = useCallback(
+    (payload: UserSignInRequestDto): void => {
+      void dispatch(authActions.signIn(payload))
+        .unwrap()
+        .then((user) => {
+          navigateAuthUser(user);
+        });
+    },
+    [dispatch, navigateAuthUser],
+  );
 
   const handleSignUpSubmit = useCallback(
     (payload: CustomerSignUpRequestDto): void => {
-      void dispatch(authActions.signUp(payload));
+      void dispatch(authActions.signUp({ payload, mode }));
     },
-    [dispatch],
+    [dispatch, mode],
   );
 
   const getScreen = (screen: string): React.ReactNode => {
@@ -34,19 +48,14 @@ const Auth: React.FC = () => {
         return <SignInForm onSubmit={handleSignInSubmit} />;
       }
       case AppRoute.SIGN_UP: {
-        return <SignUpForm onSubmit={handleSignUpSubmit} />;
+        return <SignUpForm onSubmit={handleSignUpSubmit} mode={mode} />;
       }
     }
 
     return null;
   };
 
-  return (
-    <>
-      state: {dataStatus}
-      {getScreen(pathname)}
-    </>
-  );
+  return <div className={styles.page}>{getScreen(location.pathname)}</div>;
 };
 
 export { Auth };
