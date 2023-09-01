@@ -6,6 +6,6 @@ import { type UserGroupEntityT } from './user-group-entity.type.js';
 type UserSignInResponseDto = Omit<
   UserEntityT,
   'passwordHash' | 'passwordSalt' | 'groupId'
-> & { group: UserGroupEntityT } & { business: BusinessEntityT[] };
+> & { group: UserGroupEntityT; business: BusinessEntityT[] };
 
 export { type UserSignInResponseDto };
