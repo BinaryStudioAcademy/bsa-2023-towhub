@@ -33,8 +33,9 @@ const Input = <T extends FieldValues>({
   type = 'text',
   isDisabled,
 }: Properties<T>): JSX.Element => {
-  const { field } = useFormController({ name, control });
   const [showPassword, setShowPassword] = useState(false);
+  const { field } = useFormController({ name, control });
+
   const error = errors[name]?.message;
   const hasError = Boolean(error);
   const hasValue = Boolean(field.value);
