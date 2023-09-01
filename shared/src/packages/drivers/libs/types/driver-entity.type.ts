@@ -8,4 +8,4 @@ type DriverEntity = {
   businessId: BusinessEntityT['id'];
 };
 
-export { type DriverEntity as DriverEntityT };
+export { type DriverEntity };

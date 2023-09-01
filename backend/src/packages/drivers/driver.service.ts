@@ -7,7 +7,7 @@ import { type DriverRepository } from '../drivers/driver.repository.js';
 import {
   type DriverAddResponseWithGroup,
   type DriverCreatePayload,
-  type DriverEntityT,
+  type DriverEntity as DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverUpdatePayload,
   type DriverUpdateResponseDto,
@@ -103,9 +103,9 @@ class DriverService implements IService {
     driverId,
     payload,
   }: DriverUpdatePayload): Promise<DriverUpdateResponseDto> {
-    const foundDriverById = await this.findById(driverId);
+    const foundDriver = await this.findById(driverId);
 
-    if (!foundDriverById) {
+    if (!foundDriver) {
       throw new NotFoundError({});
     }
 
@@ -125,7 +125,7 @@ class DriverService implements IService {
     const user = await this.userService.update(driverId, payload);
 
     const driver = await this.driverRepository.update({
-      id: foundDriverById.id,
+      id: foundDriver.id,
       payload,
     });
 

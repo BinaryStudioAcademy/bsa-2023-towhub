@@ -1,7 +1,7 @@
 import { type IEntity } from '~/libs/interfaces/entity.interface.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import { type DriverEntityT } from './libs/types/types.js';
+import { type DriverEntity as DriverEntityT } from './libs/types/types.js';
 
 class DriverEntity implements IEntity {
   private id: DriverEntityT['id'] | null;

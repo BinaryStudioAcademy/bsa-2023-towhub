@@ -1,5 +1,5 @@
 export { DriverApiPath, DriverValidationMessage } from '../enums/enums.js';
-export { type DriverEntityT } from './driver-entity.type.js';
+export { type DriverEntity } from './driver-entity.type.js';
 export {
   type DriverAddRequestDto,
   type DriverAllByBusinessRequestParameters,
