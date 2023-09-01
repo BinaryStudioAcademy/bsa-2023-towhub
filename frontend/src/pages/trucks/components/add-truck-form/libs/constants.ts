@@ -2,11 +2,10 @@ import { type TruckAddRequestDto } from '~/packages/trucks/libs/types/types.js';
 
 const DEFAULT_TRUCK_PAYLOAD: Omit<
   TruckAddRequestDto,
-  'manufacturer' | 'year' | 'towType'
+  'manufacturer' | 'year' | 'towType' | 'pricePerKm'
 > = {
   licensePlateNumber: '',
   capacity: 0,
-  pricePerKm: 1,
   drivers: '',
 };
 
