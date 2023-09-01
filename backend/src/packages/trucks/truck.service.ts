@@ -1,9 +1,12 @@
+import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/service.interface';
+import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
 import {
-  type TruckAddRequestDto,
-  type TruckEntityDatabase,
-} from './libs/types/types.js';
+  reverseTransformTruckEntity,
+  transformTruckEntity,
+} from './libs/helper/transform-truck-entity.js';
+import { type TruckEntityT } from './libs/types/types.js';
 import { TruckEntity } from './truck.entity.js';
 import { type TruckRepository } from './truck.repository.js';
 
@@ -14,30 +17,58 @@ class TruckService implements IService {
     this.repository = repository;
   }
 
-  public async findById(id: number): Promise<TruckEntityDatabase | null> {
-    return await this.repository.findById(id);
+  public async findById(id: number): Promise<TruckEntityT | null> {
+    const result = await this.repository.findById(id);
+
+    return result.length > 0
+      ? TruckEntity.initialize(transformTruckEntity(result[0])).toObject()
+      : null;
   }
 
-  public async create(
-    payload: TruckAddRequestDto,
-  ): Promise<TruckEntityDatabase> {
-    const newTruckEntity = TruckEntity.initializeNew({
-      manufacturer: payload.manufacturer.value,
-      year: payload.year.value,
-      towType: payload.towType.value,
-      capacity: payload.capacity,
-      pricePerKm: payload.pricePerKm,
-      licensePlateNumber: payload.licensePlateNumber,
-    });
+  public async create(payload: TruckEntityT): Promise<TruckEntityT> {
+    const existingTruck = await this.repository.find(
+      payload.licensePlateNumber,
+    );
 
-    return await this.repository.create(newTruckEntity.toNewObject());
+    if (existingTruck.length > 0) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.TRUCK_EXISTS,
+      });
+    }
+
+    const newTruckEntity = TruckEntity.initializeNew(payload);
+
+    const [result] = await this.repository.create(newTruckEntity.toNewObject());
+
+    return TruckEntity.initialize(transformTruckEntity(result)).toObject();
   }
 
-  public async update(parameters: {
-    id: number;
-    payload: Partial<TruckEntityDatabase>;
-  }): Promise<TruckEntityDatabase> {
-    return await this.repository.update(parameters);
+  public async update(
+    id: number,
+    payload: Partial<TruckEntityT>,
+  ): Promise<TruckEntityT> {
+    const truck = await this.findById(id);
+
+    if (!truck) {
+      throw new NotFoundError({ message: 'Truck not found' });
+    }
+
+    if (truck.licensePlateNumber === payload.licensePlateNumber) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.TRUCK_EXISTS,
+      });
+    }
+
+    const updatePayload = { ...truck, ...payload };
+
+    const [result] = await this.repository.update(
+      id,
+      reverseTransformTruckEntity(updatePayload),
+    );
+
+    return TruckEntity.initialize(transformTruckEntity(result)).toObject();
   }
 
   public async delete(id: number): Promise<boolean> {
