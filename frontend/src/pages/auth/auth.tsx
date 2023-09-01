@@ -4,6 +4,7 @@ import { type AuthMode, AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppSelector,
+  useAuthNavigate,
   useCallback,
   useEffect,
   useLocation,
@@ -22,6 +23,7 @@ import styles from './styles.module.css';
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { navigateAuthUser } = useAuthNavigate();
 
   const location: Location = useLocation();
   const mode = location.state as ValueOf<typeof AuthMode>;
@@ -39,9 +41,13 @@ const Auth: React.FC = () => {
 
   const handleSignInSubmit = useCallback(
     (payload: UserSignInRequestDto): void => {
-      void dispatch(authActions.signIn(payload));
+      void dispatch(authActions.signIn(payload))
+        .unwrap()
+        .then((user) => {
+          navigateAuthUser(user);
+        });
     },
-    [dispatch],
+    [dispatch, navigateAuthUser],
   );
 
   const handleSignUpSubmit = useCallback(

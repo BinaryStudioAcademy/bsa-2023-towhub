@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import { StorageKey } from '~/libs/packages/storage/storage.js';
 import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
 import {
   type BusinessSignUpRequestDto,
@@ -36,10 +37,14 @@ const signIn = createAsyncThunk<
   UserSignInResponseDto,
   UserSignInRequestDto,
   AsyncThunkConfig
->(`${sliceName}/sign-in`, (signInPayload, { extra }) => {
-  const { authApi } = extra;
+>(`${sliceName}/sign-in`, async (signInPayload, { extra }) => {
+  const { authApi, localStorage } = extra;
 
-  return authApi.signIn(signInPayload);
+  const result = await authApi.signIn(signInPayload);
+
+  await localStorage.set(StorageKey.TOKEN, result.accessToken);
+
+  return result;
 });
 
 export { signIn, signUp };
