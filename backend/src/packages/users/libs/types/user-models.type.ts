@@ -1,7 +1,6 @@
 import { type InferModel } from 'drizzle-orm';
 
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
-import { type BusinessEntityT } from '~/packages/business/business.js';
 import {
   type GroupDatabaseModel,
   type GroupEntityObjectT,
