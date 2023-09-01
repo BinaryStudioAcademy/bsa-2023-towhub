@@ -10,6 +10,7 @@ export {
   type ServerErrorDetail,
   type ServerErrorResponse,
   type UserSignInRequestDto,
+  type UserSignInResponseDto,
   type ValidationSchema,
   type ValueOf,
 } from 'shared/build/index.js';
