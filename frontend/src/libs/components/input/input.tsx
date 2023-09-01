@@ -6,7 +6,11 @@ import {
 } from 'react-hook-form';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useFormController } from '~/libs/hooks/hooks.js';
+import {
+  useCallback,
+  useFormController,
+  useState,
+} from '~/libs/hooks/hooks.js';
 
 import styles from './styles.module.scss';
 
@@ -30,7 +34,7 @@ const Input = <T extends FieldValues>({
   isDisabled,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
-
+  const [showPassword, setShowPassword] = useState(false);
   const error = errors[name]?.message;
   const hasError = Boolean(error);
   const hasValue = Boolean(field.value);
@@ -42,19 +46,29 @@ const Input = <T extends FieldValues>({
     hasError && styles.error,
   ];
 
+  const toggleShowPassword = useCallback((): void => {
+    setShowPassword(!showPassword);
+  }, [showPassword]);
+
   return (
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
         <input
           {...field}
-          type={type}
+          type={showPassword ? 'text' : type}
           placeholder={placeholder}
           className={getValidClassNames(...inputStyles)}
           disabled={isDisabled}
         />
         {type === 'password' && (
-          <span className={styles.passwordEye}>&#128065;</span>
+          <input
+            type="button"
+            className={styles.passwordEye}
+            onClick={toggleShowPassword}
+            value="&#128065;"
+            tabIndex={-1}
+          />
         )}
       </span>
 

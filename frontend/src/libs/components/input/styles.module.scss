@@ -86,7 +86,9 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
 .passwordEye {
   position: absolute;
   top: 8px;
-  right: 15px;
+  right: 10px;
+  background-color: $white;
+  border: 0;
   cursor: pointer;
 }
 
