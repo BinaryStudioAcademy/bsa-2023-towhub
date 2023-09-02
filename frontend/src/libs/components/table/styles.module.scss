@@ -1,0 +1,53 @@
+@import "src/assets/css/styles.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  gap: 20px;
+}
+
+.table {
+  background-color: rgb(248 246 246);
+  border-radius: 8px;
+  border-collapse: collapse;
+}
+
+.thead {
+  color: white;
+  background-color: #000b6a;
+}
+
+.th,
+.td {
+  padding: 10px 15px;
+}
+
+.th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.th:last-child {
+  border-top-right-radius: 8px;
+}
+
+.tr {
+  border-bottom: 1px solid white;
+}
+
+.tr:nth-child(even) {
+  background-color: #b9d1f1fa;
+}
+
+.tr:last-child {
+  border: none;
+
+  .td:first-child {
+    border-bottom-left-radius: 8px;
+  }
+
+  .td:last-child {
+    border-bottom-right-radius: 8px;
+  }
+}
