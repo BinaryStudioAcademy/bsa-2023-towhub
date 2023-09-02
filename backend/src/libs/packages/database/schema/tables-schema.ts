@@ -31,6 +31,7 @@ const users = pgTable(
   (users) => {
     return {
       phoneIdx: uniqueIndex('users_phone_unique_idx').on(users.phone),
+      emailIdx: uniqueIndex('users_email_unique_idx').on(users.email),
     };
   },
 );

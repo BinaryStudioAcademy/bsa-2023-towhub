@@ -33,8 +33,15 @@
     {
       "idx": 4,
       "version": "5",
-      "when": 1693472739680,
-      "tag": "0004_create_trucks_table",
+      "when": 1693406907945,
+      "tag": "0004_email_unique_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1693651225741,
+      "tag": "0005_create_trucks_table",
       "breakpoints": true
     }
   ]

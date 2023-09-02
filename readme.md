@@ -49,7 +49,7 @@ erDiagram
     users {
         id serial PK "not null"
         phone varchar "not null, unique"
-        email varchar "not null"
+        email varchar "not null, unique"
         first_name varchar "not null"
         last_name varchar "not null"
         password_hash varchar "not null"

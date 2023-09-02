@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "dd8363c1-1ee4-472f-93b3-cfe9bf6a5348",
-  "prevId": "c1865683-64e6-4a69-b1ec-686bd07fc724",
+  "id": "a1810b18-27af-4eae-b6f3-b2b403f3cb9f",
+  "prevId": "dd8363c1-1ee4-472f-93b3-cfe9bf6a5348",
   "tables": {
     "business_details": {
       "name": "business_details",
@@ -115,6 +115,78 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "trucks": {
+      "name": "trucks",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "manufacturer": {
+          "name": "manufacturer",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "capacity": {
+          "name": "capacity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_per_km": {
+          "name": "price_per_km",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "license_plate_number": {
+          "name": "license_plate_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year": {
+          "name": "year",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tow_type": {
+          "name": "tow_type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "trucks_license_plate_number_idx": {
+          "name": "trucks_license_plate_number_idx",
+          "columns": ["license_plate_number"],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "users": {
       "name": "users",
       "schema": "",
@@ -212,6 +284,52 @@
         }
       },
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "users_trucks": {
+      "name": "users_trucks",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "truck_id": {
+          "name": "truck_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_trucks_user_id_users_id_fk": {
+          "name": "users_trucks_user_id_users_id_fk",
+          "tableFrom": "users_trucks",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "users_trucks_truck_id_trucks_id_fk": {
+          "name": "users_trucks_truck_id_trucks_id_fk",
+          "tableFrom": "users_trucks",
+          "tableTo": "trucks",
+          "columnsFrom": ["truck_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "users_trucks_user_id_truck_id": {
+          "name": "users_trucks_user_id_truck_id",
+          "columns": ["user_id", "truck_id"]
+        }
+      },
       "uniqueConstraints": {}
     }
   },
