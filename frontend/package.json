@@ -7,15 +7,17 @@
     "npm": "9.x.x"
   },
   "scripts": {
+    "prebuild": "npm install",
     "lint:css": "npx stylelint \"src/**/*.scss\"",
     "lint:js": "npx eslint \"src/**/*.{ts,tsx}\"",
     "lint:type": "npx tsc --noEmit",
     "stylelint:fix": "npx stylelint \"src/**/*.scss\" --fix",
     "start:dev": "vite",
-    "build": "tsc && vite build",
+    "build": "npx tsc --build --clean && npx vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "4.0.4",
     "@fortawesome/fontawesome-svg-core": "6.4.2",
     "@fortawesome/free-solid-svg-icons": "6.4.2",
     "@fortawesome/react-fontawesome": "0.2.0",
@@ -38,7 +40,6 @@
     "@types/google.maps": "3.54.0",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",
-    "@vitejs/plugin-react": "4.0.4",
     "eslint-plugin-jsx-a11y": "6.7.1",
     "eslint-plugin-react": "7.32.0",
     "eslint-plugin-react-hooks": "4.6.0",
