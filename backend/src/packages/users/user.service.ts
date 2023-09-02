@@ -45,7 +45,9 @@ class UserService implements IService<UserEntityObjectT> {
   public async findByEmail(
     email: UserEntityT['email'],
   ): Promise<UserEntityObjectWithGroupT | null> {
-    const [user = null] = await this.userRepository.find({ email });
+    const [user = null] = await this.userRepository.find({
+      email: email.toLocaleLowerCase(),
+    });
 
     if (!user) {
       return null;
@@ -90,12 +92,13 @@ class UserService implements IService<UserEntityObjectT> {
   public async create(
     payload: UserEntityCreateUpdate,
   ): ReturnType<IService<UserEntityObjectT>['create']> {
-    const { password, ...user } = payload;
+    const { password, email, ...user } = payload;
     const { passwordHash, passwordSalt } =
       await encryptService.encrypt(password);
 
     const result = await this.userRepository.create({
       ...user,
+      email: email.toLowerCase(),
       passwordHash,
       passwordSalt,
     });
