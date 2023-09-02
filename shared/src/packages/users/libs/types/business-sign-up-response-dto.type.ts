@@ -1,9 +1,5 @@
-import { type UserGroupEntityT } from './types.js';
-import { type UserEntityT } from './user-entity.type.js';
+import { type UserEntityObjectWithGroupAndBusinessT } from './user-entity.type.js';
 
-type BusinessSignUpResponseDto = Omit<
-  UserEntityT,
-  'passwordHash' | 'passwordSalt' | 'groupId'
-> & { group: UserGroupEntityT };
+type BusinessSignUpResponseDto = UserEntityObjectWithGroupAndBusinessT;
 
 export { type BusinessSignUpResponseDto };

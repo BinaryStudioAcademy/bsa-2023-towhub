@@ -1,15 +1,18 @@
+import React from 'react';
 import {
-  type RouteObject,
   createBrowserRouter,
+  createRoutesFromElements,
   RouterProvider as LibraryRouterProvider,
 } from 'react-router-dom';
 
 type Properties = {
-  routes: RouteObject[];
+  children: React.ReactNode;
 };
 
-const RouterProvider: React.FC<Properties> = ({ routes }: Properties) => (
-  <LibraryRouterProvider router={createBrowserRouter(routes)} />
-);
+const RouterProvider: React.FC<Properties> = ({ children }: Properties) => {
+  const routes = createRoutesFromElements(children);
+
+  return <LibraryRouterProvider router={createBrowserRouter(routes)} />;
+};
 
 export { RouterProvider };

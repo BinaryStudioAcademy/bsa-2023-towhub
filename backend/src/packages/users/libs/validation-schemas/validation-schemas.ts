@@ -1,1 +1,4 @@
-export { customerSignUpValidationSchema } from 'shared/build/index.js';
+export {
+  businessSignUpValidationSchema,
+  customerSignUpValidationSchema,
+} from 'shared/build/index.js';

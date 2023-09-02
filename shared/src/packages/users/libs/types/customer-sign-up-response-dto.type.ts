@@ -1,9 +1,5 @@
-import { type UserGroupEntityT } from './types.js';
-import { type UserEntityT } from './user-entity.type.js';
+import { type UserEntityObjectWithGroupT } from './user-entity.type.js';
 
-type CustomerSignUpResponseDto = Omit<
-  UserEntityT,
-  'passwordHash' | 'passwordSalt' | 'groupId'
-> & { group: UserGroupEntityT };
+type CustomerSignUpResponseDto = UserEntityObjectWithGroupT;
 
 export { type CustomerSignUpResponseDto };
