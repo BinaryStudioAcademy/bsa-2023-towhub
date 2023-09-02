@@ -33,8 +33,15 @@
     {
       "idx": 4,
       "version": "5",
-      "when": 1693487848592,
-      "tag": "0004_add_orders_table",
+      "when": 1693406907945,
+      "tag": "0004_email_unique_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1693653089477,
+      "tag": "0005_add_orders_table",
       "breakpoints": true
     }
   ]

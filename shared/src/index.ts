@@ -27,6 +27,7 @@ export {
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type CapitalizeEnum,
+  type EntityPagination,
   type NullableProperties,
   type OperationResult,
   type ServerCommonErrorResponse,
@@ -72,9 +73,12 @@ export {
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupT,
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
+  type UserGroupEntityObjectT,
   type UserGroupEntityT,
   type UserGroupKeyT,
   type UserGroupNameT,
