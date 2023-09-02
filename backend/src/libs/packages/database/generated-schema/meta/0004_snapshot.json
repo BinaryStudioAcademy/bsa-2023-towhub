@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "24b368d1-e12e-43b4-8136-9f64e633077c",
-  "prevId": "7883c1f5-4fa5-421a-af63-8189fdbb9db7",
+  "id": "dd8363c1-1ee4-472f-93b3-cfe9bf6a5348",
+  "prevId": "c1865683-64e6-4a69-b1ec-686bd07fc724",
   "tables": {
     "business_details": {
       "name": "business_details",
@@ -240,6 +240,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "access_token": {
+          "name": "access_token",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -259,6 +265,11 @@
         "users_phone_unique_idx": {
           "name": "users_phone_unique_idx",
           "columns": ["phone"],
+          "isUnique": true
+        },
+        "users_email_unique_idx": {
+          "name": "users_email_unique_idx",
+          "columns": ["email"],
           "isUnique": true
         }
       },

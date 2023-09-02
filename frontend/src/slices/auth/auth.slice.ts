@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import {
+  type BusinessSignUpResponseDto,
+  type CustomerSignUpResponseDto,
   type UserSignInResponseDto,
   type ValueOf,
 } from '~/libs/types/types.js';
@@ -10,7 +12,11 @@ import { signIn, signUp } from './actions.js';
 
 type State = {
   dataStatus: ValueOf<typeof DataStatus>;
-  user: UserSignInResponseDto | null;
+  user:
+    | UserSignInResponseDto
+    | CustomerSignUpResponseDto
+    | BusinessSignUpResponseDto
+    | null;
 };
 
 const initialState: State = {
@@ -24,9 +30,11 @@ const { reducer, actions, name } = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder.addCase(signUp.pending, (state) => {
+      state.user = null;
       state.dataStatus = DataStatus.PENDING;
     });
-    builder.addCase(signUp.fulfilled, (state) => {
+    builder.addCase(signUp.fulfilled, (state, action) => {
+      state.user = action.payload;
       state.dataStatus = DataStatus.FULFILLED;
     });
     builder.addCase(signUp.rejected, (state) => {
