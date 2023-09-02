@@ -1,13 +1,11 @@
 import { type Location } from 'react-router';
 
-import { type AuthMode, AppRoute } from '~/libs/enums/enums.js';
+import { AppRoute, AuthMode } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
-  useAuthNavigate,
   useCallback,
   useLocation,
 } from '~/libs/hooks/hooks.js';
-import { type ValueOf } from '~/libs/types/types.js';
 import {
   type CustomerSignUpRequestDto,
   type UserSignInRequestDto,
@@ -15,6 +13,7 @@ import {
 import { actions as authActions } from '~/slices/auth/auth.js';
 
 import { SignInForm, SignUpForm } from './components/components.js';
+import { useAuthNavigate } from './libs/hooks/hooks.js';
 import styles from './styles.module.css';
 
 const Auth: React.FC = () => {
@@ -22,7 +21,6 @@ const Auth: React.FC = () => {
   const { navigateAuthUser } = useAuthNavigate();
 
   const location: Location = useLocation();
-  const mode = location.state as ValueOf<typeof AuthMode>;
 
   const handleSignInSubmit = useCallback(
     (payload: UserSignInRequestDto): void => {
@@ -37,25 +35,41 @@ const Auth: React.FC = () => {
 
   const handleSignUpSubmit = useCallback(
     (payload: CustomerSignUpRequestDto): void => {
-      void dispatch(authActions.signUp({ payload, mode }));
+      const mode =
+        location.pathname === AppRoute.SIGN_UP_BUSINESS
+          ? AuthMode.BUSINESS
+          : AuthMode.CUSTOMER;
+
+      void dispatch(authActions.signUp({ payload, mode }))
+        .unwrap()
+        .then((user) => {
+          navigateAuthUser(user);
+        });
     },
-    [dispatch, mode],
+    [dispatch, location, navigateAuthUser],
   );
 
-  const getScreen = (screen: string): React.ReactNode => {
-    switch (screen) {
+  const getScreen = useCallback((): React.ReactNode => {
+    switch (location.pathname) {
       case AppRoute.SIGN_IN: {
         return <SignInForm onSubmit={handleSignInSubmit} />;
       }
-      case AppRoute.SIGN_UP: {
-        return <SignUpForm onSubmit={handleSignUpSubmit} mode={mode} />;
+      case AppRoute.SIGN_UP_BUSINESS: {
+        return (
+          <SignUpForm onSubmit={handleSignUpSubmit} mode={AuthMode.BUSINESS} />
+        );
+      }
+      case AppRoute.SIGN_UP_CUSTOMER: {
+        return (
+          <SignUpForm onSubmit={handleSignUpSubmit} mode={AuthMode.CUSTOMER} />
+        );
       }
     }
 
     return null;
-  };
+  }, [handleSignInSubmit, handleSignUpSubmit, location.pathname]);
 
-  return <div className={styles.page}>{getScreen(location.pathname)}</div>;
+  return <div className={styles.page}>{getScreen()}</div>;
 };
 
 export { Auth };

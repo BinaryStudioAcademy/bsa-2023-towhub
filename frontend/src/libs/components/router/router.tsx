@@ -28,7 +28,11 @@ const Router = (): JSX.Element => (
             element: <Auth />,
           },
           {
-            path: AppRoute.SIGN_UP,
+            path: AppRoute.SIGN_UP_BUSINESS,
+            element: <Auth />,
+          },
+          {
+            path: AppRoute.SIGN_UP_CUSTOMER,
             element: <Auth />,
           },
           {

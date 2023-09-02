@@ -1,16 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
-import {
-  type UserSignInResponseDto,
-  type ValueOf,
-} from '~/libs/types/types.js';
+import { type RootState } from '~/libs/packages/store/store.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
 import { signIn, signUp } from './actions.js';
+import { extractUserFromPayload } from './libs/helpers/helpers.js';
+import { type AuthUserT } from './libs/types/types.js';
 
 type State = {
   dataStatus: ValueOf<typeof DataStatus>;
-  user: UserSignInResponseDto | null;
+  user: AuthUserT | null;
 };
 
 const initialState: State = {
@@ -26,7 +26,8 @@ const { reducer, actions, name } = createSlice({
     builder.addCase(signUp.pending, (state) => {
       state.dataStatus = DataStatus.PENDING;
     });
-    builder.addCase(signUp.fulfilled, (state) => {
+    builder.addCase(signUp.fulfilled, (state, action) => {
+      state.user = extractUserFromPayload(action.payload);
       state.dataStatus = DataStatus.FULFILLED;
     });
     builder.addCase(signUp.rejected, (state) => {
@@ -36,7 +37,7 @@ const { reducer, actions, name } = createSlice({
       state.dataStatus = DataStatus.PENDING;
     });
     builder.addCase(signIn.fulfilled, (state, action) => {
-      state.user = action.payload;
+      state.user = extractUserFromPayload(action.payload);
       state.dataStatus = DataStatus.FULFILLED;
     });
     builder.addCase(signIn.rejected, (state) => {
@@ -45,4 +46,6 @@ const { reducer, actions, name } = createSlice({
   },
 });
 
-export { actions, name, reducer };
+const selectUser = (store: RootState): AuthUserT | null => store.auth.user;
+
+export { actions, name, reducer, selectUser };

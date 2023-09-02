@@ -1,8 +1,9 @@
+import { type UserGroupEntityT } from './types.js';
 import { type UserEntityT } from './user-entity.type.js';
 
-type CustomerSignUpResponseDto = Pick<
+type CustomerSignUpResponseDto = Omit<
   UserEntityT,
-  'id' | 'phone' | 'accessToken'
->;
+  'passwordHash' | 'passwordSalt' | 'groupId'
+> & { group: UserGroupEntityT };
 
 export { type CustomerSignUpResponseDto };

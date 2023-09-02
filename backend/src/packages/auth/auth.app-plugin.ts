@@ -1,5 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
+import { HttpHeader } from 'shared/build/index.js';
 
 import { HttpMessage } from '~/libs/packages/http/http.js';
 
@@ -21,7 +22,10 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
       done: (error?: Error) => void,
     ): Promise<void> => {
       try {
-        const token = request.headers.authorization?.replace('Bearer ', '');
+        const token = request.headers[HttpHeader.AUTHORIZATION]?.replace(
+          'Bearer ',
+          '',
+        );
 
         if (!token) {
           return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED));

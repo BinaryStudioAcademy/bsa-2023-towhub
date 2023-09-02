@@ -14,25 +14,14 @@ import { reducer as usersReducer } from '~/slices/users/users.js';
 
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
-
-type RootReducer = {
-  auth: ReturnType<typeof authReducer>;
-  users: ReturnType<typeof usersReducer>;
-};
-
-type ExtraArguments = {
-  authApi: typeof authApi;
-  userApi: typeof userApi;
-  notification: typeof notification;
-  localStorage: typeof LocalStorage;
-};
+import { type ExtraArguments, type RootState } from './libs/types/types.js';
 
 class Store {
   public instance: ReturnType<
     typeof configureStore<
-      RootReducer,
+      RootState,
       AnyAction,
-      MiddlewareArray<[ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>]>
+      MiddlewareArray<[ThunkMiddleware<RootState, AnyAction, ExtraArguments>]>
     >
   >;
 

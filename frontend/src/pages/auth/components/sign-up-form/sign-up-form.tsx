@@ -47,9 +47,9 @@ const SignUpForm: React.FC<Properties> = ({ onSubmit, mode }: Properties) => {
       )}
 
       <p className={getValidClassNames('text-sm', styles.text)}>
-        Already have an account? Go to{' '}
+        Already have an account?{' '}
         <Link to={AppRoute.SIGN_IN} className={styles.link}>
-          Log in
+          Go to Sign in
         </Link>
       </p>
     </div>
