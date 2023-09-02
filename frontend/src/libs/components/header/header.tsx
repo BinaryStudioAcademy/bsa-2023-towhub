@@ -2,7 +2,7 @@ import { AppRoute } from '~/libs/enums/enums.js';
 import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 import { type MenuItem } from '~/libs/types/types.js';
 
-import { AppLogo, BurgerMenu, Link } from '../components.js';
+import { AppLogo, BurgerMenu, Button, Link } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -30,9 +30,12 @@ const Header: React.FC<Properties> = ({
           {isAuth ? (
             <BurgerMenu menuItems={menuItems} />
           ) : (
-            <button type="button" onClick={handleSignIn}>
-              Sign In
-            </button>
+            <Button
+              label="Sign In"
+              className={styles.btn}
+              type="button"
+              onClick={handleSignIn}
+            />
           )}
         </div>
       </div>

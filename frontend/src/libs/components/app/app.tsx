@@ -69,7 +69,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Header menuItems={menuItems} isAuth={true} />
+      <Header menuItems={menuItems} isAuth={false} />
 
       <div>
         <RouterOutlet />

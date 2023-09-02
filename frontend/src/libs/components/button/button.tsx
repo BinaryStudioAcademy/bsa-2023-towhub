@@ -16,7 +16,7 @@ type Properties = {
   frontIcon?: ValueOf<typeof IconName>;
   backIcon?: ValueOf<typeof IconName>;
   children?: JSX.Element;
-  onClick?: () => void;
+  onClick?: (() => void) | ((event_: React.MouseEvent) => void);
 };
 
 const Button: React.FC<Properties> = ({
