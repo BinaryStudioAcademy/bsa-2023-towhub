@@ -6,7 +6,7 @@ import { OrderStatus } from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
-  type OrderEntityT,
+  type OrderEntity as OrderEntityT,
   type OrderUpdateResponseDto,
 } from './libs/types/types.js';
 import { OrderEntity } from './order.entity.js';
@@ -77,14 +77,14 @@ class OrderService implements IService {
     return updatedOrder.toObject();
   }
 
-  public async findAllOrdersByFilter({
+  public async findByFilter({
     userId,
     businessId,
   }: {
     userId: string;
     businessId: string;
   }): Promise<{ items: OrderEntityT[] }> {
-    const usersOrders = await this.orderRepository.findAllOrdersByFilter({
+    const usersOrders = await this.orderRepository.findByFilter({
       userId: Number(userId),
       businessId: Number(businessId),
     });

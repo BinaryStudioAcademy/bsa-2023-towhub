@@ -1,7 +1,7 @@
-import { type OrderEntityT } from './order-entity.type.js';
+import { type OrderEntity } from './order-entity.type.js';
 
 type OrderUpdateRequestDto = Partial<
-  Omit<OrderEntityT, 'id' | 'userId' | 'price'>
+  Omit<OrderEntity, 'id' | 'userId' | 'price'>
 >;
 
 export { type OrderUpdateRequestDto };

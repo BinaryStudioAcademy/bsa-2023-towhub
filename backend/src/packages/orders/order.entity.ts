@@ -1,7 +1,7 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import { type OrderEntityT } from './libs/types/types.js';
+import { type OrderEntity as OrderEntityT } from './libs/types/types.js';
 
 class OrderEntity implements IEntity {
   private id: OrderEntityT['id'] | null;

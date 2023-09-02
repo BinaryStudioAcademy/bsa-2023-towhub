@@ -14,4 +14,4 @@ type OrderEntity = {
   customerPhone?: string;
 };
 
-export { type OrderEntity as OrderEntityT };
+export { type OrderEntity };

@@ -1,5 +1,5 @@
-import { type OrderEntityT } from './order-entity.type.js';
+import { type OrderEntity } from './order-entity.type.js';
 
-type OrderUpdateResponseDto = Omit<OrderEntityT, 'userId'>;
+type OrderUpdateResponseDto = Omit<OrderEntity, 'userId'>;
 
 export { type OrderUpdateResponseDto };

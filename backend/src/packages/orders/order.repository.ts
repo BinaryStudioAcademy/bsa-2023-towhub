@@ -11,7 +11,7 @@ import { OrderEntity } from '~/packages/orders/order.entity.js';
 
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import { getResultIfTruthy } from './libs/helpers/get-result-if-truthy.js';
-import { type OrderEntityT } from './libs/types/types.js';
+import { type OrderEntity as OrderEntityT } from './libs/types/types.js';
 
 class OrderRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -38,7 +38,7 @@ class OrderRepository implements IRepository {
     return (result ?? null) && OrderEntity.initialize(result as OrderEntityT);
   }
 
-  public async findAllOrdersByFilter(
+  public async findByFilter(
     searchBy: Partial<OrderEntityT>,
   ): Promise<OrderEntity[]> {
     const orders = await this.db

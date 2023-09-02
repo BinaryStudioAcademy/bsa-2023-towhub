@@ -1,7 +1,7 @@
 export {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
-  type OrderEntityT,
+  type OrderEntity,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
 } from 'shared/build/index.js';

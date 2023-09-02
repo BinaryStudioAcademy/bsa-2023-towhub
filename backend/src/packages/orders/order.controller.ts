@@ -11,11 +11,11 @@ import { type OrderService } from '~/packages/orders/order.service.js';
 import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
-  type OrderEntityT,
+  type OrderEntity,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 
-type idT = Pick<OrderEntityT, 'id'>;
+type idT = Pick<OrderEntity, 'id'>;
 
 class OrderController extends Controller {
   private orderService: OrderService;
@@ -29,7 +29,7 @@ class OrderController extends Controller {
       path: OrdersApiPath.ROOT,
       method: 'GET',
       handler: (options) =>
-        this.findAllOrdersByFilter(
+        this.findByFilter(
           options as ApiHandlerOptions<{
             query: { businessId: string; userId: string };
           }>,
@@ -119,14 +119,14 @@ class OrderController extends Controller {
     };
   }
 
-  private async findAllOrdersByFilter(
+  private async findByFilter(
     options: ApiHandlerOptions<{
       query: { businessId: string; userId: string };
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findAllOrdersByFilter({
+      payload: await this.orderService.findByFilter({
         userId: options.query.userId,
         businessId: options.query.businessId,
       }),

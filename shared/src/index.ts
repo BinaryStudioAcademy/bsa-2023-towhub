@@ -62,7 +62,7 @@ export {
 export {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
-  type OrderEntityT,
+  type OrderEntity,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
 } from './packages/orders/orders.js';
