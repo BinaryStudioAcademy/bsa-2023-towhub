@@ -4,7 +4,11 @@ import {
   type FieldPath,
   type FieldValues,
 } from 'react-hook-form';
-import Select, { type StylesConfig } from 'react-select';
+import Select, {
+  type GroupBase,
+  type SingleValue,
+  type StylesConfig,
+} from 'react-select';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
@@ -23,9 +27,13 @@ type Properties<T extends FieldValues> = {
   control: Control<T, null>;
   errors: FieldErrors<T>;
   label?: string;
+  defaultValue?: SelectOption;
+  onChange?: (value: string | undefined) => void;
 };
 
-const getStyles = (isMenuOpen: boolean): StylesConfig => {
+const getStyles = (
+  isMenuOpen: boolean,
+): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
   return {
     control: (styles) => ({
       ...styles,
@@ -69,6 +77,8 @@ const Dropdown = <T extends FieldValues>({
   control,
   label,
   errors,
+  defaultValue,
+  onChange,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { field } = useFormController({ name, control });
@@ -87,11 +97,20 @@ const Dropdown = <T extends FieldValues>({
   const stylesConfig = useMemo(() => getStyles(isMenuOpen), [isMenuOpen]);
   const inputStyles = [styles.input, hasError && styles.error];
 
+  const handleChange = useCallback(
+    (option: SingleValue<SelectOption>) => {
+      if (onChange) {
+        onChange(option?.value);
+      }
+    },
+    [onChange],
+  );
+
   return (
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
-        <Select
+        <Select<SelectOption>
           {...field}
           options={options}
           classNamePrefix="react-select"
@@ -101,6 +120,8 @@ const Dropdown = <T extends FieldValues>({
           menuIsOpen={isMenuOpen}
           onMenuOpen={handleOpenMenu}
           onMenuClose={handleCloseMenu}
+          onChange={handleChange}
+          defaultValue={defaultValue}
         />
       </span>
       <span
