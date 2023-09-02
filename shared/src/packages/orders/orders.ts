@@ -3,7 +3,6 @@ export {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
   type OrderEntityT,
-  type OrderStatusT,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
 } from './libs/types/types.js';

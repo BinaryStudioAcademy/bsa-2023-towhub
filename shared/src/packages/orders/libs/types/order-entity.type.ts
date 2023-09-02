@@ -1,4 +1,4 @@
-import { type OrderStatusT } from './order-status.type.js';
+import { type OrderStatus } from './order-status.type.js';
 
 type OrderEntity = {
   id: number;
@@ -6,7 +6,7 @@ type OrderEntity = {
   scheduledTime: string;
   startPoint: string;
   endPoint: string;
-  status: OrderStatusT;
+  status: OrderStatus;
   userId: number;
   businessId: number;
   driverId: number;
