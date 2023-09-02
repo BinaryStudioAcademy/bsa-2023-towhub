@@ -181,9 +181,11 @@ class AuthService {
 
     const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
 
+    const group = GroupEntity.initialize(user.group).toObject();
+
     return {
       ...updatedUser,
-      group: GroupEntity.initialize(user.group).toObject(),
+      group,
     };
   }
 
