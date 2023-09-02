@@ -1,0 +1,46 @@
+@import "src/assets/css/styles.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.dots {
+  margin: 0 5px;
+  color: $red-dark;
+  font-size: 22px;
+}
+
+.btn {
+  min-width: 22px;
+  margin: 1px;
+  padding: 5px;
+  color: $red-dark;
+  background-color: $white;
+  border: 1px solid $red-dark;
+}
+
+.active {
+  color: white;
+  background-color: $red;
+}
+
+.size {
+  color: $red-dark;
+}
+
+.select {
+  margin-left: 5px;
+  color: $red-dark;
+  border: 1px solid $red-dark;
+  border-radius: 4px;
+  outline: none;
+}

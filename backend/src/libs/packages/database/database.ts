@@ -13,5 +13,6 @@ const database = new Database({
 
 export { DatabaseTableName } from './libs/enums/enums.js';
 export { type IDatabase } from './libs/interfaces/interfaces.js';
+export { type DatabaseSchema } from './schema/schema.js';
 export { schema } from './schema/schema.js';
 export { database };
