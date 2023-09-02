@@ -23,9 +23,9 @@ import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
   options: SelectOption[];
-  name: FieldPath<T>;
-  control: Control<T, null>;
-  errors: FieldErrors<T>;
+  name?: FieldPath<T>;
+  control?: Control<T, null>;
+  errors?: FieldErrors<T>;
   label?: string;
   defaultValue?: SelectOption;
   onChange?: (value: string | undefined) => void;
@@ -81,8 +81,13 @@ const Dropdown = <T extends FieldValues>({
   onChange,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { field } = useFormController({ name, control });
-  const error = errors[name]?.message;
+
+  const { field } = useFormController({
+    name: name as FieldPath<T>,
+    control,
+  });
+
+  const error = errors?.[name]?.message;
   const hasLabel = Boolean(label);
   const hasError = Boolean(error);
 
@@ -110,19 +115,34 @@ const Dropdown = <T extends FieldValues>({
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
-        <Select<SelectOption>
-          {...field}
-          options={options}
-          classNamePrefix="react-select"
-          className={getValidClassNames(inputStyles)}
-          styles={stylesConfig}
-          isSearchable={false}
-          menuIsOpen={isMenuOpen}
-          onMenuOpen={handleOpenMenu}
-          onMenuClose={handleCloseMenu}
-          onChange={handleChange}
-          defaultValue={defaultValue}
-        />
+        {name && control ? (
+          <Select<SelectOption>
+            {...field}
+            options={options}
+            classNamePrefix="react-select"
+            className={getValidClassNames(inputStyles)}
+            styles={stylesConfig}
+            isSearchable={false}
+            menuIsOpen={isMenuOpen}
+            onMenuOpen={handleOpenMenu}
+            onMenuClose={handleCloseMenu}
+            onChange={handleChange}
+            defaultValue={defaultValue}
+          />
+        ) : (
+          <Select<SelectOption>
+            options={options}
+            classNamePrefix="react-select"
+            className={getValidClassNames(inputStyles)}
+            styles={stylesConfig}
+            isSearchable={false}
+            menuIsOpen={isMenuOpen}
+            onMenuOpen={handleOpenMenu}
+            onMenuClose={handleCloseMenu}
+            onChange={handleChange}
+            defaultValue={defaultValue}
+          />
+        )}
       </span>
       <span
         className={getValidClassNames(
