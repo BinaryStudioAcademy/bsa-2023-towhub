@@ -1,7 +1,7 @@
 import { AppRoute } from '~/libs/enums/enums.js';
 import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 
-import { AppLogo, Link } from '../components.js';
+import { AppLogo, Button, Link } from '../components.js';
 import styles from './styles.module.scss';
 
 const Header: React.FC = () => {
@@ -18,9 +18,12 @@ const Header: React.FC = () => {
           <AppLogo />
         </Link>
         <div className={styles.navMenu}>
-          <button type="button" onClick={handleSignIn}>
-            Sign In
-          </button>
+          <Button
+            label="Sign In"
+            className={styles.btn}
+            type="button"
+            onClick={handleSignIn}
+          />
         </div>
       </div>
     </header>
