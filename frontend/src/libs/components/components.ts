@@ -13,6 +13,7 @@ export { Image } from './image/image.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
 export { Modal } from './modal/modal.js';
+export { ProtectedRoute } from './protected-route/protected-route.js';
 export { Pagination } from './pagination/pagination.js';
 export { Radio } from './radio/radio.js';
 export { Router } from './router/router.jsx';
