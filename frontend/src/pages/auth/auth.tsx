@@ -37,9 +37,13 @@ const Auth: React.FC = () => {
 
   const handleSignUpSubmit = useCallback(
     (payload: CustomerSignUpRequestDto): void => {
-      void dispatch(authActions.signUp({ payload, mode }));
+      void dispatch(authActions.signUp({ payload, mode }))
+        .unwrap()
+        .then((user) => {
+          navigateAuthUser(user);
+        });
     },
-    [dispatch, mode],
+    [dispatch, mode, navigateAuthUser],
   );
 
   const getScreen = (screen: string): React.ReactNode => {

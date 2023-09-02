@@ -9,7 +9,9 @@ export { type ColumnDef } from '@tanstack/react-table';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
 export {
   type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
   type EntityPagination,
   type ServerErrorDetail,
   type ServerErrorResponse,
