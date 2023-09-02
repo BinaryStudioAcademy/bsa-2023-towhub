@@ -7,4 +7,13 @@ type UserGroupEntity = {
   key: UserGroupKeyT;
 };
 
-export { type UserGroupEntity as UserGroupEntityT };
+type UserGroupEntityObject = {
+  id: number;
+  name: string;
+  key: string;
+};
+
+export {
+  type UserGroupEntityObject as UserGroupEntityObjectT,
+  type UserGroupEntity as UserGroupEntityT,
+};
