@@ -17,6 +17,7 @@ const useAuthNavigate = (): AuthNavigateHook => {
         break;
       }
       case UserGroupKey.CUSTOMER: {
+        navigate(AppRoute.ROOT);
         break;
       }
       case UserGroupKey.DRIVER: {

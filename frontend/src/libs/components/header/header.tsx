@@ -12,7 +12,7 @@ const Header: React.FC = () => {
   const user = useAuthUser();
 
   const handleSignIn = useCallback(() => {
-    navigate(AppRoute.WELCOME);
+    navigate(AppRoute.SIGN_IN);
   }, [navigate]);
 
   return (
