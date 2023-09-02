@@ -1,8 +1,8 @@
-import { type store } from '~/libs/packages/store/store.js';
+import { type AppDispatch, type store } from '~/libs/packages/store/store.js';
 
 type AsyncThunkConfig = {
   state: ReturnType<typeof store.instance.getState>;
-  dispatch: typeof store.instance.dispatch;
+  dispatch: AppDispatch;
   extra: typeof store.extraArguments;
 };
 

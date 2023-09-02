@@ -1,6 +1,1 @@
-export {
-  type AppDispatch,
-  type AppStore,
-  type ExtraArguments,
-  type RootState,
-} from './store.types.js';
+export { type ExtraArguments, type RootRouter } from './store.types.js';

@@ -14,14 +14,14 @@ import { reducer as usersReducer } from '~/slices/users/users.js';
 
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
-import { type ExtraArguments, type RootState } from './libs/types/types.js';
+import { type ExtraArguments, type RootRouter } from './libs/types/types.js';
 
 class Store {
   public instance: ReturnType<
     typeof configureStore<
-      RootState,
+      RootRouter,
       AnyAction,
-      MiddlewareArray<[ThunkMiddleware<RootState, AnyAction, ExtraArguments>]>
+      MiddlewareArray<[ThunkMiddleware<RootRouter, AnyAction, ExtraArguments>]>
     >
   >;
 

@@ -5,9 +5,7 @@ import { type userApi } from '~/packages/users/users.js';
 import { type reducer as authReducer } from '~/slices/auth/auth.js';
 import { type reducer as usersReducer } from '~/slices/users/users.js';
 
-import { type store } from '../../store.js';
-
-type RootState = {
+type RootRouter = {
   auth: ReturnType<typeof authReducer>;
   users: ReturnType<typeof usersReducer>;
 };
@@ -19,8 +17,4 @@ type ExtraArguments = {
   localStorage: typeof LocalStorage;
 };
 
-type AppDispatch = typeof store.instance.dispatch;
-
-type AppStore = typeof store.instance;
-
-export { type AppDispatch, type AppStore, type ExtraArguments, type RootState };
+export { type ExtraArguments, type RootRouter };

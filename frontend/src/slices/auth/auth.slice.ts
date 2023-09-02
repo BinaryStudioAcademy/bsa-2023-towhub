@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
-import { type RootState } from '~/libs/packages/store/store.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
 import { signIn, signUp } from './actions.js';
@@ -47,6 +46,4 @@ const { reducer, actions, name } = createSlice({
   },
 });
 
-const selectUser = (store: RootState): AuthUserT | null => store.auth.user;
-
-export { actions, name, reducer, selectUser };
+export { actions, name, reducer };
