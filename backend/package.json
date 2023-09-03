@@ -21,13 +21,18 @@
     "start": "node index.js"
   },
   "devDependencies": {
+    "@types/mime-types": "2.1.1",
+    "mime-types": "2.1.35",
     "nodemon": "3.0.1",
     "ts-node": "10.9.1",
     "ts-paths-esm-loader": "1.4.3",
     "tsconfig-paths": "4.2.0"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.400.0",
+    "@aws-sdk/s3-request-presigner": "3.400.0",
     "@fastify/auth": "4.3.0",
+    "@fastify/multipart": "7.7.3",
     "@fastify/static": "6.10.2",
     "@fastify/swagger": "8.9.0",
     "@fastify/swagger-ui": "1.9.3",
