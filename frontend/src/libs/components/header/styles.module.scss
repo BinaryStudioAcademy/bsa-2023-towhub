@@ -2,7 +2,6 @@
 
 .container {
   width: 100%;
-  padding: 6px;
 }
 
 .content {
@@ -13,9 +12,12 @@
   padding-right: 29px;
   padding-left: 48px;
   background-color: $header-background;
-  border-radius: 10px;
 }
 
 .logoContainer {
   width: 186px;
+}
+
+.btn {
+  padding-inline: 60px;
 }

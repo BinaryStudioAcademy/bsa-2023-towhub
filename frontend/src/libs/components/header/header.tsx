@@ -1,13 +1,15 @@
 import { AppRoute } from '~/libs/enums/enums.js';
-import { useCallback } from '~/libs/hooks/hooks.js';
+import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 
-import { AppLogo, Link } from '../components.js';
-import styles from './header.module.scss';
+import { AppLogo, Button, Link } from '../components.js';
+import styles from './styles.module.scss';
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
+
   const handleSignIn = useCallback(() => {
-    return;
-  }, []);
+    navigate(AppRoute.WELCOME);
+  }, [navigate]);
 
   return (
     <header className={styles.container}>
@@ -16,9 +18,12 @@ const Header: React.FC = () => {
           <AppLogo />
         </Link>
         <div className={styles.navMenu}>
-          <button type="button" onClick={handleSignIn}>
-            Sign In
-          </button>
+          <Button
+            label="Sign In"
+            className={styles.btn}
+            type="button"
+            onClick={handleSignIn}
+          />
         </div>
       </div>
     </header>
