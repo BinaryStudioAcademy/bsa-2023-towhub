@@ -1,4 +1,5 @@
 export {
+  type FileInputConfig,
   type NullableProperties,
   type OperationResult,
   type ServerCommonErrorResponse,

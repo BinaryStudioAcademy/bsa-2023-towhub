@@ -1,3 +1,4 @@
+import { type ValidateFilesStrategyOptions } from '~/libs/packages/controller/libs/types/types.js';
 import { type HttpMethod } from '~/libs/packages/http/http.js';
 import { type ValidationSchema } from '~/libs/types/types.js';
 
@@ -9,6 +10,7 @@ type ControllerRouteParameters = {
   method: HttpMethod;
   handler: ApiHandler;
   authStrategy?: AuthStrategyHandler;
+  validateFilesStrategy?: ValidateFilesStrategyOptions;
   validation?: {
     body?: ValidationSchema;
     params?: ValidationSchema;

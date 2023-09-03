@@ -1,3 +1,4 @@
+import { type MultipartParsedFile } from '~/packages/files/libs/types/types.js';
 import { type UserEntityObjectWithGroupT } from '~/packages/users/users.js';
 
 type DefaultApiHandlerOptions = {
@@ -5,6 +6,7 @@ type DefaultApiHandlerOptions = {
   query?: unknown;
   params?: unknown;
   user?: UserEntityObjectWithGroupT;
+  parsedFiles?: MultipartParsedFile[];
 };
 
 type ApiHandlerOptions<
@@ -16,6 +18,7 @@ type ApiHandlerOptions<
   user: T['user'] extends unknown
     ? NonNullable<DefaultApiHandlerOptions['user']>
     : T['user'];
+  parsedFiles: T['parsedFiles'];
 };
 
 export { type ApiHandlerOptions };
