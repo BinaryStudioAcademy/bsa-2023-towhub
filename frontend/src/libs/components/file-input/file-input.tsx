@@ -1,101 +1,197 @@
 import {
+  type DropEvent,
   type DropzoneOptions,
   type ErrorCode,
   type FileRejection,
   useDropzone,
 } from 'react-dropzone';
-import { type FieldPath, type FieldValues, useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { checkValidFileName } from 'shared/build';
 
 import { ChosenFilePreview } from '~/libs/components/chosen-file-preview/chosen-file-preview.js';
-import { fileInputDefaultsConfig } from '~/libs/components/file-input/libs/config/file-input-defaults.config';
 import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useCallback, useFormController, useMemo } from '~/libs/hooks/hooks.js';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useBindEnterToClick,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from '~/libs/hooks/hooks.js';
+import { filesActions, FileStatus } from '~/slices/files/files.js';
 
 import { Icon } from '../icon/icon.jsx';
+import { fileInputDefaultsConfig } from './libs/config/config.js';
 import { DropzoneFormatErrorMessage } from './libs/helpers/helpers.js';
+import { type FileInputConfig } from './libs/types/types.js';
 import styles from './styles.module.scss';
 
-type Properties<T extends FieldValues> = {
-  label?: string;
-  name: FieldPath<T>;
+type Properties = {
+  label: string;
   isDisabled?: boolean;
-  fileInputCustomConfig?: DropzoneOptions;
+  fileInputCustomConfig?: FileInputConfig;
 };
 
-const FileInput = <T extends FieldValues>({
+type FileObject = {
+  webkitRelativePath: File['webkitRelativePath'];
+  arrayBuffer: ReturnType<File['arrayBuffer']>;
+  name: File['name'];
+  size: File['size'];
+  type: File['type'];
+};
+
+type FormType = { files: FileObject[] };
+
+const FileInput = ({
   label,
-  name,
   isDisabled = false,
   fileInputCustomConfig,
-}: Properties<T>): JSX.Element => {
+}: Properties): JSX.Element => {
+  const uploadButtonReference = useRef<HTMLButtonElement>(null);
+  useBindEnterToClick(uploadButtonReference);
+  const dispatch = useAppDispatch();
+  const { uploadStatus, error: uploadError } = useAppSelector((state) => ({
+    uploadStatus: state.files.fileStatus,
+    error: state.files.error,
+  }));
+  const isUploading = uploadStatus === FileStatus.UPLOADING;
+
   const {
     control,
-    formState: { errors },
     handleSubmit,
     setError,
-  } = useForm({
-    defaultValues: { [name]: new File([''], '') },
-    mode: 'onChange',
+    formState: { errors },
+    clearErrors,
+  } = useForm<FormType>();
+  const {
+    fields: files,
+    append,
+    remove,
+  } = useFieldArray({
+    control,
+    name: 'files',
   });
 
-  const {
-    field: { onChange, value },
-  } = useFormController({ name, control });
+  const isEmpty = useMemo(() => files.length === 0, [files]);
+
+  const handleDeleteFile = useCallback(
+    (filename: string) => {
+      const index = files.findIndex((file) => file.name === filename);
+      remove(index);
+    },
+    [remove, files],
+  );
 
   const fileInputConfig = useMemo(
-    () => ({
-      ...fileInputCustomConfig,
-      ...fileInputDefaultsConfig,
-    }),
+    (): DropzoneOptions =>
+      ({
+        ...fileInputDefaultsConfig,
+        ...fileInputCustomConfig,
+      }) as DropzoneOptions,
     [fileInputCustomConfig],
   );
 
-  const handleDropAccepted = useCallback(
-    (acceptedFiles: File[]) => {
-      onChange(acceptedFiles[0]);
+  const handleDrop = useCallback(
+    (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+      if (rejectedFiles.length > 0 || acceptedFiles.length === 0) {
+        return;
+      }
+      clearErrors('files');
+
+      append(
+        acceptedFiles.map(
+          (file) =>
+            ({
+              webkitRelativePath: file.webkitRelativePath,
+              arrayBuffer: file.arrayBuffer(),
+              name: file.name,
+              size: file.size,
+              type: file.type,
+            }) as FileObject,
+        ),
+      );
     },
-    [onChange],
+    [append, clearErrors],
   );
 
   const handleDropRejected = useCallback(
-    ([{ errors }]: FileRejection[]): void => {
+    ([{ file, errors }]: FileRejection[]): void => {
       for (const error of errors) {
-        setError(name, {
+        setError('files', {
           type: error.code,
           message: DropzoneFormatErrorMessage(
             error.code as ErrorCode,
             fileInputConfig,
+            file,
           ),
         });
       }
     },
-    [fileInputConfig, name, setError],
+    [fileInputConfig, setError],
+  );
+
+  const handleFilesFromEvent = useCallback(
+    async (event: DropEvent) => {
+      const { dataTransfer } = event as DragEvent;
+
+      let files: File[] = [];
+
+      if (dataTransfer) {
+        files = [...dataTransfer.files];
+      } else {
+        const fileHandles = event as unknown as FileSystemFileHandle[];
+        files = await Promise.all(fileHandles.map((file) => file.getFile()));
+      }
+
+      for (const file of files) {
+        const isValidFileName = checkValidFileName(file.name);
+
+        if (!isValidFileName) {
+          setError('files', {
+            type: 'invalid-file-name',
+            message: `File "${file.name}": Invalid name.`,
+          });
+
+          return [];
+        }
+      }
+
+      return files;
+    },
+    [setError],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDropAccepted: handleDropAccepted,
+    onDrop: handleDrop,
     onDropRejected: handleDropRejected,
+    getFilesFromEvent: handleFilesFromEvent,
     noDrag: isDisabled,
     noClick: isDisabled,
     noKeyboard: true,
     ...fileInputConfig,
   });
 
-  const error = errors[name]?.message;
-  const hasError = Boolean(error);
-  // const hasLabel = Boolean(label);
+  const validationError = errors.files?.message;
+  const hasError = Boolean(validationError);
 
-  const onFileSubmit = useCallback(() => {
-    /*
-    data: Record<string, File> ----^
-    TODO:
-    x 1. Slice `files`, where file send status will be stored
-    x 2. uploadFile thunk, where new FormData will be created and file data will be appended
-    x 3. packages/files (for api that will be called in the thunk. Api will take formData object as a parameter)
-    ... 4. Call the thunk here, listen for status here. (check app.tsx for example)
-    5. Update file send status via ChosenFilePreview`s fileStatus*/
-  }, []);
+  const onFileSubmit = useCallback(
+    async (data: FormType) => {
+      const files = await Promise.all(
+        data.files.map(async (fileObject) => {
+          const contentBuffer = await fileObject.arrayBuffer;
+
+          return new File([contentBuffer], fileObject.name, {
+            type: fileObject.type,
+          });
+        }),
+      );
+
+      void dispatch(filesActions.uploadFile(files));
+    },
+    [dispatch],
+  );
 
   const handleFormSubmit = useCallback(
     (event_: React.BaseSyntheticEvent): void => {
@@ -104,56 +200,88 @@ const FileInput = <T extends FieldValues>({
     [handleSubmit, onFileSubmit],
   );
 
+  const [isAnimatedState, setIsAnimatedState] = useState(false);
+
   return (
     <form onSubmit={handleFormSubmit}>
       <div className={styles.wrapper}>
         <div
           {...getRootProps({
+            onDragEnter: () => {
+              setIsAnimatedState(true);
+            },
+            onDragLeave: () => {
+              setIsAnimatedState(false);
+            },
+            onMouseEnter: () => {
+              setIsAnimatedState(true);
+            },
+            onMouseLeave: () => {
+              setIsAnimatedState(false);
+            },
             className: getValidClassNames(
               styles.inputWrapper,
-              isDisabled && styles.disabled,
+              isAnimatedState && !isUploading && styles.inputWrapperAnimated,
+              (isUploading || isDisabled) && styles.disabled,
             ),
           })}
         >
           <input
             {...getInputProps({
               className: styles.fileInput,
-              name: 'stst',
             })}
           />
           <Icon
             className={getValidClassNames(
               styles.icon,
-              isDisabled && styles.disabled,
+              (isUploading || isDisabled) && styles.disabled,
             )}
             iconName={IconName.CLOUD_UPLOAD}
           />
           <p
             className={getValidClassNames(
               styles.label,
-              isDisabled && styles.disabled,
+              (isUploading || isDisabled) && styles.disabled,
               styles.textMd,
             )}
           >
-            {label}
+            {isUploading ? 'Uploading...' : label}
           </p>
           <p
             className={getValidClassNames(
               styles.errorMessage,
-              hasError && styles.visible,
               styles.textSm,
+              hasError && styles.visible,
             )}
           >
-            {error as string}
+            {uploadError ? uploadError.message : (validationError as string)}
           </p>
         </div>
         <div className={styles.uploadedArea}>
-          {value.size > 0 && <ChosenFilePreview file={value} />}
+          {files.map((file) => {
+            return (
+              <ChosenFilePreview
+                key={file.id}
+                file={file}
+                handleDeleteFile={handleDeleteFile}
+              />
+            );
+          })}
         </div>
+        <button
+          ref={uploadButtonReference}
+          disabled={isEmpty || isDisabled || isUploading}
+          className={getValidClassNames(
+            styles.uploadFilesButton,
+            (isEmpty || isDisabled || isUploading) && styles.disabled,
+          )}
+        >
+          Upload
+        </button>
       </div>
-      <button>SUBMIT</button>
     </form>
   );
 };
 
+export { type FileObject };
 export { FileInput };

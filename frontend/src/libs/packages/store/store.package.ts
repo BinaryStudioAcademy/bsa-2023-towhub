@@ -20,6 +20,7 @@ import { LocalStorage } from '../storage/storage.js';
 type RootReducer = {
   auth: ReturnType<typeof authReducer>;
   users: ReturnType<typeof usersReducer>;
+  files: ReturnType<typeof filesReducer>;
 };
 
 type ExtraArguments = {

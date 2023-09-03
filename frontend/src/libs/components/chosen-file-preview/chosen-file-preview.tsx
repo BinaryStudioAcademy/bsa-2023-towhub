@@ -1,27 +1,65 @@
-import { filesize } from 'filesize';
-
-// import { type FieldValues } from 'react-hook-form';
+import { type FileObject } from '~/libs/components/file-input/file-input.js';
 import { Icon } from '~/libs/components/icon/icon.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { filesize, getValidClassNames } from '~/libs/helpers/helpers.js';
+import { useCallback, useEffect, useState } from '~/libs/hooks/hooks.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { FileStatus } from '~/slices/files/files.js';
 
 import styles from './styles.module.scss';
 
 type Properties = {
-  file: File;
+  file: FileObject;
   fileStatus?: ValueOf<typeof FileStatus>; // 'Chosen' | 'Uploading' | 'Uploaded' | 'Rejected'
+  handleDeleteFile: (filename: string) => void;
 };
 
 const ChosenFilePreview = ({
   file,
   fileStatus = FileStatus.CHOSEN,
+  handleDeleteFile,
 }: Properties): JSX.Element => {
   const { name, size } = file;
 
+  const [actionIconName, setActionIconName] = useState<
+    ValueOf<typeof IconName>
+  >(IconName.CHECK);
+
+  const handleMouseEnter = useCallback(() => {
+    setActionIconName(IconName.XMARK);
+  }, [setActionIconName]);
+
+  const handleMouseLeave = useCallback(() => {
+    setActionIconName(IconName.CHECK);
+  }, [setActionIconName]);
+
+  const [beforeDeletionState, setBeforeDeletionState] = useState(false);
+
+  const DELETE_TIME_OFFSET = 200;
+  useEffect(() => {
+    if (beforeDeletionState) {
+      setTimeout(
+        () => handleDeleteFile(name),
+        Number.parseInt(styles['zoom-out-speed']) - DELETE_TIME_OFFSET,
+      );
+    }
+  }, [beforeDeletionState, handleDeleteFile, name]);
+
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>): void => {
+      event.preventDefault();
+      setBeforeDeletionState(true);
+    },
+    [setBeforeDeletionState],
+  );
+
   return (
-    <div className={styles.row}>
+    <div
+      className={getValidClassNames(
+        styles.row,
+        beforeDeletionState && styles.rowBeforeDeletion,
+      )}
+    >
       <div className={styles.rowContent}>
         <Icon className={styles.textMd} iconName={IconName.FILE} />
         <div className={styles.rowContentDetails}>
@@ -31,10 +69,17 @@ const ChosenFilePreview = ({
           <span className={styles.textSm}>{filesize(size)}</span>
         </div>
       </div>
-      <Icon
-        className={getValidClassNames(styles.rowIcon, styles.textLg)}
-        iconName={IconName.CHECK}
-      />
+      <button
+        className={styles.rowActionButton}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+      >
+        <Icon
+          className={getValidClassNames(styles.rowIcon, styles.textLg)}
+          iconName={actionIconName}
+        />
+      </button>
     </div>
   );
 };

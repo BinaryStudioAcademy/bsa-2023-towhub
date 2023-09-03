@@ -6,6 +6,6 @@ const allActions = {
   uploadFile,
 };
 
-export { allActions as actions };
+export { allActions as filesActions };
 export { reducer } from './files.slice.js';
 export { FileStatus } from './libs/enums/enums.js';

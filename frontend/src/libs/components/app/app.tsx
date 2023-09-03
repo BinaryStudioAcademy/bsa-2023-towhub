@@ -6,15 +6,14 @@ import // useAppDispatch,
 // useEffect,
 // useLocation,
 '~/libs/hooks/hooks.js';
+import // Checkbox,
+// Header,
+// Link,
+// RouterOutlet,
+'~/libs/components/components.js';
 
 import { useState } from 'react';
 
-import {
-  // Checkbox,
-  Header,
-  // Link,
-  // RouterOutlet,
-} from '~/libs/components/components.js';
 import { FileInput } from '~/libs/components/file-input/file-input.js';
 // import { actions as userActions } from '~/slices/users/users.js';
 
@@ -38,7 +37,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Header />
+      {/*<Header />*/}
 
       {/*<ul className="App-navigation-list">*/}
       {/*  <li>*/}
@@ -69,14 +68,10 @@ const App: React.FC = () => {
       {/*)}*/}
 
       <FileInput
-        name={'pic'}
-        label={'Drop here'}
+        label={'Drop file'}
         isDisabled={disabled}
-        // fileInputCustomConfig={{ maxSize: 1 }}
+        fileInputCustomConfig={{ maxFiles: 4, multiple: true }}
       />
-      {/*<button onClick={() => setDisabled((state) => !state)}>*/}
-      {/*  TOGGLE DISABLE*/}
-      {/*</button>*/}
     </>
   );
 };
