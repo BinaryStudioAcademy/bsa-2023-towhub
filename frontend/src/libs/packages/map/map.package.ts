@@ -1,5 +1,4 @@
-import truckImg from 'src/assets/img/tow-truck.png';
-
+import truckImg from '~/assets/img/tow-truck.png';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 
 import { type IMapService } from './libs/interfaces/interfaces.js';
