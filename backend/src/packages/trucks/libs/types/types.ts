@@ -1,5 +1,5 @@
-export { type TruckEntity } from './truck-entity-type/truck-entity.type.js';
+export { type TruckDatabaseModel } from './truck-entity-type/truck-database-model.type.js';
 export {
   type TruckAddRequestDto,
-  type TruckEntity as TruckEntityT,
+  type TruckEntity,
 } from 'shared/build/index.js';

@@ -5,20 +5,19 @@ import {
   type TruckManufacturer,
   type TruckTowType,
 } from './libs/enums/enums.js';
-import { type TruckEntityT } from './libs/types/types.js';
+import {
+  type TruckDatabaseModel,
+  type TruckEntity as TruckEntityT,
+} from './libs/types/types.js';
 
 class TruckEntity implements IEntity {
-  private id: TruckEntityT['id'] | null;
+  private id: number | null;
 
-  private createdAt: Date;
+  private manufacturer: ValueOf<typeof TruckManufacturer>;
 
-  private updatedAt: Date;
+  private towType: ValueOf<typeof TruckTowType>;
 
-  private manufacturer: string;
-
-  private towType: string;
-
-  private year: string;
+  private year: number;
 
   private licensePlateNumber: string;
 
@@ -36,8 +35,6 @@ class TruckEntity implements IEntity {
     towType,
   }: NullableProperties<TruckEntityT, 'id'>) {
     this.id = id;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
     this.manufacturer = manufacturer;
     this.capacity = capacity;
     this.pricePerKm = pricePerKm;
@@ -54,15 +51,15 @@ class TruckEntity implements IEntity {
     licensePlateNumber,
     year,
     towType,
-  }: TruckEntityT): TruckEntity {
+  }: TruckDatabaseModel): TruckEntity {
     return new TruckEntity({
       id,
-      manufacturer,
+      manufacturer: manufacturer as ValueOf<typeof TruckManufacturer>,
+      towType: towType as ValueOf<typeof TruckTowType>,
       capacity,
       pricePerKm,
       licensePlateNumber,
       year,
-      towType,
     });
   }
 
@@ -73,23 +70,23 @@ class TruckEntity implements IEntity {
     licensePlateNumber,
     year,
     towType,
-  }: Omit<TruckEntityT, 'id'>): TruckEntity {
+  }: Omit<TruckDatabaseModel, 'id'>): TruckEntity {
     return new TruckEntity({
       id: null,
-      manufacturer,
+      manufacturer: manufacturer as ValueOf<typeof TruckManufacturer>,
+      towType: towType as ValueOf<typeof TruckTowType>,
       capacity,
       pricePerKm,
       licensePlateNumber,
       year,
-      towType,
     });
   }
 
   public toObject(): TruckEntityT {
     return {
       id: this.id as number,
-      manufacturer: this.manufacturer as ValueOf<typeof TruckManufacturer>,
-      towType: this.towType as ValueOf<typeof TruckTowType>,
+      manufacturer: this.manufacturer,
+      towType: this.towType,
       year: this.year,
       capacity: this.capacity,
       pricePerKm: this.pricePerKm,
@@ -99,8 +96,8 @@ class TruckEntity implements IEntity {
 
   public toNewObject(): Omit<TruckEntityT, 'id'> {
     return {
-      manufacturer: this.manufacturer as ValueOf<typeof TruckManufacturer>,
-      towType: this.towType as ValueOf<typeof TruckTowType>,
+      manufacturer: this.manufacturer,
+      towType: this.towType,
       year: this.year,
       capacity: this.capacity,
       pricePerKm: this.pricePerKm,

@@ -3,10 +3,9 @@ import { type ValueOf } from '~/libs/types/types.js';
 import {
   type TruckManufacturer,
   type TruckTowType,
-  type TruckYear,
-} from '../enums/enums.js';
+} from '../../enums/enums.js';
 
-type TruckAddRequestDto = {
+type TruckFormModel = {
   manufacturer: {
     label: string;
     value: ValueOf<typeof TruckManufacturer>;
@@ -14,10 +13,7 @@ type TruckAddRequestDto = {
   capacity: number;
   pricePerKm: number;
   licensePlateNumber: string;
-  year: {
-    label: string;
-    value: ValueOf<typeof TruckYear>;
-  };
+  year: number;
   towType: {
     label: string;
     value: ValueOf<typeof TruckTowType>;
@@ -25,4 +21,4 @@ type TruckAddRequestDto = {
   drivers: string;
 };
 
-export { type TruckAddRequestDto };
+export { type TruckFormModel };
