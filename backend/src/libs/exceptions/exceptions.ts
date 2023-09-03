@@ -1,4 +1,3 @@
-export { DatabaseError } from './database/database.exception.js';
 export { DatabaseConnectionError } from './database/database.js';
 export { NotFoundError } from './not-found-error/not-found-error.exception.js';
 export {
