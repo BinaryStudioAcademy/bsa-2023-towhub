@@ -1,8 +1,8 @@
 interface IService<T = unknown> {
-  find(id: unknown): Promise<T>;
+  findById(id: unknown): Promise<T | null>;
   create(payload: unknown): Promise<T>;
-  update(parameters: { id: unknown; payload: unknown }): Promise<T>;
-  delete(id: unknown): Promise<unknown>;
+  update(id: unknown, payload: unknown): Promise<T>;
+  delete(id: unknown): Promise<boolean>;
 }
 
 export { type IService };

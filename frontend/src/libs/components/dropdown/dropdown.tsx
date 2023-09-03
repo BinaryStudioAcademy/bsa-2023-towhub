@@ -1,13 +1,21 @@
-import Select, { type StylesConfig } from 'react-select';
+import Select, {
+  type GroupBase,
+  type SingleValue,
+  type StylesConfig,
+} from 'react-select';
 
 import { useCallback, useMemo, useState } from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 
 type Properties = {
   options: SelectOption[];
+  defaultValue?: SelectOption;
+  onChange?: (value: string | undefined) => void;
 };
 
-const getStyles = (isMenuOpen: boolean): StylesConfig => {
+const getStyles = (
+  isMenuOpen: boolean,
+): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
   return {
     control: (styles) => ({
       ...styles,
@@ -47,6 +55,8 @@ const getStyles = (isMenuOpen: boolean): StylesConfig => {
 
 const Dropdown: React.FC<Properties> = ({
   options,
+  defaultValue,
+  onChange,
 }: Properties): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -60,8 +70,17 @@ const Dropdown: React.FC<Properties> = ({
 
   const stylesConfig = useMemo(() => getStyles(isMenuOpen), [isMenuOpen]);
 
+  const handleChange = useCallback(
+    (option: SingleValue<SelectOption>) => {
+      if (onChange) {
+        onChange(option?.value);
+      }
+    },
+    [onChange],
+  );
+
   return (
-    <Select
+    <Select<SelectOption>
       options={options}
       classNamePrefix="react-select"
       styles={stylesConfig}
@@ -69,6 +88,8 @@ const Dropdown: React.FC<Properties> = ({
       menuIsOpen={isMenuOpen}
       onMenuOpen={handleOpenMenu}
       onMenuClose={handleCloseMenu}
+      onChange={handleChange}
+      defaultValue={defaultValue}
     />
   );
 };

@@ -1,6 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
 
-import { Header, Link, RouterOutlet } from '~/libs/components/components.js';
+import { Header, RouterOutlet } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
@@ -44,20 +44,6 @@ const App: React.FC = () => {
   return (
     <>
       <Header />
-
-      <ul className="App-navigation-list">
-        <li>
-          <Link to={AppRoute.ROOT}>Root</Link>
-        </li>
-        <li>
-          <Link to={AppRoute.WELCOME}>Sign in</Link>
-        </li>
-        <li>
-          <Link to={AppRoute.SIGN_UP}>Sign up</Link>
-        </li>
-      </ul>
-      <p>Current path: {pathname}</p>
-
       <div>
         <RouterOutlet />
       </div>

@@ -15,7 +15,8 @@ type Properties = {
   isFullWidth?: boolean;
   frontIcon?: ValueOf<typeof IconName>;
   backIcon?: ValueOf<typeof IconName>;
-  onClick?: () => void;
+  children?: JSX.Element;
+  onClick?: (() => void) | ((event_: React.MouseEvent) => void);
 };
 
 const Button: React.FC<Properties> = ({
@@ -28,6 +29,7 @@ const Button: React.FC<Properties> = ({
   isFullWidth = false,
   frontIcon,
   backIcon,
+  children,
   onClick,
 }: Properties) => {
   return (
@@ -47,6 +49,7 @@ const Button: React.FC<Properties> = ({
       {frontIcon && <Icon iconName={frontIcon} />}
       {label}
       {backIcon && <Icon iconName={backIcon} />}
+      {children}
     </button>
   );
 };
