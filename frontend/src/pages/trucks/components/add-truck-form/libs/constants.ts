@@ -1,7 +1,7 @@
-import { type TruckAddRequestDto } from '~/packages/trucks/libs/types/types.js';
+import { type TruckFormModel } from '~/packages/trucks/libs/types/types.js';
 
 const DEFAULT_TRUCK_PAYLOAD: Omit<
-  TruckAddRequestDto,
+  TruckFormModel,
   'manufacturer' | 'year' | 'towType' | 'pricePerKm'
 > = {
   licensePlateNumber: '',

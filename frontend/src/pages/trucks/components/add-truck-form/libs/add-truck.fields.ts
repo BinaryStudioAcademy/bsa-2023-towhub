@@ -4,7 +4,7 @@ import {
   TruckCapacity,
   TruckPricePerKm,
 } from '~/packages/trucks/libs/enums/enums.js';
-import { type TruckAddRequestDto } from '~/packages/trucks/libs/types/types.js';
+import { type TruckFormModel } from '~/packages/trucks/libs/types/types.js';
 import {
   FormLabel,
   FormName,
@@ -24,7 +24,7 @@ const convertToSelectOptions = (
   }));
 };
 
-const ADD_TRUCK_FIELDS: FormField<TruckAddRequestDto>[] = [
+const ADD_TRUCK_FIELDS: FormField<TruckFormModel>[] = [
   {
     type: 'dropdown',
     label: FormLabel.MANUFACTURER,

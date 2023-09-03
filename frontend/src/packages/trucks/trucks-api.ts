@@ -1,5 +1,3 @@
-import { HttpMethod } from 'shared/build/libs/packages/http/libs/enums/http-method.enum.js';
-
 import { ApiPath, ContentType } from '~/libs/enums/enums.js';
 import { HttpHeader } from '~/libs/packages/http/http.js';
 import { type Http } from '~/libs/packages/http/http.package.js';
@@ -22,7 +20,7 @@ class TruckApi {
     const path = this.getFullEndpoint(TruckApiPath.ROOT);
 
     const response = await this.http.load(path, {
-      method: HttpMethod.POST,
+      method: 'POST',
       headers: this.getHeaders(ContentType.JSON),
       payload: JSON.stringify(truck),
     });
