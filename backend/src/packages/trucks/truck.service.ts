@@ -1,11 +1,7 @@
-import { type IService } from '~/libs/interfaces/service.interface';
+import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
-import {
-  reverseTransformTruckEntity,
-  transformTruckEntity,
-} from './libs/helper/transform-truck-entity.js';
-import { type TruckEntityT } from './libs/types/types.js';
+import { type TruckEntity as TruckEntityT } from './libs/types/types.js';
 import { TruckEntity } from './truck.entity.js';
 import { type TruckRepository } from './truck.repository.js';
 
@@ -17,14 +13,14 @@ class TruckService implements IService {
   }
 
   public async findById(id: number): Promise<TruckEntityT | null> {
-    const result = await this.repository.findById(id);
+    const [truck = null] = await this.repository.findById(id);
 
-    return result.length > 0
-      ? TruckEntity.initialize(transformTruckEntity(result[0])).toObject()
-      : null;
+    return truck ? TruckEntity.initialize(truck).toObject() : null;
   }
 
-  public async create(payload: TruckEntityT): Promise<TruckEntityT> {
+  public async create(
+    payload: Omit<TruckEntityT, 'id'>,
+  ): Promise<TruckEntityT> {
     const existingTruck = await this.repository.find(
       payload.licensePlateNumber,
     );
@@ -36,11 +32,9 @@ class TruckService implements IService {
       });
     }
 
-    const newTruckEntity = TruckEntity.initializeNew(payload);
+    const [result] = await this.repository.create(payload);
 
-    const [result] = await this.repository.create(newTruckEntity.toNewObject());
-
-    return TruckEntity.initialize(transformTruckEntity(result)).toObject();
+    return TruckEntity.initialize(result).toObject();
   }
 
   public async update(
@@ -58,12 +52,9 @@ class TruckService implements IService {
 
     const updatePayload = { ...truck, ...payload };
 
-    const [result] = await this.repository.update(
-      id,
-      reverseTransformTruckEntity(updatePayload),
-    );
+    const [result] = await this.repository.update(id, updatePayload);
 
-    return TruckEntity.initialize(transformTruckEntity(result)).toObject();
+    return TruckEntity.initialize(result).toObject();
   }
 
   public async delete(id: number): Promise<boolean> {
@@ -73,7 +64,7 @@ class TruckService implements IService {
   public async getAll(): Promise<TruckEntityT[]> {
     const result = await this.repository.findAll();
 
-    return result.map((element) => transformTruckEntity(element));
+    return result.map((element) => TruckEntity.initialize(element).toObject());
   }
 }
 
