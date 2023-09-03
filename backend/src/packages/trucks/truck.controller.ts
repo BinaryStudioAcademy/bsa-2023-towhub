@@ -8,10 +8,10 @@ import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 
 import { TruckApiPath } from './libs/enums/enums.js';
-import { type TruckEntityT } from './libs/types/types.js';
+import { type TruckEntity } from './libs/types/types.js';
 import {
+  truckCreateRequestBodyValidationSchema,
   truckIdParameterValidationSchema,
-  truckRequestBodyValidationSchema,
   truckUpdateRequestBodyValidationSchema,
 } from './libs/validation-schema/validation-schemas.js';
 import { type TruckService } from './truck.service.js';
@@ -127,12 +127,12 @@ class TruckController extends Controller {
       path: TruckApiPath.ROOT,
       method: 'POST',
       validation: {
-        body: truckRequestBodyValidationSchema,
+        body: truckCreateRequestBodyValidationSchema,
       },
       handler: (request) =>
         this.create(
           request as ApiHandlerOptions<{
-            body: TruckEntityT;
+            body: Omit<TruckEntity, 'id'>;
           }>,
         ),
     });
@@ -147,7 +147,7 @@ class TruckController extends Controller {
       handler: (request) =>
         this.update(
           request as ApiHandlerOptions<{
-            body: Partial<TruckEntityT>;
+            body: Partial<TruckEntity>;
             params: { id: number };
           }>,
         ),
@@ -215,7 +215,7 @@ class TruckController extends Controller {
    */
   private async create(
     options: ApiHandlerOptions<{
-      body: TruckEntityT;
+      body: Omit<TruckEntity, 'id'>;
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
@@ -261,7 +261,7 @@ class TruckController extends Controller {
 
   private async update(
     options: ApiHandlerOptions<{
-      body: Partial<TruckEntityT>;
+      body: Partial<TruckEntity>;
       params: { id: number };
     }>,
   ): Promise<ApiHandlerResponse> {
@@ -366,7 +366,7 @@ class TruckController extends Controller {
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
-      status: HttpCode.OK,
+      status: HttpCode.NO_CONTENT,
       payload: await this.truckService.delete(options.params.id),
     };
   }
