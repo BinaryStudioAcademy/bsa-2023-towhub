@@ -1,17 +1,18 @@
-import { useCallback, useSearchParameters } from '../hooks.js';
+import { useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 type Queries = Record<string, string | null>;
 
-type Parameters = Record<string, string | number>;
+type ParametersT = Record<string, string | number>;
 
 type ReturnType = {
   getQueryParameters: (...keys: string[]) => string | Queries | null;
-  setQueryParameters: (parameters: Parameters) => void;
+  setQueryParameters: (parameters: ParametersT) => void;
   removeQueryParameters: (...keys: string[]) => void;
 };
 
 const useQueryParameters = (): ReturnType => {
-  const [searchParameters, setSearchParameters] = useSearchParameters();
+  const [searchParameters, setSearchParameters] = useSearchParams();
 
   const getQueryParameters = useCallback(
     (...keys: string[]): Queries | string | null => {
@@ -30,7 +31,7 @@ const useQueryParameters = (): ReturnType => {
   );
 
   const setQueryParameters = useCallback(
-    (parameters: Parameters): void => {
+    (parameters: ParametersT): void => {
       const newSearchParameters = new URLSearchParams(searchParameters);
       for (const key in parameters) {
         newSearchParameters.set(key, parameters[key].toString());
