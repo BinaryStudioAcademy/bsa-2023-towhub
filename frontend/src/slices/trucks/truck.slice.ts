@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { type TruckEntity } from 'shared/build/index.js';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
+import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 
 import { addTruck } from './actions.js';
 
