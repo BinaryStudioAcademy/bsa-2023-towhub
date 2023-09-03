@@ -1,1 +1,4 @@
-export { type FileInputConfig } from 'shared/build/index.js';
+export {
+  type FileInputConfig,
+  type FileUploadResponseDto,
+} from 'shared/build/index.js';

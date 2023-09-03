@@ -70,7 +70,7 @@ const App: React.FC = () => {
       <FileInput
         label={'Drop file'}
         isDisabled={disabled}
-        fileInputCustomConfig={{ maxFiles: 4, multiple: true }}
+        // fileInputCustomConfig={{ maxFiles: 2, multiple: true }}
       />
     </>
   );

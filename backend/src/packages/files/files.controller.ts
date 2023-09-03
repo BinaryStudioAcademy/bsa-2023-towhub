@@ -12,7 +12,6 @@ import { fileInputDefaultsConfig } from './libs/config/config.js';
 import { FilesValidationStrategy } from './libs/enums/enums.js';
 import {
   type DeleteFileRequestParameters,
-  type FileEntityT,
   type FileUploadResponseDto,
   type GetFileRequestParameters,
   type MultipartParsedFile,
@@ -27,6 +26,66 @@ import {
   filesUpdateNameRequestParameters,
 } from './libs/validation-schemas/validation-schemas.js';
 
+/**
+ * @swagger
+ * tags:
+ *   name: files
+ *   description: Files API
+ * components:
+ *    securitySchemes:
+ *      bearerAuth:
+ *        type: http
+ *        scheme: bearer
+ *        bearerFormat: JWT
+ *    schemas:
+ *      ErrorType:
+ *        type: object
+ *        properties:
+ *          errorType:
+ *            type: string
+ *            example: COMMON
+ *            enum:
+ *             - COMMON
+ *             - VALIDATION
+ *      FileAlreadyExists:
+ *        allOf:
+ *          - $ref: '#/components/schemas/ErrorType'
+ *          - type: object
+ *            properties:
+ *              message:
+ *                type: string
+ *                enum:
+ *                 - File *name* already exists!
+ *      FileDoesNotExist:
+ *        allOf:
+ *          - $ref: '#/components/schemas/ErrorType'
+ *          - type: object
+ *            properties:
+ *              message:
+ *                type: string
+ *                enum:
+ *                 - File with such id does not exist!
+ *      File:
+ *        type: object
+ *        properties:
+ *          id:
+ *            type: number
+ *            format: number
+ *            minimum: 1
+ *          key:
+ *            type: string
+ *            minLength: 1
+ *            pattern: ^\w(?:[\w .-]*\w)?\.[\w-]+$
+ *            example: image.jpg
+ *          contentType:
+ *            type: string
+ *            pattern: \w+/[-+.\w]+
+ *            description: Valid MIME type
+ *            example: image/png
+ *
+ * security:
+ *   - bearerAuth: []
+ */
 class FilesController extends Controller {
   private fileService: FilesService;
 
@@ -113,6 +172,45 @@ class FilesController extends Controller {
     });
   }
 
+  /**
+   * @swagger
+   * /files/:
+   *    post:
+   *      tags:
+   *       - files
+   *      summary: Upload files
+   *      description: Upload files
+   *      requestBody:
+   *        content:
+   *          multipart/form-data:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                files:
+   *                  type: array
+   *                  items:
+   *                    type: string
+   *                    format: binary
+   *      responses:
+   *        201:
+   *          description: Successful file upload.
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  totalCount:
+   *                    type: number
+   *                  items:
+   *                    $ref: '#/components/schemas/File'
+   *        400:
+   *          description:
+   *            File with such name already exists
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/FileAlreadyExists'
+   */
   private async create(
     options: ApiHandlerOptions<{
       parsedFiles: MultipartParsedFile[];
@@ -121,7 +219,7 @@ class FilesController extends Controller {
     const result = await this.fileService.create(options.parsedFiles);
 
     return {
-      status: HttpCode.OK,
+      status: HttpCode.CREATED,
       payload: {
         items: result,
         totalCount: result.length,
@@ -129,9 +227,54 @@ class FilesController extends Controller {
     };
   }
 
+  /**
+   * @swagger
+   * /files/{id}:
+   *    put:
+   *      tags:
+   *       - files
+   *      summary: Update stored file name
+   *      description: Update stored file name
+   *      parameters:
+   *        - in: path
+   *          name: id
+   *          schema:
+   *            type: integer
+   *          required: true
+   *          description: Numeric ID of the file whose name to update
+   *          example: 1
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              required:
+   *                - key
+   *              properties:
+   *                key:
+   *                  $ref: '#/components/schemas/File/properties/key'
+   *      responses:
+   *        200:
+   *          description: Successful file name update.
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  result:
+   *                    $ref: '#/components/schemas/File'
+   *        400:
+   *          description:
+   *            File with such id does not exist
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/FileDoesNotExist'
+   */
+
   private async update(
     options: ApiHandlerOptions<{
-      params: { id: FileEntityT['id'] };
+      params: UpdateFileNameRequestParameters;
       body: UpdateFileNameRequestDto;
     }>,
   ): Promise<ApiHandlerResponse> {
@@ -148,6 +291,42 @@ class FilesController extends Controller {
     };
   }
 
+  /**
+   * @swagger
+   * /files/{id}:
+   *    delete:
+   *      tags:
+   *       - files
+   *      summary: Delete stored file
+   *      description: Delete stored file
+   *      parameters:
+   *        - in: path
+   *          name: id
+   *          schema:
+   *            type: integer
+   *          required: true
+   *          description: Numeric ID of the file to delete
+   *          example: 1
+   *      responses:
+   *        200:
+   *          description: Successful attempt to delete a file
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  result:
+   *                    type: boolean
+   *                    description: true, if file was found and deleted, false, if file was not found.
+   *        400:
+   *          description:
+   *            File with such id does not exist
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/FileDoesNotExist'
+   */
+
   private async delete(
     options: ApiHandlerOptions<{
       params: DeleteFileRequestParameters;
@@ -163,6 +342,40 @@ class FilesController extends Controller {
     };
   }
 
+  /**
+   * @swagger
+   * /files/url/{id}:
+   *    get:
+   *      tags:
+   *       - files
+   *      summary: Get stored file's temporary URL
+   *      description: Get stored file's temporary URL
+   *      parameters:
+   *        - in: path
+   *          name: id
+   *          schema:
+   *            type: integer
+   *          required: true
+   *          description: Numeric ID of the file whose temporary URL to get
+   *          example: 1
+   *      responses:
+   *        200:
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  result:
+   *                    type: string
+   *        400:
+   *          description:
+   *            File with such id does not exist
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/FileDoesNotExist'
+   */
+
   private async getUrlById(
     options: ApiHandlerOptions<{
       params: GetFileRequestParameters;
@@ -175,6 +388,40 @@ class FilesController extends Controller {
       payload: { result: url },
     };
   }
+
+  /**
+   * @swagger
+   * /files/{id}:
+   *    get:
+   *      tags:
+   *       - files
+   *      summary: Get stored file's database record
+   *      description: Get stored file's database record
+   *      parameters:
+   *        - in: path
+   *          name: id
+   *          schema:
+   *            type: integer
+   *          required: true
+   *          description: Numeric ID of the file whose database record to get
+   *          example: 1
+   *      responses:
+   *        200:
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  result:
+   *                    $ref: '#/components/schemas/File'
+   *        400:
+   *          description:
+   *            File with such id does not exist
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/FileDoesNotExist'
+   */
 
   private async getRecordById(
     options: ApiHandlerOptions<{

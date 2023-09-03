@@ -11,7 +11,7 @@ import styles from './styles.module.scss';
 type Properties = {
   file: FileObject;
   fileStatus?: ValueOf<typeof FileStatus>; // 'Chosen' | 'Uploading' | 'Uploaded' | 'Rejected'
-  handleDeleteFile: (filename: string) => void;
+  handleDeleteFile: (id: string) => void;
 };
 
 const ChosenFilePreview = ({
@@ -19,7 +19,7 @@ const ChosenFilePreview = ({
   fileStatus = FileStatus.CHOSEN,
   handleDeleteFile,
 }: Properties): JSX.Element => {
-  const { name, size } = file;
+  const { name, size, id } = file;
 
   const [actionIconName, setActionIconName] = useState<
     ValueOf<typeof IconName>
@@ -39,7 +39,7 @@ const ChosenFilePreview = ({
   useEffect(() => {
     if (beforeDeletionState) {
       setTimeout(
-        () => handleDeleteFile(name),
+        () => handleDeleteFile(id),
         Number.parseInt(styles['zoom-out-speed']) - DELETE_TIME_OFFSET,
       );
     }

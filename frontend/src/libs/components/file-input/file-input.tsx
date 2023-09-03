@@ -6,7 +6,6 @@ import {
   useDropzone,
 } from 'react-dropzone';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { checkValidFileName } from 'shared/build';
 
 import { ChosenFilePreview } from '~/libs/components/chosen-file-preview/chosen-file-preview.js';
 import { IconName } from '~/libs/enums/enums.js';
@@ -20,21 +19,33 @@ import {
   useRef,
   useState,
 } from '~/libs/hooks/hooks.js';
+import { type HttpError } from '~/libs/packages/http/libs/exceptions/exceptions.js';
 import { filesActions, FileStatus } from '~/slices/files/files.js';
 
 import { Icon } from '../icon/icon.jsx';
 import { fileInputDefaultsConfig } from './libs/config/config.js';
-import { DropzoneFormatErrorMessage } from './libs/helpers/helpers.js';
-import { type FileInputConfig } from './libs/types/types.js';
+import {
+  checkValidFileName,
+  DropzoneFormatErrorMessage,
+} from './libs/helpers/helpers.js';
+import {
+  type FileInputConfig,
+  type FileUploadResponseDto,
+} from './libs/types/types.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   label: string;
   isDisabled?: boolean;
   fileInputCustomConfig?: FileInputConfig;
+  handleAfterSubmit?: (
+    response: FileUploadResponseDto | null,
+    error: HttpError | null,
+  ) => unknown;
 };
 
 type FileObject = {
+  id: string;
   webkitRelativePath: File['webkitRelativePath'];
   arrayBuffer: ReturnType<File['arrayBuffer']>;
   name: File['name'];
@@ -48,6 +59,7 @@ const FileInput = ({
   label,
   isDisabled = false,
   fileInputCustomConfig,
+  handleAfterSubmit,
 }: Properties): JSX.Element => {
   const uploadButtonReference = useRef<HTMLButtonElement>(null);
   useBindEnterToClick(uploadButtonReference);
@@ -77,11 +89,12 @@ const FileInput = ({
   const isEmpty = useMemo(() => files.length === 0, [files]);
 
   const handleDeleteFile = useCallback(
-    (filename: string) => {
-      const index = files.findIndex((file) => file.name === filename);
+    (id: string) => {
+      const index = files.findIndex((file) => file.id === id);
       remove(index);
+      clearErrors('files');
     },
-    [remove, files],
+    [remove, files, clearErrors],
   );
 
   const fileInputConfig = useMemo(
@@ -188,7 +201,24 @@ const FileInput = ({
         }),
       );
 
-      void dispatch(filesActions.uploadFile(files));
+      let response: FileUploadResponseDto | null = null;
+      let error: HttpError | null = null;
+
+      try {
+        response = await dispatch(filesActions.uploadFile(files)).unwrap();
+      } catch (error_) {
+        error = error_ as HttpError;
+      }
+
+      if (!handleAfterSubmit) {
+        return;
+      }
+
+      if (response) {
+        return handleAfterSubmit(response, null);
+      }
+
+      handleAfterSubmit(null, error);
     },
     [dispatch],
   );
