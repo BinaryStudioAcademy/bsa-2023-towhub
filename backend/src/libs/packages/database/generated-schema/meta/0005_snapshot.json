@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "a1810b18-27af-4eae-b6f3-b2b403f3cb9f",
+  "id": "9bdcc73b-f7a6-465d-ac05-f9c48c9dbf56",
   "prevId": "dd8363c1-1ee4-472f-93b3-cfe9bf6a5348",
   "tables": {
     "business_details": {
@@ -165,7 +165,7 @@
         },
         "year": {
           "name": "year",
-          "type": "varchar",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },

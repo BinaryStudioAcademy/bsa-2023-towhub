@@ -85,7 +85,7 @@ erDiagram
         capacity integer "not null"
         price_per_km real "not null"
         license_plate_number varchar "not null"
-        year varchar "not null"
+        year number "not null"
         tow_type varchar "not null"
         created_at timestamp "not null"
         updated_at timestamp "not null"
