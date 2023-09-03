@@ -1,5 +1,8 @@
+import { type FileEntityT } from '../file-entity.type.js';
+
 type FileUploadResponseDto = {
-  key: string;
+  items: FileEntityT[];
+  totalCount: number;
 };
 
 export { type FileUploadResponseDto };

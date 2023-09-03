@@ -19,7 +19,7 @@
     "lint:fs": "ls-lint",
     "lint:type": "npm run lint:type --workspaces --if-present",
     "lint:js": "npm run lint:js --workspaces --if-present -- --max-warnings=0",
-    "lint:css": "npm run lint:css --workspaces --if-present",
+    "lint:css": "npm run lint:css --workspaces --if-present -- --fix",
     "lint:prettify": "prettier --check \"**/*.{ts,tsx,json,md,scss,html,sql}\"",
     "lint": "npm run lint:editor && npm run lint:fs && npm run lint:prettify && npm run lint:type && npm run lint:js && npm run lint:css",
     "prettify": "prettier --write \"**/*.{ts,tsx,json,md,scss,html,sql}\"",
@@ -55,5 +55,8 @@
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
     "commit-msg": "npx commitlint --edit $1"
+  },
+  "dependencies": {
+    "mime-types": "2.1.35"
   }
 }

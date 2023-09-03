@@ -1,9 +1,9 @@
-import { type DropzoneOptions } from 'react-dropzone';
+import { type FileInputConfig } from '../types/file-input-config.js';
 
-const fileInputDefaultsConfig: DropzoneOptions = {
+const fileInputDefaultsConfig: FileInputConfig = {
   multiple: false,
-  maxFiles: 0,
-  maxSize: 30_000_000,
+  maxFiles: 2,
+  maxSize: 300_000_000,
   minSize: 0,
   accept: {
     'image/png': ['.png'],
