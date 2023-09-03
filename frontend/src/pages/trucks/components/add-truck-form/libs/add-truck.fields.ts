@@ -1,5 +1,9 @@
 import { type FormField } from '~/libs/types/form.type.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
+import {
+  TruckCapacity,
+  TruckPricePerKm,
+} from '~/packages/trucks/libs/enums/enums.js';
 import { type TruckAddRequestDto } from '~/packages/trucks/libs/types/types.js';
 import {
   FormLabel,
@@ -34,10 +38,10 @@ const ADD_TRUCK_FIELDS: FormField<TruckAddRequestDto>[] = [
     options: convertToSelectOptions(TruckTowType),
   },
   {
-    type: 'dropdown',
+    type: 'number',
     label: FormLabel.YEAR,
     name: FormName.YEAR,
-    options: convertToSelectOptions(TruckYear),
+    min: TruckYear.MIN,
   },
   {
     type: 'text',
@@ -49,15 +53,15 @@ const ADD_TRUCK_FIELDS: FormField<TruckAddRequestDto>[] = [
     type: 'number',
     label: FormLabel.CAPACITY,
     name: FormName.CAPACITY,
-    min: 0,
+    min: TruckCapacity.MIN,
   },
   {
     type: 'number',
     label: FormLabel.PRICE_PER_KM,
     name: FormName.PRICE_PER_KM,
-    min: 1,
-    max: 100,
-    step: '0.10',
+    min: TruckPricePerKm.MIN,
+    max: TruckPricePerKm.MAX,
+    step: TruckPricePerKm.STEP,
   },
   {
     type: 'text',

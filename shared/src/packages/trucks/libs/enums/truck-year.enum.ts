@@ -1,10 +1,8 @@
-const startYear = 2000;
-const endYear = 2023;
+const currentYear = new Date().getFullYear();
 
-const TruckYear: Record<string, string> = {};
-
-for (let year = startYear; year <= endYear; year++) {
-  TruckYear[year] = year.toString();
-}
+const TruckYear = {
+  MIN: 2000,
+  MAX: currentYear,
+};
 
 export { TruckYear };

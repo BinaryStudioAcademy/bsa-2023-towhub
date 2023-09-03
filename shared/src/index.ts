@@ -61,15 +61,15 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
-  type TruckAddRequestDto,
   type TruckEntity,
   FormLabel,
   FormName,
-  truckAddValidationSchema,
   TruckApiPath,
+  TruckCapacity,
+  truckCreateRequestBodyValidationSchema,
   truckIdParameterValidationSchema,
   TruckManufacturer,
-  truckRequestBodyValidationSchema,
+  TruckPricePerKm,
   TruckTowType,
   truckUpdateRequestBodyValidationSchema,
   TruckYear,
