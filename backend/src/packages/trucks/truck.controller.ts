@@ -40,6 +40,7 @@ import { type TruckService } from './truck.service.js';
  *             - scania
  *             - kenworth
  *             - ford
+ *           example: kenworth
  *         towType:
  *           type: string
  *           enum:
@@ -47,20 +48,26 @@ import { type TruckService } from './truck.service.js';
  *             - hook_and_chain
  *             - integrated
  *             - wheel_lift
+ *           example: integrated
  *         year:
- *           type: string
+ *           type: number
+ *           example: 2020
  *         licensePlateNumber:
  *           type: string
+ *           example: AA0007AK
  *         capacity:
  *           type: number
+ *           example: 20
  *         pricePerKm:
  *           type: number
+ *           example: 5
  *
  *     TruckResponse:
  *       type: object
  *       properties:
  *         id:
  *           type: number
+ *           example: 1
  *         manufacturer:
  *           type: string
  *           enum:
@@ -74,6 +81,7 @@ import { type TruckService } from './truck.service.js';
  *             - scania
  *             - kenworth
  *             - ford
+ *           example: kenworth
  *         towType:
  *           type: string
  *           enum:
@@ -81,14 +89,19 @@ import { type TruckService } from './truck.service.js';
  *             - hook_and_chain
  *             - integrated
  *             - wheel_lift
+ *           example: integrated
  *         year:
- *           type: string
+ *           type: number
+ *           example: 2020
  *         licensePlateNumber:
  *           type: string
+ *           example: AA0007AK
  *         capacity:
  *           type: number
+ *           example: 20
  *         pricePerKm:
  *           type: number
+ *           example: 5
  *
  *     ErrorType:
  *       type: object
@@ -291,8 +304,6 @@ class TruckController extends Controller {
    *               type: array
    *               items:
    *                 $ref: '#/components/schemas/TruckResponse'
-   *       '500':
-   *         description: Internal server error
    */
   private async getAll(): Promise<ApiHandlerResponse> {
     return {
@@ -324,8 +335,6 @@ class TruckController extends Controller {
    *               $ref: '#/components/schemas/TruckResponse'
    *       '404':
    *         description: Truck not found
-   *       '500':
-   *         description: Internal server error
    */
   private async get(
     options: ApiHandlerOptions<{
@@ -357,8 +366,6 @@ class TruckController extends Controller {
    *         description: Truck deleted successfully
    *       '404':
    *         description: Truck not found
-   *       '500':
-   *         description: Internal server error
    */
   private async delete(
     options: ApiHandlerOptions<{
