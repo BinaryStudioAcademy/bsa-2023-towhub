@@ -115,34 +115,19 @@ const Dropdown = <T extends FieldValues>({
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
-        {name && control ? (
-          <Select<SelectOption>
-            {...field}
-            options={options}
-            classNamePrefix="react-select"
-            className={getValidClassNames(inputStyles)}
-            styles={stylesConfig}
-            isSearchable={false}
-            menuIsOpen={isMenuOpen}
-            onMenuOpen={handleOpenMenu}
-            onMenuClose={handleCloseMenu}
-            onChange={handleChange}
-            defaultValue={defaultValue}
-          />
-        ) : (
-          <Select<SelectOption>
-            options={options}
-            classNamePrefix="react-select"
-            className={getValidClassNames(inputStyles)}
-            styles={stylesConfig}
-            isSearchable={false}
-            menuIsOpen={isMenuOpen}
-            onMenuOpen={handleOpenMenu}
-            onMenuClose={handleCloseMenu}
-            onChange={handleChange}
-            defaultValue={defaultValue}
-          />
-        )}
+        <Select<SelectOption>
+          {...(name && control ? field : {})}
+          options={options}
+          classNamePrefix="react-select"
+          className={getValidClassNames(inputStyles)}
+          styles={stylesConfig}
+          isSearchable={false}
+          menuIsOpen={isMenuOpen}
+          onMenuOpen={handleOpenMenu}
+          onMenuClose={handleCloseMenu}
+          onChange={handleChange}
+          defaultValue={defaultValue}
+        />
       </span>
       <span
         className={getValidClassNames(
