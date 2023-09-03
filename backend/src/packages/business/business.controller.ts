@@ -6,6 +6,7 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { AuthStrategy } from '~/packages/auth/auth.js';
 
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
@@ -145,6 +146,7 @@ class BusinessController extends Controller {
 
     this.addRoute({
       path: BusinessApiPath.ROOT,
+      authStrategy: AuthStrategy.VERIFY_JWT,
       method: 'POST',
       validation: {
         body: businessAddRequestBody,
@@ -160,6 +162,7 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.$ID,
       method: 'PUT',
+      authStrategy: AuthStrategy.VERIFY_JWT,
       validation: {
         body: businessUpdateRequestBody,
         params: businessUpdateParameters,
@@ -176,6 +179,7 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.$ID,
       method: 'DELETE',
+      authStrategy: AuthStrategy.VERIFY_JWT,
       validation: {
         params: businessDeleteParameters,
       },
@@ -190,6 +194,7 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.$ID,
       method: 'GET',
+      authStrategy: AuthStrategy.VERIFY_JWT,
       validation: {
         params: businessGetParameters,
       },

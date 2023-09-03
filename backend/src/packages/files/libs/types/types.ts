@@ -1,7 +1,16 @@
 export {
   type FileDatabaseModel,
   type FileDatabaseModelCreateUpdate,
-  type FileEntityCreateUpdate,
   type FileEntityObjectT,
 } from './file-models.type.js';
-export { type FileEntityT } from 'shared/build/index.js';
+export { type MultipartParsedFile } from './multipart-parsed-file.type.js';
+export {
+  type DeleteFileRequestParameters,
+  type FileEntityT,
+  type FileInputConfig,
+  type FileUploadResponseDto,
+  type GetFileRequestParameters,
+  type UpdateFileNameRequestDto,
+  type UpdateFileNameRequestParameters,
+  FilesApiPath,
+} from 'shared/build/index.js';

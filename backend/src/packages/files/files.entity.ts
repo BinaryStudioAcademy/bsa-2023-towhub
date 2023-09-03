@@ -3,7 +3,7 @@ import { type NullableProperties } from '~/libs/types/types.js';
 
 import { type FileEntityT } from './libs/types/types.js';
 
-class FileEntity implements IEntity {
+class FilesEntity implements IEntity {
   private id: number | null;
 
   private key: string;
@@ -20,8 +20,8 @@ class FileEntity implements IEntity {
     this.contentType = contentType;
   }
 
-  public static initialize({ id, key, contentType }: FileEntityT): FileEntity {
-    return new FileEntity({
+  public static initialize({ id, key, contentType }: FileEntityT): FilesEntity {
+    return new FilesEntity({
       id,
       key,
       contentType,
@@ -31,8 +31,8 @@ class FileEntity implements IEntity {
   public static initializeNew({
     key,
     contentType,
-  }: Omit<FileEntityT, 'id'>): FileEntity {
-    return new FileEntity({
+  }: Omit<FileEntityT, 'id'>): FilesEntity {
+    return new FilesEntity({
       id: null,
       key,
       contentType,
@@ -55,4 +55,4 @@ class FileEntity implements IEntity {
   }
 }
 
-export { FileEntity };
+export { FilesEntity };

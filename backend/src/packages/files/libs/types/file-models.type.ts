@@ -1,9 +1,7 @@
 import { type InferModel } from 'drizzle-orm';
 
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
-import { type FileEntity } from '~/packages/files/files.entity.js';
-
-import { type FileEntityT } from './types.js';
+import { type FilesEntity } from '~/packages/files/files.entity.js';
 
 type FileDatabaseModel = InferModel<DatabaseSchema['files']>;
 
@@ -12,13 +10,10 @@ type FileDatabaseModelCreateUpdate = InferModel<
   'insert'
 >;
 
-type FileEntityObjectT = ReturnType<FileEntity['toObject']>;
-
-type FileEntityCreateUpdate = Omit<FileEntityT, 'id'>;
+type FileEntityObjectT = ReturnType<FilesEntity['toObject']>;
 
 export {
   type FileDatabaseModel,
   type FileDatabaseModelCreateUpdate,
-  type FileEntityCreateUpdate,
   type FileEntityObjectT,
 };

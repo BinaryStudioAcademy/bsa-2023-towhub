@@ -9,7 +9,7 @@ import {
   type FileDatabaseModelCreateUpdate,
 } from './libs/types/types.js';
 
-class FileRepository implements IRepository<FileDatabaseModel> {
+class FilesRepository implements IRepository<FileDatabaseModel> {
   private db: Pick<IDatabase, 'driver'>;
 
   private filesSchema: DatabaseSchema['files'];
@@ -88,4 +88,4 @@ class FileRepository implements IRepository<FileDatabaseModel> {
   }
 }
 
-export { FileRepository };
+export { FilesRepository };
