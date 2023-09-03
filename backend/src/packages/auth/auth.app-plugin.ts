@@ -15,40 +15,44 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
 
   fastify.decorateRequest('user', null);
 
-  const verifyJwtStrategy = async (
-    request: FastifyRequest,
-    _: FastifyReply,
-    done: (error?: Error) => void,
-  ): Promise<void> => {
-    try {
-      const token = request.headers.authorization?.replace('Bearer ', '');
+  const verifyJwtStrategy =
+    (isJwtRequired: boolean) =>
+    async (
+      request: FastifyRequest,
+      _: FastifyReply,
+      done: (error?: Error) => void,
+    ): Promise<void> => {
+      try {
+        const token = request.headers.authorization?.replace('Bearer ', '');
 
-      if (!token) {
-        return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED));
+        if (!token && isJwtRequired) {
+          return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED));
+        } else if (!token) {
+          return;
+        }
+
+        const rawPayload = await jwtService.verifyToken(token);
+
+        const { error, value: payload } = jwtPayloadSchema.validate(rawPayload);
+
+        if (!payload) {
+          return done(createUnauthorizedError(HttpMessage.INVALID_JWT, error));
+        }
+
+        const user = await userService.findById(payload.id);
+
+        if (!user || user.accessToken !== token) {
+          return done(createUnauthorizedError(HttpMessage.INVALID_JWT));
+        }
+
+        request.user = user;
+
+        // Async should not call done() unless error
+        // return done()
+      } catch (error) {
+        return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED, error));
       }
-
-      const rawPayload = await jwtService.verifyToken(token);
-
-      const { error, value: payload } = jwtPayloadSchema.validate(rawPayload);
-
-      if (!payload) {
-        return done(createUnauthorizedError(HttpMessage.INVALID_JWT, error));
-      }
-
-      const user = await userService.findById(payload.id);
-
-      if (!user || user.accessToken !== token) {
-        return done(createUnauthorizedError(HttpMessage.INVALID_JWT));
-      }
-
-      request.user = user;
-
-      // Async should not call done() unless error
-      // return done()
-    } catch (error) {
-      return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED, error));
-    }
-  };
+    };
 
   const verifyGroup =
     (group: ValueOf<typeof UserGroupKey>) =>
@@ -62,7 +66,9 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
       }
     };
 
-  fastify.decorate(AuthStrategy.VERIFY_JWT, verifyJwtStrategy);
+  fastify.decorate(AuthStrategy.INJECT_USER, verifyJwtStrategy(false));
+
+  fastify.decorate(AuthStrategy.VERIFY_JWT, verifyJwtStrategy(true));
 
   fastify.decorate(
     AuthStrategy.VERIFY_BUSINESS_GROUP,
