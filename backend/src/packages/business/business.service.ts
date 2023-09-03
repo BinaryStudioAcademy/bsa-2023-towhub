@@ -122,7 +122,6 @@ class BusinessService implements IService {
 
   public async createDriver({
     payload,
-    groupKey,
     id,
   }: DriverCreatePayload): Promise<DriverAddResponseWithGroup> {
     const doesBusinessExist = await this.findById(id);
@@ -134,7 +133,7 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.create({ payload, groupKey, id });
+    return await this.driverService.create({ payload, id });
   }
 
   public async updateDriver({

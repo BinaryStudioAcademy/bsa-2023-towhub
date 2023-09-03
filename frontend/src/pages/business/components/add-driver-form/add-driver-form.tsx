@@ -1,4 +1,5 @@
 import { Form } from '~/libs/components/components.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   type DriverAddRequestDto,
   driverAddRequestBody,
@@ -15,7 +16,9 @@ type Properties = {
 const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
   return (
     <div className={styles.wrapper}>
-      <h3 className={styles.title}>Add driver</h3>
+      <h3 className={getValidClassNames('h4', 'uppercase', styles.title)}>
+        Add driver
+      </h3>
       <Form
         defaultValues={DEFAULT_ADD_DRIVER_PAYLOAD}
         validationSchema={driverAddRequestBody}

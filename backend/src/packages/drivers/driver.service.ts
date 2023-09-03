@@ -2,6 +2,7 @@ import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
+import { UserGroupKey } from '../auth/libs/enums/enums.js';
 import { DriverEntity } from '../drivers/driver.entity.js';
 import { type DriverRepository } from '../drivers/driver.repository.js';
 import {
@@ -50,7 +51,6 @@ class DriverService implements IService {
 
   public async create({
     payload,
-    groupKey,
     id,
   }: DriverCreatePayload): Promise<DriverAddResponseWithGroup> {
     const { password, email, lastName, firstName, phone, driverLicenseNumber } =
@@ -68,7 +68,7 @@ class DriverService implements IService {
         message: HttpMessage.DRIVER_ALREADY_EXISTS,
       });
     }
-    const group = await this.groupService.findByKey(groupKey);
+    const group = await this.groupService.findByKey(UserGroupKey.DRIVER);
 
     if (!group) {
       throw new HttpError({

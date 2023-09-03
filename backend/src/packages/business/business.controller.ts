@@ -317,7 +317,7 @@ class BusinessController extends Controller {
         this.createDriver(
           options as ApiHandlerOptions<{
             body: DriverAddRequestDto;
-            params: { id: number; groupName: ValueOf<typeof UserGroupKey> };
+            params: { id: number };
           }>,
         ),
     });
@@ -623,12 +623,11 @@ class BusinessController extends Controller {
   private async createDriver(
     options: ApiHandlerOptions<{
       body: DriverAddRequestDto;
-      params: { id: number; groupName: ValueOf<typeof UserGroupKey> };
+      params: { id: number };
     }>,
   ): Promise<ApiHandlerResponse> {
     const createdDriver = await this.businessService.createDriver({
       payload: options.body,
-      groupKey: options.params.groupName,
       id: options.params.id,
     });
 
