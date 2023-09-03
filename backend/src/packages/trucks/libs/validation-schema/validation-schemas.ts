@@ -1,6 +1,5 @@
 export {
-  truckAddValidationSchema,
+  truckCreateRequestBodyValidationSchema,
   truckIdParameterValidationSchema,
-  truckRequestBodyValidationSchema,
   truckUpdateRequestBodyValidationSchema,
 } from 'shared/build/index.js';

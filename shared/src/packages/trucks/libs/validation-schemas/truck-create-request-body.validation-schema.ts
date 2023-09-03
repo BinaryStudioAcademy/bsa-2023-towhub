@@ -1,14 +1,9 @@
 import joi from 'joi';
 
-import {
-  FormLabel,
-  TruckManufacturer,
-  TruckTowType,
-  TruckYear,
-} from '../enums/enums.js';
+import { FormLabel, TruckManufacturer, TruckTowType } from '../enums/enums.js';
 import { type TruckEntity } from '../types/types.js';
 
-const truckRequestBodyValidationSchema = joi.object<
+const truckCreateRequestBodyValidationSchema = joi.object<
   Omit<TruckEntity, 'id'>,
   true
 >({
@@ -51,13 +46,10 @@ const truckRequestBodyValidationSchema = joi.object<
       'string.pattern.base': `Invalid ${FormLabel.LICENSE_PLATE}`,
     }),
 
-  year: joi
-    .string()
-    .valid(...Object.values(TruckYear))
-    .messages({
-      'any.only': `Invalid ${FormLabel.YEAR}`,
-      'any.required': `${FormLabel.YEAR} is required`,
-    }),
+  year: joi.number().messages({
+    'any.only': `Invalid ${FormLabel.YEAR}`,
+    'any.required': `${FormLabel.YEAR} is required`,
+  }),
 
   towType: joi
     .string()
@@ -68,4 +60,4 @@ const truckRequestBodyValidationSchema = joi.object<
     }),
 });
 
-export { truckRequestBodyValidationSchema };
+export { truckCreateRequestBodyValidationSchema };

@@ -2,13 +2,15 @@ import joi from 'joi';
 
 import {
   FormLabel,
+  TruckCapacity,
   TruckManufacturer,
+  TruckPricePerKm,
   TruckTowType,
   TruckYear,
 } from '../enums/enums.js';
-import { type TruckAddRequestDto } from '../types/truck-add-request-dto.type.js';
+import { type TruckFormModel } from '../types/types.js';
 
-const truckAddValidationSchema = joi.object<TruckAddRequestDto, true>({
+const truckAddValidationSchema = joi.object<TruckFormModel, true>({
   manufacturer: joi.object({
     label: joi.string().required(),
     value: joi.valid(...Object.values(TruckManufacturer)).messages({
@@ -19,23 +21,23 @@ const truckAddValidationSchema = joi.object<TruckAddRequestDto, true>({
 
   capacity: joi
     .number()
-    .min(0)
+    .min(TruckCapacity.MIN)
     .required()
     .messages({
       'number.base': `${FormLabel.CAPACITY} must be a number`,
-      'number.min': `${FormLabel.CAPACITY} must be at least 0`,
+      'number.min': `${FormLabel.CAPACITY} must be at least ${TruckCapacity.MIN}`,
     }),
 
   pricePerKm: joi
     .number()
     .precision(1)
-    .min(1)
-    .max(100)
+    .min(TruckPricePerKm.MIN)
+    .max(TruckPricePerKm.MAX)
     .required()
     .messages({
       'number.base': `${FormLabel.PRICE_PER_KM} must be a number`,
-      'number.min': `${FormLabel.PRICE_PER_KM} must be at least 1`,
-      'number.max': `${FormLabel.PRICE_PER_KM} must be at most 100`,
+      'number.min': `${FormLabel.PRICE_PER_KM} must be at least ${TruckPricePerKm.MIN}`,
+      'number.max': `${FormLabel.PRICE_PER_KM} must be at most ${TruckPricePerKm.MAX}`,
     }),
 
   licensePlateNumber: joi
@@ -48,13 +50,14 @@ const truckAddValidationSchema = joi.object<TruckAddRequestDto, true>({
       'string.pattern.base': `Invalid ${FormLabel.LICENSE_PLATE}`,
     }),
 
-  year: joi.object({
-    label: joi.string().required(),
-    value: joi.valid(...Object.values(TruckYear)).messages({
-      'any.only': `Invalid ${FormLabel.YEAR}`,
-      'any.required': `${FormLabel.YEAR} is required`,
+  year: joi
+    .number()
+    .min(TruckYear.MIN)
+    .max(TruckYear.MAX)
+    .messages({
+      'number.base': `${FormLabel.YEAR} must be a number`,
+      'number.min': `${FormLabel.YEAR} must be at least ${TruckYear.MIN}`,
     }),
-  }),
 
   towType: joi.object({
     label: joi.string().required(),
