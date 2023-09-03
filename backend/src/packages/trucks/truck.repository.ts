@@ -1,11 +1,13 @@
-import { eq, placeholder, sql } from 'drizzle-orm';
+import { eq, ilike, placeholder } from 'drizzle-orm';
 
-import { DatabaseError } from '~/libs/exceptions/exceptions.js';
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
-import { type TruckEntity, type TruckEntityT } from './libs/types/types.js';
+import {
+  type TruckDatabaseModel,
+  type TruckEntity,
+} from './libs/types/types.js';
 
 class TruckRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -20,112 +22,66 @@ class TruckRepository implements IRepository {
     this.trucksSchema = trucksSchema;
   }
 
-  public async findById(id: number): Promise<TruckEntity[]> {
-    try {
-      return await this.db
-        .driver()
-        .select()
-        .from(this.trucksSchema)
-        .where(eq(this.trucksSchema.id, id));
-    } catch (error: unknown) {
-      throw new DatabaseError({
-        message: `Truck with ID ${id} was not found in the database`,
-        cause: error,
-      });
-    }
+  public async findById(id: number): Promise<TruckDatabaseModel[]> {
+    return await this.db
+      .driver()
+      .select()
+      .from(this.trucksSchema)
+      .where(eq(this.trucksSchema.id, id));
   }
 
-  public async findAll(): Promise<TruckEntity[]> {
-    try {
-      return await this.db.driver().select().from(this.trucksSchema);
-    } catch (error: unknown) {
-      throw new DatabaseError({
-        message: 'Failed to retrieve trucks',
-        cause: error,
-      });
-    }
+  public async findAll(): Promise<TruckDatabaseModel[]> {
+    return await this.db.driver().select().from(this.trucksSchema);
   }
 
   public async create(
-    entity: Omit<TruckEntityT, 'id'>,
-  ): Promise<TruckEntity[]> {
-    try {
-      const preparedInsert = this.db
-        .driver()
-        .insert(this.trucksSchema)
-        .values(entity)
-        .returning()
-        .prepare('createTruck');
+    entity: Omit<TruckEntity, 'id'>,
+  ): Promise<TruckDatabaseModel[]> {
+    const preparedInsert = this.db
+      .driver()
+      .insert(this.trucksSchema)
+      .values(entity)
+      .returning()
+      .prepare('createTruck');
 
-      return await preparedInsert.execute();
-    } catch (error: unknown) {
-      throw new DatabaseError({
-        message: 'Failed to create a new truck',
-        cause: error,
-      });
-    }
+    return await preparedInsert.execute();
   }
 
   public async update(
     id: number,
     payload: Partial<TruckEntity>,
-  ): Promise<TruckEntity[]> {
-    try {
-      const preparedUpdate = this.db
-        .driver()
-        .update(this.trucksSchema)
-        .set(payload)
-        .where(sql`${this.trucksSchema.id} = ${placeholder('id')}`)
-        .returning()
-        .prepare('updateTruck');
+  ): Promise<TruckDatabaseModel[]> {
+    const preparedUpdate = this.db
+      .driver()
+      .update(this.trucksSchema)
+      .set(payload)
+      .where(eq(this.trucksSchema.id, placeholder('id')))
+      .returning()
+      .prepare('updateTruck');
 
-      return await preparedUpdate.execute({ id });
-    } catch (error: unknown) {
-      throw new DatabaseError({
-        message: 'An error occurred while updating the truck in the database',
-        cause: error,
-      });
-    }
+    return await preparedUpdate.execute({ id });
   }
 
   public async delete(id: number): Promise<boolean> {
-    try {
-      return Boolean(
-        await this.db
-          .driver()
-          .delete(this.trucksSchema)
-          .where(eq(this.trucksSchema.id, id))
-          .returning()
-          .execute(),
-      );
-    } catch (error: unknown) {
-      throw new DatabaseError({
-        message: `Failed to update truck with ID ${id}`,
-        cause: error,
-      });
-    }
+    return Boolean(
+      await this.db
+        .driver()
+        .delete(this.trucksSchema)
+        .where(eq(this.trucksSchema.id, id))
+        .returning()
+        .execute(),
+    );
   }
 
-  public async find(query: string): Promise<TruckEntity[]> {
-    try {
-      const preparedQuery = this.db
-        .driver()
-        .select()
-        .from(this.trucksSchema)
-        .where(
-          sql`lower(${
-            this.trucksSchema.licensePlateNumber
-          }) ilike ${placeholder('query')}`,
-        )
-        .prepare('findTrucks');
+  public async find(query: string): Promise<TruckDatabaseModel[]> {
+    const preparedQuery = this.db
+      .driver()
+      .select()
+      .from(this.trucksSchema)
+      .where(ilike(this.trucksSchema.licensePlateNumber, placeholder('query')))
+      .prepare('findTrucks');
 
-      return await preparedQuery.execute({ query: `%${query}%` });
-    } catch (error: unknown) {
-      throw new DatabaseError({
-        message: `An error occurred while searching ${query} for trucks`,
-        cause: error,
-      });
-    }
+    return await preparedQuery.execute({ query: `%${query}%` });
   }
 }
 
