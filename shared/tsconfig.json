@@ -1,6 +1,6 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["src", "../frontend/src/libs/helpers/test-server-error-type"],
+  "include": ["src"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ESNext",
