@@ -22,9 +22,9 @@ class OrderEntity implements IEntity {
 
   private driverId: OrderEntityT['driverId'];
 
-  private customerName: OrderEntityT['customerName'] | undefined;
+  private customerName: OrderEntityT['customerName'] | null;
 
-  private customerPhone: OrderEntityT['customerPhone'] | undefined;
+  private customerPhone: OrderEntityT['customerPhone'] | null;
 
   private constructor({
     id,

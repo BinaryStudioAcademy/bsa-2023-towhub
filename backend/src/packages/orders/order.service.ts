@@ -1,4 +1,10 @@
-import { NotFoundError } from '~/libs/exceptions/exceptions.js';
+import {
+  type UserEntityObjectWithGroupT,
+  HttpCode,
+  HttpMessage,
+} from 'shared/build/index.js';
+
+import { HttpError, NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { type OperationResult } from '~/libs/types/types.js';
 
@@ -19,9 +25,9 @@ class OrderService implements IService {
     this.orderRepository = orderRepository;
   }
 
-  public async create(
+  public async createOrderForUser(
     payload: OrderCreateRequestDto,
-    userId = 1, //Mock, get from JWT
+    userId: OrderEntityT['userId'],
   ): Promise<OrderCreateResponseDto> {
     const price = 100; //Mock
     const status = OrderStatus.PENDING;
@@ -64,6 +70,14 @@ class OrderService implements IService {
     //
   }
 
+  public delete(): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  public create(): Promise<unknown> {
+    return Promise.resolve();
+  }
+
   public async update(parameters: {
     id: OrderEntityT['id'];
     payload: Partial<OrderEntityT>;
@@ -94,11 +108,29 @@ class OrderService implements IService {
     };
   }
 
-  public async delete(id: OrderEntityT['id']): Promise<boolean> {
-    const { result: foundBusiness } = await this.findById(id);
+  public async deleteIfBelongsToUser(
+    id: OrderEntityT['id'],
+    user: UserEntityObjectWithGroupT,
+  ): Promise<boolean> {
+    const { id: userId, phone } = user;
+    const { result: foundOrder } = await this.findById(id);
 
-    if (!foundBusiness) {
-      throw new NotFoundError({});
+    if (!foundOrder) {
+      throw new HttpError({
+        status: HttpCode.NOT_FOUND,
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
+    }
+
+    const orderBelongsToUser =
+      (foundOrder.userId && foundOrder.userId === userId) ||
+      (foundOrder.customerPhone && foundOrder.customerPhone === phone);
+
+    if (orderBelongsToUser) {
+      throw new HttpError({
+        status: HttpCode.NOT_FOUND,
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
     }
 
     return await this.orderRepository.delete(id);

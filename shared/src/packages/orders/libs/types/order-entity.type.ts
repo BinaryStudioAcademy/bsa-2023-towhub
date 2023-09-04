@@ -7,11 +7,11 @@ type OrderEntity = {
   startPoint: string;
   endPoint: string;
   status: OrderStatus;
-  userId: number;
+  userId: number | null;
   businessId: number;
   driverId: number;
-  customerName?: string;
-  customerPhone?: string;
+  customerName: string | null;
+  customerPhone: string | null;
 };
 
 export { type OrderEntity };

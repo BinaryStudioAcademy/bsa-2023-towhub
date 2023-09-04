@@ -1,14 +1,14 @@
 import { relations } from 'drizzle-orm';
 import {
   integer,
-  pgEnum,
   pgTable,
   serial,
   timestamp,
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { OrderStatus } from 'shared/build/index.js';
+
+import { statusEnum } from './database-enums/order-status.js';
 
 const users = pgTable(
   'users',
@@ -67,13 +67,6 @@ const businessRelations = relations(users, ({ many }) => ({
   orders: many(orders),
 }));
 
-const orderStatuses = Object.values(OrderStatus as Record<number, string>) as [
-  string,
-  ...string[],
-];
-
-const statusEnum = pgEnum('status_enum', orderStatuses);
-
 const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
   price: integer('price').notNull(),
@@ -107,7 +100,6 @@ export {
   groups,
   orders,
   ordersRelations,
-  statusEnum,
   users,
   usersRelations,
 };

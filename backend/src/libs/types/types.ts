@@ -1,4 +1,5 @@
 export {
+  type Id,
   type NullableProperties,
   type OperationResult,
   type ServerCommonErrorResponse,

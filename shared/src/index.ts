@@ -28,6 +28,7 @@ export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type CapitalizeEnum,
   type EntityPagination,
+  type Id,
   type NullableProperties,
   type OperationResult,
   type ServerCommonErrorResponse,
@@ -66,6 +67,8 @@ export {
   type OrderEntity,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
+  ordersDeleteParameters,
+  OrdersValidationMessage,
 } from './packages/orders/orders.js';
 export { OrdersApiPath, OrderStatus } from './packages/orders/orders.js';
 export {

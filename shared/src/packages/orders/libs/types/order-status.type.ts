@@ -1,5 +1,7 @@
+import { type ValueOf } from '~/libs/types/value-of.type.js';
+
 import { type OrderStatus } from '../enums/enums.js';
 
-type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
+type OrderStatus = ValueOf<typeof OrderStatus>;
 
 export { type OrderStatus };
