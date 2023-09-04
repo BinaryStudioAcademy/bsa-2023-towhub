@@ -19,7 +19,7 @@
 .filterBar {
   display: flex;
   padding: 7px 0 5px;
-  background: white;
+  background: $white;
   border-radius: 10px;
 }
 
@@ -27,12 +27,13 @@
   display: flex;
   align-items: baseline;
   width: 50%;
-  margin-right: 7px;
   padding: 11px 0 17px 21px;
-}
 
-.filterBlock:last-child {
-  border-left: 1px solid #c3d4e9;
+  &:first-child {
+    width: calc(50% - 15px);
+    margin-right: 15px;
+    border-right: 1px solid #c3d4e9;
+  }
 }
 
 .dropdownWrapper {
