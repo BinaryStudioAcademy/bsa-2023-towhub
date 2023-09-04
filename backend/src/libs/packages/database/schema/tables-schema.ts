@@ -51,7 +51,7 @@ const usersRelations = relations(users, ({ one }) => ({
 
 const business = pgTable('business_details', {
   id: serial('id').primaryKey(),
-  companyName: varchar('company_name').unique().notNull(),
+  companyName: varchar('company_name').notNull(),
   taxNumber: varchar('tax_number').unique().notNull(),
   ownerId: integer('owner_id')
     .notNull()
