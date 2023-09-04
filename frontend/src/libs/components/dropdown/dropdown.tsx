@@ -11,6 +11,7 @@ type Properties = {
   options: SelectOption[];
   defaultValue?: SelectOption;
   onChange?: (value: string | undefined) => void;
+  placeholder?: string;
 };
 
 const getStyles = (
@@ -57,6 +58,7 @@ const Dropdown: React.FC<Properties> = ({
   options,
   defaultValue,
   onChange,
+  placeholder,
 }: Properties): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -90,6 +92,7 @@ const Dropdown: React.FC<Properties> = ({
       onMenuClose={handleCloseMenu}
       onChange={handleChange}
       defaultValue={defaultValue}
+      placeholder={placeholder}
     />
   );
 };
