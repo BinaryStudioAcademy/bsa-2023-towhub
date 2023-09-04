@@ -19,7 +19,7 @@ const TruckFilter: React.FC = () => {
           <div className={styles.dropdownWrapper}>
             <Dropdown
               options={[{ label: 'option', value: 'option' }]}
-              placeholder="Select location..."
+              placeholder="Select price..."
             />
           </div>
         </div>
@@ -28,7 +28,7 @@ const TruckFilter: React.FC = () => {
           <div className={styles.dropdownWrapper}>
             <Dropdown
               options={[{ label: 'option', value: 'option' }]}
-              placeholder="Select location..."
+              placeholder="Select capacity..."
             />
           </div>
         </div>
