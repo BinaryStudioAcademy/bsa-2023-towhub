@@ -6,10 +6,12 @@ import { type AuthStrategy } from '~/packages/auth/auth.js';
 
 type AuthStrategyHandler =
   | ValueOf<typeof AuthStrategy>
+  | ValueOf<typeof AuthStrategy>[]
   | ((
       fastify: FastifyInstance,
     ) =>
       | FastifyAuthFunction[]
-      | (FastifyAuthFunction | FastifyAuthFunction[])[]);
+      | (FastifyAuthFunction | FastifyAuthFunction[])[])
+  | null;
 
 export { type AuthStrategyHandler };
