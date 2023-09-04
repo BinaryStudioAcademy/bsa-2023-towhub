@@ -1,4 +1,3 @@
-import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
@@ -103,30 +102,29 @@ class DriverService implements IService {
     driverId,
     payload,
   }: DriverUpdatePayload): Promise<DriverUpdateResponseDto> {
+    const { password, email, lastName, firstName, phone, driverLicenseNumber } =
+      payload;
+
     const foundDriver = await this.findById(driverId);
 
     if (!foundDriver) {
-      throw new NotFoundError({});
-    }
-
-    const { result: doesDriverExist } = await this.driverRepository.checkExists(
-      {
-        driverLicenseNumber: payload.driverLicenseNumber,
-      },
-    );
-
-    if (doesDriverExist) {
       throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.LICENSE_NUMBER_ALREADY_EXISTS,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+        status: HttpCode.NOT_FOUND,
       });
     }
 
-    const user = await this.userService.update(driverId, payload);
+    const user = await this.userService.update(foundDriver.userId, {
+      password,
+      email,
+      lastName,
+      firstName,
+      phone,
+    });
 
     const driver = await this.driverRepository.update({
       id: foundDriver.id,
-      payload,
+      payload: { driverLicenseNumber },
     });
 
     const driverObject = driver.toObject();
@@ -138,7 +136,10 @@ class DriverService implements IService {
     const foundDriver = await this.findById(id);
 
     if (!foundDriver) {
-      throw new NotFoundError({});
+      throw new HttpError({
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+        status: HttpCode.NOT_FOUND,
+      });
     }
 
     const isDriverDeleted = await this.driverRepository.delete(id);

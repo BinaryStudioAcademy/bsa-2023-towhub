@@ -307,7 +307,7 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.DRIVERS,
       method: 'POST',
-      authStrategy: 'verifyJWT',
+      // authStrategy: 'verifyJWT',
       validation: {
         body: driverAddRequestBody,
       },
@@ -323,7 +323,7 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.DRIVER_$ID,
       method: 'PUT',
-      authStrategy: 'verifyJWT',
+      // authStrategy: 'verifyJWT',
       validation: {
         body: driverUpdateRequestBody,
         params: driverUpdateParameters,
@@ -340,7 +340,7 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.DRIVERS,
       method: 'GET',
-      authStrategy: 'verifyJWT',
+      // authStrategy: 'verifyJWT',
       validation: {
         params: driverGetParameters,
       },
@@ -355,7 +355,7 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.DRIVER_$ID,
       method: 'DELETE',
-      authStrategy: 'verifyJWT',
+      // authStrategy: 'verifyJWT',
       validation: {
         params: driverDeleteParameters,
       },
@@ -656,12 +656,6 @@ class BusinessController extends Controller {
    *          application/json:
    *            schema:
    *              type: object
-   *              required:
-   *               - phone
-   *               - email
-   *               - firstName
-   *               - lastName
-   *               - driverLicenseNumber
    *              properties:
    *                phone:
    *                  $ref: '#/components/schemas/Business/properties/phone'

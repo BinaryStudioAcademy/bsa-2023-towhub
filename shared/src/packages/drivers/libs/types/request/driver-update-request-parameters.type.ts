@@ -1,3 +1,3 @@
-type DriverUpdateRequestParameters = { driverId: number };
+type DriverUpdateRequestParameters = { id: number; driverId: number };
 
 export { type DriverUpdateRequestParameters };

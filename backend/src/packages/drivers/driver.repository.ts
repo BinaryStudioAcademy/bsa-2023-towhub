@@ -105,7 +105,7 @@ class DriverRepository implements IRepository {
     payload,
   }: {
     id: number;
-    payload: Partial<DriverEntityT>;
+    payload: Partial<Pick<DriverEntityT, 'driverLicenseNumber'>>;
   }): Promise<DriverEntity> {
     const [item] = await this.db
       .driver()

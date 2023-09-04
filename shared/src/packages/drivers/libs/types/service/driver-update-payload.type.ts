@@ -6,8 +6,9 @@ type DriverUpdatePayload = {
   payload: Omit<
     UserEntityT,
     'id' | 'passwordHash' | 'passwordSalt' | 'groupId' | 'accessToken'
-  > &
-    Pick<DriverEntity, 'driverLicenseNumber'>;
+  > & {
+    password?: string;
+  } & Pick<DriverEntity, 'driverLicenseNumber'>;
   driverId: number;
 };
 
