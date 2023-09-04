@@ -126,7 +126,7 @@ class OrderService implements IService {
       (foundOrder.userId && foundOrder.userId === userId) ||
       (foundOrder.customerPhone && foundOrder.customerPhone === phone);
 
-    if (orderBelongsToUser) {
+    if (!orderBelongsToUser) {
       throw new HttpError({
         status: HttpCode.NOT_FOUND,
         message: HttpMessage.ORDER_DOES_NOT_EXIST,

@@ -80,10 +80,9 @@ import {
  *           minimum: 0
  *           example: 100
  *         scheduledTime:
- *           type: number
- *           format: number
- *           minimum: 0
- *           example: 1693383253670
+ *           type: string
+ *           format: date-time
+ *           example: 2023-08-30T05:14:13.670Z
  *         startPoint:
  *           type: string
  *           minLength: 1
@@ -121,6 +120,56 @@ import {
  *           pattern: ^\+\d{8,19}$
  *           nullable: true
  *           example: +123456789
+ *
+ *       CreateOrderWithRegisteredUser:
+ *         type: object
+ *         required:
+ *         - scheduledTime
+ *         - startPoint
+ *         - endPoint
+ *         - driverId
+ *         properties:
+ *           scheduledTime:
+ *             $ref: '#/components/schemas/Order/properties/scheduledTime'
+ *           startPoint:
+ *             $ref: '#/components/schemas/Order/properties/startPoint'
+ *           endPoint:
+ *             $ref: '#/components/schemas/Order/properties/endPoint'
+ *           driverId:
+ *             $ref: '#/components/schemas/Order/properties/driverId'
+ *       CreateOrderWithNotRegisteredUser:
+ *         type: object
+ *         required:
+ *         - scheduledTime
+ *         - startPoint
+ *         - endPoint
+ *         - driverId
+ *         - customerName
+ *         - customerPhone
+ *         properties:
+ *           scheduledTime:
+ *             $ref: '#/components/schemas/Order/properties/scheduledTime'
+ *           startPoint:
+ *             $ref: '#/components/schemas/Order/properties/startPoint'
+ *           endPoint:
+ *             $ref: '#/components/schemas/Order/properties/endPoint'
+ *           driverId:
+ *             $ref: '#/components/schemas/Order/properties/driverId'
+ *           customerName:
+ *             $ref: '#/components/schemas/Order/properties/customerName'
+ *           customerPhone:
+ *             $ref: '#/components/schemas/Order/properties/customerPhone'
+ *     OrderCreationFailed:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - Order can't be created!
+ *
+ *
  */
 
 class OrderController extends Controller {
@@ -197,7 +246,7 @@ class OrderController extends Controller {
 
   /**
    * @swagger
-   * /orders/:
+   * /orders:
    *    post:
    *      tags:
    *       - orders
@@ -207,38 +256,26 @@ class OrderController extends Controller {
    *        content:
    *          application/json:
    *            schema:
-   *              type: object
-   *              required:
-   *               - scheduledTime
-   *               - startPoint
-   *               - endPoint
-   *               - driverId
-   *              properties:
-   *                scheduledTime:
-   *                  $ref: '#/components/schemas/Order/properties/scheduledTime'
-   *                startPoint:
-   *                  $ref: '#/components/schemas/Order/properties/startPoint'
-   *                endPoint:
-   *                  $ref: '#/components/schemas/Order/properties/endPoint'
-   *                driverId:
-   *                  $ref: '#/components/schemas/Order/properties/driverId'
+   *              oneOf:
+   *                - $ref: '#/components/schemas/Order/CreateOrderWithRegisteredUser'
+   *                - $ref: '#/components/schemas/Order/CreateOrderWithNotRegisteredUser'
    *      security:
+   *        - {}
    *        - bearerAuth: []
    *      responses:
    *        201:
-   *          description: Successful business creation.
+   *          description: Successful order creation.
    *          content:
    *            application/json:
    *              schema:
-   *                $ref: '#/components/schemas/Business'
+   *                $ref: '#/components/schemas/Order'
    *        400:
    *          description:
-   *            User is not of 'Business' group, or already has business,
-   *            or business with such name and/or tax number already exists
+   *            Order can't be created!
    *          content:
    *            application/json:
    *              schema:
-   *                $ref: '#/components/schemas/BusinessAlreadyExists'
+   *                $ref: '#/components/schemas/OrderCreationFailed'
    */
   private async create(
     options: ApiHandlerOptions<{
