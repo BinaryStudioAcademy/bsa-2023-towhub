@@ -9,4 +9,6 @@ type DarkColor =
   | 'grey'
   | 'grey-dark';
 
-export { type DarkColor };
+type LightColor = 'white' | 'red-light' | 'grey-light' | 'grey-extra-light';
+
+export { type DarkColor, type LightColor };
