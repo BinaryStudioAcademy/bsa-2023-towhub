@@ -1,3 +1,5 @@
+@import "src/assets/css/styles.scss";
+
 $row-gap-sm: 0.5vmin;
 $row-gap-md: 1vmin;
 $row-gap-lg: 2vmin;
@@ -6,8 +8,6 @@ $grey-darker: #7e818f;
 $violet-shallow: #93a1ff;
 $blue-shallower: #6c91f9;
 $blue-shallow: #becee8;
-
-@import "src/assets/css/styles.scss";
 
 .container {
   $side-padding: 4.25vmin;
