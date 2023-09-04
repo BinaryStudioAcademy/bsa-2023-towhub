@@ -10,8 +10,8 @@ type Properties<T> = {
     pageSize: number;
     pageIndex: number;
   }) => AppThunk<EntityPagination<T>>;
-  initialPageSize: number;
-  initialPageIndex: number;
+  initialPageSize?: number;
+  initialPageIndex?: number;
 };
 
 type ReturnValue = {
