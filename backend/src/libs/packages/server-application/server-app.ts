@@ -81,7 +81,15 @@ class ServerApp implements IServerApp {
     strategy?: AuthStrategyHandler,
   ): undefined | preHandlerHookHandler {
     if (Array.isArray(strategy)) {
-      return this.app.auth(strategy);
+      const strategies = [];
+
+      for (const it of strategy) {
+        if (typeof it === 'string' && it in this.app) {
+          strategies.push(this.app[it]);
+        }
+      }
+
+      return this.app.auth(strategies, { relation: 'and' });
     }
 
     if (typeof strategy === 'string' && strategy in this.app) {
