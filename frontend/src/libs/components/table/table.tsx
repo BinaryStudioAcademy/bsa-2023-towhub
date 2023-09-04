@@ -2,6 +2,7 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  useCallback,
   useReactTable,
 } from '~/libs/hooks/hooks.js';
 import { type ColumnDef } from '~/libs/types/types.js';
@@ -40,6 +41,15 @@ const Table = <T,>({
       },
     },
   });
+
+  const handleChangePageSize = useCallback(
+    (value: number) => {
+      changePageIndex(0);
+      changePageSize(value);
+      table.setPageSize(value);
+    },
+    [changePageSize, table, changePageIndex],
+  );
 
   const createThead = (): JSX.Element => (
     <thead className={styles.thead}>
@@ -83,7 +93,7 @@ const Table = <T,>({
       <Pagination
         pageCount={pagesRange}
         onClick={changePageIndex}
-        onChangePageSize={changePageSize}
+        onChangePageSize={handleChangePageSize}
         pageIndex={pageIndex}
         pageSize={pageSize}
       />
