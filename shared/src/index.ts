@@ -26,7 +26,6 @@ export {
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
-  type CapitalizeEnum,
   type EntityPagination,
   type NullableProperties,
   type OperationResult,
@@ -70,10 +69,8 @@ export {
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
-  type UserGroupEntityObjectT,
   type UserGroupEntityT,
   type UserGroupKeyT,
-  type UserGroupNameT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
   businessSignUpValidationSchema,

@@ -1,18 +1,22 @@
+import { useCallback } from 'react';
 import {
   type Control,
   type FieldErrors,
   type FieldPath,
   type FieldValues,
+  type UseFormSetError,
 } from 'react-hook-form';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useFormController } from '~/libs/hooks/hooks.js';
 
+import { serverErrorSymbol } from '../form/libs/consts/consts.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
   control: Control<T, null>;
   errors: FieldErrors<T>;
+  setError?: UseFormSetError<T>;
   label?: string;
   name: FieldPath<T>;
   placeholder?: string;
@@ -23,6 +27,7 @@ type Properties<T extends FieldValues> = {
 const Input = <T extends FieldValues>({
   control,
   errors,
+  setError,
   label = '',
   name,
   placeholder = '',
@@ -42,6 +47,23 @@ const Input = <T extends FieldValues>({
     hasError && styles.error,
   ];
 
+  const clearServerError = useCallback(() => {
+    if (setError) {
+      setError(name, {
+        type: serverErrorSymbol,
+        message: undefined,
+      });
+    }
+  }, [name, setError]);
+
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
+      clearServerError();
+      field.onChange(event);
+    },
+    [field, clearServerError],
+  );
+
   return (
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
@@ -52,6 +74,7 @@ const Input = <T extends FieldValues>({
           placeholder={placeholder}
           className={getValidClassNames(...inputStyles)}
           disabled={isDisabled}
+          onChange={handleInputChange}
         />
         {type === 'password' && (
           <span className={styles.passwordEye}>&#128065;</span>

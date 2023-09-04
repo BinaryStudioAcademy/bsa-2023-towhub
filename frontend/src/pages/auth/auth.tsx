@@ -23,28 +23,24 @@ const Auth: React.FC = () => {
   const location: Location = useLocation();
 
   const handleSignInSubmit = useCallback(
-    (payload: UserSignInRequestDto): void => {
-      void dispatch(authActions.signIn(payload))
-        .unwrap()
-        .then((user) => {
-          navigateAuthUser(user);
-        });
+    async (payload: UserSignInRequestDto): Promise<void> => {
+      const user = await dispatch(authActions.signIn(payload)).unwrap();
+      navigateAuthUser(user);
     },
     [dispatch, navigateAuthUser],
   );
 
   const handleSignUpSubmit = useCallback(
-    (payload: CustomerSignUpRequestDto): void => {
+    async (payload: CustomerSignUpRequestDto): Promise<void> => {
       const mode =
         location.pathname === AppRoute.SIGN_UP_BUSINESS
           ? AuthMode.BUSINESS
           : AuthMode.CUSTOMER;
 
-      void dispatch(authActions.signUp({ payload, mode }))
-        .unwrap()
-        .then((user) => {
-          navigateAuthUser(user);
-        });
+      const user = await dispatch(
+        authActions.signUp({ payload, mode }),
+      ).unwrap();
+      navigateAuthUser(user);
     },
     [dispatch, location, navigateAuthUser],
   );

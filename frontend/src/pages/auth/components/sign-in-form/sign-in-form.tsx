@@ -10,7 +10,7 @@ import { signInFields } from './libs/fields.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onSubmit: (payload: UserSignInRequestDto) => void;
+  onSubmit: (payload: UserSignInRequestDto) => Promise<void>;
 };
 
 const SignInForm: React.FC<Properties> = ({ onSubmit }: Properties) => (

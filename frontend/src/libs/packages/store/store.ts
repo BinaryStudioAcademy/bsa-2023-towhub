@@ -11,5 +11,6 @@ type AppDispatch = typeof store.instance.dispatch;
 
 type AppStore = typeof store.instance;
 
+export { type ServerSerializedError } from './libs/types/types.js';
 export { type AppDispatch, type AppStore, type RootState };
 export { store };
