@@ -25,6 +25,7 @@ const getStyles = (
       border: 'none',
       boxShadow: 'none',
       outline: 'none',
+      background: 'transparent',
     }),
     option: (styles) => ({
       ...styles,
@@ -35,6 +36,9 @@ const getStyles = (
       ...styles,
       padding: '0',
       paddingLeft: '5px',
+      fontFamily: '"Plus Jakarta Sans", sans-serif',
+      fontSize: '12px',
+      fontWeight: '500',
     }),
     dropdownIndicator: (styles) => ({
       ...styles,
@@ -50,6 +54,14 @@ const getStyles = (
       ...styles,
       overflow: 'hidden',
       padding: 0,
+    }),
+    placeholder: (styles) => ({
+      ...styles,
+      color: '#90A3BF',
+    }),
+    singleValue: (styles) => ({
+      ...styles,
+      color: '#90A3BF',
     }),
   };
 };
