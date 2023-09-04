@@ -6,15 +6,18 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
-import { type ValueOf } from '~/libs/types/types.js';
-import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/user-models.type.js';
 import {
+  type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
+  type UserEntityObjectWithGroupT,
+  businessSignUpValidationSchema,
   customerSignUpValidationSchema,
 } from '~/packages/users/users.js';
 
 import { type AuthService } from './auth.service.js';
-import { type UserGroupKey, AuthApiPath } from './libs/enums/enums.js';
+import { AuthApiPath } from './libs/enums/enums.js';
 import { type UserSignInRequestDto } from './libs/types/types.js';
 import { userSignInValidationSchema } from './libs/validation-schemas/validation-schemas.js';
 
@@ -33,10 +36,23 @@ class AuthController extends Controller {
         body: customerSignUpValidationSchema,
       },
       handler: (options) =>
-        this.signUp(
+        this.signUpCustomer(
           options as ApiHandlerOptions<{
             body: CustomerSignUpRequestDto;
-            params: { groupName: ValueOf<typeof UserGroupKey> };
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: AuthApiPath.SIGN_UP_BUSINESS,
+      method: 'POST',
+      validation: {
+        body: businessSignUpValidationSchema,
+      },
+      handler: (options) =>
+        this.signUpBusiness(
+          options as ApiHandlerOptions<{
+            body: BusinessSignUpRequestDto;
           }>,
         ),
     });
@@ -57,57 +73,25 @@ class AuthController extends Controller {
     });
   }
 
-  /**
-   * @swagger
-   * /auth/sign-up:
-   *    post:
-   *      description: Sign up user into the system
-   *      requestBody:
-   *        description: User auth data
-   *        required: true
-   *        content:
-   *          application/json:
-   *            schema:
-   *              type: object
-   *              properties:
-   *                phone:
-   *                  type: string
-   *                password:
-   *                  type: string
-   *      responses:
-   *        201:
-   *          description: Successful operation
-   *          content:
-   *            application/json:
-   *              schema:
-   *                $ref: '#/components/schemas/User'
-   *        409:
-   *          description: User already exists
-   *          content:
-   *            application/json:
-   *              schema:
-   *                 type: object
-   *                 properties:
-   *                   errorType:
-   *                     type: string
-   *                     example: COMMON
-   *                   message:
-   *                     type: string
-   *                     example: User already exists
-   */
-
-  private async signUp(
+  private async signUpCustomer(
     options: ApiHandlerOptions<{
       body: CustomerSignUpRequestDto;
-      params: { groupName: ValueOf<typeof UserGroupKey> };
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<CustomerSignUpResponseDto>> {
     return {
       status: HttpCode.CREATED,
-      payload: await this.authService.signUp(
-        options.params.groupName,
-        options.body,
-      ),
+      payload: await this.authService.signUpCustomer(options.body),
+    };
+  }
+
+  private async signUpBusiness(
+    options: ApiHandlerOptions<{
+      body: BusinessSignUpRequestDto;
+    }>,
+  ): Promise<ApiHandlerResponse<BusinessSignUpResponseDto>> {
+    return {
+      status: HttpCode.CREATED,
+      payload: await this.authService.signUpBusiness(options.body),
     };
   }
 
@@ -124,3 +108,176 @@ class AuthController extends Controller {
 }
 
 export { AuthController };
+
+/**
+ * @swagger
+ * components:
+ *    schemas:
+ *      Group:
+ *        type: object
+ *        properties:
+ *          id:
+ *            type: integer
+ *            minimum: 1
+ *          name:
+ *            type: string
+ *            enum:
+ *              - Business
+ *              - Customer
+ *              - Driver
+ *          key:
+ *            type: string
+ *            enum:
+ *              - business
+ *              - customer
+ *              - driver
+ *
+ *      Customer-sign-up-request:
+ *        type: object
+ *        properties:
+ *          phone:
+ *            type: string
+ *            length: 13
+ *            pattern: ^\+\d{8,19}$
+ *            example: +380505555555
+ *          email:
+ *            type: string
+ *            format: email
+ *            minLength: 5
+ *            maxLength: 254
+ *          firstName:
+ *            type: string
+ *            minLength: 1
+ *            maxLength: 40
+ *            pattern: ^['A-Za-z-]{1,40}$
+ *            example: Bob
+ *          lastName:
+ *            type: string
+ *            minLength: 1
+ *            maxLength: 40
+ *            pattern: ^['A-Za-z-]{1,40}$
+ *            example: Sponge
+ *          password:
+ *            type: string
+ *            minimum: 6
+ *            maximum: 20
+ *            pattern: ^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$
+ *            description: Must be 6+ characters, at least 1 letter and 1 number
+ *
+ *      Business-sign-up-request:
+ *        allOf:
+ *          - $ref: '#/components/schemas/Customer-sign-up-request'
+ *          - type: object
+ *            properties:
+ *              companyName:
+ *                type: string
+ *                minLength: 1
+ *                example: Jubily
+ *              taxNumber:
+ *                type: string
+ *                pattern: ^\d{10}$
+ *                description: Consists of 10 digits
+ *                example: 1234567890
+ *
+ *      Customer-auth-response:
+ *        type: object
+ *        properties:
+ *          id:
+ *            type: number
+ *            minimum: 1
+ *          phone:
+ *            $ref: '#/components/schemas/Customer-sign-up-request/properties/phone'
+ *          email:
+ *            $ref: '#/components/schemas/Customer-sign-up-request/properties/email'
+ *          firstName:
+ *            $ref: '#/components/schemas/Customer-sign-up-request/properties/firstName'
+ *          lastName:
+ *            $ref: '#/components/schemas/Customer-sign-up-request/properties/lastName'
+ *          accessToken:
+ *            type: string
+ *            format: token
+ *            example: eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTgsImlhdCI6MTY5MzQ2MTMwMCwiaXNzIjoiand0X2lzc3VlciIsImV4cCI6MTY5MzU0NzcwMH0.x7eNMnFEZwBicwAOXP8So5ZNYXuuGhTZ3U0RytBCVYk
+ *          group:
+ *            type: string
+ *            $ref: '#/components/schemas/Group'
+ *
+ *      Business-auth-response:
+ *          allOf:
+ *            - $ref: '#/components/schemas/Customer-auth-response'
+ *            - type: object
+ *              properties:
+ *                business:
+ *                  $ref: '#/components/schemas/Business'
+ */
+
+/**
+ * @swagger
+ * /auth/sign-up/customer:
+ *    post:
+ *      tags:
+ *      - auth
+ *      description: Sign up customer into the system
+ *      requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Customer-sign-up-request'
+ *        description: Customer user auth data
+ *        required: true
+ *      responses:
+ *        201:
+ *          description: Successful operation
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Customer-auth-response'
+ *        409:
+ *          description: User already exists
+ *          content:
+ *            application/json:
+ *              schema:
+ *                 type: object
+ *                 properties:
+ *                   errorType:
+ *                     type: string
+ *                     example: COMMON
+ *                   message:
+ *                     type: string
+ *                     example: User already exists
+ */
+
+/**
+ * @swagger
+ * /auth/sign-up/business:
+ *    post:
+ *      tags:
+ *      - auth
+ *      description: Sign up business user into the system
+ *      requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Business-sign-up-request'
+ *        description: Business user auth data
+ *        required: true
+ *      responses:
+ *        201:
+ *          description: Successful operation
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Business-auth-response'
+ *        409:
+ *          description: User already exists
+ *          content:
+ *            application/json:
+ *              schema:
+ *                 type: object
+ *                 properties:
+ *                   errorType:
+ *                     type: string
+ *                     example: COMMON
+ *                   message:
+ *                     type: string
+ *                     example: User already exists
+ */
