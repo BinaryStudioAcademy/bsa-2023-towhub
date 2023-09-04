@@ -1,8 +1,7 @@
-import { type Transporter } from 'nodemailer';
-import { createTransport } from 'nodemailer';
+import { type Transporter, createTransport } from 'nodemailer';
 import { type Options } from 'nodemailer/lib/mailer';
 
-import { MailerConnectionError } from '~/libs/exceptions/mailer/mailer-connection.exception.js';
+import { MailerConnectionError } from '~/libs/exceptions/exceptions.js';
 
 import { type IConfig } from '../config/config.js';
 import { type ILogger } from '../logger/logger.js';

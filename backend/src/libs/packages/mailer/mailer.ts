@@ -8,3 +8,4 @@ const mailer = new Mailer({ config, logger });
 await mailer.connect();
 
 export { mailer };
+export { Mailer } from './mailer.package.js';

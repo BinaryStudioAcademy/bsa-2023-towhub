@@ -1,1 +1,1 @@
-export { ViewsMapper } from './views-mapper.js';
+export { plainView } from './plain/plain.js';

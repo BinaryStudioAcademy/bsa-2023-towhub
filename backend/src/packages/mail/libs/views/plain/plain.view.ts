@@ -1,6 +1,6 @@
-import { View } from '~/libs/packages/view/view.js';
+import { type IView, View } from '~/libs/packages/packages.js';
 
-class PlainView extends View {
+class PlainView extends View implements IView {
   public constructor(path: string) {
     super(path);
   }

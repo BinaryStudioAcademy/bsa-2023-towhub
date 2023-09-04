@@ -1,8 +1,11 @@
-import { type Mailer } from '~/libs/packages/mailer/mailer.package';
+import { type Mailer } from '~/libs/packages/packages.js';
 import { type RequireProperty } from '~/libs/types/types.js';
 
-import { type MailHeader, type TemplateNamesT } from './libs/types/types.js';
-import { ViewsMapper } from './libs/views/views.js';
+import { TemplateNameToView } from './libs/maps/maps.js';
+import {
+  type MailHeader,
+  type TemplateNameValues,
+} from './libs/types/types.js';
 
 class MailService {
   private mailer: Mailer;
@@ -19,10 +22,10 @@ class MailService {
 
   public async sendPage(
     header: MailHeader,
-    viewName: TemplateNamesT,
+    viewName: TemplateNameValues,
     viewParameters: unknown,
   ): Promise<void> {
-    const chosenView = ViewsMapper[viewName];
+    const chosenView = TemplateNameToView[viewName];
     await this.mailer
       .transporter()
       .sendMail({ ...header, html: chosenView.render(viewParameters) });

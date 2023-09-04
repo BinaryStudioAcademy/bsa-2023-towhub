@@ -1,4 +1,5 @@
 export {
+  type ErrorConstructor,
   type NullableProperties,
   type OperationResult,
   type RequireProperty,

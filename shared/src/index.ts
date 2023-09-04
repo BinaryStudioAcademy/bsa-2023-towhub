@@ -29,6 +29,7 @@ export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type CapitalizeEnum,
   type EntityPagination,
+  type ErrorConstructor,
   type NullableProperties,
   type OperationResult,
   type RequireProperty,
