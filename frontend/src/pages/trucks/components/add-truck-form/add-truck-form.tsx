@@ -5,8 +5,8 @@ import { type TruckFormModel } from '~/packages/trucks/libs/types/types.js';
 import { truck } from '~/packages/trucks/libs/validation-schemas/validation-schemas.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
-import { ADD_TRUCK_FIELDS } from './libs/add-truck.fields.js';
-import { DEFAULT_TRUCK_PAYLOAD } from './libs/constants.js';
+import { DEFAULT_TRUCK_PAYLOAD } from './libs/constants/constants.js';
+import { ADD_TRUCK_FIELDS } from './libs/fields/add-truck.fields.js';
 import { getTruckEntity } from './libs/helpers/get-truck-entity.helper.js';
 import styles from './styles.module.scss';
 
