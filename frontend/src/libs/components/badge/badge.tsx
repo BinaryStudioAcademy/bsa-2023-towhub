@@ -14,7 +14,7 @@ const paletteColors = {
 const [defaultColor] = Object.keys(paletteColors) as Color[];
 
 type Properties = {
-  children: string;
+  children: string | JSX.Element[];
   className?: string;
   color?: Color;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
