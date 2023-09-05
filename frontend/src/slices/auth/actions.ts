@@ -51,4 +51,19 @@ const signIn = createAsyncThunk<
   return result;
 });
 
-export { signIn, signUp };
+const getCurrent = createAsyncThunk<
+  CustomerSignUpResponseDto | BusinessSignUpResponseDto,
+  undefined,
+  AsyncThunkConfig
+>(`${sliceName}/current`, async (_, { extra }) => {
+  const { authApi, notification } = extra;
+
+  try {
+    return await authApi.getCurrentUser();
+  } catch (error) {
+    notification.warning(getErrorMessage(error));
+    throw error;
+  }
+});
+
+export { getCurrent, signIn, signUp };
