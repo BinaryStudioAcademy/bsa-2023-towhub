@@ -55,7 +55,7 @@ const OrderCard: React.FC<Properties> = ({
           </div>
         </div>
         <div className={styles.body}>
-          <div className={styles.locationContainer}>
+          <div className={styles.bodyContent}>
             <div className={styles.locationDot}>
               <PlainSvgIcon name={PlainSvgIconName.LOCATION_DOT} />
             </div>
@@ -65,34 +65,51 @@ const OrderCard: React.FC<Properties> = ({
             <span className={getValidClassNames(styles.lastUpdate, 'text-sm')}>
               last updated {timespanLastUpdated} ago
             </span>
-          </div>
-          <div className={styles.routesContainer}>
-            <div className={styles.routePoint}>
-              <div className={styles.routeDot}>
-                <PlainSvgIcon name={PlainSvgIconName.BLUE_CIRCLE} />
-              </div>
-              <span className={getValidClassNames(styles.routeInfo, 'text-sm')}>
-                {startLocation}
-              </span>
+            <div
+              className={getValidClassNames(
+                styles.routeDot,
+                styles.routeDotStart,
+              )}
+            >
+              <PlainSvgIcon name={PlainSvgIconName.BLUE_CIRCLE} />
             </div>
-            <div className={styles.routePoint}>
-              <div className={styles.routeArrow}>
-                <PlainSvgIcon name={PlainSvgIconName.ARROW_DOWN} />
-              </div>
+            <span
+              className={getValidClassNames(
+                styles.routeInfo,
+                styles.routeInfoStart,
+                'text-sm',
+              )}
+            >
+              {startLocation}
+            </span>
+            <div className={styles.routeArrow}>
+              <PlainSvgIcon name={PlainSvgIconName.ARROW_DOWN} />
             </div>
-            <div className={styles.routePoint}>
-              <div className={styles.routeDot}>
-                <PlainSvgIcon name={PlainSvgIconName.RED_CIRCLE} />
-              </div>
-              <span className={styles.routeInfo}>{endLocation}</span>
+            <div
+              className={getValidClassNames(
+                styles.routeDot,
+                styles.routeDotEnd,
+              )}
+            >
+              <PlainSvgIcon name={PlainSvgIconName.RED_CIRCLE} />
             </div>
-          </div>
-          <div className={styles.distanceContainer}>
+            <span
+              className={getValidClassNames(
+                styles.routeInfo,
+                styles.routeInfoEnd,
+              )}
+            >
+              {endLocation}
+            </span>
             <div className={styles.distanceIcon}>
               <PlainSvgIcon name={PlainSvgIconName.MAP} />
             </div>
             <span
-              className={getValidClassNames(styles.distanceInfo, 'text-md')}
+              className={getValidClassNames(
+                styles.distanceInfo,
+                styles.distanceInfoEnd,
+                'text-md',
+              )}
             >
               {distanceLeft} km{areManyKilometers && 's'}, {timespanLeft}
             </span>
