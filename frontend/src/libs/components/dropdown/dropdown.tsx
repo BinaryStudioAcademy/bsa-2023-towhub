@@ -107,8 +107,9 @@ const Dropdown = <T extends FieldValues>({
       if (onChange) {
         onChange(option?.value);
       }
+      field.onChange(option);
     },
-    [onChange],
+    [onChange, field],
   );
 
   return (
@@ -127,6 +128,7 @@ const Dropdown = <T extends FieldValues>({
           onMenuClose={handleCloseMenu}
           onChange={handleChange}
           defaultValue={defaultValue}
+          value={field.value}
         />
       </span>
       <span

@@ -26,18 +26,21 @@ const convertToSelectOptions = (
 
 const ADD_TRUCK_FIELDS: FormField<TruckFormModel>[] = [
   {
+    id: 1,
     type: 'dropdown',
     label: FormLabel.MANUFACTURER,
     name: FormName.MANUFACTURER,
     options: convertToSelectOptions(TruckManufacturer),
   },
   {
+    id: 2,
     type: 'dropdown',
     label: FormLabel.TOW_TYPE,
     name: FormName.TOW_TYPE,
     options: convertToSelectOptions(TruckTowType),
   },
   {
+    id: 3,
     type: 'number',
     label: FormLabel.YEAR,
     name: FormName.YEAR,
@@ -45,18 +48,21 @@ const ADD_TRUCK_FIELDS: FormField<TruckFormModel>[] = [
     max: TruckYear.MAX,
   },
   {
+    id: 4,
     type: 'text',
     label: FormLabel.LICENSE_PLATE,
     placeholder: PLACEHOLDER_LICENSE_PLATE,
     name: FormName.LICENSE_PLATE,
   },
   {
+    id: 5,
     type: 'number',
     label: FormLabel.CAPACITY,
     name: FormName.CAPACITY,
     min: TruckCapacity.MIN,
   },
   {
+    id: 6,
     type: 'number',
     label: FormLabel.PRICE_PER_KM,
     name: FormName.PRICE_PER_KM,

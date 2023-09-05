@@ -12,6 +12,7 @@ type FormField<T extends FieldValues> = {
   max?: number;
   currency?: string;
   step?: number;
+  id?: number;
 };
 
 export { type FormField };
