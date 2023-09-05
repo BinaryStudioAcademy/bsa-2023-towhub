@@ -1,11 +1,7 @@
-import { type InferModel } from 'drizzle-orm';
 import { eq } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
-import {
-  type IDatabase,
-  type schema,
-} from '~/libs/packages/database/database.js';
+import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { OrderEntity } from '~/packages/orders/order.entity.js';
 
@@ -13,7 +9,7 @@ import { combineFilters } from './libs/helpers/combine-filters.js';
 import { getResultIfTruthy } from './libs/helpers/get-result-if-truthy.js';
 import { type OrderEntity as OrderEntityT } from './libs/types/types.js';
 
-class OrderRepository implements IRepository {
+class OrderRepository implements Omit<IRepository, 'find'> {
   private db: Pick<IDatabase, 'driver'>;
 
   private ordersSchema: DatabaseSchema['orders'];
@@ -24,10 +20,6 @@ class OrderRepository implements IRepository {
   ) {
     this.db = database;
     this.ordersSchema = ordersSchema;
-  }
-
-  public find(): Promise<InferModel<typeof schema.users>[]> {
-    return Promise.resolve([]);
   }
 
   public async findById(id: OrderEntityT['id']): Promise<OrderEntity | null> {
