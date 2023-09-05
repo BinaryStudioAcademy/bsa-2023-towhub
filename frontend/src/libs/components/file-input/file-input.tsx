@@ -220,7 +220,7 @@ const FileInput = ({
 
       handleAfterSubmit(null, error);
     },
-    [dispatch],
+    [dispatch, handleAfterSubmit],
   );
 
   const handleFormSubmit = useCallback(

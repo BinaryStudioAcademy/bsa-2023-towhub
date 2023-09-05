@@ -1,5 +1,5 @@
-import { type UserEntityT } from './user-entity.type.js';
+import { type UserEntityObjectWithGroupAndBusinessT } from './user-entity.type.js';
 
-type BusinessSignUpResponseDto = Pick<UserEntityT, 'id' | 'phone'>;
+type BusinessSignUpResponseDto = UserEntityObjectWithGroupAndBusinessT;
 
 export { type BusinessSignUpResponseDto };

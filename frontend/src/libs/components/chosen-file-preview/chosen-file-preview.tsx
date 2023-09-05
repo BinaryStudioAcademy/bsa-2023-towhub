@@ -43,7 +43,7 @@ const ChosenFilePreview = ({
         Number.parseInt(styles['zoom-out-speed']) - DELETE_TIME_OFFSET,
       );
     }
-  }, [beforeDeletionState, handleDeleteFile, name]);
+  }, [beforeDeletionState, handleDeleteFile, name, id]);
 
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>): void => {

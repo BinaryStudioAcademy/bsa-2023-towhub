@@ -15,7 +15,7 @@ const uploadFile = createAsyncThunk<
 
   const formData = new FormData();
 
-  for (const [index, file] of Object.entries(files)) {
+  for (const [, file] of Object.entries(files)) {
     formData.append('file', file);
   }
 
@@ -24,7 +24,7 @@ const uploadFile = createAsyncThunk<
   } catch (error_) {
     const error = error_ as HttpError;
 
-    throw rejectWithValue({ ...error, message: error.message });
+    return rejectWithValue({ ...error, message: error.message });
   }
 });
 
