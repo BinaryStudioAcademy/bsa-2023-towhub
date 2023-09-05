@@ -191,7 +191,7 @@ class OrderController extends Controller {
     this.addRoute({
       path: OrdersApiPath.ROOT,
       method: 'GET',
-      authStrategy: AuthStrategy.VERIFY_JWT,
+      authStrategy: AuthStrategy.INJECT_USER,
       validation: {
         query: orderFindBy,
       },
@@ -207,7 +207,7 @@ class OrderController extends Controller {
     this.addRoute({
       path: OrdersApiPath.$ID,
       method: 'GET',
-      authStrategy: AuthStrategy.VERIFY_JWT,
+      authStrategy: AuthStrategy.INJECT_USER,
       validation: {
         params: orderIdParameter,
       },
@@ -242,7 +242,7 @@ class OrderController extends Controller {
     this.addRoute({
       path: OrdersApiPath.ROOT,
       method: 'POST',
-      authStrategy: AuthStrategy.VERIFY_JWT,
+      authStrategy: AuthStrategy.INJECT_USER,
       validation: {
         body: orderCreate,
       },
@@ -344,6 +344,7 @@ class OrderController extends Controller {
    *         description: Numeric ID of the order to find
    *         example: 1
    *      security:
+   *        - {}
    *        - bearerAuth: []
    *      responses:
    *        200:
@@ -479,6 +480,7 @@ class OrderController extends Controller {
    *         description: business ID of the order to find
    *         example: 1
    *      security:
+   *        - {}
    *        - bearerAuth: []
    *      responses:
    *        200:
