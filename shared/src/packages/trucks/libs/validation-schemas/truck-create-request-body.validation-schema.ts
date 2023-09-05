@@ -17,15 +17,21 @@ const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
     .required()
     .valid(...Object.values(TruckManufacturer))
     .messages({
-      'any.only': TruckValidationMessage.MANUFACTURER_INVALID,
-      'any.required': TruckValidationMessage.MANUFACTURER_REQUIRED,
+      'any.only': TruckValidationMessage.INVALID,
+      'any.required': TruckValidationMessage.REQUIRED,
     }),
 
-  capacity: joi.number().min(TruckCapacity.MIN).required().messages({
-    'number.base': TruckValidationMessage.CAPACITY_NOT_A_NUMBER,
-    'number.min': TruckValidationMessage.CAPACITY_MINIMUM,
-    'any.required': TruckValidationMessage.CAPACITY_REQUIRED,
-  }),
+  capacity: joi
+    .number()
+    .min(TruckCapacity.MIN)
+    .max(TruckCapacity.MAX)
+    .required()
+    .messages({
+      'number.base': TruckValidationMessage.NUMBER_INVALID,
+      'number.min': TruckValidationMessage.NUMBER_INVALID,
+      'number.max': TruckValidationMessage.NUMBER_INVALID,
+      'any.required': TruckValidationMessage.REQUIRED,
+    }),
 
   pricePerKm: joi
     .number()
@@ -34,28 +40,30 @@ const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
     .max(TruckPricePerKm.MAX)
     .required()
     .messages({
-      'number.base': TruckValidationMessage.PRICE_PER_KM_NOT_A_NUMBER,
-      'number.min': TruckValidationMessage.PRICE_PER_KM_MINIMUM,
-      'number.max': TruckValidationMessage.PRICE_PER_KM_MAXIMUM,
-      'any.required': TruckValidationMessage.PRICE_PER_KM_REQUIRED,
+      'number.base': TruckValidationMessage.NUMBER_INVALID,
+      'number.min': TruckValidationMessage.NUMBER_INVALID,
+      'number.max': TruckValidationMessage.NUMBER_INVALID,
+      'any.required': TruckValidationMessage.REQUIRED,
     }),
 
   licensePlateNumber: joi
     .string()
     .trim()
+    .min(3)
+    .max(10)
     .pattern(LICENSE_PLATE_NUMBER_REGEX)
     .required()
     .messages({
-      'string.empty': TruckValidationMessage.LICENSE_PLATE_EMPTY,
+      'string.empty': TruckValidationMessage.REQUIRED,
+      'any.required': TruckValidationMessage.REQUIRED,
       'string.pattern.base': TruckValidationMessage.LICENSE_PLATE_INVALID,
-      'any.required': TruckValidationMessage.LICENSE_PLATE_REQUIRED,
     }),
 
   year: joi.number().min(TruckYear.MIN).max(TruckYear.MAX).required().messages({
-    'number.base': TruckValidationMessage.YEAR_NOT_A_NUMBER,
-    'number.min': TruckValidationMessage.YEAR_MINIMUM,
-    'number.max': TruckValidationMessage.YEAR_MAXIMUM,
-    'any.required': TruckValidationMessage.YEAR_REQUIRED,
+    'number.base': TruckValidationMessage.YEAR_INVALID,
+    'number.min': TruckValidationMessage.YEAR_INVALID,
+    'number.max': TruckValidationMessage.YEAR_INVALID,
+    'any.required': TruckValidationMessage.REQUIRED,
   }),
 
   towType: joi
@@ -63,8 +71,8 @@ const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
     .required()
     .valid(...Object.values(TruckTowType))
     .messages({
-      'any.only': TruckValidationMessage.TOW_TYPE_INVALID,
-      'any.required': TruckValidationMessage.TOW_TYPE_REQUIRED,
+      'any.only': TruckValidationMessage.INVALID,
+      'any.required': TruckValidationMessage.REQUIRED,
     }),
 });
 

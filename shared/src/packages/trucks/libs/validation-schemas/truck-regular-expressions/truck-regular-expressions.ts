@@ -1,3 +1,3 @@
-const LICENSE_PLATE_NUMBER_REGEX = /^[A-Za-z]{2}\d{4}[A-Za-z]{2}$/;
+const LICENSE_PLATE_NUMBER_REGEX = /^(?!.*\s)[\dA-ZЁА-Я-]{3,10}$/;
 
 export { LICENSE_PLATE_NUMBER_REGEX };

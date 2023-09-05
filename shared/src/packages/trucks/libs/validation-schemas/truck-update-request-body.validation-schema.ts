@@ -16,13 +16,19 @@ const truckUpdateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
     .string()
     .valid(...Object.values(TruckManufacturer))
     .messages({
-      'any.only': TruckValidationMessage.MANUFACTURER_INVALID,
+      'any.only': TruckValidationMessage.REQUIRED,
     }),
 
-  capacity: joi.number().min(TruckCapacity.MIN).messages({
-    'number.base': TruckValidationMessage.CAPACITY_NOT_A_NUMBER,
-    'number.min': TruckValidationMessage.CAPACITY_MINIMUM,
-  }),
+  capacity: joi
+    .number()
+    .min(TruckCapacity.MIN)
+    .max(TruckCapacity.MAX)
+    .required()
+    .messages({
+      'number.base': TruckValidationMessage.INVALID,
+      'number.min': TruckValidationMessage.INVALID,
+      'number.max': TruckValidationMessage.INVALID,
+    }),
 
   pricePerKm: joi
     .number()
@@ -30,31 +36,33 @@ const truckUpdateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
     .min(TruckPricePerKm.MIN)
     .max(TruckPricePerKm.MAX)
     .messages({
-      'number.base': TruckValidationMessage.PRICE_PER_KM_NOT_A_NUMBER,
-      'number.min': TruckValidationMessage.PRICE_PER_KM_MINIMUM,
-      'number.max': TruckValidationMessage.PRICE_PER_KM_MAXIMUM,
+      'number.base': TruckValidationMessage.NUMBER_INVALID,
+      'number.min': TruckValidationMessage.NUMBER_INVALID,
+      'number.max': TruckValidationMessage.NUMBER_INVALID,
     }),
 
   licensePlateNumber: joi
     .string()
     .trim()
+    .min(3)
+    .max(10)
     .pattern(LICENSE_PLATE_NUMBER_REGEX)
     .messages({
-      'string.empty': TruckValidationMessage.LICENSE_PLATE_EMPTY,
+      'string.empty': TruckValidationMessage.REQUIRED,
       'string.pattern.base': TruckValidationMessage.LICENSE_PLATE_INVALID,
     }),
 
   year: joi.number().min(TruckYear.MIN).max(TruckYear.MAX).messages({
-    'number.base': TruckValidationMessage.YEAR_NOT_A_NUMBER,
-    'number.min': TruckValidationMessage.YEAR_MINIMUM,
-    'number.max': TruckValidationMessage.YEAR_MAXIMUM,
+    'number.base': TruckValidationMessage.YEAR_INVALID,
+    'number.min': TruckValidationMessage.YEAR_INVALID,
+    'number.max': TruckValidationMessage.YEAR_INVALID,
   }),
 
   towType: joi
     .string()
     .valid(...Object.values(TruckTowType))
     .messages({
-      'any.only': TruckValidationMessage.TOW_TYPE_INVALID,
+      'any.only': TruckValidationMessage.INVALID,
     }),
 });
 
