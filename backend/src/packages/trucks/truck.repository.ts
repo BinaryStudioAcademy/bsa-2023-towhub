@@ -37,21 +37,21 @@ class TruckRepository implements IRepository {
   public async create(
     entity: Omit<TruckEntity, 'id'>,
   ): Promise<TruckDatabaseModel[]> {
-    const preparedInsert = this.db
+    const preparedQuery = this.db
       .driver()
       .insert(this.trucksSchema)
       .values(entity)
       .returning()
       .prepare('createTruck');
 
-    return await preparedInsert.execute();
+    return await preparedQuery.execute();
   }
 
   public async update(
     id: number,
     payload: Partial<TruckEntity>,
   ): Promise<TruckDatabaseModel[]> {
-    const preparedUpdate = this.db
+    const preparedQuery = this.db
       .driver()
       .update(this.trucksSchema)
       .set(payload)
@@ -59,7 +59,7 @@ class TruckRepository implements IRepository {
       .returning()
       .prepare('updateTruck');
 
-    return await preparedUpdate.execute({ id });
+    return await preparedQuery.execute({ id });
   }
 
   public async delete(id: number): Promise<boolean> {
