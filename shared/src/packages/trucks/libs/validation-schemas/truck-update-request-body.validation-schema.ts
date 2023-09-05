@@ -1,34 +1,28 @@
 import joi from 'joi';
 
 import {
-  FormLabel,
   TruckCapacity,
   TruckManufacturer,
   TruckPricePerKm,
   TruckTowType,
   TruckYear,
 } from '../enums/enums.js';
+import { TruckValidationMessage } from '../enums/truck-validation-message.enum.js';
 import { type TruckEntity } from '../types/types.js';
+import { LICENSE_PLATE_NUMBER_REGEX } from './validation-schema.js';
 
-const truckUpdateRequestBodyValidationSchema = joi.object<
-  Omit<TruckEntity, 'id'>,
-  true
->({
+const truckUpdateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
   manufacturer: joi
     .string()
     .valid(...Object.values(TruckManufacturer))
     .messages({
-      'any.only': `Invalid ${FormLabel.MANUFACTURER}`,
-      'any.required': `${FormLabel.MANUFACTURER} is required`,
+      'any.only': TruckValidationMessage.MANUFACTURER_INVALID,
     }),
 
-  capacity: joi
-    .number()
-    .min(TruckCapacity.MIN)
-    .messages({
-      'number.base': `${FormLabel.CAPACITY} must be a number`,
-      'number.min': `${FormLabel.CAPACITY} must be at least ${TruckCapacity.MIN}`,
-    }),
+  capacity: joi.number().min(TruckCapacity.MIN).messages({
+    'number.base': TruckValidationMessage.CAPACITY_NOT_A_NUMBER,
+    'number.min': TruckValidationMessage.CAPACITY_MINIMUM,
+  }),
 
   pricePerKm: joi
     .number()
@@ -36,36 +30,32 @@ const truckUpdateRequestBodyValidationSchema = joi.object<
     .min(TruckPricePerKm.MIN)
     .max(TruckPricePerKm.MAX)
     .messages({
-      'number.base': `${FormLabel.PRICE_PER_KM} must be a number`,
-      'number.min': `${FormLabel.PRICE_PER_KM} must be at least ${TruckPricePerKm.MIN}`,
-      'number.max': `${FormLabel.PRICE_PER_KM} must be at most ${TruckPricePerKm.MAX}`,
+      'number.base': TruckValidationMessage.PRICE_PER_KM_NOT_A_NUMBER,
+      'number.min': TruckValidationMessage.PRICE_PER_KM_MINIMUM,
+      'number.max': TruckValidationMessage.PRICE_PER_KM_MAXIMUM,
     }),
 
   licensePlateNumber: joi
     .string()
     .trim()
-    .pattern(/^[A-Za-z]{2}\d{4}[A-Za-z]{2}$/)
+    .pattern(LICENSE_PLATE_NUMBER_REGEX)
     .messages({
-      'string.empty': `${FormLabel.LICENSE_PLATE} is required`,
-      'string.pattern.base': `Invalid ${FormLabel.LICENSE_PLATE}`,
+      'string.empty': TruckValidationMessage.LICENSE_PLATE_EMPTY,
+      'string.pattern.base': TruckValidationMessage.LICENSE_PLATE_INVALID,
     }),
 
-  year: joi
-    .number()
-    .min(TruckYear.MIN)
-    .max(TruckYear.MAX)
-    .messages({
-      'number.base': `${FormLabel.YEAR} must be a number`,
-      'number.min': `${FormLabel.YEAR} must be at least ${TruckYear.MIN}`,
-    }),
+  year: joi.number().min(TruckYear.MIN).max(TruckYear.MAX).messages({
+    'number.base': TruckValidationMessage.YEAR_NOT_A_NUMBER,
+    'number.min': TruckValidationMessage.YEAR_MINIMUM,
+    'number.max': TruckValidationMessage.YEAR_MAXIMUM,
+  }),
 
   towType: joi
     .string()
     .valid(...Object.values(TruckTowType))
     .messages({
-      'any.only': `Invalid ${FormLabel.TOW_TYPE}`,
-      'any.required': `${FormLabel.TOW_TYPE} is required`,
+      'any.only': TruckValidationMessage.TOW_TYPE_INVALID,
     }),
 });
 
-export { truckUpdateRequestBodyValidationSchema };
+export { truckUpdateRequestBody };

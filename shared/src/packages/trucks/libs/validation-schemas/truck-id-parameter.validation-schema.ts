@@ -1,7 +1,11 @@
 import joi from 'joi';
 
-const truckIdParameterValidationSchema = joi.object({
-  id: joi.number().required(),
+import { TruckValidationMessage } from '../enums/truck-validation-message.enum.js';
+
+const truckIdParameter = joi.object({
+  id: joi.number().integer().positive().required().messages({
+    'number': TruckValidationMessage.ID_NOT_A_NUMBER,
+  }),
 });
 
-export { truckIdParameterValidationSchema };
+export { truckIdParameter };

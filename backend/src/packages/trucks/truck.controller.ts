@@ -10,9 +10,9 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { TruckApiPath } from './libs/enums/enums.js';
 import { type TruckEntity } from './libs/types/types.js';
 import {
-  truckCreateRequestBodyValidationSchema,
-  truckIdParameterValidationSchema,
-  truckUpdateRequestBodyValidationSchema,
+  truckCreateRequestBody,
+  truckIdParameter,
+  truckUpdateRequestBody,
 } from './libs/validation-schema/validation-schemas.js';
 import { type TruckService } from './truck.service.js';
 
@@ -140,7 +140,7 @@ class TruckController extends Controller {
       path: TruckApiPath.ROOT,
       method: 'POST',
       validation: {
-        body: truckCreateRequestBodyValidationSchema,
+        body: truckCreateRequestBody,
       },
       handler: (request) =>
         this.create(
@@ -154,8 +154,8 @@ class TruckController extends Controller {
       path: TruckApiPath.$ID,
       method: 'PUT',
       validation: {
-        body: truckUpdateRequestBodyValidationSchema,
-        params: truckIdParameterValidationSchema,
+        body: truckUpdateRequestBody,
+        params: truckIdParameter,
       },
       handler: (request) =>
         this.update(
@@ -176,7 +176,7 @@ class TruckController extends Controller {
       path: TruckApiPath.$ID,
       method: 'GET',
       validation: {
-        params: truckIdParameterValidationSchema,
+        params: truckIdParameter,
       },
       handler: (request) =>
         this.get(
@@ -190,7 +190,7 @@ class TruckController extends Controller {
       path: TruckApiPath.$ID,
       method: 'DELETE',
       validation: {
-        params: truckIdParameterValidationSchema,
+        params: truckIdParameter,
       },
       handler: (request) =>
         this.delete(

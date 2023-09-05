@@ -1,4 +1,4 @@
-import { type ValueOf } from '~/libs/types/value-of.type.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
 import { type TruckManufacturer, type TruckTowType } from '../enums/enums.js';
 

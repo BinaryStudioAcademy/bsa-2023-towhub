@@ -64,14 +64,15 @@ export {
   type TruckEntity,
   FormLabel,
   FormName,
+  LICENSE_PLATE_NUMBER_REGEX,
   TruckApiPath,
   TruckCapacity,
-  truckCreateRequestBodyValidationSchema,
-  truckIdParameterValidationSchema,
+  truckCreateRequestBody,
+  truckIdParameter,
   TruckManufacturer,
   TruckPricePerKm,
   TruckTowType,
-  truckUpdateRequestBodyValidationSchema,
+  truckUpdateRequestBody,
   TruckYear,
 } from './packages/trucks/trucks.js';
 export {

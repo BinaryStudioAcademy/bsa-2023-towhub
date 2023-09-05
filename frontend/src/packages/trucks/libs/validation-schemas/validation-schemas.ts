@@ -1,2 +1,5 @@
-export { truckAddValidationSchema } from './truck-add.validation-schema.js';
-export { truckCreateRequestBodyValidationSchema } from 'shared/build/index.js';
+export { truck } from './truck.validation-schema.js';
+export {
+  LICENSE_PLATE_NUMBER_REGEX,
+  truckCreateRequestBody,
+} from 'shared/build/index.js';
