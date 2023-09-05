@@ -36,7 +36,7 @@ const Input = <T extends FieldValues>({
   isDisabled,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
-  const [showPassword, setShowPassword] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const error = errors[name]?.message;
   const hasError = Boolean(error);
   const hasValue = Boolean(field.value);
@@ -51,9 +51,9 @@ const Input = <T extends FieldValues>({
   const toggleShowPassword = useCallback(
     (event: React.MouseEvent<HTMLElement>): void => {
       event.preventDefault();
-      setShowPassword(!showPassword);
+      setIsShowPassword(!isShowPassword);
     },
-    [showPassword],
+    [isShowPassword],
   );
 
   return (
@@ -62,14 +62,17 @@ const Input = <T extends FieldValues>({
       <span className={styles.inputWrapper}>
         <input
           {...field}
-          type={showPassword ? 'text' : type}
+          type={isShowPassword ? 'text' : type}
           placeholder={placeholder}
           className={getValidClassNames(...inputStyles)}
           disabled={isDisabled}
         />
         {type === 'password' && (
           <button
-            className={styles.passwordEye}
+            className={getValidClassNames(
+              styles.passwordEye,
+              isShowPassword && styles.passwordEyeLight,
+            )}
             onClick={toggleShowPassword}
             tabIndex={-1}
           >
