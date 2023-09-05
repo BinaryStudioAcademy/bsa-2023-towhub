@@ -6,7 +6,6 @@ import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { OrderEntity } from '~/packages/orders/order.entity.js';
 
 import { combineFilters } from './libs/helpers/combine-filters.js';
-import { getResultIfTruthy } from './libs/helpers/get-result-if-truthy.js';
 import { type OrderEntity as OrderEntityT } from './libs/types/types.js';
 
 class OrderRepository implements Omit<IRepository, 'find'> {
@@ -84,19 +83,14 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     id: OrderEntityT['id'];
     payload: Partial<OrderEntityT>;
   }): Promise<OrderEntity | null> {
-    const result = await this.db
+    const [result = null] = await this.db
       .driver()
       .update(this.ordersSchema)
       .set(payload)
       .where(eq(this.ordersSchema.id, id))
       .returning();
 
-    const order = result[0] as OrderEntityT;
-
-    return getResultIfTruthy<OrderEntityT, OrderEntity>(
-      order,
-      OrderEntity.initialize.bind(OrderEntity),
-    );
+    return result && OrderEntity.initialize(result as OrderEntityT);
   }
 
   public async delete(

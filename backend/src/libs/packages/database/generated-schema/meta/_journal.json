@@ -40,14 +40,7 @@
     {
       "idx": 5,
       "version": "5",
-      "when": 1693653089477,
-      "tag": "0005_add_orders_table",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "5",
-      "when": 1693914703726,
+      "when": 1693928394464,
       "tag": "0005_add_orders_table",
       "breakpoints": true
     }

@@ -67,13 +67,14 @@ const businessRelations = relations(users, ({ many }) => ({
   orders: many(orders),
 }));
 
+const orderStatus = pgEnum('status', ORDER_STATUSES);
 const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
   price: integer('price').notNull(),
   scheduledTime: timestamp('scheduled_time', { mode: 'string' }).notNull(),
   startPoint: varchar('start_point').notNull(),
   endPoint: varchar('end_point').notNull(),
-  status: pgEnum('status', ORDER_STATUSES)('status').notNull(),
+  status: orderStatus('status').notNull(),
   userId: integer('user_id').references(() => users.id),
   businessId: integer('business_id').references(() => business.id),
   driverId: integer('driver_id'),
@@ -100,6 +101,7 @@ export {
   groups,
   orders,
   ordersRelations,
+  orderStatus,
   users,
   usersRelations,
 };
