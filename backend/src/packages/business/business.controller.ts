@@ -6,6 +6,7 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
   type DriverAllByBusinessRequestParameters,
@@ -238,7 +239,12 @@ class BusinessController extends Controller {
   private businessService: BusinessService;
 
   public constructor(logger: ILogger, businessService: BusinessService) {
-    super(logger, ApiPath.BUSINESS);
+    const defaultStrategies = [
+      AuthStrategy.VERIFY_JWT,
+      AuthStrategy.VERIFY_BUSINESS_GROUP,
+    ];
+
+    super(logger, ApiPath.BUSINESS, defaultStrategies);
 
     this.businessService = businessService;
 
