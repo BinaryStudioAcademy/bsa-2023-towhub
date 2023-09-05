@@ -1,43 +1,36 @@
 import { ApiPath, ContentType } from '~/libs/enums/enums.js';
-import { HttpHeader } from '~/libs/packages/http/http.js';
-import { type Http } from '~/libs/packages/http/http.package.js';
-import { type ValueOf } from '~/libs/types/types.js';
+import { HttpApi } from '~/libs/packages/api/http-api.js';
+import { type IHttp } from '~/libs/packages/http/http.js';
+import { type IStorage } from '~/libs/packages/storage/storage.js';
 
 import { TruckApiPath } from './libs/enums/enums.js';
 import { type TruckEntity } from './libs/types/types.js';
 
-class TruckApi {
-  private baseUrl: string;
+type Constructor = {
+  baseUrl: string;
+  http: IHttp;
+  storage: IStorage;
+};
 
-  private http: Http;
-
-  public constructor(baseUrl: string, http: Http) {
-    this.baseUrl = baseUrl;
-    this.http = http;
+class TruckApi extends HttpApi {
+  public constructor({ baseUrl, http, storage }: Constructor) {
+    super({ path: ApiPath.TRUCKS, baseUrl, http, storage });
   }
 
-  public async addTruck(truck: Omit<TruckEntity, 'id'>): Promise<TruckEntity> {
-    const path = this.getFullEndpoint(TruckApiPath.ROOT);
+  public async addTruck(
+    payload: Omit<TruckEntity, 'id'>,
+  ): Promise<TruckEntity> {
+    const response = await this.load(
+      this.getFullEndpoint(TruckApiPath.ROOT, {}),
+      {
+        method: 'POST',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: false,
+      },
+    );
 
-    const response = await this.http.load(path, {
-      method: 'POST',
-      headers: this.getHeaders(ContentType.JSON),
-      payload: JSON.stringify(truck),
-    });
-
-    return (await response.json()) as TruckEntity;
-  }
-
-  private getHeaders(contentType: ValueOf<typeof ContentType>): Headers {
-    const headers = new Headers();
-
-    headers.append(HttpHeader.CONTENT_TYPE, contentType);
-
-    return headers;
-  }
-
-  private getFullEndpoint(path: string): string {
-    return `${this.baseUrl}${ApiPath.TRUCKS}${path}`;
+    return await response.json<TruckEntity>();
   }
 }
 
