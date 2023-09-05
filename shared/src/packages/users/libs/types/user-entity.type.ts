@@ -22,7 +22,7 @@ type UserEntityObjectWithGroupT = Omit<
 };
 
 type UserEntityObjectWithGroupAndBusinessT = UserEntityObjectWithGroupT & {
-  business: BusinessEntityT | null;
+  business: BusinessEntityT;
 };
 
 export {

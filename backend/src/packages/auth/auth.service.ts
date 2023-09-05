@@ -161,7 +161,9 @@ class AuthService {
 
   public async signIn(
     credentials: UserSignInRequestDto,
-  ): Promise<UserEntityObjectWithGroupAndBusinessT> {
+  ): Promise<
+    UserEntityObjectWithGroupAndBusinessT | UserEntityObjectWithGroupT
+  > {
     const { email, password } = credentials;
 
     const user = await this.userService.findByEmailRaw(email);
@@ -185,10 +187,17 @@ class AuthService {
       updatedUser.id,
     );
 
+    if (userBusiness) {
+      return {
+        ...updatedUser,
+        group: GroupEntity.initialize(user.group).toObject(),
+        business: userBusiness,
+      };
+    }
+
     return {
       ...updatedUser,
       group: GroupEntity.initialize(user.group).toObject(),
-      business: userBusiness,
     };
   }
 
