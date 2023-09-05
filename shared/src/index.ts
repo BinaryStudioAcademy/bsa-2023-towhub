@@ -67,8 +67,11 @@ export {
   type OrderEntity,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
-  ordersDeleteParameters,
+  orderCreate,
+  orderFindBy,
+  orderIdParameter,
   OrdersValidationMessage,
+  orderUpdate,
 } from './packages/orders/orders.js';
 export { OrdersApiPath, OrderStatus } from './packages/orders/orders.js';
 export {

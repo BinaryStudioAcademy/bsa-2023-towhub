@@ -1,7 +1,11 @@
 import {
   type Id,
   type UserEntityObjectWithGroupT,
-  ordersDeleteParameters,
+  orderCreate,
+  orderFindBy,
+  orderIdParameter,
+  orderUpdate,
+  UserGroupKey,
 } from 'shared/build/index.js';
 
 import { ApiPath } from '~/libs/enums/enums.js';
@@ -15,6 +19,7 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type OrderService } from '~/packages/orders/order.service.js';
 
 import { AuthStrategy } from '../auth/auth.js';
+import { type BusinessService } from '../business/business.service.js';
 import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
@@ -47,14 +52,9 @@ import {
  *               enum:
  *                 - Order does not exist!
  *     OrderDeletionResult:
- *       type: object
- *       required:
- *         - result
- *       properties:
- *         result:
- *           type: boolean
- *           example: true
- *           description: true, if deletion successful
+ *       type: boolean
+ *       example: true
+ *       description: true, if deletion successful
  *     UnauthorizedError:
  *       allOf:
  *         - $ref: '#/components/schemas/ErrorType'
@@ -175,18 +175,31 @@ import {
 class OrderController extends Controller {
   private orderService: OrderService;
 
-  public constructor(logger: ILogger, orderService: OrderService) {
+  private businessService: BusinessService;
+
+  public constructor(
+    logger: ILogger,
+    orderService: OrderService,
+    businessService: BusinessService,
+  ) {
     super(logger, ApiPath.ORDERS);
 
     this.orderService = orderService;
 
+    this.businessService = businessService;
+
     this.addRoute({
       path: OrdersApiPath.ROOT,
       method: 'GET',
+      authStrategy: AuthStrategy.VERIFY_JWT,
+      validation: {
+        query: orderFindBy,
+      },
       handler: (options) =>
-        this.findByFilter(
+        this.findBy(
           options as ApiHandlerOptions<{
-            query: { businessId: string; userId: string };
+            query: { businessId: string; userId: string; driverId: string };
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -194,10 +207,16 @@ class OrderController extends Controller {
     this.addRoute({
       path: OrdersApiPath.$ID,
       method: 'GET',
+      authStrategy: AuthStrategy.VERIFY_JWT,
+      validation: {
+        params: orderIdParameter,
+      },
       handler: (options) =>
         this.findById(
           options as ApiHandlerOptions<{
             params: Id;
+            user: UserEntityObjectWithGroupT;
+            businessId: number;
           }>,
         ),
     });
@@ -205,11 +224,17 @@ class OrderController extends Controller {
     this.addRoute({
       path: OrdersApiPath.$ID,
       method: 'POST',
+      authStrategy: AuthStrategy.VERIFY_JWT,
+      validation: {
+        params: orderIdParameter,
+        body: orderUpdate,
+      },
       handler: (options) =>
         this.update(
           options as ApiHandlerOptions<{
             params: Id;
             body: OrderUpdateRequestDto;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -218,6 +243,9 @@ class OrderController extends Controller {
       path: OrdersApiPath.ROOT,
       method: 'POST',
       authStrategy: AuthStrategy.VERIFY_JWT,
+      validation: {
+        body: orderCreate,
+      },
       handler: (options) =>
         this.create(
           options as ApiHandlerOptions<{
@@ -232,7 +260,7 @@ class OrderController extends Controller {
       method: 'DELETE',
       authStrategy: AuthStrategy.VERIFY_JWT,
       validation: {
-        params: ordersDeleteParameters,
+        params: orderIdParameter,
       },
       handler: (options) =>
         this.delete(
@@ -285,49 +313,216 @@ class OrderController extends Controller {
   ): Promise<ApiHandlerResponse> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.createOrderForUser(
-        options.body,
-        options.user.id,
-      ),
+      payload: await this.orderService.create({
+        ...options.body,
+        userId: options.user.id,
+      }),
     };
   }
 
+  /**
+   * @swagger
+   * /orders/{id}:
+   *    get:
+   *      tags:
+   *       - orders
+   *      summary: Get order by Id
+   *      description: Get order by Id
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              oneOf:
+   *                - $ref: '#/components/schemas/Order/CreateOrderWithRegisteredUser'
+   *                - $ref: '#/components/schemas/Order/CreateOrderWithNotRegisteredUser'
+   *      parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the order to find
+   *         example: 1
+   *      security:
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Order found
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Order'
+   *        404:
+   *          description:
+   *            Order with such ID does not found
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/OrderDoesNotExist'
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *
+   */
   private async findById(
     options: ApiHandlerOptions<{
       params: Id;
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findById(options.params.id),
+      payload: await this.orderService.findById(
+        options.params.id,
+        options.user,
+      ),
     };
   }
 
+  /**
+   * @swagger
+   * /orders/{id}:
+   *    post:
+   *      tags:
+   *       - orders
+   *      summary: Update order by Id
+   *      description: Update order by Id
+   *      parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the order to update
+   *         example: 1
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              oneOf:
+   *                - $ref: '#/components/schemas/Order/CreateOrderWithRegisteredUser'
+   *                - $ref: '#/components/schemas/Order/CreateOrderWithNotRegisteredUser'
+   *      security:
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Order updated
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Order'
+   *        404:
+   *          description:
+   *            Order with such ID does not found
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/OrderDoesNotExist'
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *
+   */
   private async update(
     options: ApiHandlerOptions<{
       params: Id;
       body: OrderUpdateRequestDto;
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
+    let driverId; //TODO: add check for driver id
+
     return {
       status: HttpCode.OK,
       payload: await this.orderService.update({
         id: options.params.id,
         payload: options.body,
+        driverId,
       }),
     };
   }
+  /**
+   * @swagger
+   * /orders:
+   *    get:
+   *      tags:
+   *       - orders
+   *      summary: Get order by parameters
+   *      description: Get order by parameters
+   *      parameters:
+   *       - in: query
+   *         name: userId
+   *         schema:
+   *           type: integer
+   *         description: user ID of the order to find
+   *         example: 1
+   *       - in: query
+   *         name: driverId
+   *         schema:
+   *           type: integer
+   *         description: driver ID of the order to find
+   *         example: 1
+   *       - in: query
+   *         name: businessId
+   *         schema:
+   *           type: integer
+   *         description: business ID of the order to find
+   *         example: 1
+   *      security:
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Orders found
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: array
+   *                items:
+   *                  type: object
+   *                  properties:
+   *                    items:
+   *                      $ref: '#/components/schemas/Order'
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *
+   */
 
-  private async findByFilter(
+  private async findBy(
     options: ApiHandlerOptions<{
-      query: { businessId: string; userId: string };
+      query: { businessId: string; userId: string; driverId: string };
+      user: UserEntityObjectWithGroupT | undefined;
     }>,
   ): Promise<ApiHandlerResponse> {
+    let businessId;
+
+    if (options.user.group.key === UserGroupKey.BUSINESS) {
+      businessId = await this.businessService.findByOwnerId(options.user.id);
+    }
+
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findByFilter({
+      payload: await this.orderService.findBy({
         userId: options.query.userId,
         businessId: options.query.businessId,
+        driverId: options.query.driverId,
+        currentUserId: options.user.id,
+        currentUserBusinessId: businessId?.id,
       }),
     };
   }
@@ -380,7 +575,7 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const result = await this.orderService.deleteIfBelongsToUser(
+    const result = await this.orderService.delete(
       options.params.id,
       options.user,
     );

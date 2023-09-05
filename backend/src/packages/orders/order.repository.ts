@@ -38,9 +38,7 @@ class OrderRepository implements IRepository {
     return (result ?? null) && OrderEntity.initialize(result as OrderEntityT);
   }
 
-  public async findByFilter(
-    searchBy: Partial<OrderEntityT>,
-  ): Promise<OrderEntity[]> {
+  public async findBy(searchBy: Partial<OrderEntityT>): Promise<OrderEntity[]> {
     const orders = await this.db
       .driver()
       .select()

@@ -10,4 +10,9 @@ export {
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
 } from './libs/types/types.js';
-export { ordersDeleteParameters } from './libs/validation-schemas/validation-schemas.js';
+export {
+  orderCreate,
+  orderFindBy,
+  orderIdParameter,
+  orderUpdate,
+} from './libs/validation-schemas/validation-schemas.js';

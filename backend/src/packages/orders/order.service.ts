@@ -4,9 +4,8 @@ import {
   HttpMessage,
 } from 'shared/build/index.js';
 
-import { HttpError, NotFoundError } from '~/libs/exceptions/exceptions.js';
+import { HttpError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
-import { type OperationResult } from '~/libs/types/types.js';
 
 import { OrderStatus } from './libs/enums/enums.js';
 import {
@@ -18,37 +17,34 @@ import {
 import { OrderEntity } from './order.entity.js';
 import { type OrderRepository } from './order.repository.js';
 
-class OrderService implements IService {
+class OrderService implements Omit<IService, 'delete' | 'findById'> {
   private orderRepository: OrderRepository;
 
   public constructor(orderRepository: OrderRepository) {
     this.orderRepository = orderRepository;
   }
 
-  public async createOrderForUser(
-    payload: OrderCreateRequestDto,
-    userId: OrderEntityT['userId'],
+  public async create(
+    payload: OrderCreateRequestDto & { userId: number },
   ): Promise<OrderCreateResponseDto> {
-    const price = 100; //Mock
-    const status = OrderStatus.PENDING;
     const {
       scheduledTime,
       startPoint,
       endPoint,
       customerName,
       customerPhone,
-      businessId,
       driverId,
+      userId,
     } = payload;
     const order = await this.orderRepository.create(
       OrderEntity.initializeNew({
-        price,
+        price: 100, //Mock, get price from driver->user->truck and calculated distance
         scheduledTime,
         startPoint,
         endPoint,
-        status,
+        status: OrderStatus.PENDING,
         userId,
-        businessId,
+        businessId: 1, //Mock, get businessId from driver
         driverId,
         customerName,
         customerPhone,
@@ -60,47 +56,68 @@ class OrderService implements IService {
 
   public async findById(
     id: OrderEntityT['id'],
-  ): Promise<OperationResult<OrderEntityT | null>> {
-    const order = await this.orderRepository.findById(id);
+    user: UserEntityObjectWithGroupT | undefined,
+  ): Promise<OrderEntityT | null> {
+    const foundOrder = await this.orderRepository.findById(id);
 
-    return { result: order ? order.toObject() : null };
-  }
+    if (!foundOrder) {
+      throw new HttpError({
+        status: HttpCode.NOT_FOUND,
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
+    }
+    const result = foundOrder.toObject();
 
-  public async find(): Promise<void> {
-    //
-  }
+    if (user) {
+      this.checkIfOrderBelongsToUser(result, user);
+    }
 
-  public delete(): Promise<boolean> {
-    return Promise.resolve(false);
-  }
-
-  public create(): Promise<unknown> {
-    return Promise.resolve();
+    return result;
   }
 
   public async update(parameters: {
     id: OrderEntityT['id'];
     payload: Partial<OrderEntityT>;
+    driverId: number | undefined;
   }): Promise<OrderUpdateResponseDto> {
+    const foundOrder = await this.orderRepository.findById(parameters.id);
+
+    if (parameters.driverId && foundOrder) {
+      this.checkIfOrderBelongsToDriver(
+        foundOrder.toObject(),
+        parameters.driverId,
+      );
+    }
+
     const updatedOrder = await this.orderRepository.update(parameters);
 
     if (!updatedOrder) {
-      throw new NotFoundError({});
+      throw new HttpError({
+        status: HttpCode.NOT_FOUND,
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
     }
 
     return updatedOrder.toObject();
   }
 
-  public async findByFilter({
+  public async findBy({
     userId,
     businessId,
+    driverId,
+    currentUserBusinessId,
+    currentUserId,
   }: {
     userId: string;
     businessId: string;
+    driverId: string;
+    currentUserBusinessId: number | undefined;
+    currentUserId: number | undefined;
   }): Promise<{ items: OrderEntityT[] }> {
-    const usersOrders = await this.orderRepository.findByFilter({
-      userId: Number(userId),
-      businessId: Number(businessId),
+    const usersOrders = await this.orderRepository.findBy({
+      userId: Number(currentUserBusinessId ? userId : currentUserId),
+      businessId: Number(currentUserBusinessId ?? businessId),
+      driverId: Number(driverId),
     });
 
     return {
@@ -108,12 +125,11 @@ class OrderService implements IService {
     };
   }
 
-  public async deleteIfBelongsToUser(
+  public async delete(
     id: OrderEntityT['id'],
     user: UserEntityObjectWithGroupT,
   ): Promise<boolean> {
-    const { id: userId, phone } = user;
-    const { result: foundOrder } = await this.findById(id);
+    const foundOrder = await this.findById(id, user);
 
     if (!foundOrder) {
       throw new HttpError({
@@ -122,6 +138,33 @@ class OrderService implements IService {
       });
     }
 
+    return await this.orderRepository.delete(id);
+  }
+
+  private checkIfOrderBelongsToDriver(
+    foundOrder: OrderEntityT | null,
+    driverId: number,
+  ): void {
+    if (!foundOrder) {
+      return;
+    }
+
+    if (foundOrder.driverId !== driverId) {
+      throw new HttpError({
+        status: HttpCode.NOT_FOUND,
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
+    }
+  }
+
+  private checkIfOrderBelongsToUser(
+    foundOrder: OrderEntityT | null,
+    user: UserEntityObjectWithGroupT,
+  ): void {
+    if (!foundOrder) {
+      return;
+    }
+    const { id: userId, phone } = user;
     const orderBelongsToUser =
       (foundOrder.userId && foundOrder.userId === userId) ||
       (foundOrder.customerPhone && foundOrder.customerPhone === phone);
@@ -132,8 +175,6 @@ class OrderService implements IService {
         message: HttpMessage.ORDER_DOES_NOT_EXIST,
       });
     }
-
-    return await this.orderRepository.delete(id);
   }
 }
 
