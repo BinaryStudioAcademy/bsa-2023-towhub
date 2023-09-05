@@ -5,6 +5,7 @@ import {
   type FieldValues,
 } from 'react-hook-form';
 
+import { IconName } from '~/libs/enums/icon-name.enum';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
@@ -12,6 +13,7 @@ import {
   useState,
 } from '~/libs/hooks/hooks.js';
 
+import { Icon } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
@@ -46,9 +48,13 @@ const Input = <T extends FieldValues>({
     hasError && styles.error,
   ];
 
-  const toggleShowPassword = useCallback((): void => {
-    setShowPassword(!showPassword);
-  }, [showPassword]);
+  const toggleShowPassword = useCallback(
+    (event: React.MouseEvent<HTMLElement>): void => {
+      event.preventDefault();
+      setShowPassword(!showPassword);
+    },
+    [showPassword],
+  );
 
   return (
     <label className={styles.inputComponentWrapper}>
@@ -62,13 +68,13 @@ const Input = <T extends FieldValues>({
           disabled={isDisabled}
         />
         {type === 'password' && (
-          <input
-            type="button"
+          <button
             className={styles.passwordEye}
             onClick={toggleShowPassword}
-            value="&#128065;"
             tabIndex={-1}
-          />
+          >
+            <Icon iconName={IconName.EYE} size="sm" />
+          </button>
         )}
       </span>
 
