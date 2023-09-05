@@ -1,3 +1,5 @@
+import pg from 'postgres';
+
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import { HttpError } from '~/libs/exceptions/exceptions.js';
 import {
@@ -19,6 +21,7 @@ import { type UserService } from '~/packages/users/user.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { UserGroupKey } from './libs/enums/enums.js';
+import { handleDatabaseUniqueViolationError } from './libs/helpers/handle-database-unique-violation-error.helper.js';
 import { createUnauthorizedError } from './libs/helpers/helpers.js';
 import { type UserSignInRequestDto } from './libs/types/types.js';
 
@@ -60,29 +63,9 @@ class AuthService {
     this.config = config;
   }
 
-  private async checkIsExistingUser({
-    email,
-    phone,
-  }: CustomerSignUpRequestDto | BusinessSignUpRequestDto): Promise<boolean> {
-    const existingUser =
-      (await this.userService.findByEmail(email)) ??
-      (await this.userService.findByPhone(phone));
-
-    return Boolean(existingUser);
-  }
-
   public async signUpCustomer(
     payload: CustomerSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupT> {
-    const isExistingUser = await this.checkIsExistingUser(payload);
-
-    if (isExistingUser) {
-      throw new HttpError({
-        message: HttpMessage.USER_EXISTS,
-        status: HttpCode.CONFLICT,
-      });
-    }
-
     const group = await this.groupService.findByKey(UserGroupKey.CUSTOMER);
 
     if (!group) {
@@ -92,23 +75,24 @@ class AuthService {
       });
     }
 
-    const newUser = await this.userService.create({
-      ...payload,
-      groupId: group.id,
-    });
+    try {
+      const newUser = await this.userService.create({
+        ...payload,
+        groupId: group.id,
+      });
+      const userWithToken = await this.generateAccessTokenAndUpdateUser(
+        newUser.id,
+      );
 
-    const userWithToken = await this.generateAccessTokenAndUpdateUser(
-      newUser.id,
-    );
-
-    return { ...userWithToken, group };
+      return { ...userWithToken, group };
+    } catch (error) {
+      throw handleDatabaseUniqueViolationError(error);
+    }
   }
 
   public async signUpBusiness(
     payload: BusinessSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupAndBusinessT> {
-    const isExistingUser = await this.checkIsExistingUser(payload);
-
     const {
       phone,
       email,
@@ -118,13 +102,6 @@ class AuthService {
       companyName,
       taxNumber,
     } = payload;
-
-    if (isExistingUser) {
-      throw new HttpError({
-        message: HttpMessage.USER_EXISTS,
-        status: HttpCode.CONFLICT,
-      });
-    }
 
     const group = await this.groupService.findByKey(UserGroupKey.BUSINESS);
 
@@ -148,15 +125,19 @@ class AuthService {
       newUser.id,
     );
 
-    const business = await this.businessService.create({
-      payload: {
-        companyName,
-        taxNumber,
-      },
-      owner: { ...newUser, group },
-    });
+    try {
+      const business = await this.businessService.create({
+        payload: {
+          companyName,
+          taxNumber,
+        },
+        owner: { ...newUser, group },
+      });
 
-    return { ...userWithToken, group, business };
+      return { ...userWithToken, group, business };
+    } catch (error) {
+      throw handleDatabaseUniqueViolationError(error);
+    }
   }
 
   public async signIn(

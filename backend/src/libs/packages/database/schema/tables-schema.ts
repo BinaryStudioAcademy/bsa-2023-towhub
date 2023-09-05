@@ -8,6 +8,8 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 
+import { TableConstraint } from '../database.js';
+
 const users = pgTable(
   'users',
   {
@@ -28,8 +30,12 @@ const users = pgTable(
 
   (users) => {
     return {
-      phoneIdx: uniqueIndex('users_phone_unique_idx').on(users.phone),
-      emailIdx: uniqueIndex('users_email_unique_idx').on(users.email),
+      phoneIdx: uniqueIndex(TableConstraint.USERS_PHONE_UNIQUE_IDX).on(
+        users.phone,
+      ),
+      emailIdx: uniqueIndex(TableConstraint.USERS_EMAIL_UNIQUE_IDX).on(
+        users.email,
+      ),
     };
   },
 );

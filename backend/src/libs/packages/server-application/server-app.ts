@@ -9,6 +9,7 @@ import Fastify, {
   type FastifyError,
   type preHandlerHookHandler,
 } from 'fastify';
+import pg from 'postgres';
 
 import { ServerErrorType } from '~/libs/enums/enums.js';
 import { type ValidationError } from '~/libs/exceptions/exceptions.js';
@@ -191,6 +192,12 @@ class ServerApp implements IServerApp {
           };
 
           return replay.status(error.status).send(response);
+        }
+
+        if (error instanceof pg.PostgresError) {
+          this.logger.error(
+            `[DB Error]: ${error.code.toString()} – ${error.message}`,
+          );
         }
 
         this.logger.error(error.message);
