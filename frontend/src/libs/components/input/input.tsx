@@ -20,7 +20,7 @@ type Properties<T extends FieldValues> = {
   isDisabled?: boolean;
   min?: number;
   max?: number;
-  step?: string;
+  step?: number;
 };
 
 const Input = <T extends FieldValues>({
