@@ -15,3 +15,4 @@ export { filesController, filesService };
 export { FilesService } from './files.service.js';
 export { filesValidationPlugin } from './files-validation.app-plugin.js';
 export { FilesValidationStrategy } from './libs/enums/enums.js';
+export { type FastifyFileValidationFunction } from './libs/types/types.js';

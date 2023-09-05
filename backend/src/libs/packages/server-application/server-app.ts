@@ -110,7 +110,7 @@ class ServerApp implements IServerApp {
   ): preHandlerHookHandler {
     const { strategy, filesInputConfig } = validateFilesStrategy;
 
-    return this.app[strategy](filesInputConfig) as preHandlerHookHandler;
+    return this.app[strategy](filesInputConfig);
   }
 
   private resolveAuthStrategy(

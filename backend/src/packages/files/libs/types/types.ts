@@ -1,3 +1,4 @@
+export { type FastifyFileValidationFunction } from './fastify-file-validation-function.type.js';
 export {
   type FileDatabaseModel,
   type FileDatabaseModelCreateUpdate,
