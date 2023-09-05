@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 
 import { useCallback, useState } from '~/libs/hooks/hooks.js';
-import { type MenuItem, type TabName } from '~/libs/types/types.js';
+import { type BurgerMenuItem, type TabName } from '~/libs/types/types.js';
 import { Sidebar } from '~/pages/dashboard/components/sidebar/sidebar.js';
 
 import { Header } from '../components.js';
@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 type Properties = {
   isHeaderHidden?: boolean;
   isSidebarHidden?: boolean;
-  menuItems?: MenuItem[];
+  menuItems?: BurgerMenuItem[];
   children: JSX.Element;
 };
 
@@ -18,6 +18,7 @@ const PageLayout: FC<Properties> = ({
   isHeaderHidden = false,
   isSidebarHidden = false,
   children,
+  menuItems,
 }: Properties) => {
   const [selectedTab, setSelectedTab] = useState<TabName>('orders');
 
@@ -30,7 +31,7 @@ const PageLayout: FC<Properties> = ({
     <div className={styles.container}>
       {!isHeaderHidden && (
         <div className={styles.header}>
-          <Header isAuth={false} />
+          <Header isAuth={false} menuItems={menuItems} />
         </div>
       )}
       {!isSidebarHidden && (

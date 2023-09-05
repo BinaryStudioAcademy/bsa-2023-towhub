@@ -1,7 +1,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import { Header, RouterOutlet } from '~/libs/components/components.js';
-import { AppRoute, MenuLable } from '~/libs/enums/enums.js';
+import { AppRoute, BurgerMenuItemsName, IconName } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppSelector,
@@ -13,8 +13,6 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { socket as socketService } from '~/libs/packages/socket/socket.js';
 import { actions as userActions } from '~/slices/users/users.js';
-
-import { iconNameToSvg } from '../icon/maps/maps.js';
 
 const App: React.FC = () => {
   const { pathname } = useLocation();
@@ -31,19 +29,19 @@ const App: React.FC = () => {
   const menuItems = useMemo(
     () => [
       {
-        label: MenuLable.HISTORY,
+        name: BurgerMenuItemsName.HISTORY,
         onClick: () => navigate(AppRoute.ORDER_HISTORY),
-        icon: iconNameToSvg['clock rotate left'],
+        icon: IconName.CLOCK_ROTATE_LEFT,
       },
       {
-        label: MenuLable.EDIT,
+        name: BurgerMenuItemsName.EDIT,
         onClick: () => navigate(AppRoute.EDIT_PROFILE),
-        icon: iconNameToSvg['user pen'],
+        icon: IconName.USER_PEN,
       },
       {
-        label: MenuLable.LOG_OUT,
+        name: BurgerMenuItemsName.LOG_OUT,
         onClick: () => navigate(AppRoute.SIGN_IN),
-        icon: iconNameToSvg['right from bracket'],
+        icon: IconName.RIGHT_FROM_BRACKET,
       },
     ],
     [navigate],
@@ -69,7 +67,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Header menuItems={menuItems} isAuth={false} />
+      <Header menuItems={menuItems} isAuth={true} />
 
       <div>
         <RouterOutlet />

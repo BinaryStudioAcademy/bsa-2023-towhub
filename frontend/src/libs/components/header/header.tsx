@@ -1,12 +1,12 @@
 import { AppRoute } from '~/libs/enums/enums.js';
 import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
-import { type MenuItem } from '~/libs/types/types.js';
+import { type BurgerMenuItem } from '~/libs/types/types.js';
 
 import { AppLogo, BurgerMenu, Button, Link } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  menuItems?: MenuItem[];
+  menuItems?: BurgerMenuItem[];
   isAuth: boolean;
 };
 

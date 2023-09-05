@@ -22,27 +22,24 @@
   z-index: 10;
   width: 220px;
   overflow: hidden;
-  background-color: $blue-dark;
   border: none;
   border-radius: 16px;
-  box-shadow: $shadow;
+
+  .btn {
+    display: inline-flex;
+    justify-content: start;
+    background-color: $blue-dark;
+    border-radius: 0;
+
+    &:hover {
+      background-color: $blue;
+    }
+  }
 
   ul {
     margin: 0;
     padding: 0;
     list-style: none;
-  }
-
-  li {
-    padding: 10px 20px;
-
-    &:not(:last-child) {
-      border-bottom: 1px solid $grey-dark;
-    }
-
-    &:hover {
-      background-color: $blue;
-    }
   }
 
   .menuIcon {
@@ -55,5 +52,14 @@
 @media (width <= $screen-size-lg) {
   .menu {
     width: 80px;
+    background-color: $blue-dark;
+
+    li {
+      padding: 10px 20px;
+
+      &:hover {
+        background-color: $blue;
+      }
+    }
   }
 }

@@ -1,5 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
@@ -7,14 +6,13 @@ import {
   useLocation,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { type MenuItem } from '~/libs/types/types.js';
+import { type BurgerMenuItem } from '~/libs/types/types.js';
 
-import { Button } from '../components.js';
-import { iconNameToSvg } from '../icon/maps/maps.js';
+import { Button, Icon } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  menuItems?: MenuItem[];
+  menuItems?: BurgerMenuItem[];
 };
 
 const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
@@ -35,8 +33,8 @@ const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
     <div
       className={getValidClassNames(styles.burgerMenu, isOpen && styles.open)}
     >
-      <FontAwesomeIcon
-        icon={isOpen ? iconNameToSvg.xmark : iconNameToSvg.bars}
+      <Icon
+        iconName={isOpen ? IconName.XMARK : IconName.BARS}
         onClick={toggleMenu}
         className={styles.burgerIcon}
       />
@@ -47,16 +45,18 @@ const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
             {menuItems?.map((item, index) => (
               <li key={index}>
                 {isMobile ? (
-                  <FontAwesomeIcon
-                    icon={item.icon}
+                  <Icon
+                    iconName={item.icon}
                     onClick={item.onClick}
                     className={styles.menuIcon}
                   />
                 ) : (
                   <Button
+                    frontIcon={item.icon}
                     isFullWidth={true}
-                    label={item.label}
+                    label={item.name}
                     onClick={item.onClick}
+                    className={styles.btn}
                   />
                 )}
               </li>
