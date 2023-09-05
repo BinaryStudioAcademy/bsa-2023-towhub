@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useLocation,
+  useNavigate,
   useState,
 } from '~/libs/hooks/hooks.js';
 import { type BurgerMenuItem } from '~/libs/types/types.js';
@@ -18,16 +19,26 @@ type Properties = {
 const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleMenu = useCallback(() => {
     setIsOpen(!isOpen);
   }, [isOpen]);
+
+  const handleNavigate = useCallback(
+    (navigateTo: string) => () => navigate(navigateTo),
+    [navigate],
+  );
 
   useEffect(() => {
     setIsOpen(false);
   }, [location]);
 
   const isMobile = window.innerWidth <= 768;
+
+  if (!menuItems) {
+    return null;
+  }
 
   return (
     <div
@@ -38,16 +49,15 @@ const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
         onClick={toggleMenu}
         className={styles.burgerIcon}
       />
-
       {isOpen && (
         <div className={styles.menu}>
           <ul>
-            {menuItems?.map((item, index) => (
+            {menuItems.map((item, index) => (
               <li key={index}>
                 {isMobile ? (
                   <Icon
                     iconName={item.icon}
-                    onClick={item.onClick}
+                    onClick={handleNavigate(item.navigateTo)}
                     className={styles.menuIcon}
                   />
                 ) : (
@@ -55,7 +65,7 @@ const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
                     frontIcon={item.icon}
                     isFullWidth={true}
                     label={item.name}
-                    onClick={item.onClick}
+                    onClick={handleNavigate(item.navigateTo)}
                     className={styles.btn}
                   />
                 )}

@@ -8,21 +8,23 @@ import {
   useEffect,
   useLocation,
   useMemo,
-  useNavigate,
   useState,
 } from '~/libs/hooks/hooks.js';
 import { socket as socketService } from '~/libs/packages/socket/socket.js';
+import { selectUser } from '~/slices/auth/selectors.js';
 import { actions as userActions } from '~/slices/users/users.js';
 
 const App: React.FC = () => {
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();
   const [isWebSocketsConnected, setIsWebSocketsConnected] = useState(false);
-  const navigate = useNavigate();
   const { users, dataStatus } = useAppSelector(({ users }) => ({
     users: users.users,
     dataStatus: users.dataStatus,
   }));
+
+  const user = useAppSelector(selectUser);
+  const hasUser = Boolean(user);
 
   const isRoot = pathname === AppRoute.ROOT;
 
@@ -30,21 +32,21 @@ const App: React.FC = () => {
     () => [
       {
         name: BurgerMenuItemsName.HISTORY,
-        onClick: () => navigate(AppRoute.ORDER_HISTORY),
+        navigateTo: AppRoute.ORDER_HISTORY,
         icon: IconName.CLOCK_ROTATE_LEFT,
       },
       {
         name: BurgerMenuItemsName.EDIT,
-        onClick: () => navigate(AppRoute.EDIT_PROFILE),
+        navigateTo: AppRoute.EDIT_PROFILE,
         icon: IconName.USER_PEN,
       },
       {
         name: BurgerMenuItemsName.LOG_OUT,
-        onClick: () => navigate(AppRoute.SIGN_IN),
+        navigateTo: AppRoute.SIGN_IN,
         icon: IconName.RIGHT_FROM_BRACKET,
       },
     ],
-    [navigate],
+    [],
   );
 
   useEffect(() => {
@@ -67,7 +69,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Header menuItems={menuItems} isAuth={true} />
+      <Header menuItems={menuItems} isAuth={hasUser} />
 
       <div>
         <RouterOutlet />

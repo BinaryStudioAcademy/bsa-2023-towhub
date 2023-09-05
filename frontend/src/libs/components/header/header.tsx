@@ -10,10 +10,7 @@ type Properties = {
   isAuth: boolean;
 };
 
-const Header: React.FC<Properties> = ({
-  menuItems,
-  isAuth = false,
-}: Properties) => {
+const Header: React.FC<Properties> = ({ menuItems, isAuth }: Properties) => {
   const navigate = useNavigate();
 
   const handleSignIn = useCallback(() => {

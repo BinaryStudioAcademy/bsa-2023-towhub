@@ -3,7 +3,7 @@ import { type ValueOf } from './types.js';
 
 type BurgerMenuItem = {
   name: ValueOf<typeof BurgerMenuItemsName>;
-  onClick: () => void;
+  navigateTo: string;
   icon: ValueOf<typeof IconName>;
 };
 
