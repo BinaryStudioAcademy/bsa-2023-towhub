@@ -1,8 +1,8 @@
 import { FormLabel, FormName } from '~/libs/enums/enums.js';
 import { type FormField } from '~/libs/types/types.js';
-import { type DriverRequestDto } from '~/packages/drivers/drivers.js';
+import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
 
-const addDriverFields: FormField<DriverRequestDto>[] = [
+const addDriverFields: FormField<DriverCreateUpdateRequestDto>[] = [
   {
     label: FormLabel.FIRST_NAME,
     placeholder: 'Enter driver first name',

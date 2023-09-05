@@ -4,10 +4,10 @@ import { commonSignUpRules } from '~/packages/users/libs/validation-schemas/comm
 import { UserValidationRule } from '~/packages/users/libs/validation-schemas/enums/enums.js';
 
 import { DriverValidationMessage } from '../enums/enums.js';
-import { type DriverRequestDto } from '../types/types.js';
+import { type DriverCreateUpdateRequestDto } from '../types/types.js';
 
-const driverRequestBody = joi.object<
-  Omit<DriverRequestDto, 'businessId'>,
+const driverCreateUpdateRequestBody = joi.object<
+  DriverCreateUpdateRequestDto,
   true
 >({
   ...commonSignUpRules,
@@ -21,4 +21,4 @@ const driverRequestBody = joi.object<
     }),
 });
 
-export { driverRequestBody };
+export { driverCreateUpdateRequestBody };

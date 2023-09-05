@@ -1,18 +1,20 @@
 export {
+  type DriverAddPayload,
   type DriverAllByBusinessRequestParameters,
+  type DriverCommonDetails,
+  type DriverCreateUpdateRequestDto,
+  type DriverCreateUpdateResponseDto,
+  type DriverDto,
   type DriverEntity,
   type DriverGetAllResponseDto,
   type DriverGetRequestParameters,
-  type DriverPayload,
-  type DriverRequestDto,
-  type DriverRequestParameters,
-  type DriverResponseDto,
+  type DriverUpdateDeleteRequestParameters,
   type DriverUpdatePayload,
   DriverApiPath,
   DriverValidationMessage,
 } from './libs/types/types.js';
 export {
+  driverCreateUpdateRequestBody,
   driverGetParameters,
-  driverParameters,
-  driverRequestBody,
+  driverUpdateDeleteParameters,
 } from './libs/validation-schemas/validation-schemas.js';

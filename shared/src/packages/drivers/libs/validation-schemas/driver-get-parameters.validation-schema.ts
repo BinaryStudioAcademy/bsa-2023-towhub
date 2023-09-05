@@ -9,7 +9,7 @@ const driverGetParameters = joi.object<
   DriverAllByBusinessRequestParameters,
   true
 >({
-  id: positiveRequiredIntegerSchema(
+  businessId: positiveRequiredIntegerSchema(
     BusinessValidationMessage.ID_MUST_BE_NUMBER,
   ),
 });

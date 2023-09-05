@@ -4,6 +4,7 @@ export {
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type UserCommonDetails,
   type UserEntityObjectWithGroupAndBusinessT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,

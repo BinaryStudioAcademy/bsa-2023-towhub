@@ -1,6 +1,10 @@
-import { type DriverPayload } from './driver-payload.type.js';
+import { type DriverDto } from '../types.js';
 
-type DriverUpdatePayload = Pick<DriverPayload, 'payload'> & {
+type DriverUpdatePayload = {
+  payload: DriverDto & {
+    password: string;
+  };
   driverId: number;
 };
+
 export { type DriverUpdatePayload };

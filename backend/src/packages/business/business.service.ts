@@ -5,10 +5,10 @@ import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { type DriverService } from '../drivers/driver.service.js';
 import {
+  type DriverAddPayload,
   type DriverAddResponseWithGroup,
+  type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
-  type DriverPayload,
-  type DriverResponseDto,
   type DriverUpdatePayload,
 } from '../drivers/drivers.js';
 import { BusinessEntity } from './business.entity.js';
@@ -122,9 +122,9 @@ class BusinessService implements IService {
 
   public async createDriver({
     payload,
-    id,
-  }: DriverPayload): Promise<DriverAddResponseWithGroup> {
-    const doesBusinessExist = await this.findById(id);
+    businessId,
+  }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
+    const doesBusinessExist = await this.findById(businessId);
 
     if (!doesBusinessExist) {
       throw new HttpError({
@@ -133,13 +133,13 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.create({ payload, id });
+    return await this.driverService.create({ payload, businessId });
   }
 
   public updateDriver({
     driverId,
     payload,
-  }: DriverUpdatePayload): Promise<DriverResponseDto> {
+  }: DriverUpdatePayload): Promise<DriverCreateUpdateResponseDto> {
     return this.driverService.update({
       driverId,
       payload,

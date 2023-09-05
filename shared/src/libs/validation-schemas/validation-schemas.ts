@@ -1,1 +1,1 @@
-export { positiveRequiredIntegerSchema } from './helper-schemas/positive-required-integer-schema.validation-schema.js';
+export { positiveRequiredIntegerSchema } from './common-schemas/positive-required-integer-schema.validation-schema.js';

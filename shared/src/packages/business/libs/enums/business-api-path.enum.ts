@@ -1,8 +1,8 @@
 const BusinessApiPath = {
   ROOT: '/',
   $ID: '/:id',
-  DRIVERS: '/:id/drivers',
-  DRIVER_$ID: '/:id/driver/:driverId',
+  DRIVERS: '/:businessId/drivers',
+  DRIVER_$ID: '/:businessId/driver/:driverId',
 } as const;
 
 export { BusinessApiPath };

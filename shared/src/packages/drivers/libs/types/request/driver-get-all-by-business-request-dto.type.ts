@@ -1,3 +1,3 @@
-type DriverAllByBusinessRequestParameters = { id: number };
+type DriverAllByBusinessRequestParameters = { businessId: number };
 
 export { type DriverAllByBusinessRequestParameters };

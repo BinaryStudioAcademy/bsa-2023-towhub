@@ -1,1 +1,1 @@
-export { type DriverRequestDto } from 'shared/build/index.js';
+export { type DriverCreateUpdateRequestDto } from 'shared/build/index.js';

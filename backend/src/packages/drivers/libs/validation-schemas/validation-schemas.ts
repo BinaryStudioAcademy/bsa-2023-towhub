@@ -1,5 +1,5 @@
 export {
+  driverCreateUpdateRequestBody,
   driverGetParameters,
-  driverParameters,
-  driverRequestBody,
+  driverUpdateDeleteParameters,
 } from 'shared/build/index.js';

@@ -4,13 +4,13 @@ import { positiveRequiredIntegerSchema } from '~/libs/validation-schemas/validat
 import { BusinessValidationMessage } from '~/packages/business/business.js';
 
 import { DriverValidationMessage } from '../enums/enums.js';
-import { type DriverRequestParameters } from '../types/types.js';
+import { type DriverUpdateDeleteRequestParameters } from '../types/types.js';
 
-const driverParameters = joi.object<
-  Omit<DriverRequestParameters, 'businessId'>,
+const driverUpdateDeleteParameters = joi.object<
+  DriverUpdateDeleteRequestParameters,
   true
 >({
-  id: positiveRequiredIntegerSchema(
+  businessId: positiveRequiredIntegerSchema(
     BusinessValidationMessage.ID_MUST_BE_NUMBER,
   ),
   driverId: positiveRequiredIntegerSchema(
@@ -18,4 +18,4 @@ const driverParameters = joi.object<
   ),
 });
 
-export { driverParameters };
+export { driverUpdateDeleteParameters };
