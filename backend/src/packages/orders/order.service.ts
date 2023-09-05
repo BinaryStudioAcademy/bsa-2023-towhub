@@ -1,5 +1,6 @@
 import {
   type UserEntityObjectWithGroupT,
+  type ValueOf,
   HttpCode,
   HttpMessage,
 } from 'shared/build/index.js';
@@ -20,8 +21,22 @@ import { type OrderRepository } from './order.repository.js';
 class OrderService implements Omit<IService, 'delete' | 'findById'> {
   private orderRepository: OrderRepository;
 
+  private errors: Record<
+    string,
+    {
+      status: ValueOf<typeof HttpCode>;
+      message: string;
+    }
+  >;
+
   public constructor(orderRepository: OrderRepository) {
     this.orderRepository = orderRepository;
+    this.errors = {
+      notFound: {
+        status: HttpCode.NOT_FOUND,
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      },
+    };
   }
 
   public async create(
@@ -61,10 +76,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     const foundOrder = await this.orderRepository.findById(id);
 
     if (!foundOrder) {
-      throw new HttpError({
-        status: HttpCode.NOT_FOUND,
-        message: HttpMessage.ORDER_DOES_NOT_EXIST,
-      });
+      throw new HttpError(this.errors.notFound);
     }
     const result = foundOrder.toObject();
 
@@ -92,10 +104,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     const updatedOrder = await this.orderRepository.update(parameters);
 
     if (!updatedOrder) {
-      throw new HttpError({
-        status: HttpCode.NOT_FOUND,
-        message: HttpMessage.ORDER_DOES_NOT_EXIST,
-      });
+      throw new HttpError(this.errors.notFound);
     }
 
     return updatedOrder.toObject();
@@ -132,10 +141,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     const foundOrder = await this.findById(id, user);
 
     if (!foundOrder) {
-      throw new HttpError({
-        status: HttpCode.NOT_FOUND,
-        message: HttpMessage.ORDER_DOES_NOT_EXIST,
-      });
+      throw new HttpError(this.errors.notFound);
     }
 
     return await this.orderRepository.delete(id);
@@ -150,10 +156,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     }
 
     if (foundOrder.driverId !== driverId) {
-      throw new HttpError({
-        status: HttpCode.NOT_FOUND,
-        message: HttpMessage.ORDER_DOES_NOT_EXIST,
-      });
+      throw new HttpError(this.errors.notFound);
     }
   }
 
@@ -170,10 +173,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
       (foundOrder.customerPhone && foundOrder.customerPhone === phone);
 
     if (!orderBelongsToUser) {
-      throw new HttpError({
-        status: HttpCode.NOT_FOUND,
-        message: HttpMessage.ORDER_DOES_NOT_EXIST,
-      });
+      throw new HttpError(this.errors.notFound);
     }
   }
 }
