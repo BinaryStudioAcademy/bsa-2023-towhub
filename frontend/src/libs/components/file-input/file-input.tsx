@@ -69,6 +69,12 @@ const FileInput = ({
     error: state.files.error,
   }));
   const isUploading = uploadStatus === FileStatus.UPLOADING;
+  const isUploaded = uploadStatus === FileStatus.UPLOADED;
+
+  const isFormNotAvailable = useMemo<boolean>(
+    () => isDisabled || isUploading,
+    [isDisabled, isUploading],
+  );
 
   const {
     control,
@@ -87,6 +93,10 @@ const FileInput = ({
   });
 
   const isEmpty = useMemo(() => files.length === 0, [files]);
+  const isFormNotSubmittable = useMemo<boolean>(
+    () => isEmpty || isDisabled || isUploading,
+    [isEmpty, isDisabled, isUploading],
+  );
 
   const handleDeleteFile = useCallback(
     (id: string) => {
@@ -108,7 +118,10 @@ const FileInput = ({
 
   const handleDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
-      if (rejectedFiles.length > 0 || acceptedFiles.length === 0) {
+      const areAllFilesInvalid =
+        rejectedFiles.length > 0 || acceptedFiles.length === 0;
+
+      if (areAllFilesInvalid) {
         return;
       }
       clearErrors('files');
@@ -180,8 +193,8 @@ const FileInput = ({
     onDrop: handleDrop,
     onDropRejected: handleDropRejected,
     getFilesFromEvent: handleFilesFromEvent,
-    noDrag: isDisabled,
-    noClick: isDisabled,
+    noDrag: isFormNotAvailable,
+    noClick: isFormNotAvailable,
     noKeyboard: true,
     ...fileInputConfig,
   });
@@ -230,7 +243,15 @@ const FileInput = ({
     [handleSubmit, onFileSubmit],
   );
 
-  const [isAnimatedState, setIsAnimatedState] = useState(false);
+  const [isInputBeingUsed, setIsInputBeingUsed] = useState(false);
+
+  let formMessage = label;
+
+  if (isUploading) {
+    formMessage = 'Uploading...';
+  } else if (isUploaded) {
+    formMessage = 'Uploaded';
+  }
 
   return (
     <form onSubmit={handleFormSubmit}>
@@ -238,21 +259,23 @@ const FileInput = ({
         <div
           {...getRootProps({
             onDragEnter: () => {
-              setIsAnimatedState(true);
+              setIsInputBeingUsed(true);
             },
             onDragLeave: () => {
-              setIsAnimatedState(false);
+              setIsInputBeingUsed(false);
             },
             onMouseEnter: () => {
-              setIsAnimatedState(true);
+              setIsInputBeingUsed(true);
             },
             onMouseLeave: () => {
-              setIsAnimatedState(false);
+              setIsInputBeingUsed(false);
             },
             className: getValidClassNames(
               styles.inputWrapper,
-              isAnimatedState && !isUploading && styles.inputWrapperAnimated,
-              (isUploading || isDisabled) && styles.disabled,
+              isInputBeingUsed &&
+                !isFormNotAvailable &&
+                styles.inputWrapperAnimated,
+              isFormNotAvailable && styles.disabled,
             ),
           })}
         >
@@ -264,18 +287,18 @@ const FileInput = ({
           <Icon
             className={getValidClassNames(
               styles.icon,
-              (isUploading || isDisabled) && styles.disabled,
+              isFormNotAvailable && styles.disabled,
             )}
             iconName={IconName.CLOUD_UPLOAD}
           />
           <p
             className={getValidClassNames(
               styles.label,
-              (isUploading || isDisabled) && styles.disabled,
+              isFormNotAvailable && styles.disabled,
               styles.textMd,
             )}
           >
-            {isUploading ? 'Uploading...' : label}
+            {formMessage}
           </p>
           <p
             className={getValidClassNames(
@@ -284,7 +307,7 @@ const FileInput = ({
               hasError && styles.visible,
             )}
           >
-            {uploadError ? uploadError.message : (validationError as string)}
+            {uploadError?.message ?? validationError}
           </p>
         </div>
         <div className={styles.uploadedArea}>
@@ -300,10 +323,10 @@ const FileInput = ({
         </div>
         <button
           ref={uploadButtonReference}
-          disabled={isEmpty || isDisabled || isUploading}
+          disabled={isFormNotSubmittable}
           className={getValidClassNames(
             styles.uploadFilesButton,
-            (isEmpty || isDisabled || isUploading) && styles.disabled,
+            isFormNotSubmittable && styles.disabled,
           )}
         >
           Upload
