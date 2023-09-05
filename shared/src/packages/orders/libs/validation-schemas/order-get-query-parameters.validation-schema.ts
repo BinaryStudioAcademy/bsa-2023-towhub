@@ -1,8 +1,8 @@
 import joi from 'joi';
 
-import { type OrderFindByRequestDto } from '../types/order-find-by-request-dto.type.js';
+import { type OrderFindByRequestDto } from '../types/types.js';
 
-const orderFindBy = joi.object<OrderFindByRequestDto, true>({
+const orderGetQueryParameters = joi.object<OrderFindByRequestDto, true>({
   price: joi.string(),
   scheduledTime: joi.string(),
   startPoint: joi.string(),
@@ -15,4 +15,4 @@ const orderFindBy = joi.object<OrderFindByRequestDto, true>({
   businessId: joi.string(),
 });
 
-export { orderFindBy };
+export { orderGetQueryParameters };

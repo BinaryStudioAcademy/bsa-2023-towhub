@@ -1,4 +1,4 @@
-export { orderIdParameter } from './order-id-parameter.validation-schema.js';
-export { orderCreate } from './orders-create.validation-schema.js';
-export { orderFindBy } from './orders-find-by.validation-schema.js';
-export { orderUpdate } from './orders-update.validation-schema.js';
+export { orderCreateRequestBody } from './order-create-request-body.validation-schema.js';
+export { orderGetParameter } from './order-get-parameter.validation-schema.js';
+export { orderGetQueryParameters } from './order-get-query-parameters.validation-schema.js';
+export { orderUpdateRequestBody } from './orders-update-request-body.validation-schema.js';

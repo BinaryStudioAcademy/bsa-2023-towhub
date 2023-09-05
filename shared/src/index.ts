@@ -67,13 +67,15 @@ export {
   type OrderEntity,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
-  orderCreate,
-  orderFindBy,
-  orderIdParameter,
+  ORDER_STATUSES,
+  orderCreateRequestBody,
+  orderGetParameter,
+  orderGetQueryParameters,
+  OrdersApiPath,
+  OrderStatus,
   OrdersValidationMessage,
-  orderUpdate,
+  orderUpdateRequestBody,
 } from './packages/orders/orders.js';
-export { OrdersApiPath, OrderStatus } from './packages/orders/orders.js';
 export {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,

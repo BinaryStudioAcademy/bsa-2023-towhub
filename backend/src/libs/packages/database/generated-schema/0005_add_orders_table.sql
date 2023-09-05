@@ -1,10 +1,3 @@
-DO $$ BEGIN
-  CREATE TYPE "status_enum" AS ENUM('pending', 'confirmed', 'canceled', 'done');
-EXCEPTION
-  WHEN duplicate_object THEN null;
-END $$;
-
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS
   "orders" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -12,7 +5,7 @@ CREATE TABLE IF NOT EXISTS
     "scheduled_time" timestamp NOT NULL,
     "start_point" varchar NOT NULL,
     "end_point" varchar NOT NULL,
-    "status" "status_enum" NOT NULL,
+    "status" "status" NOT NULL,
     "user_id" integer,
     "business_id" integer,
     "driver_id" integer,

@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "d45bbb41-a142-4770-b044-c59ec1674ae7",
+  "id": "e4f31741-654a-41cb-856b-f035952d3e15",
   "prevId": "dd8363c1-1ee4-472f-93b3-cfe9bf6a5348",
   "tables": {
     "business_details": {
@@ -151,7 +151,7 @@
         },
         "status": {
           "name": "status",
-          "type": "status_enum",
+          "type": "status",
           "primaryKey": false,
           "notNull": true
         },
@@ -324,17 +324,7 @@
       "uniqueConstraints": {}
     }
   },
-  "enums": {
-    "status_enum": {
-      "name": "status_enum",
-      "values": {
-        "pending": "pending",
-        "confirmed": "confirmed",
-        "canceled": "canceled",
-        "done": "done"
-      }
-    }
-  },
+  "enums": {},
   "schemas": {},
   "_meta": {
     "schemas": {},

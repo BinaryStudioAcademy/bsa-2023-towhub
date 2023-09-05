@@ -1,11 +1,11 @@
 import joi from 'joi';
 
-import { UserValidationRule } from '~/packages/users/libs/validation-schemas/enums/user-validation-rule.enum.js';
+import { UserValidationRule } from '~/packages/users/libs/validation-schemas/enums/enums.js';
 
-import { OrderStatus } from '../enums/order-status.enum.js';
-import { type OrderUpdateRequestDto } from '../types/order-update-request-dto.type.js';
+import { OrderStatus } from '../enums/enums.js';
+import { type OrderUpdateRequestDto } from '../types/types.js';
 
-const orderUpdate = joi.object<OrderUpdateRequestDto, true>({
+const orderUpdateRequestBody = joi.object<OrderUpdateRequestDto, true>({
   scheduledTime: joi.string().isoDate(),
   startPoint: joi.string(),
   endPoint: joi.string(),
@@ -16,4 +16,4 @@ const orderUpdate = joi.object<OrderUpdateRequestDto, true>({
   customerPhone: joi.string().pattern(UserValidationRule.PHONE),
 });
 
-export { orderUpdate };
+export { orderUpdateRequestBody };

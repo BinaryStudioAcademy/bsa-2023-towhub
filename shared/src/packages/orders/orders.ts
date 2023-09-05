@@ -1,3 +1,4 @@
+export { ORDER_STATUSES } from './libs/constants/constants.js';
 export {
   OrdersApiPath,
   OrderStatus,
@@ -11,8 +12,8 @@ export {
   type OrderUpdateResponseDto,
 } from './libs/types/types.js';
 export {
-  orderCreate,
-  orderFindBy,
-  orderIdParameter,
-  orderUpdate,
+  orderCreateRequestBody,
+  orderGetParameter,
+  orderGetQueryParameters,
+  orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';

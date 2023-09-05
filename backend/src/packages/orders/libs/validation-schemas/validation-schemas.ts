@@ -1,6 +1,6 @@
 export {
-  orderCreate,
-  orderFindBy,
-  orderIdParameter,
-  orderUpdate,
+  orderCreateRequestBody,
+  orderGetParameter,
+  orderGetQueryParameters,
+  orderUpdateRequestBody,
 } from 'shared/build/index.js';

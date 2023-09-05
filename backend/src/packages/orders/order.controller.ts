@@ -1,10 +1,10 @@
 import {
   type Id,
   type UserEntityObjectWithGroupT,
-  orderCreate,
-  orderFindBy,
-  orderIdParameter,
-  orderUpdate,
+  orderCreateRequestBody,
+  orderGetParameter,
+  orderGetQueryParameters,
+  orderUpdateRequestBody,
   UserGroupKey,
 } from 'shared/build/index.js';
 
@@ -193,7 +193,7 @@ class OrderController extends Controller {
       method: 'GET',
       authStrategy: AuthStrategy.INJECT_USER,
       validation: {
-        query: orderFindBy,
+        query: orderGetQueryParameters,
       },
       handler: (options) =>
         this.findBy(
@@ -209,7 +209,7 @@ class OrderController extends Controller {
       method: 'GET',
       authStrategy: AuthStrategy.INJECT_USER,
       validation: {
-        params: orderIdParameter,
+        params: orderGetParameter,
       },
       handler: (options) =>
         this.findById(
@@ -226,8 +226,8 @@ class OrderController extends Controller {
       method: 'POST',
       authStrategy: AuthStrategy.VERIFY_JWT,
       validation: {
-        params: orderIdParameter,
-        body: orderUpdate,
+        params: orderGetParameter,
+        body: orderUpdateRequestBody,
       },
       handler: (options) =>
         this.update(
@@ -244,7 +244,7 @@ class OrderController extends Controller {
       method: 'POST',
       authStrategy: AuthStrategy.INJECT_USER,
       validation: {
-        body: orderCreate,
+        body: orderCreateRequestBody,
       },
       handler: (options) =>
         this.create(
@@ -260,7 +260,7 @@ class OrderController extends Controller {
       method: 'DELETE',
       authStrategy: AuthStrategy.VERIFY_JWT,
       validation: {
-        params: orderIdParameter,
+        params: orderGetParameter,
       },
       handler: (options) =>
         this.delete(

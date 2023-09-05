@@ -1,14 +1,9 @@
-import {
-  type UserEntityObjectWithGroupT,
-  type ValueOf,
-  HttpCode,
-  HttpMessage,
-} from 'shared/build/index.js';
+import { type UserEntityObjectWithGroupT } from 'shared/build/index.js';
 
-import { HttpError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 
 import { OrderStatus } from './libs/enums/enums.js';
+import { OrderNotFound } from './libs/exceptions/order-not-found.js';
 import {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
@@ -21,22 +16,8 @@ import { type OrderRepository } from './order.repository.js';
 class OrderService implements Omit<IService, 'delete' | 'findById'> {
   private orderRepository: OrderRepository;
 
-  private errors: Record<
-    string,
-    {
-      status: ValueOf<typeof HttpCode>;
-      message: string;
-    }
-  >;
-
   public constructor(orderRepository: OrderRepository) {
     this.orderRepository = orderRepository;
-    this.errors = {
-      notFound: {
-        status: HttpCode.NOT_FOUND,
-        message: HttpMessage.ORDER_DOES_NOT_EXIST,
-      },
-    };
   }
 
   public async create(
@@ -76,7 +57,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     const foundOrder = await this.orderRepository.findById(id);
 
     if (!foundOrder) {
-      throw new HttpError(this.errors.notFound);
+      throw new OrderNotFound();
     }
     const result = foundOrder.toObject();
 
@@ -104,7 +85,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     const updatedOrder = await this.orderRepository.update(parameters);
 
     if (!updatedOrder) {
-      throw new HttpError(this.errors.notFound);
+      throw new OrderNotFound();
     }
 
     return updatedOrder.toObject();
@@ -141,7 +122,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     const foundOrder = await this.findById(id, user);
 
     if (!foundOrder) {
-      throw new HttpError(this.errors.notFound);
+      throw new OrderNotFound();
     }
 
     return await this.orderRepository.delete(id);
@@ -156,7 +137,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     }
 
     if (foundOrder.driverId !== driverId) {
-      throw new HttpError(this.errors.notFound);
+      throw new OrderNotFound();
     }
   }
 
@@ -173,7 +154,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
       (foundOrder.customerPhone && foundOrder.customerPhone === phone);
 
     if (!orderBelongsToUser) {
-      throw new HttpError(this.errors.notFound);
+      throw new OrderNotFound();
     }
   }
 }

@@ -1,14 +1,14 @@
 import { relations } from 'drizzle-orm';
 import {
   integer,
+  pgEnum,
   pgTable,
   serial,
   timestamp,
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
-
-import { statusEnum } from './database-enums/order-status.js';
+import { ORDER_STATUSES } from 'shared/build/index.js';
 
 const users = pgTable(
   'users',
@@ -73,7 +73,7 @@ const orders = pgTable('orders', {
   scheduledTime: timestamp('scheduled_time', { mode: 'string' }).notNull(),
   startPoint: varchar('start_point').notNull(),
   endPoint: varchar('end_point').notNull(),
-  status: statusEnum('status').notNull(),
+  status: pgEnum('status', ORDER_STATUSES)('status').notNull(),
   userId: integer('user_id').references(() => users.id),
   businessId: integer('business_id').references(() => business.id),
   driverId: integer('driver_id'),
