@@ -5,7 +5,7 @@ import {
 
 const DEFAULT_SIGN_UP_PAYLOAD_CUSTOMER: CustomerSignUpRequestDto = {
   email: '',
-  phone: '+380',
+  phone: '',
   password: '',
   firstName: '',
   lastName: '',
@@ -13,7 +13,7 @@ const DEFAULT_SIGN_UP_PAYLOAD_CUSTOMER: CustomerSignUpRequestDto = {
 
 const DEFAULT_SIGN_UP_PAYLOAD_BUSINESS: BusinessSignUpRequestDto = {
   email: '',
-  phone: '+380',
+  phone: '',
   password: '',
   firstName: '',
   lastName: '',
