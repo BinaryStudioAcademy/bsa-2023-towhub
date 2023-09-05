@@ -13,7 +13,6 @@ type TruckFormModel = {
   licensePlateNumber: string;
   year: number;
   towType: SelectOption<ValueOf<typeof TruckTowType>>;
-  drivers: string;
 };
 
 export { type TruckFormModel };

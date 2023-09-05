@@ -6,5 +6,6 @@ export {
   TruckManufacturer,
   TruckPricePerKm,
   TruckTowType,
+  TruckValidationMessage,
   TruckYear,
 } from 'shared/build/index.js';

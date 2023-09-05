@@ -6,6 +6,7 @@ export {
   TruckManufacturer,
   TruckPricePerKm,
   TruckTowType,
+  TruckValidationMessage,
   TruckYear,
 } from './libs/enums/enums.js';
 export { type TruckEntity } from './libs/types/types.js';

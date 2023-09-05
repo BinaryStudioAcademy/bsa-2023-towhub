@@ -14,7 +14,7 @@ const TruckValidationMessage = {
   PRICE_PER_KM_MAXIMUM: `${FormLabel.PRICE_PER_KM} must be at most ${TruckPricePerKm.MAX}`,
   PRICE_PER_KM_REQUIRED: `${FormLabel.PRICE_PER_KM} is required`,
   LICENSE_PLATE_EMPTY: `${FormLabel.LICENSE_PLATE} is required`,
-  LICENSE_PLATE_INVALID: `Invalid ${FormLabel.LICENSE_PLATE}`,
+  LICENSE_PLATE_INVALID: `${FormLabel.LICENSE_PLATE} must be in format AA0000AA`,
   LICENSE_PLATE_REQUIRED: `${FormLabel.LICENSE_PLATE} is required`,
   YEAR_NOT_A_NUMBER: `${FormLabel.YEAR} must be a number`,
   YEAR_MINIMUM: `${FormLabel.YEAR} must be at least ${TruckYear.MIN}`,

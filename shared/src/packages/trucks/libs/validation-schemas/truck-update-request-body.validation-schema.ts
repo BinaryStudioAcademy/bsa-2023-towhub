@@ -9,7 +9,7 @@ import {
 } from '../enums/enums.js';
 import { TruckValidationMessage } from '../enums/truck-validation-message.enum.js';
 import { type TruckEntity } from '../types/types.js';
-import { LICENSE_PLATE_NUMBER_REGEX } from './validation-schema.js';
+import { LICENSE_PLATE_NUMBER_REGEX } from './truck-regular-expressions/truck-regular-expressions.js';
 
 const truckUpdateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
   manufacturer: joi

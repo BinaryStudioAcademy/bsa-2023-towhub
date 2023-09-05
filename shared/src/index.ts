@@ -73,6 +73,7 @@ export {
   TruckPricePerKm,
   TruckTowType,
   truckUpdateRequestBody,
+  TruckValidationMessage,
   TruckYear,
 } from './packages/trucks/trucks.js';
 export {

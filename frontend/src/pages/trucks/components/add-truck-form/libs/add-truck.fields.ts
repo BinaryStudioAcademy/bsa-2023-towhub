@@ -42,6 +42,7 @@ const ADD_TRUCK_FIELDS: FormField<TruckFormModel>[] = [
     label: FormLabel.YEAR,
     name: FormName.YEAR,
     min: TruckYear.MIN,
+    max: TruckYear.MAX,
   },
   {
     type: 'text',
@@ -62,12 +63,6 @@ const ADD_TRUCK_FIELDS: FormField<TruckFormModel>[] = [
     min: TruckPricePerKm.MIN,
     max: TruckPricePerKm.MAX,
     step: TruckPricePerKm.STEP,
-  },
-  {
-    type: 'text',
-    label: FormLabel.DRIVERS,
-    name: FormName.DRIVERS,
-    options: [],
   },
 ];
 

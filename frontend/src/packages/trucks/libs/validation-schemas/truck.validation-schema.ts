@@ -5,19 +5,22 @@ import {
   TruckManufacturer,
   TruckPricePerKm,
   TruckTowType,
+  TruckValidationMessage,
   TruckYear,
 } from '../enums/enums.js';
-import { TruckValidationMessage } from '../enums/truck-validation-message.enum.js';
-import { type TruckEntity } from '../types/types.js';
-import { LICENSE_PLATE_NUMBER_REGEX } from './truck-regular-expressions/truck-regular-expressions.js';
+import { type TruckFormModel } from '../types/types.js';
+import { LICENSE_PLATE_NUMBER_REGEX } from './validation-schemas.js';
 
-const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
+const truck = joi.object<TruckFormModel, true>({
   manufacturer: joi
-    .string()
+    .object({
+      label: joi.string().required(),
+      value: joi.valid(...Object.values(TruckManufacturer)).messages({
+        'any.only': TruckValidationMessage.MANUFACTURER_INVALID,
+      }),
+    })
     .required()
-    .valid(...Object.values(TruckManufacturer))
     .messages({
-      'any.only': TruckValidationMessage.MANUFACTURER_INVALID,
       'any.required': TruckValidationMessage.MANUFACTURER_REQUIRED,
     }),
 
@@ -59,13 +62,14 @@ const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
   }),
 
   towType: joi
-    .string()
+    .object({
+      label: joi.string().required(),
+      value: joi.valid(...Object.values(TruckTowType)).messages({
+        'any.only': TruckValidationMessage.TOW_TYPE_INVALID,
+      }),
+    })
     .required()
-    .valid(...Object.values(TruckTowType))
-    .messages({
-      'any.only': TruckValidationMessage.TOW_TYPE_INVALID,
-      'any.required': TruckValidationMessage.TOW_TYPE_REQUIRED,
-    }),
+    .messages({ 'any.required': TruckValidationMessage.TOW_TYPE_REQUIRED }),
 });
 
-export { truckCreateRequestBody };
+export { truck };
