@@ -1,5 +1,5 @@
 import { addTruck } from './actions.js';
-import { actions } from './truck.slice.js';
+import { actions } from './trucks.slice.js';
 
 const allActions = {
   ...actions,
@@ -7,4 +7,4 @@ const allActions = {
 };
 
 export { allActions as actions };
-export { reducer } from './truck.slice.js';
+export { reducer } from './trucks.slice.js';
