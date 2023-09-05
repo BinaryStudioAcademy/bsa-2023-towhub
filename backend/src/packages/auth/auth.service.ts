@@ -1,5 +1,3 @@
-import pg from 'postgres';
-
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import { HttpError } from '~/libs/exceptions/exceptions.js';
 import {
