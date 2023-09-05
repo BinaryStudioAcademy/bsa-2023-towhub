@@ -13,6 +13,7 @@ export { Icon } from './icon/icon.js';
 export { Image } from './image/image.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
+export { LocationInput } from './location-input/location-input.js';
 export { Modal } from './modal/modal.js';
 export { Notification } from './notification/notification.js';
 export { Pagination } from './pagination/pagination.js';
