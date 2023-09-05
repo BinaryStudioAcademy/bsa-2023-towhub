@@ -1,11 +1,14 @@
 import Select, {
+  type ClassNamesConfig,
   type GroupBase,
   type SingleValue,
-  type StylesConfig,
 } from 'react-select';
 
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useMemo, useState } from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
+
+import styles from './style.module.scss';
 
 type Properties = {
   options: SelectOption[];
@@ -14,57 +17,22 @@ type Properties = {
   placeholder?: string;
 };
 
-const getStyles = (
+const getClassNames = (
   isMenuOpen: boolean,
-): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
-  return {
-    control: (styles) => ({
-      ...styles,
-      height: '20px',
-      minHeight: '20px',
-      border: 'none',
-      boxShadow: 'none',
-      outline: 'none',
-      background: 'transparent',
-    }),
-    option: (styles) => ({
-      ...styles,
-      padding: '10px',
-      margin: '-4px 0',
-    }),
-    valueContainer: (styles) => ({
-      ...styles,
-      padding: '0',
-      paddingLeft: '5px',
-      fontFamily: '"Plus Jakarta Sans", sans-serif',
-      fontSize: '12px',
-      fontWeight: '500',
-    }),
-    dropdownIndicator: (styles) => ({
-      ...styles,
-      transition: 'all 0.2s ease',
-      margin: '0',
-      padding: '0',
-      transform: `scaleY(${isMenuOpen ? '-1' : '1'})`,
-    }),
-    indicatorSeparator: () => ({
-      display: 'none',
-    }),
-    menu: (styles) => ({
-      ...styles,
-      overflow: 'hidden',
-      padding: 0,
-    }),
-    placeholder: (styles) => ({
-      ...styles,
-      color: '#90A3BF',
-    }),
-    singleValue: (styles) => ({
-      ...styles,
-      color: '#90A3BF',
-    }),
-  };
-};
+): ClassNamesConfig<SelectOption, false, GroupBase<SelectOption>> => ({
+  container: () => styles.container,
+  control: () => styles.control,
+  option: () => styles.option,
+  menu: () => styles.singleValue,
+  placeholder: () => styles.placeholder,
+  singleValue: () => styles.singleValue,
+  valueContainer: () => styles.valueContainer,
+  dropdownIndicator: () =>
+    isMenuOpen
+      ? getValidClassNames(styles.dropdownIndicator, styles.upside)
+      : getValidClassNames(styles.dropdownIndicator),
+  indicatorSeparator: () => styles.indicatorSeparator,
+});
 
 const Dropdown: React.FC<Properties> = ({
   options,
@@ -82,7 +50,10 @@ const Dropdown: React.FC<Properties> = ({
     setIsMenuOpen(false);
   }, []);
 
-  const stylesConfig = useMemo(() => getStyles(isMenuOpen), [isMenuOpen]);
+  const classNamesConfig = useMemo(
+    () => getClassNames(isMenuOpen),
+    [isMenuOpen],
+  );
 
   const handleChange = useCallback(
     (option: SingleValue<SelectOption>) => {
@@ -97,7 +68,7 @@ const Dropdown: React.FC<Properties> = ({
     <Select<SelectOption>
       options={options}
       classNamePrefix="react-select"
-      styles={stylesConfig}
+      classNames={classNamesConfig}
       isSearchable={false}
       menuIsOpen={isMenuOpen}
       onMenuOpen={handleOpenMenu}
