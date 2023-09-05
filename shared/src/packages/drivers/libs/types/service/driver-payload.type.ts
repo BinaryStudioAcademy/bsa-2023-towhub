@@ -2,14 +2,15 @@ import { type UserEntityT } from '~/packages/users/libs/types/types.js';
 
 import { type DriverEntity } from '../driver-entity.type.js';
 
-type DriverUpdatePayload = {
+type DriverPayload = {
   payload: Omit<
     UserEntityT,
     'id' | 'passwordHash' | 'passwordSalt' | 'groupId' | 'accessToken'
-  > & {
-    password?: string;
-  } & Pick<DriverEntity, 'driverLicenseNumber'>;
-  driverId: number;
+  > &
+    Pick<DriverEntity, 'driverLicenseNumber'> & {
+      password: string;
+    };
+  id: number;
 };
 
-export { type DriverUpdatePayload };
+export { type DriverPayload };

@@ -86,8 +86,8 @@ erDiagram
     }
 
     users one or many -- one groups: "users(group_id) belongs to groups(id)"
-    business_details one or many -- one users: "business_details(owner_id) belongs to users(id)"
-    driver_details one or many -- one users: "driver_details(user_id) belongs to users(id)"
+    business_details 0..1 -- one users: "business_details(owner_id) belongs to users(id)"
+    driver_details 0..1 -- one users: "driver_details(user_id) belongs to users(id)"
     driver_details one or many -- one business_details: "driver_details(business_id) belongs to business_details(id)"
 ```
 

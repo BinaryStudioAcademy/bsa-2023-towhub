@@ -1,8 +1,8 @@
-import { type DriverAddResponseDto } from 'shared/build/index.js';
+import { type DriverResponseDto } from 'shared/build/index.js';
 
 import { type GroupEntityT } from '~/packages/groups/groups.js';
 
-type DriverAddResponseWithGroup = DriverAddResponseDto & {
+type DriverAddResponseWithGroup = DriverResponseDto & {
   group: GroupEntityT;
 };
 

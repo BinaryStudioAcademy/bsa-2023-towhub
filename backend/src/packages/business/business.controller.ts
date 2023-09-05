@@ -8,18 +8,14 @@ import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 
 import {
-  type DriverAddRequestDto,
   type DriverAllByBusinessRequestParameters,
-  type DriverDeleteRequestParameters,
-  type DriverUpdateRequestDto,
-  type DriverUpdateRequestParameters,
+  type DriverRequestDto,
+  type DriverRequestParameters,
 } from '../drivers/drivers.js';
 import {
-  driverAddRequestBody,
-  driverDeleteParameters,
   driverGetParameters,
-  driverUpdateParameters,
-  driverUpdateRequestBody,
+  driverParameters,
+  driverRequestBody,
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
@@ -307,14 +303,14 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.DRIVERS,
       method: 'POST',
-      // authStrategy: 'verifyJWT',
+      authStrategy: 'verifyJWT',
       validation: {
-        body: driverAddRequestBody,
+        body: driverRequestBody,
       },
       handler: (options) =>
         this.createDriver(
           options as ApiHandlerOptions<{
-            body: DriverAddRequestDto;
+            body: DriverRequestDto;
             params: { id: number };
           }>,
         ),
@@ -323,16 +319,16 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.DRIVER_$ID,
       method: 'PUT',
-      // authStrategy: 'verifyJWT',
+      authStrategy: 'verifyJWT',
       validation: {
-        body: driverUpdateRequestBody,
-        params: driverUpdateParameters,
+        body: driverRequestBody,
+        params: driverParameters,
       },
       handler: (options) =>
         this.updateDriver(
           options as ApiHandlerOptions<{
-            body: DriverUpdateRequestDto;
-            params: DriverUpdateRequestParameters;
+            body: DriverRequestDto;
+            params: DriverRequestParameters;
           }>,
         ),
     });
@@ -340,7 +336,7 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.DRIVERS,
       method: 'GET',
-      // authStrategy: 'verifyJWT',
+      authStrategy: 'verifyJWT',
       validation: {
         params: driverGetParameters,
       },
@@ -355,14 +351,14 @@ class BusinessController extends Controller {
     this.addRoute({
       path: BusinessApiPath.DRIVER_$ID,
       method: 'DELETE',
-      // authStrategy: 'verifyJWT',
+      authStrategy: 'verifyJWT',
       validation: {
-        params: driverDeleteParameters,
+        params: driverParameters,
       },
       handler: (options) =>
         this.deleteDriver(
           options as ApiHandlerOptions<{
-            params: DriverDeleteRequestParameters;
+            params: DriverRequestParameters;
           }>,
         ),
     });
@@ -565,7 +561,7 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{id}/driver:
+   * /business/{id}/drivers:
    *    post:
    *      tags:
    *       - business/driver
@@ -620,7 +616,7 @@ class BusinessController extends Controller {
 
   private async createDriver(
     options: ApiHandlerOptions<{
-      body: DriverAddRequestDto;
+      body: DriverRequestDto;
       params: { id: number };
     }>,
   ): Promise<ApiHandlerResponse> {
@@ -685,8 +681,8 @@ class BusinessController extends Controller {
 
   private async updateDriver(
     options: ApiHandlerOptions<{
-      body: DriverUpdateRequestDto;
-      params: DriverUpdateRequestParameters;
+      body: DriverRequestDto;
+      params: DriverRequestParameters;
     }>,
   ): Promise<ApiHandlerResponse> {
     const updatedDriver = await this.businessService.updateDriver({
@@ -702,7 +698,7 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{id}/driver:
+   * /business/{id}/drivers:
    *    get:
    *      tags:
    *       - business/driver
@@ -732,13 +728,13 @@ class BusinessController extends Controller {
       params: DriverAllByBusinessRequestParameters;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const findDrivers = await this.businessService.findAllDriversById(
+    const drivers = await this.businessService.findAllDriversByBusinessId(
       options.params.id,
     );
 
     return {
       status: HttpCode.OK,
-      payload: findDrivers,
+      payload: drivers,
     };
   }
 
@@ -777,7 +773,7 @@ class BusinessController extends Controller {
 
   private async deleteDriver(
     options: ApiHandlerOptions<{
-      params: DriverDeleteRequestParameters;
+      params: DriverRequestParameters;
     }>,
   ): Promise<ApiHandlerResponse> {
     const deletionResult = await this.businessService.deleteDriver(

@@ -1,19 +1,16 @@
 export { DriverApiPath, DriverValidationMessage } from '../enums/enums.js';
 export { type DriverEntity } from './driver-entity.type.js';
 export {
-  type DriverAddRequestDto,
   type DriverAllByBusinessRequestParameters,
-  type DriverDeleteRequestParameters,
   type DriverGetRequestParameters,
-  type DriverUpdateRequestDto,
-  type DriverUpdateRequestParameters,
+  type DriverRequestDto,
+  type DriverRequestParameters,
 } from './request/request.js';
 export {
-  type DriverAddResponseDto,
   type DriverGetAllResponseDto,
-  type DriverUpdateResponseDto,
+  type DriverResponseDto,
 } from './response/response.js';
 export {
-  type DriverCreatePayload,
+  type DriverPayload,
   type DriverUpdatePayload,
 } from './service/service.js';

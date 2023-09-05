@@ -6,10 +6,10 @@ import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import {
   type DriverAddResponseWithGroup,
-  type DriverCreatePayload,
   type DriverGetAllResponseDto,
+  type DriverPayload,
+  type DriverResponseDto,
   type DriverUpdatePayload,
-  type DriverUpdateResponseDto,
 } from '../drivers/drivers.js';
 import { BusinessEntity } from './business.entity.js';
 import { type BusinessRepository } from './business.repository.js';
@@ -123,7 +123,7 @@ class BusinessService implements IService {
   public async createDriver({
     payload,
     id,
-  }: DriverCreatePayload): Promise<DriverAddResponseWithGroup> {
+  }: DriverPayload): Promise<DriverAddResponseWithGroup> {
     const doesBusinessExist = await this.findById(id);
 
     if (!doesBusinessExist) {
@@ -136,24 +136,24 @@ class BusinessService implements IService {
     return await this.driverService.create({ payload, id });
   }
 
-  public async updateDriver({
+  public updateDriver({
     driverId,
     payload,
-  }: DriverUpdatePayload): Promise<DriverUpdateResponseDto> {
-    return await this.driverService.update({
+  }: DriverUpdatePayload): Promise<DriverResponseDto> {
+    return this.driverService.update({
       driverId,
       payload,
     });
   }
 
-  public async findAllDriversById(
+  public findAllDriversByBusinessId(
     id: number,
   ): Promise<DriverGetAllResponseDto> {
-    return await this.driverService.findAllByBusinessId(id);
+    return this.driverService.findAllByBusinessId(id);
   }
 
-  public async deleteDriver(driverId: number): Promise<boolean> {
-    return await this.driverService.delete(driverId);
+  public deleteDriver(driverId: number): Promise<boolean> {
+    return this.driverService.delete(driverId);
   }
 }
 

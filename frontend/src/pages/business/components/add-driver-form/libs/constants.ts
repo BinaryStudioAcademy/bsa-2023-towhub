@@ -1,6 +1,6 @@
-import { type DriverAddRequestDto } from '~/packages/drivers/drivers.js';
+import { type DriverRequestDto } from '~/packages/drivers/drivers.js';
 
-const DEFAULT_ADD_DRIVER_PAYLOAD: DriverAddRequestDto = {
+const DEFAULT_ADD_DRIVER_PAYLOAD: DriverRequestDto = {
   email: '',
   phone: '+380',
   password: '',

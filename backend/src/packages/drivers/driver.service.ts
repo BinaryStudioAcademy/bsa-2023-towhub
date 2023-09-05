@@ -6,11 +6,11 @@ import { DriverEntity } from '../drivers/driver.entity.js';
 import { type DriverRepository } from '../drivers/driver.repository.js';
 import {
   type DriverAddResponseWithGroup,
-  type DriverCreatePayload,
   type DriverEntity as DriverEntityT,
   type DriverGetAllResponseDto,
+  type DriverPayload,
+  type DriverResponseDto,
   type DriverUpdatePayload,
-  type DriverUpdateResponseDto,
 } from '../drivers/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
 import { type UserService } from '../users/user.service.js';
@@ -51,7 +51,7 @@ class DriverService implements IService {
   public async create({
     payload,
     id,
-  }: DriverCreatePayload): Promise<DriverAddResponseWithGroup> {
+  }: DriverPayload): Promise<DriverAddResponseWithGroup> {
     const { password, email, lastName, firstName, phone, driverLicenseNumber } =
       payload;
 
@@ -101,7 +101,7 @@ class DriverService implements IService {
   public async update({
     driverId,
     payload,
-  }: DriverUpdatePayload): Promise<DriverUpdateResponseDto> {
+  }: DriverUpdatePayload): Promise<DriverResponseDto> {
     const { password, email, lastName, firstName, phone, driverLicenseNumber } =
       payload;
 
