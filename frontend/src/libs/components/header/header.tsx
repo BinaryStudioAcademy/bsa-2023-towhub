@@ -11,6 +11,10 @@ const Header: React.FC = () => {
 
   const user = useAuthUser();
 
+  const handleSignUp = useCallback(() => {
+    navigate(AppRoute.WELCOME);
+  }, [navigate]);
+
   const handleSignIn = useCallback(() => {
     navigate(AppRoute.SIGN_IN);
   }, [navigate]);
@@ -22,17 +26,26 @@ const Header: React.FC = () => {
           <AppLogo />
         </Link>
         <div className={styles.navMenu}>
-          {user && (
+          {user ? (
             <div className={getValidClassNames('textMd', styles.welcome)}>
               Hello, {`${user.firstName} ${user.lastName}`}
             </div>
+          ) : (
+            <>
+              <Button
+                label="Sign Up"
+                className={styles.btn}
+                type="button"
+                onClick={handleSignUp}
+              />
+              <Button
+                label="Sign In"
+                className={styles.btn}
+                type="button"
+                onClick={handleSignIn}
+              />
+            </>
           )}
-          <Button
-            label="Sign In"
-            className={styles.btn}
-            type="button"
-            onClick={handleSignIn}
-          />
         </div>
       </div>
     </header>
