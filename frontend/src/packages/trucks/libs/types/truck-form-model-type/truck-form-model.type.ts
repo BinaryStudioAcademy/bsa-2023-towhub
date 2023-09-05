@@ -1,3 +1,4 @@
+import { type SelectOption } from '~/libs/types/select-option.type.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
 import {
@@ -6,18 +7,12 @@ import {
 } from '../../enums/enums.js';
 
 type TruckFormModel = {
-  manufacturer: {
-    label: string;
-    value: ValueOf<typeof TruckManufacturer>;
-  };
+  manufacturer: SelectOption<ValueOf<typeof TruckManufacturer>>;
   capacity: number;
   pricePerKm: number;
   licensePlateNumber: string;
   year: number;
-  towType: {
-    label: string;
-    value: ValueOf<typeof TruckTowType>;
-  };
+  towType: SelectOption<ValueOf<typeof TruckTowType>>;
   drivers: string;
 };
 
