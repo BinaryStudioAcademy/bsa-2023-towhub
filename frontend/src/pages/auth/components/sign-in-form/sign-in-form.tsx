@@ -25,7 +25,7 @@ const SignInForm: React.FC<Properties> = ({ onSubmit }: Properties) => (
     />
     <p className={styles.text}>
       Don`t have an account yet?
-      <Link to={AppRoute.SIGN_UP} className={styles.link}>
+      <Link to={AppRoute.WELCOME} className={styles.link}>
         {' '}
         Sign up
       </Link>
