@@ -178,7 +178,7 @@ export { AuthController };
  *                pattern: ^\d{10}$
  *                description: Consists of 10 digits
  *                example: 1234567890
- * 
+ *
  *      Sign-in-request:
  *        type: object
  *        properties:
@@ -186,13 +186,13 @@ export { AuthController };
  *            type: string
  *            format: email
  *            minLength: 5
- *            maxLength: 254 
+ *            maxLength: 254
  *          password:
  *            type: string
  *            minimum: 6
  *            maximum: 20
  *            pattern: ^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$
- *          
+ *
  *
  *      Customer-auth-response:
  *        type: object
@@ -223,7 +223,7 @@ export { AuthController };
  *              properties:
  *                business:
  *                  $ref: '#/components/schemas/Business'
- *      
+ *
  *      Sign-in-auth-response:
  *          allOf:
  *            - $ref: '#/components/schemas/Customer-auth-response'
@@ -231,7 +231,7 @@ export { AuthController };
  *              properties:
  *                business:
  *                  nullable: true
- *                  $ref: '#/components/schemas/Business'          
+ *                  $ref: '#/components/schemas/Business'
  */
 
 /**

@@ -181,12 +181,14 @@ class AuthService {
 
     const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
 
-    const userBusiness = await this.businessService.findByOwnerId(updatedUser.id);
+    const userBusiness = await this.businessService.findByOwnerId(
+      updatedUser.id,
+    );
 
     return {
       ...updatedUser,
       group: GroupEntity.initialize(user.group).toObject(),
-      business: userBusiness
+      business: userBusiness,
     };
   }
 
