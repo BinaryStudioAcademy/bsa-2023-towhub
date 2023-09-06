@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "9bdcc73b-f7a6-465d-ac05-f9c48c9dbf56",
+  "id": "bf19a957-5022-41f0-80bc-2557c64ff740",
   "prevId": "dd8363c1-1ee4-472f-93b3-cfe9bf6a5348",
   "tables": {
     "business_details": {
@@ -73,6 +73,79 @@
         }
       }
     },
+    "driver_details": {
+      "name": "driver_details",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "driver_license_number": {
+          "name": "driver_license_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "business_id": {
+          "name": "business_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "driver_details_user_id_users_id_fk": {
+          "name": "driver_details_user_id_users_id_fk",
+          "tableFrom": "driver_details",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "driver_details_business_id_business_details_id_fk": {
+          "name": "driver_details_business_id_business_details_id_fk",
+          "tableFrom": "driver_details",
+          "tableTo": "business_details",
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "driver_details_driver_license_number_unique": {
+          "name": "driver_details_driver_license_number_unique",
+          "nullsNotDistinct": false,
+          "columns": ["driver_license_number"]
+        }
+      }
+    },
     "groups": {
       "name": "groups",
       "schema": "",
@@ -111,78 +184,6 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "trucks": {
-      "name": "trucks",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "manufacturer": {
-          "name": "manufacturer",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "capacity": {
-          "name": "capacity",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "price_per_km": {
-          "name": "price_per_km",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "license_plate_number": {
-          "name": "license_plate_number",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "year": {
-          "name": "year",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "tow_type": {
-          "name": "tow_type",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {
-        "trucks_license_plate_number_idx": {
-          "name": "trucks_license_plate_number_idx",
-          "columns": ["license_plate_number"],
-          "isUnique": true
-        }
-      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
@@ -284,52 +285,6 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "users_trucks": {
-      "name": "users_trucks",
-      "schema": "",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "truck_id": {
-          "name": "truck_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "users_trucks_user_id_users_id_fk": {
-          "name": "users_trucks_user_id_users_id_fk",
-          "tableFrom": "users_trucks",
-          "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "users_trucks_truck_id_trucks_id_fk": {
-          "name": "users_trucks_truck_id_trucks_id_fk",
-          "tableFrom": "users_trucks",
-          "tableTo": "trucks",
-          "columnsFrom": ["truck_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "users_trucks_user_id_truck_id": {
-          "name": "users_trucks_user_id_truck_id",
-          "columns": ["user_id", "truck_id"]
-        }
-      },
       "uniqueConstraints": {}
     }
   },

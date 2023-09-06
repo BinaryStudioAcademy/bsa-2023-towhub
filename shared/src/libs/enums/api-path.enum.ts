@@ -3,6 +3,7 @@ const ApiPath = {
   AUTH: '/auth',
   BUSINESS: '/business',
   TRUCKS: '/trucks',
+  DRIVERS: '/drivers',
 } as const;
 
 export { ApiPath };

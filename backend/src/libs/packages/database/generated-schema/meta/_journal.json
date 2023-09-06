@@ -40,8 +40,15 @@
     {
       "idx": 5,
       "version": "5",
-      "when": 1693692248631,
-      "tag": "0005_create_trucks_table",
+      "when": 1693736656473,
+      "tag": "0005_create_table_driver_details",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1693992300427,
+      "tag": "0006_create_trucks_table",
       "breakpoints": true
     }
   ]

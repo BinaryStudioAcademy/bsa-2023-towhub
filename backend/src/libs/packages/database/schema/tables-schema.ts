@@ -62,6 +62,19 @@ const business = pgTable('business_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+const drivers = pgTable('driver_details', {
+  id: serial('id').primaryKey(),
+  driverLicenseNumber: varchar('driver_license_number').unique().notNull(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id),
+  businessId: integer('business_id')
+    .notNull()
+    .references(() => business.id),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
 const trucks = pgTable(
   'trucks',
   {
@@ -101,4 +114,12 @@ const usersTrucks = pgTable(
   },
 );
 
-export { business, groups, trucks, users, usersRelations, usersTrucks };
+export {
+  business,
+  drivers,
+  groups,
+  trucks,
+  users,
+  usersRelations,
+  usersTrucks,
+};

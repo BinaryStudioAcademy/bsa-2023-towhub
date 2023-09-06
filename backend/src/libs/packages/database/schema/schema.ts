@@ -1,5 +1,6 @@
 import {
   business,
+  drivers,
   groups,
   trucks,
   users,
@@ -13,6 +14,7 @@ const schema = {
   trucks,
   users,
   usersTrucks,
+  drivers,
   usersRelations,
 };
 
