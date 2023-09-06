@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "8c454a9f-d718-42f1-8648-2c8da6a16918",
+  "id": "bf19a957-5022-41f0-80bc-2557c64ff740",
   "prevId": "dd8363c1-1ee4-472f-93b3-cfe9bf6a5348",
   "tables": {
     "business_details": {
@@ -61,10 +61,88 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "business_details_company_name_unique": {
+          "name": "business_details_company_name_unique",
+          "nullsNotDistinct": false,
+          "columns": ["company_name"]
+        },
         "business_details_tax_number_unique": {
           "name": "business_details_tax_number_unique",
           "nullsNotDistinct": false,
           "columns": ["tax_number"]
+        }
+      }
+    },
+    "driver_details": {
+      "name": "driver_details",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "driver_license_number": {
+          "name": "driver_license_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "business_id": {
+          "name": "business_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "driver_details_user_id_users_id_fk": {
+          "name": "driver_details_user_id_users_id_fk",
+          "tableFrom": "driver_details",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "driver_details_business_id_business_details_id_fk": {
+          "name": "driver_details_business_id_business_details_id_fk",
+          "tableFrom": "driver_details",
+          "tableTo": "business_details",
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "driver_details_driver_license_number_unique": {
+          "name": "driver_details_driver_license_number_unique",
+          "nullsNotDistinct": false,
+          "columns": ["driver_license_number"]
         }
       }
     },

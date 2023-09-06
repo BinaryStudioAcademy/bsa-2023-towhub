@@ -40,8 +40,15 @@
     {
       "idx": 5,
       "version": "5",
-      "when": 1693843703834,
-      "tag": "0005_del_company_name_unique_index",
+      "when": 1693736656473,
+      "tag": "0005_create_table_driver_details",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1693992485783,
+      "tag": "0006_del_company_name_unique_idx",
       "breakpoints": true
     }
   ]
