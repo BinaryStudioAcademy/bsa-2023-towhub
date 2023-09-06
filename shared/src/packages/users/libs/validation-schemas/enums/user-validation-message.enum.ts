@@ -6,6 +6,8 @@ const UserValidationMessage = {
   PHONE_NOT_VALID: 'Must be 8 - 17 digits, start with +',
   TAX_NUMBER_NOT_VALID: 'Must be 8 or more characters',
   COMPANY_NAME_NOT_VALID: 'Must be 8 or more characters',
+  DRIVER_LICENSE_NUMBER_NOT_VALID:
+    'Must be 3 capital letters, followed by a space and 6 digits',
 } as const;
 
 export { UserValidationMessage };

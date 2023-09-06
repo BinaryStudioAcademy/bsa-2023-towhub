@@ -117,7 +117,7 @@ class UserService implements IService<UserEntityObjectT> {
       Object.assign(updated, encryptedPassword);
     }
 
-    const result = await this.userRepository.update(id, payload);
+    const result = await this.userRepository.update(id, updated);
 
     return UserEntity.initialize(result).toObject();
   }
