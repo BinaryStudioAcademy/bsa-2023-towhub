@@ -4,6 +4,7 @@ const FormName = {
   EMAIL: 'email',
   PHONE: 'phone',
   PASSWORD: 'password',
+  DRIVER_LICENSE_NUMBER: 'driverLicenseNumber',
   COMPANY_NAME: 'companyName',
   TAX_NUMBER: 'taxNumber',
 } as const;
@@ -14,6 +15,7 @@ const FormLabel = {
   EMAIL: 'Email',
   PHONE: 'Phone',
   PASSWORD: 'Password',
+  DRIVER_LICENSE_NUMBER: 'Driver license number',
   COMPANY_NAME: 'Company name',
   TAX_NUMBER: 'Tax number',
 } as const;
