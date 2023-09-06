@@ -79,6 +79,9 @@ const drivers = pgTable('driver_details', {
 const businessRelations = relations(users, ({ many }) => ({
   orders: many(orders),
 }));
+const driversRelations = relations(drivers, ({ many }) => ({
+  orders: many(orders),
+}));
 
 const orderStatus = pgEnum('status', ORDER_STATUSES);
 const orders = pgTable('orders', {
@@ -106,12 +109,17 @@ const ordersRelations = relations(orders, ({ one }) => ({
     fields: [orders.businessId],
     references: [business.id],
   }),
+  driver: one(drivers, {
+    fields: [orders.driverId],
+    references: [drivers.id],
+  }),
 }));
 
 export {
   business,
   businessRelations,
   drivers,
+  driversRelations,
   groups,
   orders,
   ordersRelations,
