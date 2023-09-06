@@ -10,7 +10,7 @@ import {
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useFormController } from '~/libs/hooks/hooks.js';
 
-import { serverErrorSymbol } from '../form/libs/consts/consts.js';
+import { SERVER_ERROR_SYMBOL } from '../form/libs/consts/consts.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
@@ -50,7 +50,7 @@ const Input = <T extends FieldValues>({
   const clearServerError = useCallback(() => {
     if (setError) {
       setError(name, {
-        type: serverErrorSymbol,
+        type: SERVER_ERROR_SYMBOL,
         message: undefined,
       });
     }

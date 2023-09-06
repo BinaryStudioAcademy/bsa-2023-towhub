@@ -28,7 +28,7 @@ const Header: React.FC = () => {
         <div className={styles.navMenu}>
           {user ? (
             <div className={getValidClassNames('textMd', styles.welcome)}>
-              Hello, {`${user.firstName} ${user.lastName}`}
+              Hello, {`${user.firstName + ' ' + user.lastName}`}
             </div>
           ) : (
             <>

@@ -1,8 +1,8 @@
 import { type ServerSerializedError } from '~/libs/packages/store/store.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 
-type CustomAsyncThunkConfig = AsyncThunkConfig & {
+type ThunkConfigWithServerSerializedError = AsyncThunkConfig & {
   serializedErrorType: ServerSerializedError;
 };
 
-export { type CustomAsyncThunkConfig };
+export { type ThunkConfigWithServerSerializedError };

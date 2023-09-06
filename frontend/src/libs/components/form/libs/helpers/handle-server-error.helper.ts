@@ -12,7 +12,7 @@ import {
   type ServerValidationErrorResponse,
 } from '~/libs/types/types.js';
 
-import { serverErrorSymbol } from '../consts/consts.js';
+import { SERVER_ERROR_SYMBOL } from '../consts/consts.js';
 
 const handleServerError = <T extends FieldValues>(
   error: ServerSerializedError,
@@ -45,7 +45,7 @@ function assignCommonErrors<T extends FieldValues>(
           setError(field.name, errorDescriptor.error, errorDescriptor.options);
         } else if (errorDescriptor === commonError.message) {
           setError(field.name, {
-            type: serverErrorSymbol,
+            type: SERVER_ERROR_SYMBOL,
             message: errorDescriptor,
           });
         }
@@ -65,7 +65,7 @@ function assignValidationErrors<T extends FieldValues>(
 
       if (fields.some((field) => field.name === fieldName)) {
         setError(fieldName as FieldPath<T>, {
-          type: serverErrorSymbol,
+          type: SERVER_ERROR_SYMBOL,
           message,
         });
       }

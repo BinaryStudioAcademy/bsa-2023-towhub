@@ -1,9 +1,8 @@
 import { useAppSelector } from '~/libs/hooks/hooks.js';
 
 import { selectUser } from '../../selectors.js';
-import { type AuthUserT } from '../types/types.js';
 
-const useAuthUser: () => AuthUserT | null = () => {
+const useAuthUser: () => ReturnType<typeof selectUser> = () => {
   return useAppSelector(selectUser);
 };
 

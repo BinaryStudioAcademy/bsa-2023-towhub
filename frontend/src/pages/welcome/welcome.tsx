@@ -1,5 +1,5 @@
 import { BusinessCard, CustomerCard } from '~/libs/components/components.js';
-import { type AuthMode, AppRoute } from '~/libs/enums/enums.js';
+import { AppRoute, AuthMode } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 import { type ValueOf } from '~/libs/types/types.js';
@@ -11,11 +11,11 @@ const WelcomePage: React.FC = () => {
   const handleClick = useCallback(
     (mode: ValueOf<typeof AuthMode>) => {
       switch (mode) {
-        case 'customer': {
+        case AuthMode.CUSTOMER: {
           navigate(AppRoute.SIGN_UP_CUSTOMER);
           break;
         }
-        case 'business': {
+        case AuthMode.BUSINESS: {
           navigate(AppRoute.SIGN_UP_BUSINESS);
           break;
         }

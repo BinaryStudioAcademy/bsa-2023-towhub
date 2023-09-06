@@ -1,3 +1,3 @@
-const serverErrorSymbol = 'server';
+const SERVER_ERROR_SYMBOL = 'server';
 
-export { serverErrorSymbol };
+export { SERVER_ERROR_SYMBOL };

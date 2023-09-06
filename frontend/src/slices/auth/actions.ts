@@ -18,7 +18,7 @@ import {
 } from '~/packages/users/users.js';
 
 import { name as sliceName } from './auth.slice.js';
-import { type CustomAsyncThunkConfig } from './libs/types/types.js';
+import { type ThunkConfigWithServerSerializedError } from './libs/types/types.js';
 
 const signUp = createAsyncThunk<
   CustomerSignUpResponseDto | BusinessSignUpResponseDto,
@@ -26,7 +26,7 @@ const signUp = createAsyncThunk<
     payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto;
     mode: ValueOf<typeof AuthMode>;
   },
-  CustomAsyncThunkConfig
+  ThunkConfigWithServerSerializedError
 >(`${sliceName}/sign-up`, async ({ payload, mode }, { extra }) => {
   const { authApi, notification, localStorage } = extra;
 
