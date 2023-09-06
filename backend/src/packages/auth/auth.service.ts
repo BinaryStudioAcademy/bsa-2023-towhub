@@ -187,17 +187,10 @@ class AuthService {
       updatedUser.id,
     );
 
-    if (userBusiness) {
-      return {
-        ...updatedUser,
-        group: GroupEntity.initialize(user.group).toObject(),
-        business: userBusiness,
-      };
-    }
-
     return {
       ...updatedUser,
       group: GroupEntity.initialize(user.group).toObject(),
+      ...(userBusiness && { business: userBusiness }),
     };
   }
 
