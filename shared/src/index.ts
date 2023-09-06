@@ -60,6 +60,22 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
+  type BusinessGetAllDriversRequestParameters,
+  type DriverAddPayload,
+  type DriverCreateUpdateRequestDto,
+  type DriverCreateUpdateResponseDto,
+  type DriverEntity,
+  type DriverGetAllResponseDto,
+  type DriverGetRequestParameters,
+  type DriverUpdateDeleteRequestParameters,
+  type DriverUpdatePayload,
+  DriverApiPath,
+  driverCreateUpdateRequestBody,
+  driverGetParameters,
+  driverUpdateDeleteParameters,
+  DriverValidationMessage,
+} from './packages/drivers/drivers.js';
+export {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
