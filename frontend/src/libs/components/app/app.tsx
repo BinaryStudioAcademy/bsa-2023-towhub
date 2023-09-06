@@ -9,7 +9,10 @@ import {
   useLocation,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { socket as socketService } from '~/libs/packages/socket/socket.js';
+import {
+  ClientSocketEvent,
+  socket as socketService,
+} from '~/libs/packages/socket/socket.js';
 import { actions as userActions } from '~/slices/users/users.js';
 
 const App: React.FC = () => {
@@ -26,7 +29,7 @@ const App: React.FC = () => {
   useEffect(() => {
     socketService.connect();
 
-    socketService.addListener('CONNECT', () => {
+    socketService.addListener(ClientSocketEvent.CONNECT, () => {
       setIsWebSocketsConnected(true);
     });
 
