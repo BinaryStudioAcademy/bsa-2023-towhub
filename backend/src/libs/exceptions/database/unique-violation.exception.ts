@@ -1,8 +1,8 @@
 import { type PostgresError } from 'postgres';
-import { type ValueOf } from 'shared/build/index.js';
 
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import { TableConstraint } from '~/libs/packages/database/database.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
 import { HttpError } from '../exceptions.js';
 
