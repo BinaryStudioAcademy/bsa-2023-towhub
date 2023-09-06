@@ -3,6 +3,7 @@ export {
   FormName,
   TruckApiPath,
   TruckCapacity,
+  TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
   TruckTowType,

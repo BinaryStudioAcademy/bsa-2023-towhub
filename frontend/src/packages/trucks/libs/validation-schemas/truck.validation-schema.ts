@@ -2,6 +2,7 @@ import joi from 'joi';
 
 import {
   TruckCapacity,
+  TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
   TruckTowType,
@@ -9,7 +10,7 @@ import {
   TruckYear,
 } from '../enums/enums.js';
 import { type TruckFormModel } from '../types/types.js';
-import { LICENSE_PLATE_NUMBER_REGEX } from './validation-schemas.js';
+import { LICENSE_PLATE_NUMBER } from './validation-schemas.js';
 
 const truck = joi.object<TruckFormModel, true>({
   manufacturer: joi
@@ -52,9 +53,9 @@ const truck = joi.object<TruckFormModel, true>({
   licensePlateNumber: joi
     .string()
     .trim()
-    .min(3)
-    .max(10)
-    .pattern(LICENSE_PLATE_NUMBER_REGEX)
+    .min(TruckLicensePlateNumber.MIN)
+    .max(TruckLicensePlateNumber.MAX)
+    .pattern(LICENSE_PLATE_NUMBER)
     .required()
     .messages({
       'string.empty': TruckValidationMessage.REQUIRED,

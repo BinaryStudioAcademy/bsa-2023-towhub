@@ -1,7 +1,9 @@
 import joi from 'joi';
 
+import { LICENSE_PLATE_NUMBER } from '../../regex-patterns/regex-patterns.js';
 import {
   TruckCapacity,
+  TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
   TruckTowType,
@@ -9,7 +11,6 @@ import {
 } from '../enums/enums.js';
 import { TruckValidationMessage } from '../enums/truck-validation-message.enum.js';
 import { type TruckEntity } from '../types/types.js';
-import { LICENSE_PLATE_NUMBER_REGEX } from './truck-regular-expressions/truck-regular-expressions.js';
 
 const truckUpdateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
   manufacturer: joi
@@ -44,9 +45,9 @@ const truckUpdateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
   licensePlateNumber: joi
     .string()
     .trim()
-    .min(3)
-    .max(10)
-    .pattern(LICENSE_PLATE_NUMBER_REGEX)
+    .min(TruckLicensePlateNumber.MIN)
+    .max(TruckLicensePlateNumber.MAX)
+    .pattern(LICENSE_PLATE_NUMBER)
     .messages({
       'string.empty': TruckValidationMessage.REQUIRED,
       'string.pattern.base': TruckValidationMessage.LICENSE_PLATE_INVALID,

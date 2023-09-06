@@ -1,6 +1,7 @@
 export { FormLabel, FormName } from './form.enum.js';
 export { TruckTowType } from './tow-truck-type.enum.js';
 export { TruckCapacity } from './truck-capacity.enum.js';
+export { TruckLicensePlateNumber } from './truck-license-plate-number.enum.js';
 export { TruckManufacturer } from './truck-manufacturer.enum.js';
 export { TruckPricePerKm } from './truck-price-per-km.enum.js';
 export { TruckValidationMessage } from './truck-validation-message.enum.js';
