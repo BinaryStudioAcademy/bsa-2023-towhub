@@ -73,4 +73,15 @@ const drivers = pgTable('driver_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export { business, drivers, groups, users, usersRelations };
+const driversRelations = relations(drivers, ({ one }) => ({
+  user: one(users, {
+    fields: [drivers.userId],
+    references: [users.id],
+  }),
+  business: one(business, {
+    fields: [drivers.businessId],
+    references: [business.id],
+  }),
+}));
+
+export { business, drivers, driversRelations, groups, users, usersRelations };

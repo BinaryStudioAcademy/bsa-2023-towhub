@@ -1,6 +1,7 @@
 import {
   business,
   drivers,
+  driversRelations,
   groups,
   users,
   usersRelations,
@@ -12,6 +13,7 @@ const schema = {
   business,
   drivers,
   usersRelations,
+  driversRelations,
 };
 
 type DatabaseSchema = typeof schema;
