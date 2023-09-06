@@ -1,13 +1,12 @@
 import { Route } from 'react-router-dom';
 
 import { AppRoute } from '~/libs/enums/enums.js';
-import { useAppDispatch, useEffect } from '~/libs/hooks/hooks.js';
+import { useGetCurrentUser } from '~/libs/hooks/hooks.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
 import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 import { WelcomePage } from '~/pages/welcome/welcome.js';
-import { actions as authActions } from '~/slices/auth/auth.js';
 
 import { App } from '../app/app.js';
 import { ProtectedRoute } from '../components.js';
@@ -15,11 +14,8 @@ import { PageLayout } from '../page-layout/page-layout.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    void dispatch(authActions.getCurrent());
-  }, [dispatch]);
+  const { getCurrentUser } = useGetCurrentUser();
+  void getCurrentUser();
 
   return (
     <RouterProvider>

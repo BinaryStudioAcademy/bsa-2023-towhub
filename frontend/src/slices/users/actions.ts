@@ -9,7 +9,7 @@ const loadAll = createAsyncThunk<
   UserGetAllResponseDto,
   undefined,
   AsyncThunkConfig
->(`${sliceName}/sign-up`, (_, { extra }) => {
+>(`${sliceName}/loadAll`, (_, { extra }) => {
   const { userApi } = extra;
 
   return userApi.getAll();
