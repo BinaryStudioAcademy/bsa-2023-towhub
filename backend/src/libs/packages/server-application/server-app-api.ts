@@ -41,7 +41,7 @@ class ServerAppApi implements IServerAppApi {
         },
         servers: [
           {
-            url: `http://localhost:3001/api/${this.version}`,
+            url: `http://localhost:${this.config.ENV.APP.PORT}/api/${this.version}`,
           },
         ],
       },
