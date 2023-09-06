@@ -1,6 +1,6 @@
 export {
+  type BusinessGetAllDriversRequestParameters,
   type DriverAddPayload,
-  type DriverAllByBusinessRequestParameters,
   type DriverCommonDetails,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,

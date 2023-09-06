@@ -95,7 +95,7 @@ class DriverService implements IService {
 
     const driverObject = driver.toObject();
 
-    return { ...user, group, driver: driverObject };
+    return { ...user, ...driverObject, group };
   }
 
   public async update({
@@ -129,7 +129,7 @@ class DriverService implements IService {
 
     const driverObject = driver.toObject();
 
-    return { ...user, driver: driverObject };
+    return { ...user, ...driverObject };
   }
 
   public async delete(id: number): Promise<boolean> {

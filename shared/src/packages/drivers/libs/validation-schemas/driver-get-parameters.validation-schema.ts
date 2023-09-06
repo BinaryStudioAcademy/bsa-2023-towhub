@@ -3,10 +3,10 @@ import joi from 'joi';
 import { positiveRequiredIntegerSchema } from '~/libs/validation-schemas/validation-schemas.js';
 import { BusinessValidationMessage } from '~/packages/business/business.js';
 
-import { type DriverAllByBusinessRequestParameters } from '../types/types.js';
+import { type BusinessGetAllDriversRequestParameters } from '../types/types.js';
 
 const driverGetParameters = joi.object<
-  DriverAllByBusinessRequestParameters,
+  BusinessGetAllDriversRequestParameters,
   true
 >({
   businessId: positiveRequiredIntegerSchema(

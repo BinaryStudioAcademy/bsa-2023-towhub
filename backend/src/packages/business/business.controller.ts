@@ -9,7 +9,7 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
-  type DriverAllByBusinessRequestParameters,
+  type BusinessGetAllDriversRequestParameters,
   type DriverCreateUpdateRequestDto,
   type DriverUpdateDeleteRequestParameters,
 } from '../drivers/drivers.js';
@@ -349,7 +349,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.findAllDrivers(
           options as ApiHandlerOptions<{
-            params: DriverAllByBusinessRequestParameters;
+            params: BusinessGetAllDriversRequestParameters;
           }>,
         ),
     });
@@ -731,7 +731,7 @@ class BusinessController extends Controller {
 
   private async findAllDrivers(
     options: ApiHandlerOptions<{
-      params: DriverAllByBusinessRequestParameters;
+      params: BusinessGetAllDriversRequestParameters;
     }>,
   ): Promise<ApiHandlerResponse> {
     const drivers = await this.businessService.findAllDriversByBusinessId(
