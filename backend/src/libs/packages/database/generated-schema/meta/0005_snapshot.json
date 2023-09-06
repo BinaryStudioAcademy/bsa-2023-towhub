@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "c5065de3-3423-4111-81b1-aae67a1a5291",
+  "id": "bf19a957-5022-41f0-80bc-2557c64ff740",
   "prevId": "dd8363c1-1ee4-472f-93b3-cfe9bf6a5348",
   "tables": {
     "business_details": {
@@ -73,6 +73,79 @@
         }
       }
     },
+    "driver_details": {
+      "name": "driver_details",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "driver_license_number": {
+          "name": "driver_license_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "business_id": {
+          "name": "business_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "driver_details_user_id_users_id_fk": {
+          "name": "driver_details_user_id_users_id_fk",
+          "tableFrom": "driver_details",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "driver_details_business_id_business_details_id_fk": {
+          "name": "driver_details_business_id_business_details_id_fk",
+          "tableFrom": "driver_details",
+          "tableTo": "business_details",
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "driver_details_driver_license_number_unique": {
+          "name": "driver_details_driver_license_number_unique",
+          "nullsNotDistinct": false,
+          "columns": ["driver_license_number"]
+        }
+      }
+    },
     "groups": {
       "name": "groups",
       "schema": "",
@@ -112,115 +185,6 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "orders": {
-      "name": "orders",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "price": {
-          "name": "price",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "scheduled_time": {
-          "name": "scheduled_time",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "start_point": {
-          "name": "start_point",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "end_point": {
-          "name": "end_point",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "status",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "business_id": {
-          "name": "business_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "driver_id": {
-          "name": "driver_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "customer_name": {
-          "name": "customer_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "customer_phone": {
-          "name": "customer_phone",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "orders_user_id_users_id_fk": {
-          "name": "orders_user_id_users_id_fk",
-          "tableFrom": "orders",
-          "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "orders_business_id_business_details_id_fk": {
-          "name": "orders_business_id_business_details_id_fk",
-          "tableFrom": "orders",
-          "tableTo": "business_details",
-          "columnsFrom": ["business_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -324,17 +288,7 @@
       "uniqueConstraints": {}
     }
   },
-  "enums": {
-    "status": {
-      "name": "status",
-      "values": {
-        "pending": "pending",
-        "confirmed": "confirmed",
-        "canceled": "canceled",
-        "done": "done"
-      }
-    }
-  },
+  "enums": {},
   "schemas": {},
   "_meta": {
     "schemas": {},

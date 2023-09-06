@@ -76,6 +76,24 @@ erDiagram
         updated_at timestamp "not null"
     }
 
+    driver_details {
+        id serial PK "not null"
+        driverLicenseNumber varchar "not null, unique"
+        userId integer FK "not null"
+        businessId integer FK "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
+
+    driver_details {
+        id serial PK "not null"
+        driverLicenseNumber varchar "not null, unique"
+        userId integer FK "not null"
+        businessId integer FK "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
+
     orders {
         id serial PK "not null"
         price integer "not null"
@@ -95,10 +113,11 @@ erDiagram
 
     users one -- zero or many orders: "users(id) has orders(user_id)"
     users one or many -- one groups: "users(group_id) belongs to groups(id)"
+    business_details 0..1 -- one users: "business_details(owner_id) belongs to users(id)"
+    driver_details 0..1 -- one users: "driver_details(user_id) belongs to users(id)"
+    driver_details one or many -- one business_details: "driver_details(business_id) belongs to business_details(id)"
+    users one -- zero or many orders: "users(id) has orders(user_id)"
     business_details one -- zero or many orders: "business_details(id) has orders(business_id)"
-    business_details one or many -- one users: "business_details(owner_id) belongs to users(id)"
-
-
 ```
 
 ### 🌑 Backend

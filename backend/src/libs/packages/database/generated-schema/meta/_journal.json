@@ -40,8 +40,15 @@
     {
       "idx": 5,
       "version": "5",
+      "when": 1693736656473,
+      "tag": "0005_create_table_driver_details",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
       "when": 1693928394464,
-      "tag": "0005_add_orders_table",
+      "tag": "0006_add_orders_table",
       "breakpoints": true
     }
   ]
