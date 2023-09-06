@@ -1,5 +1,10 @@
+import pg from 'postgres';
+
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
-import { HttpError } from '~/libs/exceptions/exceptions.js';
+import {
+  HttpError,
+  UniqueViolationError,
+} from '~/libs/exceptions/exceptions.js';
 import {
   type IEncryptService,
   type IJwtService,
@@ -19,7 +24,6 @@ import { type UserService } from '~/packages/users/user.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { UserGroupKey } from './libs/enums/enums.js';
-import { handleDatabaseUniqueViolationError } from './libs/helpers/handle-database-unique-violation-error.helper.js';
 import { createUnauthorizedError } from './libs/helpers/helpers.js';
 import { type UserSignInRequestDto } from './libs/types/types.js';
 
@@ -84,7 +88,10 @@ class AuthService {
 
       return { ...userWithToken, group };
     } catch (error) {
-      throw handleDatabaseUniqueViolationError(error);
+      if (error instanceof pg.PostgresError) {
+        throw new UniqueViolationError(error);
+      }
+      throw error;
     }
   }
 
@@ -134,7 +141,10 @@ class AuthService {
 
       return { ...userWithToken, group, business };
     } catch (error) {
-      throw handleDatabaseUniqueViolationError(error);
+      if (error instanceof pg.PostgresError) {
+        throw new UniqueViolationError(error);
+      }
+      throw error;
     }
   }
 

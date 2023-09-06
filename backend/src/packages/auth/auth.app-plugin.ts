@@ -1,8 +1,7 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
-import { HttpHeader } from 'shared/build/index.js';
 
-import { HttpMessage } from '~/libs/packages/http/http.js';
+import { HttpHeader, HttpMessage } from '~/libs/packages/http/http.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
 import { AuthStrategy } from './auth.js';

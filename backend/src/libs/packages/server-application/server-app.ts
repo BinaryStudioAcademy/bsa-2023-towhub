@@ -12,7 +12,10 @@ import Fastify, {
 import pg from 'postgres';
 
 import { ServerErrorType } from '~/libs/enums/enums.js';
-import { type ValidationError } from '~/libs/exceptions/exceptions.js';
+import {
+  type ValidationError,
+  UniqueViolationError,
+} from '~/libs/exceptions/exceptions.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
@@ -181,7 +184,10 @@ class ServerApp implements IServerApp {
           return replay.status(HttpCode.UNPROCESSED_ENTITY).send(response);
         }
 
-        if (error instanceof HttpError) {
+        if (
+          error instanceof HttpError ||
+          error instanceof UniqueViolationError
+        ) {
           this.logger.error(
             `[Http Error]: ${error.status.toString()} – ${error.message}`,
           );
