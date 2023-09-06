@@ -712,7 +712,7 @@ class BusinessController extends Controller {
    *      description: Find all drivers
    *      parameters:
    *       - in: path
-   *         name: id
+   *         name: businessId
    *         schema:
    *           type: integer
    *         required: true
