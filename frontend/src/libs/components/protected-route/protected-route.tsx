@@ -23,7 +23,7 @@ const ProtectedRoute = ({
     return <Spinner size="sm" />;
   }
 
-  return user && allowedUserGroup === user.group ? (
+  return user && allowedUserGroup === user.group.key ? (
     <RouterOutlet />
   ) : (
     <NotFound />
