@@ -4,9 +4,11 @@ $error-font-size: 12px;
 $line-height-coefficient: 1.54;
 $error-message-height: calc($error-font-size * $line-height-coefficient);
 
-.inputComponentWrapper {
+.inputComponentWrapper,
+:global(.form-control).phoneInput {
   display: flex;
   flex-direction: column;
+  width: auto;
   max-width: 327px;
   color: $grey-dark;
   font-weight: $font-weight-semibold;
@@ -16,9 +18,9 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   line-height: 140.5%;
 }
 
-.input {
+.input,
+:global(.form-control).input {
   width: 100%;
-  padding: 8px;
   color: $grey-dark;
   font-weight: $font-weight-regular;
   font-size: 14px;
@@ -31,22 +33,30 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   outline: none;
 }
 
-.input.filled {
+.inputPadding {
+  padding: 8px;
+}
+
+.input.filled,
+:global(.form-control).input {
   color: $black;
 }
 
-.input:focus {
+.input:focus,
+:global(.form-control).input:focus {
   border-color: $blue;
   box-shadow:
     0 2px 4px -2px rgb(0 44 132 / 6%),
     0 4px 8px -2px rgb(0 85 255 / 16%);
 }
 
-.input.disabled {
+.input.disabled,
+:global(.form-control).input.disabled {
   color: $grey-light;
 }
 
-.input.error {
+.input.error,
+:global(.form-control).input.error {
   border-color: $red;
 }
 
@@ -94,4 +104,12 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   position: relative;
   display: block;
   width: 100%;
+}
+
+:global(.flag-dropdown).phoneButton {
+  top: 2px;
+  left: 2px;
+  height: 90%;
+  background-color: $white;
+  border: none;
 }

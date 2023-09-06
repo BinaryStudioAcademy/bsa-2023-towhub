@@ -26,6 +26,7 @@ const signUpCustomerFields: FormField<CustomerSignUpRequestDto>[] = [
     label: FormLabel.PHONE,
     placeholder: 'Enter your phone',
     name: FormName.PHONE,
+    type: 'phone',
   },
   {
     type: 'password',
@@ -56,6 +57,7 @@ const signUpBusinessFields: FormField<BusinessSignUpRequestDto>[] = [
     label: FormLabel.PHONE,
     placeholder: 'Enter your phone',
     name: FormName.PHONE,
+    type: 'phone',
   },
   {
     label: FormLabel.COMPANY_NAME,
