@@ -1,3 +1,4 @@
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   flexRender,
   getCoreRowModel,
@@ -76,9 +77,10 @@ const Table = <T,>({
                 {...{
                   onMouseDown: header.getResizeHandler(),
                   onTouchStart: header.getResizeHandler(),
-                  className: `${styles.resizer} ${
-                    header.column.getIsResizing() ? `${styles.isResizing}` : ''
-                  }`,
+                  className: getValidClassNames(
+                    styles.resizer,
+                    header.column.getIsResizing() && styles.isResizing,
+                  ),
                 }}
               />
             </th>
