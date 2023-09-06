@@ -32,4 +32,3 @@ rules:
     - 2
   media-query-no-invalid:
     - null
-
