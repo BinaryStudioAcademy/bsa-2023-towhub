@@ -39,7 +39,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     } = payload;
     const order = await this.orderRepository.create(
       OrderEntity.initializeNew({
-        price: 100, //Mock, get price from driver->user->truck and calculated distance
+        price: 100, //Mock, get price from truck and calculated distance
         scheduledTime,
         carsQty,
         startPoint,
@@ -68,7 +68,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     const result = foundOrder.toObject();
 
     if (user) {
-      this.checkIfOrderBelongsToUser(result, user);
+      this.verifyOrderBelongsToUser(result, user);
     }
 
     return result;
@@ -82,7 +82,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     const foundOrder = await this.orderRepository.findById(parameters.id);
 
     if (parameters.driverId && foundOrder) {
-      this.checkIfOrderBelongsToDriver(
+      this.verifyOrderBelongsToDriver(
         foundOrder.toObject(),
         parameters.driverId,
       );
@@ -104,10 +104,10 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     currentUserBusinessId,
     currentUserId,
   }: {
-    userId: string | undefined;
-    businessId: string | undefined;
-    driverId: string | undefined;
-    currentUserBusinessId: number | undefined;
+    userId?: string;
+    businessId?: string;
+    driverId?: string;
+    currentUserBusinessId?: number;
     currentUserId: number | null;
   }): Promise<{ items: OrderEntityT[] }> {
     const usersOrders = await this.orderRepository.find({
@@ -134,7 +134,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     return await this.orderRepository.delete(id);
   }
 
-  private checkIfOrderBelongsToDriver(
+  private verifyOrderBelongsToDriver(
     foundOrder: OrderEntityT | null,
     driverId: number,
   ): void {
@@ -147,7 +147,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     }
   }
 
-  private checkIfOrderBelongsToUser(
+  private verifyOrderBelongsToUser(
     foundOrder: OrderEntityT | null,
     user: UserEntityObjectWithGroupT,
   ): void {

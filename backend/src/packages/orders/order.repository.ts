@@ -42,36 +42,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
   }
 
   public async create(entity: OrderEntity): Promise<OrderEntity> {
-    const {
-      price,
-      scheduledTime,
-      carsQty,
-      startPoint,
-      endPoint,
-      status,
-      userId,
-      businessId,
-      driverId,
-      customerName,
-      customerPhone,
-    } = entity.toNewObject();
-
     const [result] = await this.db
       .driver()
       .insert(this.ordersSchema)
-      .values({
-        price,
-        scheduledTime,
-        carsQty,
-        startPoint,
-        endPoint,
-        status,
-        userId,
-        businessId,
-        driverId,
-        customerName,
-        customerPhone,
-      })
+      .values(entity.toNewObject())
       .returning()
       .execute();
 

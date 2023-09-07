@@ -1,7 +1,8 @@
-type OrderFindByRequestDto = {
-  'userId': string;
-  'businessId': string;
-  'driverId': string;
-};
+import { type OrderEntity } from './order-entity.type.js';
+
+type OrderFindByRequestDto = Pick<
+  OrderEntity,
+  'userId' | 'businessId' | 'driverId'
+>;
 
 export { type OrderFindByRequestDto };
