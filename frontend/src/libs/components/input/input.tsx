@@ -20,8 +20,11 @@ type Properties<T extends FieldValues> = {
   label?: string;
   name: FieldPath<T>;
   placeholder?: string;
-  type?: 'text' | 'email' | 'password' | 'phone';
+  type?: 'text' | 'email' | 'password' | 'number' | 'dropdown' | 'phone';
   isDisabled?: boolean;
+  min?: number;
+  max?: number;
+  step?: number;
 };
 
 const Input = <T extends FieldValues>({
@@ -32,6 +35,9 @@ const Input = <T extends FieldValues>({
   placeholder = '',
   type = 'text',
   isDisabled,
+  min,
+  max,
+  step,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
 
@@ -54,7 +60,7 @@ const Input = <T extends FieldValues>({
     [controlledInputStyles],
   );
 
-  const defaultInput = (
+  const DefaultInput = (
     <>
       <input
         {...field}
@@ -62,6 +68,9 @@ const Input = <T extends FieldValues>({
         placeholder={placeholder}
         className={getValidClassNames(...defaultInputStyles)}
         disabled={isDisabled}
+        min={min}
+        max={max}
+        step={step}
       />
       {type === 'password' && (
         <span className={styles.passwordEye}>&#128065;</span>
@@ -93,7 +102,7 @@ const Input = <T extends FieldValues>({
     );
   }, [controlledInputStyles, field, handlePhoneChange]);
 
-  const phoneInput = (
+  const AppPhoneInput = (
     <Controller name={name} control={control} render={renderPhoneInput} />
   );
 
@@ -101,7 +110,7 @@ const Input = <T extends FieldValues>({
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
-        {type === 'phone' ? phoneInput : defaultInput}
+        {type === 'phone' ? AppPhoneInput : DefaultInput}
       </span>
       <span
         className={getValidClassNames(
