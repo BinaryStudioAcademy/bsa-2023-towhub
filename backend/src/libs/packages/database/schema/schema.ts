@@ -2,14 +2,18 @@ import {
   business,
   drivers,
   groups,
+  trucks,
   users,
   usersRelations,
+  usersTrucks,
 } from './tables-schema.js';
 
 const schema = {
-  users,
-  groups,
   business,
+  groups,
+  trucks,
+  users,
+  usersTrucks,
   drivers,
   usersRelations,
 };

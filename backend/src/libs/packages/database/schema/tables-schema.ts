@@ -2,6 +2,8 @@ import { relations } from 'drizzle-orm';
 import {
   integer,
   pgTable,
+  primaryKey,
+  real,
   serial,
   timestamp,
   uniqueIndex,
@@ -73,4 +75,51 @@ const drivers = pgTable('driver_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export { business, drivers, groups, users, usersRelations };
+const trucks = pgTable(
+  'trucks',
+  {
+    id: serial('id').primaryKey(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    manufacturer: varchar('manufacturer').notNull(),
+    capacity: integer('capacity').notNull(),
+    pricePerKm: real('price_per_km').notNull(),
+    licensePlateNumber: varchar('license_plate_number').notNull(),
+    year: integer('year').notNull(),
+    towType: varchar('tow_type').notNull(),
+  },
+  (trucks) => {
+    return {
+      uniqueLicensePlateNumber: uniqueIndex(
+        'trucks_license_plate_number_idx',
+      ).on(trucks.licensePlateNumber),
+    };
+  },
+);
+
+const usersTrucks = pgTable(
+  'users_trucks',
+  {
+    userId: integer('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    truckId: integer('truck_id')
+      .references(() => trucks.id, { onDelete: 'cascade' })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      pk: primaryKey(table.userId, table.truckId),
+    };
+  },
+);
+
+export {
+  business,
+  drivers,
+  groups,
+  trucks,
+  users,
+  usersRelations,
+  usersTrucks,
+};
