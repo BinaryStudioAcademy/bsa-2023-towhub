@@ -85,6 +85,11 @@ import {
  *           type: string
  *           format: date-time
  *           example: 2023-08-30T05:14:13.670Z
+ *         carsQty:
+ *           type: number
+ *           format: number
+ *           minimum: 1
+ *           example: 1
  *         startPoint:
  *           type: string
  *           minLength: 1
@@ -127,12 +132,15 @@ import {
  *         type: object
  *         required:
  *         - scheduledTime
+ *         - carsQty
  *         - startPoint
  *         - endPoint
  *         - driverId
  *         properties:
  *           scheduledTime:
  *             $ref: '#/components/schemas/Order/properties/scheduledTime'
+ *           carsQty:
+ *             $ref: '#/components/schemas/Order/properties/carsQty'
  *           startPoint:
  *             $ref: '#/components/schemas/Order/properties/startPoint'
  *           endPoint:
@@ -143,6 +151,7 @@ import {
  *         type: object
  *         required:
  *         - scheduledTime
+ *         - carsQty
  *         - startPoint
  *         - endPoint
  *         - driverId
@@ -151,6 +160,8 @@ import {
  *         properties:
  *           scheduledTime:
  *             $ref: '#/components/schemas/Order/properties/scheduledTime'
+ *           carsQty:
+ *             $ref: '#/components/schemas/Order/properties/carsQty'
  *           startPoint:
  *             $ref: '#/components/schemas/Order/properties/startPoint'
  *           endPoint:

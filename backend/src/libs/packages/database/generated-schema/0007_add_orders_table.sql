@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS
     "user_id" integer,
     "business_id" integer,
     "driver_id" integer,
+    "cars_qty" integer DEFAULT 1 NOT NULL,
     "customer_name" varchar,
     "customer_phone" varchar,
     "created_at" timestamp DEFAULT now() NOT NULL,

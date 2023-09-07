@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "708740dc-c863-4de7-92d5-39a22511a25e",
+  "id": "4fdb4b34-82e2-4296-b5b6-fa29d1b8c263",
   "prevId": "6a9efa25-832b-4234-b0fe-8ad4c38c8bbb",
   "tables": {
     "business_details": {
@@ -245,6 +245,13 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "cars_qty": {
+          "name": "cars_qty",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
         },
         "customer_name": {
           "name": "customer_name",

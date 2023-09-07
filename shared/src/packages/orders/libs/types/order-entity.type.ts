@@ -4,6 +4,7 @@ type OrderEntity = {
   id: number;
   price: number;
   scheduledTime: string;
+  carsQty: number;
   startPoint: string;
   endPoint: string;
   status: OrderStatus;

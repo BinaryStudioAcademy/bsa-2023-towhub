@@ -45,6 +45,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     const {
       price,
       scheduledTime,
+      carsQty,
       startPoint,
       endPoint,
       status,
@@ -61,6 +62,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .values({
         price,
         scheduledTime,
+        carsQty,
         startPoint,
         endPoint,
         status,

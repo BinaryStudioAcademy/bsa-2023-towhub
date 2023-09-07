@@ -1,5 +1,7 @@
-import { type OrderEntity } from './order-entity.type.js';
-
-type OrderFindByRequestDto = Partial<Omit<OrderEntity, 'id'>>;
+type OrderFindByRequestDto = {
+  'userId': string;
+  'businessId': string;
+  'driverId': string;
+};
 
 export { type OrderFindByRequestDto };

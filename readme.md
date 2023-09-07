@@ -58,7 +58,6 @@ erDiagram
         created_at timestamp "not null"
         updated_at timestamp "not null"
     }
-
     groups {
         id serial PK "not null"
         name varchar "not null"
@@ -66,16 +65,6 @@ erDiagram
         created_at timestamp "not null"
         updated_at timestamp "not null"
     }
-
-    business_details {
-        id serial PK "not null"
-        company_name varchar "not null, unique"
-        tax_number varchar "not null, unique"
-        owner_id integer FK "not null"
-        created_at timestamp "not null"
-        updated_at timestamp "not null"
-    }
-
     driver_details {
         id serial PK "not null"
         driverLicenseNumber varchar "not null, unique"
@@ -84,7 +73,10 @@ erDiagram
         created_at timestamp "not null"
         updated_at timestamp "not null"
     }
-
+    users_trucks {
+        user_id integer FK "not null"
+        truck_id integer FK "not null"
+    }
     trucks {
         id serial PK "not null"
         manufacturer varchar "not null"
@@ -96,7 +88,14 @@ erDiagram
         created_at timestamp "not null"
         updated_at timestamp "not null"
     }
-
+    business_details {
+        id serial PK "not null"
+        company_name varchar "not null, unique"
+        tax_number varchar "not null, unique"
+        owner_id integer FK "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
     orders {
         id serial PK "not null"
         price integer "not null"
@@ -109,31 +108,9 @@ erDiagram
         driver_id integer FK "nullable"
         customer_name varchar "nullable"
         customer_phone varchar "nullable"
+        cars_qty integer "not null"
         created_at timestamp "not null"
         updated_at timestamp "not null"
-    }
-
-    orders {
-        id serial PK "not null"
-        price integer "not null"
-        scheduled_time timestamp "not null"
-        start_point varchar "not null"
-        end_point varchar "not null"
-        status enum "not null"
-        user_id integer FK "nullable"
-        business_id integer FK "nullable"
-        driver_id integer FK "nullable"
-        customer_name varchar "nullable"
-        customer_phone varchar "nullable"
-        created_at timestamp "not null"
-        updated_at timestamp "not null"
-    }
-
-
-
-    users_trucks {
-        user_id integer FK "not null"
-        truck_id integer FK "not null"
     }
 
     users_trucks one or many -- one trucks: "users_trucks(truck_id) belongs to trucks(id)"

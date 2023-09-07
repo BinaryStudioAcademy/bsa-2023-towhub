@@ -10,6 +10,8 @@ class OrderEntity implements IEntity {
 
   private scheduledTime: OrderEntityT['scheduledTime'];
 
+  private carsQty: OrderEntityT['carsQty'];
+
   private startPoint: OrderEntityT['startPoint'];
 
   private endPoint: OrderEntityT['endPoint'];
@@ -30,6 +32,7 @@ class OrderEntity implements IEntity {
     id,
     price,
     scheduledTime,
+    carsQty,
     startPoint,
     endPoint,
     status,
@@ -42,6 +45,7 @@ class OrderEntity implements IEntity {
     this.id = id;
     this.price = price;
     this.scheduledTime = scheduledTime;
+    this.carsQty = carsQty;
     this.startPoint = startPoint;
     this.endPoint = endPoint;
     this.status = status;
@@ -56,6 +60,7 @@ class OrderEntity implements IEntity {
     id,
     price,
     scheduledTime,
+    carsQty,
     startPoint,
     endPoint,
     status,
@@ -69,6 +74,7 @@ class OrderEntity implements IEntity {
       id,
       price,
       scheduledTime,
+      carsQty,
       startPoint,
       endPoint,
       status,
@@ -83,6 +89,7 @@ class OrderEntity implements IEntity {
   public static initializeNew({
     price,
     scheduledTime,
+    carsQty,
     startPoint,
     endPoint,
     status,
@@ -96,6 +103,7 @@ class OrderEntity implements IEntity {
       id: null,
       price,
       scheduledTime,
+      carsQty,
       startPoint,
       endPoint,
       status,
@@ -112,6 +120,7 @@ class OrderEntity implements IEntity {
       id: this.id as number,
       price: this.price,
       scheduledTime: this.scheduledTime,
+      carsQty: this.carsQty,
       startPoint: this.startPoint,
       endPoint: this.endPoint,
       status: this.status,
@@ -127,6 +136,7 @@ class OrderEntity implements IEntity {
     return {
       price: this.price,
       scheduledTime: this.scheduledTime,
+      carsQty: this.carsQty,
       startPoint: this.startPoint,
       endPoint: this.endPoint,
       status: this.status,

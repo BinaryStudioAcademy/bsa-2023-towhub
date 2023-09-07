@@ -28,6 +28,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
   ): Promise<OrderCreateResponseDto> {
     const {
       scheduledTime,
+      carsQty,
       startPoint,
       endPoint,
       customerName,
@@ -40,6 +41,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
       OrderEntity.initializeNew({
         price: 100, //Mock, get price from driver->user->truck and calculated distance
         scheduledTime,
+        carsQty,
         startPoint,
         endPoint,
         status: OrderStatus.PENDING,
