@@ -88,6 +88,7 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   top: 8px;
   right: 15px;
   cursor: pointer;
+  user-select: none;
 }
 
 .inputWrapper {
