@@ -78,7 +78,7 @@ const Form = <T extends FieldValues = FieldValues>({
   };
 
   return (
-    <form onSubmit={handleFormSubmit} className={styles.form}>
+    <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
       <Button type="submit" label={btnLabel ?? 'Submit'} isFullWidth />
     </form>
