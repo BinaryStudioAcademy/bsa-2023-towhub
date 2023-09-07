@@ -29,13 +29,13 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     return (result ?? null) && OrderEntity.initialize(result as OrderEntityT);
   }
 
-  public async findBy(searchBy: Partial<OrderEntityT>): Promise<OrderEntity[]> {
+  public async find(search: Partial<OrderEntityT>): Promise<OrderEntity[]> {
     const orders = await this.db
       .driver()
       .select()
       .from(this.ordersSchema)
       .where(
-        combineFilters<DatabaseSchema['orders']>(this.ordersSchema, searchBy),
+        combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
       );
 
     return orders.map((it) => OrderEntity.initialize(it as OrderEntityT));

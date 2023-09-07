@@ -14,13 +14,16 @@ import {
   type ApiHandlerResponse,
   Controller,
 } from '~/libs/packages/controller/controller.js';
+import { type ApiHandlerOptionsWithNullableUser } from '~/libs/packages/controller/libs/types/api-handler-options-with-nullable-user.type.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type OrderService } from '~/packages/orders/order.service.js';
 
 import { AuthStrategy } from '../auth/auth.js';
 import { type BusinessService } from '../business/business.service.js';
+import { type DriverService } from '../drivers/driver.service.js';
 import { OrdersApiPath } from './libs/enums/enums.js';
+import { DriverNotExist } from './libs/exceptions/driver-not-exist.js';
 import {
   type OrderCreateRequestDto,
   type OrderUpdateRequestDto,
@@ -159,7 +162,7 @@ import {
  *             $ref: '#/components/schemas/Order/properties/customerName'
  *           customerPhone:
  *             $ref: '#/components/schemas/Order/properties/customerPhone'
- *     OrderCreationFailed:
+ *     OrderCreationError:
  *       allOf:
  *         - $ref: '#/components/schemas/ErrorType'
  *         - type: object
@@ -168,7 +171,15 @@ import {
  *               type: string
  *               enum:
  *                 - Order can't be created!
- *
+ *     DriverNotExistError:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - Driver does not exist!
  *
  */
 
@@ -177,16 +188,26 @@ class OrderController extends Controller {
 
   private businessService: BusinessService;
 
-  public constructor(
-    logger: ILogger,
-    orderService: OrderService,
-    businessService: BusinessService,
-  ) {
+  private driverService: DriverService;
+
+  public constructor({
+    logger,
+    orderService,
+    businessService,
+    driverService,
+  }: {
+    logger: ILogger;
+    orderService: OrderService;
+    businessService: BusinessService;
+    driverService: DriverService;
+  }) {
     super(logger, ApiPath.ORDERS);
 
     this.orderService = orderService;
 
     this.businessService = businessService;
+
+    this.driverService = driverService;
 
     this.addRoute({
       path: OrdersApiPath.ROOT,
@@ -196,7 +217,7 @@ class OrderController extends Controller {
         query: orderGetQueryParameters,
       },
       handler: (options) =>
-        this.findBy(
+        this.find(
           options as ApiHandlerOptions<{
             query: { businessId: string; userId: string; driverId: string };
             user: UserEntityObjectWithGroupT;
@@ -215,7 +236,6 @@ class OrderController extends Controller {
         this.findById(
           options as ApiHandlerOptions<{
             params: Id;
-            user: UserEntityObjectWithGroupT;
             businessId: number;
           }>,
         ),
@@ -250,7 +270,6 @@ class OrderController extends Controller {
         this.create(
           options as ApiHandlerOptions<{
             body: OrderCreateRequestDto;
-            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -299,23 +318,33 @@ class OrderController extends Controller {
    *                $ref: '#/components/schemas/Order'
    *        400:
    *          description:
-   *            Order can't be created!
+   *            Order creation error
    *          content:
    *            application/json:
    *              schema:
-   *                $ref: '#/components/schemas/OrderCreationFailed'
+   *                oneOf:
+   *                 - $ref: '#/components/schemas/DriverNotExistError'
+   *                 - $ref: '#/components/schemas/OrderCreationError'
+   *
    */
   private async create(
-    options: ApiHandlerOptions<{
+    options: ApiHandlerOptionsWithNullableUser<{
       body: OrderCreateRequestDto;
-      user: UserEntityObjectWithGroupT;
+      user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse> {
+    const driver = await this.driverService.findByUserId(options.body.driverId);
+
+    if (!driver) {
+      throw new DriverNotExist();
+    }
+
     return {
       status: HttpCode.OK,
       payload: await this.orderService.create({
         ...options.body,
-        userId: options.user.id,
+        userId: options.user?.id ?? null,
+        businessId: driver.businessId,
       }),
     };
   }
@@ -371,9 +400,9 @@ class OrderController extends Controller {
    *
    */
   private async findById(
-    options: ApiHandlerOptions<{
+    options: ApiHandlerOptionsWithNullableUser<{
       params: Id;
-      user: UserEntityObjectWithGroupT;
+      user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
@@ -441,14 +470,14 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    let driverId; //TODO: add check for driver id
+    const driver = await this.driverService.findByUserId(options.user.id);
 
     return {
       status: HttpCode.OK,
       payload: await this.orderService.update({
         id: options.params.id,
         payload: options.body,
-        driverId,
+        driverId: driver?.id,
       }),
     };
   }
@@ -505,25 +534,25 @@ class OrderController extends Controller {
    *
    */
 
-  private async findBy(
-    options: ApiHandlerOptions<{
+  private async find(
+    options: ApiHandlerOptionsWithNullableUser<{
       query: { businessId: string; userId: string; driverId: string };
-      user: UserEntityObjectWithGroupT | undefined;
+      user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse> {
     let businessId;
 
-    if (options.user.group.key === UserGroupKey.BUSINESS) {
+    if (options.user?.group.key === UserGroupKey.BUSINESS) {
       businessId = await this.businessService.findByOwnerId(options.user.id);
     }
 
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findBy({
+      payload: await this.orderService.find({
         userId: options.query.userId,
         businessId: options.query.businessId,
         driverId: options.query.driverId,
-        currentUserId: options.user.id,
+        currentUserId: options.user?.id ?? null,
         currentUserBusinessId: businessId?.id,
       }),
     };

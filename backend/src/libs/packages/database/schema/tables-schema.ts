@@ -83,7 +83,7 @@ const driversRelations = relations(drivers, ({ many }) => ({
   orders: many(orders),
 }));
 
-const orderStatus = pgEnum('status', ORDER_STATUSES);
+const orderStatus = pgEnum('order_status', ORDER_STATUSES);
 const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
   price: integer('price').notNull(),

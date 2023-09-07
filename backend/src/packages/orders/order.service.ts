@@ -21,7 +21,10 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
   }
 
   public async create(
-    payload: OrderCreateRequestDto & { userId: number },
+    payload: OrderCreateRequestDto & {
+      userId: number | null;
+      businessId: number;
+    },
   ): Promise<OrderCreateResponseDto> {
     const {
       scheduledTime,
@@ -31,6 +34,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
       customerPhone,
       driverId,
       userId,
+      businessId,
     } = payload;
     const order = await this.orderRepository.create(
       OrderEntity.initializeNew({
@@ -40,7 +44,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
         endPoint,
         status: OrderStatus.PENDING,
         userId,
-        businessId: 1, //Mock, get businessId from driver
+        businessId,
         driverId,
         customerName,
         customerPhone,
@@ -52,7 +56,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
 
   public async findById(
     id: OrderEntityT['id'],
-    user: UserEntityObjectWithGroupT | undefined,
+    user: UserEntityObjectWithGroupT | null | undefined,
   ): Promise<OrderEntityT | null> {
     const foundOrder = await this.orderRepository.findById(id);
 
@@ -91,20 +95,20 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     return updatedOrder.toObject();
   }
 
-  public async findBy({
+  public async find({
     userId,
     businessId,
     driverId,
     currentUserBusinessId,
     currentUserId,
   }: {
-    userId: string;
-    businessId: string;
-    driverId: string;
+    userId: string | undefined;
+    businessId: string | undefined;
+    driverId: string | undefined;
     currentUserBusinessId: number | undefined;
-    currentUserId: number | undefined;
+    currentUserId: number | null;
   }): Promise<{ items: OrderEntityT[] }> {
-    const usersOrders = await this.orderRepository.findBy({
+    const usersOrders = await this.orderRepository.find({
       userId: Number(currentUserBusinessId ? userId : currentUserId),
       businessId: Number(currentUserBusinessId ?? businessId),
       driverId: Number(driverId),
