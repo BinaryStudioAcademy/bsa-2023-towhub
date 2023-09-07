@@ -1,4 +1,4 @@
-import { IconName } from '~/libs/enums/enums.js';
+import { AppRoute, Breakpoints, IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
@@ -10,13 +10,12 @@ import {
 import { type BurgerMenuItem } from '~/libs/types/types.js';
 
 import { Button, Icon } from '../components.js';
+import { BURGER_MENU_ITEMS } from './burger-menu-items.js';
 import styles from './styles.module.scss';
 
-type Properties = {
-  menuItems?: BurgerMenuItem[];
-};
+let currentMenuItems: BurgerMenuItem[] | null;
 
-const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
+const BurgerMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,9 +33,23 @@ const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
     setIsOpen(false);
   }, [location]);
 
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = window.innerWidth <= Breakpoints.MOBILE;
 
-  if (!menuItems) {
+  switch (location.pathname) {
+    case AppRoute.DASHBOARD: {
+      currentMenuItems = BURGER_MENU_ITEMS.BusinessMenu;
+      break;
+    }
+    case AppRoute.ROOT: {
+      currentMenuItems = BURGER_MENU_ITEMS.CustomerMenu;
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+
+  if (!currentMenuItems) {
     return null;
   }
 
@@ -52,7 +65,7 @@ const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
       {isOpen && (
         <div className={styles.menu}>
           <ul>
-            {menuItems.map((item, index) => (
+            {currentMenuItems.map((item, index) => (
               <li key={index}>
                 {isMobile ? (
                   <Icon
@@ -63,7 +76,7 @@ const BurgerMenu: React.FC<Properties> = ({ menuItems }: Properties) => {
                 ) : (
                   <Button
                     frontIcon={item.icon}
-                    isFullWidth={true}
+                    isFullWidth
                     label={item.name}
                     onClick={handleNavigate(item.navigateTo)}
                     className={styles.btn}

@@ -1,17 +1,18 @@
 import { AppRoute } from '~/libs/enums/enums.js';
-import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
-import { type BurgerMenuItem } from '~/libs/types/types.js';
+import {
+  useAppSelector,
+  useCallback,
+  useNavigate,
+} from '~/libs/hooks/hooks.js';
+import { selectUser } from '~/slices/auth/selectors.js';
 
 import { AppLogo, BurgerMenu, Button, Link } from '../components.js';
 import styles from './styles.module.scss';
 
-type Properties = {
-  menuItems?: BurgerMenuItem[];
-  isAuth: boolean;
-};
-
-const Header: React.FC<Properties> = ({ menuItems, isAuth }: Properties) => {
+const Header: React.FC = () => {
   const navigate = useNavigate();
+  const user = useAppSelector(selectUser);
+  const hasUser = Boolean(user);
 
   const handleSignIn = useCallback(() => {
     navigate(AppRoute.WELCOME);
@@ -24,8 +25,8 @@ const Header: React.FC<Properties> = ({ menuItems, isAuth }: Properties) => {
           <AppLogo />
         </Link>
         <div className={styles.navMenu}>
-          {isAuth ? (
-            <BurgerMenu menuItems={menuItems} />
+          {hasUser ? (
+            <BurgerMenu />
           ) : (
             <Button
               label="Sign In"

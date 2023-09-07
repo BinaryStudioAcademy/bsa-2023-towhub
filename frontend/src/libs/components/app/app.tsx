@@ -1,17 +1,15 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import { Header, RouterOutlet } from '~/libs/components/components.js';
-import { AppRoute, BurgerMenuItemsName, IconName } from '~/libs/enums/enums.js';
+import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppSelector,
   useEffect,
   useLocation,
-  useMemo,
   useState,
 } from '~/libs/hooks/hooks.js';
 import { socket as socketService } from '~/libs/packages/socket/socket.js';
-import { selectUser } from '~/slices/auth/selectors.js';
 import { actions as userActions } from '~/slices/users/users.js';
 
 const App: React.FC = () => {
@@ -23,31 +21,7 @@ const App: React.FC = () => {
     dataStatus: users.dataStatus,
   }));
 
-  const user = useAppSelector(selectUser);
-  const hasUser = Boolean(user);
-
   const isRoot = pathname === AppRoute.ROOT;
-
-  const menuItems = useMemo(
-    () => [
-      {
-        name: BurgerMenuItemsName.HISTORY,
-        navigateTo: AppRoute.ORDER_HISTORY,
-        icon: IconName.CLOCK_ROTATE_LEFT,
-      },
-      {
-        name: BurgerMenuItemsName.EDIT,
-        navigateTo: AppRoute.EDIT_PROFILE,
-        icon: IconName.USER_PEN,
-      },
-      {
-        name: BurgerMenuItemsName.LOG_OUT,
-        navigateTo: AppRoute.SIGN_IN,
-        icon: IconName.RIGHT_FROM_BRACKET,
-      },
-    ],
-    [],
-  );
 
   useEffect(() => {
     socketService.connect();
@@ -69,7 +43,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Header menuItems={menuItems} isAuth={hasUser} />
+      <Header />
 
       <div>
         <RouterOutlet />
