@@ -10,14 +10,12 @@ import { type IConfig } from '~/libs/packages/config/config.js';
 import { authApi } from '~/packages/auth/auth.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
-import { reducer as usersReducer } from '~/slices/users/users.js';
 
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
 
 type RootReducer = {
   auth: ReturnType<typeof authReducer>;
-  users: ReturnType<typeof usersReducer>;
 };
 
 type ExtraArguments = {
@@ -41,7 +39,6 @@ class Store {
       devTools: config.ENV.APP.ENVIRONMENT !== AppEnvironment.PRODUCTION,
       reducer: {
         auth: authReducer,
-        users: usersReducer,
       },
       middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({
