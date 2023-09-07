@@ -1,5 +1,3 @@
-import { type UserEntityObjectWithGroupT } from '~/packages/users/users.js';
-
 import { type DefaultApiHandlerOptions } from './default-api-handler-options.type.js';
 
 type ApiHandlerOptions<
