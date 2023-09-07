@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "64b4fa97-ee86-46cd-8f5c-4061a0fe4c84",
+  "id": "6a9efa25-832b-4234-b0fe-8ad4c38c8bbb",
   "prevId": "bf19a957-5022-41f0-80bc-2557c64ff740",
   "tables": {
     "business_details": {
@@ -188,8 +188,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "orders": {
-      "name": "orders",
+    "trucks": {
+      "name": "trucks",
       "schema": "",
       "columns": {
         "id": {
@@ -197,66 +197,6 @@
           "type": "serial",
           "primaryKey": true,
           "notNull": true
-        },
-        "price": {
-          "name": "price",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "scheduled_time": {
-          "name": "scheduled_time",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "start_point": {
-          "name": "start_point",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "end_point": {
-          "name": "end_point",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "order_status",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "business_id": {
-          "name": "business_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "driver_id": {
-          "name": "driver_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "customer_name": {
-          "name": "customer_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "customer_phone": {
-          "name": "customer_phone",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -271,29 +211,52 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "orders_user_id_users_id_fk": {
-          "name": "orders_user_id_users_id_fk",
-          "tableFrom": "orders",
-          "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
         },
-        "orders_business_id_business_details_id_fk": {
-          "name": "orders_business_id_business_details_id_fk",
-          "tableFrom": "orders",
-          "tableTo": "business_details",
-          "columnsFrom": ["business_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+        "manufacturer": {
+          "name": "manufacturer",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "capacity": {
+          "name": "capacity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_per_km": {
+          "name": "price_per_km",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "license_plate_number": {
+          "name": "license_plate_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tow_type": {
+          "name": "tow_type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         }
       },
+      "indexes": {
+        "trucks_license_plate_number_idx": {
+          "name": "trucks_license_plate_number_idx",
+          "columns": ["license_plate_number"],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -395,19 +358,55 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "users_trucks": {
+      "name": "users_trucks",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "truck_id": {
+          "name": "truck_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_trucks_user_id_users_id_fk": {
+          "name": "users_trucks_user_id_users_id_fk",
+          "tableFrom": "users_trucks",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "users_trucks_truck_id_trucks_id_fk": {
+          "name": "users_trucks_truck_id_trucks_id_fk",
+          "tableFrom": "users_trucks",
+          "tableTo": "trucks",
+          "columnsFrom": ["truck_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "users_trucks_user_id_truck_id": {
+          "name": "users_trucks_user_id_truck_id",
+          "columns": ["user_id", "truck_id"]
+        }
+      },
+      "uniqueConstraints": {}
     }
   },
-  "enums": {
-    "order_status": {
-      "name": "order_status",
-      "values": {
-        "pending": "pending",
-        "confirmed": "confirmed",
-        "canceled": "canceled",
-        "done": "done"
-      }
-    }
-  },
+  "enums": {},
   "schemas": {},
   "_meta": {
     "schemas": {},

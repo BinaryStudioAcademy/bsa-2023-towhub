@@ -4,6 +4,7 @@ import { logger } from '~/libs/packages/logger/logger.js';
 import { authController } from '~/packages/auth/auth.js';
 import { businessController } from '~/packages/business/business.js';
 import { orderController } from '~/packages/orders/orders.js';
+import { truckController } from '~/packages/trucks/trucks.js';
 import { userController } from '~/packages/users/users.js';
 
 import { ServerApp } from './server-app.js';
@@ -15,6 +16,7 @@ const apiV1 = new ServerAppApi(
   ...authController.routes,
   ...userController.routes,
   ...businessController.routes,
+  ...truckController.routes,
   ...orderController.routes,
 );
 

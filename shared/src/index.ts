@@ -93,6 +93,21 @@ export {
   orderUpdateRequestBody,
 } from './packages/orders/orders.js';
 export {
+  type TruckEntity,
+  LICENSE_PLATE_NUMBER,
+  TruckApiPath,
+  TruckCapacity,
+  truckCreateRequestBody,
+  truckGetParameters,
+  TruckLicensePlateNumber,
+  TruckManufacturer,
+  TruckPricePerKm,
+  TruckTowType,
+  truckUpdateRequestBody,
+  TruckValidationMessage,
+  TruckYear,
+} from './packages/trucks/trucks.js';
+export {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,

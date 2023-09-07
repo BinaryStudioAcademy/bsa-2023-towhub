@@ -47,8 +47,8 @@
     {
       "idx": 6,
       "version": "5",
-      "when": 1694005259550,
-      "tag": "0006_add_orders_table",
+      "when": 1693992300427,
+      "tag": "0006_create_trucks_table",
       "breakpoints": true
     }
   ]

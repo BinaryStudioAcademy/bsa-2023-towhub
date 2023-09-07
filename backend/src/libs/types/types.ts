@@ -1,3 +1,4 @@
+export { type Constructor } from './error-constructor-type/error-constructor.type.js';
 export {
   type Id,
   type NullableProperties,

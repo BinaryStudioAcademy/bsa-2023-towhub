@@ -3,6 +3,8 @@ import {
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
+  real,
   serial,
   timestamp,
   uniqueIndex,
@@ -10,6 +12,37 @@ import {
 } from 'drizzle-orm/pg-core';
 import { ORDER_STATUSES } from 'shared/build/index.js';
 
+const orderStatus = pgEnum('order_status', ORDER_STATUSES);
+const orders = pgTable('orders', {
+  id: serial('id').primaryKey(),
+  price: integer('price').notNull(),
+  scheduledTime: timestamp('scheduled_time', { mode: 'string' }).notNull(),
+  startPoint: varchar('start_point').notNull(),
+  endPoint: varchar('end_point').notNull(),
+  status: orderStatus('status').notNull(),
+  userId: integer('user_id').references(() => users.id),
+  businessId: integer('business_id').references(() => business.id),
+  driverId: integer('driver_id'),
+  customerName: varchar('customer_name'),
+  customerPhone: varchar('customer_phone'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+const ordersRelations = relations(orders, ({ one }) => ({
+  customer: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
+  }),
+  business: one(business, {
+    fields: [orders.businessId],
+    references: [business.id],
+  }),
+  driver: one(drivers, {
+    fields: [orders.driverId],
+    references: [drivers.id],
+  }),
+}));
 const users = pgTable(
   'users',
   {
@@ -76,43 +109,50 @@ const drivers = pgTable('driver_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+const trucks = pgTable(
+  'trucks',
+  {
+    id: serial('id').primaryKey(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    manufacturer: varchar('manufacturer').notNull(),
+    capacity: integer('capacity').notNull(),
+    pricePerKm: real('price_per_km').notNull(),
+    licensePlateNumber: varchar('license_plate_number').notNull(),
+    year: integer('year').notNull(),
+    towType: varchar('tow_type').notNull(),
+  },
+  (trucks) => {
+    return {
+      uniqueLicensePlateNumber: uniqueIndex(
+        'trucks_license_plate_number_idx',
+      ).on(trucks.licensePlateNumber),
+    };
+  },
+);
+
+const usersTrucks = pgTable(
+  'users_trucks',
+  {
+    userId: integer('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    truckId: integer('truck_id')
+      .references(() => trucks.id, { onDelete: 'cascade' })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      pk: primaryKey(table.userId, table.truckId),
+    };
+  },
+);
+
 const businessRelations = relations(users, ({ many }) => ({
   orders: many(orders),
 }));
 const driversRelations = relations(drivers, ({ many }) => ({
   orders: many(orders),
-}));
-
-const orderStatus = pgEnum('order_status', ORDER_STATUSES);
-const orders = pgTable('orders', {
-  id: serial('id').primaryKey(),
-  price: integer('price').notNull(),
-  scheduledTime: timestamp('scheduled_time', { mode: 'string' }).notNull(),
-  startPoint: varchar('start_point').notNull(),
-  endPoint: varchar('end_point').notNull(),
-  status: orderStatus('status').notNull(),
-  userId: integer('user_id').references(() => users.id),
-  businessId: integer('business_id').references(() => business.id),
-  driverId: integer('driver_id'),
-  customerName: varchar('customer_name'),
-  customerPhone: varchar('customer_phone'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
-
-const ordersRelations = relations(orders, ({ one }) => ({
-  customer: one(users, {
-    fields: [orders.userId],
-    references: [users.id],
-  }),
-  business: one(business, {
-    fields: [orders.businessId],
-    references: [business.id],
-  }),
-  driver: one(drivers, {
-    fields: [orders.driverId],
-    references: [drivers.id],
-  }),
 }));
 
 export {
@@ -124,6 +164,8 @@ export {
   orders,
   ordersRelations,
   orderStatus,
+  trucks,
   users,
   usersRelations,
+  usersTrucks,
 };
