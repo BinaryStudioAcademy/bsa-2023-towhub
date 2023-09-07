@@ -30,6 +30,7 @@ type Properties<T extends FieldValues> = {
   defaultValue?: SelectOption;
   onChange?: (value: string | undefined) => void;
   placeholder?: string;
+  insideInput?: boolean;
 };
 
 const getClassNames = (
@@ -58,6 +59,7 @@ const Dropdown = <T extends FieldValues>({
   defaultValue,
   onChange,
   placeholder,
+  insideInput = true,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -74,10 +76,13 @@ const Dropdown = <T extends FieldValues>({
     [isMenuOpen],
   );
 
-  const { field } = useFormController({
-    name: name as FieldPath<T>,
-    control: control ?? undefined,
-  });
+  const { field } = control
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useFormController({
+        name: name as FieldPath<T>,
+        control,
+      })
+    : { field: null };
 
   const error = errors?.[name]?.message;
   const hasLabel = Boolean(label);
@@ -90,12 +95,12 @@ const Dropdown = <T extends FieldValues>({
       if (onChange) {
         onChange(option?.value);
       }
-      field.onChange(option);
+      field?.onChange(option);
     },
     [onChange, field],
   );
 
-  return (
+  return insideInput ? (
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
@@ -111,7 +116,7 @@ const Dropdown = <T extends FieldValues>({
           onMenuClose={handleCloseMenu}
           onChange={handleChange}
           defaultValue={defaultValue}
-          value={field.value}
+          value={field?.value}
           placeholder={placeholder}
         />
       </span>
@@ -124,6 +129,18 @@ const Dropdown = <T extends FieldValues>({
         {error as string}
       </span>
     </label>
+  ) : (
+    <Select<SelectOption>
+      options={options}
+      classNames={classNamesConfig}
+      isSearchable={false}
+      menuIsOpen={isMenuOpen}
+      onMenuOpen={handleOpenMenu}
+      onMenuClose={handleCloseMenu}
+      onChange={handleChange}
+      defaultValue={defaultValue}
+      placeholder={placeholder}
+    />
   );
 };
 
