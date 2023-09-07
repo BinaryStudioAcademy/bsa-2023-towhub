@@ -7,9 +7,10 @@
   align-items: center;
   height: 100vh;
   background-color: $blue-dark;
-  background-image: url("src/assets/img/not-found-page-bg.svg");
+  background-image: url("src/assets/img/auth-page-bg.svg");
   background-repeat: no-repeat;
-  background-position: right 100%;
+  background-position: center;
+  background-size: cover;
 }
 
 .code {
