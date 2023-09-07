@@ -6,6 +6,7 @@ export { Button } from './button/button.js';
 export { Checkbox } from './checkbox/checkbox.js';
 export { CustomerCard } from './customer-card/customer-card.js';
 export { Dropdown } from './dropdown/dropdown.js';
+export { DropdownInput } from './dropdown-input/dropdown-input.js';
 export { Form } from './form/form.jsx';
 export { Header } from './header/header.js';
 export { Icon } from './icon/icon.js';

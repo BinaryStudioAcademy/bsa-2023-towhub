@@ -1,5 +1,6 @@
 import {
   type Control,
+  type ControllerRenderProps,
   type FieldErrors,
   type FieldPath,
   type FieldValues,
@@ -11,12 +12,7 @@ import Select, {
 } from 'react-select';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import {
-  useCallback,
-  useFormController,
-  useMemo,
-  useState,
-} from '~/libs/hooks/hooks.js';
+import { useCallback, useMemo, useState } from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 
 import styles from './styles.module.scss';
@@ -28,9 +24,10 @@ type Properties<T extends FieldValues> = {
   errors?: FieldErrors<T>;
   label?: string;
   defaultValue?: SelectOption;
-  onChange?: (value: string | undefined) => void;
+  onChange?: (option: SingleValue<SelectOption>) => void;
   placeholder?: string;
-  insideInput?: boolean;
+  field?: ControllerRenderProps<T, FieldPath<T>>;
+  className?: string;
 };
 
 const getClassNames = (
@@ -54,12 +51,11 @@ const Dropdown = <T extends FieldValues>({
   options,
   name,
   control,
-  label,
-  errors,
+  field,
   defaultValue,
   onChange,
+  className,
   placeholder,
-  insideInput = true,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -76,70 +72,18 @@ const Dropdown = <T extends FieldValues>({
     [isMenuOpen],
   );
 
-  const { field } = control
-    ? // eslint-disable-next-line react-hooks/rules-of-hooks
-      useFormController({
-        name: name as FieldPath<T>,
-        control,
-      })
-    : { field: null };
-
-  const error = errors?.[name]?.message;
-  const hasLabel = Boolean(label);
-  const hasError = Boolean(error);
-
-  const inputStyles = [styles.input, hasError && styles.error];
-
-  const handleChange = useCallback(
-    (option: SingleValue<SelectOption>) => {
-      if (onChange) {
-        onChange(option?.value);
-      }
-      field?.onChange(option);
-    },
-    [onChange, field],
-  );
-
-  return insideInput ? (
-    <label className={styles.inputComponentWrapper}>
-      {hasLabel && <span className={styles.label}>{label}</span>}
-      <span className={styles.inputWrapper}>
-        <Select<SelectOption>
-          {...(name && control && field)}
-          options={options}
-          classNamePrefix="react-select"
-          className={getValidClassNames(inputStyles)}
-          classNames={classNamesConfig}
-          isSearchable={false}
-          menuIsOpen={isMenuOpen}
-          onMenuOpen={handleOpenMenu}
-          onMenuClose={handleCloseMenu}
-          onChange={handleChange}
-          defaultValue={defaultValue}
-          value={field?.value}
-          placeholder={placeholder}
-        />
-      </span>
-      <span
-        className={getValidClassNames(
-          styles.errorMessage,
-          hasError && styles.visible,
-        )}
-      >
-        {error as string}
-      </span>
-    </label>
-  ) : (
+  return (
     <Select<SelectOption>
       {...(name && control && field)}
       options={options}
       classNamePrefix="react-select"
+      className={className}
       classNames={classNamesConfig}
       isSearchable={false}
       menuIsOpen={isMenuOpen}
       onMenuOpen={handleOpenMenu}
       onMenuClose={handleCloseMenu}
-      onChange={handleChange}
+      onChange={onChange}
       defaultValue={defaultValue}
       value={field?.value}
       placeholder={placeholder}

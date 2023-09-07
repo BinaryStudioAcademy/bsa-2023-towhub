@@ -10,7 +10,6 @@ const TruckFilter: React.FC = () => {
           <Dropdown
             options={[{ label: 'option', value: 'option' }]}
             placeholder="Select location..."
-            insideInput={false}
           />
         </div>
       </div>
@@ -21,7 +20,6 @@ const TruckFilter: React.FC = () => {
             <Dropdown
               options={[{ label: 'option', value: 'option' }]}
               placeholder="Select price..."
-              insideInput={false}
             />
           </div>
         </div>
@@ -31,7 +29,6 @@ const TruckFilter: React.FC = () => {
             <Dropdown
               options={[{ label: 'option', value: 'option' }]}
               placeholder="Select capacity..."
-              insideInput={false}
             />
           </div>
         </div>
