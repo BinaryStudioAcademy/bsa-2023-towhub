@@ -1,3 +1,5 @@
+import { type Control, type FieldErrors } from 'react-hook-form';
+
 import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
 import {
   type DeepPartial,
@@ -7,6 +9,7 @@ import {
 } from '~/libs/types/types.js';
 
 import { Button } from '../button/button.jsx';
+import { Dropdown } from '../dropdown/dropdown.js';
 import { Input } from '../input/input.jsx';
 import styles from './styles.module.scss';
 
@@ -16,6 +19,37 @@ type Properties<T extends FieldValues> = {
   validationSchema: ValidationSchema;
   btnLabel?: string;
   onSubmit: (payload: T) => void;
+};
+
+const renderField = <T extends FieldValues = FieldValues>(
+  field: FormField<T>,
+  control: Control<T, null>,
+  errors: FieldErrors<T>,
+): JSX.Element => {
+  switch (field.type) {
+    case 'dropdown': {
+      const { options, name, label } = field;
+
+      return (
+        <Dropdown
+          options={options ?? []}
+          name={name}
+          control={control}
+          errors={errors}
+          label={label}
+        />
+      );
+    }
+    case 'number':
+    case 'text':
+    case 'email':
+    case 'password': {
+      return <Input {...field} control={control} errors={errors} />;
+    }
+    default: {
+      return <Input {...field} control={control} errors={errors} />;
+    }
+  }
 };
 
 const Form = <T extends FieldValues = FieldValues>({
@@ -39,7 +73,7 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
-      <Input {...field} control={control} errors={errors} key={index} />
+      <div key={(field.id = index)}>{renderField(field, control, errors)}</div>
     ));
   };
 
