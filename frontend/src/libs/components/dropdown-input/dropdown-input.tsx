@@ -15,10 +15,10 @@ import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
   options: SelectOption[];
-  name?: FieldPath<T>;
-  control?: Control<T, null> | undefined;
-  errors?: FieldErrors<T>;
-  label?: string;
+  name: FieldPath<T>;
+  control: Control<T, null> | undefined;
+  errors: FieldErrors<T>;
+  label: string;
   defaultValue?: SelectOption;
   onChange?: (value: string | undefined) => void;
   placeholder?: string;
@@ -40,7 +40,7 @@ const DropdownInput = <T extends FieldValues>({
     control,
   });
 
-  const error = errors?.[name]?.message;
+  const error = errors[name]?.message;
   const hasLabel = Boolean(label);
   const hasError = Boolean(error);
 
