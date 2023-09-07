@@ -8,9 +8,9 @@ import { type SingleValue } from 'react-select';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useFormController } from '~/libs/hooks/hooks.js';
-import { type SelectOption } from '~/libs/types/select-option.type.js';
+import { type SelectOption } from '~/libs/types/types.js';
 
-import { Dropdown } from '../components.js';
+import { Dropdown } from '../dropdown/dropdown.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {

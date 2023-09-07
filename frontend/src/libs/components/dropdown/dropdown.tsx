@@ -20,7 +20,7 @@ import styles from './styles.module.scss';
 type Properties<T extends FieldValues> = {
   options: SelectOption[];
   name?: FieldPath<T>;
-  control?: Control<T, null> | undefined;
+  control?: Control<T, null>;
   errors?: FieldErrors<T>;
   label?: string;
   defaultValue?: SelectOption;
@@ -43,7 +43,7 @@ const getClassNames = (
   dropdownIndicator: () =>
     isMenuOpen
       ? getValidClassNames(styles.dropdownIndicator, styles.upside)
-      : getValidClassNames(styles.dropdownIndicator),
+      : styles.dropdownIndicator,
   indicatorSeparator: () => styles.indicatorSeparator,
 });
 
