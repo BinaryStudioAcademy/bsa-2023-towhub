@@ -35,12 +35,6 @@ class UserController extends Controller {
     this.userService = userService;
 
     this.addRoute({
-      path: UsersApiPath.ROOT,
-      method: 'GET',
-      handler: () => this.findAll(),
-    });
-
-    this.addRoute({
       path: UsersApiPath.$ID,
       method: 'GET',
       authStrategy: AuthStrategy.VERIFY_JWT,
@@ -51,33 +45,6 @@ class UserController extends Controller {
           }>,
         ),
     });
-  }
-
-  /**
-   * @swagger
-   * /users:
-   *    get:
-   *      description: Returns an array of users
-   *      responses:
-   *        200:
-   *          description: Successful operation
-   *          content:
-   *            application/json:
-   *              schema:
-   *                type: array
-   *                items:
-   *                  $ref: '#/components/schemas/User'
-   */
-  private async findAll(): Promise<ApiHandlerResponse> {
-    const result = await this.userService.findAll();
-
-    return {
-      status: HttpCode.OK,
-      payload: {
-        items: result,
-        totalCount: result.length,
-      },
-    };
   }
 
   private async findById(
