@@ -88,6 +88,7 @@ const Input = <T extends FieldValues>({
           ...controlledInputStyles,
         )}
         buttonClass={styles.phoneButton}
+        dropdownClass={styles.phoneDropdown}
       />
     );
   }, [controlledInputStyles, field, handlePhoneChange]);

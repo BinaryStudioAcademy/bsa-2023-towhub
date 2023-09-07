@@ -113,3 +113,20 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   background-color: $white;
   border: none;
 }
+
+:global(.country-list).phoneDropdown {
+  color: $grey-dark;
+  font-weight: $font-weight-semibold;
+  font-size: 14px;
+  font-family: $font-family;
+  border: 2px solid $grey-light;
+  border-radius: 4px;
+  box-shadow: $shadow;
+}
+
+:global(.react-tel-input)
+  :global(.country-list)
+  :global(.country):global(.highlight),
+:global(.react-tel-input) :global(.country-list) :global(.country):hover {
+  background-color: $grey-extra-light;
+}
