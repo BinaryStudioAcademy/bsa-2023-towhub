@@ -91,6 +91,7 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   background-color: $white;
   border: 0;
   cursor: pointer;
+  user-select: none;
 }
 
 .passwordEyeLight {
