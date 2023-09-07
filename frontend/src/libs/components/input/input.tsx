@@ -22,8 +22,11 @@ type Properties<T extends FieldValues> = {
   label?: string;
   name: FieldPath<T>;
   placeholder?: string;
-  type?: 'text' | 'email' | 'password';
+  type?: 'text' | 'email' | 'password' | 'number' | 'dropdown';
   isDisabled?: boolean;
+  min?: number;
+  max?: number;
+  step?: number;
 };
 
 const Input = <T extends FieldValues>({
@@ -34,6 +37,9 @@ const Input = <T extends FieldValues>({
   placeholder = '',
   type = 'text',
   isDisabled,
+  min,
+  max,
+  step,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -66,6 +72,9 @@ const Input = <T extends FieldValues>({
           placeholder={placeholder}
           className={getValidClassNames(...inputStyles)}
           disabled={isDisabled}
+          min={min}
+          max={max}
+          step={step}
         />
         {type === 'password' && (
           <button
