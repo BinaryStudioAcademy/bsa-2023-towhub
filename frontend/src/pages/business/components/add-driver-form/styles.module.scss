@@ -1,0 +1,14 @@
+@import "src/assets/css/vars.scss";
+
+.wrapper {
+  width: 100%;
+  max-width: 448px;
+  padding: 30px 60px 50px;
+  background-color: $white;
+  border-radius: 8px;
+}
+
+.title {
+  margin: 0 0 17px;
+  color: $title-color;
+}

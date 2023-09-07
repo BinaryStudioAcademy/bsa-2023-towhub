@@ -27,6 +27,8 @@ rules:
     - ignorePseudoClasses:
         - global
         - export
+  # allow limit the depth of nesting
+  max-nesting-depth:
+    - 2
   media-query-no-invalid:
     - null
-
