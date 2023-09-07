@@ -1,4 +1,4 @@
-import { Dropdown } from '../components.js';
+import { Dropdown } from '../dropdown/dropdown.js';
 import styles from './style.module.scss';
 
 const TruckFilter: React.FC = () => {
