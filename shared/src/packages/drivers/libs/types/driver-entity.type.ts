@@ -6,6 +6,7 @@ type DriverEntity = {
   driverLicenseNumber: string;
   userId: UserEntityT['id'];
   businessId: BusinessEntityT['id'];
+  user?: UserEntityT;
 };
 
 export { type DriverEntity };

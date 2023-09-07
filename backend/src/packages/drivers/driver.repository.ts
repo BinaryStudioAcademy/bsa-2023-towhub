@@ -25,7 +25,7 @@ class DriverRepository implements IRepository {
   }
 
   public find(
-    partial: Partial<DriverEntityT>,
+    partial: Partial<Omit<DriverEntityT, 'user'>>,
   ): ReturnType<IRepository<DriverEntityT>['find']> {
     const queries = Object.entries(partial).map(([key, value]) =>
       eq(
@@ -38,7 +38,7 @@ class DriverRepository implements IRepository {
 
     return this.db
       .driver()
-      .query.drivers.findMany({ where: finalQuery })
+      .query.drivers.findMany({ where: finalQuery, with: { user: true } })
       .execute();
   }
 
@@ -47,9 +47,11 @@ class DriverRepository implements IRepository {
   ): Promise<DriverEntity[]> {
     const drivers = await this.db
       .driver()
-      .select()
-      .from(this.driverSchema)
-      .where(eq(this.driverSchema.businessId, businessId));
+      .query.drivers.findMany({
+        where: eq(this.driverSchema.businessId, businessId),
+        with: { user: true },
+      })
+      .execute();
 
     return drivers.map((it) => DriverEntity.initialize(it));
   }

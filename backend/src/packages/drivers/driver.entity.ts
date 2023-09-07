@@ -12,16 +12,20 @@ class DriverEntity implements IEntity {
 
   private businessId: DriverEntityT['businessId'];
 
+  private user?: DriverEntityT['user'];
+
   private constructor({
     id,
     driverLicenseNumber,
     userId,
     businessId,
+    user,
   }: NullableProperties<DriverEntityT, 'id'>) {
     this.id = id;
     this.driverLicenseNumber = driverLicenseNumber;
     this.userId = userId;
     this.businessId = businessId;
+    this.user = user;
   }
 
   public static initialize({
@@ -29,12 +33,14 @@ class DriverEntity implements IEntity {
     driverLicenseNumber,
     userId,
     businessId,
+    user,
   }: DriverEntityT): DriverEntity {
     return new DriverEntity({
       id,
       driverLicenseNumber,
       userId,
       businessId,
+      user,
     });
   }
 
@@ -42,12 +48,14 @@ class DriverEntity implements IEntity {
     driverLicenseNumber,
     userId,
     businessId,
+    user,
   }: Omit<DriverEntityT, 'id'>): DriverEntity {
     return new DriverEntity({
       id: null,
       driverLicenseNumber,
       userId,
       businessId,
+      user,
     });
   }
 
@@ -65,6 +73,16 @@ class DriverEntity implements IEntity {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
+    };
+  }
+
+  public toObjectWithUser(): DriverEntityT {
+    return {
+      id: this.id as number,
+      driverLicenseNumber: this.driverLicenseNumber,
+      userId: this.userId,
+      businessId: this.businessId,
+      user: this.user,
     };
   }
 }

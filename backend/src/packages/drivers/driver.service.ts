@@ -14,6 +14,7 @@ import {
 } from '../drivers/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
 import { type UserService } from '../users/user.service.js';
+import { convertToDriverUser } from './libs/helpers/helpers.js';
 
 class DriverService implements IService {
   private driverRepository: DriverRepository;
@@ -41,10 +42,22 @@ class DriverService implements IService {
   public async findAllByBusinessId(
     businessId: number,
   ): Promise<DriverGetAllResponseDto> {
-    const items = await this.driverRepository.findAllByBusinessId(businessId);
+    const data = await this.driverRepository.findAllByBusinessId(businessId);
+    const items = data.map((element) => {
+      const { user, ...pureDriver } = element.toObjectWithUser();
+
+      if (!user) {
+        throw new HttpError({
+          status: HttpCode.BAD_REQUEST,
+          message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+        });
+      }
+
+      return { ...convertToDriverUser(user), driver: pureDriver };
+    });
 
     return {
-      items: items.map((it) => it.toObject()),
+      items,
     };
   }
 
