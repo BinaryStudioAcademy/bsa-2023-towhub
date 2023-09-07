@@ -14,7 +14,6 @@ import {
   type ApiHandlerResponse,
   Controller,
 } from '~/libs/packages/controller/controller.js';
-import { type ApiHandlerOptionsWithNullableUser } from '~/libs/packages/controller/libs/types/api-handler-options-with-nullable-user.type.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type OrderService } from '~/packages/orders/order.service.js';
@@ -220,7 +219,7 @@ class OrderController extends Controller {
         this.find(
           options as ApiHandlerOptions<{
             query: { businessId: string; userId: string; driverId: string };
-            user: UserEntityObjectWithGroupT;
+            user: UserEntityObjectWithGroupT | null;
           }>,
         ),
     });
@@ -236,7 +235,7 @@ class OrderController extends Controller {
         this.findById(
           options as ApiHandlerOptions<{
             params: Id;
-            businessId: number;
+            user: UserEntityObjectWithGroupT | null;
           }>,
         ),
     });
@@ -270,6 +269,7 @@ class OrderController extends Controller {
         this.create(
           options as ApiHandlerOptions<{
             body: OrderCreateRequestDto;
+            user: UserEntityObjectWithGroupT | null;
           }>,
         ),
     });
@@ -328,7 +328,7 @@ class OrderController extends Controller {
    *
    */
   private async create(
-    options: ApiHandlerOptionsWithNullableUser<{
+    options: ApiHandlerOptions<{
       body: OrderCreateRequestDto;
       user: UserEntityObjectWithGroupT | null;
     }>,
@@ -400,7 +400,7 @@ class OrderController extends Controller {
    *
    */
   private async findById(
-    options: ApiHandlerOptionsWithNullableUser<{
+    options: ApiHandlerOptions<{
       params: Id;
       user: UserEntityObjectWithGroupT | null;
     }>,
@@ -535,7 +535,7 @@ class OrderController extends Controller {
    */
 
   private async find(
-    options: ApiHandlerOptionsWithNullableUser<{
+    options: ApiHandlerOptions<{
       query: { businessId: string; userId: string; driverId: string };
       user: UserEntityObjectWithGroupT | null;
     }>,
