@@ -77,7 +77,9 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
+  type BusinessGetAllTrucksRequestParameters,
   type TruckEntity,
+  businessGetAllTrucksParameters,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,

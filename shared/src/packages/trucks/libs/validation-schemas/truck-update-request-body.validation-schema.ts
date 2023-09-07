@@ -1,5 +1,7 @@
 import joi from 'joi';
 
+import { positiveRequiredIntegerSchema } from '~/libs/validation-schemas/validation-schemas.js';
+
 import {
   TruckCapacity,
   TruckLicensePlateNumber,
@@ -65,6 +67,9 @@ const truckUpdateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
     .messages({
       'any.only': TruckValidationMessage.INVALID,
     }),
+  businessId: positiveRequiredIntegerSchema(
+    TruckValidationMessage.ID_NOT_A_NUMBER,
+  ),
 });
 
 export { truckUpdateRequestBody };

@@ -18,6 +18,10 @@ import {
   driverGetParameters,
   driverUpdateDeleteParameters,
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
+import {
+  type BusinessGetAllTrucksRequestParameters,
+  businessGetAllTrucksParameters,
+} from '../trucks/trucks.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 import {
@@ -365,6 +369,21 @@ class BusinessController extends Controller {
         this.deleteDriver(
           options as ApiHandlerOptions<{
             params: DriverUpdateDeleteRequestParameters;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.TRUCKS,
+      method: 'GET',
+      authStrategy: defaultStrategies,
+      validation: {
+        params: businessGetAllTrucksParameters,
+      },
+      handler: (options) =>
+        this.findAllTrucks(
+          options as ApiHandlerOptions<{
+            params: BusinessGetAllTrucksRequestParameters;
           }>,
         ),
     });
@@ -789,6 +808,48 @@ class BusinessController extends Controller {
     return {
       status: HttpCode.OK,
       payload: deletionResult,
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/{businessId}/trucks:
+   *    get:
+   *      tags:
+   *       - business/trucks
+   *      summary: Find all trucks
+   *      description: Find all trucks
+   *      parameters:
+   *       - in: path
+   *         name: businessId
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the business to create truck
+   *         example: 1
+   *      responses:
+   *        200:
+   *          description: Successful find all trucks
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: array
+   *                items:
+   *                  $ref: '#/components/schemas/Truck'
+   */
+
+  private async findAllTrucks(
+    options: ApiHandlerOptions<{
+      params: BusinessGetAllTrucksRequestParameters;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const trucks = await this.businessService.findAllTrucksByBusinessId(
+      options.params.businessId,
+    );
+
+    return {
+      status: HttpCode.OK,
+      payload: trucks,
     };
   }
 }

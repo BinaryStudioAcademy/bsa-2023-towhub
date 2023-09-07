@@ -34,6 +34,16 @@ class TruckRepository implements IRepository {
     return await this.db.driver().select().from(this.trucksSchema);
   }
 
+  public async findAllByBusinessId(
+    businessId: number,
+  ): Promise<TruckDatabaseModel[]> {
+    return await this.db
+      .driver()
+      .select()
+      .from(this.trucksSchema)
+      .where(eq(this.trucksSchema.businessId, businessId));
+  }
+
   public async create(
     entity: Omit<TruckEntity, 'id'>,
   ): Promise<TruckDatabaseModel[]> {

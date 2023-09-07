@@ -18,6 +18,14 @@ class TruckService implements IService {
     return truck ? TruckEntity.initialize(truck).toObject() : null;
   }
 
+  public async findAllByBusinessId(
+    businessId: number,
+  ): Promise<TruckEntityT[]> {
+    const trucks = await this.repository.findAllByBusinessId(businessId);
+
+    return trucks.map((it) => TruckEntity.initialize(it).toObject());
+  }
+
   public async create(
     payload: Omit<TruckEntityT, 'id'>,
   ): Promise<TruckEntityT> {

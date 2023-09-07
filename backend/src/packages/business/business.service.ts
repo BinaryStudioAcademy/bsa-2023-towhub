@@ -11,6 +11,8 @@ import {
   type DriverGetAllResponseDto,
   type DriverUpdatePayload,
 } from '../drivers/drivers.js';
+import { type TruckService } from '../trucks/truck.service.js';
+import { type TruckEntity as TruckEntityT } from '../trucks/trucks.js';
 import { BusinessEntity } from './business.entity.js';
 import { type BusinessRepository } from './business.repository.js';
 import {
@@ -25,12 +27,16 @@ class BusinessService implements IService {
 
   private driverService: DriverService;
 
+  private truckService: TruckService;
+
   public constructor(
     businessRepository: BusinessRepository,
     driverService: DriverService,
+    truckService: TruckService,
   ) {
     this.businessRepository = businessRepository;
     this.driverService = driverService;
+    this.truckService = truckService;
   }
 
   public async findById(id: number): Promise<BusinessEntityT | null> {
@@ -154,6 +160,10 @@ class BusinessService implements IService {
 
   public deleteDriver(driverId: number): Promise<boolean> {
     return this.driverService.delete(driverId);
+  }
+
+  public findAllTrucksByBusinessId(id: number): Promise<TruckEntityT[]> {
+    return this.truckService.findAllByBusinessId(id);
   }
 }
 

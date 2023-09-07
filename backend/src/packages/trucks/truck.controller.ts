@@ -13,7 +13,7 @@ import {
   truckCreateRequestBody,
   truckGetParameters,
   truckUpdateRequestBody,
-} from './libs/validation-schema/validation-schemas.js';
+} from './libs/validation-schemas/validation-schemas.js';
 import { type TruckService } from './truck.service.js';
 
 /**
