@@ -21,6 +21,7 @@ export { Radio } from './radio/radio.js';
 export { Router } from './router/router.jsx';
 export { RouterProvider } from './router-provider/router-provider.jsx';
 export { Spinner } from './spinner/spinner.js';
+export { StarRating } from './star-rating/star-rating.jsx';
 export { Table } from './table/table.js';
 export { Toggle } from './toggle/toggle.js';
 export { Provider as StoreProvider } from 'react-redux';
