@@ -1,3 +1,3 @@
-type SelectOption = { label: string; value: string };
+type SelectOption<T = string> = { label: string; value: T };
 
 export { type SelectOption };
