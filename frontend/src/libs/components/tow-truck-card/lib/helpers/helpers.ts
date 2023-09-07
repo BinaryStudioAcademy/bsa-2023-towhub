@@ -1,23 +1,21 @@
-import { type ValueOf } from 'shared/build';
+import { type ValueOf, TruckTowType } from 'shared/build';
 
 import img1 from '~/assets/img/truck/type-1.svg';
 import img2 from '~/assets/img/truck/type-2.svg';
 import img3 from '~/assets/img/truck/type-3.svg';
 
-import { TowTruckType } from '../enum.js';
-
-const getTowTruckImage = (type: ValueOf<typeof TowTruckType>): string => {
+const getTowTruckImage = (type: ValueOf<typeof TruckTowType>): string => {
   switch (type) {
-    case TowTruckType.FLATBED_OR_ROLLBACK: {
+    case TruckTowType.FLATBED_OR_ROLLBACK: {
       return img3;
     }
-    case TowTruckType.HOOK_AND_CHAIN: {
+    case TruckTowType.HOOK_AND_CHAIN: {
       return img3;
     }
-    case TowTruckType.INTEGRATED: {
+    case TruckTowType.INTEGRATED: {
       return img1;
     }
-    case TowTruckType.WHEEL_LIFT: {
+    case TruckTowType.WHEEL_LIFT: {
       return img2;
     }
   }

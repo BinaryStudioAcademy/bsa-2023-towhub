@@ -1,9 +1,9 @@
 import { IconName } from '~/libs/enums/icon-name.enum.js';
+import { type TruckEntity } from '~/libs/types/types.js';
 
 import { Badge, Button, Icon } from '../components.js';
 import { StarRating } from '../star-rating/star-rating.jsx';
 import { getTowTruckImage } from './lib/helpers/helpers.js';
-import { type TruckEntity } from './lib/types.js';
 import styles from './styles.module.scss';
 
 type Properties = {
