@@ -30,22 +30,28 @@ class ServerAppApi implements IServerAppApi {
     const isProduction =
       this.config.ENV.APP.ENVIRONMENT === AppEnvironment.PRODUCTION;
 
-    const controllerExtension = isProduction ? 'js' : 'ts';
+    const isDevelopment =
+      this.config.ENV.APP.ENVIRONMENT === AppEnvironment.DEVELOPMENT;
+
+    const controllerExtension = isProduction || isDevelopment ? 'js' : 'ts';
+    const sourceDirectory = isDevelopment ? '.' : 'src';
 
     return swaggerJsdoc({
       definition: {
         openapi: '3.0.0',
         info: {
-          title: 'Hello World',
+          title: 'TowHub API',
           version: `${this.version}.0.0`,
         },
         servers: [
           {
-            url: `http://localhost:3001/api/${this.version}`,
+            url: `api/${this.version}`,
           },
         ],
       },
-      apis: [`src/packages/**/*.controller.${controllerExtension}`],
+      apis: [
+        `${sourceDirectory}/packages/**/*.controller.${controllerExtension}`,
+      ],
     });
   }
 }
