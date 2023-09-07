@@ -27,6 +27,7 @@ export {
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type CapitalizeEnum,
+  type EntityPagination,
   type NullableProperties,
   type OperationResult,
   type ServerCommonErrorResponse,
@@ -60,13 +61,32 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
+  type BusinessGetAllDriversRequestParameters,
+  type DriverAddPayload,
+  type DriverCreateUpdateRequestDto,
+  type DriverCreateUpdateResponseDto,
+  type DriverEntity,
+  type DriverGetAllResponseDto,
+  type DriverGetRequestParameters,
+  type DriverUpdateDeleteRequestParameters,
+  type DriverUpdatePayload,
+  DriverApiPath,
+  driverCreateUpdateRequestBody,
+  driverGetParameters,
+  driverUpdateDeleteParameters,
+  DriverValidationMessage,
+} from './packages/drivers/drivers.js';
+export {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupT,
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
+  type UserGroupEntityObjectT,
   type UserGroupEntityT,
   type UserGroupKeyT,
   type UserGroupNameT,

@@ -29,6 +29,20 @@
       "when": 1693315084230,
       "tag": "0003_add_access_token_to_users",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1693406907945,
+      "tag": "0004_email_unique_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1693736656473,
+      "tag": "0005_create_table_driver_details",
+      "breakpoints": true
     }
   ]
 }

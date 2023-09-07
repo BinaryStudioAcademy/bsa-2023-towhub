@@ -49,7 +49,7 @@ erDiagram
     users {
         id serial PK "not null"
         phone varchar "not null, unique"
-        email varchar "not null"
+        email varchar "not null, unique"
         first_name varchar "not null"
         last_name varchar "not null"
         password_hash varchar "not null"
@@ -76,9 +76,19 @@ erDiagram
         updated_at timestamp "not null"
     }
 
-    users one or many -- one groups: "users(group_id) belongs to groups(id)"
-    business_details one or many -- one users: "business_details(owner_id) belongs to users(id)"
+    driver_details {
+        id serial PK "not null"
+        driverLicenseNumber varchar "not null, unique"
+        userId integer FK "not null"
+        businessId integer FK "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
 
+    users one or many -- one groups: "users(group_id) belongs to groups(id)"
+    business_details 0..1 -- one users: "business_details(owner_id) belongs to users(id)"
+    driver_details 0..1 -- one users: "driver_details(user_id) belongs to users(id)"
+    driver_details one or many -- one business_details: "driver_details(business_id) belongs to business_details(id)"
 ```
 
 ### 🌑 Backend
