@@ -60,4 +60,17 @@ const business = pgTable('business_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export { business, groups, users, usersRelations };
+const drivers = pgTable('driver_details', {
+  id: serial('id').primaryKey(),
+  driverLicenseNumber: varchar('driver_license_number').unique().notNull(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id),
+  businessId: integer('business_id')
+    .notNull()
+    .references(() => business.id),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export { business, drivers, groups, users, usersRelations };
