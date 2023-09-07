@@ -78,13 +78,11 @@ export {
 } from './packages/drivers/drivers.js';
 export {
   type TruckEntity,
-  FormLabel,
-  FormName,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
   truckCreateRequestBody,
-  truckIdParameter,
+  truckGetParameters,
   TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,

@@ -1,6 +1,5 @@
+export { FormLabel, FormName } from './form.enum.js';
 export {
-  FormLabel,
-  FormName,
   TruckApiPath,
   TruckCapacity,
   TruckLicensePlateNumber,

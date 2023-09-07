@@ -1,4 +1,4 @@
-import { TruckLicensePlateNumber } from '../libs/enums/enums.js';
+import { TruckLicensePlateNumber } from '../enums/enums.js';
 
 const LICENSE_PLATE_NUMBER = new RegExp(
   `^(?!.*\\s)[\\dA-ZЁА-Я-]{${TruckLicensePlateNumber.MIN},${TruckLicensePlateNumber.MAX}}$`,

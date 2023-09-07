@@ -1,4 +1,3 @@
-export { FormLabel, FormName } from './form.enum.js';
 export { TruckTowType } from './tow-truck-type.enum.js';
 export { TruckCapacity } from './truck-capacity.enum.js';
 export { TruckLicensePlateNumber } from './truck-license-plate-number.enum.js';

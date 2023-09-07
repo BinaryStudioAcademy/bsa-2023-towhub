@@ -1,5 +1,5 @@
 export {
   truckCreateRequestBody,
-  truckIdParameter,
+  truckGetParameters,
   truckUpdateRequestBody,
 } from 'shared/build/index.js';

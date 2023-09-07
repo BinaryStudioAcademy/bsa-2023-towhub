@@ -37,9 +37,7 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
 
 .input:focus {
   border-color: $blue;
-  box-shadow:
-    0 2px 4px -2px rgb(0 44 132 / 6%),
-    0 4px 8px -2px rgb(0 85 255 / 16%);
+  box-shadow: $shadow, $shadow-light;
 }
 
 .input.disabled {

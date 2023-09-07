@@ -117,7 +117,7 @@ const Dropdown = <T extends FieldValues>({
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
         <Select<SelectOption>
-          {...(name && control ? field : {})}
+          {...(name && control && field)}
           options={options}
           classNamePrefix="react-select"
           className={getValidClassNames(inputStyles)}

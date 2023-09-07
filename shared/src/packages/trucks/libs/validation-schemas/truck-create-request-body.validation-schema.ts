@@ -1,6 +1,5 @@
 import joi from 'joi';
 
-import { LICENSE_PLATE_NUMBER } from '../../regex-patterns/regex-patterns.js';
 import {
   TruckCapacity,
   TruckLicensePlateNumber,
@@ -10,6 +9,7 @@ import {
   TruckYear,
 } from '../enums/enums.js';
 import { TruckValidationMessage } from '../enums/truck-validation-message.enum.js';
+import { LICENSE_PLATE_NUMBER } from '../regex-patterns/regex-patterns.js';
 import { type TruckEntity } from '../types/types.js';
 
 const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({

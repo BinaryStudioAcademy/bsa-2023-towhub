@@ -4,12 +4,10 @@ import {
 } from '~/packages/trucks/libs/types/types.js';
 
 function getTruckEntity(payload: TruckFormModel): Omit<TruckEntity, 'id'> {
-  const { ...truckDetails } = payload;
-
   return {
-    ...truckDetails,
-    manufacturer: truckDetails.manufacturer.value,
-    towType: truckDetails.towType.value,
+    ...payload,
+    manufacturer: payload.manufacturer.value,
+    towType: payload.towType.value,
   };
 }
 
