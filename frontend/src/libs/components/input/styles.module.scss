@@ -124,6 +124,18 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   box-shadow: $shadow;
 }
 
+:global(.country-list).phoneDropdown::-webkit-scrollbar {
+  width: 10px;
+  background: $scroll-bar;
+  border-radius: 5px;
+  opacity: 0.5;
+}
+
+:global(.country-list).phoneDropdown::-webkit-scrollbar-thumb {
+  background: $scroll-bar-thumb;
+  border-radius: 5px;
+}
+
 :global(.react-tel-input)
   :global(.country-list)
   :global(.country):global(.highlight),
