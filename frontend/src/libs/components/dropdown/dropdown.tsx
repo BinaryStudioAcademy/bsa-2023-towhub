@@ -11,14 +11,6 @@ import Select, {
 } from 'react-select';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-
-import { useCallback, useMemo, useState } from '~/libs/hooks/hooks.js';
-import { type SelectOption } from '~/libs/types/select-option.type.js';
-
-import styles from './style.module.scss';
-
-type Properties = {
-
 import {
   useCallback,
   useFormController,
@@ -30,10 +22,9 @@ import { type SelectOption } from '~/libs/types/select-option.type.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
-
   options: SelectOption[];
   name?: FieldPath<T>;
-  control?: Control<T, null>;
+  control?: Control<T, null> | undefined;
   errors?: FieldErrors<T>;
   label?: string;
   defaultValue?: SelectOption;
@@ -66,22 +57,9 @@ const Dropdown = <T extends FieldValues>({
   errors,
   defaultValue,
   onChange,
-
   placeholder,
-
-
 }: Properties<T>): JSX.Element => {
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const { field } = useFormController({
-    name: name as FieldPath<T>,
-    control,
-  });
-
-  const error = errors?.[name]?.message;
-  const hasLabel = Boolean(label);
-  const hasError = Boolean(error);
 
   const handleOpenMenu = useCallback(() => {
     setIsMenuOpen(true);
@@ -91,15 +69,21 @@ const Dropdown = <T extends FieldValues>({
     setIsMenuOpen(false);
   }, []);
 
-
   const classNamesConfig = useMemo(
     () => getClassNames(isMenuOpen),
     [isMenuOpen],
   );
 
-  const stylesConfig = useMemo(() => getStyles(isMenuOpen), [isMenuOpen]);
-  const inputStyles = [styles.input, hasError && styles.error];
+  const { field } = useFormController({
+    name: name as FieldPath<T>,
+    control: control ?? undefined,
+  });
 
+  const error = errors?.[name]?.message;
+  const hasLabel = Boolean(label);
+  const hasError = Boolean(error);
+
+  const inputStyles = [styles.input, hasError && styles.error];
 
   const handleChange = useCallback(
     (option: SingleValue<SelectOption>) => {
@@ -112,7 +96,6 @@ const Dropdown = <T extends FieldValues>({
   );
 
   return (
-
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
@@ -121,7 +104,7 @@ const Dropdown = <T extends FieldValues>({
           options={options}
           classNamePrefix="react-select"
           className={getValidClassNames(inputStyles)}
-          styles={stylesConfig}
+          classNames={classNamesConfig}
           isSearchable={false}
           menuIsOpen={isMenuOpen}
           onMenuOpen={handleOpenMenu}
@@ -129,6 +112,7 @@ const Dropdown = <T extends FieldValues>({
           onChange={handleChange}
           defaultValue={defaultValue}
           value={field.value}
+          placeholder={placeholder}
         />
       </span>
       <span
@@ -140,7 +124,6 @@ const Dropdown = <T extends FieldValues>({
         {error as string}
       </span>
     </label>
-
   );
 };
 
