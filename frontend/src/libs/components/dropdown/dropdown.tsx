@@ -131,7 +131,9 @@ const Dropdown = <T extends FieldValues>({
     </label>
   ) : (
     <Select<SelectOption>
+      {...(name && control && field)}
       options={options}
+      classNamePrefix="react-select"
       classNames={classNamesConfig}
       isSearchable={false}
       menuIsOpen={isMenuOpen}
@@ -139,6 +141,7 @@ const Dropdown = <T extends FieldValues>({
       onMenuClose={handleCloseMenu}
       onChange={handleChange}
       defaultValue={defaultValue}
+      value={field?.value}
       placeholder={placeholder}
     />
   );
