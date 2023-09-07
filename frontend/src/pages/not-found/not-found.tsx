@@ -1,16 +1,14 @@
 import { Link } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
 
+import styles from './style.module.scss';
+
 const NotFound = (): JSX.Element => (
-  <div>
-    <h2>
-      Oops, the dreaded <span>404</span>.
-    </h2>
-
-    <p>Let&apos;s get you back on track.</p>
-
-    <Link to={AppRoute.ROOT}>
-      <span>Back to Home page</span>
+  <div className={styles.page}>
+    <h1 className={styles.code}>404</h1>
+    <p className={styles.message}>OOPS! PAGE NOT FOUND</p>
+    <Link className={styles.link} to={AppRoute.WELCOME}>
+      GO TO HOMEPAGE
     </Link>
   </div>
 );
