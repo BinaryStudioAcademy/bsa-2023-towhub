@@ -1,1 +1,1 @@
-export { TemplateNameToView } from './template-name-to-view.map.js';
+export { templateNameToView } from './template-name-to-view.map.js';

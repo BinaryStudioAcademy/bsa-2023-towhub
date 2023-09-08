@@ -1,7 +1,7 @@
 import { type Mailer } from '~/libs/packages/packages.js';
 import { type RequireProperty } from '~/libs/types/types.js';
 
-import { TemplateNameToView } from './libs/maps/maps.js';
+import { templateNameToView } from './libs/maps/maps.js';
 import {
   type MailHeader,
   type TemplateNameValues,
@@ -25,7 +25,7 @@ class MailService {
     viewName: TemplateNameValues,
     viewParameters: unknown,
   ): Promise<void> {
-    const chosenView = TemplateNameToView[viewName];
+    const chosenView = templateNameToView[viewName];
     await this.mailer
       .transporter()
       .sendMail({ ...header, html: chosenView.render(viewParameters) });
