@@ -25,6 +25,16 @@ class UserService implements IService<UserEntityObjectT> {
     return result.map((item) => UserEntity.initialize(item).toObject());
   }
 
+  public async findByPhoneOrEmail(
+    phone: UserEntityT['phone'],
+    email: UserEntityT['email'],
+  ): Promise<(UserEntityT & { createdAt: Date; updatedAt: Date }) | null> {
+    return await this.userRepository.findByPhoneOrEmail({
+      phone,
+      email,
+    });
+  }
+
   public async findByPhone(
     phone: UserEntityT['phone'],
   ): Promise<UserEntityObjectWithGroupT | null> {
@@ -117,7 +127,7 @@ class UserService implements IService<UserEntityObjectT> {
       Object.assign(updated, encryptedPassword);
     }
 
-    const result = await this.userRepository.update(id, payload);
+    const result = await this.userRepository.update(id, updated);
 
     return UserEntity.initialize(result).toObject();
   }
