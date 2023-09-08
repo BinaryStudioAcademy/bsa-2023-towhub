@@ -7,7 +7,7 @@ import { ReactComponent as RedCircle } from '~/assets/img/order-card/red-circle.
 import { PlainSvgIconName } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
-const iconNameToPlainSvgMap: Record<
+const iconNameToPlainSvg: Record<
   ValueOf<typeof PlainSvgIconName>,
   JSX.Element
 > = {
@@ -19,4 +19,4 @@ const iconNameToPlainSvgMap: Record<
   [PlainSvgIconName.RED_CIRCLE]: <RedCircle />,
 };
 
-export { iconNameToPlainSvgMap };
+export { iconNameToPlainSvg };

@@ -1,5 +1,5 @@
 import { type HttpMethod } from '~/libs/packages/http/libs/enums/http-method.enum.js';
-import { type ValueOf } from '~/libs/types/value-of.type';
+import { type ValueOf } from '~/libs/types/value-of.type.js';
 
 type HttpOptions = {
   method: ValueOf<typeof HttpMethod>;
