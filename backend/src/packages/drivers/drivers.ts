@@ -1,5 +1,5 @@
 import { database, schema } from '~/libs/packages/database/database.js';
-import { geolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
+import { GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { DriverRepository } from '~/packages/drivers/driver.repository.js';
 
 import { groupService } from '../groups/groups.js';
@@ -11,7 +11,7 @@ const driverService = new DriverService({
   driverRepository,
   userService,
   groupService,
-  geolocationCacheService,
+  geolocationCacheService: GeolocationCacheService.getInstance(),
 });
 
 export { driverRepository, driverService };

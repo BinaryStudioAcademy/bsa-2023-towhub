@@ -136,11 +136,11 @@ class BusinessService implements IService {
     return await this.driverService.create({ payload, businessId });
   }
 
-  public async updateDriver({
+  public updateDriver({
     driverId,
     payload,
   }: DriverUpdatePayload): Promise<DriverCreateUpdateResponseDto> {
-    return await this.driverService.update({
+    return this.driverService.update({
       driverId,
       payload,
     });

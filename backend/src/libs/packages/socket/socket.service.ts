@@ -1,7 +1,7 @@
 import { type FastifyInstance } from 'fastify/types/instance';
 import { Server as SocketServer } from 'socket.io';
 
-import { type GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.package';
+import { type GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { logger } from '~/libs/packages/logger/logger.js';
 
 import { ServerSocketEvent } from './libs/enums/enums.js';
