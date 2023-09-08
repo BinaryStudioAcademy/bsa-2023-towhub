@@ -1,10 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 
-import { addTruck } from './actions.js';
+import { addTruck, findAllTrucksForBusiness } from './actions.js';
 
 type State = {
   trucks: TruckEntity[];
@@ -22,16 +22,26 @@ const { reducer, actions, name } = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(addTruck.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
       .addCase(addTruck.fulfilled, (state, action) => {
         state.trucks.push(action.payload);
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(addTruck.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
-      });
+      .addCase(findAllTrucksForBusiness.fulfilled, (state, action) => {
+        state.trucks = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addMatcher(
+        isAnyOf(addTruck.pending, findAllTrucksForBusiness.pending),
+        (state) => {
+          state.dataStatus = DataStatus.PENDING;
+        },
+      )
+      .addMatcher(
+        isAnyOf(addTruck.rejected, findAllTrucksForBusiness.rejected),
+        (state) => {
+          state.dataStatus = DataStatus.REJECTED;
+        },
+      );
   },
 });
 

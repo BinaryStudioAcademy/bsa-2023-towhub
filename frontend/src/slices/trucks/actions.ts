@@ -15,4 +15,14 @@ const addTruck = createAsyncThunk<
   return truckApi.addTruck(payload);
 });
 
-export { addTruck };
+const findAllTrucksForBusiness = createAsyncThunk<
+  TruckEntity[],
+  number,
+  AsyncThunkConfig
+>(`${sliceName}/find-all-trucks-for-business`, (businessId, { extra }) => {
+  const { businessApi } = extra;
+
+  return businessApi.findAllTrucksByBusinessId(businessId);
+});
+
+export { addTruck, findAllTrucksForBusiness };

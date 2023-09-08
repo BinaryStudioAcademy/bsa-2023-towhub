@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 type Properties = {
   isHeaderHidden?: boolean;
   isSidebarHidden?: boolean;
-  children: JSX.Element;
+  children: (selectedTab: TabName) => JSX.Element | JSX.Element;
 };
 
 const PageLayout: FC<Properties> = ({
@@ -37,7 +37,10 @@ const PageLayout: FC<Properties> = ({
           <Sidebar selectedTab={selectedTab} onTabClick={handleTabSelect} />
         </div>
       )}
-      <main className={styles.content}>{children}</main>
+      <main className={styles.content}>
+        {' '}
+        {typeof children === 'function' ? children(selectedTab) : children}
+      </main>
     </div>
   );
 };
