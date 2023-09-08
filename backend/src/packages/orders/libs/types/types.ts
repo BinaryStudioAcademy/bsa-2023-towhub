@@ -1,4 +1,5 @@
 export {
+  type Id,
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
   type OrderEntity,

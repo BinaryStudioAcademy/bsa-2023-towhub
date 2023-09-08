@@ -1,12 +1,3 @@
-import {
-  type Id,
-  type UserEntityObjectWithGroupT,
-  orderCreateRequestBody,
-  orderGetParameter,
-  orderUpdateRequestBody,
-  UserGroupKey,
-} from 'shared/build/index.js';
-
 import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
@@ -20,13 +11,20 @@ import { type OrderService } from '~/packages/orders/order.service.js';
 import { AuthStrategy } from '../auth/auth.js';
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
-import { OrdersApiPath } from './libs/enums/enums.js';
-import { BusinessNotExist } from './libs/exceptions/business-not-exist.js';
+import { type UserEntityObjectWithGroupT } from '../users/users.js';
+import { OrdersApiPath, UserGroupKey } from './libs/enums/enums.js';
 import { DriverNotExist } from './libs/exceptions/driver-not-exist.js';
+import { BusinessNotExist } from './libs/exceptions/exceptions.js';
 import {
+  type Id,
   type OrderCreateRequestDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
+import {
+  orderCreateRequestBody,
+  orderGetParameter,
+  orderUpdateRequestBody,
+} from './libs/validation-schemas/validation-schemas.js';
 
 /**
  * @swagger
