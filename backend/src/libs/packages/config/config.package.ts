@@ -31,11 +31,11 @@ class Config implements IConfig {
 
   private get envSchema(): TConfig<EnvironmentSchema> {
     convict.addFormat({
-      name: 'boolean',
-      validate: (value: string) => {
-        if (typeof value !== 'boolean') {
+      name: 'boolean_string',
+      validate: (value: string, schema: convict.SchemaObj) => {
+        if (value !== 'true' && value !== 'false') {
           throw new ConfigValidationError({
-            message: 'Invalid SMTP_TLS format',
+            message: `Invalid ${schema.env ?? ''} format`,
           });
         }
       },
@@ -43,10 +43,10 @@ class Config implements IConfig {
 
     convict.addFormat({
       name: 'email',
-      validate: (value: string) => {
+      validate: (value: string, schema: convict.SchemaObj) => {
         if (!FormatRegex.EMAIL.test(value)) {
           throw new ConfigValidationError({
-            message: 'Invalid Sendgrid sender email format',
+            message: `Invalid ${schema.env ?? ''} format`,
           });
         }
       },
@@ -123,7 +123,7 @@ class Config implements IConfig {
         SMTP_TLS: {
           doc: 'Whether SMTP connection uses TLS',
           env: 'SMTP_TLS',
-          format: 'boolean',
+          format: 'boolean_string',
           default: true,
         },
         SENDGRID_SENDER_EMAIL: {

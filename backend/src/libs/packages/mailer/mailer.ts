@@ -5,7 +5,13 @@ import { Mailer } from './mailer.package.js';
 
 const mailer = new Mailer({ config, logger });
 
-await mailer.connect();
+try {
+  await mailer.connect();
+  logger.info('Mailer service started');
+} catch (error) {
+  logger.error('Mailer service: error during the startup!');
+  logger.error(JSON.stringify(error));
+}
 
 export { mailer };
 export { Mailer } from './mailer.package.js';
