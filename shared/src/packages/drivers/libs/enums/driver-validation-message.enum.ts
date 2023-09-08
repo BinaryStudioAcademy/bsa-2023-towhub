@@ -5,6 +5,8 @@ const DriverValidationMessage = {
   BUSINESS_ID_MUST_BE_NUMBER: 'Driver user id must be number',
   UPDATE_AT_LEAST_ONE_FIELD:
     'Update fields are empty, there is nothing to update',
+  PAGE_SIZE_MUST_BE_NUMBER: 'Page size must be number',
+  PAGE_INDEX_MUST_BE_NUMBER: 'Page index must be number',
 } as const;
 
 export { DriverValidationMessage };

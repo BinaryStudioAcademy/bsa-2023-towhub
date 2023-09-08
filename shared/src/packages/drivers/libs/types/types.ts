@@ -4,6 +4,7 @@ export { type DriverDto } from './driver-dto.type.js';
 export { type DriverEntity } from './driver-entity.type.js';
 export {
   type BusinessGetAllDriversRequestParameters,
+  type BusinessGetDriversPageRequestParameters,
   type DriverCreateUpdateRequestDto,
   type DriverGetRequestParameters,
   type DriverUpdateDeleteRequestParameters,
@@ -11,8 +12,10 @@ export {
 export {
   type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
+  type DriverWithUserData,
 } from './response/response.js';
 export {
   type DriverAddPayload,
+  type DriverGetDriversPagePayload,
   type DriverUpdatePayload,
 } from './service/service.js';
