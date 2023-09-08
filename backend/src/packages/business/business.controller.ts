@@ -1,3 +1,5 @@
+import { type BusinessGetDriversPageRequestParameters } from 'shared/build/index.js';
+
 import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
@@ -15,6 +17,7 @@ import {
 } from '../drivers/drivers.js';
 import {
   driverCreateUpdateRequestBody,
+  driverGetPageParameters,
   driverGetParameters,
   driverUpdateDeleteParameters,
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
@@ -365,6 +368,21 @@ class BusinessController extends Controller {
         this.deleteDriver(
           options as ApiHandlerOptions<{
             params: DriverUpdateDeleteRequestParameters;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.DRIVERS_BY_PAGE,
+      method: 'GET',
+      authStrategy: defaultStrategies,
+      validation: {
+        params: driverGetPageParameters,
+      },
+      handler: (options) =>
+        this.getDriversPage(
+          options as ApiHandlerOptions<{
+            params: BusinessGetDriversPageRequestParameters;
           }>,
         ),
     });
@@ -789,6 +807,21 @@ class BusinessController extends Controller {
     return {
       status: HttpCode.OK,
       payload: deletionResult,
+    };
+  }
+
+  private async getDriversPage(
+    options: ApiHandlerOptions<{
+      params: BusinessGetDriversPageRequestParameters;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const drivers = await this.businessService.findPageOfDrivers({
+      ...options.params,
+    });
+
+    return {
+      status: HttpCode.OK,
+      payload: drivers,
     };
   }
 }

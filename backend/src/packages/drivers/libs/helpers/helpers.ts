@@ -1,24 +1,24 @@
-import { type UserEntityT } from 'shared/build';
+import {
+  type DriverWithUserData,
+  HttpCode,
+  HttpError,
+  HttpMessage,
+} from 'shared/build/index.js';
 
-const convertToDriverUser = ({
-  id,
-  phone,
-  email,
-  firstName,
-  lastName,
-  groupId,
-}: UserEntityT): Omit<
-  UserEntityT,
-  'passwordHash' | 'passwordSalt' | 'accessToken'
-> => {
-  return {
-    id,
-    phone,
-    email,
-    firstName,
-    lastName,
-    groupId,
-  };
+import { type DriverEntity } from '../../driver.entity.js';
+
+const convertToDriverUser = (driver: DriverEntity): DriverWithUserData => {
+  const { user, ...pureDriver } = driver.toObjectWithUser();
+
+  if (!user) {
+    throw new HttpError({
+      status: HttpCode.BAD_REQUEST,
+      message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+    });
+  }
+  const { id, phone, email, firstName, lastName, groupId } = user;
+
+  return { id, phone, email, firstName, lastName, groupId, driver: pureDriver };
 };
 
 export { convertToDriverUser };

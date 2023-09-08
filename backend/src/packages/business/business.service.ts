@@ -1,3 +1,5 @@
+import { type DriverGetDriversPagePayload } from 'shared/build/index.js';
+
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
@@ -150,6 +152,12 @@ class BusinessService implements IService {
     id: number,
   ): Promise<DriverGetAllResponseDto> {
     return this.driverService.findAllByBusinessId(id);
+  }
+
+  public findPageOfDrivers(
+    payload: DriverGetDriversPagePayload,
+  ): Promise<DriverGetAllResponseDto> {
+    return this.driverService.findPageOfDrivers(payload);
   }
 
   public deleteDriver(driverId: number): Promise<boolean> {

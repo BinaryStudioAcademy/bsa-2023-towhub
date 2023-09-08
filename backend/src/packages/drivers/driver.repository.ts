@@ -56,6 +56,25 @@ class DriverRepository implements IRepository {
     return drivers.map((it) => DriverEntity.initialize(it));
   }
 
+  public async findPageOfDrivers(
+    businessId: number,
+    pageIndex: number,
+    pageSize: number,
+  ): Promise<DriverEntity[]> {
+    const offset = pageIndex * pageSize;
+    const drivers = await this.db
+      .driver()
+      .query.drivers.findMany({
+        limit: pageSize,
+        offset,
+        where: eq(this.driverSchema.businessId, businessId),
+        with: { user: true },
+      })
+      .execute();
+
+    return drivers.map((it) => DriverEntity.initialize(it));
+  }
+
   public async checkExists({
     driverLicenseNumber,
     userId,

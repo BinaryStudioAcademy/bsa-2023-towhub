@@ -1,3 +1,5 @@
+import { type DriverGetDriversPagePayload } from 'shared/build/index.js';
+
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
@@ -42,22 +44,26 @@ class DriverService implements IService {
   public async findAllByBusinessId(
     businessId: number,
   ): Promise<DriverGetAllResponseDto> {
-    const data = await this.driverRepository.findAllByBusinessId(businessId);
-    const items = data.map((element) => {
-      const { user, ...pureDriver } = element.toObjectWithUser();
-
-      if (!user) {
-        throw new HttpError({
-          status: HttpCode.BAD_REQUEST,
-          message: HttpMessage.DRIVER_DOES_NOT_EXIST,
-        });
-      }
-
-      return { ...convertToDriverUser(user), driver: pureDriver };
-    });
+    const items = await this.driverRepository.findAllByBusinessId(businessId);
 
     return {
-      items,
+      items: items.map((item) => convertToDriverUser(item)),
+    };
+  }
+
+  public async findPageOfDrivers({
+    businessId,
+    pageIndex,
+    pageSize,
+  }: DriverGetDriversPagePayload): Promise<DriverGetAllResponseDto> {
+    const items = await this.driverRepository.findPageOfDrivers(
+      businessId,
+      pageIndex,
+      pageSize,
+    );
+
+    return {
+      items: items.map((item) => convertToDriverUser(item)),
     };
   }
 
