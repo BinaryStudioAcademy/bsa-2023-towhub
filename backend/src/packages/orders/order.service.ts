@@ -1,8 +1,9 @@
+import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
+import { HttpMessage } from '~/libs/packages/http/http.js';
 
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
-import { OrderNotFound } from './libs/exceptions/order-not-found.js';
 import {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
@@ -60,7 +61,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     const foundOrder = await this.orderRepository.findById(id);
 
     if (!foundOrder) {
-      throw new OrderNotFound();
+      throw new NotFoundError({});
     }
 
     return foundOrder.toObject();
@@ -73,7 +74,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     const updatedOrder = await this.orderRepository.update(parameters);
 
     if (!updatedOrder) {
-      throw new OrderNotFound();
+      throw new NotFoundError({});
     }
 
     return updatedOrder.toObject();
@@ -106,11 +107,14 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
   public async updateOne(parameters: {
     id: OrderEntityT['id'];
     payload: OrderUpdateRequestDto;
-    driverId: number | undefined;
+    driverId?: number;
   }): Promise<OrderUpdateResponseDto> {
+    if (!parameters.driverId) {
+      throw new NotFoundError({});
+    }
     const foundOrder = await this.orderRepository.findById(parameters.id);
 
-    if (parameters.driverId && foundOrder) {
+    if (foundOrder) {
       this.verifyOrderBelongsToDriver(
         foundOrder.toObject(),
         parameters.driverId,
@@ -138,7 +142,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     const foundOrder = await this.findById(id);
 
     if (!foundOrder) {
-      throw new OrderNotFound();
+      throw new NotFoundError({});
     }
 
     return await this.orderRepository.delete(id);
@@ -153,7 +157,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     }
 
     if (foundOrder.driverId !== driverId) {
-      throw new OrderNotFound();
+      throw new NotFoundError({});
     }
   }
 
@@ -166,7 +170,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     }
 
     if (foundOrder.businessId !== businessId) {
-      throw new OrderNotFound();
+      throw new NotFoundError({});
     }
   }
 
@@ -183,7 +187,7 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
       (foundOrder.customerPhone && foundOrder.customerPhone === phone);
 
     if (!orderBelongsToUser) {
-      throw new OrderNotFound();
+      throw new NotFoundError({});
     }
   }
 }

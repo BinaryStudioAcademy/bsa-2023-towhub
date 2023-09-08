@@ -231,7 +231,10 @@ class OrderController extends Controller {
     this.addRoute({
       path: OrdersApiPath.ROOT,
       method: 'GET',
-      authStrategy: AuthStrategy.VERIFY_JWT,
+      authStrategy: [
+        AuthStrategy.VERIFY_JWT,
+        AuthStrategy.VERIFY_BUSINESS_GROUP,
+      ],
       handler: (options) =>
         this.findAllBusinessOrders(
           options as ApiHandlerOptions<{
@@ -258,8 +261,8 @@ class OrderController extends Controller {
 
     this.addRoute({
       path: OrdersApiPath.$ID,
-      method: 'POST',
-      authStrategy: AuthStrategy.VERIFY_JWT,
+      method: 'PUT',
+      authStrategy: [AuthStrategy.VERIFY_JWT, AuthStrategy.VERIFY_DRIVER_GROUP],
       validation: {
         params: orderGetParameter,
         body: orderUpdateRequestBody,
@@ -433,7 +436,7 @@ class OrderController extends Controller {
   /**
    * @swagger
    * /orders/{id}:
-   *    post:
+   *    put:
    *      tags:
    *       - orders
    *      summary: Update order by Id

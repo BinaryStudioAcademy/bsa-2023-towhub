@@ -13,7 +13,7 @@ const combineFilters = <TSchema extends Table>(
     .filter(([, v]) => v)
     .map(([field, value]) => {
       return eq(schema[field as keyof TSchema], value);
-    });
+    }) ;
 
   return and(...eqs);
 };
