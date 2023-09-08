@@ -81,7 +81,7 @@ const Dropdown = <T extends FieldValues>({
   onChange,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [value, setValue] = useState(defaultValue);
   const { field } = useFormController({
     name: name as FieldPath<T>,
     control,
@@ -107,7 +107,8 @@ const Dropdown = <T extends FieldValues>({
       if (onChange) {
         onChange(option?.value);
       }
-      field.onChange(option);
+      option && setValue(option);
+      field.onChange(option?.value);
     },
     [onChange, field],
   );
@@ -128,7 +129,7 @@ const Dropdown = <T extends FieldValues>({
           onMenuClose={handleCloseMenu}
           onChange={handleChange}
           defaultValue={defaultValue}
-          value={field.value}
+          value={value}
         />
       </span>
       <span
