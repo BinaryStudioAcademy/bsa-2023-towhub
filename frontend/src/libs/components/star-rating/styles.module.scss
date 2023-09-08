@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+}
+
+.star {
+  position: relative;
+}
+
+.inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  overflow: hidden;
+  color: #ffd12d;
+  white-space: nowrap;
+}
