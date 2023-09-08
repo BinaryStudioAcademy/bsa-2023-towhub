@@ -2,6 +2,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import fastifyAuth from '@fastify/auth';
+import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import swagger, { type StaticDocumentSpec } from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
@@ -81,7 +82,15 @@ class ServerApp implements IServerApp {
     strategy?: AuthStrategyHandler,
   ): undefined | preHandlerHookHandler {
     if (Array.isArray(strategy)) {
-      return this.app.auth(strategy);
+      const strategies = [];
+
+      for (const it of strategy) {
+        if (typeof it === 'string' && it in this.app) {
+          strategies.push(this.app[it]);
+        }
+      }
+
+      return this.app.auth(strategies, { relation: 'and' });
     }
 
     if (typeof strategy === 'string' && strategy in this.app) {
@@ -119,6 +128,12 @@ class ServerApp implements IServerApp {
 
         await this.app.register(swaggerUi, {
           routePrefix: `${it.version}/documentation`,
+        });
+
+        await this.app.register(cors, {
+          origin: '*',
+          methods: 'GET,PUT,POST,DELETE',
+          allowedHeaders: 'Content-Type',
         });
       }),
     );

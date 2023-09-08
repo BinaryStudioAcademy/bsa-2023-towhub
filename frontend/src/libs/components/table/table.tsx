@@ -1,12 +1,15 @@
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  useCallback,
   useReactTable,
 } from '~/libs/hooks/hooks.js';
 import { type ColumnDef } from '~/libs/types/types.js';
 
 import { Pagination } from '../pagination/pagination.jsx';
+import { DEFAULT_COLUMN } from './libs/constant.js';
 import styles from './styles.module.scss';
 
 type Properties<T> = {
@@ -32,6 +35,8 @@ const Table = <T,>({
   const table = useReactTable({
     data,
     columns,
+    columnResizeMode: 'onChange',
+    defaultColumn: DEFAULT_COLUMN,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
@@ -41,18 +46,43 @@ const Table = <T,>({
     },
   });
 
+  const handleChangePageSize = useCallback(
+    (value: number) => {
+      changePageIndex(0);
+      changePageSize(value);
+      table.setPageSize(value);
+    },
+    [changePageSize, table, changePageIndex],
+  );
+
   const createThead = (): JSX.Element => (
     <thead className={styles.thead}>
       {table.getHeaderGroups().map((headerGroup) => (
         <tr key={headerGroup.id} className={styles.tr}>
           {headerGroup.headers.map((header) => (
-            <th key={header.id} className={styles.th}>
+            <th
+              key={header.id}
+              className={styles.th}
+              style={{
+                width: header.getSize(),
+              }}
+            >
               {header.isPlaceholder
                 ? null
                 : flexRender(
                     header.column.columnDef.header,
                     header.getContext(),
                   )}
+              <div
+                {...{
+                  onMouseDown: header.getResizeHandler(),
+                  onTouchStart: header.getResizeHandler(),
+                  className: getValidClassNames(
+                    styles.resizer,
+                    header.column.getIsResizing() && styles.isResizing,
+                  ),
+                }}
+              />
             </th>
           ))}
         </tr>
@@ -65,7 +95,13 @@ const Table = <T,>({
       {table.getRowModel().rows.map((row) => (
         <tr key={row.id} className={styles.tr}>
           {row.getVisibleCells().map((cell) => (
-            <td key={cell.id} className={styles.td}>
+            <td
+              key={cell.id}
+              className={styles.td}
+              style={{
+                width: cell.column.getSize(),
+              }}
+            >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </td>
           ))}
@@ -76,14 +112,19 @@ const Table = <T,>({
 
   return (
     <div className={styles.container}>
-      <table className={styles.table}>
+      <table
+        className={styles.table}
+        style={{
+          width: table.getCenterTotalSize(),
+        }}
+      >
         {createThead()}
         {createTbody()}
       </table>
       <Pagination
         pageCount={pagesRange}
         onClick={changePageIndex}
-        onChangePageSize={changePageSize}
+        onChangePageSize={handleChangePageSize}
         pageIndex={pageIndex}
         pageSize={pageSize}
       />

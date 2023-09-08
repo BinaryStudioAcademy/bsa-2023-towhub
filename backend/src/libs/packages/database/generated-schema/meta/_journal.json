@@ -36,6 +36,27 @@
       "when": 1693406907945,
       "tag": "0004_email_unique_index",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1693736656473,
+      "tag": "0005_create_table_driver_details",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1693992300427,
+      "tag": "0006_create_trucks_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1694154185364,
+      "tag": "0007_del_comp_name_unique_idx",
+      "breakpoints": true
     }
   ]
 }
