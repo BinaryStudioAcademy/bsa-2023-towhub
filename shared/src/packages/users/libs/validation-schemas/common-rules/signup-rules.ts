@@ -30,7 +30,7 @@ const signUpRules = {
     .trim()
     .min(Rule.EMAIL_MIN_LENGTH)
     .max(Rule.EMAIL_MAX_LENGTH)
-    .email({ tlds: { allow: false } })
+    .email({ tlds: { allow: false }, ignoreLength: true })
     .required()
     .messages({
       'string.empty': Message.FIELD_IS_REQUIRED,

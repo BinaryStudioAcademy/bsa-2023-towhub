@@ -2,6 +2,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import fastifyAuth from '@fastify/auth';
+import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import swagger, { type StaticDocumentSpec } from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
@@ -128,6 +129,12 @@ class ServerApp implements IServerApp {
 
         await this.app.register(swaggerUi, {
           routePrefix: `${it.version}/documentation`,
+        });
+
+        await this.app.register(cors, {
+          origin: '*',
+          methods: 'GET,PUT,POST,DELETE',
+          allowedHeaders: 'Content-Type',
         });
       }),
     );
