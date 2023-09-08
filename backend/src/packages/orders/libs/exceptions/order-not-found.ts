@@ -1,9 +1,9 @@
-import { HttpCode, HttpError, HttpMessage } from 'shared/build/index.js';
+import { HttpMessage } from '~/libs/enums/enums.js';
+import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 
-class OrderNotFound extends HttpError {
+class OrderNotFound extends NotFoundError {
   public constructor() {
     super({
-      status: HttpCode.NOT_FOUND,
       message: HttpMessage.ORDER_DOES_NOT_EXIST,
     });
   }

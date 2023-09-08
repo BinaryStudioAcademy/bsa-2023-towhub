@@ -86,7 +86,6 @@ export {
   ORDER_STATUSES,
   orderCreateRequestBody,
   orderGetParameter,
-  orderGetQueryParameters,
   OrdersApiPath,
   OrderStatus,
   OrdersValidationMessage,

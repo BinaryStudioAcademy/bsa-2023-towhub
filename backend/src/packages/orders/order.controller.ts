@@ -3,7 +3,6 @@ import {
   type UserEntityObjectWithGroupT,
   orderCreateRequestBody,
   orderGetParameter,
-  orderGetQueryParameters,
   orderUpdateRequestBody,
   UserGroupKey,
 } from 'shared/build/index.js';
@@ -22,6 +21,7 @@ import { AuthStrategy } from '../auth/auth.js';
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import { OrdersApiPath } from './libs/enums/enums.js';
+import { BusinessNotExist } from './libs/exceptions/business-not-exist.js';
 import { DriverNotExist } from './libs/exceptions/driver-not-exist.js';
 import {
   type OrderCreateRequestDto,
@@ -190,6 +190,15 @@ import {
  *               type: string
  *               enum:
  *                 - Driver does not exist!
+ *     BusinessNotExistError:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - Business does not exist!
  *
  */
 
@@ -222,15 +231,11 @@ class OrderController extends Controller {
     this.addRoute({
       path: OrdersApiPath.ROOT,
       method: 'GET',
-      authStrategy: AuthStrategy.INJECT_USER,
-      validation: {
-        query: orderGetQueryParameters,
-      },
+      authStrategy: AuthStrategy.VERIFY_JWT,
       handler: (options) =>
-        this.find(
+        this.findAllBusinessOrders(
           options as ApiHandlerOptions<{
-            query: { businessId: string; userId: string; driverId: string };
-            user: UserEntityObjectWithGroupT | null;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -243,7 +248,7 @@ class OrderController extends Controller {
         params: orderGetParameter,
       },
       handler: (options) =>
-        this.findById(
+        this.findOne(
           options as ApiHandlerOptions<{
             params: Id;
             user: UserEntityObjectWithGroupT | null;
@@ -260,7 +265,7 @@ class OrderController extends Controller {
         body: orderUpdateRequestBody,
       },
       handler: (options) =>
-        this.update(
+        this.updateOne(
           options as ApiHandlerOptions<{
             params: Id;
             body: OrderUpdateRequestDto;
@@ -344,7 +349,7 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const driver = await this.driverService.findByUserId(options.body.driverId);
+    const driver = await this.driverService.findById(options.body.driverId);
 
     if (!driver) {
       throw new DriverNotExist();
@@ -368,13 +373,6 @@ class OrderController extends Controller {
    *       - orders
    *      summary: Get order by Id
    *      description: Get order by Id
-   *      requestBody:
-   *        content:
-   *          application/json:
-   *            schema:
-   *              oneOf:
-   *                - $ref: '#/components/schemas/Order/CreateOrderWithRegisteredUser'
-   *                - $ref: '#/components/schemas/Order/CreateOrderWithNotRegisteredUser'
    *      parameters:
    *       - in: path
    *         name: id
@@ -410,18 +408,25 @@ class OrderController extends Controller {
    *                $ref: '#/components/schemas/UnauthorizedError'
    *
    */
-  private async findById(
+  private async findOne(
     options: ApiHandlerOptions<{
       params: Id;
       user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse> {
+    let business;
+
+    if (options.user?.group.key === UserGroupKey.BUSINESS) {
+      business = await this.businessService.findByOwnerId(options.user.id);
+    }
+
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findById(
-        options.params.id,
-        options.user,
-      ),
+      payload: await this.orderService.findOne({
+        id: options.params.id,
+        user: options.user,
+        businessId: business?.id,
+      }),
     };
   }
 
@@ -474,7 +479,7 @@ class OrderController extends Controller {
    *                $ref: '#/components/schemas/UnauthorizedError'
    *
    */
-  private async update(
+  private async updateOne(
     options: ApiHandlerOptions<{
       params: Id;
       body: OrderUpdateRequestDto;
@@ -485,7 +490,7 @@ class OrderController extends Controller {
 
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.update({
+      payload: await this.orderService.updateOne({
         id: options.params.id,
         payload: options.body,
         driverId: driver?.id,
@@ -498,29 +503,9 @@ class OrderController extends Controller {
    *    get:
    *      tags:
    *       - orders
-   *      summary: Get order by parameters
-   *      description: Get order by parameters
-   *      parameters:
-   *       - in: query
-   *         name: userId
-   *         schema:
-   *           type: integer
-   *         description: user ID of the order to find
-   *         example: 1
-   *       - in: query
-   *         name: driverId
-   *         schema:
-   *           type: integer
-   *         description: driver ID of the order to find
-   *         example: 1
-   *       - in: query
-   *         name: businessId
-   *         schema:
-   *           type: integer
-   *         description: business ID of the order to find
-   *         example: 1
+   *      summary: Get all business orders
+   *      description: Get all business orders
    *      security:
-   *        - {}
    *        - bearerAuth: []
    *      responses:
    *        200:
@@ -542,29 +527,31 @@ class OrderController extends Controller {
    *            plain/text:
    *              schema:
    *                $ref: '#/components/schemas/UnauthorizedError'
-   *
+   *        400:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/BusinessNotExistError'
    */
 
-  private async find(
+  private async findAllBusinessOrders(
     options: ApiHandlerOptions<{
-      query: { businessId: string; userId: string; driverId: string };
-      user: UserEntityObjectWithGroupT | null;
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    let businessId;
+    const business = await this.businessService.findByOwnerId(options.user.id);
 
-    if (options.user?.group.key === UserGroupKey.BUSINESS) {
-      businessId = await this.businessService.findByOwnerId(options.user.id);
+    if (!business) {
+      throw new BusinessNotExist();
     }
 
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.find({
-        userId: options.query.userId,
-        businessId: options.query.businessId,
-        driverId: options.query.driverId,
-        currentUserId: options.user?.id ?? null,
-        currentUserBusinessId: businessId?.id,
+      payload: await this.orderService.findAllBusinessOrders({
+        currentUserBusinessId: business.id,
       }),
     };
   }
@@ -617,16 +604,11 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const result = await this.orderService.delete(
-      options.params.id,
-      options.user,
-    );
+    const result = await this.orderService.delete(options.params.id);
 
     return {
       status: HttpCode.OK,
-      payload: {
-        result,
-      },
+      payload: result,
     };
   }
 }

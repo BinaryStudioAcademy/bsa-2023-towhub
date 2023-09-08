@@ -1,19 +1,19 @@
-import { type UserEntityObjectWithGroupT } from 'shared/build/index.js';
-
 import { type IService } from '~/libs/interfaces/interfaces.js';
 
-import { OrderStatus } from './libs/enums/enums.js';
+import { type UserEntityObjectWithGroupT } from '../users/users.js';
+import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import { OrderNotFound } from './libs/exceptions/order-not-found.js';
 import {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
   type OrderEntity as OrderEntityT,
+  type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
 } from './libs/types/types.js';
 import { OrderEntity } from './order.entity.js';
 import { type OrderRepository } from './order.repository.js';
 
-class OrderService implements Omit<IService, 'delete' | 'findById'> {
+class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
   private orderRepository: OrderRepository;
 
   public constructor(orderRepository: OrderRepository) {
@@ -56,27 +56,56 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     return order.toObject();
   }
 
-  public async findById(
-    id: OrderEntityT['id'],
-    user: UserEntityObjectWithGroupT | null | undefined,
-  ): Promise<OrderEntityT | null> {
+  public async findById(id: OrderEntityT['id']): Promise<OrderEntityT | null> {
     const foundOrder = await this.orderRepository.findById(id);
 
     if (!foundOrder) {
       throw new OrderNotFound();
     }
-    const result = foundOrder.toObject();
 
-    if (user) {
-      this.verifyOrderBelongsToUser(result, user);
-    }
-
-    return result;
+    return foundOrder.toObject();
   }
 
   public async update(parameters: {
     id: OrderEntityT['id'];
-    payload: Partial<OrderEntityT>;
+    payload: OrderUpdateRequestDto;
+  }): Promise<OrderUpdateResponseDto> {
+    const updatedOrder = await this.orderRepository.update(parameters);
+
+    if (!updatedOrder) {
+      throw new OrderNotFound();
+    }
+
+    return updatedOrder.toObject();
+  }
+
+  public async findOne({
+    id,
+    user,
+    businessId,
+  }: {
+    id: OrderEntityT['id'];
+    user: UserEntityObjectWithGroupT | null;
+    businessId?: number;
+  }): Promise<OrderEntityT | null> {
+    const foundOrder = await this.findById(id);
+
+    if (user?.group.key === UserGroupKey.BUSINESS && businessId) {
+      this.verifyOrderBelongsToBusiness(foundOrder, businessId);
+
+      return foundOrder;
+    }
+
+    if (user) {
+      this.verifyOrderBelongsToUser(foundOrder, user);
+    }
+
+    return foundOrder;
+  }
+
+  public async updateOne(parameters: {
+    id: OrderEntityT['id'];
+    payload: OrderUpdateRequestDto;
     driverId: number | undefined;
   }): Promise<OrderUpdateResponseDto> {
     const foundOrder = await this.orderRepository.findById(parameters.id);
@@ -88,32 +117,16 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
       );
     }
 
-    const updatedOrder = await this.orderRepository.update(parameters);
-
-    if (!updatedOrder) {
-      throw new OrderNotFound();
-    }
-
-    return updatedOrder.toObject();
+    return await this.update(parameters);
   }
 
-  public async find({
-    userId,
-    businessId,
-    driverId,
-    currentUserBusinessId,
-    currentUserId,
+  public async findAllBusinessOrders({
+    currentUserBusinessId: businessId,
   }: {
-    userId?: string;
-    businessId?: string;
-    driverId?: string;
-    currentUserBusinessId?: number;
-    currentUserId: number | null;
+    currentUserBusinessId: number;
   }): Promise<{ items: OrderEntityT[] }> {
     const usersOrders = await this.orderRepository.find({
-      userId: Number(currentUserBusinessId ? userId : currentUserId),
-      businessId: Number(currentUserBusinessId ?? businessId),
-      driverId: Number(driverId),
+      businessId,
     });
 
     return {
@@ -121,11 +134,8 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     };
   }
 
-  public async delete(
-    id: OrderEntityT['id'],
-    user: UserEntityObjectWithGroupT,
-  ): Promise<boolean> {
-    const foundOrder = await this.findById(id, user);
+  public async delete(id: OrderEntityT['id']): Promise<boolean> {
+    const foundOrder = await this.findById(id);
 
     if (!foundOrder) {
       throw new OrderNotFound();
@@ -143,6 +153,19 @@ class OrderService implements Omit<IService, 'delete' | 'findById'> {
     }
 
     if (foundOrder.driverId !== driverId) {
+      throw new OrderNotFound();
+    }
+  }
+
+  private verifyOrderBelongsToBusiness(
+    foundOrder: OrderEntityT | null,
+    businessId: number,
+  ): void {
+    if (!foundOrder) {
+      return;
+    }
+
+    if (foundOrder.businessId !== businessId) {
       throw new OrderNotFound();
     }
   }

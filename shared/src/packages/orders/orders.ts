@@ -14,6 +14,5 @@ export {
 export {
   orderCreateRequestBody,
   orderGetParameter,
-  orderGetQueryParameters,
   orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';

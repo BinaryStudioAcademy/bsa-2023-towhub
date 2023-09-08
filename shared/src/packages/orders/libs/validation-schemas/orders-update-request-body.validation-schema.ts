@@ -16,9 +16,9 @@ const orderUpdateRequestBody = joi.object<OrderUpdateRequestDto, true>({
   driverId: positiveRequiredIntegerSchema(
     OrdersValidationMessage.DRIVER_ID_MUST_BE_NUMBER,
   ),
-  userId: positiveRequiredIntegerSchema(
-    OrdersValidationMessage.USER_ID_MUST_BE_NUMBER,
-  ),
+  userId: joi.number().integer().positive().messages({
+    'number': OrdersValidationMessage.USER_ID_MUST_BE_NUMBER,
+  }),
   status: joi.string().valid(...Object.values(OrderStatus)),
   customerName: joi.string().pattern(UserValidationRule.NAME),
   customerPhone: joi.string().pattern(UserValidationRule.PHONE),
