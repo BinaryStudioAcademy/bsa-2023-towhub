@@ -1,17 +1,27 @@
 import {
   business,
+  drivers,
   files,
   groups,
+  trucks,
+  trucksRelations,
   users,
   usersRelations,
+  usersTrucks,
+  usersTrucksRelations,
 } from './tables-schema.js';
 
 const schema = {
-  users,
-  groups,
-  business,
-  usersRelations,
   files,
+  business,
+  groups,
+  trucks,
+  trucksRelations,
+  users,
+  usersTrucks,
+  drivers,
+  usersRelations,
+  usersTrucksRelations,
 };
 
 type DatabaseSchema = typeof schema;

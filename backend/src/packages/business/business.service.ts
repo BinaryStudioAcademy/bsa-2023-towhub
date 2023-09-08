@@ -3,6 +3,14 @@ import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
+import { type DriverService } from '../drivers/driver.service.js';
+import {
+  type DriverAddPayload,
+  type DriverAddResponseWithGroup,
+  type DriverCreateUpdateResponseDto,
+  type DriverGetAllResponseDto,
+  type DriverUpdatePayload,
+} from '../drivers/drivers.js';
 import { BusinessEntity } from './business.entity.js';
 import { type BusinessRepository } from './business.repository.js';
 import {
@@ -15,8 +23,14 @@ import {
 class BusinessService implements IService {
   private businessRepository: BusinessRepository;
 
-  public constructor(businessRepository: BusinessRepository) {
+  private driverService: DriverService;
+
+  public constructor(
+    businessRepository: BusinessRepository,
+    driverService: DriverService,
+  ) {
     this.businessRepository = businessRepository;
+    this.driverService = driverService;
   }
 
   public async findById(id: number): Promise<BusinessEntityT | null> {
@@ -29,6 +43,15 @@ class BusinessService implements IService {
     const [business = null] = await this.businessRepository.find({ ownerId });
 
     return business ? BusinessEntity.initialize(business).toObject() : null;
+  }
+
+  public async checkIsExistingBusiness(
+    key: Pick<BusinessEntityT, 'taxNumber'>,
+  ): Promise<boolean> {
+    const { result: doesBusinessExist } =
+      await this.businessRepository.checkExists(key);
+
+    return doesBusinessExist;
   }
 
   public async create({
@@ -46,7 +69,6 @@ class BusinessService implements IService {
       await this.businessRepository.checkExists({
         id: owner.id,
         taxNumber: payload.taxNumber,
-        companyName: payload.companyName,
       });
 
     if (doesBusinessExist) {
@@ -104,6 +126,42 @@ class BusinessService implements IService {
     }
 
     return await this.businessRepository.delete(id);
+  }
+
+  public async createDriver({
+    payload,
+    businessId,
+  }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
+    const doesBusinessExist = await this.findById(businessId);
+
+    if (!doesBusinessExist) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.driverService.create({ payload, businessId });
+  }
+
+  public updateDriver({
+    driverId,
+    payload,
+  }: DriverUpdatePayload): Promise<DriverCreateUpdateResponseDto> {
+    return this.driverService.update({
+      driverId,
+      payload,
+    });
+  }
+
+  public findAllDriversByBusinessId(
+    id: number,
+  ): Promise<DriverGetAllResponseDto> {
+    return this.driverService.findAllByBusinessId(id);
+  }
+
+  public deleteDriver(driverId: number): Promise<boolean> {
+    return this.driverService.delete(driverId);
   }
 }
 
