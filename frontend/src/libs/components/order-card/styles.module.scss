@@ -16,6 +16,7 @@ $blue-shallow: #becee8;
   width: 75vmin;
   height: min-content;
   padding: 0 $side-padding 6vmin $side-padding;
+  background-color: $white;
   border-radius: 5%;
   box-shadow: $shadow-dark;
 }
@@ -79,14 +80,19 @@ $blue-shallow: #becee8;
 
 .body {
   display: grid;
-  grid-template-rows: 0.9fr 1fr 0.6fr;
   padding-top: 4.5vmin;
-  column-gap: 2vmin;
 }
 
-.locationContainer {
+.bodyContent {
   display: grid;
-  grid-template-columns: min-content auto;
+  grid-template-columns: 20px auto;
+  grid-template-areas:
+    "locationDot         location"
+    "    .             lastUpdate"
+    "routeDotStart routeInfoStart"
+    "routeArrow          .       "
+    "routeDotEnd   routeInfoEnd  "
+    "distanceIcon   distanceInfo  ";
   align-items: center;
   row-gap: $row-gap-md;
   height: max-content;
@@ -94,15 +100,22 @@ $blue-shallow: #becee8;
 }
 
 .locationDot {
+  display: flex;
+  grid-area: locationDot;
+  justify-self: flex-end;
   height: 20px;
   color: $violet-shallow;
 }
 
 .location {
+  grid-area: location;
+
   $color: $grey-dark;
 }
 
 .lastUpdate {
+  grid-area: lastUpdate;
+
   $color: $grey;
 
   grid-column: 2 / span 1;
@@ -128,14 +141,40 @@ $blue-shallow: #becee8;
   text-overflow: ellipsis;
 }
 
+$routes-margin-top: 1.5vmin;
+$routes-margin-bottom: 3.5vmin;
+
+.routeInfoStart {
+  grid-area: routeInfoStart;
+  margin-top: $routes-margin-top;
+}
+
+.routeInfoEnd {
+  grid-area: routeInfoEnd;
+  margin-bottom: $routes-margin-bottom;
+}
+
 .routeDot {
   display: inline-block;
   justify-self: center;
 }
 
+.routeDotStart {
+  grid-area: routeDotStart;
+  margin-top: $routes-margin-top;
+}
+
+.routeDotEnd {
+  grid-area: routeDotEnd;
+  margin-bottom: $routes-margin-bottom;
+}
+
 .routeArrow {
   display: grid;
+  grid-area: routeArrow;
   justify-content: center;
+  margin-top: -1vmin;
+  margin-bottom: -1vmin;
 }
 
 .distanceContainer {
@@ -148,9 +187,11 @@ $blue-shallow: #becee8;
 
 .distanceIcon {
   display: grid;
+  grid-area: distanceIcon;
   padding-right: 1vmin;
 }
 
 .distanceInfo {
+  grid-area: distanceInfo;
   color: $grey-darker;
 }
