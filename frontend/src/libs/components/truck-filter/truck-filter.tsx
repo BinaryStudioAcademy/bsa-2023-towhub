@@ -1,39 +1,65 @@
-import { type DeepPartial, type FieldValues } from 'react-hook-form';
+import { type SingleValue } from 'react-select';
 
-import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
+import { useCallback, useEffect, useState } from '~/libs/hooks/hooks.js';
+import { type SelectOption } from '~/libs/types/select-option.type.js';
+import { type TruckFilters } from '~/libs/types/truck-filters.type.js';
 
 import { Dropdown } from '../dropdown/dropdown.js';
+import { TruckFilterField } from './libs/truck-filter-field.enum.js';
 import styles from './styles.module.scss';
 
-type Properties<T extends FieldValues> = {
-  defaultValues: DeepPartial<T>;
-  onSubmit: (payload: T) => void;
+type Properties = {
+  onChange: (filters: TruckFilters) => void;
 };
 
-const TruckFilter = <T extends FieldValues = FieldValues>({
-  defaultValues,
-  onSubmit,
-}: Properties<T>): JSX.Element => {
-  const { control, handleSubmit } = useAppForm<T>({
-    defaultValues,
+const TruckFilter = ({ onChange }: Properties): JSX.Element => {
+  const [filters, setFilters] = useState<TruckFilters>({
+    location: null,
+    price: null,
+    capacity: null,
   });
 
-  const handleFormSubmit = useCallback(
-    (event_: React.BaseSyntheticEvent): void => {
-      void handleSubmit(onSubmit)(event_);
+  const handleSelectChange = useCallback(
+    (fieldName: string, option: SingleValue<SelectOption>) => {
+      const newFilters = {
+        ...filters,
+        [fieldName]: option?.value ?? null,
+      };
+
+      setFilters(newFilters);
     },
-    [handleSubmit, onSubmit],
+    [filters],
   );
 
+  const handleLocationChange = useCallback(
+    (option: SingleValue<SelectOption>) =>
+      handleSelectChange(TruckFilterField.LOCATION, option),
+    [handleSelectChange],
+  );
+  const handlePriceChange = useCallback(
+    (option: SingleValue<SelectOption>) =>
+      handleSelectChange(TruckFilterField.PRICE, option),
+    [handleSelectChange],
+  );
+  const handleCapacityChange = useCallback(
+    (option: SingleValue<SelectOption>) =>
+      handleSelectChange(TruckFilterField.CAPACITY, option),
+    [handleSelectChange],
+  );
+
+  useEffect(() => {
+    onChange(filters);
+  }, [filters, onChange]);
+
   return (
-    <form className={styles.truckFilter} onSubmit={handleFormSubmit}>
+    <form className={styles.truckFilter}>
       <div className={styles.locationFilter}>
         <span className={styles.filterTitle}>Location</span>
         <div className={styles.dropdownWrapper}>
           <Dropdown
             options={[{ label: 'option', value: 'option' }]}
             placeholder="Select location..."
-            control={control}
+            onChange={handleLocationChange}
           />
         </div>
       </div>
@@ -44,7 +70,7 @@ const TruckFilter = <T extends FieldValues = FieldValues>({
             <Dropdown
               options={[{ label: 'option', value: 'option' }]}
               placeholder="Select price..."
-              control={control}
+              onChange={handlePriceChange}
             />
           </div>
         </div>
@@ -54,7 +80,7 @@ const TruckFilter = <T extends FieldValues = FieldValues>({
             <Dropdown
               options={[{ label: 'option', value: 'option' }]}
               placeholder="Select capacity..."
-              control={control}
+              onChange={handleCapacityChange}
             />
           </div>
         </div>
