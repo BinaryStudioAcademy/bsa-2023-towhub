@@ -8,9 +8,7 @@ import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 import { WelcomePage } from '~/pages/welcome/welcome.js';
 
-import { App } from '../app/app.js';
-import { ProtectedRoute } from '../components.js';
-import { PageLayout } from '../page-layout/page-layout.js';
+import { App, PageLayout, ProtectedRoute } from '../components.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => {
