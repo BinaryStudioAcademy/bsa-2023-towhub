@@ -1,0 +1,14 @@
+@import "src/assets/css/vars.scss";
+
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  background-color: $blue-dark;
+  background-image: url("../../assets/img/auth-page-bg.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  padding-block: 57px;
+}

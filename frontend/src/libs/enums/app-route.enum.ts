@@ -6,6 +6,7 @@ const AppRoute = {
   SIGN_UP: '/sign-up',
   ORDER_HISTORY: '/order-history',
   EDIT_PROFILE: '/edit-profile',
+  TRUCKS: '/trucks',
   DASHBOARD: '/dashboard',
 } as const;
 

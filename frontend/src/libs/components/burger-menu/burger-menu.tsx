@@ -1,4 +1,4 @@
-import { AppRoute, Breakpoints, IconName } from '~/libs/enums/enums.js';
+import { AppRoute, Breakpoint, IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
@@ -33,7 +33,7 @@ const BurgerMenu: React.FC = () => {
     setIsOpen(false);
   }, [location]);
 
-  const isMobile = window.innerWidth <= Breakpoints.MOBILE;
+  const isMobile = window.innerWidth <= Breakpoint.MOBILE;
 
   switch (location.pathname) {
     case AppRoute.DASHBOARD: {
