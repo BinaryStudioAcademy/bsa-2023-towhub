@@ -4,6 +4,7 @@ export { useAppSelector } from './use-app-selector/use-app-selector.hook.js';
 export { useAppTable } from './use-app-table/use-app-table.js';
 export { useAuthNavigate } from './use-auth-navigate/use-auth-navigate.hook.js';
 export { useGeolocation } from './use-geolocation/use-geolocation.hook.js';
+export { useQueryParameters } from './use-query-parameters/use-query-parameters.hook.js';
 export {
   createColumnHelper,
   flexRender,
@@ -13,4 +14,8 @@ export {
 } from '@tanstack/react-table';
 export { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 export { useController as useFormController } from 'react-hook-form';
-export { useLocation, useNavigate } from 'react-router-dom';
+export {
+  useLocation,
+  useNavigate,
+  useSearchParams as useSearchParameters,
+} from 'react-router-dom';
