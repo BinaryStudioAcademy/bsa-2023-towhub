@@ -54,8 +54,15 @@
     {
       "idx": 7,
       "version": "5",
-      "when": 1694093478143,
-      "tag": "0007_add_orders_table",
+      "when": 1694154185364,
+      "tag": "0007_del_comp_name_unique_idx",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1694181446091,
+      "tag": "0008_create_orders_table",
       "breakpoints": true
     }
   ]

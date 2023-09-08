@@ -45,6 +45,15 @@ class BusinessService implements IService {
     return business ? BusinessEntity.initialize(business).toObject() : null;
   }
 
+  public async checkIsExistingBusiness(
+    key: Pick<BusinessEntityT, 'taxNumber'>,
+  ): Promise<boolean> {
+    const { result: doesBusinessExist } =
+      await this.businessRepository.checkExists(key);
+
+    return doesBusinessExist;
+  }
+
   public async create({
     payload,
     owner,
@@ -60,7 +69,6 @@ class BusinessService implements IService {
       await this.businessRepository.checkExists({
         id: owner.id,
         taxNumber: payload.taxNumber,
-        companyName: payload.companyName,
       });
 
     if (doesBusinessExist) {
