@@ -64,11 +64,22 @@ class AuthService {
     email,
     phone,
   }: CustomerSignUpRequestDto | BusinessSignUpRequestDto): Promise<boolean> {
-    const existingUser =
-      (await this.userService.findByEmail(email)) ??
-      (await this.userService.findByPhone(phone));
+    const existingUser = await this.userService.findByPhoneOrEmail(
+      phone,
+      email,
+    );
 
     return Boolean(existingUser);
+  }
+
+  private async checkIsExistingBusiness({
+    taxNumber,
+  }: BusinessSignUpRequestDto): Promise<boolean> {
+    const existingBusiness = await this.businessService.checkIsExistingBusiness(
+      { taxNumber },
+    );
+
+    return Boolean(existingBusiness);
   }
 
   public async signUpCustomer(
@@ -91,7 +102,6 @@ class AuthService {
         status: HttpCode.BAD_REQUEST,
       });
     }
-
     const newUser = await this.userService.create({
       ...payload,
       groupId: group.id,
@@ -108,6 +118,21 @@ class AuthService {
     payload: BusinessSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupAndBusinessT> {
     const isExistingUser = await this.checkIsExistingUser(payload);
+    const isExistingBusiness = await this.checkIsExistingBusiness(payload);
+
+    if (isExistingUser) {
+      throw new HttpError({
+        message: HttpMessage.USER_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
+
+    if (isExistingBusiness) {
+      throw new HttpError({
+        message: HttpMessage.BUSINESS_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
 
     const {
       phone,
@@ -118,13 +143,6 @@ class AuthService {
       companyName,
       taxNumber,
     } = payload;
-
-    if (isExistingUser) {
-      throw new HttpError({
-        message: HttpMessage.USER_EXISTS,
-        status: HttpCode.CONFLICT,
-      });
-    }
 
     const group = await this.groupService.findByKey(UserGroupKey.BUSINESS);
 
@@ -161,7 +179,9 @@ class AuthService {
 
   public async signIn(
     credentials: UserSignInRequestDto,
-  ): Promise<UserEntityObjectWithGroupT> {
+  ): Promise<
+    UserEntityObjectWithGroupAndBusinessT | UserEntityObjectWithGroupT
+  > {
     const { email, password } = credentials;
 
     const user = await this.userService.findByEmailRaw(email);
@@ -181,9 +201,17 @@ class AuthService {
 
     const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
 
+    const userGroup = GroupEntity.initialize(user.group).toObject();
+
+    const userBusiness =
+      userGroup.key === UserGroupKey.BUSINESS
+        ? await this.businessService.findByOwnerId(updatedUser.id)
+        : null;
+
     return {
       ...updatedUser,
-      group: GroupEntity.initialize(user.group).toObject(),
+      group: userGroup,
+      ...(userBusiness && { business: userBusiness }),
     };
   }
 
