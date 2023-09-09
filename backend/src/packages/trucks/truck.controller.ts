@@ -61,6 +61,9 @@ import { type TruckService } from './truck.service.js';
  *         pricePerKm:
  *           type: number
  *           example: 5
+ *         businessId:
+ *           type: number
+ *           example: 1
  *
  *     TruckResponse:
  *       type: object
@@ -102,6 +105,9 @@ import { type TruckService } from './truck.service.js';
  *         pricePerKm:
  *           type: number
  *           example: 5
+ *         businessId:
+ *           type: number
+ *           example: 1
  *
  *     ErrorType:
  *       type: object

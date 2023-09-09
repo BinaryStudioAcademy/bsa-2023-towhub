@@ -50,6 +50,13 @@
       "when": 1693992300427,
       "tag": "0006_create_trucks_table",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1694197172749,
+      "tag": "0007_add_businessId_to_trucks",
+      "breakpoints": true
     }
   ]
 }
