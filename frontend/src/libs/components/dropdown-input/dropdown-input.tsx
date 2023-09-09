@@ -16,11 +16,11 @@ import styles from './styles.module.scss';
 type Properties<T extends FieldValues> = {
   options: SelectOption[];
   name: FieldPath<T>;
-  control: Control<T, null> | undefined;
+  control: Control<T, null>;
   errors: FieldErrors<T>;
   label: string;
   defaultValue?: SelectOption;
-  onChange?: (value: string | undefined) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
   insideInput?: boolean;
 };
@@ -48,8 +48,8 @@ const DropdownInput = <T extends FieldValues>({
 
   const handleChange = useCallback(
     (option: SingleValue<SelectOption>) => {
-      if (onChange) {
-        onChange(option?.value);
+      if (onChange && option) {
+        onChange(option.value);
       }
       field.onChange(option);
     },
@@ -61,12 +61,13 @@ const DropdownInput = <T extends FieldValues>({
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
         <Dropdown<T>
-          {...(name && control && field)}
+          name={name}
+          control={control}
+          field={field}
           options={options}
           className={getValidClassNames(inputStyles)}
           onChange={handleChange}
           defaultValue={defaultValue}
-          field={field}
           placeholder={placeholder}
         />
       </span>
