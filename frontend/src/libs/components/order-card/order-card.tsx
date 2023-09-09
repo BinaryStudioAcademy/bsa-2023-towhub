@@ -15,6 +15,7 @@ type Properties = {
   truck: OrderedTruckInfo;
   initialStatus: OrderInitialStatus;
   currentStatus: OrderCurrentStatus;
+  className?: string;
 };
 
 const OrderCard: React.FC<Properties> = ({
@@ -22,11 +23,17 @@ const OrderCard: React.FC<Properties> = ({
   truck: { licensePlate },
   initialStatus: { startLocation, endLocation },
   currentStatus: { timespanLastUpdated, location, distanceLeft, timespanLeft },
+  className,
 }: Properties) => {
   const areManyKilometers = distanceLeft > 1;
 
   return (
-    <div className={styles.container}>
+    <div
+      className={getValidClassNames(
+        styles.container,
+        Boolean(className) && className,
+      )}
+    >
       <div className={styles.cardLayout}>
         <div className={styles.horizontalBar}>
           <div>
@@ -43,12 +50,12 @@ const OrderCard: React.FC<Properties> = ({
           </div>
           <div className={styles.headerInfoContainer}>
             <div className={styles.headerTitleContainer}>
-              <span className="text-md">
+              <span className="textMd">
                 {firstName} {lastName}
               </span>
             </div>
             <div className={styles.headerSubtitleContainer}>
-              <span className={getValidClassNames(styles.subtitle, 'text-sm')}>
+              <span className={getValidClassNames(styles.subtitle, 'textSm')}>
                 {licensePlate}
               </span>
             </div>
@@ -59,10 +66,10 @@ const OrderCard: React.FC<Properties> = ({
             <div className={styles.locationDot}>
               <PlainSvgIcon name={PlainSvgIconName.LOCATION_DOT} />
             </div>
-            <span className={getValidClassNames(styles.location, 'text-sm')}>
+            <span className={getValidClassNames(styles.location, 'textSm')}>
               {location}
             </span>
-            <span className={getValidClassNames(styles.lastUpdate, 'text-sm')}>
+            <span className={getValidClassNames(styles.lastUpdate, 'textSm')}>
               last updated {timespanLastUpdated} ago
             </span>
             <div

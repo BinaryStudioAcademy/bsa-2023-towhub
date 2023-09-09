@@ -1,0 +1,21 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  display: flex;
+  flex-flow: row-reverse wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  padding: 154px 24px 0;
+  background-color: $background-color-grey;
+}
+
+.card {
+  max-width: 416px;
+  margin: 0 25px;
+}
+
+.status {
+  flex-grow: 1;
+  margin: 0 30px;
+}

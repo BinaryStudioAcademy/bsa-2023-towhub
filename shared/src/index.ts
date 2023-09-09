@@ -78,6 +78,7 @@ export {
   driverUpdateDeleteParameters,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
+export { type OrderStatusValues } from './packages/orders/orders.js';
 export {
   type TruckEntity,
   LICENSE_PLATE_NUMBER,

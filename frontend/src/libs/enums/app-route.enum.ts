@@ -6,6 +6,8 @@ const AppRoute = {
   SIGN_UP: '/sign-up',
   TRUCKS: '/trucks',
   DASHBOARD: '/dashboard',
+  ORDER: '/order/:id',
+  DRIVER_PROFILE: '/driver/:id',
 } as const;
 
 export { AppRoute };
