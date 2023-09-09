@@ -3,7 +3,6 @@ import { type ShiftCloseRequestDto } from 'shared/build/index.js';
 import { type IService } from '~/libs/interfaces/service.interface';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
-import { UserGroupKey } from '../users/libs/enums/enums.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { ShiftEntity } from './shift.entity.js';
 import {
