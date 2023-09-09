@@ -1,3 +1,4 @@
+import { type ShiftCloseRequestDto } from 'shared/build/index.js';
 import { ApiPath, HttpCode } from 'src/libs/enums/enums.js';
 
 import {
@@ -12,6 +13,8 @@ import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import {
   type ShiftCreateRequestDto,
   type ShiftCreateResponseDto,
+  type ShiftEntity,
+  shiftCloseValidationSchema,
   shiftCreateValidationSchema,
   ShiftsApiPath,
 } from './shift.js';
@@ -41,21 +44,22 @@ class ShiftController extends Controller {
         ),
     });
 
-    // this.addRoute({
-    //   path: TruckApiPath.$ID,
-    //   method: 'PUT',
-    //   validation: {
-    //     body: truckUpdateRequestBody,
-    //     params: truckGetParameters,
-    //   },
-    //   handler: (options) =>
-    //     this.update(
-    //       options as ApiHandlerOptions<{
-    //         body: Partial<TruckEntity>;
-    //         params: { id: number };
-    //       }>,
-    //     ),
-    // });
+    this.addRoute({
+      path: ShiftsApiPath.$ID,
+      method: 'PUT',
+      authStrategy: AuthStrategy.INJECT_USER,
+      validation: {
+        body: shiftCloseValidationSchema,
+      },
+      handler: (options) =>
+        this.closeShift(
+          options as ApiHandlerOptions<{
+            body: ShiftCloseRequestDto;
+            user: UserEntityObjectWithGroupT;
+            params: Pick<ShiftEntity, 'id'>;
+          }>,
+        ),
+    });
   }
 
   private async startShift(
@@ -70,6 +74,18 @@ class ShiftController extends Controller {
     };
   }
 
+  private async closeShift(
+    options: ApiHandlerOptions<{
+      body: ShiftCloseRequestDto;
+      user: UserEntityObjectWithGroupT;
+      params: Pick<ShiftEntity, 'id'>;
+    }>,
+  ): Promise<ApiHandlerResponse<ShiftCreateResponseDto>> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.shiftService.close(options),
+    };
+  }
   // private async update(
   //   options: ApiHandlerOptions<{
   //     body: Partial<TruckEntity>;

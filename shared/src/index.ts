@@ -77,9 +77,11 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
+  type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
   type ShiftCreateResponseDto,
   type ShiftEntity,
+  shiftClose as shiftCloseValidationSchema,
   shiftCreate as shiftCreateValidationSchema,
   ShiftsApiPath,
   ShiftValidationMessage,

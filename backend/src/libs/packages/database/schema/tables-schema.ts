@@ -117,15 +117,13 @@ const usersTrucks = pgTable(
 const shifts = pgTable('shifts', {
   id: serial('id').primaryKey(),
   startDate: timestamp('start_date', {
-    precision: 6,
-    withTimezone: true,
+    mode: 'date',
   }).notNull(),
   endDate: timestamp('end_date', {
-    precision: 6,
-    withTimezone: true,
+    mode: 'date',
   }),
-  driverId: integer('driver_id')
-    .references(() => drivers.id)
+  driverUserId: integer('driver_user_id')
+    .references(() => users.id)
     .notNull(),
   truckId: integer('truck_id')
     .references(() => trucks.id)

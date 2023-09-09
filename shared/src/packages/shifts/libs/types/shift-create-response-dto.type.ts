@@ -1,4 +1,4 @@
 import { type ShiftEntity } from './shift-entity.type.js';
 
-type ShiftCreateResponseDto = Omit<ShiftEntity, 'endDate'>;
+type ShiftCreateResponseDto = ShiftEntity;
 export { type ShiftCreateResponseDto };

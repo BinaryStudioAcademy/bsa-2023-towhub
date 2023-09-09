@@ -1,1 +1,4 @@
-export { shiftCreateValidationSchema } from 'shared/build/index.js';
+export {
+  shiftCloseValidationSchema,
+  shiftCreateValidationSchema,
+} from 'shared/build/index.js';

@@ -61,8 +61,8 @@
     {
       "idx": 8,
       "version": "5",
-      "when": 1694177138249,
-      "tag": "0008_create_shifts_table",
+      "when": 1694256170628,
+      "tag": "0008_add_shifts_table",
       "breakpoints": true
     }
   ]

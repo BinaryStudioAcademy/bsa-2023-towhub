@@ -17,6 +17,8 @@ const HttpMessage = {
   WRONG_PASSWORD: 'The password is wrong',
   INVALID_GROUP: 'Provided group is unavailable',
   CANNOT_DELETE: 'Cannot delete this user',
+  WRONG_SHIFT: 'Specified shift id is not belong to you',
+  SHIFT_ALREADY_CLOSED: 'Specified shift is already closed',
 } as const;
 
 export { HttpMessage };

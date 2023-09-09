@@ -82,7 +82,7 @@ class ShiftRepository implements IRepository {
   // }
 
   public async create(
-    entity: Pick<ShiftEntityT, 'startDate' | 'truckId' | 'driverId'>,
+    entity: Pick<ShiftEntityT, 'startDate' | 'truckId' | 'driverUserId'>,
   ): ReturnType<IRepository<ShiftDatabaseModel>['create']> {
     const [shift] = await this.db
       .driver()
@@ -94,17 +94,30 @@ class ShiftRepository implements IRepository {
     return shift;
   }
 
+  public async findById(
+    id: ShiftEntityT['id'],
+  ): Promise<ShiftDatabaseModel | null> {
+    const [shift] = await this.db
+      .driver()
+      .select()
+      .from(this.shiftSchema)
+      .where(eq(this.shiftSchema.id, id))
+      .execute();
+
+    return shift;
+  }
+
   public async update({
     id,
     payload,
   }: {
     id: number;
-    payload: Partial<ShiftEntityT>;
+    payload: Partial<ShiftDatabaseModel>;
   }): Promise<ShiftDatabaseModel> {
     const [item] = await this.db
       .driver()
       .update(this.shiftSchema)
-      .set(payload)
+      .set({ ...payload, updatedAt: new Date() })
       .where(eq(this.shiftSchema.id, id))
       .returning()
       .execute();

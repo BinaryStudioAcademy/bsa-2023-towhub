@@ -17,5 +17,8 @@ export {
   type ShiftCreateResponseDto,
   type ShiftEntity,
 } from './libs/types/types.js';
-export { shiftCreateValidationSchema } from './libs/validation-schemas/validaion-schemas.js';
+export {
+  shiftCloseValidationSchema,
+  shiftCreateValidationSchema,
+} from './libs/validation-schemas/validaion-schemas.js';
 export { shiftController, shiftService };

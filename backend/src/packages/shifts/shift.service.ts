@@ -1,3 +1,5 @@
+import { type ShiftCloseRequestDto } from 'shared/build/index.js';
+
 import { type IService } from '~/libs/interfaces/service.interface';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
@@ -55,11 +57,55 @@ class ShiftService implements IService {
 
     const shift = await this.shiftRepository.create({
       ...body,
-      driverId: user.id,
+      driverUserId: user.id,
     });
 
     return ShiftEntity.initialize(shift).toObject();
   }
+
+  public async close({
+    body,
+    user,
+    params,
+  }: {
+    body: ShiftCloseRequestDto;
+    user: UserEntityObjectWithGroupT;
+    params: Pick<ShiftEntityT, 'id'>;
+  }): Promise<ShiftCreateResponseDto> {
+    const shift = await this.shiftRepository.findById(params.id);
+
+    if (!shift) {
+      throw new HttpError({
+        status: HttpCode.NOT_FOUND,
+        message: HttpMessage.NOT_FOUND,
+      });
+    }
+
+    if (shift.driverUserId !== user.id) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.WRONG_SHIFT,
+      });
+    }
+
+    if (shift.endDate !== null) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.SHIFT_ALREADY_CLOSED,
+      });
+    }
+
+    const updShift = await this.shiftRepository.update({
+      id: params.id,
+      payload: {
+        ...body,
+        deletedAt: new Date(),
+      },
+    });
+
+    return ShiftEntity.initialize(updShift).toObject();
+  }
+
   //     const { result: doesBusinessExist } =
   //       await this.businessRepository.checkExists({
   //         id: owner.id,

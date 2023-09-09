@@ -1,8 +1,8 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import { type DriverEntity } from '../drivers/drivers.js';
 import { type TruckEntity } from '../trucks/libs/types/types.js';
+import { type UserEntityT } from '../users/users.js';
 import {
   type ShiftDatabaseModel,
   type ShiftEntity as ShiftEntityT,
@@ -15,7 +15,7 @@ class ShiftEntity implements IEntity {
 
   private 'endDate': Date | null;
 
-  private 'driverId': DriverEntity['id'];
+  private 'driverUserId': UserEntityT['id'];
 
   private 'truckId': TruckEntity['id'];
 
@@ -23,13 +23,13 @@ class ShiftEntity implements IEntity {
     id,
     startDate,
     endDate,
-    driverId,
+    driverUserId,
     truckId,
   }: NullableProperties<ShiftEntityT, 'id' | 'endDate'>) {
     this.id = id;
     this.startDate = startDate;
     this.endDate = endDate;
-    this.driverId = driverId;
+    this.driverUserId = driverUserId;
     this.truckId = truckId;
   }
 
@@ -37,37 +37,41 @@ class ShiftEntity implements IEntity {
     id,
     startDate,
     endDate,
-    driverId,
+    driverUserId,
     truckId,
   }: ShiftDatabaseModel): ShiftEntity {
     return new ShiftEntity({
       id,
       startDate,
       endDate,
-      driverId,
+      driverUserId,
       truckId,
     });
   }
 
   public static initializeNew({
     startDate,
-    driverId,
+    driverUserId,
     truckId,
-  }: Pick<ShiftEntityT, 'startDate' | 'driverId' | 'truckId'>): ShiftEntity {
+  }: Pick<
+    ShiftEntityT,
+    'startDate' | 'driverUserId' | 'truckId'
+  >): ShiftEntity {
     return new ShiftEntity({
       id: null,
       startDate,
       endDate: null,
-      driverId,
+      driverUserId,
       truckId,
     });
   }
 
-  public toObject(): Omit<ShiftEntityT, 'endDate'> {
+  public toObject(): ShiftEntityT {
     return {
       id: this.id as number,
       startDate: this.startDate,
-      driverId: this.driverId,
+      endDate: this.endDate,
+      driverUserId: this.driverUserId,
       truckId: this.truckId,
     };
   }
@@ -76,7 +80,7 @@ class ShiftEntity implements IEntity {
     return {
       startDate: this.startDate,
       endDate: this.endDate,
-      driverId: this.driverId,
+      driverUserId: this.driverUserId,
       truckId: this.truckId,
     };
   }
