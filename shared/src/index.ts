@@ -77,6 +77,14 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
+  type ShiftCreateRequestDto,
+  type ShiftCreateResponseDto,
+  type ShiftEntity,
+  shiftCreate as shiftCreateValidationSchema,
+  ShiftsApiPath,
+  ShiftValidationMessage,
+} from './packages/shifts/shifts.js';
+export {
   type TruckEntity,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,

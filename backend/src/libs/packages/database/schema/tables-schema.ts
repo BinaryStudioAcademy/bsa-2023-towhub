@@ -114,10 +114,32 @@ const usersTrucks = pgTable(
   },
 );
 
+const shifts = pgTable('shifts', {
+  id: serial('id').primaryKey(),
+  startDate: timestamp('start_date', {
+    precision: 6,
+    withTimezone: true,
+  }).notNull(),
+  endDate: timestamp('end_date', {
+    precision: 6,
+    withTimezone: true,
+  }),
+  driverId: integer('driver_id')
+    .references(() => drivers.id)
+    .notNull(),
+  truckId: integer('truck_id')
+    .references(() => trucks.id)
+    .notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+});
+
 export {
   business,
   drivers,
   groups,
+  shifts,
   trucks,
   users,
   usersRelations,

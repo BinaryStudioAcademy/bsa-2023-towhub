@@ -57,6 +57,13 @@
       "when": 1694154185364,
       "tag": "0007_del_comp_name_unique_idx",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1694177138249,
+      "tag": "0008_create_shifts_table",
+      "breakpoints": true
     }
   ]
 }
