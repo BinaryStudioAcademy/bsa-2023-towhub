@@ -180,6 +180,21 @@ export { AuthController };
  *                description: Consists of 10 digits
  *                example: 1234567890
  *
+ *      Sign-in-request:
+ *        type: object
+ *        properties:
+ *          email:
+ *            type: string
+ *            format: email
+ *            minLength: 5
+ *            maxLength: 254
+ *          password:
+ *            type: string
+ *            minimum: 6
+ *            maximum: 20
+ *            pattern: ^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$
+ *
+ *
  *      Customer-auth-response:
  *        type: object
  *        properties:
@@ -208,6 +223,15 @@ export { AuthController };
  *            - type: object
  *              properties:
  *                business:
+ *                  $ref: '#/components/schemas/Business'
+ *
+ *      Sign-in-auth-response:
+ *          allOf:
+ *            - $ref: '#/components/schemas/Customer-auth-response'
+ *            - type: object
+ *              properties:
+ *                business:
+ *                  nullable: true
  *                  $ref: '#/components/schemas/Business'
  */
 
@@ -281,4 +305,40 @@ export { AuthController };
  *                   message:
  *                     type: string
  *                     example: User already exists
+ */
+
+/**
+ * @swagger
+ * /auth/sign-in:
+ *    post:
+ *      tags:
+ *      - auth
+ *      description: Sign in to the system
+ *      requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Sign-in-request'
+ *        description: Sign in credentials
+ *        required: true
+ *      responses:
+ *        201:
+ *          description: Successful operation
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Sign-in-auth-response'
+ *        401:
+ *          description: Wrong credentials
+ *          content:
+ *            application/json:
+ *              schema:
+ *                 type: object
+ *                 properties:
+ *                   errorType:
+ *                     type: string
+ *                     example: COMMON
+ *                   message:
+ *                     type: string
+ *                     example: This email is not registered
  */

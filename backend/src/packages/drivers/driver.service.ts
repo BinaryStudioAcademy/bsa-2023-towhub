@@ -1,4 +1,8 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
+import {
+  type GeolocationCacheService,
+  type GeolocationLatLng,
+} from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
 import { UserGroupKey } from '../auth/libs/enums/enums.js';
@@ -22,14 +26,45 @@ class DriverService implements IService {
 
   private groupService: GroupService;
 
-  public constructor(
-    driverRepository: DriverRepository,
-    userService: UserService,
-    groupService: GroupService,
-  ) {
+  private geolocationCacheService: GeolocationCacheService;
+
+  public constructor({
+    driverRepository,
+    userService,
+    groupService,
+    geolocationCacheService,
+  }: {
+    driverRepository: DriverRepository;
+    userService: UserService;
+    groupService: GroupService;
+    geolocationCacheService: GeolocationCacheService;
+  }) {
     this.driverRepository = driverRepository;
     this.userService = userService;
     this.groupService = groupService;
+    this.geolocationCacheService = geolocationCacheService;
+  }
+
+  public async getGeolocationById(id: number): Promise<GeolocationLatLng> {
+    const foundDriver = await this.findById(id);
+
+    if (!foundDriver) {
+      throw new HttpError({
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+        status: HttpCode.NOT_FOUND,
+      });
+    }
+
+    const geolocation = this.geolocationCacheService.getCache(id);
+
+    if (!geolocation) {
+      throw new HttpError({
+        message: HttpMessage.DRIVER_LOCATION_UNKNOWN,
+        status: HttpCode.BAD_REQUEST,
+      });
+    }
+
+    return geolocation;
   }
 
   public async findById(id: number): Promise<DriverEntityT | null> {
