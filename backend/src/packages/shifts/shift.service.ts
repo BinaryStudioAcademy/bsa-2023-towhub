@@ -76,13 +76,6 @@ class ShiftService implements IService {
     body: ShiftCreateRequestDto;
     user: UserEntityObjectWithGroupT;
   }): Promise<ShiftCreateResponseDto> {
-    if (user.group.key !== UserGroupKey.DRIVER) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.INVALID_USER_GROUP,
-      });
-    }
-
     const shift = await this.shiftRepository.create({
       ...body,
       driverUserId: user.id,

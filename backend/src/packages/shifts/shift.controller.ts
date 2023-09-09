@@ -38,7 +38,10 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.ROOT,
       method: 'POST',
-      authStrategy: AuthStrategy.INJECT_USER,
+      authStrategy: [
+        AuthStrategy.INJECT_USER,
+        AuthStrategy.VERIFY_DRIVER_GROUP,
+      ],
       validation: {
         body: shiftCreateValidationSchema,
       },
@@ -54,7 +57,10 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.$ID,
       method: 'PUT',
-      authStrategy: AuthStrategy.INJECT_USER,
+      authStrategy: [
+        AuthStrategy.INJECT_USER,
+        AuthStrategy.VERIFY_DRIVER_GROUP,
+      ],
       validation: {
         body: shiftCloseValidationSchema,
       },
@@ -71,7 +77,10 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.$ID,
       method: 'GET',
-      authStrategy: AuthStrategy.INJECT_USER,
+      authStrategy: [
+        AuthStrategy.INJECT_USER,
+        AuthStrategy.VERIFY_DRIVER_GROUP,
+      ],
       handler: (options) =>
         this.getByShiftId(
           options as ApiHandlerOptions<{
@@ -84,7 +93,10 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.$DRIVER_ID,
       method: 'GET',
-      authStrategy: AuthStrategy.INJECT_USER,
+      authStrategy: [
+        AuthStrategy.INJECT_USER,
+        AuthStrategy.VERIFY_DRIVER_GROUP,
+      ],
       handler: (options) =>
         this.getByDriver(
           options as ApiHandlerOptions<{
