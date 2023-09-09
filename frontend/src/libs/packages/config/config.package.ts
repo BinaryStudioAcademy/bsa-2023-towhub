@@ -23,6 +23,9 @@ class Config implements IConfig {
         SERVER_URL: import.meta.env.VITE_APP_PROXY_SERVER_URL as string,
         GOOGLE_MAPS_API_KEY: import.meta.env
           .VITE_APP_GOOGLE_MAPS_API_KEY as string,
+        DRIVER_GEOLOCATION_UPDATE_INTERVAL: Number(
+          import.meta.env.VITE_DRIVER_GEOLOCATION_UPDATE_INTERVAL,
+        ),
       },
     };
   }
