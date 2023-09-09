@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/repository.interface.js';
 import { type IDatabase } from '~/libs/packages/database/libs/interfaces/database.interface.js';
@@ -22,7 +22,7 @@ class ShiftRepository implements IRepository {
 
   public find(
     partial: Partial<ShiftDatabaseModel>,
-  ): ReturnType<IRepository<ShiftDatabaseModel>['find']> {
+  ): Promise<ShiftDatabaseModel[]> {
     const queries = Object.entries(partial).map(([key, value]) =>
       eq(
         this.shiftSchema[key as keyof typeof partial],
@@ -40,50 +40,19 @@ class ShiftRepository implements IRepository {
       .execute();
   }
 
-  // public async checkExists({
-  //   id,
-  //   taxNumber,
-  //   companyName,
-  //   ownerId,
-  // }: Partial<BusinessEntityT>): Promise<OperationResult<boolean>> {
-  //   const filterClause: SQL[] = [];
-
-  //   if (id) {
-  //     filterClause.push(eq(this.businessSchema.id, id));
-  //   }
-
-  //   if (taxNumber) {
-  //     filterClause.push(eq(this.businessSchema.taxNumber, taxNumber));
-  //   }
-
-  //   if (companyName) {
-  //     filterClause.push(eq(this.businessSchema.companyName, companyName));
-  //   }
-
-  //   if (ownerId) {
-  //     filterClause.push(eq(this.businessSchema.ownerId, ownerId));
-  //   }
-
-  //   if (filterClause.length === 0) {
-  //     throw new ApplicationError({
-  //       message: AppErrorMessage.INVALID_QUERY,
-  //     });
-  //   }
-
-  //   const [business]: BusinessEntityT[] = await this.db
-  //     .driver()
-  //     .select()
-  //     .from(this.businessSchema)
-  //     .where(or(...filterClause));
-
-  //   return {
-  //     result: Boolean(business),
-  //   };
-  // }
+  public getAllOpened(): Promise<ShiftDatabaseModel[]> {
+    return this.db
+      .driver()
+      .select()
+      .from(this.shiftSchema)
+      .orderBy(desc(this.shiftSchema.startDate))
+      .where(isNull(this.shiftSchema.endDate))
+      .execute();
+  }
 
   public async create(
     entity: Pick<ShiftEntityT, 'startDate' | 'truckId' | 'driverUserId'>,
-  ): ReturnType<IRepository<ShiftDatabaseModel>['create']> {
+  ): Promise<ShiftDatabaseModel> {
     const [shift] = await this.db
       .driver()
       .insert(this.shiftSchema)

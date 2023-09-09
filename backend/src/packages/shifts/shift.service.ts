@@ -20,26 +20,54 @@ class ShiftService implements IService {
     this.shiftRepository = shiftRepository;
   }
 
+  public async getAllStarted(): Promise<ShiftCreateResponseDto[]> {
+    const shifts = await this.shiftRepository.getAllOpened();
+
+    return shifts.length > 0
+      ? shifts.map((it) => ShiftEntity.initialize(it).toObject())
+      : [];
+  }
+
   public async findById(id: number): Promise<ShiftCreateResponseDto | null> {
     const [shift = null] = await this.shiftRepository.find({ id });
 
     return shift ? ShiftEntity.initialize(shift).toObject() : null;
   }
 
-  //   public async findByOwnerId(ownerId: number): Promise<BusinessEntityT | null> {
-  //     const [business = null] = await this.businessRepository.find({ ownerId });
+  public async findByShiftId(
+    shiftId: number,
+    userId: number,
+  ): Promise<ShiftCreateResponseDto> {
+    const [shift = null] = await this.shiftRepository.find({ id: shiftId });
 
-  //     return business ? BusinessEntity.initialize(business).toObject() : null;
-  //   }
+    if (!shift) {
+      throw new HttpError({
+        status: HttpCode.NOT_FOUND,
+        message: HttpMessage.NOT_FOUND,
+      });
+    }
 
-  //   public async checkIsExistingBusiness(
-  //     key: Pick<BusinessEntityT, 'taxNumber'>,
-  //   ): Promise<boolean> {
-  //     const { result: doesBusinessExist } =
-  //       await this.businessRepository.checkExists(key);
+    if (shift.driverUserId !== userId) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.WRONG_SHIFT,
+      });
+    }
 
-  //     return doesBusinessExist;
-  //   }
+    return ShiftEntity.initialize(shift).toObject();
+  }
+
+  public async findByDriverUserId(
+    driverUserId: number,
+  ): Promise<ShiftCreateResponseDto[]> {
+    const shifts = await this.shiftRepository.find({
+      driverUserId,
+    });
+
+    return shifts.length > 0
+      ? shifts.map((it) => ShiftEntity.initialize(it).toObject())
+      : [];
+  }
 
   public async create({
     body,
@@ -72,21 +100,7 @@ class ShiftService implements IService {
     user: UserEntityObjectWithGroupT;
     params: Pick<ShiftEntityT, 'id'>;
   }): Promise<ShiftCreateResponseDto> {
-    const shift = await this.shiftRepository.findById(params.id);
-
-    if (!shift) {
-      throw new HttpError({
-        status: HttpCode.NOT_FOUND,
-        message: HttpMessage.NOT_FOUND,
-      });
-    }
-
-    if (shift.driverUserId !== user.id) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.WRONG_SHIFT,
-      });
-    }
+    const shift = await this.findByShiftId(params.id, user.id);
 
     if (shift.endDate !== null) {
       throw new HttpError({
@@ -106,26 +120,6 @@ class ShiftService implements IService {
     return ShiftEntity.initialize(updShift).toObject();
   }
 
-  //     const { result: doesBusinessExist } =
-  //       await this.businessRepository.checkExists({
-  //         id: owner.id,
-  //         taxNumber: payload.taxNumber,
-  //       });
-
-  //     if (doesBusinessExist) {
-  //       throw new HttpError({
-  //         status: HttpCode.BAD_REQUEST,
-  //         message: HttpMessage.BUSINESS_ALREADY_EXISTS,
-  //       });
-  //     }
-
-  //     const business = await this.businessRepository.create(
-  //       BusinessEntity.initializeNew({ ...payload, ownerId: owner.id }),
-  //     );
-
-  //     return business.toObject();
-  //   }
-
   public async update({
     id,
     payload,
@@ -141,42 +135,6 @@ class ShiftService implements IService {
   public async delete(id: number): Promise<boolean> {
     return await this.shiftRepository.delete(id);
   }
-
-  //   public async createDriver({
-  //     payload,
-  //     businessId,
-  //   }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
-  //     const doesBusinessExist = await this.findById(businessId);
-
-  //     if (!doesBusinessExist) {
-  //       throw new HttpError({
-  //         status: HttpCode.BAD_REQUEST,
-  //         message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
-  //       });
-  //     }
-
-  //     return await this.driverService.create({ payload, businessId });
-  //   }
-
-  //   public updateDriver({
-  //     driverId,
-  //     payload,
-  //   }: DriverUpdatePayload): Promise<DriverCreateUpdateResponseDto> {
-  //     return this.driverService.update({
-  //       driverId,
-  //       payload,
-  //     });
-  //   }
-
-  //   public findAllDriversByBusinessId(
-  //     id: number,
-  //   ): Promise<DriverGetAllResponseDto> {
-  //     return this.driverService.findAllByBusinessId(id);
-  //   }
-
-  //   public deleteDriver(driverId: number): Promise<boolean> {
-  //     return this.driverService.delete(driverId);
-  //   }
 }
 
 export { ShiftService };

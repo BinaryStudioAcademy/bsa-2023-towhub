@@ -30,6 +30,13 @@ class ShiftController extends Controller {
 
     this.addRoute({
       path: ShiftsApiPath.ROOT,
+      method: 'GET',
+      authStrategy: AuthStrategy.VERIFY_JWT,
+      handler: () => this.getAllStarted(),
+    });
+
+    this.addRoute({
+      path: ShiftsApiPath.ROOT,
       method: 'POST',
       authStrategy: AuthStrategy.INJECT_USER,
       validation: {
@@ -60,6 +67,40 @@ class ShiftController extends Controller {
           }>,
         ),
     });
+
+    this.addRoute({
+      path: ShiftsApiPath.$ID,
+      method: 'GET',
+      authStrategy: AuthStrategy.INJECT_USER,
+      handler: (options) =>
+        this.getByShiftId(
+          options as ApiHandlerOptions<{
+            user: UserEntityObjectWithGroupT;
+            params: Pick<ShiftEntity, 'id'>;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: ShiftsApiPath.$DRIVER_ID,
+      method: 'GET',
+      authStrategy: AuthStrategy.INJECT_USER,
+      handler: (options) =>
+        this.getByDriver(
+          options as ApiHandlerOptions<{
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+  }
+
+  private async getAllStarted(): Promise<
+    ApiHandlerResponse<ShiftCreateResponseDto[]>
+  > {
+    return {
+      status: HttpCode.OK,
+      payload: await this.shiftService.getAllStarted(),
+    };
   }
 
   private async startShift(
@@ -86,50 +127,32 @@ class ShiftController extends Controller {
       payload: await this.shiftService.close(options),
     };
   }
-  // private async update(
-  //   options: ApiHandlerOptions<{
-  //     body: Partial<TruckEntity>;
-  //     params: { id: number };
-  //   }>,
-  // ): Promise<ApiHandlerResponse> {
-  //   const { params, body } = options;
 
-  //   const updatedTruck = await this.truckService.update(params.id, body);
+  private async getByShiftId(
+    options: ApiHandlerOptions<{
+      user: UserEntityObjectWithGroupT;
+      params: Pick<ShiftEntity, 'id'>;
+    }>,
+  ): Promise<ApiHandlerResponse<ShiftCreateResponseDto>> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.shiftService.findByShiftId(
+        options.params.id,
+        options.user.id,
+      ),
+    };
+  }
 
-  //   return {
-  //     status: HttpCode.OK,
-  //     payload: updatedTruck,
-  //   };
-  // }
-
-  // private async getAll(): Promise<ApiHandlerResponse> {
-  //   return {
-  //     status: HttpCode.OK,
-  //     payload: await this.truckService.getAll(),
-  //   };
-  // }
-
-  // private async get(
-  //   options: ApiHandlerOptions<{
-  //     params: { id: number };
-  //   }>,
-  // ): Promise<ApiHandlerResponse> {
-  //   return {
-  //     status: HttpCode.OK,
-  //     payload: await this.truckService.findById(options.params.id),
-  //   };
-  // }
-
-  // private async delete(
-  //   options: ApiHandlerOptions<{
-  //     params: { id: number };
-  //   }>,
-  // ): Promise<ApiHandlerResponse> {
-  //   return {
-  //     status: HttpCode.NO_CONTENT,
-  //     payload: await this.truckService.delete(options.params.id),
-  //   };
-  // }
+  private async getByDriver(
+    options: ApiHandlerOptions<{
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse<ShiftCreateResponseDto[]>> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.shiftService.findByDriverUserId(options.user.id),
+    };
+  }
 }
 
 export { ShiftController };
