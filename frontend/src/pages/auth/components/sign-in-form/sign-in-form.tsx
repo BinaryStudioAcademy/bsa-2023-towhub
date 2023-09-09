@@ -1,5 +1,5 @@
 import { Form, Link } from '~/libs/components/components.js';
-import { AppRoute } from '~/libs/enums/app-route.enum.js';
+import { AppRoute } from '~/libs/enums/enums.js';
 import {
   type UserSignInRequestDto,
   userSignInValidationSchema,
@@ -24,9 +24,8 @@ const SignInForm: React.FC<Properties> = ({ onSubmit }: Properties) => (
       fields={signInFields}
     />
     <p className={styles.text}>
-      Don`t have an account yet?
-      <Link to={AppRoute.WELCOME} className={styles.link}>
-        {' '}
+      Don`t have an account yet?{' '}
+      <Link to={AppRoute.WELCOME} className={'link commonLink'}>
         Sign up
       </Link>
     </p>

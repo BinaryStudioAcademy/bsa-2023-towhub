@@ -3,6 +3,7 @@ export {
   AppEnvironment,
   AppErrorMessage,
   ContentType,
+  FrontendPath,
   ServerErrorType,
 } from './libs/enums/enums.js';
 export {
@@ -54,6 +55,7 @@ export {
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,
   type BusinessUpdateResponseDto,
+  type SetupPaymentFormData,
   businessAddRequestBody,
   BusinessApiPath,
   businessDeleteParameters,
@@ -61,6 +63,7 @@ export {
   businessUpdateParameters,
   businessUpdateRequestBody,
   BusinessValidationMessage,
+  connectStripeValidationSchema,
 } from './packages/business/business.js';
 export {
   type BusinessGetAllDriversRequestParameters,

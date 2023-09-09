@@ -5,6 +5,7 @@ import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
 import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
+import { SetupPayment } from '~/pages/setup-payment/setup-payment.js';
 import { WelcomePage } from '~/pages/welcome/welcome.js';
 
 import { PageLayout, ProtectedRoute } from '../components.js';
@@ -21,6 +22,14 @@ const Router = (): JSX.Element => (
       path={AppRoute.ROOT}
       element={<ProtectedRoute allowedUserGroup={UserGroupKey.BUSINESS} />}
     >
+      <Route
+        path={AppRoute.SETUP_PAYMENT}
+        element={
+          <PageLayout isSidebarHidden>
+            <SetupPayment />
+          </PageLayout>
+        }
+      />
       <Route
         path={AppRoute.DASHBOARD}
         element={

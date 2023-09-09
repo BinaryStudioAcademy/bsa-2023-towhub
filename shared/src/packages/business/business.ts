@@ -11,6 +11,7 @@ export {
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,
   type BusinessUpdateResponseDto,
+  type SetupPaymentFormData,
 } from './libs/types/types.js';
 export {
   businessAddRequestBody,
@@ -18,4 +19,5 @@ export {
   businessGetParameters,
   businessUpdateParameters,
   businessUpdateRequestBody,
+  connectStripeValidationSchema,
 } from './libs/validation-schemas/validation-schemas.js';

@@ -1,0 +1,59 @@
+@import "src/assets/css/vars.scss";
+
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  background-color: $blue-dark;
+  background-image: url("../../assets/img/auth-page-bg.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  padding-block: 57px;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 448px;
+  padding: 30px 60px 50px;
+  background-color: $white;
+  border-radius: 8px;
+}
+
+.title {
+  margin: 0 0 17px;
+  color: $title-color;
+  font-weight: $font-weight-bold;
+  font-size: 24px;
+  font-family: $font-family;
+  text-transform: uppercase;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: $grey;
+  font-weight: $font-weight-regular;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.mainText {
+  font-size: 16px;
+  text-align: center;
+}
+
+.smallText {
+  text-align: center;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+}
