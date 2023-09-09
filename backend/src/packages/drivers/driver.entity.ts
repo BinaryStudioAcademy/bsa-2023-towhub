@@ -12,6 +12,8 @@ class DriverEntity implements IEntity {
 
   private businessId: DriverEntityT['businessId'];
 
+  private createdAt: DriverEntityT['createdAt'];
+
   private user?: DriverEntityT['user'];
 
   private constructor({
@@ -19,12 +21,14 @@ class DriverEntity implements IEntity {
     driverLicenseNumber,
     userId,
     businessId,
+    createdAt,
     user,
   }: NullableProperties<DriverEntityT, 'id'>) {
     this.id = id;
     this.driverLicenseNumber = driverLicenseNumber;
     this.userId = userId;
     this.businessId = businessId;
+    this.createdAt = createdAt;
     this.user = user;
   }
 
@@ -33,6 +37,7 @@ class DriverEntity implements IEntity {
     driverLicenseNumber,
     userId,
     businessId,
+    createdAt,
     user,
   }: DriverEntityT): DriverEntity {
     return new DriverEntity({
@@ -40,6 +45,7 @@ class DriverEntity implements IEntity {
       driverLicenseNumber,
       userId,
       businessId,
+      createdAt,
       user,
     });
   }
@@ -48,6 +54,7 @@ class DriverEntity implements IEntity {
     driverLicenseNumber,
     userId,
     businessId,
+    createdAt,
     user,
   }: Omit<DriverEntityT, 'id'>): DriverEntity {
     return new DriverEntity({
@@ -55,6 +62,7 @@ class DriverEntity implements IEntity {
       driverLicenseNumber,
       userId,
       businessId,
+      createdAt,
       user,
     });
   }
@@ -65,6 +73,7 @@ class DriverEntity implements IEntity {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
+      createdAt: this.createdAt,
     };
   }
 
@@ -73,6 +82,7 @@ class DriverEntity implements IEntity {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
+      createdAt: this.createdAt,
     };
   }
 
@@ -82,6 +92,7 @@ class DriverEntity implements IEntity {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
+      createdAt: this.createdAt,
       user: this.user,
     };
   }

@@ -45,9 +45,11 @@ class DriverService implements IService {
     businessId: number,
   ): Promise<DriverGetAllResponseDto> {
     const items = await this.driverRepository.findAllByBusinessId(businessId);
+    const total = await this.driverRepository.getTotal(businessId);
 
     return {
       items: items.map((item) => convertToDriverUser(item)),
+      total,
     };
   }
 
@@ -61,9 +63,11 @@ class DriverService implements IService {
       pageIndex,
       pageSize,
     );
+    const total = await this.driverRepository.getTotal(businessId);
 
     return {
       items: items.map((item) => convertToDriverUser(item)),
+      total,
     };
   }
 

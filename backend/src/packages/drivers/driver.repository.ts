@@ -1,4 +1,4 @@
-import { type SQL, and, eq, or } from 'drizzle-orm';
+import { type SQL, and, eq, or, sql } from 'drizzle-orm';
 
 import { AppErrorMessage } from '~/libs/enums/enums.js';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
@@ -148,6 +148,16 @@ class DriverRepository implements IRepository {
       .execute();
 
     return Boolean(item);
+  }
+
+  public async getTotal(id: number): Promise<number> {
+    const [driver] = await this.db
+      .driver()
+      .select({ count: sql<number>`count(*)` })
+      .from(this.driverSchema)
+      .where(eq(this.driverSchema.businessId, id));
+
+    return driver.count;
   }
 }
 

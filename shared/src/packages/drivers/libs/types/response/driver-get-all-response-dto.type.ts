@@ -4,6 +4,7 @@ import { type DriverEntity } from '../driver-entity.type.js';
 
 type DriverGetAllResponseDto = {
   items: DriverWithUserData[];
+  total: number;
 };
 
 type DriverWithUserData = Omit<
