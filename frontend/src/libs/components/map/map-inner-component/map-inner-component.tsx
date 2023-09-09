@@ -2,7 +2,7 @@ import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useEffect, useRef } from '~/libs/hooks/hooks.js';
 import { MapService } from '~/libs/packages/map/map.js';
 
-import styles from './map.module.scss';
+import styles from './styles.module.scss';
 
 type Properties = {
   center: google.maps.LatLngLiteral;
@@ -28,6 +28,7 @@ const MapInnerComponent: React.FC<Properties> = ({
         center,
         zoom,
       });
+
       mapService.current.addMarker(center);
     }
   }, [center, zoom]);

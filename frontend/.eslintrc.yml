@@ -23,7 +23,7 @@ rules:
 
 overrides:
   - files:
-    - vite.config.ts
+      - vite.config.ts
     rules:
       import/no-default-export:
         - off
