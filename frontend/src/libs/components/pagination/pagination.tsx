@@ -1,5 +1,8 @@
+import { type SingleValue } from 'react-select';
+
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
+import { type SelectOption } from '~/libs/types/select-option.type.js';
 
 import { Button } from '../button/button.jsx';
 import { Dropdown } from '../dropdown/dropdown.js';
@@ -57,9 +60,9 @@ const Pagination: React.FC<Properties> = ({
   );
 
   const handleChangePageSize = useCallback(
-    (value: string | undefined) => {
-      if (value && !Number.isNaN(+value) && onChangePageSize) {
-        onChangePageSize(+value);
+    (option: SingleValue<SelectOption>) => {
+      if (option?.value && !Number.isNaN(+option.value) && onChangePageSize) {
+        onChangePageSize(+option.value);
       }
     },
     [onChangePageSize],
