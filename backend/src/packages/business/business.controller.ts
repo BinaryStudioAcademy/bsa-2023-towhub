@@ -1,5 +1,3 @@
-import { type BusinessGetDriversPageRequestParameters } from 'shared/build/index.js';
-
 import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
@@ -12,6 +10,7 @@ import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
   type BusinessGetAllDriversRequestParameters,
+  type BusinessGetDriversPageRequestParameters,
   type DriverCreateUpdateRequestDto,
   type DriverUpdateDeleteRequestParameters,
 } from '../drivers/drivers.js';
@@ -809,6 +808,48 @@ class BusinessController extends Controller {
       payload: deletionResult,
     };
   }
+
+  /**
+   * @swagger
+   * /business/{businessId}/{pageIndex}/{pageSize}/drivers:
+   *    get:
+   *      tags:
+   *       - business/driver
+   *      summary: Find a page of drivers
+   *      description: Find a page of drivers
+   *      parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the business to create driver
+   *         example: 1
+   *       - in: path
+   *         name: pageIndex
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Number of drivers page
+   *         example: 0
+   *       - in: path
+   *         name: pageSize
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Number of drivers page size
+   *         example: 2
+   *      responses:
+   *        200:
+   *          description: Successful find a drivers page
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: array
+   *                items:
+   *                  $ref: '#/components/schemas/Driver'
+   *
+   */
 
   private async getDriversPage(
     options: ApiHandlerOptions<{

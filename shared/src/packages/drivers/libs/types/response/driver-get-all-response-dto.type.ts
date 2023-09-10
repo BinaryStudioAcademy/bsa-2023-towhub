@@ -1,11 +1,9 @@
+import { type EntityPagination } from '~/libs/types/entity-pagination.js';
 import { type UserEntityT } from '~/packages/users/users.js';
 
 import { type DriverEntity } from '../driver-entity.type.js';
 
-type DriverGetAllResponseDto = {
-  items: DriverWithUserData[];
-  total: number;
-};
+type DriverGetAllResponseDto = EntityPagination<DriverWithUserData>;
 
 type DriverWithUserData = Omit<
   UserEntityT,

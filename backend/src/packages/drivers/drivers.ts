@@ -17,12 +17,14 @@ const driverService = new DriverService({
 export { driverRepository, driverService };
 export {
   type BusinessGetAllDriversRequestParameters,
+  type BusinessGetDriversPageRequestParameters,
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverEntity,
   type DriverGetAllResponseDto,
+  type DriverGetDriversPagePayload,
   type DriverGetRequestParameters,
   type DriverUpdateDeleteRequestParameters,
   type DriverUpdatePayload,

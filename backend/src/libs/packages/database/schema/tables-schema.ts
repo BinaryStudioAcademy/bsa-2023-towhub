@@ -76,13 +76,6 @@ const drivers = pgTable('driver_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-const driversRelations = relations(drivers, ({ one }) => ({
-  user: one(users, {
-    fields: [drivers.userId],
-    references: [users.id],
-  }),
-}));
-
 const trucks = pgTable(
   'trucks',
   {

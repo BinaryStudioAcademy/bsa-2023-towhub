@@ -32,6 +32,7 @@ export {
   type EntityPagination,
   type NullableProperties,
   type OperationResult,
+  type PaginationPayload,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,

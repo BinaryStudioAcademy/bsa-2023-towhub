@@ -19,7 +19,6 @@ const schema = {
   users,
   usersTrucks,
   drivers,
-  driversRelations,
   usersRelations,
   driversRelations,
   usersTrucksRelations,

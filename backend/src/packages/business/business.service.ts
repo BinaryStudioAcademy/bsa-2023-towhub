@@ -1,5 +1,3 @@
-import { type DriverGetDriversPagePayload } from 'shared/build/index.js';
-
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
@@ -11,6 +9,7 @@ import {
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
+  type DriverGetDriversPagePayload,
   type DriverUpdatePayload,
 } from '../drivers/drivers.js';
 import { BusinessEntity } from './business.entity.js';

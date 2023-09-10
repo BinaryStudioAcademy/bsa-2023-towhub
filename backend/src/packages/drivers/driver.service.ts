@@ -1,5 +1,3 @@
-import { type DriverGetDriversPagePayload } from 'shared/build/index.js';
-
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import {
   type GeolocationCacheService,
@@ -16,6 +14,7 @@ import {
   type DriverCreateUpdateResponseDto,
   type DriverEntity as DriverEntityT,
   type DriverGetAllResponseDto,
+  type DriverGetDriversPagePayload,
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
