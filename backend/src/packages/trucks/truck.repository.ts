@@ -6,7 +6,7 @@ import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
 import {
   type TruckDatabaseModel,
-  type TruckEntity,
+  type TruckEntityT,
 } from './libs/types/types.js';
 
 class TruckRepository implements IRepository {
@@ -35,7 +35,7 @@ class TruckRepository implements IRepository {
   }
 
   public async create(
-    entity: Omit<TruckEntity, 'id'>,
+    entity: Omit<TruckEntityT, 'id'>,
   ): Promise<TruckDatabaseModel[]> {
     const preparedQuery = this.db
       .driver()
@@ -49,7 +49,7 @@ class TruckRepository implements IRepository {
 
   public async update(
     id: number,
-    payload: Partial<TruckEntity>,
+    payload: Partial<TruckEntityT>,
   ): Promise<TruckDatabaseModel[]> {
     const preparedQuery = this.db
       .driver()

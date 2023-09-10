@@ -8,7 +8,7 @@ import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 
 import { TruckApiPath } from './libs/enums/enums.js';
-import { type TruckEntity } from './libs/types/types.js';
+import { type TruckEntityT } from './libs/types/types.js';
 import {
   truckCreateRequestBody,
   truckGetParameters,
@@ -145,7 +145,7 @@ class TruckController extends Controller {
       handler: (request) =>
         this.create(
           request as ApiHandlerOptions<{
-            body: Omit<TruckEntity, 'id'>;
+            body: Omit<TruckEntityT, 'id'>;
           }>,
         ),
     });
@@ -160,7 +160,7 @@ class TruckController extends Controller {
       handler: (request) =>
         this.update(
           request as ApiHandlerOptions<{
-            body: Partial<TruckEntity>;
+            body: Partial<TruckEntityT>;
             params: { id: number };
           }>,
         ),
@@ -228,7 +228,7 @@ class TruckController extends Controller {
    */
   private async create(
     options: ApiHandlerOptions<{
-      body: Omit<TruckEntity, 'id'>;
+      body: Omit<TruckEntityT, 'id'>;
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
@@ -274,7 +274,7 @@ class TruckController extends Controller {
 
   private async update(
     options: ApiHandlerOptions<{
-      body: Partial<TruckEntity>;
+      body: Partial<TruckEntityT>;
       params: { id: number };
     }>,
   ): Promise<ApiHandlerResponse> {

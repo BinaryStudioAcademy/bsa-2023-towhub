@@ -5,7 +5,7 @@ export {
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverDto,
-  type DriverEntity,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetRequestParameters,
   type DriverUpdateDeleteRequestParameters,

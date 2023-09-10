@@ -67,7 +67,7 @@ export {
   type DriverAddPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetRequestParameters,
   type DriverUpdateDeleteRequestParameters,
@@ -79,7 +79,7 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
-  type TruckEntity,
+  type TruckEntityT,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
@@ -88,6 +88,7 @@ export {
   TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
+  TruckStatus,
   TruckTowType,
   truckUpdateRequestBody,
   TruckValidationMessage,
@@ -115,3 +116,4 @@ export {
   UsersApiPath,
   userSignInValidationSchema,
 } from './packages/users/users.js';
+export { type UsersTrucksEntityT } from './packages/users-trucks/users-trucks.js';

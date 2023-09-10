@@ -1,7 +1,7 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
-import { type TruckEntity as TruckEntityT } from './libs/types/types.js';
+import { type TruckEntityT } from './libs/types/types.js';
 import { TruckEntity } from './truck.entity.js';
 import { type TruckRepository } from './truck.repository.js';
 

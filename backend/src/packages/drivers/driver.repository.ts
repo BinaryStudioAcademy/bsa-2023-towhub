@@ -8,7 +8,7 @@ import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { type OperationResult } from '~/libs/types/types.js';
 
 import { DriverEntity } from './driver.entity.js';
-import { type DriverEntity as DriverEntityT } from './drivers.js';
+import { type DriverEntityT as DriverEntityT } from './drivers.js';
 
 class DriverRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;

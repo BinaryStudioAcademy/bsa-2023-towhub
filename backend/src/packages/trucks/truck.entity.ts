@@ -4,10 +4,11 @@ import { type NullableProperties, type ValueOf } from '~/libs/types/types.js';
 import {
   type TruckManufacturer,
   type TruckTowType,
+  TruckStatus,
 } from './libs/enums/enums.js';
 import {
   type TruckDatabaseModel,
-  type TruckEntity as TruckEntityT,
+  type TruckEntityT as TruckEntityT,
 } from './libs/types/types.js';
 
 class TruckEntity implements IEntity {
@@ -25,6 +26,8 @@ class TruckEntity implements IEntity {
 
   private pricePerKm: number;
 
+  private status: ValueOf<typeof TruckStatus>;
+
   private constructor({
     id,
     manufacturer,
@@ -33,6 +36,7 @@ class TruckEntity implements IEntity {
     licensePlateNumber,
     year,
     towType,
+    status,
   }: NullableProperties<TruckEntityT, 'id'>) {
     this.id = id;
     this.manufacturer = manufacturer;
@@ -41,6 +45,7 @@ class TruckEntity implements IEntity {
     this.licensePlateNumber = licensePlateNumber;
     this.year = year;
     this.towType = towType;
+    this.status = status;
   }
 
   public static initialize({
@@ -51,6 +56,7 @@ class TruckEntity implements IEntity {
     licensePlateNumber,
     year,
     towType,
+    status,
   }: TruckDatabaseModel): TruckEntity {
     return new TruckEntity({
       id,
@@ -60,6 +66,7 @@ class TruckEntity implements IEntity {
       pricePerKm,
       licensePlateNumber,
       year,
+      status,
     });
   }
 
@@ -79,6 +86,7 @@ class TruckEntity implements IEntity {
       pricePerKm,
       licensePlateNumber,
       year,
+      status: TruckStatus.NOT_AVAILABLE,
     });
   }
 
@@ -91,6 +99,7 @@ class TruckEntity implements IEntity {
       capacity: this.capacity,
       pricePerKm: this.pricePerKm,
       licensePlateNumber: this.licensePlateNumber,
+      status: this.status,
     };
   }
 
@@ -102,6 +111,7 @@ class TruckEntity implements IEntity {
       capacity: this.capacity,
       pricePerKm: this.pricePerKm,
       licensePlateNumber: this.licensePlateNumber,
+      status: this.status,
     };
   }
 }

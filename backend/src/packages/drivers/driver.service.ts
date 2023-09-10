@@ -12,7 +12,7 @@ import {
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity as DriverEntityT,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
