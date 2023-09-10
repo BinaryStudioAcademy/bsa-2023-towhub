@@ -1,4 +1,5 @@
 import { type DriverEntity } from '~/packages/drivers/drivers.js';
+import { type UserEntityT } from '~/packages/users/users.js';
 
 import { type OrderStatusValues } from './order-status-values.type.js';
 
@@ -15,8 +16,11 @@ type OrderEntity = {
   driverId: number;
   customerName: string | null;
   customerPhone: string | null;
-  driver?: Pick<DriverEntity, 'businessId' | 'id' | 'driverLicenseNumber'> & {
-    user: { firstName: string; lastName: string };
+  driver?: Pick<DriverEntity, 'driverLicenseNumber'> & {
+    user: {
+      firstName: UserEntityT['firstName'];
+      lastName: UserEntityT['lastName'];
+    };
   };
 };
 

@@ -26,7 +26,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       where: (orders) => eq(orders.id, id),
       with: {
         driver: {
-          columns: { id: true, businessId: true, driverLicenseNumber: true },
+          columns: { driverLicenseNumber: true },
           with: { user: { columns: { firstName: true, lastName: true } } },
         },
       },
