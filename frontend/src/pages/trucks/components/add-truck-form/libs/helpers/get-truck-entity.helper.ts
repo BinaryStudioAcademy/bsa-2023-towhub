@@ -1,9 +1,11 @@
 import {
-  type TruckEntity,
+  type TruckEntityT,
   type TruckFormModel,
 } from '~/packages/trucks/libs/types/types.js';
 
-function getTruckEntity(payload: TruckFormModel): Omit<TruckEntity, 'id'> {
+function getTruckEntity(
+  payload: TruckFormModel,
+): Omit<TruckEntityT, 'id' | 'status'> {
   return {
     ...payload,
     manufacturer: payload.manufacturer.value,

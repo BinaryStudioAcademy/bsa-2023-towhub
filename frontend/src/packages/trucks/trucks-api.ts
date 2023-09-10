@@ -4,7 +4,11 @@ import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 
 import { TruckApiPath } from './libs/enums/enums.js';
-import { type TruckEntity } from './libs/types/types.js';
+import {
+  type GetAllTrucksByUserIdResponseDto,
+  type TruckEntityT,
+  type UsersTrucksEntityT,
+} from './libs/types/types.js';
 
 type Constructor = {
   baseUrl: string;
@@ -18,8 +22,8 @@ class TruckApi extends HttpApi {
   }
 
   public async addTruck(
-    payload: Omit<TruckEntity, 'id'>,
-  ): Promise<TruckEntity> {
+    payload: Omit<TruckEntityT, 'id' | 'status'>,
+  ): Promise<TruckEntityT> {
     const response = await this.load(
       this.getFullEndpoint(TruckApiPath.ROOT, {}),
       {
@@ -30,7 +34,27 @@ class TruckApi extends HttpApi {
       },
     );
 
-    return await response.json<TruckEntity>();
+    return await response.json<TruckEntityT>();
+  }
+
+  public async getAllTrucksByUserId({
+    userId,
+  }: Pick<
+    UsersTrucksEntityT,
+    'userId'
+  >): Promise<GetAllTrucksByUserIdResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(TruckApiPath.$USER_ID, {
+        userId: userId.toString(),
+      }),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: false,
+      },
+    );
+
+    return await response.json<GetAllTrucksByUserIdResponseDto>();
   }
 }
 

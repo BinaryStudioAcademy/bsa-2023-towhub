@@ -16,7 +16,7 @@ export {
   type EntityPagination,
   type ServerErrorDetail,
   type ServerErrorResponse,
-  type TruckEntity,
+  type TruckEntityT,
   type TruckTowType,
   type UserSignInRequestDto,
   type UserSignInResponseDto,

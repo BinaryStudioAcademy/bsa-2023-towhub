@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 import { AppRoute } from '~/libs/enums/enums.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
+import { AvailableTrucks } from '~/pages/available-trucks/available-trucks.js';
 import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 import { WelcomePage } from '~/pages/welcome/welcome.js';
@@ -26,6 +27,19 @@ const Router = (): JSX.Element => (
         element={
           <PageLayout>
             <Dashboard />
+          </PageLayout>
+        }
+      />
+    </Route>
+    <Route
+      path={AppRoute.ROOT}
+      element={<ProtectedRoute allowedUserGroup={UserGroupKey.DRIVER} />}
+    >
+      <Route
+        path={AppRoute.AVAILABLE_TRUCKS}
+        element={
+          <PageLayout isSidebarHidden>
+            <AvailableTrucks />
           </PageLayout>
         }
       />

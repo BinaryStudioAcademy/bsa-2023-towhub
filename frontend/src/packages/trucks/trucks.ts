@@ -11,6 +11,7 @@ export {
   TruckTowType,
   TruckYear,
 } from './libs/enums/enums.js';
+export { type GetAllTrucksByUserIdResponseDto } from './libs/types/types.js';
 export { TruckApi } from './trucks-api.js';
 
 const truckApi = new TruckApi({
