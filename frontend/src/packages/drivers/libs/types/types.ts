@@ -1,1 +1,4 @@
-export { type DriverCreateUpdateRequestDto } from 'shared/build/index.js';
+export {
+  type DriverCreateUpdateRequestDto,
+  type BusinessGetDriversPageRequestParameters as GetPageOfDriversPayload,
+} from 'shared/build/index.js';

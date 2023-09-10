@@ -25,7 +25,9 @@ const Router = (): JSX.Element => (
         path={AppRoute.DASHBOARD}
         element={
           <PageLayout>
-            <Dashboard />
+            {(selectedTab): JSX.Element => (
+              <Dashboard selectedTab={selectedTab} />
+            )}
           </PageLayout>
         }
       />

@@ -1,15 +1,17 @@
+import { type AsyncThunk } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 
-import { type AppThunk, type EntityPagination } from '~/libs/types/types.js';
+import {
+  type AsyncThunkConfig,
+  type PaginationPayload,
+} from '~/libs/types/types.js';
 
 import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
 
-type Properties<T> = {
-  tableFetchCall: (a: {
-    pageSize: number;
-    pageIndex: number;
-  }) => AppThunk<EntityPagination<T>>;
+type Properties<T, K> = {
+  tableFetchCall: AsyncThunk<T, K & PaginationPayload, AsyncThunkConfig>;
+  payload: K;
   initialPageSize?: number;
   initialPageIndex?: number;
 };
@@ -21,18 +23,19 @@ type ReturnValue = {
   changePageIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const useAppTable = <T>({
+const useAppTable = <T, K>({
   tableFetchCall,
+  payload,
   initialPageSize = DEFAULT_PAGE_SIZE,
   initialPageIndex = DEFAULT_PAGE_INDEX,
-}: Properties<T>): ReturnValue => {
+}: Properties<T, K>): ReturnValue => {
   const [pageSize, changePageSize] = useState(initialPageSize);
   const [pageIndex, changePageIndex] = useState(initialPageIndex);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(tableFetchCall({ pageSize, pageIndex }));
-  }, [tableFetchCall, pageSize, pageIndex, dispatch]);
+    void dispatch(tableFetchCall({ ...payload, pageSize, pageIndex }));
+  }, [tableFetchCall, pageSize, pageIndex, dispatch, payload]);
 
   return { pageSize, pageIndex, changePageSize, changePageIndex };
 };
