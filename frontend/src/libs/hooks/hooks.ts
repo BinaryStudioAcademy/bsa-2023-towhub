@@ -17,5 +17,6 @@ export { useController as useFormController } from 'react-hook-form';
 export {
   useLocation,
   useNavigate,
+  useParams,
   useSearchParams as useSearchParameters,
 } from 'react-router-dom';

@@ -19,3 +19,9 @@
   flex-grow: 1;
   margin: 0 30px;
 }
+
+@media screen and (width <= 400px) {
+  .container {
+    padding: 54px 24px 0;
+  }
+}

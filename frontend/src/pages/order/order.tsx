@@ -1,37 +1,53 @@
 import { OrderStatus as OrderStatusEnum } from 'shared/build/packages/orders/libs/enums/order-status.enum';
 
-import {
-  // BusinessCard,
-  // CustomerCard,
-  OrderCard,
-} from '~/libs/components/components.js';
+import { OrderCard } from '~/libs/components/components.js';
 import { OrderStatus } from '~/libs/components/orders-status/order-status.js';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useEffect,
+  useParams,
+} from '~/libs/hooks/hooks.js';
+import { actions } from '~/slices/orders/orders.js';
+import { selectOrder } from '~/slices/orders/selectors.js';
 
-// import { AppRoute } from '~/libs/enums/enums.js';
-// import { getValidClassNames } from '~/libs/helpers/helpers.js';
-// import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 import styles from './styles.module.scss';
 
 const OrderPage: React.FC = () => {
+  const { orderId } = useParams();
+  const dispatch = useAppDispatch();
+  const order = useAppSelector(selectOrder);
+
+  useEffect(() => {
+    if (orderId) {
+      void dispatch(actions.getOrder(orderId));
+    }
+  }, [dispatch, orderId]);
+
   return (
     <div className={styles.container}>
       <OrderStatus status={OrderStatusEnum.PENDING} className={styles.status} />
-      <OrderCard
-        driver={{
-          firstName: 'First Name',
-          lastName: 'Last Name',
-          profileURL: `https://www.gravatar.com/avatar/${Math.random()}`,
-        }}
-        truck={{ licensePlate: '1111' }}
-        initialStatus={{ startLocation: 'London', endLocation: 'Paris' }}
-        currentStatus={{
-          timespanLastUpdated: '30 seconds ago',
-          location: 'A',
-          distanceLeft: 12,
-          timespanLeft: '1 hrs 24 mins',
-        }}
-        className={styles.card}
-      />
+      {order && (
+        <OrderCard
+          driver={{
+            firstName: order.driver.user.firstName,
+            lastName: order.driver.user.lastName,
+            profileURL: 'https://i.pravatar.cc/300',
+          }}
+          truck={{ licensePlate: 'GB 555' }}
+          initialStatus={{
+            startLocation: order.startPoint,
+            endLocation: order.endPoint,
+          }}
+          currentStatus={{
+            timespanLastUpdated: '30 seconds',
+            location: 'Birmingham',
+            distanceLeft: 12,
+            timespanLeft: '1 hrs 24 mins',
+          }}
+          className={styles.card}
+        />
+      )}
     </div>
   );
 };
