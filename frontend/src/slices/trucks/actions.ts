@@ -1,6 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import {
+  type AsyncThunkConfig,
+  type PaginationPayload,
+} from '~/libs/types/types.js';
 import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 
 import { name as sliceName } from './trucks.slice.js';
@@ -17,12 +20,16 @@ const addTruck = createAsyncThunk<
 
 const findAllTrucksForBusiness = createAsyncThunk<
   TruckEntity[],
-  number,
+  Pick<TruckEntity, 'businessId'> & PaginationPayload,
   AsyncThunkConfig
->(`${sliceName}/find-all-trucks-for-business`, (businessId, { extra }) => {
+>(`${sliceName}/find-all-trucks-for-business`, (payload, { extra }) => {
+  const { businessId, pageIndex, pageSize } = payload;
   const { businessApi } = extra;
 
-  return businessApi.findAllTrucksByBusinessId(businessId);
+  return businessApi.findAllTrucksByBusinessId(businessId, {
+    pageIndex,
+    pageSize,
+  });
 });
 
 export { addTruck, findAllTrucksForBusiness };

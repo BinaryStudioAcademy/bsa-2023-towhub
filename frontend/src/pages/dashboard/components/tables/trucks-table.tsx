@@ -1,9 +1,68 @@
-// import { useAppSelector } from '~/libs/hooks/hooks.js';
+import { Table } from '~/libs/components/components.js';
+import { capitalizeFirstLetter } from '~/libs/helpers/helpers.js';
+import { useAppSelector, useAppTable } from '~/libs/hooks/hooks.js';
+import { type ColumnDef, type TruckEntity } from '~/libs/types/types.js';
+import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
 
-const TrucksTable: React.FC = () => {
-  // const trucks = useAppSelector((state) => state.trucks.trucks);
+const columns: ColumnDef<TruckEntity>[] = [
+  {
+    id: 'manufacturer',
+    header: 'Manufacturer',
+    cell: (row) => capitalizeFirstLetter(row.row.original.manufacturer),
+  },
+  {
+    id: 'towType',
+    header: 'Tow Type',
+    cell: (row) => capitalizeFirstLetter(row.row.original.towType),
+  },
+  {
+    id: 'year',
+    header: 'Year',
+    cell: (row) => row.row.original.year,
+  },
+  {
+    id: 'licensePlateNumber',
+    header: 'Plate Number',
+    cell: (row) => row.row.original.licensePlateNumber,
+  },
+  {
+    id: 'capacity',
+    header: 'Capacity',
+    cell: (row) => row.row.original.capacity,
+  },
+  {
+    id: 'pricePerKm',
+    header: 'Price Per Km',
+    cell: (row) => row.row.original.pricePerKm,
+  },
+];
 
-  return <div> Trucks</div>;
+type Properties = {
+  businessId: number;
+};
+
+const TrucksTable: React.FC<Properties> = ({ businessId }: Properties) => {
+  const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
+    TruckEntity[],
+    Pick<TruckEntity, 'businessId'>
+  >({
+    tableFetchCall: findAllTrucksForBusiness,
+    payload: { businessId },
+  });
+
+  const trucks = useAppSelector((state) => state.trucks.trucks);
+
+  return (
+    <Table
+      data={trucks}
+      columns={columns}
+      totalRow={5}
+      pageIndex={pageIndex}
+      pageSize={pageSize}
+      changePageSize={changePageSize}
+      changePageIndex={changePageIndex}
+    />
+  );
 };
 
 export { TrucksTable };

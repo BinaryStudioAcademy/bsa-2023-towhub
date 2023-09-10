@@ -3,6 +3,7 @@ import { eq, ilike, placeholder } from 'drizzle-orm';
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
+import { type PaginationPayload } from '~/libs/types/types.js';
 
 import {
   type TruckDatabaseModel,
@@ -36,12 +37,15 @@ class TruckRepository implements IRepository {
 
   public async findAllByBusinessId(
     businessId: number,
+    query: PaginationPayload,
   ): Promise<TruckDatabaseModel[]> {
     return await this.db
       .driver()
       .select()
       .from(this.trucksSchema)
-      .where(eq(this.trucksSchema.businessId, businessId));
+      .where(eq(this.trucksSchema.businessId, businessId))
+      .offset(query.pageIndex)
+      .limit(query.pageSize);
   }
 
   public async create(

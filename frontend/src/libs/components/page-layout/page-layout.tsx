@@ -4,13 +4,15 @@ import { useCallback, useState } from '~/libs/hooks/hooks.js';
 import { type TabName } from '~/libs/types/types.js';
 import { Sidebar } from '~/pages/dashboard/components/sidebar/sidebar.js';
 
-import { Header } from '../components.js';
+import { Header } from '../header/header.js';
+import { RouterOutlet } from '../router/router.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   isHeaderHidden?: boolean;
   isSidebarHidden?: boolean;
   children: (selectedTab: TabName) => JSX.Element | JSX.Element;
+  // children?: JSX.Element;
 };
 
 const PageLayout: FC<Properties> = ({
@@ -40,6 +42,8 @@ const PageLayout: FC<Properties> = ({
       <main className={styles.content}>
         {' '}
         {typeof children === 'function' ? children(selectedTab) : children}
+        <RouterOutlet />
+        {/* // {children}  */}
       </main>
     </div>
   );

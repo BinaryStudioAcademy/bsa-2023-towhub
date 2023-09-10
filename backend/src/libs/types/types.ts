@@ -2,6 +2,7 @@ export { type Constructor } from './error-constructor-type/error-constructor.typ
 export {
   type NullableProperties,
   type OperationResult,
+  type PaginationPayload,
   type ServerCommonErrorResponse,
   type ServerErrorResponse,
   type ServerValidationErrorResponse,

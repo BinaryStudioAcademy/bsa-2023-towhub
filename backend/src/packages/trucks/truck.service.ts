@@ -1,5 +1,6 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
+import { type PaginationPayload } from '~/libs/types/types.js';
 
 import { type TruckEntity as TruckEntityT } from './libs/types/types.js';
 import { TruckEntity } from './truck.entity.js';
@@ -20,8 +21,9 @@ class TruckService implements IService {
 
   public async findAllByBusinessId(
     businessId: number,
+    query: PaginationPayload,
   ): Promise<TruckEntityT[]> {
-    const trucks = await this.repository.findAllByBusinessId(businessId);
+    const trucks = await this.repository.findAllByBusinessId(businessId, query);
 
     return trucks.map((it) => TruckEntity.initialize(it).toObject());
   }

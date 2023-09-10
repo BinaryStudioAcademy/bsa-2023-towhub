@@ -1,11 +1,9 @@
+import { useAppSelector } from '~/libs/hooks/hooks.js';
 import {
-  useAppDispatch,
-  useAppSelector,
-  useEffect,
-} from '~/libs/hooks/hooks.js';
-import { type TabName } from '~/libs/types/types.js';
+  type TabName,
+  type UserEntityObjectWithGroupAndBusinessT,
+} from '~/libs/types/types.js';
 import { selectUser } from '~/slices/auth/selectors.js';
-import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
 
 import { TrucksTable } from './components/tables/trucks-table.js';
 
@@ -14,15 +12,9 @@ type Properties = {
 };
 
 const Dashboard: React.FC<Properties> = ({ selectedTab }: Properties) => {
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
-
-  useEffect(() => {
-    if (user) {
-      void dispatch(findAllTrucksForBusiness(user.id)).unwrap();
-    }
-  }, [dispatch, user]);
-
+  const user = useAppSelector(
+    selectUser,
+  ) as UserEntityObjectWithGroupAndBusinessT;
   const renderTabContent = (selectedTab: TabName): React.ReactNode => {
     switch (selectedTab) {
       case 'drivers': {
@@ -31,7 +23,7 @@ const Dashboard: React.FC<Properties> = ({ selectedTab }: Properties) => {
       case 'trucks': {
         return (
           <div>
-            <TrucksTable />
+            <TrucksTable businessId={user.business.id} />
           </div>
         );
       }

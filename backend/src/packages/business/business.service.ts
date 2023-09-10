@@ -1,6 +1,7 @@
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
+import { type PaginationPayload } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { type DriverService } from '../drivers/driver.service.js';
@@ -51,6 +52,15 @@ class BusinessService implements IService {
     return business ? BusinessEntity.initialize(business).toObject() : null;
   }
 
+  public async checkIsExistingBusiness(
+    key: Pick<BusinessEntityT, 'taxNumber'>,
+  ): Promise<boolean> {
+    const { result: doesBusinessExist } =
+      await this.businessRepository.checkExists(key);
+
+    return doesBusinessExist;
+  }
+
   public async create({
     payload,
     owner,
@@ -66,7 +76,6 @@ class BusinessService implements IService {
       await this.businessRepository.checkExists({
         id: owner.id,
         taxNumber: payload.taxNumber,
-        companyName: payload.companyName,
       });
 
     if (doesBusinessExist) {
@@ -162,8 +171,11 @@ class BusinessService implements IService {
     return this.driverService.delete(driverId);
   }
 
-  public findAllTrucksByBusinessId(id: number): Promise<TruckEntityT[]> {
-    return this.truckService.findAllByBusinessId(id);
+  public findAllTrucksByBusinessId(
+    id: number,
+    query: PaginationPayload,
+  ): Promise<TruckEntityT[]> {
+    return this.truckService.findAllByBusinessId(id, query);
   }
 }
 

@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, or } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
@@ -8,6 +8,7 @@ import {
   type UserDatabaseModel,
   type UserDatabaseModelCreateUpdate,
   type UserDatabaseModelWithGroup,
+  type UserEntityT,
 } from './libs/types/types.js';
 
 class UserRepository implements IRepository<UserDatabaseModel> {
@@ -46,6 +47,27 @@ class UserRepository implements IRepository<UserDatabaseModel> {
         with: { group: true },
       })
       .execute();
+  }
+
+  public async findByPhoneOrEmail({
+    phone,
+    email,
+  }: Pick<UserEntityT, 'phone' | 'email'>): Promise<
+    (UserEntityT & { createdAt: Date; updatedAt: Date }) | null
+  > {
+    const [user = null] = await this.db
+      .driver()
+      .select()
+      .from(this.usersSchema)
+      .where(
+        or(
+          eq(this.usersSchema.phone, phone),
+          eq(this.usersSchema.email, email),
+        ),
+      )
+      .execute();
+
+    return user;
   }
 
   public async create(

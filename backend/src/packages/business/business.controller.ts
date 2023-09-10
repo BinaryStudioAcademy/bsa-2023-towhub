@@ -6,6 +6,7 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { type PaginationPayload } from '~/libs/types/types.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
@@ -384,6 +385,7 @@ class BusinessController extends Controller {
         this.findAllTrucks(
           options as ApiHandlerOptions<{
             params: BusinessGetAllTrucksRequestParameters;
+            query: PaginationPayload;
           }>,
         ),
     });
@@ -841,10 +843,12 @@ class BusinessController extends Controller {
   private async findAllTrucks(
     options: ApiHandlerOptions<{
       params: BusinessGetAllTrucksRequestParameters;
+      query: PaginationPayload;
     }>,
   ): Promise<ApiHandlerResponse> {
     const trucks = await this.businessService.findAllTrucksByBusinessId(
       options.params.businessId,
+      options.query,
     );
 
     return {
