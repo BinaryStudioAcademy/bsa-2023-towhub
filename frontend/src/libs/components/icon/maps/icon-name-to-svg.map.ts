@@ -10,6 +10,7 @@ import {
   faMap,
   faPlus,
   faStar,
+  faSync,
   faTruckPickup,
   faUsers,
 } from '@fortawesome/free-solid-svg-icons';
@@ -30,6 +31,7 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.MAP]: faMap,
   [IconName.TRUCK]: faTruckPickup,
   [IconName.USERS]: faUsers,
+  [IconName.SYNC]: faSync,
 };
 
 export { iconNameToSvg };

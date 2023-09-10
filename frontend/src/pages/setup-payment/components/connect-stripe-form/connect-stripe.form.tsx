@@ -1,14 +1,18 @@
 import { Link } from 'react-router-dom';
 
-import { Button, Input } from '~/libs/components/components.js';
+import { Button, Icon, Input } from '~/libs/components/components.js';
+import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useAppForm, useCallback, useState } from '~/libs/hooks/hooks.js';
+import { businessApi } from '~/packages/business/business.js';
 
 import { type SetupPaymentFormData } from './libs/types/types.js';
 import { connectStripeValidationSchema } from './libs/validation-schemas/validation-schemas.js';
 import styles from './styles.module.scss';
 
 const ConnectStripeForm: React.FC = () => {
+  const [isFetching, setIsFetching] = useState(false);
+
   const [showInput, setShowInput] = useState(false);
   const { control, errors, handleSubmit } = useAppForm<SetupPaymentFormData>({
     defaultValues: { stripeKey: '' },
@@ -28,8 +32,14 @@ const ConnectStripeForm: React.FC = () => {
     [handleSubmit],
   );
 
-  const handleRegisterStripeAccountPress = useCallback((): void => {
-    return;
+  const handleRegisterStripeAccountPress = useCallback(() => {
+    setIsFetching(true);
+    businessApi
+      .generateStripeLink()
+      .then((url) => {
+        window.location.href = url;
+      })
+      .finally(() => setIsFetching(false));
   }, []);
 
   return (
@@ -64,7 +74,14 @@ const ConnectStripeForm: React.FC = () => {
                 control={control}
                 errors={errors}
               />
-              <Button type="submit" label="Continue" />
+              <Button type="submit" label="" isDisabled={!isFetching}>
+                <>
+                  {isFetching && (
+                    <Icon iconName={IconName.SYNC} className="fa-spin" />
+                  )}
+                  Submit
+                </>
+              </Button>
             </form>
             <div className={getValidClassNames('textSm', styles.smallText)}>
               Don&apos;t have a Stripe account?{' '}
@@ -79,9 +96,17 @@ const ConnectStripeForm: React.FC = () => {
         ) : (
           <>
             <Button
-              label="Register stripe account"
+              label=""
               onClick={handleRegisterStripeAccountPress}
-            />
+              isDisabled={isFetching}
+            >
+              <>
+                {isFetching && (
+                  <Icon iconName={IconName.SYNC} className="fa-spin" />
+                )}
+                Register stripe account
+              </>
+            </Button>
             <div className="textSm">
               Already have a Stripe account?{' '}
               <button
