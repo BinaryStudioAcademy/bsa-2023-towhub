@@ -56,12 +56,13 @@ const getCurrent = createAsyncThunk<
   undefined,
   AsyncThunkConfig
 >(`${sliceName}/current`, async (_, { extra }) => {
-  const { authApi, notification } = extra;
+  const { authApi, notification, localStorage } = extra;
 
   try {
     return await authApi.getCurrentUser();
   } catch (error) {
     notification.warning(getErrorMessage(error));
+    await localStorage.drop(StorageKey.TOKEN);
     throw error;
   }
 });
