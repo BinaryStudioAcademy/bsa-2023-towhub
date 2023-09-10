@@ -25,7 +25,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     const result = await this.db.driver().query.orders.findFirst({
       where: (orders) => eq(orders.id, id),
       with: {
-        driver: true,
+        driver: {
+          columns: { id: true, businessId: true, driverLicenseNumber: true },
+          with: { user: { columns: { firstName: true, lastName: true } } },
+        },
       },
     });
 

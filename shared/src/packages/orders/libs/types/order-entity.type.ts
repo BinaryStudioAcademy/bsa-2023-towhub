@@ -15,7 +15,9 @@ type OrderEntity = {
   driverId: number;
   customerName: string | null;
   customerPhone: string | null;
-  driver?: DriverEntity;
+  driver?: Pick<DriverEntity, 'businessId' | 'id' | 'driverLicenseNumber'> & {
+    user: { firstName: string; lastName: string };
+  };
 };
 
 export { type OrderEntity };
