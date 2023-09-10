@@ -5,4 +5,5 @@ export {
   type OrderEntity,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
+  type OrderWithDriverEntity,
 } from 'shared/build/index.js';

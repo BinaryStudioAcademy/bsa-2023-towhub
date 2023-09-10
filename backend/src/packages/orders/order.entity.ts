@@ -28,8 +28,6 @@ class OrderEntity implements IEntity {
 
   private customerPhone: OrderEntityT['customerPhone'] | null;
 
-  private driver: OrderEntityT['driver'];
-
   private constructor({
     id,
     price,
@@ -43,7 +41,6 @@ class OrderEntity implements IEntity {
     driverId,
     customerName,
     customerPhone,
-    driver,
   }: NullableProperties<OrderEntityT, 'id'>) {
     this.id = id;
     this.price = price;
@@ -57,7 +54,6 @@ class OrderEntity implements IEntity {
     this.driverId = driverId;
     this.customerName = customerName;
     this.customerPhone = customerPhone;
-    this.driver = driver;
   }
 
   public static initialize({
@@ -73,7 +69,6 @@ class OrderEntity implements IEntity {
     driverId,
     customerName,
     customerPhone,
-    driver,
   }: OrderEntityT): OrderEntity {
     return new OrderEntity({
       id,
@@ -88,7 +83,6 @@ class OrderEntity implements IEntity {
       driverId,
       customerName,
       customerPhone,
-      driver,
     });
   }
 
@@ -135,7 +129,6 @@ class OrderEntity implements IEntity {
       driverId: this.driverId,
       customerName: this.customerName,
       customerPhone: this.customerPhone,
-      driver: this.driver,
     };
   }
 

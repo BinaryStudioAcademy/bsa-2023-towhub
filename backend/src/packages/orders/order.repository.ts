@@ -6,7 +6,11 @@ import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { OrderEntity } from '~/packages/orders/order.entity.js';
 
 import { combineFilters } from './libs/helpers/combine-filters.js';
-import { type OrderEntity as OrderEntityT } from './libs/types/types.js';
+import {
+  type OrderEntity as OrderEntityT,
+  type OrderWithDriverEntity as OrderWithDriverEntityT,
+} from './libs/types/types.js';
+import { OrderWithDriverEntity } from './order-with-driver.entity.js';
 
 class OrderRepository implements Omit<IRepository, 'find'> {
   private db: Pick<IDatabase, 'driver'>;
@@ -21,7 +25,9 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     this.ordersSchema = ordersSchema;
   }
 
-  public async findById(id: OrderEntityT['id']): Promise<OrderEntity | null> {
+  public async findById(
+    id: OrderEntityT['id'],
+  ): Promise<OrderWithDriverEntity | null> {
     const result = await this.db.driver().query.orders.findFirst({
       where: (orders) => eq(orders.id, id),
       with: {
@@ -32,7 +38,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       },
     });
 
-    return (result ?? null) && OrderEntity.initialize(result as OrderEntityT);
+    return (
+      (result ?? null) &&
+      OrderWithDriverEntity.initialize(result as OrderWithDriverEntityT)
+    );
   }
 
   public async find(

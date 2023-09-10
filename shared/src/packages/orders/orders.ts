@@ -10,6 +10,7 @@ export {
   type OrderEntity,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
+  type OrderWithDriverEntity,
 } from './libs/types/types.js';
 export {
   orderCreateRequestBody,

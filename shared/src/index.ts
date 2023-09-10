@@ -85,6 +85,7 @@ export {
   type OrderEntity,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
+  type OrderWithDriverEntity,
   ORDER_STATUSES,
   orderCreateRequestBody,
   orderGetParameter,
