@@ -3,6 +3,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
   real,
   serial,
   timestamp,
@@ -96,9 +97,7 @@ const trucks = pgTable(
     licensePlateNumber: varchar('license_plate_number').notNull(),
     year: integer('year').notNull(),
     towType: varchar('tow_type').notNull(),
-    status: truckStatusEnum('status')
-      .notNull()
-      .default(TruckStatus.NOT_AVAILABLE),
+    status: truckStatusEnum('status').notNull().default(TruckStatus.AVAILABLE),
   },
   (trucks) => {
     return {
@@ -130,6 +129,7 @@ const usersTrucks = pgTable(
         table.userId,
         table.truckId,
       ),
+      pk: primaryKey(table.id),
     };
   },
 );

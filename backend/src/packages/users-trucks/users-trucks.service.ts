@@ -31,6 +31,22 @@ class UsersTrucksService implements IService<UsersTrucksEntityObjectT> {
     };
   }
 
+  public async findByUserId(
+    userId: UsersTrucksEntityT['userId'],
+  ): Promise<UsersTrucksEntityT[] | null> {
+    const usersTrucksRecords = await this.usersTrucksRepository.find({
+      userId,
+    });
+
+    if (usersTrucksRecords.length === 0) {
+      return null;
+    }
+
+    return usersTrucksRecords.map((usersTrucksRecord) =>
+      UsersTrucksEntity.initialize(usersTrucksRecord).toObject(),
+    );
+  }
+
   public async create(
     payload: UsersTrucksCreateUpdate,
   ): ReturnType<IService<UsersTrucksEntityObjectT>['create']> {

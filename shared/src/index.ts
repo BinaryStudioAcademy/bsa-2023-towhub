@@ -79,6 +79,7 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
+  type GetAllTrucksByUserIdResponseDto,
   type TruckEntityT,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,

@@ -2,6 +2,7 @@ const HttpMessage = {
   USER_EXISTS: 'User already exists',
   BUSINESS_EXISTS: 'Business with specified tax number already exists',
   TRUCK_EXISTS: 'Truck already exists',
+  TRUCK_DOES_NOT_EXIST: 'Truck does not exist',
   NOT_FOUND: 'Not found',
   BUSINESS_ALREADY_EXISTS: 'Owner already has business!',
   DRIVER_ALREADY_EXISTS: 'Driver already exists',
