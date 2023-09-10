@@ -1,9 +1,12 @@
 import { type FieldPath, type FieldValues } from 'react-hook-form';
 
+import { type ValueOf } from '~/libs/types/types.js';
+
+import { type InputType } from '../enums/input-type.enum.js';
 import { type SelectOption } from './select-option.type.js';
 
 type FormField<T extends FieldValues> = {
-  type?: 'text' | 'email' | 'password' | 'number' | 'dropdown';
+  type?: ValueOf<typeof InputType>;
   label: string;
   placeholder?: string;
   name: FieldPath<T>;

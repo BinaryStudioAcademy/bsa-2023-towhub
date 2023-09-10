@@ -1,0 +1,52 @@
+import { userSignInValidationSchema } from 'shared/build';
+
+import { Form } from '~/libs/components/components.js';
+import { useCallback } from '~/libs/hooks/hooks.js';
+
+import styles from './styles.module.scss';
+
+type Properties = {
+  onLocationChange:
+    | ((place: { lat: number | undefined; lng: number | undefined }) => void)
+    | undefined;
+  // onDestinationChange: ((place: { lat: number | undefined; lng: number | undefined }) => void) | undefined;
+};
+
+const OrderForm: React.FC<Properties> = ({ onLocationChange }: Properties) => {
+  const handleSubmit = useCallback(() => {
+    return;
+  }, []);
+
+  return (
+    <div className={styles.formWrapper}>
+      <p>Please fill the form</p>
+      <Form
+        validationSchema={userSignInValidationSchema}
+        fields={[
+          { label: 'Name', name: 'name' },
+          { label: 'Phone', name: 'phone' },
+          { label: 'Time', name: 'time', type: 'date' },
+          { label: 'Location', name: 'location', type: 'location' },
+          { label: 'Destination', name: 'destination', type: 'location' },
+          {
+            label: 'How many cars need to be towed',
+            name: 'cars',
+            type: 'number',
+          },
+        ]}
+        defaultValues={{
+          name: '',
+          phone: '',
+          time: '',
+          location: '',
+          destination: '',
+          cars: 1,
+        }}
+        onSubmit={handleSubmit}
+        onLocationChange={onLocationChange}
+      />
+    </div>
+  );
+};
+
+export { OrderForm };

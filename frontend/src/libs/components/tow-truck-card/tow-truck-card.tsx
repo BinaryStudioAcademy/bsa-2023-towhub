@@ -1,4 +1,5 @@
 import { IconName } from '~/libs/enums/icon-name.enum.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { type TruckEntity } from '~/libs/types/types.js';
 
 import { Badge, Button, Icon } from '../components.js';
@@ -13,18 +14,26 @@ type Properties = {
     reviewCount: number;
   };
   distance: number;
+  hasFooter?: boolean;
 };
 
 const TowTruckCard: React.FC<Properties> = ({
   truck,
   rating,
   distance,
+  hasFooter = true,
 }: Properties) => {
   const { manufacturer, capacity, pricePerKm, towType } = truck;
   const img = getTowTruckImage(towType);
 
   return (
-    <div className={styles.container}>
+    <div
+      className={
+        hasFooter
+          ? styles.container
+          : getValidClassNames(styles.container, styles.noFooter)
+      }
+    >
       <div className={styles.body}>
         <div className={styles.description}>
           <div className={styles.name}>{manufacturer}</div>
@@ -45,18 +54,20 @@ const TowTruckCard: React.FC<Properties> = ({
           <Badge className={styles.badge}>free</Badge>
         </div>
       </div>
-      <div className={styles.footer}>
-        <div className={styles.info}>
-          <div className={styles.price}>
-            ${pricePerKm}/ <span className={styles.gray}>km</span>
+      {hasFooter && (
+        <div className={styles.footer}>
+          <div className={styles.info}>
+            <div className={styles.price}>
+              ${pricePerKm}/ <span className={styles.gray}>km</span>
+            </div>
+            <Badge color="grey">
+              <Icon iconName={IconName.LOCATION_DOT} />
+              <span className={styles.km}>{distance} km</span>
+            </Badge>
           </div>
-          <Badge color="grey">
-            <Icon iconName={IconName.LOCATION_DOT} />
-            <span className={styles.km}>{distance} km</span>
-          </Badge>
+          <Button label="order now" />
         </div>
-        <Button label="order now" />
-      </div>
+      )}
     </div>
   );
 };

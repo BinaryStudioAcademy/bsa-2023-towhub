@@ -7,7 +7,7 @@ import {
 } from 'react-hook-form';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useFormController } from '~/libs/hooks/hooks.js';
+import { useCallback, useFormController } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
 
 import styles from './styles.module.scss';
@@ -19,6 +19,9 @@ type Properties<T extends FieldValues> = {
   name: FieldPath<T>;
   placeholder?: string;
   isDisabled?: boolean;
+  onChange?:
+    | ((place: { lat: number | undefined; lng: number | undefined }) => void)
+    | undefined;
 };
 
 const LocationInput = <T extends FieldValues>({
@@ -28,6 +31,7 @@ const LocationInput = <T extends FieldValues>({
   name,
   placeholder = '',
   isDisabled,
+  onChange,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
 
@@ -42,6 +46,18 @@ const LocationInput = <T extends FieldValues>({
     hasError && styles.error,
   ];
 
+  const handleSelectPlace = useCallback(
+    (place: google.maps.places.PlaceResult) => {
+      if (onChange) {
+        onChange({
+          lat: place.geometry?.location?.lat(),
+          lng: place.geometry?.location?.lng(),
+        });
+      }
+    },
+    [onChange],
+  );
+
   return (
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
@@ -53,6 +69,10 @@ const LocationInput = <T extends FieldValues>({
           className={getValidClassNames(...inputStyles)}
           disabled={isDisabled}
           apiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
+          options={{
+            types: ['address'],
+          }}
+          onPlaceSelected={handleSelectPlace}
         />
       </span>
 
