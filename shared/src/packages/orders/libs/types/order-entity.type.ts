@@ -1,3 +1,5 @@
+import { type DriverEntity } from '~/packages/drivers/drivers.js';
+
 import { type OrderStatusValues } from './order-status-values.type.js';
 
 type OrderEntity = {
@@ -13,6 +15,7 @@ type OrderEntity = {
   driverId: number;
   customerName: string | null;
   customerPhone: string | null;
+  driver?: DriverEntity;
 };
 
 export { type OrderEntity };

@@ -44,6 +44,7 @@ const ordersRelations = relations(orders, ({ one }) => ({
     references: [drivers.id],
   }),
 }));
+
 const users = pgTable(
   'users',
   {

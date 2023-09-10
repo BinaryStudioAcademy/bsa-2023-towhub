@@ -24,12 +24,17 @@ class OrderRepository implements Omit<IRepository, 'find'> {
   public async findById(id: OrderEntityT['id']): Promise<OrderEntity | null> {
     const result = await this.db.driver().query.orders.findFirst({
       where: (orders) => eq(orders.id, id),
+      with: {
+        driver: true,
+      },
     });
 
     return (result ?? null) && OrderEntity.initialize(result as OrderEntityT);
   }
 
-  public async find(search: Partial<OrderEntityT>): Promise<OrderEntity[]> {
+  public async find(
+    search: Partial<Pick<OrderEntityT, 'userId' | 'driverId' | 'businessId'>>,
+  ): Promise<OrderEntity[]> {
     const orders = await this.db
       .driver()
       .select()
