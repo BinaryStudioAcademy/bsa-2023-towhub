@@ -1,14 +1,22 @@
 import { TowTruckCard } from '~/libs/components/components.js';
-import { useCallback } from '~/libs/hooks/hooks.js';
+import { Map } from '~/libs/components/map/map.js';
+import { useCallback, useState } from '~/libs/hooks/hooks.js';
 
 import { OrderForm } from './libs/components/order-form.js';
 import styles from './styles.module.scss';
 
 const Order: React.FC = () => {
+  const [location, setLocation] = useState({ lat: 50.4547, lng: 30.5238 });
+
   const handleLocatonChange = useCallback(
-    (values: { lat: number | undefined; lng: number | undefined }) => {
+    (location: { lat: number | undefined; lng: number | undefined }) => {
       // console.log('data', values);
-      return values;
+      setLocation((previous) => {
+        return {
+          lat: location.lat ?? previous.lat,
+          lng: location.lng ?? previous.lng,
+        };
+      });
     },
     [],
   );
@@ -40,11 +48,11 @@ const Order: React.FC = () => {
           border: '5px solid white',
         }}
       >
-        {/* <Map
-          center={{ lat: 50.4547, lng: 30.5238 }}
-          zoom={14}
+        <Map
+          center={location}
+          zoom={16}
           destination={{ lat: 50.4647, lng: 30.5231 }}
-        /> */}
+        />
       </div>
     </section>
   );
