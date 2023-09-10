@@ -1,5 +1,6 @@
 import { database, schema } from '~/libs/packages/database/database.js';
 import { logger } from '~/libs/packages/logger/logger.js';
+import { stripeService } from '~/libs/packages/stripe/stripe.js';
 import { BusinessRepository } from '~/packages/business/business.repository.js';
 import { BusinessService } from '~/packages/business/business.service.js';
 
@@ -7,7 +8,11 @@ import { driverService } from '../drivers/drivers.js';
 import { BusinessController } from './business.controller.js';
 
 const businessRepository = new BusinessRepository(database, schema.business);
-const businessService = new BusinessService(businessRepository, driverService);
+const businessService = new BusinessService(
+  businessRepository,
+  driverService,
+  stripeService,
+);
 
 const businessController = new BusinessController(logger, businessService);
 

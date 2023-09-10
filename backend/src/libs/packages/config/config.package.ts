@@ -42,6 +42,12 @@ class Config implements IConfig {
           env: 'PORT',
           default: null,
         },
+        FRONTEND_BASE_URL: {
+          doc: 'Current base url of the frontend',
+          format: String,
+          env: 'FRONTEND_BASE_URL',
+          default: 'http://localhost:3000',
+        },
       },
       JWT: {
         SECRET: {
@@ -80,6 +86,20 @@ class Config implements IConfig {
           doc: 'Database pool max count',
           format: Number,
           env: 'DB_POOL_MAX',
+          default: null,
+        },
+      },
+      STRIPE: {
+        API_KEY: {
+          doc: 'Main stripe account api key',
+          format: String,
+          env: 'STRIPE_API_KEY',
+          default: null,
+        },
+        API_VERSION: {
+          doc: 'Supported stripe api version',
+          format: String,
+          env: 'STRIPE_API_VERSION',
           default: null,
         },
       },

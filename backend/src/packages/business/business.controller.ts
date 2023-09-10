@@ -368,6 +368,13 @@ class BusinessController extends Controller {
           }>,
         ),
     });
+
+    this.addRoute({
+      path: BusinessApiPath.GENERATE_STRIPE_LINK,
+      method: 'GET',
+      authStrategy: defaultStrategies,
+      handler: (options) => this.generateStripeLink(options),
+    });
   }
 
   /**
@@ -789,6 +796,34 @@ class BusinessController extends Controller {
     return {
       status: HttpCode.OK,
       payload: deletionResult,
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/generate-stripe-link:
+   *    get:
+   *      tags:
+   *       - business
+   *      summary: Generate Stripe link
+   *      description: Generates a link for creating express registration on Stripe
+   *      responses:
+   *        200:
+   *          description: Generate link operation had no errors.
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: string
+   *                example: https://connect.stripe.com/setup/e/acct_1NomTdCpYU4ai5Qu/SuH7AfUHrqZ2
+   */
+  private async generateStripeLink(
+    options: ApiHandlerOptions,
+  ): Promise<ApiHandlerResponse> {
+    const result = await this.businessService.generateStripeLink(options.user);
+
+    return {
+      status: HttpCode.OK,
+      payload: { result },
     };
   }
 }

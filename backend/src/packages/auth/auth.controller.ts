@@ -11,7 +11,6 @@ import {
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
-  type UserEntityObjectWithGroupT,
   businessSignUpValidationSchema,
   customerSignUpValidationSchema,
 } from '~/packages/users/users.js';
@@ -67,7 +66,6 @@ class AuthController extends Controller {
         this.signIn(
           options as ApiHandlerOptions<{
             body: UserSignInRequestDto;
-            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });

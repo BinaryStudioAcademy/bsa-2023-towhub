@@ -8,6 +8,7 @@ import swagger, { type StaticDocumentSpec } from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import Fastify, {
   type FastifyError,
+  type FastifySchema,
   type preHandlerHookHandler,
 } from 'fastify';
 
@@ -64,16 +65,22 @@ class ServerApp implements IServerApp {
 
   public addRoute(parameters: ServerAppRouteParameters): void {
     const { path, method, handler, validation, authStrategy } = parameters;
+    const schema: FastifySchema = {};
+
+    if (validation?.body) {
+      schema.body = validation.body;
+    }
+
+    if (validation?.params) {
+      schema.params = validation.params;
+    }
 
     this.app.route({
       url: path,
       method,
       handler,
       preHandler: this.resolveAuthStrategy(authStrategy),
-      schema: {
-        body: validation?.body,
-        params: validation?.params,
-      },
+      schema,
     });
 
     this.logger.info(`Route: ${method as string} ${path} is registered`);

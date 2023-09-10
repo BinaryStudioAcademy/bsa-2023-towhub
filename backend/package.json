@@ -48,6 +48,7 @@
     "pino-pretty": "10.2.0",
     "postgres": "3.3.5",
     "socket.io": "4.7.2",
+    "stripe": "13.5.0",
     "swagger-jsdoc": "6.2.8"
   }
 }
