@@ -12,16 +12,24 @@ class BusinessEntity implements IEntity {
 
   private ownerId: BusinessEntityT['ownerId'];
 
+  private stripeId: BusinessEntityT['stripeId'] | null;
+
+  private stripeActivated: BusinessEntityT['stripeActivated'];
+
   private constructor({
     id,
     companyName,
     taxNumber,
+    stripeId,
+    stripeActivated,
     ownerId,
-  }: NullableProperties<BusinessEntityT, 'id'>) {
+  }: NullableProperties<BusinessEntityT, 'id' | 'stripeId'>) {
     this.id = id;
     this.companyName = companyName;
     this.taxNumber = taxNumber;
     this.ownerId = ownerId;
+    this.stripeId = stripeId;
+    this.stripeActivated = stripeActivated;
   }
 
   public static initialize({
@@ -29,12 +37,16 @@ class BusinessEntity implements IEntity {
     companyName,
     taxNumber,
     ownerId,
+    stripeId,
+    stripeActivated,
   }: BusinessEntityT): BusinessEntity {
     return new BusinessEntity({
       id,
       companyName,
       taxNumber,
       ownerId,
+      stripeId,
+      stripeActivated,
     });
   }
 
@@ -42,12 +54,17 @@ class BusinessEntity implements IEntity {
     companyName,
     taxNumber,
     ownerId,
-  }: Omit<BusinessEntityT, 'id'>): BusinessEntity {
+  }: Omit<
+    BusinessEntityT,
+    'id' | 'stripeId' | 'stripeActivated'
+  >): BusinessEntity {
     return new BusinessEntity({
       id: null,
       companyName,
       taxNumber,
       ownerId,
+      stripeId: null,
+      stripeActivated: false,
     });
   }
 
@@ -57,10 +74,15 @@ class BusinessEntity implements IEntity {
       companyName: this.companyName,
       taxNumber: this.taxNumber,
       ownerId: this.ownerId,
+      stripeId: this.stripeId as string,
+      stripeActivated: this.stripeActivated,
     };
   }
 
-  public toNewObject(): Omit<BusinessEntityT, 'id'> {
+  public toNewObject(): Omit<
+    BusinessEntityT,
+    'id' | 'stripeId' | 'stripeActivated'
+  > {
     return {
       companyName: this.companyName,
       taxNumber: this.taxNumber,

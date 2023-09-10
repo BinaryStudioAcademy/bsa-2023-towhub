@@ -55,7 +55,6 @@ export {
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,
   type BusinessUpdateResponseDto,
-  type SetupPaymentFormData,
   businessAddRequestBody,
   BusinessApiPath,
   businessDeleteParameters,
@@ -63,7 +62,6 @@ export {
   businessUpdateParameters,
   businessUpdateRequestBody,
   BusinessValidationMessage,
-  connectStripeValidationSchema,
 } from './packages/business/business.js';
 export {
   type BusinessGetAllDriversRequestParameters,
@@ -81,6 +79,11 @@ export {
   driverUpdateDeleteParameters,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
+export {
+  type SetupPaymentFormData,
+  connectStripeValidationSchema,
+  StripeApiPath,
+} from './packages/stripe/stripe.js';
 export {
   type TruckEntity,
   LICENSE_PLATE_NUMBER,

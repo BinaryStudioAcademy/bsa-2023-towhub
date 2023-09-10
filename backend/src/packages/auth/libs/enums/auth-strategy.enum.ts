@@ -3,6 +3,7 @@ const AuthStrategy = {
   VERIFY_JWT: 'verifyJWT',
   VERIFY_BUSINESS_GROUP: 'verifyBusinessGroup',
   VERIFY_DRIVER_GROUP: 'verifyDriverGroup',
+  VERIFY_STRIPE_WEBHOOK: 'verifyStripeWebhook',
 } as const;
 
 export { AuthStrategy };

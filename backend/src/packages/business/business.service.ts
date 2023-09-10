@@ -1,7 +1,6 @@
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
-import { type StripeService } from '~/libs/packages/stripe/stripe.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { type DriverService } from '../drivers/driver.service.js';
@@ -12,7 +11,6 @@ import {
   type DriverGetAllResponseDto,
   type DriverUpdatePayload,
 } from '../drivers/drivers.js';
-import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { BusinessEntity } from './business.entity.js';
 import { type BusinessRepository } from './business.repository.js';
 import {
@@ -27,16 +25,12 @@ class BusinessService implements IService {
 
   private driverService: DriverService;
 
-  private stripeService: StripeService;
-
   public constructor(
     businessRepository: BusinessRepository,
     driverService: DriverService,
-    stripeService: StripeService,
   ) {
     this.businessRepository = businessRepository;
     this.driverService = driverService;
-    this.stripeService = stripeService;
   }
 
   public async findById(id: number): Promise<BusinessEntityT | null> {
@@ -96,7 +90,9 @@ class BusinessService implements IService {
     payload,
   }: {
     id: number;
-    payload: Pick<BusinessEntityT, 'companyName'>;
+    payload: Partial<
+      Pick<BusinessEntityT, 'companyName' | 'stripeActivated' | 'stripeId'>
+    >;
   }): Promise<BusinessUpdateResponseDto> {
     const foundBusinessById = await this.findById(id);
 
@@ -168,32 +164,6 @@ class BusinessService implements IService {
 
   public deleteDriver(driverId: number): Promise<boolean> {
     return this.driverService.delete(driverId);
-  }
-
-  public async generateStripeLink(
-    user: UserEntityObjectWithGroupT,
-  ): Promise<string> {
-    const business = await this.findByOwnerId(user.id);
-
-    if (!business) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
-      });
-    }
-
-    const userWithBusiness = {
-      ...user,
-      business,
-    };
-
-    const account =
-      await this.stripeService.createExpressAccount(userWithBusiness);
-
-    const link =
-      await this.stripeService.generateExpressAccountOnboardingLink(account);
-
-    return link.url;
   }
 }
 

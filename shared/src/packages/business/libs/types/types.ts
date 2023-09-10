@@ -10,4 +10,3 @@ export {
   type BusinessAddResponseDto,
   type BusinessUpdateResponseDto,
 } from './response/response.js';
-export { type SetupPaymentFormData } from './setup-payment-form-data.type.js';

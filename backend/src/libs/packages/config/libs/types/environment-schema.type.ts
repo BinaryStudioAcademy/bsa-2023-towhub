@@ -22,6 +22,7 @@ type EnvironmentSchema = {
   STRIPE: {
     API_KEY: string;
     API_VERSION: Stripe.LatestApiVersion;
+    WEBHOOK_SECRET: string;
   };
 };
 

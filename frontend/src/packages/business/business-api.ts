@@ -1,9 +1,9 @@
-import { BusinessApiPath } from 'shared/build/index.js';
-
 import { ApiPath, ContentType } from '~/libs/enums/enums.js';
 import { HttpApi } from '~/libs/packages/api/api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
+
+import { StripeApiPath } from './libs/enums/enums.js';
 
 type Constructor = {
   baseUrl: string;
@@ -18,7 +18,7 @@ class BusinessApi extends HttpApi {
 
   public async generateStripeLink(): Promise<string> {
     const response = await this.load(
-      this.getFullEndpoint(BusinessApiPath.GENERATE_STRIPE_LINK, {}),
+      this.getFullEndpoint(StripeApiPath.GENERATE_LINK, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,

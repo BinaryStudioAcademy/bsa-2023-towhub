@@ -1,11 +1,12 @@
+import { FastifyRequest } from 'fastify';
 import Stripe from 'stripe';
 
+import { type config as baseConfig } from '~/libs/packages/config/config.js';
 import { type UserEntityObjectWithGroupAndBusinessT } from '~/packages/users/users.js';
 
-import { type config as baseConfig } from '../config/config.js';
 import { FrontendPath } from './libs/enums/enums.js';
 
-class StripeService {
+class StripeRepository {
   private stripe: Stripe;
 
   private config: typeof baseConfig.ENV;
@@ -17,6 +18,16 @@ class StripeService {
     });
   }
 
+  public constructWebhookEvent(
+    payload: string | Buffer,
+    signature: string,
+  ): Stripe.Event {
+    return this.stripe.webhooks.constructEvent(
+      payload,
+      signature,
+      this.config.STRIPE.WEBHOOK_SECRET,
+    );
+  }
   // public createPaymentIntent(businessId: number, price: number) {
   //   // await this.stripe.accounts.create({country: })
   //   await this.stripe.checkout.sessions.create({
@@ -57,4 +68,4 @@ class StripeService {
   }
 }
 
-export { StripeService };
+export { StripeRepository };

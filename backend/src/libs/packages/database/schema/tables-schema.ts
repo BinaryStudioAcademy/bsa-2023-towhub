@@ -1,5 +1,6 @@
 import { relations } from 'drizzle-orm';
 import {
+  boolean,
   integer,
   pgTable,
   primaryKey,
@@ -56,6 +57,8 @@ const business = pgTable('business_details', {
   id: serial('id').primaryKey(),
   companyName: varchar('company_name').notNull(),
   taxNumber: varchar('tax_number').unique().notNull(),
+  stripeId: varchar('stripe_id').unique(),
+  stripeActivated: boolean('stripe_activated').notNull().default(false),
   ownerId: integer('owner_id')
     .notNull()
     .references(() => users.id),

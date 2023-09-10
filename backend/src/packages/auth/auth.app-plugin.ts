@@ -1,7 +1,8 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
+import { type Stripe } from 'stripe';
 
-import { HttpMessage } from '~/libs/packages/http/http.js';
+import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
 import { AuthStrategy } from './auth.js';
@@ -11,7 +12,7 @@ import { type AuthPluginOptions } from './libs/types/auth-plugin-options.type.js
 import { jwtPayloadSchema } from './libs/validation-schemas/validation-schemas.js';
 
 const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
-  const { userService, jwtService } = options;
+  const { userService, jwtService, stripeRepository } = options;
 
   fastify.decorateRequest('user', null);
 
@@ -78,6 +79,44 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
   fastify.decorate(
     AuthStrategy.VERIFY_DRIVER_GROUP,
     verifyGroup(UserGroupKey.DRIVER),
+  );
+
+  fastify.decorate(
+    AuthStrategy.VERIFY_STRIPE_WEBHOOK,
+    (
+      request: FastifyRequest<{ Body: { stripeWebhookEvent?: Stripe.Event } }>,
+      _: FastifyReply,
+      done: (error?: Error) => void,
+    ): void => {
+      const signature = request.headers['stripe-signature'];
+
+      if (!(request.rawBody && signature && typeof signature === 'string')) {
+        return done(
+          new HttpError({
+            message: 'Error parsing stripe webhook request',
+            status: HttpCode.BAD_REQUEST,
+          }),
+        );
+      }
+
+      try {
+        const event = stripeRepository.constructWebhookEvent(
+          request.rawBody,
+          signature,
+        );
+        request.body.stripeWebhookEvent = event;
+      } catch (error) {
+        done(
+          new HttpError({
+            message: 'Error parsing stripe webhook request',
+            status: HttpCode.BAD_REQUEST,
+            cause: error,
+          }),
+        );
+      }
+
+      return done();
+    },
   );
 
   done();

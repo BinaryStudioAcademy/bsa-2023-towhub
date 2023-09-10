@@ -15,7 +15,7 @@ const ConnectStripeForm: React.FC = () => {
 
   const [showInput, setShowInput] = useState(false);
   const { control, errors, handleSubmit } = useAppForm<SetupPaymentFormData>({
-    defaultValues: { stripeKey: '' },
+    defaultValues: { stripeId: '' },
     validationSchema: connectStripeValidationSchema,
   });
 
@@ -70,7 +70,7 @@ const ConnectStripeForm: React.FC = () => {
             >
               <Input
                 label="Stripe account key"
-                name="stripeKey"
+                name="stripeId"
                 control={control}
                 errors={errors}
               />

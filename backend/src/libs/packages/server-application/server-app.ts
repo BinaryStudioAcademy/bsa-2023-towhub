@@ -11,8 +11,10 @@ import Fastify, {
   type FastifySchema,
   type preHandlerHookHandler,
 } from 'fastify';
+import fastifyRawBody from 'fastify-raw-body';
+import { StripeApiPath } from 'shared/build/index.js';
 
-import { ServerErrorType } from '~/libs/enums/enums.js';
+import { ApiPath, ServerErrorType } from '~/libs/enums/enums.js';
 import { type ValidationError } from '~/libs/exceptions/exceptions.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
@@ -26,6 +28,7 @@ import {
   type ValidationSchema,
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
+import { stripeRepository } from '~/packages/stripe/stripe.js';
 import { userService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
@@ -222,10 +225,21 @@ class ServerApp implements IServerApp {
 
   private async initPlugins(): Promise<void> {
     await this.app.register(fastifyAuth);
+
     await this.app.register(authPlugin, {
       config: this.config,
       userService,
       jwtService,
+      stripeRepository,
+    });
+
+    await this.app.register(fastifyRawBody, {
+      field: 'rawBody',
+      encoding: 'utf8',
+      runFirst: true,
+      routes: this.apis.map((it) =>
+        it.buildFullPath(ApiPath.STRIPE + StripeApiPath.WEBHOOK),
+      ),
     });
   }
 

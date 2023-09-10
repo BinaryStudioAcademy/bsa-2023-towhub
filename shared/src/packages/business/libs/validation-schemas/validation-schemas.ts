@@ -3,4 +3,3 @@ export { businessDeleteParameters } from './business-delete-parameters.validatio
 export { businessGetParameters } from './business-get-parameters.validation-schema.js';
 export { businessUpdateParameters } from './business-update-parameters.validation-schema.js';
 export { businessUpdateRequestBody } from './business-update-request-body.validation-schema.js';
-export { connectStripeValidationSchema } from './connect-stripe.validation-schema.js';
