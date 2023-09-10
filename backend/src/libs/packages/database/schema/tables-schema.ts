@@ -127,7 +127,7 @@ const shifts = pgTable('shifts', {
   endDate: timestamp('end_date', {
     mode: 'date',
   }),
-  driverUserId: integer('driver_user_id')
+  driverId: integer('driver_id')
     .references(() => users.id)
     .notNull(),
   truckId: integer('truck_id')

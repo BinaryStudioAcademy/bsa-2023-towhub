@@ -12,7 +12,7 @@ const shiftCreate = joi.object<ShiftCreateRequestDto, true>({
   truckId: positiveRequiredIntegerSchema(
     ShiftValidationMessage.ID_MUST_BE_NUMBER,
   ),
-  driverUserId: positiveRequiredIntegerSchema(
+  driverId: positiveRequiredIntegerSchema(
     ShiftValidationMessage.ID_MUST_BE_NUMBER,
   ),
 });

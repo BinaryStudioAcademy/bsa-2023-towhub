@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "54dafbb0-cc1e-42ac-aa71-8f95994e010e",
+  "id": "73ed765b-847d-4a98-8faa-f5a71b3f20ab",
   "prevId": "ebac1b00-5007-49e7-9a2c-3403e83ae06e",
   "tables": {
     "business_details": {
@@ -205,8 +205,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "driver_user_id": {
-          "name": "driver_user_id",
+        "driver_id": {
+          "name": "driver_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -240,11 +240,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shifts_driver_user_id_users_id_fk": {
-          "name": "shifts_driver_user_id_users_id_fk",
+        "shifts_driver_id_users_id_fk": {
+          "name": "shifts_driver_id_users_id_fk",
           "tableFrom": "shifts",
           "tableTo": "users",
-          "columnsFrom": ["driver_user_id"],
+          "columnsFrom": ["driver_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"

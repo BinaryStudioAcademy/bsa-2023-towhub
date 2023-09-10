@@ -6,7 +6,7 @@ type ShiftEntity = {
   id: number;
   startDate: Date;
   endDate: Date | null;
-  driverUserId: UserEntityT['id'];
+  driverId: UserEntityT['id'];
   truckId: TruckEntity['id'];
 };
 

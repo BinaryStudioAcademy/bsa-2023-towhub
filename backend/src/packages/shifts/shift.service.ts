@@ -59,10 +59,10 @@ class ShiftService implements IService {
   }
 
   public async findByDriverUserId(
-    driverUserId: number,
+    driverId: number,
   ): Promise<ShiftCreateResponseDto[]> {
     const shifts = await this.shiftRepository.find({
-      driverUserId,
+      driverId,
     });
 
     return shifts.length > 0
@@ -78,7 +78,7 @@ class ShiftService implements IService {
     user: UserEntityObjectWithGroupT;
   }): Promise<ShiftCreateResponseDto> {
     const canCreateShift = await this.checkAccessToShift({
-      driverUserId: body.driverUserId,
+      driverId: body.driverId,
       user,
     });
 
@@ -106,7 +106,7 @@ class ShiftService implements IService {
     const shift = await this.findByShiftId(params.id);
 
     const canCloseShift = await this.checkAccessToShift({
-      driverUserId: shift.driverUserId,
+      driverId: shift.driverId,
       user,
     });
 
@@ -157,20 +157,20 @@ class ShiftService implements IService {
 
   private async checkAccessToShift({
     user,
-    driverUserId,
+    driverId,
   }: {
     user: UserEntityObjectWithGroupT;
-    driverUserId: ShiftEntityT['driverUserId'];
+    driverId: ShiftEntityT['driverId'];
   }): Promise<boolean> {
     if (user.group.key === UserGroupKey.BUSINESS) {
       const business = await this.businessService.findByOwnerId(user.id);
-      const driver = await this.driverService.findByUserId(driverUserId);
+      const driver = await this.driverService.findByUserId(driverId);
 
       if (!business || !driver || business.id !== driver.businessId) {
         return false;
       }
     } else if (user.group.key === UserGroupKey.DRIVER) {
-      if (user.id !== driverUserId) {
+      if (user.id !== driverId) {
         return false;
       }
     } else {

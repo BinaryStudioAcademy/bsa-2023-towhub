@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS
     "id" serial PRIMARY KEY NOT NULL,
     "start_date" timestamp NOT NULL,
     "end_date" timestamp,
-    "driver_user_id" integer NOT NULL,
+    "driver_id" integer NOT NULL,
     "truck_id" integer NOT NULL,
     "created_at" timestamp DEFAULT now() NOT NULL,
     "updated_at" timestamp DEFAULT now() NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS
 
 --> statement-breakpoint
 DO $$ BEGIN
-    ALTER TABLE "shifts" ADD CONSTRAINT "shifts_driver_user_id_users_id_fk" FOREIGN KEY ("driver_user_id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
+    ALTER TABLE "shifts" ADD CONSTRAINT "shifts_driver_id_users_id_fk" FOREIGN KEY ("driver_id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;

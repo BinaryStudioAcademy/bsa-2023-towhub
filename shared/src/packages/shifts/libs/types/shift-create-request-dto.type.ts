@@ -2,6 +2,6 @@ import { type ShiftEntity } from './shift-entity.type.js';
 
 type ShiftCreateRequestDto = Pick<
   ShiftEntity,
-  'startDate' | 'truckId' | 'driverUserId'
+  'startDate' | 'truckId' | 'driverId'
 >;
 export { type ShiftCreateRequestDto };

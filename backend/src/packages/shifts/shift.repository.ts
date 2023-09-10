@@ -51,7 +51,7 @@ class ShiftRepository implements IRepository {
   }
 
   public async create(
-    entity: Pick<ShiftEntityT, 'startDate' | 'truckId' | 'driverUserId'>,
+    entity: Pick<ShiftEntityT, 'startDate' | 'truckId' | 'driverId'>,
   ): Promise<ShiftDatabaseModel> {
     const [shift] = await this.db
       .driver()
