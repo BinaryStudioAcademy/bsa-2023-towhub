@@ -1,4 +1,3 @@
-import { type ShiftCloseRequestDto } from 'shared/build/index.js';
 import { ApiPath, HttpCode } from 'src/libs/enums/enums.js';
 
 import {
@@ -9,8 +8,12 @@ import {
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 
 import { AuthStrategy } from '../auth/auth.js';
-import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import {
+  type UserEntityObjectWithGroupT,
+  type UserEntityT,
+} from '../users/users.js';
+import {
+  type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
   type ShiftCreateResponseDto,
   type ShiftEntity,
@@ -31,17 +34,13 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.ROOT,
       method: 'GET',
-      authStrategy: AuthStrategy.VERIFY_JWT,
       handler: () => this.getAllStarted(),
     });
 
     this.addRoute({
       path: ShiftsApiPath.ROOT,
       method: 'POST',
-      authStrategy: [
-        AuthStrategy.INJECT_USER,
-        AuthStrategy.VERIFY_DRIVER_GROUP,
-      ],
+      authStrategy: AuthStrategy.INJECT_USER,
       validation: {
         body: shiftCreateValidationSchema,
       },
@@ -57,10 +56,7 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.$ID,
       method: 'PUT',
-      authStrategy: [
-        AuthStrategy.INJECT_USER,
-        AuthStrategy.VERIFY_DRIVER_GROUP,
-      ],
+      authStrategy: AuthStrategy.INJECT_USER,
       validation: {
         body: shiftCloseValidationSchema,
       },
@@ -77,30 +73,21 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.$ID,
       method: 'GET',
-      authStrategy: [
-        AuthStrategy.INJECT_USER,
-        AuthStrategy.VERIFY_DRIVER_GROUP,
-      ],
       handler: (options) =>
         this.getByShiftId(
           options as ApiHandlerOptions<{
-            user: UserEntityObjectWithGroupT;
             params: Pick<ShiftEntity, 'id'>;
           }>,
         ),
     });
 
     this.addRoute({
-      path: ShiftsApiPath.$DRIVER_ID,
+      path: ShiftsApiPath.$DRIVER_ID + ShiftsApiPath.$ID,
       method: 'GET',
-      authStrategy: [
-        AuthStrategy.INJECT_USER,
-        AuthStrategy.VERIFY_DRIVER_GROUP,
-      ],
       handler: (options) =>
         this.getByDriver(
           options as ApiHandlerOptions<{
-            user: UserEntityObjectWithGroupT;
+            params: Pick<UserEntityT, 'id'>;
           }>,
         ),
     });
@@ -142,27 +129,23 @@ class ShiftController extends Controller {
 
   private async getByShiftId(
     options: ApiHandlerOptions<{
-      user: UserEntityObjectWithGroupT;
       params: Pick<ShiftEntity, 'id'>;
     }>,
   ): Promise<ApiHandlerResponse<ShiftCreateResponseDto>> {
     return {
       status: HttpCode.OK,
-      payload: await this.shiftService.findByShiftId(
-        options.params.id,
-        options.user.id,
-      ),
+      payload: await this.shiftService.findByShiftId(options.params.id),
     };
   }
 
   private async getByDriver(
     options: ApiHandlerOptions<{
-      user: UserEntityObjectWithGroupT;
+      params: Pick<UserEntityT, 'id'>;
     }>,
   ): Promise<ApiHandlerResponse<ShiftCreateResponseDto[]>> {
     return {
       status: HttpCode.OK,
-      payload: await this.shiftService.findByDriverUserId(options.user.id),
+      payload: await this.shiftService.findByDriverUserId(options.params.id),
     };
   }
 }

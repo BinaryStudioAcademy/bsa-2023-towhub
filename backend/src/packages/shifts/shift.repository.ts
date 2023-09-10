@@ -1,6 +1,6 @@
 import { and, desc, eq, isNull } from 'drizzle-orm';
 
-import { type IRepository } from '~/libs/interfaces/repository.interface.js';
+import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/libs/interfaces/database.interface.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 

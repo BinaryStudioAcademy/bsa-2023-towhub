@@ -5,6 +5,7 @@ import { type DatabaseSchema } from '~/libs/packages/database/database.js';
 type ShiftDatabaseModel = InferModel<DatabaseSchema['shifts']>;
 
 export {
+  type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
   type ShiftCreateResponseDto,
   type ShiftEntity,
