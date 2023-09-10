@@ -1,4 +1,4 @@
-import { type OrderStatusValues } from './order-status.type.js';
+import { type OrderStatusValues } from './order-status-values.type.js';
 
 type OrderEntity = {
   id: number;

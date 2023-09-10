@@ -22,7 +22,7 @@ const orders = pgTable('orders', {
   status: orderStatus('status').notNull(),
   userId: integer('user_id').references(() => users.id),
   businessId: integer('business_id').references(() => business.id),
-  driverId: integer('driver_id'),
+  driverId: integer('driver_id').references(() => drivers.id),
   carsQty: integer('cars_qty').notNull().default(1),
   customerName: varchar('customer_name'),
   customerPhone: varchar('customer_phone'),

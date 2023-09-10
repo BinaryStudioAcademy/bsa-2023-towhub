@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "a526bb86-98bc-4195-96c1-bbe3ba9b457a",
+  "id": "c1163141-c286-41fe-8010-0154a305dc20",
   "prevId": "ebac1b00-5007-49e7-9a2c-3403e83ae06e",
   "tables": {
     "business_details": {
@@ -291,6 +291,15 @@
           "tableFrom": "orders",
           "tableTo": "business_details",
           "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "orders_driver_id_driver_details_id_fk": {
+          "name": "orders_driver_id_driver_details_id_fk",
+          "tableFrom": "orders",
+          "tableTo": "driver_details",
+          "columnsFrom": ["driver_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
