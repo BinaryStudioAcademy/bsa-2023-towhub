@@ -1,5 +1,3 @@
-import { OrderStatus as OrderStatusEnum } from 'shared/build/packages/orders/libs/enums/order-status.enum';
-
 import { OrderCard } from '~/libs/components/components.js';
 import { OrderStatus } from '~/libs/components/orders-status/order-status.js';
 import {
@@ -26,27 +24,29 @@ const OrderPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <OrderStatus status={OrderStatusEnum.PENDING} className={styles.status} />
       {order && (
-        <OrderCard
-          driver={{
-            firstName: order.driver.user.firstName,
-            lastName: order.driver.user.lastName,
-            profileURL: 'https://i.pravatar.cc/300',
-          }}
-          truck={{ licensePlate: 'GB 555' }}
-          initialStatus={{
-            startLocation: order.startPoint,
-            endLocation: order.endPoint,
-          }}
-          currentStatus={{
-            timespanLastUpdated: '30 seconds',
-            location: 'Birmingham',
-            distanceLeft: 12,
-            timespanLeft: '1 hrs 24 mins',
-          }}
-          className={styles.card}
-        />
+        <>
+          <OrderStatus status={order.status} className={styles.status} />
+          <OrderCard
+            driver={{
+              firstName: order.driver.user.firstName,
+              lastName: order.driver.user.lastName,
+              profileURL: 'https://i.pravatar.cc/300',
+            }}
+            truck={{ licensePlate: 'GB 555' }}
+            initialStatus={{
+              startLocation: order.startPoint,
+              endLocation: order.endPoint,
+            }}
+            currentStatus={{
+              timespanLastUpdated: '30 seconds',
+              location: 'Birmingham',
+              distanceLeft: 12,
+              timespanLeft: '1 hrs 24 mins',
+            }}
+            className={styles.card}
+          />
+        </>
       )}
     </div>
   );
