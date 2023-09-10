@@ -1,8 +1,10 @@
-import { Table } from '~/libs/components/components.js';
+import { Button, Table } from '~/libs/components/components.js';
 import { capitalizeFirstLetter } from '~/libs/helpers/helpers.js';
 import { useAppSelector, useAppTable } from '~/libs/hooks/hooks.js';
 import { type ColumnDef, type TruckEntity } from '~/libs/types/types.js';
 import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
+
+import styles from './styles.module.scss';
 
 const columns: ColumnDef<TruckEntity>[] = [
   {
@@ -53,15 +55,19 @@ const TrucksTable: React.FC<Properties> = ({ businessId }: Properties) => {
   const trucks = useAppSelector((state) => state.trucks.trucks);
 
   return (
-    <Table
-      data={trucks}
-      columns={columns}
-      totalRow={5}
-      pageIndex={pageIndex}
-      pageSize={pageSize}
-      changePageSize={changePageSize}
-      changePageIndex={changePageIndex}
-    />
+    <div className={styles.container}>
+      <h2 className={styles.title}>Trucks Table</h2>
+      <Button label="+" className={styles.btn} />
+      <Table
+        data={trucks}
+        columns={columns}
+        totalRow={5}
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        changePageSize={changePageSize}
+        changePageIndex={changePageIndex}
+      />
+    </div>
   );
 };
 

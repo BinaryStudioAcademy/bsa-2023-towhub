@@ -5,7 +5,8 @@ import {
 } from '~/libs/types/types.js';
 import { selectUser } from '~/slices/auth/selectors.js';
 
-import { TrucksTable } from './components/tables/trucks-table.js';
+import { TrucksTable } from './components/tables/tables.js';
+import styles from './styles.module.scss';
 
 type Properties = {
   selectedTab: TabName;
@@ -21,11 +22,7 @@ const Dashboard: React.FC<Properties> = ({ selectedTab }: Properties) => {
         return <div>Drivers</div>;
       }
       case 'trucks': {
-        return (
-          <div>
-            <TrucksTable businessId={user.business.id} />
-          </div>
-        );
+        return <TrucksTable businessId={user.business.id} />;
       }
       case 'orders': {
         return <div>Orders</div>;
@@ -33,7 +30,9 @@ const Dashboard: React.FC<Properties> = ({ selectedTab }: Properties) => {
     }
   };
 
-  return <div> {renderTabContent(selectedTab)}</div>;
+  return (
+    <div className={styles.container}> {renderTabContent(selectedTab)}</div>
+  );
 };
 
 export { Dashboard };
