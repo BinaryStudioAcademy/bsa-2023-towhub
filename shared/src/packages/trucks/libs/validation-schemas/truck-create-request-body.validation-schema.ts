@@ -1,7 +1,5 @@
 import joi from 'joi';
 
-import { positiveRequiredIntegerSchema } from '~/libs/validation-schemas/validation-schemas.js';
-
 import {
   TruckCapacity,
   TruckLicensePlateNumber,
@@ -14,7 +12,10 @@ import { TruckValidationMessage } from '../enums/truck-validation-message.enum.j
 import { LICENSE_PLATE_NUMBER } from '../regex-patterns/regex-patterns.js';
 import { type TruckEntity } from '../types/types.js';
 
-const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
+const truckCreateRequestBody = joi.object<
+  Omit<TruckEntity, 'id' | 'businessId'>,
+  true
+>({
   manufacturer: joi
     .string()
     .required()
@@ -77,9 +78,6 @@ const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
       'any.only': TruckValidationMessage.INVALID,
       'any.required': TruckValidationMessage.REQUIRED,
     }),
-  businessId: positiveRequiredIntegerSchema(
-    TruckValidationMessage.ID_NOT_A_NUMBER,
-  ),
 });
 
 export { truckCreateRequestBody };

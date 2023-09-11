@@ -2,8 +2,9 @@
 
 .container {
   width: 200px;
-  height: 100%;
-  overflow: hidden;
+  height: calc(100% - 20px);
+  margin: 10px;
+  overflow-y: auto;
   background-color: $white;
   border-radius: 10px;
   box-shadow: $shadow-light;
