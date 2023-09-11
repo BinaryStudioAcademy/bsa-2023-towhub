@@ -51,7 +51,7 @@ const DropdownInput = <T extends FieldValues>({
       if (onChange && option) {
         onChange(option.value);
       }
-      field.onChange(option);
+      field.onChange(option?.value);
     },
     [onChange, field],
   );
