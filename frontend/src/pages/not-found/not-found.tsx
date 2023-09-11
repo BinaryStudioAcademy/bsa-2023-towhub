@@ -2,7 +2,7 @@ import { Button } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
 import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 
-import styles from './style.module.scss';
+import styles from './styles.module.scss';
 
 const NotFound = (): JSX.Element => {
   const navigate = useNavigate();
