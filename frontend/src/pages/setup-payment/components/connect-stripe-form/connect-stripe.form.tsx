@@ -4,7 +4,7 @@ import { Button, Icon, Input } from '~/libs/components/components.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useAppForm, useCallback, useState } from '~/libs/hooks/hooks.js';
-import { businessApi } from '~/packages/business/business.js';
+import { stripeApi } from '~/packages/stripe/stripe.js';
 
 import { type SetupPaymentFormData } from './libs/types/types.js';
 import { connectStripeValidationSchema } from './libs/validation-schemas/validation-schemas.js';
@@ -34,8 +34,8 @@ const ConnectStripeForm: React.FC = () => {
 
   const handleRegisterStripeAccountPress = useCallback(() => {
     setIsFetching(true);
-    businessApi
-      .generateStripeLink()
+    stripeApi
+      .generateExpressAccountLink()
       .then((url) => {
         window.location.href = url;
       })

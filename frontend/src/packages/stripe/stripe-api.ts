@@ -11,12 +11,12 @@ type Constructor = {
   storage: IStorage;
 };
 
-class BusinessApi extends HttpApi {
+class StripeApi extends HttpApi {
   public constructor({ baseUrl, http, storage }: Constructor) {
     super({ path: ApiPath.STRIPE, baseUrl, http, storage });
   }
 
-  public async generateStripeLink(): Promise<string> {
+  public async generateExpressAccountLink(): Promise<string> {
     const response = await this.load(
       this.getFullEndpoint(StripeApiPath.GENERATE_EXPRESS_ACCOUNT_LINK, {}),
       {
@@ -31,4 +31,4 @@ class BusinessApi extends HttpApi {
   }
 }
 
-export { BusinessApi };
+export { StripeApi as StripeApi };

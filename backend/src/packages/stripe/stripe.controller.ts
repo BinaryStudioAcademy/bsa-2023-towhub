@@ -76,7 +76,9 @@ class StripeController extends Controller {
   private async generateExpressAccountLink(
     options: ApiHandlerOptions,
   ): Promise<ApiHandlerResponse> {
-    const result = await this.stripeService.generateStripeLink(options.user);
+    const result = await this.stripeService.generateExpressAccountLink(
+      options.user,
+    );
 
     return {
       status: HttpCode.OK,

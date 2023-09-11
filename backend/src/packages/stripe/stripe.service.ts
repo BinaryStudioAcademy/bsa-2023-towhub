@@ -21,7 +21,7 @@ class StripeService {
     this.businessService = businessService;
   }
 
-  public async generateStripeLink(
+  public async generateExpressAccountLink(
     user: UserEntityObjectWithGroupT,
   ): Promise<string> {
     const business = await this.businessService.findByOwnerId(user.id);
