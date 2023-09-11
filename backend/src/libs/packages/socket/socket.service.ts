@@ -43,9 +43,9 @@ class SocketService {
       cors: { origin: '*' },
     });
     const HOUR_IN_MS = 3.6e6;
-    const sessionMap = new Map<
+    const shiftMap = new Map<
       number,
-      { timer?: NodeJS.Timeout; chosenTruck?: TruckEntityT }
+      { timer?: NodeJS.Timeout; chosenTruck?: TruckEntityT; socket: Socket }
     >();
 
     this.geolocationCacheService = geolocationCacheService;
@@ -57,10 +57,11 @@ class SocketService {
       logger.info(`${socket.id} connected`);
 
       if (socketUserId) {
-        const driverSessionData = sessionMap.get(socketUserId);
+        const driverShiftData = shiftMap.get(socketUserId);
+        shiftMap.set(socketUserId, { ...shiftMap.get(socketUserId), socket });
 
-        if (driverSessionData?.chosenTruck) {
-          const { id } = driverSessionData.chosenTruck;
+        if (driverShiftData?.chosenTruck) {
+          const { id } = driverShiftData.chosenTruck;
           socket.emit(ClientSocketEvent.SHIFT_SYNC, {
             truckId: id,
           });
@@ -108,7 +109,9 @@ class SocketService {
           }
 
           const timer = setTimeout((): void => {
-            socket.emit(ClientSocketEvent.DRIVER_TIMED_OUT);
+            const shift = shiftMap.get(socketUserId);
+            const socket = shift?.socket;
+            socket?.emit(ClientSocketEvent.DRIVER_TIMED_OUT);
 
             void endShift({
               socket,
@@ -117,11 +120,14 @@ class SocketService {
               timer,
               truckService,
             });
+
+            shiftMap.delete(socketUserId);
           }, HOUR_IN_MS);
 
-          sessionMap.set(socketUserId, {
+          shiftMap.set(socketUserId, {
             chosenTruck: truck,
             timer,
+            socket,
           });
 
           await this.truckService.update(truck.id, {
@@ -138,8 +144,8 @@ class SocketService {
           return;
         }
 
-        const timer = sessionMap.get(socketUserId)?.timer;
-        const chosenTruck = sessionMap.get(socketUserId)?.chosenTruck;
+        const timer = shiftMap.get(socketUserId)?.timer;
+        const chosenTruck = shiftMap.get(socketUserId)?.chosenTruck;
 
         if (!chosenTruck) {
           return emitSocketError(socket, SocketError.TRUCK_DOES_NOT_EXIST);
@@ -156,6 +162,8 @@ class SocketService {
           timer,
           truckService,
         });
+
+        shiftMap.delete(socketUserId);
       });
     });
   }

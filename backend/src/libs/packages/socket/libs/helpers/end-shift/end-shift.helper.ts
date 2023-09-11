@@ -13,7 +13,7 @@ const endShift = async ({
   timer,
   truckService,
 }: {
-  socket: Socket;
+  socket?: Socket;
   io: Server | null;
   truck: TruckEntityT;
   timer: NodeJS.Timer;
@@ -27,7 +27,7 @@ const endShift = async ({
 
   io?.emit(ClientSocketEvent.TRUCK_AVAILABLE, { truckId: truck.id });
 
-  socket.emit(ClientSocketEvent.SHIFT_ENDED);
+  socket?.emit(ClientSocketEvent.SHIFT_ENDED);
 };
 
 export { endShift };

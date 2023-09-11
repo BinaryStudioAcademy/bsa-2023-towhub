@@ -54,7 +54,7 @@ const AvailableTrucks: React.FC = () => {
   return (
     <div className={styles.page}>
       {areTrucksLoading || isTruckBeingChosen ? (
-        <Spinner />
+        <Spinner isFullScreen />
       ) : (
         <div className={styles.cardsContainer}>
           {trucks.items
