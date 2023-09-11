@@ -4,6 +4,7 @@ import { AppRoute } from '~/libs/enums/enums.js';
 import { useGetCurrentUser } from '~/libs/hooks/hooks.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
+import { CheckoutPage } from '~/pages/checkout/checkout.js';
 import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 import { SetupPayment } from '~/pages/setup-payment/setup-payment.js';
@@ -32,6 +33,14 @@ const Router = (): JSX.Element => {
           element={
             <PageLayout isSidebarHidden>
               <SetupPayment />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.CHECKOUT}
+          element={
+            <PageLayout isSidebarHidden>
+              <CheckoutPage />
             </PageLayout>
           }
         />

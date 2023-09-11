@@ -3,14 +3,8 @@ import Stripe from 'stripe';
 import { type config as baseConfig } from '~/libs/packages/config/config.js';
 import { type UserEntityObjectWithGroupAndBusinessT } from '~/packages/users/users.js';
 
-import { type BusinessEntityT } from '../business/business.js';
 import { FrontendPath } from './libs/enums/enums.js';
-
-type CheckoutProperties = {
-  business: BusinessEntityT;
-  quantity: number;
-  price: number;
-};
+import { type CheckoutProperties } from './libs/types/types.js';
 
 class StripeRepository {
   private stripe: Stripe;
@@ -37,8 +31,8 @@ class StripeRepository {
 
   public async createCheckoutSession({
     business,
-    price,
-    quantity,
+    distance,
+    pricePerUnit,
   }: CheckoutProperties): Promise<string | null> {
     if (!business.stripeActivated || !business.stripeId) {
       throw new Error(
@@ -50,7 +44,10 @@ class StripeRepository {
       business.stripeId,
     );
 
-    const total = this.calculateTotal({ price, quantity });
+    const total = this.calculateTotal({
+      price: pricePerUnit,
+      quantity: distance,
+    });
 
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -58,9 +55,9 @@ class StripeRepository {
         {
           price_data: {
             currency: default_currency ?? 'usd',
-            unit_amount: price,
+            unit_amount: pricePerUnit,
           },
-          quantity: quantity,
+          quantity: distance,
         },
       ],
       payment_intent_data: {

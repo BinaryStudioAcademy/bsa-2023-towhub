@@ -80,6 +80,7 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
+  type GenerateCheckoutLinkRequest,
   type SetupPaymentFormData,
   connectStripeValidationSchema,
   StripeApiPath,

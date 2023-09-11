@@ -1,6 +1,10 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["src", "knexfile.ts"],
+  "include": [
+    "src",
+    "knexfile.ts",
+    "../shared/src/packages/stripe/libs/types/generate-checkout-request.ts"
+  ],
   "exclude": ["node_modules"],
   "files": ["src/index.d.ts"],
   "compilerOptions": {

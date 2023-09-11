@@ -5,6 +5,7 @@ import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type BusinessService } from '../business/business.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { StripeEvent } from './libs/enums/stripe-event.enum.js';
+import { type CheckoutProperties } from './libs/types/checkout-properties.type.js';
 import { type StripeRepository } from './stripe.repository.js';
 
 class StripeService {
@@ -59,6 +60,9 @@ class StripeService {
   public async processWebhookEvent(
     event: Stripe.DiscriminatedEvent,
   ): Promise<void> {
+    // console.log('-----Webhooks');
+    // console.log(event);
+
     switch (event.type) {
       case StripeEvent.CAPABILITY_UPDATED: {
         {
@@ -84,6 +88,25 @@ class StripeService {
       }
       default:
     }
+  }
+
+  public async createCheckoutSession(
+    userId: number,
+    properties: Omit<CheckoutProperties, 'business'>,
+  ): Promise<string | null> {
+    const business = await this.businessService.findByOwnerId(userId);
+
+    if (!business) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.stripeRepository.createCheckoutSession({
+      business,
+      ...properties,
+    });
   }
 }
 

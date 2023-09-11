@@ -18,7 +18,7 @@ class BusinessApi extends HttpApi {
 
   public async generateStripeLink(): Promise<string> {
     const response = await this.load(
-      this.getFullEndpoint(StripeApiPath.GENERATE_LINK, {}),
+      this.getFullEndpoint(StripeApiPath.GENERATE_EXPRESS_ACCOUNT_LINK, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,
