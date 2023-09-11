@@ -1,7 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {
+  type CaseReducer,
+  type PayloadAction,
+  createSlice,
+} from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
+import { type ClientSocketEventParameter } from '~/libs/packages/socket/libs/types/types.js';
+import { type ClientSocketEvent } from '~/libs/packages/socket/socket.js';
 import { type ValueOf } from '~/libs/types/types.js';
+import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
 import { type GetAllTrucksByUserIdResponseDto } from '~/packages/trucks/libs/types/types.js';
 
 import { addTruck, getAllTrucksByUserId } from './actions.js';
@@ -16,10 +23,45 @@ const initialState: State = {
   dataStatus: DataStatus.IDLE,
 };
 
+type TruckChosenPayload =
+  ClientSocketEventParameter[typeof ClientSocketEvent.TRUCK_CHOSEN];
+
+const truckChosen: CaseReducer<State, PayloadAction<TruckChosenPayload>> = (
+  state,
+  action,
+) => {
+  const { truckId } = action.payload;
+  const chosenTruck = state.trucks.items.find((truck) => truck.id === truckId);
+
+  if (!chosenTruck) {
+    return;
+  }
+  chosenTruck.status = TruckStatus.ACTIVE;
+};
+
+type TruckAvailablePayload =
+  ClientSocketEventParameter[typeof ClientSocketEvent.TRUCK_AVAILABLE];
+
+const truckAvailable: CaseReducer<
+  State,
+  PayloadAction<TruckAvailablePayload>
+> = (state, action) => {
+  const { truckId } = action.payload;
+  const chosenTruck = state.trucks.items.find((truck) => truck.id === truckId);
+
+  if (!chosenTruck) {
+    return;
+  }
+  chosenTruck.status = TruckStatus.AVAILABLE;
+};
+
 const { reducer, actions, name } = createSlice({
   initialState,
   name: 'trucks',
-  reducers: {},
+  reducers: {
+    truckChosen,
+    truckAvailable,
+  },
   extraReducers(builder) {
     builder
       .addCase(addTruck.pending, (state) => {

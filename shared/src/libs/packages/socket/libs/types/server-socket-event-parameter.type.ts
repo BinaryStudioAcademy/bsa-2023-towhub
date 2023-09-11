@@ -7,6 +7,10 @@ type ServerSocketEventParameter = {
     latLng: GeolocationLatLng;
     driverId: number;
   };
+  [ServerSocketEvent.CHOOSE_TRUCK]: {
+    truckId: number;
+  };
+  [ServerSocketEvent.END_SHIFT]: undefined;
 };
 
 export { type ServerSocketEventParameter };

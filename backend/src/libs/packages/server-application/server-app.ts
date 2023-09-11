@@ -15,7 +15,7 @@ import { ServerErrorType } from '~/libs/enums/enums.js';
 import { type ValidationError } from '~/libs/exceptions/exceptions.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
-import { GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
+import { type GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { socket as socketService } from '~/libs/packages/socket/socket.js';
@@ -25,6 +25,7 @@ import {
   type ValidationSchema,
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
+import { type TruckService } from '~/packages/trucks/truck.service.js';
 import { userService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
@@ -40,6 +41,8 @@ type Constructor = {
   logger: ILogger;
   database: IDatabase;
   apis: IServerAppApi[];
+  geolocationCacheService: GeolocationCacheService;
+  truckService: TruckService;
 };
 
 class ServerApp implements IServerApp {
@@ -53,11 +56,25 @@ class ServerApp implements IServerApp {
 
   private app: ReturnType<typeof Fastify>;
 
-  public constructor({ config, logger, database, apis }: Constructor) {
+  private geolocationCacheService: GeolocationCacheService;
+
+  private truckService: TruckService;
+
+  public constructor({
+    config,
+    logger,
+    database,
+    apis,
+    geolocationCacheService,
+    truckService,
+  }: Constructor) {
     this.config = config;
     this.logger = logger;
     this.database = database;
     this.apis = apis;
+
+    this.geolocationCacheService = geolocationCacheService;
+    this.truckService = truckService;
 
     this.app = Fastify();
   }
@@ -229,7 +246,8 @@ class ServerApp implements IServerApp {
 
     socketService.initializeIo({
       app: this.app,
-      geolocationCacheService: GeolocationCacheService.getInstance(),
+      geolocationCacheService: this.geolocationCacheService,
+      truckService: this.truckService,
     });
 
     await this.initMiddlewares();

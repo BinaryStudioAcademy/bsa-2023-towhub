@@ -6,6 +6,7 @@ import { Auth } from '~/pages/auth/auth.js';
 import { AvailableTrucks } from '~/pages/available-trucks/available-trucks.js';
 import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
+import { Orders } from '~/pages/orders/orders.js';
 import { WelcomePage } from '~/pages/welcome/welcome.js';
 
 import { PageLayout, ProtectedRoute } from '../components.js';
@@ -40,6 +41,15 @@ const Router = (): JSX.Element => (
         element={
           <PageLayout isSidebarHidden>
             <AvailableTrucks />
+          </PageLayout>
+        }
+      />
+
+      <Route
+        path={AppRoute.ORDERS}
+        element={
+          <PageLayout isSidebarHidden>
+            <Orders />
           </PageLayout>
         }
       />

@@ -1,1 +1,5 @@
-export { ClientSocketEvent, ServerSocketEvent } from 'shared/build/index.js';
+export {
+  ClientSocketEvent,
+  ServerSocketEvent,
+  SocketResponseStatus,
+} from 'shared/build/index.js';

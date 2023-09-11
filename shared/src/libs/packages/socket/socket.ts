@@ -1,2 +1,10 @@
-export { ClientSocketEvent, ServerSocketEvent } from './libs/enums/enums.js';
-export { type ServerSocketEventParameter } from './libs/types/types.js';
+export {
+  ClientSocketEvent,
+  ServerSocketEvent,
+  SocketResponseStatus,
+} from './libs/enums/enums.js';
+export {
+  type ClientSocketEventParameter,
+  type ServerSocketEventParameter,
+  type ServerSocketEventResponse,
+} from './libs/types/types.js';

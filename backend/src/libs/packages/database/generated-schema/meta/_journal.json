@@ -61,7 +61,7 @@
     {
       "idx": 8,
       "version": "5",
-      "when": 1694345144284,
+      "when": 1694367818889,
       "tag": "0008_add_status_to_trucks_add_pk_id_to_users_trucks",
       "breakpoints": true
     }

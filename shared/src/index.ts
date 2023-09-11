@@ -22,9 +22,12 @@ export {
   HttpMessage,
 } from './libs/packages/http/http.js';
 export {
+  type ClientSocketEventParameter,
   type ServerSocketEventParameter,
+  type ServerSocketEventResponse,
   ClientSocketEvent,
   ServerSocketEvent,
+  SocketResponseStatus,
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {

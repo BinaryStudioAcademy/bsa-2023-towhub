@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
@@ -29,4 +29,13 @@ const getAllTrucksByUserId = createAsyncThunk<
   return truckApi.getAllTrucksByUserId(payload);
 });
 
-export { addTruck, getAllTrucksByUserId };
+const chooseTruck = createAction(
+  `${sliceName}/choose-truck`,
+  (truckId: number) => {
+    return {
+      payload: { truckId },
+    };
+  },
+);
+
+export { addTruck, chooseTruck, getAllTrucksByUserId };

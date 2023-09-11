@@ -18,6 +18,8 @@ export {
   type ServerErrorResponse,
   type TruckEntityT,
   type TruckTowType,
+  type UserEntityObjectWithGroupT,
+  type UserEntityT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
   type ValidationSchema,

@@ -1,5 +1,5 @@
 DO $$ BEGIN
-  CREATE TYPE "truck_status" AS ENUM('Available', 'Not available', 'Busy');
+  CREATE TYPE "truck_status" AS ENUM('Not available', 'Available', 'Active', 'Busy');
 EXCEPTION
   WHEN duplicate_object THEN null;
 END $$;

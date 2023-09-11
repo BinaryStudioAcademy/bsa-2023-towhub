@@ -30,17 +30,17 @@ import { type TruckService } from './truck.service.js';
  *         manufacturer:
  *           type: string
  *           enum:
- *             - miller_industries
- *             - mercedes_benz
- *             - daf
- *             - man
- *             - volvo
- *             - renault
- *             - iveco
- *             - scania
- *             - kenworth
- *             - ford
- *           example: kenworth
+ *             - Miller_industries
+ *             - Mercedes_benz
+ *             - Daf
+ *             - Man
+ *             - Volvo
+ *             - Renault
+ *             - Iveco
+ *             - Scania
+ *             - Kenworth
+ *             - Ford
+ *           example: Kenworth
  *         towType:
  *           type: string
  *           enum:
@@ -71,17 +71,17 @@ import { type TruckService } from './truck.service.js';
  *         manufacturer:
  *           type: string
  *           enum:
- *             - miller_industries
- *             - mercedes_benz
- *             - daf
- *             - man
- *             - volvo
- *             - renault
- *             - iveco
- *             - scania
- *             - kenworth
- *             - ford
- *           example: kenworth
+ *             - Miller_industries
+ *             - Mercedes_benz
+ *             - Daf
+ *             - Man
+ *             - Volvo
+ *             - Renault
+ *             - Iveco
+ *             - Scania
+ *             - Kenworth
+ *             - Ford
+ *           example: Kenworth
  *         towType:
  *           type: string
  *           enum:

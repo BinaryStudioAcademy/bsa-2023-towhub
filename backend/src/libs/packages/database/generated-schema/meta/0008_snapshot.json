@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "79c23b75-0f53-4bae-9a80-fcc2678ce22b",
+  "id": "62fe316d-f676-4535-967e-8aaac410e270",
   "prevId": "ebac1b00-5007-49e7-9a2c-3403e83ae06e",
   "tables": {
     "business_details": {
@@ -424,8 +424,9 @@
     "truck_status": {
       "name": "truck_status",
       "values": {
-        "Available": "Available",
         "Not available": "Not available",
+        "Available": "Available",
+        "Active": "Active",
         "Busy": "Busy"
       }
     }

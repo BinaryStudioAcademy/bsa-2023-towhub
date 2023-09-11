@@ -1,14 +1,14 @@
 const TruckManufacturer = {
-  MILLER_INDUSTRIES: 'miller_industries',
-  MERCEDES: 'mercedes_benz',
-  DAF: 'daf',
-  MAN: 'man',
-  VOLVO: 'volvo',
-  RENAULT: 'renault',
-  IVECO: 'iveco',
-  SCANIA: 'scania',
-  KENWORTH: 'kenworth',
-  FORD: 'ford',
+  MILLER_INDUSTRIES: 'Miller_industries',
+  MERCEDES: 'Mercedes_benz',
+  DAF: 'Daf',
+  MAN: 'Man',
+  VOLVO: 'Volvo',
+  RENAULT: 'Renault',
+  IVECO: 'Iveco',
+  SCANIA: 'Scania',
+  KENWORTH: 'Kenworth',
+  FORD: 'Ford',
 } as const;
 
 export { TruckManufacturer };

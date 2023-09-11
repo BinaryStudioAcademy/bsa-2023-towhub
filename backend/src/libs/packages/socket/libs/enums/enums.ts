@@ -1,1 +1,2 @@
-export { ServerSocketEvent } from 'shared/build/index.js';
+export { SocketError } from './socket-error.enum.js';
+export { ServerSocketEvent, SocketResponseStatus } from 'shared/build/index.js';

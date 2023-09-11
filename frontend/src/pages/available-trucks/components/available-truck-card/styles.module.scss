@@ -1,0 +1,60 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  width: 100%;
+  height: 212px;
+  margin-bottom: 16px;
+  padding: 7px 0;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px 0 rgba(173 164 164 / 15%);
+}
+
+.body {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 24px 4px;
+}
+
+.description {
+  margin-top: 26px;
+}
+
+.name {
+  color: $black-blue;
+  font-weight: $font-weight-bold;
+  font-size: 20px;
+}
+
+.capacity {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 13px;
+  color: $grey;
+  font-weight: $font-weight-bold;
+  font-size: 14px;
+}
+
+.aside {
+  display: flex;
+}
+
+.img {
+  width: 267px;
+  height: 127px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 24px 16px;
+  border-top: 1px solid $grey-border;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 23px;
+}
