@@ -19,7 +19,9 @@ class MapService implements IMapService {
 
   public constructor({ mapElement, center, zoom }: Constructor) {
     this.directionsService = new google.maps.DirectionsService();
-    this.directionsRenderer = new google.maps.DirectionsRenderer();
+    this.directionsRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: true,
+    });
 
     this.initMap(mapElement, center, zoom);
   }
@@ -61,6 +63,9 @@ class MapService implements IMapService {
     try {
       const response = await this.directionsService.route(request);
       this.directionsRenderer.setDirections(response);
+
+      this.addMarker(origin);
+      this.addMarker(destination, undefined, true);
 
       const duration = response.routes[0]?.legs?.[0]?.duration?.value;
 
