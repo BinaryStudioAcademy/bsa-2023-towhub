@@ -45,7 +45,7 @@ class ServerAppApi implements IServerAppApi {
         },
         servers: [
           {
-            url: `api/${this.version}`,
+            url: `/api/${this.version}`,
           },
         ],
       },
