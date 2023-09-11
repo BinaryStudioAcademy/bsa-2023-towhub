@@ -3,7 +3,7 @@
 .container {
   width: 200px;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
   background-color: $white;
   border-radius: 10px;
   box-shadow: $shadow-light;
