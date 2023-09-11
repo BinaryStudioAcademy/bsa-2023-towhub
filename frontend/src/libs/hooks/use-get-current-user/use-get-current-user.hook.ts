@@ -1,7 +1,7 @@
 import { LocalStorage, StorageKey } from '~/libs/packages/storage/storage.js';
 import { actions as authActions } from '~/slices/auth/auth.js';
 
-import { useAppDispatch } from '../hooks.js';
+import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 
 type GetCurrentUser = {
   getCurrentUser: () => Promise<void>;
