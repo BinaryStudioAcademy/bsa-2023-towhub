@@ -1,0 +1,197 @@
+@import "src/assets/css/styles.scss";
+
+$row-gap-sm: 0.5vmin;
+$row-gap-md: 1vmin;
+$row-gap-lg: 2vmin;
+$shadow-dark: 0 4px 4px #00000021;
+$grey-darker: #7e818f;
+$violet-shallow: #93a1ff;
+$blue-shallower: #6c91f9;
+$blue-shallow: #becee8;
+
+.container {
+  $side-padding: 4.25vmin;
+
+  display: flex;
+  width: 75vmin;
+  height: min-content;
+  padding: 0 $side-padding 6vmin $side-padding;
+  background-color: $white;
+  border-radius: 5%;
+  box-shadow: $shadow-dark;
+}
+
+.cardLayout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+}
+
+.horizontalBar {
+  display: grid;
+  place-content: center;
+  margin: 2.25vmin 0;
+}
+
+.header {
+  $side-padding: 2.25vmin;
+
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 3fr;
+  padding: 0 $side-padding 0 $side-padding;
+  column-gap: 2.25vmin;
+}
+
+.headerImageContainer {
+  display: grid;
+  place-content: center;
+  justify-self: center;
+}
+
+.profileImage {
+  $size: 11vmin;
+
+  width: $size;
+  height: $size;
+  border-radius: 55px;
+}
+
+.headerInfoContainer {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  row-gap: $row-gap-md;
+}
+
+.headerTitleContainer {
+  display: grid;
+  align-items: end;
+}
+
+.headerSubtitleContainer {
+  display: grid;
+  align-items: start;
+}
+
+.subtitle {
+  $color: $grey-dark;
+}
+
+.body {
+  display: grid;
+  padding-top: 4.5vmin;
+}
+
+.bodyContent {
+  display: grid;
+  grid-template-columns: 20px auto;
+  grid-template-areas:
+    "locationDot         location"
+    "    .             lastUpdate"
+    "routeDotStart routeInfoStart"
+    "routeArrow          .       "
+    "routeDotEnd   routeInfoEnd  "
+    "distanceIcon   distanceInfo  ";
+  align-items: center;
+  row-gap: $row-gap-md;
+  height: max-content;
+  column-gap: 1.7vmin;
+}
+
+.locationDot {
+  display: flex;
+  grid-area: locationDot;
+  justify-self: flex-end;
+  height: 20px;
+  color: $violet-shallow;
+}
+
+.location {
+  grid-area: location;
+
+  $color: $grey-dark;
+}
+
+.lastUpdate {
+  grid-area: lastUpdate;
+
+  $color: $grey;
+
+  grid-column: 2 / span 1;
+}
+
+.routesContainer {
+  display: grid;
+  grid-template-rows: repeat(3, min-content);
+}
+
+.routePoint {
+  display: grid;
+  grid-template-columns: 3.3vmin auto;
+  align-items: center;
+  column-gap: 1.7vmin;
+}
+
+.routeInfo {
+  display: inline-block;
+  overflow: hidden;
+  color: $grey-darker;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+$routes-margin-top: 1.5vmin;
+$routes-margin-bottom: 3.5vmin;
+
+.routeInfoStart {
+  grid-area: routeInfoStart;
+  margin-top: $routes-margin-top;
+}
+
+.routeInfoEnd {
+  grid-area: routeInfoEnd;
+  margin-bottom: $routes-margin-bottom;
+}
+
+.routeDot {
+  display: inline-block;
+  justify-self: center;
+}
+
+.routeDotStart {
+  grid-area: routeDotStart;
+  margin-top: $routes-margin-top;
+}
+
+.routeDotEnd {
+  grid-area: routeDotEnd;
+  margin-bottom: $routes-margin-bottom;
+}
+
+.routeArrow {
+  display: grid;
+  grid-area: routeArrow;
+  justify-content: center;
+  margin-top: -1vmin;
+  margin-bottom: -1vmin;
+}
+
+.distanceContainer {
+  display: grid;
+  grid-template-columns: min-content max-content;
+  align-items: end;
+  align-self: end;
+  column-gap: 0.7vmin;
+}
+
+.distanceIcon {
+  display: grid;
+  grid-area: distanceIcon;
+  padding-right: 1vmin;
+}
+
+.distanceInfo {
+  grid-area: distanceInfo;
+  color: $grey-darker;
+}
