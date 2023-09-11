@@ -112,7 +112,6 @@ class OrderService implements Omit<IService, 'find'> {
   }: {
     id: OrderEntityT['id'];
     user: UserEntityObjectWithGroupT | null;
-    businessId?: number;
   }): Promise<OrderFindByIdResponseDto | null> {
     let businessId;
 
