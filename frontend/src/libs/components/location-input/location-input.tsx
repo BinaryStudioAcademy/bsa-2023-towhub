@@ -1,4 +1,4 @@
-import GooglePlacesAutocomplete from 'react-google-autocomplete';
+import { Autocomplete } from '@react-google-maps/api';
 import {
   type Control,
   type FieldErrors,
@@ -7,8 +7,11 @@ import {
 } from 'react-hook-form';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useCallback, useFormController } from '~/libs/hooks/hooks.js';
-import { config } from '~/libs/packages/config/config.js';
+import {
+  useCallback,
+  useFormController,
+  useState,
+} from '~/libs/hooks/hooks.js';
 
 import styles from './styles.module.scss';
 
@@ -34,6 +37,9 @@ const LocationInput = <T extends FieldValues>({
   onChange,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
+  const [location, setLocation] = useState<
+    google.maps.places.Autocomplete | undefined
+  >();
 
   const error = errors[name]?.message;
   const hasError = Boolean(error);
@@ -46,34 +52,47 @@ const LocationInput = <T extends FieldValues>({
     hasError && styles.error,
   ];
 
-  const handleSelectPlace = useCallback(
-    (place: google.maps.places.PlaceResult) => {
-      if (onChange) {
-        onChange({
-          lat: place.geometry?.location?.lat(),
-          lng: place.geometry?.location?.lng(),
-        });
-      }
+  const handleLoad = useCallback(
+    (instance: google.maps.places.Autocomplete) => {
+      setLocation(instance);
     },
-    [onChange],
+    [],
   );
+
+  const handlePlaceChanged = useCallback(() => {
+    const place = location?.getPlace();
+    field.onChange(place?.formatted_address);
+
+    if (onChange && place?.geometry?.location) {
+      onChange({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      });
+    }
+  }, [location, onChange, field]);
 
   return (
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
-        <GooglePlacesAutocomplete
-          {...field}
-          type="text"
-          placeholder={placeholder}
-          className={getValidClassNames(...inputStyles)}
-          disabled={isDisabled}
-          apiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
+        <Autocomplete
           options={{
             types: ['address'],
           }}
-          onPlaceSelected={handleSelectPlace}
-        />
+          onLoad={handleLoad}
+          onPlaceChanged={handlePlaceChanged}
+        >
+          <input
+            {...field}
+            type="text"
+            placeholder={placeholder}
+            className={getValidClassNames(...inputStyles)}
+            disabled={isDisabled}
+            // apiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
+            //
+            // onPlaceSelected={handleSelectPlace}
+          />
+        </Autocomplete>
       </span>
 
       <span
