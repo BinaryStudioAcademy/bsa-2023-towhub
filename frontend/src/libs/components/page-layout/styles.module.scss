@@ -13,11 +13,10 @@
 
 .sidebar {
   grid-area: sidebar;
-  padding: 10px 0 10px 10px;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
 
 .content {
   grid-area: content;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
