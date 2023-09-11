@@ -60,6 +60,23 @@ class AuthApi extends HttpApi {
 
     return await response.json<UserSignInResponseDto>();
   }
+
+  public async getCurrentUser(): Promise<
+    CustomerSignUpResponseDto | BusinessSignUpResponseDto
+  > {
+    const response = await this.load(
+      this.getFullEndpoint(AuthApiPath.CURRENT, {}),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<
+      CustomerSignUpResponseDto | BusinessSignUpResponseDto
+    >();
+  }
 }
 
 export { AuthApi };
