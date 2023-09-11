@@ -215,6 +215,20 @@ class AuthService {
     };
   }
 
+  public async getCurrent(
+    user: UserEntityObjectWithGroupT,
+  ): Promise<
+    UserEntityObjectWithGroupT | UserEntityObjectWithGroupAndBusinessT
+  > {
+    if (user.group.key === UserGroupKey.BUSINESS) {
+      const business = await this.businessService.findByOwnerId(user.id);
+
+      return business ? { ...user, business } : user;
+    }
+
+    return user;
+  }
+
   public async generateAccessTokenAndUpdateUser(
     userId: UserEntityT['id'],
   ): Promise<UserEntityObjectT> {
