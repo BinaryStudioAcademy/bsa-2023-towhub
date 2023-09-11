@@ -1,5 +1,4 @@
-import { ApiPath, HttpMessage } from '~/libs/enums/enums.js';
-import { NotFoundError } from '~/libs/exceptions/exceptions.js';
+import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
   type ApiHandlerResponse,
@@ -10,10 +9,8 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type OrderService } from '~/packages/orders/order.service.js';
 
 import { AuthStrategy } from '../auth/auth.js';
-import { type BusinessService } from '../business/business.service.js';
-import { type DriverService } from '../drivers/driver.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
-import { OrdersApiPath, UserGroupKey } from './libs/enums/enums.js';
+import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type Id,
   type OrderCreateRequestDto,
@@ -202,28 +199,16 @@ import {
 class OrderController extends Controller {
   private orderService: OrderService;
 
-  private businessService: BusinessService;
-
-  private driverService: DriverService;
-
   public constructor({
     logger,
     orderService,
-    businessService,
-    driverService,
   }: {
     logger: ILogger;
     orderService: OrderService;
-    businessService: BusinessService;
-    driverService: DriverService;
   }) {
     super(logger, ApiPath.ORDERS);
 
     this.orderService = orderService;
-
-    this.businessService = businessService;
-
-    this.driverService = driverService;
 
     this.addRoute({
       path: OrdersApiPath.ROOT,
@@ -349,18 +334,11 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const driver = await this.driverService.findById(options.body.driverId);
-
-    if (!driver) {
-      throw new NotFoundError({ message: HttpMessage.DRIVER_DOES_NOT_EXIST });
-    }
-
     return {
       status: HttpCode.OK,
       payload: await this.orderService.create({
         ...options.body,
         userId: options.user?.id ?? null,
-        businessId: driver.businessId,
       }),
     };
   }
@@ -414,18 +392,11 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse> {
-    let business;
-
-    if (options.user?.group.key === UserGroupKey.BUSINESS) {
-      business = await this.businessService.findByOwnerId(options.user.id);
-    }
-
     return {
       status: HttpCode.OK,
       payload: await this.orderService.findOne({
         id: options.params.id,
         user: options.user,
-        businessId: business?.id,
       }),
     };
   }
@@ -486,14 +457,12 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const driver = await this.driverService.findByUserId(options.user.id);
-
     return {
       status: HttpCode.OK,
       payload: await this.orderService.updateOne({
         id: options.params.id,
         payload: options.body,
-        driverId: driver?.id,
+        user: options.user,
       }),
     };
   }
@@ -542,17 +511,9 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const business = await this.businessService.findByOwnerId(options.user.id);
-
-    if (!business) {
-      throw new NotFoundError({});
-    }
-
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findAllBusinessOrders({
-        currentUserBusinessId: business.id,
-      }),
+      payload: await this.orderService.findAllBusinessOrders(options.user),
     };
   }
 

@@ -2,6 +2,8 @@ import { HttpMessage } from '~/libs/enums/enums.js';
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 
+import { type BusinessService } from '../business/business.service.js';
+import { type DriverService } from '../drivers/driver.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
@@ -18,14 +20,29 @@ import { type OrderRepository } from './order.repository.js';
 class OrderService implements Omit<IService, 'find'> {
   private orderRepository: OrderRepository;
 
-  public constructor(orderRepository: OrderRepository) {
+  private businessService: BusinessService;
+
+  private driverService: DriverService;
+
+  public constructor({
+    businessService,
+    orderRepository,
+    driverService,
+  }: {
+    orderRepository: OrderRepository;
+    businessService: BusinessService;
+    driverService: DriverService;
+  }) {
     this.orderRepository = orderRepository;
+
+    this.businessService = businessService;
+
+    this.driverService = driverService;
   }
 
   public async create(
     payload: OrderCreateRequestDto & {
       userId: number | null;
-      businessId: number;
     },
   ): Promise<OrderCreateResponseDto> {
     const {
@@ -37,8 +54,12 @@ class OrderService implements Omit<IService, 'find'> {
       customerPhone,
       driverId,
       userId,
-      businessId,
     } = payload;
+    const driver = await this.driverService.findById(driverId);
+
+    if (!driver) {
+      throw new NotFoundError({ message: HttpMessage.DRIVER_DOES_NOT_EXIST });
+    }
     const order = await this.orderRepository.create(
       OrderEntity.initializeNew({
         price: 100, //Mock, get price from truck and calculated distance
@@ -48,7 +69,7 @@ class OrderService implements Omit<IService, 'find'> {
         endPoint,
         status: OrderStatus.PENDING,
         userId,
-        businessId,
+        businessId: driver.businessId,
         driverId,
         customerName,
         customerPhone,
@@ -88,12 +109,17 @@ class OrderService implements Omit<IService, 'find'> {
   public async findOne({
     id,
     user,
-    businessId,
   }: {
     id: OrderEntityT['id'];
     user: UserEntityObjectWithGroupT | null;
     businessId?: number;
   }): Promise<OrderFindByIdResponseDto | null> {
+    let businessId;
+
+    if (user?.group.key === UserGroupKey.BUSINESS) {
+      const business = await this.businessService.findByOwnerId(user.id);
+      businessId = business?.id;
+    }
     const result = await this.orderRepository.findByIdWithDriver(id);
 
     if (!result) {
@@ -104,27 +130,29 @@ class OrderService implements Omit<IService, 'find'> {
 
     const { order, driver } = result;
 
-    const foundOrder = order.toObject();
+    const foundOrder = { ...order.toObject(), driver };
 
     if (user?.group.key === UserGroupKey.BUSINESS && businessId) {
       this.verifyOrderBelongsToBusiness(foundOrder, businessId);
 
-      return { ...foundOrder, driver };
+      return foundOrder;
     }
 
     if (user) {
       this.verifyOrderBelongsToUser(foundOrder, user);
     }
 
-    return { ...foundOrder, driver };
+    return foundOrder;
   }
 
   public async updateOne(parameters: {
     id: OrderEntityT['id'];
     payload: OrderUpdateRequestDto;
-    driverId?: number;
+    user: UserEntityObjectWithGroupT;
   }): Promise<OrderUpdateResponseDto> {
-    if (!parameters.driverId) {
+    const driver = await this.driverService.findByUserId(parameters.user.id);
+
+    if (!driver) {
       throw new NotFoundError({
         message: HttpMessage.ORDER_DOES_NOT_EXIST,
       });
@@ -132,22 +160,23 @@ class OrderService implements Omit<IService, 'find'> {
     const foundOrder = await this.orderRepository.findById(parameters.id);
 
     if (foundOrder) {
-      this.verifyOrderBelongsToDriver(
-        foundOrder.toObject(),
-        parameters.driverId,
-      );
+      this.verifyOrderBelongsToDriver(foundOrder.toObject(), driver.id);
     }
 
     return await this.update(parameters);
   }
 
-  public async findAllBusinessOrders({
-    currentUserBusinessId: businessId,
-  }: {
-    currentUserBusinessId: number;
-  }): Promise<{ items: OrderEntityT[] }> {
+  public async findAllBusinessOrders(
+    user: UserEntityObjectWithGroupT,
+  ): Promise<{ items: OrderEntityT[] }> {
+    const business = await this.businessService.findByOwnerId(user.id);
+
+    if (!business) {
+      throw new NotFoundError({});
+    }
+
     const usersOrders = await this.orderRepository.find({
-      businessId,
+      businessId: business.id,
     });
 
     return {

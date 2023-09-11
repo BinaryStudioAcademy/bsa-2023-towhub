@@ -8,12 +8,14 @@ import { OrderRepository } from './order.repository.js';
 import { OrderService } from './order.service.js';
 
 const orderRepository = new OrderRepository(database, schema.orders);
-const orderService = new OrderService(orderRepository);
+const orderService = new OrderService({
+  orderRepository,
+  businessService,
+  driverService,
+});
 const orderController = new OrderController({
   logger,
   orderService,
-  businessService,
-  driverService,
 });
 
 export { orderController, orderService };

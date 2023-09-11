@@ -33,7 +33,16 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       with: {
         driver: {
           columns: { driverLicenseNumber: true },
-          with: { user: { columns: { firstName: true, lastName: true } } },
+          with: {
+            user: {
+              columns: {
+                firstName: true,
+                lastName: true,
+                phone: true,
+                email: true,
+              },
+            },
+          },
         },
       },
     });
@@ -42,8 +51,12 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       return null;
     }
     const { driver, ...order } = result;
+    const { user, ...modifiedDriver } = driver;
 
-    return { order: OrderEntity.initialize(order as OrderEntityT), driver };
+    return {
+      order: OrderEntity.initialize(order as OrderEntityT),
+      driver: { ...modifiedDriver, ...user },
+    };
   }
 
   public async findById(id: OrderEntityT['id']): Promise<OrderEntity | null> {
