@@ -8,7 +8,7 @@ const NotFound = (): JSX.Element => {
   const navigate = useNavigate();
 
   const handleClick = useCallback(() => {
-    navigate(AppRoute.WELCOME);
+    navigate(AppRoute.ROOT);
   }, [navigate]);
 
   return (
