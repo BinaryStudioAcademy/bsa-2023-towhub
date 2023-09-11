@@ -36,14 +36,6 @@ const users = pgTable(
   },
 );
 
-const groups = pgTable('groups', {
-  id: serial('id').primaryKey(),
-  name: varchar('name').notNull(),
-  key: varchar('key').notNull(),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
-
 const usersRelations = relations(users, ({ one, many }) => ({
   group: one(groups, {
     fields: [users.groupId],
@@ -52,6 +44,13 @@ const usersRelations = relations(users, ({ one, many }) => ({
   usersTrucks: many(usersTrucks),
 }));
 
+const groups = pgTable('groups', {
+  id: serial('id').primaryKey(),
+  name: varchar('name').notNull(),
+  key: varchar('key').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
 const business = pgTable('business_details', {
   id: serial('id').primaryKey(),
   companyName: varchar('company_name').notNull(),
@@ -138,9 +137,21 @@ const usersTrucksRelations = relations(usersTrucks, ({ one }) => ({
   }),
 }));
 
+const driversRelations = relations(drivers, ({ one }) => ({
+  user: one(users, {
+    fields: [drivers.userId],
+    references: [users.id],
+  }),
+  business: one(business, {
+    fields: [drivers.businessId],
+    references: [business.id],
+  }),
+}));
+
 export {
   business,
   drivers,
+  driversRelations,
   files,
   groups,
   trucks,
