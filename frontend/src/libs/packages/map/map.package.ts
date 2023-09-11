@@ -129,6 +129,9 @@ class MapService implements IMapService {
       label,
       map: this.map,
       icon: destination ? undefined : truckImg,
+      anchorPoint: new google.maps.Point(60, 60),
+
+      // shape: { coords: [0, 0, 148, 164], type: 'rect' },
     });
   }
 }

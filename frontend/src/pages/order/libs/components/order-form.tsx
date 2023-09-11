@@ -24,7 +24,7 @@ const OrderForm: React.FC<Properties> = ({
 
   return (
     <div className={styles.formWrapper}>
-      <p>Please fill the form</p>
+      <p className={styles.title}>Please fill the form</p>
       <Form
         validationSchema={userSignInValidationSchema}
         fields={[
