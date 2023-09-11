@@ -1,5 +1,10 @@
 const capitalizeFirstLetter = (string: string): string => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+  const stringWithoutUnderscores = string.replace(/_/g, ' ');
+
+  return (
+    stringWithoutUnderscores.charAt(0).toUpperCase() +
+    stringWithoutUnderscores.slice(1)
+  );
 };
 
 export { capitalizeFirstLetter };

@@ -39,12 +39,14 @@ class TruckRepository implements IRepository {
     businessId: number,
     query: PaginationPayload,
   ): Promise<TruckDatabaseModel[]> {
+    const index = query.pageIndex * query.pageSize;
+
     return await this.db
       .driver()
       .select()
       .from(this.trucksSchema)
       .where(eq(this.trucksSchema.businessId, businessId))
-      .offset(query.pageIndex)
+      .offset(index)
       .limit(query.pageSize);
   }
 

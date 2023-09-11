@@ -12,6 +12,7 @@ import {
   faStar,
   faTruckPickup,
   faUsers,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { IconName } from '~/libs/enums/icon-name.enum.js';
@@ -28,6 +29,7 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.LIST]: faListUl,
   [IconName.LOCATION_DOT]: faLocationDot,
   [IconName.MAP]: faMap,
+  [IconName.XMARK]: faXmark,
   [IconName.TRUCK]: faTruckPickup,
   [IconName.USERS]: faUsers,
 };

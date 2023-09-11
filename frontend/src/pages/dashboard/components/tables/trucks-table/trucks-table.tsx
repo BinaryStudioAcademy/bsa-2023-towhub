@@ -1,7 +1,13 @@
-import { Button, Table } from '~/libs/components/components.js';
+import { Button, Modal, Table } from '~/libs/components/components.js';
 import { capitalizeFirstLetter } from '~/libs/helpers/helpers.js';
-import { useAppSelector, useAppTable } from '~/libs/hooks/hooks.js';
+import {
+  useAppSelector,
+  useAppTable,
+  useCallback,
+  useState,
+} from '~/libs/hooks/hooks.js';
 import { type ColumnDef, type TruckEntity } from '~/libs/types/types.js';
+import { AddTruckForm } from '~/pages/trucks/components/add-truck-form/add-truck-form.js';
 import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
 
 import styles from './styles.module.scss';
@@ -54,20 +60,36 @@ const TrucksTable: React.FC<Properties> = ({ businessId }: Properties) => {
 
   const trucks = useAppSelector((state) => state.trucks.trucks);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
   return (
-    <div className={styles.container}>
-      <h2 className={styles.title}>Trucks Table</h2>
-      <Button label="+" className={styles.btn} />
-      <Table
-        data={trucks}
-        columns={columns}
-        totalRow={5}
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-        changePageSize={changePageSize}
-        changePageIndex={changePageIndex}
-      />
-    </div>
+    <>
+      <div className={styles.container}>
+        <h2 className={styles.title}>Trucks Table</h2>
+        <Button label="+" className={styles.btn} onClick={openModal} />
+        <Table
+          data={trucks}
+          columns={columns}
+          totalRow={15}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          changePageSize={changePageSize}
+          changePageIndex={changePageIndex}
+        />
+      </div>
+
+      <Modal isOpen={isModalOpen} isCentered={true} onClose={closeModal}>
+        <AddTruckForm onClose={closeModal} businessId={businessId} />
+      </Modal>
+    </>
   );
 };
 

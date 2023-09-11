@@ -9,6 +9,7 @@ const IconName = {
   MAP: 'map',
   PLUS: 'plus',
   STAR: 'star',
+  XMARK: 'xmark',
   TRUCK: 'truck',
   USERS: 'users',
 } as const;

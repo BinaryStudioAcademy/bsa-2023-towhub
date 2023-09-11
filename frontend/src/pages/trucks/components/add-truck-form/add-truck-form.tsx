@@ -1,4 +1,5 @@
-import { Form } from '~/libs/components/components.js';
+import { Form, Icon } from '~/libs/components/components.js';
+import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useAppDispatch, useCallback } from '~/libs/hooks/hooks.js';
 import { type TruckFormModel } from '~/packages/trucks/libs/types/types.js';
@@ -10,12 +11,23 @@ import { ADD_TRUCK_FIELDS } from './libs/fields/add-truck.fields.js';
 import { getTruckEntity } from './libs/helpers/get-truck-entity.helper.js';
 import styles from './styles.module.scss';
 
-const AddTruckForm: React.FC = () => {
+type Properties = {
+  businessId: number;
+  onClose: () => void;
+};
+
+const AddTruckForm: React.FC<Properties> = ({
+  businessId,
+  onClose,
+}: Properties) => {
   const dispatch = useAppDispatch();
 
   const handleFormSubmit = useCallback(
     (payload: TruckFormModel): void => {
-      void dispatch(truckActions.addTruck(getTruckEntity(payload)));
+      void dispatch(
+        truckActions.addTruck({ ...getTruckEntity(payload), businessId }),
+      );
+      onClose();
     },
     [dispatch],
   );
@@ -25,6 +37,11 @@ const AddTruckForm: React.FC = () => {
       <h3 className={getValidClassNames('h4', 'uppercase', styles.title)}>
         Add Truck
       </h3>
+      <Icon
+        iconName={IconName.XMARK}
+        onClick={onClose}
+        className={styles.closeIcon}
+      />
       <Form
         fields={ADD_TRUCK_FIELDS}
         defaultValues={DEFAULT_TRUCK_PAYLOAD}
