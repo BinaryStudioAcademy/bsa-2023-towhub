@@ -109,6 +109,14 @@ class Config implements IConfig {
           default: null,
         },
       },
+      BUSINESS: {
+        APPLICATION_FEE_AMOUNT: {
+          doc: 'Amount of business application fee as fraction',
+          format: Number,
+          env: 'BUSINESS_APPLICATION_FEE_AMOUNT',
+          default: 0,
+        },
+      },
     });
   }
 }

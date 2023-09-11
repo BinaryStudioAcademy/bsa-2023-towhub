@@ -24,6 +24,10 @@ type EnvironmentSchema = {
     API_VERSION: Stripe.LatestApiVersion;
     WEBHOOK_SECRET: string;
   };
+
+  BUSINESS: {
+    APPLICATION_FEE_AMOUNT: number;
+  };
 };
 
 export { type EnvironmentSchema };

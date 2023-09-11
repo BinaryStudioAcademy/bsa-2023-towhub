@@ -71,12 +71,14 @@ class StripeController extends Controller {
     };
   }
 
-  private processWebhook(
+  private async processWebhook(
     options: ApiHandlerOptions<{
       body: WebhookBody;
     }>,
-  ): ApiHandlerResponse {
-    this.stripeService.processWebhookEvent(options.body.stripeWebhookEvent);
+  ): Promise<ApiHandlerResponse> {
+    await this.stripeService.processWebhookEvent(
+      options.body.stripeWebhookEvent,
+    );
 
     return {
       status: HttpCode.OK,

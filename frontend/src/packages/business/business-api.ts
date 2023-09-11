@@ -13,7 +13,7 @@ type Constructor = {
 
 class BusinessApi extends HttpApi {
   public constructor({ baseUrl, http, storage }: Constructor) {
-    super({ path: ApiPath.BUSINESS, baseUrl, http, storage });
+    super({ path: ApiPath.STRIPE, baseUrl, http, storage });
   }
 
   public async generateStripeLink(): Promise<string> {

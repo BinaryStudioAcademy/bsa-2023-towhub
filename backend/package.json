@@ -50,6 +50,7 @@
     "postgres": "3.3.5",
     "socket.io": "4.7.2",
     "stripe": "13.5.0",
+    "stripe-event-types": "2.4.0",
     "swagger-jsdoc": "6.2.8"
   }
 }

@@ -45,6 +45,14 @@ class BusinessService implements IService {
     return business ? BusinessEntity.initialize(business).toObject() : null;
   }
 
+  public async findByStripeId(
+    stripeId: string,
+  ): Promise<BusinessEntityT | null> {
+    const [business = null] = await this.businessRepository.find({ stripeId });
+
+    return business ? BusinessEntity.initialize(business).toObject() : null;
+  }
+
   public async checkIsExistingBusiness(
     key: Pick<BusinessEntityT, 'taxNumber'>,
   ): Promise<boolean> {
@@ -100,16 +108,18 @@ class BusinessService implements IService {
       throw new NotFoundError({});
     }
 
-    const { result: doesBusinessExist } =
-      await this.businessRepository.checkExists({
-        companyName: payload.companyName,
-      });
+    if ('companyName' in payload) {
+      const { result: doesBusinessExist } =
+        await this.businessRepository.checkExists({
+          companyName: payload.companyName,
+        });
 
-    if (doesBusinessExist) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.NAME_ALREADY_REGISTERED,
-      });
+      if (doesBusinessExist) {
+        throw new HttpError({
+          status: HttpCode.BAD_REQUEST,
+          message: HttpMessage.NAME_ALREADY_REGISTERED,
+        });
+      }
     }
 
     const business = await this.businessRepository.update({

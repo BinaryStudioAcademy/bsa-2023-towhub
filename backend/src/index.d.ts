@@ -1,3 +1,5 @@
+/// <reference types="stripe-event-types" />
+
 import { type AuthStrategy } from './packages/auth/auth.js';
 import { type UserEntityObjectWithGroupT } from './packages/users/users.js';
 

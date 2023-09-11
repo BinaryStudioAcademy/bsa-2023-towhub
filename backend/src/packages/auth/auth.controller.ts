@@ -11,6 +11,7 @@ import {
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type UserEntityObjectWithGroupT,
   businessSignUpValidationSchema,
   customerSignUpValidationSchema,
 } from '~/packages/users/users.js';

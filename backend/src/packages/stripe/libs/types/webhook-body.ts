@@ -1,7 +1,7 @@
 import { type Stripe } from 'stripe';
 
 type WebhookBody = {
-  stripeWebhookEvent: Stripe.Event;
+  stripeWebhookEvent: Stripe.DiscriminatedEvent;
 };
 
 export { type WebhookBody };

@@ -4,6 +4,7 @@ import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
+import { StripeEvent } from './libs/enums/stripe-event.enum.js';
 import { type StripeRepository } from './stripe.repository.js';
 
 class StripeService {
@@ -36,7 +37,7 @@ class StripeService {
       business,
     };
 
-    // If there is not account yet, creating new, othewise retrieving from stripe
+    // If there is no account yet, creating new, othewise retrieving from stripe
     const account = business.stripeId
       ? await this.stripeRepository.retrieveExpressAccount(business.stripeId)
       : await this.stripeRepository.createExpressAccount(userWithBusiness);
@@ -55,8 +56,34 @@ class StripeService {
     return link.url;
   }
 
-  public processWebhookEvent(event: Stripe.Event): boolean {
-    return !!event;
+  public async processWebhookEvent(
+    event: Stripe.DiscriminatedEvent,
+  ): Promise<void> {
+    switch (event.type) {
+      case StripeEvent.CAPABILITY_UPDATED: {
+        {
+          if (event.account && event.data.object.status === 'active') {
+            // Linked account has been activated
+            const business = await this.businessService.findByStripeId(
+              event.account,
+            );
+
+            if (business && !business.stripeActivated) {
+              await this.businessService.update({
+                id: business.id,
+                payload: { stripeActivated: true },
+              });
+            }
+          }
+        }
+        break;
+      }
+      case StripeEvent.PAYMENT_INTENT_SUCCEEDED: {
+        // Handle successfull payment
+        return;
+      }
+      default:
+    }
   }
 }
 
