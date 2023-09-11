@@ -72,6 +72,12 @@ const Dropdown = <T extends FieldValues>({
     [isMenuOpen],
   );
 
+  const findOptionByValue = (
+    value: string | undefined,
+  ): SingleValue<SelectOption> | undefined => {
+    return options.find((opt) => opt.value === value);
+  };
+
   return (
     <Select<SelectOption>
       {...(name && control && field)}
@@ -85,7 +91,7 @@ const Dropdown = <T extends FieldValues>({
       onMenuClose={handleCloseMenu}
       onChange={onChange}
       defaultValue={defaultValue}
-      value={field?.value}
+      value={findOptionByValue(field?.value)}
       placeholder={placeholder}
     />
   );
