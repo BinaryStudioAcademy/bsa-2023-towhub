@@ -1,9 +1,9 @@
 import joi from 'joi';
 
 import { FilesValidationMessage } from '../enums/enums.js';
-import { type UpdateFileNameRequestDto } from '../types/request/update-file-name-request-dto.type.js';
+import { type UpdateFileKeyRequestDto } from '../types/request/update-file-name-request-dto.type.js';
 
-const filesUpdateNameRequestBody = joi.object<UpdateFileNameRequestDto, true>({
+const filesUpdateKeyRequestBody = joi.object<UpdateFileKeyRequestDto, true>({
   key: joi
     .string()
     .trim()
@@ -15,4 +15,4 @@ const filesUpdateNameRequestBody = joi.object<UpdateFileNameRequestDto, true>({
     }),
 });
 
-export { filesUpdateNameRequestBody };
+export { filesUpdateKeyRequestBody };

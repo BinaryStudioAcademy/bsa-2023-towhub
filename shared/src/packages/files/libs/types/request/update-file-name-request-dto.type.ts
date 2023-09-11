@@ -1,5 +1,5 @@
 import { type FileEntityT } from '../file-entity.type.js';
 
-type UpdateFileNameRequestDto = Pick<FileEntityT, 'key'>;
+type UpdateFileKeyRequestDto = Pick<FileEntityT, 'key'>;
 
-export { type UpdateFileNameRequestDto };
+export { type UpdateFileKeyRequestDto };

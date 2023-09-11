@@ -15,15 +15,15 @@ import {
   type FileUploadResponseDto,
   type GetFileRequestParameters,
   type MultipartParsedFile,
-  type UpdateFileNameRequestDto,
-  type UpdateFileNameRequestParameters,
+  type UpdateFileKeyRequestDto,
+  type UpdateFileKeyRequestParameters,
   FilesApiPath,
 } from './libs/types/types.js';
 import {
   filesDeleteRequestParameters,
   filesGetRequestParameters,
-  filesUpdateNameRequestBody,
-  filesUpdateNameRequestParameters,
+  filesUpdateKeyRequestBody,
+  filesUpdateKeyRequestParameters,
 } from './libs/validation-schemas/validation-schemas.js';
 
 /**
@@ -117,14 +117,14 @@ class FilesController extends Controller {
       path: FilesApiPath.$ID,
       method: 'PUT',
       validation: {
-        body: filesUpdateNameRequestBody,
-        params: filesUpdateNameRequestParameters,
+        body: filesUpdateKeyRequestBody,
+        params: filesUpdateKeyRequestParameters,
       },
       handler: (options) =>
         this.update(
           options as ApiHandlerOptions<{
-            body: UpdateFileNameRequestDto;
-            params: UpdateFileNameRequestParameters;
+            body: UpdateFileKeyRequestDto;
+            params: UpdateFileKeyRequestParameters;
           }>,
         ),
     });
@@ -274,8 +274,8 @@ class FilesController extends Controller {
 
   private async update(
     options: ApiHandlerOptions<{
-      params: UpdateFileNameRequestParameters;
-      body: UpdateFileNameRequestDto;
+      params: UpdateFileKeyRequestParameters;
+      body: UpdateFileKeyRequestDto;
     }>,
   ): Promise<ApiHandlerResponse> {
     const updatedFileRecord = await this.fileService.update(

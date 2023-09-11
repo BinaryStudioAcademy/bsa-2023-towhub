@@ -7,12 +7,12 @@ export {
   type FileInputConfig,
   type FileUploadResponseDto,
   type GetFileRequestParameters,
-  type UpdateFileNameRequestDto,
-  type UpdateFileNameRequestParameters,
+  type UpdateFileKeyRequestDto,
+  type UpdateFileKeyRequestParameters,
 } from './libs/types/types.js';
 export {
   filesDeleteRequestParameters,
   filesGetRequestParameters,
-  filesUpdateNameRequestBody,
-  filesUpdateNameRequestParameters,
+  filesUpdateKeyRequestBody,
+  filesUpdateKeyRequestParameters,
 } from './libs/validation-schemas/validation-schemas.js';

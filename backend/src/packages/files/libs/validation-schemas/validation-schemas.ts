@@ -1,6 +1,6 @@
 export {
   filesDeleteRequestParameters,
   filesGetRequestParameters,
-  filesUpdateNameRequestBody,
-  filesUpdateNameRequestParameters,
+  filesUpdateKeyRequestBody,
+  filesUpdateKeyRequestParameters,
 } from 'shared/build/index.js';

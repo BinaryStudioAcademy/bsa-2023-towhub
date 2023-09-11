@@ -1,15 +1,13 @@
 import joi from 'joi';
 
-import { FilesValidationMessage } from '../enums/enums.js';
 import { type DeleteFileRequestParameters } from '../types/request/request.js';
+import { filesIdRequestParameter } from './files-id-request-parameter.validation-schema.js';
 
 const filesDeleteRequestParameters = joi.object<
   DeleteFileRequestParameters,
   true
 >({
-  id: joi.number().integer().positive().required().messages({
-    'number.required': FilesValidationMessage.ID_REQUIRED,
-  }),
+  ...filesIdRequestParameter,
 });
 
 export { filesDeleteRequestParameters };

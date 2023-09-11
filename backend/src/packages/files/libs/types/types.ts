@@ -11,7 +11,7 @@ export {
   type FileInputConfig,
   type FileUploadResponseDto,
   type GetFileRequestParameters,
-  type UpdateFileNameRequestDto,
-  type UpdateFileNameRequestParameters,
+  type UpdateFileKeyRequestDto,
+  type UpdateFileKeyRequestParameters,
   FilesApiPath,
 } from 'shared/build/index.js';

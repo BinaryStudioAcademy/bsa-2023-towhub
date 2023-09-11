@@ -3,7 +3,7 @@ export { type FileInputConfig } from './file-input-config.js';
 export {
   type DeleteFileRequestParameters,
   type GetFileRequestParameters,
-  type UpdateFileNameRequestDto,
-  type UpdateFileNameRequestParameters,
+  type UpdateFileKeyRequestDto,
+  type UpdateFileKeyRequestParameters,
 } from './request/request.js';
 export { type FileUploadResponseDto } from './response/response.js';
