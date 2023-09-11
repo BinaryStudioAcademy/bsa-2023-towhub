@@ -16,6 +16,7 @@ const MapInnerComponent: React.FC<Properties> = ({
   center,
   zoom,
   className,
+  destination,
 }: Properties) => {
   const mapReference = useRef<HTMLDivElement>(null);
   const mapService = useRef<MapService | null>(null);
@@ -30,8 +31,14 @@ const MapInnerComponent: React.FC<Properties> = ({
       });
 
       mapService.current.addMarker(center);
+
+      if (destination) {
+        mapService.current.addMarker(destination, undefined, true);
+
+        void mapService.current.calculateRouteAndTime(center, destination);
+      }
     }
-  }, [center, zoom]);
+  }, [center, zoom, destination]);
 
   return <div ref={mapReference} id="map" className={mapClasses} />;
 };

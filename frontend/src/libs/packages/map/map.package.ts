@@ -112,14 +112,18 @@ class MapService implements IMapService {
     }
   }
 
-  public addMarker(position: google.maps.LatLngLiteral, label?: string): void {
+  public addMarker(
+    position: google.maps.LatLngLiteral,
+    label?: string,
+    destination = false,
+  ): void {
     this.throwIfMapNotInitialized();
 
     new google.maps.Marker({
       position,
       label,
       map: this.map,
-      icon: truckImg,
+      icon: destination ? undefined : truckImg,
     });
   }
 }

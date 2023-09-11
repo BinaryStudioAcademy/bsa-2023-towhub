@@ -9,10 +9,15 @@ type Properties = {
   onLocationChange:
     | ((place: { lat: number | undefined; lng: number | undefined }) => void)
     | undefined;
-  // onDestinationChange: ((place: { lat: number | undefined; lng: number | undefined }) => void) | undefined;
+  onDestinationChange:
+    | ((place: { lat: number | undefined; lng: number | undefined }) => void)
+    | undefined;
 };
 
-const OrderForm: React.FC<Properties> = ({ onLocationChange }: Properties) => {
+const OrderForm: React.FC<Properties> = ({
+  onLocationChange,
+  onDestinationChange,
+}: Properties) => {
   const handleSubmit = useCallback(() => {
     return;
   }, []);
@@ -44,6 +49,7 @@ const OrderForm: React.FC<Properties> = ({ onLocationChange }: Properties) => {
         }}
         onSubmit={handleSubmit}
         onLocationChange={onLocationChange}
+        onDestinationChange={onDestinationChange}
       />
     </div>
   );

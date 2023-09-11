@@ -23,6 +23,9 @@ type Properties<T extends FieldValues> = {
   onLocationChange?:
     | ((place: { lat: number | undefined; lng: number | undefined }) => void)
     | undefined;
+  onDestinationChange?:
+    | ((place: { lat: number | undefined; lng: number | undefined }) => void)
+    | undefined;
 };
 
 const Form = <T extends FieldValues = FieldValues>({
@@ -32,6 +35,7 @@ const Form = <T extends FieldValues = FieldValues>({
   btnLabel,
   onSubmit,
   onLocationChange,
+  onDestinationChange,
 }: Properties<T>): JSX.Element => {
   const { control, errors, handleSubmit } = useAppForm<T>({
     defaultValues,
@@ -65,14 +69,27 @@ const Form = <T extends FieldValues = FieldValues>({
         return <Input {...field} control={control} errors={errors} />;
       }
       case 'location': {
-        return (
-          <LocationInput
-            {...field}
-            control={control}
-            errors={errors}
-            onChange={onLocationChange}
-          />
-        );
+        if (field.name === 'location') {
+          return (
+            <LocationInput
+              {...field}
+              control={control}
+              errors={errors}
+              onChange={onLocationChange}
+            />
+          );
+        } else if (field.name === 'destination') {
+          return (
+            <LocationInput
+              {...field}
+              control={control}
+              errors={errors}
+              onChange={onDestinationChange}
+            />
+          );
+        }
+
+        return <LocationInput {...field} control={control} errors={errors} />;
       }
       default: {
         return <Input {...field} control={control} errors={errors} />;

@@ -8,8 +8,14 @@ import { config } from '~/libs/packages/config/config.js';
 import { OrderForm } from './libs/components/order-form.js';
 import styles from './styles.module.scss';
 
+const libraries: Libraries = ['places'];
+
 const Order: React.FC = () => {
   const [location, setLocation] = useState({ lat: 50.4547, lng: 30.5238 });
+  const [destination, setDestination] = useState({
+    lat: 50.4507,
+    lng: 30.5278,
+  });
 
   const handleLocatonChange = useCallback(
     (location: { lat: number | undefined; lng: number | undefined }) => {
@@ -24,7 +30,17 @@ const Order: React.FC = () => {
     [],
   );
 
-  const libraries: Libraries = ['places'];
+  const handleDestinationChange = useCallback(
+    (location: { lat: number | undefined; lng: number | undefined }) => {
+      setDestination((previous) => {
+        return {
+          lat: location.lat ?? previous.lat,
+          lng: location.lng ?? previous.lng,
+        };
+      });
+    },
+    [],
+  );
 
   return (
     <section className={styles.page} style={{ display: 'flex' }}>
@@ -48,7 +64,10 @@ const Order: React.FC = () => {
             hasFooter={false}
           />
           <span>TowTrucks</span>
-          <OrderForm onLocationChange={handleLocatonChange} />
+          <OrderForm
+            onLocationChange={handleLocatonChange}
+            onDestinationChange={handleDestinationChange}
+          />
         </div>
         <div
           style={{
@@ -60,7 +79,7 @@ const Order: React.FC = () => {
           <MapInnerComponent
             center={location}
             zoom={16}
-            destination={{ lat: 50.4647, lng: 30.5231 }}
+            destination={destination}
           />
         </div>
       </LoadScript>
