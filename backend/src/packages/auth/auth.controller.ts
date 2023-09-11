@@ -17,7 +17,7 @@ import {
 } from '~/packages/users/users.js';
 
 import { type AuthService } from './auth.service.js';
-import { AuthApiPath } from './libs/enums/enums.js';
+import { AuthApiPath, AuthStrategy } from './libs/enums/enums.js';
 import { type UserSignInRequestDto } from './libs/types/types.js';
 import { userSignInValidationSchema } from './libs/validation-schemas/validation-schemas.js';
 
@@ -71,6 +71,18 @@ class AuthController extends Controller {
           }>,
         ),
     });
+
+    this.addRoute({
+      path: AuthApiPath.CURRENT,
+      method: 'GET',
+      authStrategy: AuthStrategy.INJECT_USER,
+      handler: (options) =>
+        this.getCurrentUser(
+          options as ApiHandlerOptions<{
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
   }
 
   private async signUpCustomer(
@@ -104,6 +116,19 @@ class AuthController extends Controller {
     return {
       status: HttpCode.OK,
       payload: await this.authService.signIn(options.body),
+    };
+  }
+
+  private async getCurrentUser(
+    options: ApiHandlerOptions<{
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<
+    ApiHandlerResponse<CustomerSignUpResponseDto | BusinessSignUpResponseDto>
+  > {
+    return {
+      status: HttpCode.OK,
+      payload: await this.authService.getCurrent(options.user),
     };
   }
 }
