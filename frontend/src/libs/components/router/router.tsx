@@ -13,8 +13,8 @@ import { App, PageLayout, ProtectedRoute } from '../components.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => {
-  // const { getCurrentUser } = useGetCurrentUser();
-  // void getCurrentUser();
+  const { getCurrentUser } = useGetCurrentUser();
+  void getCurrentUser();
 
   return (
     <RouterProvider>
