@@ -8,9 +8,8 @@ import { OrderEntity } from '~/packages/orders/order.entity.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
   type OrderEntity as OrderEntityT,
-  type OrderWithDriverEntity as OrderWithDriverEntityT,
+  type OrderFindByIdResponseDto,
 } from './libs/types/types.js';
-import { OrderWithDriverEntity } from './order-with-driver.entity.js';
 
 class OrderRepository implements Omit<IRepository, 'find'> {
   private db: Pick<IDatabase, 'driver'>;
@@ -25,9 +24,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     this.ordersSchema = ordersSchema;
   }
 
-  public async findById(
-    id: OrderEntityT['id'],
-  ): Promise<OrderWithDriverEntity | null> {
+  public async findByIdWithDriver(id: OrderEntityT['id']): Promise<{
+    order: OrderEntity;
+    driver: OrderFindByIdResponseDto['driver'];
+  } | null> {
     const result = await this.db.driver().query.orders.findFirst({
       where: (orders) => eq(orders.id, id),
       with: {
@@ -38,10 +38,20 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       },
     });
 
-    return (
-      (result ?? null) &&
-      OrderWithDriverEntity.initialize(result as OrderWithDriverEntityT)
-    );
+    if (!result?.driver) {
+      return null;
+    }
+    const { driver, ...order } = result;
+
+    return { order: OrderEntity.initialize(order as OrderEntityT), driver };
+  }
+
+  public async findById(id: OrderEntityT['id']): Promise<OrderEntity | null> {
+    const result = await this.db.driver().query.orders.findFirst({
+      where: (orders) => eq(orders.id, id),
+    });
+
+    return (result ?? null) && OrderEntity.initialize(result as OrderEntityT);
   }
 
   public async find(

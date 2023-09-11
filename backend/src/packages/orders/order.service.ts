@@ -1,3 +1,4 @@
+import { HttpMessage } from '~/libs/enums/enums.js';
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 
@@ -7,13 +8,14 @@ import {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
   type OrderEntity as OrderEntityT,
+  type OrderFindByIdResponseDto,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
 } from './libs/types/types.js';
 import { OrderEntity } from './order.entity.js';
 import { type OrderRepository } from './order.repository.js';
 
-class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
+class OrderService implements Omit<IService, 'find'> {
   private orderRepository: OrderRepository;
 
   public constructor(orderRepository: OrderRepository) {
@@ -60,7 +62,9 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     const foundOrder = await this.orderRepository.findById(id);
 
     if (!foundOrder) {
-      throw new NotFoundError({});
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
     }
 
     return foundOrder.toObject();
@@ -73,7 +77,9 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     const updatedOrder = await this.orderRepository.update(parameters);
 
     if (!updatedOrder) {
-      throw new NotFoundError({});
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
     }
 
     return updatedOrder.toObject();
@@ -87,20 +93,30 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     id: OrderEntityT['id'];
     user: UserEntityObjectWithGroupT | null;
     businessId?: number;
-  }): Promise<OrderEntityT | null> {
-    const foundOrder = await this.findById(id);
+  }): Promise<OrderFindByIdResponseDto | null> {
+    const result = await this.orderRepository.findByIdWithDriver(id);
+
+    if (!result) {
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
+    }
+
+    const { order, driver } = result;
+
+    const foundOrder = order.toObject();
 
     if (user?.group.key === UserGroupKey.BUSINESS && businessId) {
       this.verifyOrderBelongsToBusiness(foundOrder, businessId);
 
-      return foundOrder;
+      return { ...foundOrder, driver };
     }
 
     if (user) {
       this.verifyOrderBelongsToUser(foundOrder, user);
     }
 
-    return foundOrder;
+    return { ...foundOrder, driver };
   }
 
   public async updateOne(parameters: {
@@ -109,7 +125,9 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     driverId?: number;
   }): Promise<OrderUpdateResponseDto> {
     if (!parameters.driverId) {
-      throw new NotFoundError({});
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
     }
     const foundOrder = await this.orderRepository.findById(parameters.id);
 
@@ -141,7 +159,9 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     const foundOrder = await this.findById(id);
 
     if (!foundOrder) {
-      throw new NotFoundError({});
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
     }
 
     return await this.orderRepository.delete(id);
@@ -156,7 +176,9 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     }
 
     if (foundOrder.driverId !== driverId) {
-      throw new NotFoundError({});
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
     }
   }
 
@@ -169,7 +191,9 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
     }
 
     if (foundOrder.businessId !== businessId) {
-      throw new NotFoundError({});
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
     }
   }
 
@@ -186,7 +210,9 @@ class OrderService implements Omit<IService, 'delete' | 'findById' | 'find'> {
       (foundOrder.customerPhone && foundOrder.customerPhone === phone);
 
     if (!orderBelongsToUser) {
-      throw new NotFoundError({});
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
     }
   }
 }

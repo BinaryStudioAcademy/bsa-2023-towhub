@@ -1,10 +1,10 @@
-import { type DriverEntity } from '~/packages/drivers/drivers.js';
+import { type DriverDto } from '~/packages/drivers/drivers.js';
 import { type UserEntityT } from '~/packages/users/users.js';
 
 import { type OrderEntity } from './order-entity.type.js';
 
-type OrderWithDriverEntity = OrderEntity & {
-  driver: Pick<DriverEntity, 'driverLicenseNumber'> & {
+type OrderFindByIdResponseDto = OrderEntity & {
+  driver: Pick<DriverDto, 'driverLicenseNumber'> & {
     user: {
       firstName: UserEntityT['firstName'];
       lastName: UserEntityT['lastName'];
@@ -12,4 +12,4 @@ type OrderWithDriverEntity = OrderEntity & {
   };
 };
 
-export { type OrderWithDriverEntity };
+export { type OrderFindByIdResponseDto };

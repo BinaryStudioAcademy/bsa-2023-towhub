@@ -1,4 +1,5 @@
-import { ApiPath } from '~/libs/enums/enums.js';
+import { ApiPath, HttpMessage } from '~/libs/enums/enums.js';
+import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import {
   type ApiHandlerOptions,
   type ApiHandlerResponse,
@@ -13,8 +14,6 @@ import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrdersApiPath, UserGroupKey } from './libs/enums/enums.js';
-import { DriverNotExist } from './libs/exceptions/driver-not-exist.js';
-import { BusinessNotExist } from './libs/exceptions/exceptions.js';
 import {
   type Id,
   type OrderCreateRequestDto,
@@ -353,7 +352,7 @@ class OrderController extends Controller {
     const driver = await this.driverService.findById(options.body.driverId);
 
     if (!driver) {
-      throw new DriverNotExist();
+      throw new NotFoundError({ message: HttpMessage.DRIVER_DOES_NOT_EXIST });
     }
 
     return {
@@ -546,7 +545,7 @@ class OrderController extends Controller {
     const business = await this.businessService.findByOwnerId(options.user.id);
 
     if (!business) {
-      throw new BusinessNotExist();
+      throw new NotFoundError({});
     }
 
     return {

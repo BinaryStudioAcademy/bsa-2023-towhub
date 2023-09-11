@@ -8,9 +8,9 @@ export {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
   type OrderEntity,
+  type OrderFindByIdResponseDto,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
-  type OrderWithDriverEntity,
 } from './libs/types/types.js';
 export {
   orderCreateRequestBody,
