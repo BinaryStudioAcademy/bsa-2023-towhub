@@ -81,8 +81,8 @@ export {
 export {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftCreateResponseDto,
   type ShiftEntity,
+  type ShiftResponseDto,
   shiftClose as shiftCloseValidationSchema,
   shiftCreate as shiftCreateValidationSchema,
   ShiftsApiPath,

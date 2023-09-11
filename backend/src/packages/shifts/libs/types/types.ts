@@ -7,7 +7,7 @@ type ShiftDatabaseModel = InferModel<DatabaseSchema['shifts']>;
 export {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftCreateResponseDto,
   type ShiftEntity,
+  type ShiftResponseDto,
 } from 'shared/build/index.js';
 export { type ShiftDatabaseModel };

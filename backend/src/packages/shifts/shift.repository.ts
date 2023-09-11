@@ -66,7 +66,7 @@ class ShiftRepository implements IRepository {
   public async findById(
     id: ShiftEntityT['id'],
   ): Promise<ShiftDatabaseModel | null> {
-    const [shift] = await this.db
+    const [shift = null] = await this.db
       .driver()
       .select()
       .from(this.shiftSchema)

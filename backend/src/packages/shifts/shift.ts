@@ -21,8 +21,8 @@ export { ShiftsApiPath, ShiftValidationMessage } from './libs/enums/enums.js';
 export {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftCreateResponseDto,
   type ShiftEntity,
+  type ShiftResponseDto,
 } from './libs/types/types.js';
 export {
   shiftCloseValidationSchema,

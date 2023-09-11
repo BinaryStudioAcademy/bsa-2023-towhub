@@ -9,8 +9,8 @@ import { ShiftEntity } from './shift.entity.js';
 import {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftCreateResponseDto,
   type ShiftEntity as ShiftEntityT,
+  type ShiftResponseDto,
 } from './shift.js';
 import { type ShiftRepository } from './shift.repository.js';
 
@@ -31,7 +31,7 @@ class ShiftService implements IService {
     this.driverService = driverService;
   }
 
-  public async getAllStarted(): Promise<ShiftCreateResponseDto[]> {
+  public async getAllStarted(): Promise<ShiftResponseDto[]> {
     const shifts = await this.shiftRepository.getAllOpened();
 
     return shifts.length > 0
@@ -39,13 +39,13 @@ class ShiftService implements IService {
       : [];
   }
 
-  public async findById(id: number): Promise<ShiftCreateResponseDto | null> {
+  public async findById(id: number): Promise<ShiftResponseDto | null> {
     const [shift = null] = await this.shiftRepository.find({ id });
 
     return shift ? ShiftEntity.initialize(shift).toObject() : null;
   }
 
-  public async findByShiftId(shiftId: number): Promise<ShiftCreateResponseDto> {
+  public async findByShiftId(shiftId: number): Promise<ShiftResponseDto> {
     const [shift = null] = await this.shiftRepository.find({ id: shiftId });
 
     if (!shift) {
@@ -60,7 +60,7 @@ class ShiftService implements IService {
 
   public async findByDriverUserId(
     driverId: number,
-  ): Promise<ShiftCreateResponseDto[]> {
+  ): Promise<ShiftResponseDto[]> {
     const shifts = await this.shiftRepository.find({
       driverId,
     });
@@ -76,8 +76,8 @@ class ShiftService implements IService {
   }: {
     body: ShiftCreateRequestDto;
     user: UserEntityObjectWithGroupT;
-  }): Promise<ShiftCreateResponseDto> {
-    const canCreateShift = await this.checkAccessToShift({
+  }): Promise<ShiftResponseDto> {
+    const canCreateShift = await this.checkHasAccessToShift({
       driverId: body.driverId,
       user,
     });
@@ -102,10 +102,10 @@ class ShiftService implements IService {
     body: ShiftCloseRequestDto;
     user: UserEntityObjectWithGroupT;
     params: Pick<ShiftEntityT, 'id'>;
-  }): Promise<ShiftCreateResponseDto> {
+  }): Promise<ShiftResponseDto> {
     const shift = await this.findByShiftId(params.id);
 
-    const canCloseShift = await this.checkAccessToShift({
+    const canCloseShift = await this.checkHasAccessToShift({
       driverId: shift.driverId,
       user,
     });
@@ -140,7 +140,7 @@ class ShiftService implements IService {
   }: {
     id: number;
     payload: Partial<ShiftEntityT>;
-  }): Promise<ShiftCreateResponseDto> {
+  }): Promise<ShiftResponseDto> {
     const result = await this.shiftRepository.update({ id, payload });
 
     return ShiftEntity.initialize(result).toObject();
@@ -155,29 +155,27 @@ class ShiftService implements IService {
     return Boolean(shift);
   }
 
-  private async checkAccessToShift({
+  private async checkHasAccessToShift({
     user,
     driverId,
   }: {
     user: UserEntityObjectWithGroupT;
     driverId: ShiftEntityT['driverId'];
   }): Promise<boolean> {
-    if (user.group.key === UserGroupKey.BUSINESS) {
-      const business = await this.businessService.findByOwnerId(user.id);
-      const driver = await this.driverService.findByUserId(driverId);
+    const { id: userId, group } = user;
 
-      if (!business || !driver || business.id !== driver.businessId) {
-        return false;
-      }
-    } else if (user.group.key === UserGroupKey.DRIVER) {
-      if (user.id !== driverId) {
-        return false;
-      }
-    } else {
-      return false;
+    if (group.key === UserGroupKey.BUSINESS) {
+      return await this.businessService.checkisDriverBelongedToBusiness({
+        userId,
+        driverId,
+      });
     }
 
-    return true;
+    if (group.key === UserGroupKey.DRIVER) {
+      return userId === driverId;
+    }
+
+    return false;
   }
 }
 

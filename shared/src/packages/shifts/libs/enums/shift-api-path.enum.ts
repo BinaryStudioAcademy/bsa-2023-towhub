@@ -1,7 +1,7 @@
 const ShiftsApiPath = {
   ROOT: '/',
   $ID: '/:id',
-  $DRIVER_ID: '/driver',
+  DRIVER_$ID: '/driver',
 } as const;
 
 export { ShiftsApiPath };

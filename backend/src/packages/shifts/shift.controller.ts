@@ -15,8 +15,8 @@ import {
 import {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftCreateResponseDto,
   type ShiftEntity,
+  type ShiftResponseDto,
   shiftCloseValidationSchema,
   shiftCreateValidationSchema,
   ShiftsApiPath,
@@ -82,7 +82,7 @@ class ShiftController extends Controller {
     });
 
     this.addRoute({
-      path: ShiftsApiPath.$DRIVER_ID + ShiftsApiPath.$ID,
+      path: ShiftsApiPath.DRIVER_$ID + ShiftsApiPath.$ID,
       method: 'GET',
       handler: (options) =>
         this.getByDriver(
@@ -94,7 +94,7 @@ class ShiftController extends Controller {
   }
 
   private async getAllStarted(): Promise<
-    ApiHandlerResponse<ShiftCreateResponseDto[]>
+    ApiHandlerResponse<ShiftResponseDto[]>
   > {
     return {
       status: HttpCode.OK,
@@ -107,7 +107,7 @@ class ShiftController extends Controller {
       body: ShiftCreateRequestDto;
       user: UserEntityObjectWithGroupT;
     }>,
-  ): Promise<ApiHandlerResponse<ShiftCreateResponseDto>> {
+  ): Promise<ApiHandlerResponse<ShiftResponseDto>> {
     return {
       status: HttpCode.CREATED,
       payload: await this.shiftService.create(options),
@@ -120,7 +120,7 @@ class ShiftController extends Controller {
       user: UserEntityObjectWithGroupT;
       params: Pick<ShiftEntity, 'id'>;
     }>,
-  ): Promise<ApiHandlerResponse<ShiftCreateResponseDto>> {
+  ): Promise<ApiHandlerResponse<ShiftResponseDto>> {
     return {
       status: HttpCode.OK,
       payload: await this.shiftService.close(options),
@@ -131,7 +131,7 @@ class ShiftController extends Controller {
     options: ApiHandlerOptions<{
       params: Pick<ShiftEntity, 'id'>;
     }>,
-  ): Promise<ApiHandlerResponse<ShiftCreateResponseDto>> {
+  ): Promise<ApiHandlerResponse<ShiftResponseDto>> {
     return {
       status: HttpCode.OK,
       payload: await this.shiftService.findByShiftId(options.params.id),
@@ -142,7 +142,7 @@ class ShiftController extends Controller {
     options: ApiHandlerOptions<{
       params: Pick<UserEntityT, 'id'>;
     }>,
-  ): Promise<ApiHandlerResponse<ShiftCreateResponseDto[]>> {
+  ): Promise<ApiHandlerResponse<ShiftResponseDto[]>> {
     return {
       status: HttpCode.OK,
       payload: await this.shiftService.findByDriverUserId(options.params.id),
