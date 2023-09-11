@@ -9,7 +9,7 @@ import {
 } from '~/libs/types/types.js';
 
 import { Button } from '../button/button.jsx';
-import { Dropdown } from '../dropdown/dropdown.js';
+import { DropdownInput } from '../dropdown-input/dropdown-input.js';
 import { Input } from '../input/input.jsx';
 import styles from './styles.module.scss';
 
@@ -31,7 +31,7 @@ const renderField = <T extends FieldValues = FieldValues>(
       const { options, name, label } = field;
 
       return (
-        <Dropdown
+        <DropdownInput
           options={options ?? []}
           name={name}
           control={control}

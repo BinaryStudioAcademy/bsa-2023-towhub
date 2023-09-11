@@ -13,6 +13,7 @@ export {
 } from './libs/exceptions/exceptions.js';
 export { configureString } from './libs/helpers/helpers.js';
 export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
+export { type GeolocationLatLng } from './libs/packages/geolocation/geolocation.js';
 export {
   type HttpMethod,
   type HttpOptions,
@@ -22,6 +23,7 @@ export {
   HttpMessage,
 } from './libs/packages/http/http.js';
 export {
+  type ServerSocketEventParameter,
   ClientSocketEvent,
   ServerSocketEvent,
 } from './libs/packages/socket/socket.js';
