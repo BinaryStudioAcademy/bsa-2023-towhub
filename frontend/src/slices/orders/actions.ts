@@ -15,8 +15,7 @@ const createOrder = createAsyncThunk<
 >(`${sliceName}/create-order`, (payload, { extra }) => {
   const { ordersApi } = extra;
 
-  // FIXME
-  return ordersApi.createOrder({ ...payload, driverId: 1 });
+  return ordersApi.createOrder(payload);
 });
 
 export { createOrder };

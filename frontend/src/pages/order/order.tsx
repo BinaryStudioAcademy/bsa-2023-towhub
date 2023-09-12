@@ -37,12 +37,12 @@ const Order: React.FC = () => {
 
   const handleSubmit = useCallback(
     (payload: OrderCreateRequestDto) => {
-      void dispatch(orderActions.createOrder(payload));
-      // FIXME
-      // .unwrap()
-      // .then((response) => {
-      //   Navigate user here
-      // });
+      void dispatch(orderActions.createOrder({ ...payload, driverId }))
+        // FIXME
+        .unwrap()
+        .then((response) => {
+          // console.log(response);
+        });
     },
     [dispatch],
   );
@@ -81,15 +81,11 @@ const Order: React.FC = () => {
             onSubmit={handleSubmit}
             onLocationChange={handleLocatonChange}
             onDestinationChange={handleDestinationChange}
-            additionalValues={{ driverId }}
+            // additionalValues={{ driverId }}
           />
         </div>
         <div className={styles.right}>
-          <Map
-            center={location}
-            zoom={16}
-            destination={destination}
-          />
+          <Map center={location} zoom={16} destination={destination} />
         </div>
       </LoadScript>
     </section>

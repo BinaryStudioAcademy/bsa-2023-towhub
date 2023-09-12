@@ -1,9 +1,4 @@
-import {
-  type Control,
-  type FieldErrors,
-  type Path,
-  type PathValue,
-} from 'react-hook-form';
+import { type Control, type FieldErrors } from 'react-hook-form';
 
 import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
 import {
@@ -22,7 +17,6 @@ import styles from './styles.module.scss';
 type Properties<T extends FieldValues> = {
   fields: FormField<T>[];
   defaultValues: DeepPartial<T>;
-  additionalValues?: DeepPartial<T>;
   validationSchema: ValidationSchema;
   btnLabel?: string;
   onSubmit: (payload: T) => void;
@@ -37,14 +31,13 @@ type Properties<T extends FieldValues> = {
 const Form = <T extends FieldValues = FieldValues>({
   fields,
   defaultValues,
-  additionalValues,
   validationSchema,
   btnLabel,
   onSubmit,
   onLocationChange,
   onDestinationChange,
 }: Properties<T>): JSX.Element => {
-  const { control, errors, handleSubmit, setValue } = useAppForm<T>({
+  const { control, errors, handleSubmit } = useAppForm<T>({
     defaultValues,
     validationSchema,
   });
@@ -108,19 +101,9 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const handleFormSubmit = useCallback(
     (event_: React.BaseSyntheticEvent): void => {
-      if (additionalValues) {
-        // Используйте цикл for...of для перебора ключе й и значений в объекте
-        for (const [fieldName, fieldValue] of Object.entries(
-          additionalValues,
-        )) {
-          // Обновите значение поля формы с использованием метода setValue
-          setValue(fieldName as Path<T>, fieldValue as PathValue<T, Path<T>>);
-        }
-      }
-
       void handleSubmit(onSubmit)(event_);
     },
-    [handleSubmit, setValue, onSubmit, additionalValues],
+    [handleSubmit, onSubmit],
   );
 
   const createInputs = (): JSX.Element[] => {
