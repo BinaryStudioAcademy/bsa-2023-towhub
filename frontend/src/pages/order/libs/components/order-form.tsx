@@ -1,11 +1,12 @@
 import { orderCreateRequestBody } from 'shared/build/index.js';
 
 import { Form } from '~/libs/components/components.js';
-import { useCallback } from '~/libs/hooks/hooks.js';
+import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 
 import styles from './styles.module.scss';
 
 type Properties = {
+  onSubmit: (payload: OrderCreateRequestDto) => void;
   onLocationChange:
     | ((place: { lat: number | undefined; lng: number | undefined }) => void)
     | undefined;
@@ -15,39 +16,36 @@ type Properties = {
 };
 
 const OrderForm: React.FC<Properties> = ({
+  onSubmit,
   onLocationChange,
   onDestinationChange,
 }: Properties) => {
-  const handleSubmit = useCallback(() => {
-    return;
-  }, []);
-
   return (
     <div className={styles.formWrapper}>
       <p className={styles.title}>Please fill the form</p>
       <Form
         validationSchema={orderCreateRequestBody}
         fields={[
-          { label: 'Name', name: 'name' },
-          { label: 'Phone', name: 'phone' },
-          { label: 'Time', name: 'time', type: 'date' },
-          { label: 'Location', name: 'location', type: 'location' },
-          { label: 'Destination', name: 'destination', type: 'location' },
+          { label: 'Name', name: 'customerName' },
+          { label: 'Phone', name: 'customerPhone' },
+          { label: 'Time', name: 'scheduledTime', type: 'date' },
+          { label: 'Location', name: 'startPoint', type: 'location' },
+          { label: 'Destination', name: 'endPoint', type: 'location' },
           {
             label: 'How many cars need to be towed',
-            name: 'cars',
+            name: 'carsQty',
             type: 'number',
           },
         ]}
         defaultValues={{
-          name: '',
-          phone: '',
-          time: '',
-          location: '',
-          destination: '',
-          cars: 1,
+          customerName: '',
+          customerPhone: '',
+          scheduledTime: '',
+          startPoint: '',
+          endPoint: '',
+          carsQty: 1,
         }}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
         onLocationChange={onLocationChange}
         onDestinationChange={onDestinationChange}
       />

@@ -69,7 +69,8 @@ const Form = <T extends FieldValues = FieldValues>({
         return <Input {...field} control={control} errors={errors} />;
       }
       case 'location': {
-        if (field.name === 'location') {
+        // FIXME
+        if (field.name === 'startPoint') {
           return (
             <LocationInput
               {...field}
@@ -78,7 +79,8 @@ const Form = <T extends FieldValues = FieldValues>({
               onChange={onLocationChange}
             />
           );
-        } else if (field.name === 'destination') {
+          // FIXME
+        } else if (field.name === 'endPoint') {
           return (
             <LocationInput
               {...field}
@@ -110,21 +112,8 @@ const Form = <T extends FieldValues = FieldValues>({
     ));
   };
 
-  // const handleChange = useCallback((): void => {
-  //   const values = getValues();
-
-  //   if (onChange) {
-  //     onChange(values);
-  //   }
-  // }, [getValues, onChange]);
-
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className={styles.form}
-      // onChange={handleChange}
-      noValidate
-    >
+    <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
       <Button type="submit" label={btnLabel ?? 'Submit'} isFullWidth />
     </form>

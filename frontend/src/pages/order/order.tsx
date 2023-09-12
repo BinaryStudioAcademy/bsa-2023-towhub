@@ -2,8 +2,10 @@ import { type Libraries, LoadScript } from '@react-google-maps/api';
 
 import { TowTruckCard } from '~/libs/components/components.js';
 import { MapInnerComponent } from '~/libs/components/map/map-inner-component/map-inner-component.js';
-import { useCallback, useState } from '~/libs/hooks/hooks.js';
+import { useAppDispatch, useCallback, useState } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
+import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
+import { actions as orderActions } from '~/slices/orders/order.js';
 
 import { OrderForm } from './libs/components/order-form.js';
 import styles from './styles.module.scss';
@@ -17,6 +19,8 @@ const Order: React.FC = () => {
     lng: 30.5278,
   });
 
+  const dispatch = useAppDispatch();
+
   const handleLocatonChange = useCallback(
     (location: { lat: number | undefined; lng: number | undefined }) => {
       setLocation((previous) => {
@@ -27,6 +31,19 @@ const Order: React.FC = () => {
       });
     },
     [],
+  );
+
+  const handleSubmit = useCallback(
+    (payload: OrderCreateRequestDto) => {
+      // console.log("click");
+      void dispatch(orderActions.createOrder(payload));
+      // FIXME
+      // .unwrap()
+      // .then((response) => {
+      //   console.log(response);
+      // });
+    },
+    [dispatch],
   );
 
   const handleDestinationChange = useCallback(
@@ -64,6 +81,7 @@ const Order: React.FC = () => {
           />
           <span>TowTrucks</span>
           <OrderForm
+            onSubmit={handleSubmit}
             onLocationChange={handleLocatonChange}
             onDestinationChange={handleDestinationChange}
           />
