@@ -34,9 +34,7 @@ class ShiftService implements IService {
   public async getAllStarted(): Promise<ShiftResponseDto[]> {
     const shifts = await this.shiftRepository.getAllOpened();
 
-    return shifts.length > 0
-      ? shifts.map((it) => ShiftEntity.initialize(it).toObject())
-      : [];
+    return shifts.map((it) => ShiftEntity.initialize(it).toObject());
   }
 
   public async findById(id: number): Promise<ShiftResponseDto | null> {
@@ -65,9 +63,7 @@ class ShiftService implements IService {
       driverId,
     });
 
-    return shifts.length > 0
-      ? shifts.map((it) => ShiftEntity.initialize(it).toObject())
-      : [];
+    return shifts.map((it) => ShiftEntity.initialize(it).toObject());
   }
 
   public async create({
