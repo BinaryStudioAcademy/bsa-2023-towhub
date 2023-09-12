@@ -5,9 +5,15 @@ import {
   type FieldValues,
 } from 'react-hook-form';
 
+import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useFormController } from '~/libs/hooks/hooks.js';
+import {
+  useCallback,
+  useFormController,
+  useState,
+} from '~/libs/hooks/hooks.js';
 
+import { Icon } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
@@ -43,7 +49,7 @@ const Input = <T extends FieldValues>({
   step,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
-
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
   const error = errors[name]?.message;
   const hasError = Boolean(error);
   const hasValue = Boolean(field.value);
@@ -55,13 +61,21 @@ const Input = <T extends FieldValues>({
     hasError && styles.error,
   ];
 
+  const toggleShowPassword = useCallback(
+    (event: React.MouseEvent<HTMLElement>): void => {
+      event.preventDefault();
+      setIsPasswordShown(!isPasswordShown);
+    },
+    [isPasswordShown],
+  );
+
   return (
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
         <input
           {...field}
-          type={type}
+          type={isPasswordShown ? 'text' : type}
           placeholder={placeholder}
           className={getValidClassNames(...inputStyles)}
           disabled={isDisabled}
@@ -70,7 +84,16 @@ const Input = <T extends FieldValues>({
           step={step}
         />
         {type === 'password' && (
-          <span className={styles.passwordEye}>&#128065;</span>
+          <button
+            className={getValidClassNames(
+              styles.passwordEye,
+              isPasswordShown && styles.passwordEyeLight,
+            )}
+            onClick={toggleShowPassword}
+            tabIndex={-1}
+          >
+            <Icon iconName={IconName.EYE} size="sm" />
+          </button>
         )}
       </span>
 
