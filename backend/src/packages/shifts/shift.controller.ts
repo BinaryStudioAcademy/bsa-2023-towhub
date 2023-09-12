@@ -1,5 +1,4 @@
-import { ApiPath, HttpCode } from 'src/libs/enums/enums.js';
-
+import { ApiPath, HttpCode } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
   type ApiHandlerResponse,
