@@ -79,12 +79,6 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
-  type OrderEntity,
-  type OrderStatusValues,
-  type OrderWithDriverEntity,
-  OrdersApiPath,
-} from './packages/orders/orders.js';
-export {
   type TruckEntity,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
