@@ -1,15 +1,13 @@
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import { HttpError } from '~/libs/exceptions/exceptions.js';
+import { FileTransactionError } from '~/libs/exceptions/file/file-transaction.exception';
+import { InvalidFileError } from '~/libs/exceptions/file/invalid-file.exception';
 import { type IService } from '~/libs/interfaces/service.interface';
 import { type ILogger } from '~/libs/packages/logger/libs/interfaces/logger.interface';
 import { type S3ClientService } from '~/libs/packages/s3-client-service/s3-client-service.package';
 
 import { FilesEntity } from './files.entity.js';
 import { type FilesRepository } from './files.repository.js';
-import {
-  createFileTransactionError,
-  createInvalidFileError,
-} from './libs/helpers/helpers.js';
 import {
   type FileEntityObjectT,
   type FileEntityT,
@@ -73,7 +71,9 @@ class FilesService
       const foundFiles = await this.fileRepository.find({ key });
 
       if (foundFiles.length > 0) {
-        throw createInvalidFileError(`File '${key}' already exists.`);
+        throw new InvalidFileError({
+          message: `File '${key}' already exists.`,
+        });
       }
 
       try {
@@ -90,12 +90,10 @@ class FilesService
         this.logger.error(`[CREATE_FILE]: File transaction error. Key: ${key}`);
 
         if (S3OperationSuccess) {
-          //If S3 fails, local DB won't be affected as it goes after S3 success.
-          //If S3 succeeds, but local DB fails, then S3 must be synchronized with local DB.
           await this.s3ClientService.deleteObject(parsedFile.filename);
         }
 
-        throw createFileTransactionError();
+        throw new FileTransactionError({});
       }
     }
 
@@ -131,12 +129,10 @@ class FilesService
       );
 
       if (S3OperationSuccess) {
-        //If S3 fails, local DB won't be affected as it goes after S3 success.
-        //If S3 succeeds, but local DB fails, then S3 must be synchronized with local DB.
         await this.s3ClientService.updateObjectKey(payload.key, fileRecord.key);
       }
 
-      throw createFileTransactionError();
+      throw new FileTransactionError({});
     }
   }
 
@@ -175,12 +171,10 @@ class FilesService
       );
 
       if (S3OperationSuccess) {
-        //If S3 fails, local DB won't be affected as it goes after S3 success.
-        //If S3 succeeds, but local DB fails, then S3 must be synchronized with local DB.
         await this.s3ClientService.putObject(fileRecord.key, fileContent);
       }
 
-      throw createFileTransactionError();
+      throw new FileTransactionError({});
     }
   }
 }

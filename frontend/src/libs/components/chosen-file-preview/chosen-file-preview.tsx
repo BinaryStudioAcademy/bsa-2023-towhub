@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 
 type Properties = {
   file: FileObject;
-  fileStatus?: ValueOf<typeof FileStatus>; // 'Chosen' | 'Uploading' | 'Uploaded' | 'Rejected'
+  fileStatus?: ValueOf<typeof FileStatus>;
   handleDeleteFile: (id: string) => void;
 };
 
@@ -38,10 +38,9 @@ const ChosenFilePreview = ({
   const DELETE_TIME_OFFSET = 200;
   useEffect(() => {
     if (beforeDeletionState) {
-      setTimeout(
-        () => handleDeleteFile(id),
-        Number.parseInt(styles['zoom-out-speed']) - DELETE_TIME_OFFSET,
-      );
+      const zoomOutSpeed = Number.parseInt(styles['zoom-out-speed']);
+      const deletionTimeout = zoomOutSpeed - DELETE_TIME_OFFSET;
+      setTimeout(() => handleDeleteFile(id), deletionTimeout);
     }
   }, [beforeDeletionState, handleDeleteFile, name, id]);
 

@@ -1,6 +1,6 @@
 import { type Accept, type DropzoneOptions, ErrorCode } from 'react-dropzone';
 
-import { filesize } from '~/libs/helpers/helpers.js';
+import { filesize, pluralizeString } from '~/libs/helpers/helpers.js';
 
 const DropzoneFormatErrorMessage = (
   type: ErrorCode,
@@ -22,10 +22,9 @@ const DropzoneFormatErrorMessage = (
     }
     case ErrorCode.TooManyFiles: {
       const maxFilesCount = dropzoneOptions.maxFiles as number;
+      const pluralizedFiles = pluralizeString('file', maxFilesCount);
 
-      return `There can be no more than ${maxFilesCount} file${
-        maxFilesCount > 1 ? 's' : ''
-      }`;
+      return `There can be no more than ${maxFilesCount} ${pluralizedFiles}`;
     }
     default: {
       return '';

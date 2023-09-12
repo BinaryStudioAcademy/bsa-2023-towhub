@@ -4,14 +4,14 @@ import fp from 'fastify-plugin';
 import { lookup } from 'mime-types';
 
 import { type HttpError } from '~/libs/exceptions/exceptions.js';
+import { InvalidFileError } from '~/libs/exceptions/file/file.js';
 
 import {
-  FilesValidationError,
+  FilesValidationErrorMessage,
   FilesValidationStrategy,
 } from './libs/enums/enums.js';
 import {
   checkValidFileName,
-  createInvalidFileError,
   createInvalidFileErrorMessage,
 } from './libs/helpers/helpers.js';
 import {
@@ -27,12 +27,12 @@ const checkName = (
 
   if (!isValidFilename) {
     const message = createInvalidFileErrorMessage(
-      FilesValidationError.INVALID_FILE_NAME,
-      fileInputConfig as Required<typeof fileInputConfig>,
+      FilesValidationErrorMessage.INVALID_FILE_NAME,
+      fileInputConfig,
       temporaryFile,
     );
 
-    throw createInvalidFileError(message);
+    throw new InvalidFileError({ message });
   }
 };
 const checkSize = async (
@@ -46,12 +46,12 @@ const checkSize = async (
     bufferedContent.length > fileInputConfig.maxSize
   ) {
     const message = createInvalidFileErrorMessage(
-      FilesValidationError.FILE_TOO_BIG,
-      fileInputConfig as Required<typeof fileInputConfig>,
+      FilesValidationErrorMessage.FILE_TOO_BIG,
+      fileInputConfig,
       temporaryFile,
     );
 
-    throw createInvalidFileError(message);
+    throw new InvalidFileError({ message });
   }
 
   return bufferedContent;
@@ -70,12 +70,12 @@ const checkType = (
 
     if (!matchedType) {
       const message = createInvalidFileErrorMessage(
-        FilesValidationError.INVALID_FILE_TYPE,
-        fileInputConfig as Required<typeof fileInputConfig>,
+        FilesValidationErrorMessage.INVALID_FILE_TYPE,
+        fileInputConfig,
         temporaryFile,
       );
 
-      throw createInvalidFileError(message);
+      throw new InvalidFileError({ message });
     }
   }
 
@@ -88,11 +88,11 @@ const checkFilesCount = (
 ): void => {
   if (fileInputConfig.maxFiles && filesCount > fileInputConfig.maxFiles) {
     const message = createInvalidFileErrorMessage(
-      FilesValidationError.TOO_MANY_FILES,
-      fileInputConfig as Required<typeof fileInputConfig>,
+      FilesValidationErrorMessage.TOO_MANY_FILES,
+      fileInputConfig,
     );
 
-    throw createInvalidFileError(message);
+    throw new InvalidFileError({ message });
   }
 };
 

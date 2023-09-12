@@ -11,7 +11,11 @@ export {
   HttpError,
   ValidationError,
 } from './libs/exceptions/exceptions.js';
-export { configureString, filesize } from './libs/helpers/helpers.js';
+export {
+  configureString,
+  filesize,
+  pluralizeString,
+} from './libs/helpers/helpers.js';
 export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
 export { type GeolocationLatLng } from './libs/packages/geolocation/geolocation.js';
 export {
