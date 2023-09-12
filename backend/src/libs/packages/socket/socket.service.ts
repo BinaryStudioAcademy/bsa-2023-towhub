@@ -6,14 +6,14 @@ import { logger } from '~/libs/packages/logger/logger.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
 import { type TruckEntityT } from '~/packages/trucks/libs/types/types.js';
-import { type TruckService } from '~/packages/trucks/truck.service';
+import { type TruckService } from '~/packages/trucks/truck.service.js';
 
 import {
   ServerSocketEvent,
   SocketError,
   SocketResponseStatus,
 } from './libs/enums/enums.js';
-import { emitSocketError, endShift } from './libs/helpers/helpers.js';
+import { endShift, socketChooseTruck } from './libs/helpers/helpers.js';
 import {
   type ServerSocketEventParameter,
   ClientSocketEvent,
@@ -58,7 +58,8 @@ class SocketService {
 
       if (socketUserId) {
         const driverShiftData = shiftMap.get(socketUserId);
-        shiftMap.set(socketUserId, { ...shiftMap.get(socketUserId), socket });
+
+        shiftMap.set(socketUserId, { ...driverShiftData, socket });
 
         if (driverShiftData?.chosenTruck) {
           const { id } = driverShiftData.chosenTruck;
@@ -110,14 +111,15 @@ class SocketService {
 
           const timer = setTimeout((): void => {
             const shift = shiftMap.get(socketUserId);
-            const socket = shift?.socket;
-            socket?.emit(ClientSocketEvent.DRIVER_TIMED_OUT);
+            socket.emit(ClientSocketEvent.DRIVER_TIMED_OUT);
+
+            if(!shift){
+              return;
+            }
 
             void endShift({
-              socket,
               io: this.io,
-              truck,
-              timer,
+              shift,
               truckService,
             });
 
@@ -130,12 +132,8 @@ class SocketService {
             socket,
           });
 
-          await this.truckService.update(truck.id, {
-            status: TruckStatus.ACTIVE,
-          });
-
+          await socketChooseTruck(truck,this.truckService,this.io);
           callback(SocketResponseStatus.OK);
-          this.io?.emit(ClientSocketEvent.TRUCK_CHOSEN, { truckId });
         },
       );
 
@@ -144,22 +142,15 @@ class SocketService {
           return;
         }
 
-        const timer = shiftMap.get(socketUserId)?.timer;
-        const chosenTruck = shiftMap.get(socketUserId)?.chosenTruck;
+        const shift = shiftMap.get(socketUserId);
 
-        if (!chosenTruck) {
-          return emitSocketError(socket, SocketError.TRUCK_DOES_NOT_EXIST);
-        }
-
-        if (!timer) {
-          return emitSocketError(socket, SocketError.SHIFT_ENDED);
+        if(!shift){
+          return;
         }
 
         await endShift({
-          socket,
           io: this.io,
-          truck: chosenTruck,
-          timer,
+          shift,
           truckService,
         });
 

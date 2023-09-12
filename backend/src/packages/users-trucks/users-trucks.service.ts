@@ -39,7 +39,7 @@ class UsersTrucksService implements IService<UsersTrucksEntityObjectT> {
     });
 
     if (usersTrucksRecords.length === 0) {
-      return null;
+      return [];
     }
 
     return usersTrucksRecords.map((usersTrucksRecord) =>

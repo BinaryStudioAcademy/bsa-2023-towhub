@@ -86,7 +86,7 @@ class TruckEntity implements IEntity {
       pricePerKm,
       licensePlateNumber,
       year,
-      status: TruckStatus.NOT_AVAILABLE,
+      status: TruckStatus.AVAILABLE,
     });
   }
 
