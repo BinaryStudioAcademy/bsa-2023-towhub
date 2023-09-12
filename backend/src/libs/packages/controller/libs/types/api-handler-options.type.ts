@@ -1,11 +1,6 @@
-import { type UserEntityObjectWithGroupT } from '~/packages/users/users.js';
+import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/types.js';
 
-type DefaultApiHandlerOptions = {
-  body?: unknown;
-  query?: unknown;
-  params?: unknown;
-  user?: unknown;
-};
+import { type DefaultApiHandlerOptions } from './default-api-handler-options.type.js';
 
 type ApiHandlerOptions<
   T extends DefaultApiHandlerOptions = DefaultApiHandlerOptions,

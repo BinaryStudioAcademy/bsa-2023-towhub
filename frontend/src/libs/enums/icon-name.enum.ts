@@ -12,6 +12,7 @@ const IconName = {
   TRUCK: 'truck',
   USERS: 'users',
   SYNC: 'sync',
+  EYE: 'eye',
 } as const;
 
 export { IconName };

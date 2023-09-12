@@ -4,6 +4,7 @@ const ApiPath = {
   BUSINESS: '/business',
   TRUCKS: '/trucks',
   DRIVERS: '/drivers',
+  ORDERS: '/orders',
   STRIPE: '/stripe',
 } as const;
 

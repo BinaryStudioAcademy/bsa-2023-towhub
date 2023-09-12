@@ -78,6 +78,10 @@ class ServerApp implements IServerApp {
       schema.params = validation.params;
     }
 
+    if (validation?.query) {
+      schema.querystring = validation.query;
+    }
+
     this.app.route({
       url: path,
       method,

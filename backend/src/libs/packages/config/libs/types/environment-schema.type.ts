@@ -19,12 +19,17 @@ type EnvironmentSchema = {
     POOL_MIN: number;
     POOL_MAX: number;
   };
+  MAILER: {
+    SENDGRID_API_KEY: string;
+    SENDGRID_USER: string;
+    SMTP_TLS: boolean;
+    SENDGRID_SENDER_EMAIL: string;
+  };
   STRIPE: {
     API_KEY: string;
     API_VERSION: Stripe.LatestApiVersion;
     WEBHOOK_SECRET: string;
   };
-
   BUSINESS: {
     APPLICATION_FEE_AMOUNT: number;
   };
