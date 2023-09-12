@@ -1,4 +1,4 @@
-import { userSignInValidationSchema } from 'shared/build';
+import { orderCreateRequestBody } from 'shared/build/index.js';
 
 import { Form } from '~/libs/components/components.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
@@ -26,7 +26,7 @@ const OrderForm: React.FC<Properties> = ({
     <div className={styles.formWrapper}>
       <p className={styles.title}>Please fill the form</p>
       <Form
-        validationSchema={userSignInValidationSchema}
+        validationSchema={orderCreateRequestBody}
         fields={[
           { label: 'Name', name: 'name' },
           { label: 'Phone', name: 'phone' },
