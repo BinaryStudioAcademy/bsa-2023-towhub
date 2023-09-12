@@ -1,1 +1,5 @@
-export { type TruckEntity } from 'shared/build/index.js';
+export {
+  type TruckAddPayload,
+  type TruckEntity,
+  type TruckGetAllResponseDto,
+} from 'shared/build/index.js';

@@ -6,27 +6,31 @@ import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 import { truckCreateRequestBody } from '~/packages/trucks/libs/validation-schemas/validation-schemas.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
-import { DEFAULT_TRUCK_PAYLOAD } from './libs/constants/constants.js';
-import { ADD_TRUCK_FIELDS } from './libs/fields/add-truck.fields.js';
+import { DEFAULT_TRUCK_PAYLOAD } from './constants/constants.js';
+import { ADD_TRUCK_FIELDS } from './fields/add-truck.fields.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   businessId: number;
   onClose: () => void;
+  updatePage?: () => void;
 };
 
 const AddTruckForm: React.FC<Properties> = ({
   businessId,
   onClose,
+  updatePage,
 }: Properties) => {
   const dispatch = useAppDispatch();
 
   const handleFormSubmit = useCallback(
-    (payload: Omit<TruckEntity, 'id' | 'businessId'>): void => {
-      void dispatch(truckActions.addTruck({ ...payload, businessId }));
+    (payload: Omit<TruckEntity, 'id' | 'businessId' | 'createdAt'>): void => {
+      void dispatch(truckActions.addTruck({ payload, businessId })).then(
+        updatePage,
+      );
       onClose();
     },
-    [businessId, dispatch, onClose],
+    [businessId, dispatch, onClose, updatePage],
   );
 
   return (

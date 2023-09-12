@@ -27,12 +27,26 @@ const Router = (): JSX.Element => {
         element={<ProtectedRoute allowedUserGroup={UserGroupKey.BUSINESS} />}
       >
         <Route
-          path={AppRoute.DASHBOARD}
+          path={AppRoute.DASHBOARD_ORDERS}
           element={
             <PageLayout>
-              {(selectedTab): JSX.Element => (
-                <Dashboard selectedTab={selectedTab} />
-              )}
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_TRUCKS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_DRIVERS}
+          element={
+            <PageLayout>
+              <Dashboard />
             </PageLayout>
           }
         />

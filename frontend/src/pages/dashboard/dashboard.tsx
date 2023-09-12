@@ -1,38 +1,29 @@
-import { useAppSelector } from '~/libs/hooks/hooks.js';
-import {
-  type TabName,
-  type UserEntityObjectWithGroupAndBusinessT,
-} from '~/libs/types/types.js';
-import { selectUser } from '~/slices/auth/selectors.js';
+import { AppRoute } from '~/libs/enums/enums.js';
+import { useLocation } from '~/libs/hooks/hooks.js';
 
 import { TrucksTable } from './components/tables/tables.js';
 import styles from './styles.module.scss';
 
-type Properties = {
-  selectedTab: TabName;
-};
-
-const Dashboard: React.FC<Properties> = ({ selectedTab }: Properties) => {
-  const user = useAppSelector(
-    selectUser,
-  ) as UserEntityObjectWithGroupAndBusinessT;
-  const renderTabContent = (selectedTab: TabName): React.ReactNode => {
-    switch (selectedTab) {
-      case 'drivers': {
+const Dashboard: React.FC = () => {
+  const location = useLocation();
+  const getScreen = (screen: string): React.ReactNode => {
+    switch (screen) {
+      case AppRoute.DASHBOARD_ORDERS: {
+        return <div>Orders</div>;
+      }
+      case AppRoute.DASHBOARD_TRUCKS: {
+        return <TrucksTable />;
+      }
+      case AppRoute.DASHBOARD_DRIVERS: {
         return <div>Drivers</div>;
       }
-      case 'trucks': {
-        return <TrucksTable businessId={user.business.id} />;
-      }
-      case 'orders': {
-        return <div>Orders</div>;
+      default: {
+        return null;
       }
     }
   };
 
-  return (
-    <div className={styles.container}> {renderTabContent(selectedTab)}</div>
-  );
+  return <div className={styles.container}>{getScreen(location.pathname)}</div>;
 };
 
 export { Dashboard };

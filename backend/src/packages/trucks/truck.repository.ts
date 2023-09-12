@@ -1,4 +1,4 @@
-import { eq, ilike, placeholder } from 'drizzle-orm';
+import { desc, eq, ilike, placeholder, sql } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
@@ -46,12 +46,23 @@ class TruckRepository implements IRepository {
       .select()
       .from(this.trucksSchema)
       .where(eq(this.trucksSchema.businessId, businessId))
+      .orderBy(desc(this.trucksSchema.createdAt))
       .offset(index)
       .limit(query.pageSize);
   }
 
+  public async getTotal(businessId: number): Promise<number> {
+    const [total] = await this.db
+      .driver()
+      .select({ count: sql<number>`count(${this.trucksSchema.businessId})` })
+      .from(this.trucksSchema)
+      .where(eq(this.trucksSchema.businessId, businessId));
+
+    return total.count;
+  }
+
   public async create(
-    entity: Omit<TruckEntity, 'id'>,
+    entity: Omit<TruckEntity, 'id' | 'createdAt'>,
   ): Promise<TruckDatabaseModel[]> {
     const preparedQuery = this.db
       .driver()
@@ -65,7 +76,7 @@ class TruckRepository implements IRepository {
 
   public async update(
     id: number,
-    payload: Partial<TruckEntity>,
+    payload: Partial<Omit<TruckEntity, 'createdAt'>>,
   ): Promise<TruckDatabaseModel[]> {
     const preparedQuery = this.db
       .driver()

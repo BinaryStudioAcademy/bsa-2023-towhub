@@ -11,6 +11,7 @@ type TruckEntity = {
   capacity: number;
   pricePerKm: number;
   businessId: number;
+  createdAt: Date;
 };
 
 export { type TruckEntity };

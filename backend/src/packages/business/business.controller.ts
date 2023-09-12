@@ -21,7 +21,10 @@ import {
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
 import {
   type BusinessGetAllTrucksRequestParameters,
+  type TruckEntity,
   businessGetAllTrucksParameters,
+  truckCreateRequestBody,
+  truckCreateRequestParameters,
 } from '../trucks/trucks.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
@@ -386,6 +389,23 @@ class BusinessController extends Controller {
           options as ApiHandlerOptions<{
             params: BusinessGetAllTrucksRequestParameters;
             query: PaginationPayload;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.TRUCKS,
+      method: 'POST',
+      authStrategy: defaultStrategies,
+      validation: {
+        body: truckCreateRequestBody,
+        params: truckCreateRequestParameters,
+      },
+      handler: (request) =>
+        this.createTruck(
+          request as ApiHandlerOptions<{
+            body: Omit<TruckEntity, 'id' | 'createdAt' | 'businessId'>;
+            params: { businessId: number };
           }>,
         ),
     });
@@ -854,6 +874,55 @@ class BusinessController extends Controller {
     return {
       status: HttpCode.OK,
       payload: trucks,
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/{businessId}/trucks:
+   *   post:
+   *     summary: Create a new truck
+   *     tags:
+   *       - business/trucks
+   *     parameters:
+   *       - in: path
+   *         name: businessId
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the business to create truck
+   *         example: 1
+   *     requestBody:
+   *       description: Truck data to be added
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Truck'
+   *     responses:
+   *       '201':
+   *         description: Truck created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/TruckResponse'
+   *       '400':
+   *         description: Bad request
+   *
+   */
+
+  private async createTruck(
+    options: ApiHandlerOptions<{
+      body: Omit<TruckEntity, 'id' | 'createdAt' | 'businessId'>;
+      params: { businessId: number };
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.CREATED,
+      payload: await this.businessService.createTruck({
+        payload: options.body,
+        businessId: options.params.businessId,
+      }),
     };
   }
 }

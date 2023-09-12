@@ -80,12 +80,16 @@ export {
 } from './packages/drivers/drivers.js';
 export {
   type BusinessGetAllTrucksRequestParameters,
+  type TruckAddPayload,
+  type TruckCreateRequestParameters,
   type TruckEntity,
+  type TruckGetAllResponseDto,
   businessGetAllTrucksParameters,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
   truckCreateRequestBody,
+  truckCreateRequestParameters,
   truckGetParameters,
   TruckLicensePlateNumber,
   TruckManufacturer,

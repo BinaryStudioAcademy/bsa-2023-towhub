@@ -141,6 +141,7 @@ const Pagination: React.FC<Properties> = ({
         <div className={styles.size}>
           <label htmlFor="pageSize">Page size:</label>
           <Dropdown
+            className={styles.dropdown}
             options={createOptions([5, 10, 20, 50, 100])}
             defaultValue={createOption(pageSize)}
             onChange={handleChangePageSize}

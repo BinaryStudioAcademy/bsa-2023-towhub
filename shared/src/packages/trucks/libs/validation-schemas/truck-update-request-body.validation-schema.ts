@@ -14,7 +14,10 @@ import { TruckValidationMessage } from '../enums/truck-validation-message.enum.j
 import { LICENSE_PLATE_NUMBER } from '../regex-patterns/regex-patterns.js';
 import { type TruckEntity } from '../types/types.js';
 
-const truckUpdateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
+const truckUpdateRequestBody = joi.object<
+  Omit<TruckEntity, 'id' | 'createdAt'>,
+  true
+>({
   manufacturer: joi
     .string()
     .valid(...Object.values(TruckManufacturer))

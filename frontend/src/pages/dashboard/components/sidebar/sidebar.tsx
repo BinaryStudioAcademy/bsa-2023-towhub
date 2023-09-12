@@ -1,6 +1,7 @@
 import { Button } from '~/libs/components/components.js';
+import { AppRoute } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useCallback } from '~/libs/hooks/hooks.js';
+import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 import { type TabName } from '~/libs/types/types.js';
 
 import styles from './styles.module.scss';
@@ -17,9 +18,14 @@ const Sidebar: React.FC<Properties> = ({
   selectedTab,
   onTabClick,
 }: Properties) => {
+  const navigate = useNavigate();
+
   const handleTabClick = useCallback(
-    (tabName: TabName) => () => onTabClick(tabName),
-    [onTabClick],
+    (tabName: TabName) => () => {
+      onTabClick(tabName);
+      navigate(`${AppRoute.DASHBOARD}/${tabName}`);
+    },
+    [navigate, onTabClick],
   );
 
   return (

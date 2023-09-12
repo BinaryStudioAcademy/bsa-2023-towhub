@@ -8,11 +8,13 @@ import { addTruck, findAllTrucksForBusiness } from './actions.js';
 
 type State = {
   trucks: TruckEntity[];
+  total: number;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
 const initialState: State = {
   trucks: [],
+  total: 0,
   dataStatus: DataStatus.IDLE,
 };
 
@@ -27,7 +29,8 @@ const { reducer, actions, name } = createSlice({
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(findAllTrucksForBusiness.fulfilled, (state, action) => {
-        state.trucks = action.payload;
+        state.trucks = action.payload.items;
+        state.total = action.payload.total;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addMatcher(

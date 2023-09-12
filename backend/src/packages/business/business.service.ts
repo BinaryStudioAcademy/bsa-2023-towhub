@@ -12,8 +12,12 @@ import {
   type DriverGetAllResponseDto,
   type DriverUpdatePayload,
 } from '../drivers/drivers.js';
+import { type TruckGetAllResponseDto } from '../trucks/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
-import { type TruckEntity as TruckEntityT } from '../trucks/trucks.js';
+import {
+  type TruckAddPayload,
+  type TruckEntity as TruckEntityT,
+} from '../trucks/trucks.js';
 import { BusinessEntity } from './business.entity.js';
 import { type BusinessRepository } from './business.repository.js';
 import {
@@ -174,8 +178,24 @@ class BusinessService implements IService {
   public findAllTrucksByBusinessId(
     id: number,
     query: PaginationPayload,
-  ): Promise<TruckEntityT[]> {
+  ): Promise<TruckGetAllResponseDto> {
     return this.truckService.findAllByBusinessId(id, query);
+  }
+
+  public async createTruck({
+    payload,
+    businessId,
+  }: TruckAddPayload): Promise<TruckEntityT> {
+    const doesBusinessExist = await this.findById(businessId);
+
+    if (!doesBusinessExist) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.truckService.create({ payload, businessId });
   }
 }
 

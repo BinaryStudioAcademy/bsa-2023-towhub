@@ -13,7 +13,7 @@ import { LICENSE_PLATE_NUMBER } from '../regex-patterns/regex-patterns.js';
 import { type TruckEntity } from '../types/types.js';
 
 const truckCreateRequestBody = joi.object<
-  Omit<TruckEntity, 'id' | 'businessId'>,
+  Omit<TruckEntity, 'id' | 'businessId' | 'createdAt'>,
   true
 >({
   manufacturer: joi

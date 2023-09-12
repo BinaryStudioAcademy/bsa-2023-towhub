@@ -8,6 +8,7 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { type ColumnDef } from '~/libs/types/types.js';
 
+import { Spinner } from '../components.js';
 import { Pagination } from '../pagination/pagination.jsx';
 import { DEFAULT_COLUMN } from './libs/constant.js';
 import styles from './styles.module.scss';
@@ -18,6 +19,7 @@ type Properties<T> = {
   pageSize: number;
   totalRow: number;
   pageIndex: number;
+  isLoading?: boolean;
   changePageIndex: React.Dispatch<React.SetStateAction<number>>;
   changePageSize: React.Dispatch<React.SetStateAction<number>>;
 };
@@ -28,6 +30,7 @@ const Table = <T,>({
   totalRow,
   pageSize,
   pageIndex,
+  isLoading,
   changePageIndex,
   changePageSize,
 }: Properties<T>): JSX.Element => {
@@ -112,15 +115,19 @@ const Table = <T,>({
 
   return (
     <div className={styles.container}>
-      <table
-        className={styles.table}
-        style={{
-          width: table.getCenterTotalSize(),
-        }}
-      >
-        {createThead()}
-        {createTbody()}
-      </table>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <table
+          className={styles.table}
+          style={{
+            width: table.getCenterTotalSize(),
+          }}
+        >
+          {createThead()}
+          {createTbody()}
+        </table>
+      )}
       <Pagination
         pageCount={pagesRange}
         onClick={changePageIndex}

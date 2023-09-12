@@ -2,7 +2,11 @@ import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type PaginationPayload } from '~/libs/types/types.js';
 
-import { type TruckEntity as TruckEntityT } from './libs/types/types.js';
+import {
+  type TruckAddPayload,
+  type TruckEntity as TruckEntityT,
+  type TruckGetAllResponseDto,
+} from './libs/types/types.js';
 import { TruckEntity } from './truck.entity.js';
 import { type TruckRepository } from './truck.repository.js';
 
@@ -22,15 +26,20 @@ class TruckService implements IService {
   public async findAllByBusinessId(
     businessId: number,
     query: PaginationPayload,
-  ): Promise<TruckEntityT[]> {
-    const trucks = await this.repository.findAllByBusinessId(businessId, query);
+  ): Promise<TruckGetAllResponseDto> {
+    const data = await this.repository.findAllByBusinessId(businessId, query);
 
-    return trucks.map((it) => TruckEntity.initialize(it).toObject());
+    const items = data.map((it) => TruckEntity.initialize(it).toObject());
+
+    const total = await this.repository.getTotal(businessId);
+
+    return { items, total };
   }
 
-  public async create(
-    payload: Omit<TruckEntityT, 'id'>,
-  ): Promise<TruckEntityT> {
+  public async create({
+    payload,
+    businessId,
+  }: TruckAddPayload): Promise<TruckEntityT> {
     const existingTruck = await this.repository.find(
       payload.licensePlateNumber,
     );
@@ -42,14 +51,14 @@ class TruckService implements IService {
       });
     }
 
-    const [result] = await this.repository.create(payload);
+    const [result] = await this.repository.create({ ...payload, businessId });
 
     return TruckEntity.initialize(result).toObject();
   }
 
   public async update(
     id: number,
-    payload: Partial<TruckEntityT>,
+    payload: Partial<Omit<TruckEntityT, 'createdAt'>>,
   ): Promise<TruckEntityT> {
     const truck = await this.findById(id);
 
