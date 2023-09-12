@@ -1,0 +1,40 @@
+@import "src/assets/css/vars.scss";
+
+.page {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: $blue-dark;
+  background-image: url("../../assets/img/auth-page-bg.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.code {
+  color: $white;
+  font-weight: $font-weight-extrabold;
+  font-size: 220px;
+  font-family: $font-family;
+}
+
+.message {
+  margin-bottom: 40px;
+  color: $white;
+  font-weight: $font-weight-bold;
+  font-size: 28px;
+  font-family: $font-family;
+}
+
+.link {
+  padding: 15px;
+  color: $white;
+  font-size: 16px;
+  font-family: $font-family;
+  background-color: $red-dark;
+  border-radius: 5px;
+  box-shadow: 0 4px 4px 0 rgb(0 0 0 / 40%);
+  cursor: pointer;
+}

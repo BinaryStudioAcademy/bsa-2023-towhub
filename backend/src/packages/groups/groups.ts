@@ -7,6 +7,7 @@ const groupRepository = new GroupRepository(database, schema.groups);
 const groupService = new GroupService(groupRepository);
 
 export { GroupEntity } from './group.entity.js';
+export { UserGroupKey } from './libs/enums/enums.js';
 export {
   type GroupDatabaseModel,
   type GroupDatabaseModelCreateUpdate,

@@ -4,6 +4,7 @@ import {
   faCaretDown,
   faChevronDown,
   faChevronLeft,
+  faEye,
   faGear,
   faListUl,
   faLocationDot,
@@ -32,6 +33,7 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.XMARK]: faXmark,
   [IconName.TRUCK]: faTruckPickup,
   [IconName.USERS]: faUsers,
+  [IconName.EYE]: faEye,
 };
 
 export { iconNameToSvg };
