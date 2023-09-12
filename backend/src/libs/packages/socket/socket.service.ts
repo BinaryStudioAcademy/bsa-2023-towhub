@@ -5,7 +5,10 @@ import { type GeolocationCacheService } from '~/libs/packages/geolocation-cache/
 import { logger } from '~/libs/packages/logger/logger.js';
 
 import { ServerSocketEvent } from './libs/enums/enums.js';
-import { type ServerSocketEventParameter } from './libs/types/types.js';
+import {
+  type OrderUpdateResponseDto,
+  type ServerSocketEventParameter,
+} from './libs/types/types.js';
 
 class SocketService {
   private io: SocketServer | null = null;
@@ -43,6 +46,13 @@ class SocketService {
         },
       );
     });
+  }
+
+  public notifyOrderUpdate(
+    id: OrderUpdateResponseDto['id'],
+    order: OrderUpdateResponseDto,
+  ): void {
+    this.io?.to(id.toString()).emit(ServerSocketEvent.ORDER_UPDATED, order);
   }
 }
 

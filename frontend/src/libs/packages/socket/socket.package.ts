@@ -1,35 +1,37 @@
+import { type ValueOf } from 'shared/build/index.js';
 import { type Socket, io } from 'socket.io-client';
 
 import { config } from '~/libs/packages/config/config.js';
 
 import {
-  type ClientSocketEventValue,
-  type ServerSocketEventParameter,
+  type ClientToServerEvents,
+  type ServerToClientEvents,
 } from './libs/types/types.js';
 
 class SocketService {
-  private io: Socket | undefined;
+  private io: Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
 
   public connect(): void {
-    this.io = io(config.ENV.API.SERVER_URL, {
-      transports: ['websocket', 'polling'],
-    });
+    const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+      config.ENV.API.SERVER_URL,
+      {
+        transports: ['websocket', 'polling'],
+      },
+    );
+    this.io = socket;
   }
 
   public addListener(
-    event: ClientSocketEventValue,
+    event: keyof ServerToClientEvents,
     listener: () => void,
   ): void {
     this.io?.on(event, listener);
   }
 
-  public emit<T extends keyof ServerSocketEventParameter>({
-    event,
-    eventPayload,
-  }: {
-    event: T;
-    eventPayload: ServerSocketEventParameter[T];
-  }): void {
+  public emit(
+    event: keyof ClientToServerEvents,
+    eventPayload: Parameters<ValueOf<ClientToServerEvents>>[0],
+  ): void {
     this.io?.emit(event, eventPayload);
   }
 

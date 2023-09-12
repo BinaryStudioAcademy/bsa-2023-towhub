@@ -1,1 +1,4 @@
-export { type OrderFindByIdResponseDto } from 'shared/build/index.js';
+export {
+  type OrderFindByIdResponseDto,
+  type OrderUpdateResponseDto,
+} from 'shared/build/index.js';

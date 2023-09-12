@@ -5,12 +5,9 @@ const sendDriverGeolocation = (
   driverId: number,
   { coords }: GeolocationPosition,
 ): void => {
-  socketService.emit({
-    event: ServerSocketEvent.DRIVER_LOCATION_UPDATE,
-    eventPayload: {
-      driverId,
-      latLng: { latitude: coords.latitude, longitude: coords.longitude },
-    },
+  socketService.emit(ServerSocketEvent.DRIVER_LOCATION_UPDATE, {
+    driverId,
+    latLng: { latitude: coords.latitude, longitude: coords.longitude },
   });
 };
 

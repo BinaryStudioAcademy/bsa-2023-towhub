@@ -1,6 +1,7 @@
 import { HttpMessage } from '~/libs/enums/enums.js';
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
+import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
@@ -24,20 +25,26 @@ class OrderService implements Omit<IService, 'find'> {
 
   private driverService: DriverService;
 
+  private socketService: SocketService;
+
   public constructor({
     businessService,
     orderRepository,
     driverService,
+    socket,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
     driverService: DriverService;
+    socket: SocketService;
   }) {
     this.orderRepository = orderRepository;
 
     this.businessService = businessService;
 
     this.driverService = driverService;
+
+    this.socketService = socket;
   }
 
   public async create(
@@ -103,7 +110,11 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
-    return updatedOrder.toObject();
+    const order = updatedOrder.toObject();
+
+    this.socketService.notifyOrderUpdate(order.id, order);
+
+    return order;
   }
 
   public async findOne({
