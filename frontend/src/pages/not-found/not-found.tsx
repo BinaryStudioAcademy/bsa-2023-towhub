@@ -1,18 +1,27 @@
-import { Link } from '~/libs/components/components.js';
+import { Button } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
+import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 
-const NotFound = (): JSX.Element => (
-  <div>
-    <h2>
-      Oops, the dreaded <span>404</span>.
-    </h2>
+import styles from './styles.module.scss';
 
-    <p>Let&apos;s get you back on track.</p>
+const NotFound = (): JSX.Element => {
+  const navigate = useNavigate();
 
-    <Link to={AppRoute.ROOT}>
-      <span>Back to Home page</span>
-    </Link>
-  </div>
-);
+  const handleClick = useCallback(() => {
+    navigate(AppRoute.ROOT);
+  }, [navigate]);
+
+  return (
+    <div className={styles.page}>
+      <h1 className={styles.code}>404</h1>
+      <p className={styles.message}>OOPS! PAGE NOT FOUND</p>
+      <Button
+        className={styles.link}
+        label="GO TO HOMEPAGE"
+        onClick={handleClick}
+      />
+    </div>
+  );
+};
 
 export { NotFound };
