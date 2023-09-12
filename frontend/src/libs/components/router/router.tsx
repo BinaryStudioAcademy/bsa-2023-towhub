@@ -36,7 +36,11 @@ const Router = (): JSX.Element => {
               <Dashboard />
             </PageLayout>
           }
-        />
+        >
+          {/* <Route index element={<Orders />} />
+          <Route path="trucks" element={<Trucks />} />
+          <Route path="drivers" element={<Drivers />} /> */}
+        </Route>
       </Route>
       <Route path={AppRoute.ANY} element={<NotFound />} />
     </RouterProvider>
