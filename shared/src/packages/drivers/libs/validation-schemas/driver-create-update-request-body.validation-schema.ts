@@ -19,6 +19,8 @@ const driverCreateUpdateRequestBody = joi.object<
     .messages({
       'string.empty': DriverValidationMessage.DRIVER_LICENSE_NUMBER_REQUIRED,
     }),
+
+  driverTrucks: joi.array().items(joi.number()),
 });
 
 export { driverCreateUpdateRequestBody };

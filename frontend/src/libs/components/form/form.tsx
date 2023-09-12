@@ -10,6 +10,7 @@ import {
 
 import { Button } from '../button/button.jsx';
 import { DropdownInput } from '../dropdown-input/dropdown-input.js';
+import { DropdownMultiSelect } from '../dropdown-multi-select/dropdown-multi-select.js';
 import { Input } from '../input/input.jsx';
 import styles from './styles.module.scss';
 
@@ -26,12 +27,23 @@ const renderField = <T extends FieldValues = FieldValues>(
   control: Control<T, null>,
   errors: FieldErrors<T>,
 ): JSX.Element => {
+  const { options, name, label } = field;
+
   switch (field.type) {
     case 'dropdown': {
-      const { options, name, label } = field;
-
       return (
         <DropdownInput
+          options={options ?? []}
+          name={name}
+          control={control}
+          errors={errors}
+          label={label}
+        />
+      );
+    }
+    case 'multi': {
+      return (
+        <DropdownMultiSelect
           options={options ?? []}
           name={name}
           control={control}

@@ -20,19 +20,18 @@ type Properties<T extends FieldValues> = {
   errors: FieldErrors<T>;
   label: string;
   defaultValue?: SelectOption;
-  onChange?: (value: string) => void;
+  onChange?: (value: string[]) => void;
   placeholder?: string;
   insideInput?: boolean;
 };
 
-const DropdownInput = <T extends FieldValues>({
+const DropdownMultiSelect = <T extends FieldValues>({
   options,
   name,
   control,
   label,
   errors,
   defaultValue,
-  onChange,
   placeholder,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({
@@ -48,12 +47,15 @@ const DropdownInput = <T extends FieldValues>({
 
   const handleChange = useCallback(
     (option: SingleValue<SelectOption> | SingleValue<SelectOption>[]) => {
-      if (!Array.isArray(option) && onChange && option) {
-        onChange(option.value);
-      }
-      field.onChange(!Array.isArray(option) && option?.value);
+      const selectedValues =
+        Array.isArray(option) &&
+        (option
+          .map((opt) => opt?.value)
+          .filter((value) => typeof value === 'string') as string[]);
+
+      field.onChange(selectedValues);
     },
-    [onChange, field],
+    [field],
   );
 
   return (
@@ -69,6 +71,7 @@ const DropdownInput = <T extends FieldValues>({
           onChange={handleChange}
           defaultValue={defaultValue}
           placeholder={placeholder}
+          isMulti
         />
       </span>
       <span
@@ -83,4 +86,4 @@ const DropdownInput = <T extends FieldValues>({
   );
 };
 
-export { DropdownInput };
+export { DropdownMultiSelect };

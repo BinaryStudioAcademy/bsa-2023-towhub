@@ -5,6 +5,7 @@ const FormName = {
   PHONE: 'phone',
   PASSWORD: 'password',
   DRIVER_LICENSE_NUMBER: 'driverLicenseNumber',
+  DRIVER_POSSIBLE_TRUCKS: 'driverTrucks',
   COMPANY_NAME: 'companyName',
   TAX_NUMBER: 'taxNumber',
 } as const;
@@ -16,6 +17,7 @@ const FormLabel = {
   PHONE: 'Phone',
   PASSWORD: 'Password',
   DRIVER_LICENSE_NUMBER: 'Driver license number',
+  DRIVER_POSSIBLE_TRUCKS: 'Choose Possible Trucks for Driver',
   COMPANY_NAME: 'Company name',
   TAX_NUMBER: 'Tax number',
 } as const;
