@@ -87,6 +87,7 @@ export {
   type OrderCreateResponseDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
+  type OrderStatusValues,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
   ORDER_STATUSES,

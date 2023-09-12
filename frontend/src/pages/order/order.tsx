@@ -29,8 +29,8 @@ const OrderPage: React.FC = () => {
           <OrderStatus status={order.status} className={styles.status} />
           <OrderCard
             driver={{
-              firstName: order.driver.user.firstName,
-              lastName: order.driver.user.lastName,
+              firstName: order.driver.firstName,
+              lastName: order.driver.lastName,
               profileURL: 'https://i.pravatar.cc/300',
             }}
             truck={{ licensePlate: 'GB 555' }}

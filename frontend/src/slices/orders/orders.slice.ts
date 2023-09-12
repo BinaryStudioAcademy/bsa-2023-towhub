@@ -2,12 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
-import { type OrderWithDriverEntity } from '~/packages/orders/libs/types/types.js';
+import { type OrderFindByIdResponseDto } from '~/packages/orders/libs/types/types.js';
 
 import { getOrder } from './actions.js';
 
 type State = {
-  order: OrderWithDriverEntity | null;
+  order: OrderFindByIdResponseDto | null;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 

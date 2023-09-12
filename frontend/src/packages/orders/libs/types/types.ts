@@ -1,1 +1,1 @@
-export { type OrderWithDriverEntity } from 'shared/build/index.js';
+export { type OrderFindByIdResponseDto } from 'shared/build/index.js';

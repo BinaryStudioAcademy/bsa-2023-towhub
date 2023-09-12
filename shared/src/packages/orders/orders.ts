@@ -9,6 +9,7 @@ export {
   type OrderCreateResponseDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
+  type OrderStatusValues,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
 } from './libs/types/types.js';

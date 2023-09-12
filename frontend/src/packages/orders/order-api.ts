@@ -3,7 +3,7 @@ import { HttpApi } from '~/libs/packages/api/http-api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 
-import { type OrderWithDriverEntity } from './libs/types/types.js';
+import { type OrderFindByIdResponseDto } from './libs/types/types.js';
 
 type Constructor = {
   baseUrl: string;
@@ -16,7 +16,7 @@ class OrderApi extends HttpApi {
     super({ path: ApiPath.ORDERS, baseUrl, http, storage });
   }
 
-  public async getOrder(orderId: string): Promise<OrderWithDriverEntity> {
+  public async getOrder(orderId: string): Promise<OrderFindByIdResponseDto> {
     //Mock
     return await Promise.resolve({
       id: Number(orderId),
@@ -33,10 +33,10 @@ class OrderApi extends HttpApi {
       customerPhone: '+123456789',
       driver: {
         driverLicenseNumber: 'license-number-555',
-        user: {
-          firstName: 'John',
-          lastName: 'Drivefast',
-        },
+        phone: '+123456789',
+        email: 'email',
+        firstName: 'John',
+        lastName: 'Drivefast',
       },
     });
   }

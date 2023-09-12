@@ -26,7 +26,7 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.SIGN_IN} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP} element={<Auth />} />
         <Route path={AppRoute.ORDER} element={<Order />} />
-    </Route>
+      </Route>
       <Route
         path={AppRoute.ROOT}
         element={<ProtectedRoute allowedUserGroup={UserGroupKey.BUSINESS} />}
