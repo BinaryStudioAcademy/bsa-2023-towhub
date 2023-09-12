@@ -64,6 +64,13 @@
       "when": 1694326684511,
       "tag": "0008_create_orders_table",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1694520594814,
+      "tag": "0009_create_files_table",
+      "breakpoints": true
     }
   ]
 }
