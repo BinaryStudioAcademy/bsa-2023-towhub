@@ -24,7 +24,7 @@ const convertToSelectOptions = (
   }));
 };
 
-const ADD_TRUCK_FIELDS: FormField<TruckEntity>[] = [
+const ADD_TRUCK_FIELDS: FormField<Omit<TruckEntity, 'businessId'>>[] = [
   {
     id: 1,
     type: 'dropdown',

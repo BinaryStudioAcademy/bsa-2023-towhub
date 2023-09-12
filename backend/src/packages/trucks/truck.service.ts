@@ -66,6 +66,21 @@ class TruckService implements IService {
 
     return result.map((element) => TruckEntity.initialize(element).toObject());
   }
+
+  public async getTrucksByBusinessId(
+    id: number,
+  ): Promise<TruckEntityT[] | null> {
+    const result = await this.repository.getTrucksByBusinessId(id);
+
+    if (result.length === 0) {
+      throw new HttpError({
+        status: HttpCode.NOT_FOUND,
+        message: HttpMessage.NOT_FOUND,
+      });
+    }
+
+    return result.map((element) => TruckEntity.initialize(element).toObject());
+  }
 }
 
 export { TruckService };

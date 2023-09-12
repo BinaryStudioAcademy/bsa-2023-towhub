@@ -1,8 +1,15 @@
+import { type UserEntityObjectWithGroupAndBusinessT } from 'shared/build/index.js';
+
 import { Form } from '~/libs/components/components.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useAppDispatch, useCallback } from '~/libs/hooks/hooks.js';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useCallback,
+} from '~/libs/hooks/hooks.js';
 import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 import { truckCreateRequestBody } from '~/packages/trucks/libs/validation-schemas/validation-schemas.js';
+import { selectUser } from '~/slices/auth/selectors.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { DEFAULT_TRUCK_PAYLOAD } from './libs/constants/constants.js';
@@ -12,11 +19,17 @@ import styles from './styles.module.scss';
 const AddTruckForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
+  const user = useAppSelector(
+    selectUser,
+  ) as UserEntityObjectWithGroupAndBusinessT;
+
   const handleFormSubmit = useCallback(
-    (payload: TruckEntity): void => {
-      void dispatch(truckActions.addTruck(payload));
+    (payload: Omit<TruckEntity, 'businessId'>): void => {
+      void dispatch(
+        truckActions.addTruck({ ...payload, businessId: user.business.id }),
+      );
     },
-    [dispatch],
+    [dispatch, user],
   );
 
   return (

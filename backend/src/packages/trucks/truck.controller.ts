@@ -421,9 +421,9 @@ class TruckController extends Controller {
   private async getTrucksByBusinessId(
     options: ApiHandlerOptions<{ params: { id: number } }>,
   ): Promise<ApiHandlerResponse> {
-    const { params: id } = options;
+    const { id } = options.params;
 
-    const trucks = await this.truckService.getAll();
+    const trucks = await this.truckService.getTrucksByBusinessId(id);
 
     return {
       status: HttpCode.OK,
