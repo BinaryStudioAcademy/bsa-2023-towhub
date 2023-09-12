@@ -5,7 +5,7 @@ import {
   type FieldValues,
 } from 'react-hook-form';
 
-import { IconName } from '~/libs/enums/icon-name.enum';
+import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
