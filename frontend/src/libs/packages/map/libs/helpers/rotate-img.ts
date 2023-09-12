@@ -1,7 +1,12 @@
+const TRUCK_IMG_HEIGHT = 168;
+const TRUCK_IMG_WIDTH = 146;
+
 const rotateImg = (url: string, degrees: number): string => {
   const canvas = document.createElement('canvas');
-  canvas.width = 146;
-  canvas.height = 168;
+
+  canvas.width = TRUCK_IMG_WIDTH;
+  canvas.height = TRUCK_IMG_HEIGHT;
+
   const context = canvas.getContext('2d');
 
   const img = new Image();

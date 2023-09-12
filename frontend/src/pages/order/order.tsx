@@ -40,7 +40,7 @@ const Order: React.FC = () => {
       void dispatch(orderActions.createOrder({ ...payload, driverId }))
         .unwrap()
         .then(() => {
-          // console.log(response);
+          // navigate user here
         });
     },
     [dispatch],
