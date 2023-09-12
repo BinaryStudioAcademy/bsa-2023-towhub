@@ -1,6 +1,7 @@
 import truckImg from '~/assets/img/tow-truck.png';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 
+import { rotateImg } from './libs/helpers/rotate-img.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
 import mapStyle from './map.config.json';
 
@@ -64,8 +65,10 @@ class MapService implements IMapService {
       const response = await this.directionsService.route(request);
       this.directionsRenderer.setDirections(response);
 
-      this.addMarker(origin);
-      this.addMarker(destination, undefined, true);
+      const angle = this.findAngle(response, origin);
+
+      this.addMarker(origin, false, angle);
+      this.addMarker(destination, true);
 
       const duration = response.routes[0]?.legs?.[0]?.duration?.value;
 
@@ -117,21 +120,43 @@ class MapService implements IMapService {
     }
   }
 
+  public findAngle(
+    response: google.maps.DirectionsResult,
+    origin: google.maps.LatLngLiteral,
+  ): number {
+    const firstRoute = response.routes[0];
+
+    let nextPoint = null;
+
+    const firstLeg = firstRoute.legs[0];
+
+    firstLeg.steps.length > 1
+      ? (nextPoint = firstLeg.steps[1].start_location)
+      : (nextPoint = firstLeg.steps[0].end_location);
+
+    return google.maps.geometry.spherical.computeHeading(origin, nextPoint);
+  }
+
   public addMarker(
     position: google.maps.LatLngLiteral,
-    label?: string,
-    destination = false,
+    origin = true,
+    angle = 0,
   ): void {
     this.throwIfMapNotInitialized();
 
+    const rotatedIconUrl = rotateImg(truckImg, angle);
+
     new google.maps.Marker({
       position,
-      label,
       map: this.map,
-      icon: destination ? undefined : truckImg,
-      anchorPoint: new google.maps.Point(60, 60),
-
-      // shape: { coords: [0, 0, 148, 164], type: 'rect' },
+      icon: origin
+        ? {
+            url: rotatedIconUrl,
+            anchor: new google.maps.Point(73, 84),
+            size: new google.maps.Size(146, 168),
+            scale: 1,
+          }
+        : undefined,
     });
   }
 }

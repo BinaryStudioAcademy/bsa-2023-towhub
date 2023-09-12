@@ -19,7 +19,6 @@ const Order: React.FC = () => {
 
   const handleLocatonChange = useCallback(
     (location: { lat: number | undefined; lng: number | undefined }) => {
-      // console.log('data', values);
       setLocation((previous) => {
         return {
           lat: location.lat ?? previous.lat,
