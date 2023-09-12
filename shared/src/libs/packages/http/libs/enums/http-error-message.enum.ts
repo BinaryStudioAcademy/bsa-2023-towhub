@@ -21,6 +21,7 @@ const HttpMessage = {
   WRONG_SHIFT: 'Specified shift id is not belong to you',
   SHIFT_ALREADY_CLOSED: 'Specified shift is already closed',
   NOT_ACCESS: 'You do not have enough rights to operate this shift',
+  ORDER_DOES_NOT_EXIST: 'Order does not exist!',
 } as const;
 
 export { HttpMessage };

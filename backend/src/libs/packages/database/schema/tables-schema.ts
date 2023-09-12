@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import {
   integer,
+  pgEnum,
   pgTable,
   primaryKey,
   real,
@@ -9,6 +10,40 @@ import {
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
+import { ORDER_STATUSES } from 'shared/build/index.js';
+
+const orderStatus = pgEnum('order_status', ORDER_STATUSES);
+const orders = pgTable('orders', {
+  id: serial('id').primaryKey(),
+  price: integer('price').notNull(),
+  scheduledTime: timestamp('scheduled_time', { mode: 'string' }).notNull(),
+  startPoint: varchar('start_point').notNull(),
+  endPoint: varchar('end_point').notNull(),
+  status: orderStatus('status').notNull(),
+  userId: integer('user_id').references(() => users.id),
+  businessId: integer('business_id').references(() => business.id),
+  driverId: integer('driver_id').references(() => drivers.id),
+  carsQty: integer('cars_qty').notNull().default(1),
+  customerName: varchar('customer_name'),
+  customerPhone: varchar('customer_phone'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+const ordersRelations = relations(orders, ({ one }) => ({
+  customer: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
+  }),
+  business: one(business, {
+    fields: [orders.businessId],
+    references: [business.id],
+  }),
+  driver: one(drivers, {
+    fields: [orders.driverId],
+    references: [drivers.id],
+  }),
+}));
 
 const users = pgTable(
   'users',
@@ -42,6 +77,7 @@ const usersRelations = relations(users, ({ one, many }) => ({
     references: [groups.id],
   }),
   usersTrucks: many(usersTrucks),
+  orders: many(orders),
 }));
 
 const groups = pgTable('groups', {
@@ -137,6 +173,10 @@ const shifts = pgTable('shifts', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'),
 });
+const businessRelations = relations(users, ({ many }) => ({
+  orders: many(orders),
+}));
+
 const usersTrucksRelations = relations(usersTrucks, ({ one }) => ({
   truck: one(trucks, {
     fields: [usersTrucks.truckId],
@@ -148,7 +188,7 @@ const usersTrucksRelations = relations(usersTrucks, ({ one }) => ({
   }),
 }));
 
-const driversRelations = relations(drivers, ({ one }) => ({
+const driversRelations = relations(drivers, ({ one, many }) => ({
   user: one(users, {
     fields: [drivers.userId],
     references: [users.id],
@@ -157,13 +197,18 @@ const driversRelations = relations(drivers, ({ one }) => ({
     fields: [drivers.businessId],
     references: [business.id],
   }),
+  orders: many(orders),
 }));
 
 export {
   business,
+  businessRelations,
   drivers,
   driversRelations,
   groups,
+  orders,
+  ordersRelations,
+  orderStatus,
   shifts,
   trucks,
   trucksRelations,

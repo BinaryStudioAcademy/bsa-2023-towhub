@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "c1163141-c286-41fe-8010-0154a305dc20",
-  "prevId": "ebac1b00-5007-49e7-9a2c-3403e83ae06e",
+  "id": "b7486ff7-ef67-4b22-ba19-aaf8eac68511",
+  "prevId": "c1163141-c286-41fe-8010-0154a305dc20",
   "tables": {
     "business_details": {
       "name": "business_details",
@@ -300,6 +300,85 @@
           "tableFrom": "orders",
           "tableTo": "driver_details",
           "columnsFrom": ["driver_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "shifts": {
+      "name": "shifts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "driver_id": {
+          "name": "driver_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "truck_id": {
+          "name": "truck_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "shifts_driver_id_users_id_fk": {
+          "name": "shifts_driver_id_users_id_fk",
+          "tableFrom": "shifts",
+          "tableTo": "users",
+          "columnsFrom": ["driver_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "shifts_truck_id_trucks_id_fk": {
+          "name": "shifts_truck_id_trucks_id_fk",
+          "tableFrom": "shifts",
+          "tableTo": "trucks",
+          "columnsFrom": ["truck_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
