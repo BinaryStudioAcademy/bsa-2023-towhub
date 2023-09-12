@@ -8,10 +8,8 @@ import styles from './styles.module.scss';
 type Properties = {
   additionalValues: { driverId: number };
   onSubmit: (payload: OrderCreateRequestDto) => void;
-  onLocationChange: ((place: { lat: number; lng: number }) => void) | undefined;
-  onDestinationChange:
-    | ((place: { lat: number; lng: number }) => void)
-    | undefined;
+  onLocationChange: ((place: google.maps.LatLngLiteral) => void) | undefined;
+  onDestinationChange: ((place: google.maps.LatLngLiteral) => void) | undefined;
 };
 
 const OrderForm: React.FC<Properties> = ({
