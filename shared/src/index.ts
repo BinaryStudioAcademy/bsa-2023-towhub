@@ -32,6 +32,7 @@ export {
   type CapitalizeEnum,
   type EntityPagination,
   type ErrorConstructor,
+  type Id,
   type NullableProperties,
   type OperationResult,
   type RequireProperty,
@@ -81,6 +82,21 @@ export {
   driverUpdateDeleteParameters,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
+export {
+  type OrderCreateRequestDto,
+  type OrderCreateResponseDto,
+  type OrderEntity,
+  type OrderFindByIdResponseDto,
+  type OrderUpdateRequestDto,
+  type OrderUpdateResponseDto,
+  ORDER_STATUSES,
+  orderCreateRequestBody,
+  orderGetParameter,
+  OrdersApiPath,
+  OrderStatus,
+  OrdersValidationMessage,
+  orderUpdateRequestBody,
+} from './packages/orders/orders.js';
 export {
   type TruckEntity,
   LICENSE_PLATE_NUMBER,
