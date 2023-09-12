@@ -1,4 +1,4 @@
-import { type SQL, and, eq, or, sql } from 'drizzle-orm';
+import { type SQL, and, desc, eq, or, sql } from 'drizzle-orm';
 
 import { AppErrorMessage } from '~/libs/enums/enums.js';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
@@ -69,6 +69,7 @@ class DriverRepository implements IRepository {
         offset,
         where: eq(this.driverSchema.businessId, businessId),
         with: { user: true },
+        orderBy: [desc(this.driverSchema.createdAt)],
       })
       .execute();
 

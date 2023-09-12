@@ -1,23 +1,21 @@
-import { TabsName } from '~/libs/enums/sidebar-tabs.enum.js';
-import { type TabName } from '~/libs/types/sidebar.type.js';
+import { useLocation } from 'react-router-dom';
+
+import { AppRoute } from '~/libs/enums/app-route.enum.js';
 
 import { DriverTable } from './components/table/drivers-table/driver-table.js';
 import styles from './styles.module.scss';
 
-type Properties = {
-  selectedTab: TabName;
-};
-
-const Dashboard: React.FC<Properties> = ({ selectedTab }: Properties) => {
-  const getScreen = (): React.ReactNode => {
-    switch (selectedTab) {
-      case TabsName.ORDERS: {
+const Dashboard: React.FC = () => {
+  const location = useLocation();
+  const getScreen = (path: string): React.ReactNode => {
+    switch (path) {
+      case AppRoute.DASHBOARD_ORDERS: {
         return <div>Orders</div>;
       }
-      case TabsName.TRUCKS: {
+      case AppRoute.DASHBOARD_TRUCKS: {
         return <div>Trucks</div>;
       }
-      case TabsName.DRIVERS: {
+      case AppRoute.DASHBOARD_DRIVERS: {
         return <DriverTable />;
       }
       default: {
@@ -26,7 +24,7 @@ const Dashboard: React.FC<Properties> = ({ selectedTab }: Properties) => {
     }
   };
 
-  return <div className={styles.container}>{getScreen()}</div>;
+  return <div className={styles.container}>{getScreen(location.pathname)}</div>;
 };
 
 export { Dashboard };

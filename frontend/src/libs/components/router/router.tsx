@@ -4,6 +4,7 @@ import { AppRoute } from '~/libs/enums/enums.js';
 import { useEffect, useGetCurrentUser } from '~/libs/hooks/hooks.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
+import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 import { WelcomePage } from '~/pages/welcome/welcome.js';
 
@@ -29,10 +30,26 @@ const Router = (): JSX.Element => {
         element={<ProtectedRoute allowedUserGroup={UserGroupKey.BUSINESS} />}
       >
         <Route
-          path={AppRoute.DASHBOARD}
+          path={AppRoute.DASHBOARD_ORDERS}
           element={
             <PageLayout>
-              <div></div>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_TRUCKS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_DRIVERS}
+          element={
+            <PageLayout>
+              <Dashboard />
             </PageLayout>
           }
         />

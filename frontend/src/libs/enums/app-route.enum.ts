@@ -7,7 +7,7 @@ const AppRoute = {
   TRUCKS: '/trucks',
   DASHBOARD: '/dashboard',
   DASHBOARD_ORDERS: '/dashboard/orders',
-  DASHBOARD_TRUCKS: '/dashboard/tucks',
+  DASHBOARD_TRUCKS: '/dashboard/trucks',
   DASHBOARD_DRIVERS: '/dashboard/drivers',
 } as const;
 

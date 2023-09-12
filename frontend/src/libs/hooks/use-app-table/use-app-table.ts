@@ -1,5 +1,5 @@
 import { type AsyncThunk } from '@reduxjs/toolkit';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
   type AsyncThunkConfig,
@@ -21,6 +21,7 @@ type ReturnValue = {
   pageIndex: number;
   changePageSize: React.Dispatch<React.SetStateAction<number>>;
   changePageIndex: React.Dispatch<React.SetStateAction<number>>;
+  updatePage: () => void;
 };
 
 const useAppTable = <T, K>({
@@ -33,11 +34,15 @@ const useAppTable = <T, K>({
   const [pageIndex, changePageIndex] = useState(initialPageIndex);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
+  const updatePage = useCallback(() => {
     void dispatch(tableFetchCall({ ...payload, pageSize, pageIndex }));
-  }, [tableFetchCall, pageSize, pageIndex, dispatch, payload]);
+  }, [dispatch, pageIndex, pageSize, payload, tableFetchCall]);
 
-  return { pageSize, pageIndex, changePageSize, changePageIndex };
+  useEffect(() => {
+    updatePage();
+  }, [tableFetchCall, pageSize, pageIndex, dispatch, payload, updatePage]);
+
+  return { pageSize, pageIndex, changePageSize, changePageIndex, updatePage };
 };
 
 export { useAppTable };

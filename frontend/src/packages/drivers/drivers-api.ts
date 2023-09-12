@@ -5,7 +5,11 @@ import { type IStorage } from '~/libs/packages/storage/storage.js';
 import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 
 import { DriverApiPath } from './libs/enums/enums.js';
-import { type GetPageOfDriversPayload } from './libs/types/types.js';
+import {
+  type DriverAddPayload,
+  type DriverCreateUpdateRequestDto,
+  type GetPageOfDriversPayload,
+} from './libs/types/types.js';
 
 type Constructor = {
   baseUrl: string;
@@ -36,6 +40,26 @@ class DriverApi extends HttpApi {
     );
 
     return await data.json<DriverGetAllResponseDto>();
+  }
+
+  public async addDriver({
+    businessId,
+    payload,
+  }: DriverAddPayload): Promise<DriverCreateUpdateRequestDto> {
+    const data = await this.load(
+      this.getFullEndpoint(
+        `${DriverApiPath.ROOT}${businessId}${ApiPath.DRIVERS}`,
+        {},
+      ),
+      {
+        method: 'POST',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: true,
+      },
+    );
+
+    return await data.json<DriverCreateUpdateRequestDto>();
   }
 }
 

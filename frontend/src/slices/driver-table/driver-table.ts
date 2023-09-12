@@ -1,9 +1,10 @@
-import { getDriversPage } from './actions.js';
+import { addDriver, getDriversPage } from './actions.js';
 import { actions } from './driver-table.slice.js';
 
 const allAction = {
   ...actions,
   getDriversPage,
+  addDriver,
 };
 
 export { allAction as actions };

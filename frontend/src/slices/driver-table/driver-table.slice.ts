@@ -1,9 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/data-status.enum';
 import { type DriverWithUserData, type ValueOf } from '~/libs/types/types.js';
 
-import { getDriversPage } from './actions.js';
+import { addDriver, getDriversPage } from './actions.js';
 
 type State = {
   drivers: DriverWithUserData[];
@@ -23,17 +23,26 @@ const { actions, reducer, name } = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getDriversPage.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
       .addCase(getDriversPage.fulfilled, (state, actions) => {
         state.drivers = actions.payload.items;
         state.total = actions.payload.total;
         state.dataStatus = DataStatus.IDLE;
       })
-      .addCase(getDriversPage.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
-      });
+      .addCase(addDriver.fulfilled, (state) => {
+        state.dataStatus = DataStatus.IDLE;
+      })
+      .addMatcher(
+        isAnyOf(getDriversPage.pending, addDriver.pending),
+        (state) => {
+          state.dataStatus = DataStatus.PENDING;
+        },
+      )
+      .addMatcher(
+        isAnyOf(getDriversPage.rejected, addDriver.rejected),
+        (state) => {
+          state.dataStatus = DataStatus.REJECTED;
+        },
+      );
   },
 });
 
