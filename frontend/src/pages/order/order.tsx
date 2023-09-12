@@ -1,7 +1,7 @@
 import { type Libraries, LoadScript } from '@react-google-maps/api';
 
 import { TowTruckCard } from '~/libs/components/components.js';
-import { MapInnerComponent } from '~/libs/components/map/map-inner-component/map-inner-component.js';
+import { Map } from '~/libs/components/map/map.js';
 import { useAppDispatch, useCallback, useState } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
@@ -85,7 +85,7 @@ const Order: React.FC = () => {
           />
         </div>
         <div className={styles.right}>
-          <MapInnerComponent
+          <Map
             center={location}
             zoom={16}
             destination={destination}

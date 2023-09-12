@@ -1,12 +1,8 @@
-import { Status, Wrapper } from '@googlemaps/react-wrapper';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { useEffect, useRef } from '~/libs/hooks/hooks.js';
+import { MapService } from '~/libs/packages/map/map.js';
 
-import { useCallback } from '~/libs/hooks/hooks.js';
-import { config } from '~/libs/packages/config/config.js';
-
-import { Spinner } from '../components.js';
-import { MapInnerComponent } from './map-inner-component/map-inner-component.js';
-
-const apiMapKey = config.ENV.API.GOOGLE_MAPS_API_KEY;
+import styles from './styles.module.scss';
 
 type Properties = {
   center: google.maps.LatLngLiteral;
@@ -16,25 +12,33 @@ type Properties = {
   className?: string;
 };
 
-const Map: React.FC<Properties> = ({ ...mapProperties }) => {
-  const renderMap = useCallback(
-    (status: Status): React.ReactElement => {
-      switch (status) {
-        case Status.LOADING: {
-          return <Spinner />;
-        }
-        case Status.FAILURE: {
-          return <div>Error loading Google Maps</div>;
-        }
-        case Status.SUCCESS: {
-          return <MapInnerComponent {...mapProperties} />;
-        }
-      }
-    },
-    [mapProperties],
-  );
+const Map: React.FC<Properties> = ({
+  center,
+  zoom,
+  className,
+  destination,
+}: Properties) => {
+  const mapReference = useRef<HTMLDivElement>(null);
+  const mapService = useRef<MapService | null>(null);
+  const mapClasses = getValidClassNames(styles.map, className);
 
-  return <Wrapper apiKey={apiMapKey} render={renderMap} />;
+  useEffect(() => {
+    if (mapReference.current) {
+      mapService.current = new MapService({
+        mapElement: mapReference.current,
+        center,
+        zoom,
+      });
+
+      if (destination) {
+        mapService.current.addMarker(destination);
+
+        void mapService.current.calculateRouteAndTime(center, destination);
+      }
+    }
+  }, [center, zoom, destination]);
+
+  return <div ref={mapReference} id="map" className={mapClasses} />;
 };
 
 export { Map };
