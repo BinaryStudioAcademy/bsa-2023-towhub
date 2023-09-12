@@ -1,7 +1,7 @@
 DO $$ BEGIN
- CREATE TYPE "truck_status" AS ENUM('Not available', 'Available', 'Active', 'Busy');
+  CREATE TYPE "truck_status" AS ENUM('Not available', 'Available', 'Active', 'Busy');
 EXCEPTION
- WHEN duplicate_object THEN null;
+  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 ALTER TABLE "users_trucks" DROP CONSTRAINT "users_trucks_user_id_truck_id";--> statement-breakpoint
