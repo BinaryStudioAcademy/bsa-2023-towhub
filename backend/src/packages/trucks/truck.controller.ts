@@ -10,7 +10,7 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { TruckApiPath } from './libs/enums/enums.js';
 import { type TruckEntity } from './libs/types/types.js';
 import {
-  truckCreateRequestBody,
+  truckCreate,
   truckGetParameters,
   truckUpdateRequestBody,
 } from './libs/validation-schema/validation-schemas.js';
@@ -140,7 +140,7 @@ class TruckController extends Controller {
       path: TruckApiPath.ROOT,
       method: 'POST',
       validation: {
-        body: truckCreateRequestBody,
+        body: truckCreate,
       },
       handler: (request) =>
         this.create(

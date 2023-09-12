@@ -102,6 +102,7 @@ export {
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
+  truckCreate,
   truckCreateRequestBody,
   truckGetParameters,
   TruckLicensePlateNumber,
