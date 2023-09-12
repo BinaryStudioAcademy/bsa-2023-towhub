@@ -67,8 +67,8 @@ class MapService implements IMapService {
 
       const angle = this.findAngle(response, origin);
 
-      this.addMarker(origin, false, angle);
-      this.addMarker(destination, true);
+      this.addMarker(origin, true, angle);
+      this.addMarker(destination, false);
 
       const duration = response.routes[0]?.legs?.[0]?.duration?.value;
 

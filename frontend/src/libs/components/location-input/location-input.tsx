@@ -88,9 +88,6 @@ const LocationInput = <T extends FieldValues>({
             placeholder={placeholder}
             className={getValidClassNames(...inputStyles)}
             disabled={isDisabled}
-            // apiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
-            //
-            // onPlaceSelected={handleSelectPlace}
           />
         </Autocomplete>
       </span>

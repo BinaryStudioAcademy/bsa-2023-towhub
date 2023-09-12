@@ -42,12 +42,12 @@ const Order: React.FC = () => {
   );
 
   return (
-    <section className={styles.page} style={{ display: 'flex' }}>
+    <section className={styles.page}>
       <LoadScript
         googleMapsApiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
         libraries={libraries}
       >
-        <div style={{ width: '35%', marginRight: '15px' }}>
+        <div className={styles.left}>
           <TowTruckCard
             truck={{
               id: 1,
@@ -68,13 +68,7 @@ const Order: React.FC = () => {
             onDestinationChange={handleDestinationChange}
           />
         </div>
-        <div
-          style={{
-            width: '65%',
-            height: 'calc(100vh - 120px)',
-            border: '5px solid white',
-          }}
-        >
+        <div className={styles.right}>
           <MapInnerComponent
             center={location}
             zoom={16}
