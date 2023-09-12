@@ -75,6 +75,12 @@ class DriverService implements IService {
     return driver ? DriverEntity.initialize(driver).toObject() : null;
   }
 
+  public async findByUserId(userId: number): Promise<DriverEntityT | null> {
+    const [driver = null] = await this.driverRepository.find({ userId });
+
+    return driver ? DriverEntity.initialize(driver).toObject() : null;
+  }
+
   public async findAllByBusinessId(
     businessId: number,
   ): Promise<DriverGetAllResponseDto> {

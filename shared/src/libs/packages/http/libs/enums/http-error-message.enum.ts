@@ -18,6 +18,7 @@ const HttpMessage = {
   WRONG_PASSWORD: 'The password is wrong',
   INVALID_GROUP: 'Provided group is unavailable',
   CANNOT_DELETE: 'Cannot delete this user',
+  ORDER_DOES_NOT_EXIST: 'Order does not exist!',
 } as const;
 
 export { HttpMessage };
