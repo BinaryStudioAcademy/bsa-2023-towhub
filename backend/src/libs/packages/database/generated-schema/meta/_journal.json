@@ -64,6 +64,13 @@
       "when": 1694326684511,
       "tag": "0008_create_orders_table",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1694518822475,
+      "tag": "0009_create_shifts_table",
+      "breakpoints": true
     }
   ]
 }
