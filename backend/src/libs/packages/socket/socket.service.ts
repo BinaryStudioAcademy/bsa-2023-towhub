@@ -113,7 +113,7 @@ class SocketService {
             const shift = shiftMap.get(socketUserId);
             socket.emit(ClientSocketEvent.DRIVER_TIMED_OUT);
 
-            if(!shift){
+            if (!shift) {
               return;
             }
 
@@ -132,7 +132,7 @@ class SocketService {
             socket,
           });
 
-          await socketChooseTruck(truck,this.truckService,this.io);
+          await socketChooseTruck(truck, this.truckService, this.io);
           callback(SocketResponseStatus.OK);
         },
       );
@@ -144,7 +144,7 @@ class SocketService {
 
         const shift = shiftMap.get(socketUserId);
 
-        if(!shift){
+        if (!shift) {
           return;
         }
 

@@ -57,6 +57,20 @@
       "when": 1694154185364,
       "tag": "0007_del_comp_name_unique_idx",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1694326684511,
+      "tag": "0008_create_orders_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1694521846761,
+      "tag": "0009_add_status_to_trucks_add_pk_id_to_users_trucks",
+      "breakpoints": true
     }
   ]
 }

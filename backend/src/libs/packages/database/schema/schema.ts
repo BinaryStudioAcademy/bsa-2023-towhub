@@ -3,6 +3,8 @@ import {
   drivers,
   driversRelations,
   groups,
+  orders,
+  ordersRelations,
   trucks,
   trucksRelations,
   truckStatusEnum,
@@ -23,6 +25,8 @@ const schema = {
   usersRelations,
   driversRelations,
   usersTrucksRelations,
+  orders,
+  ordersRelations,
   truckStatusEnum,
 };
 

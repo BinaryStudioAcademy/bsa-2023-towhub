@@ -20,7 +20,7 @@
     "lint:type": "npm run lint:type --workspaces --if-present",
     "lint:js": "npm run lint:js --workspaces --if-present -- --max-warnings=0",
     "lint:css": "npm run lint:css --workspaces --if-present -- --fix",
-    "lint:prettify": "prettier --check \"**/*.{ts,tsx,json,md,scss,html,sql}\"",
+    "lint:prettify": "prettier --check \"**/*.{ts,tsx,json,md,scss,html,sql}\" -- --fix",
     "lint": "npm run lint:editor && npm run lint:fs && npm run lint:prettify && npm run lint:type && npm run lint:js && npm run lint:css",
     "prettify": "prettier --write \"**/*.{ts,tsx,json,md,scss,html,sql}\"",
     "build": "npm run build:shared && npm run build:frontend && npm run build:backend && npm run prepare-build",
