@@ -18,6 +18,10 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   line-height: 140.5%;
 }
 
+:global(.form-control).phoneInput {
+  height: 38px;
+}
+
 .input,
 :global(.form-control).input {
   width: 100%;
@@ -95,10 +99,17 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
 
 .passwordEye {
   position: absolute;
-  top: 8px;
-  right: 15px;
+  top: 11px;
+  right: 10px;
+  color: $grey-dark;
+  background-color: $white;
+  border: 0;
   cursor: pointer;
   user-select: none;
+}
+
+.passwordEyeLight {
+  color: $grey-light;
 }
 
 .inputWrapper {
@@ -108,9 +119,9 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
 }
 
 :global(.flag-dropdown).phoneButton {
-  top: 2px;
+  top: 3px;
   left: 2px;
-  height: 90%;
+  height: 80%;
   background-color: $white;
   border: none;
 }

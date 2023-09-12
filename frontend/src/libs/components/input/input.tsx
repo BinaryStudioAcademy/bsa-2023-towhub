@@ -9,9 +9,16 @@ import {
 } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
 
+import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useCallback, useFormController, useMemo } from '~/libs/hooks/hooks.js';
+import {
+  useCallback,
+  useFormController,
+  useMemo,
+  useState,
+} from '~/libs/hooks/hooks.js';
 
+import { Icon } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
@@ -40,11 +47,19 @@ const Input = <T extends FieldValues>({
   step,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
-
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
   const error = errors[name]?.message;
   const hasError = Boolean(error);
   const hasValue = Boolean(field.value);
   const hasLabel = Boolean(label);
+  const toggleShowPassword = useCallback(
+    (event: React.MouseEvent<HTMLElement>): void => {
+      event.preventDefault();
+      setIsPasswordShown(!isPasswordShown);
+    },
+    [isPasswordShown],
+  );
+  const id = `input-${name}`;
 
   const controlledInputStyles = useMemo(
     () => [
@@ -64,16 +79,26 @@ const Input = <T extends FieldValues>({
     <>
       <input
         {...field}
-        type={type}
+        type={isPasswordShown ? 'text' : type}
         placeholder={placeholder}
         className={getValidClassNames(...defaultInputStyles)}
         disabled={isDisabled}
         min={min}
         max={max}
         step={step}
+        id={id}
       />
       {type === 'password' && (
-        <span className={styles.passwordEye}>&#128065;</span>
+        <button
+          className={getValidClassNames(
+            styles.passwordEye,
+            isPasswordShown && styles.passwordEyeLight,
+          )}
+          onClick={toggleShowPassword}
+          tabIndex={-1}
+        >
+          <Icon iconName={IconName.EYE} size="sm" />
+        </button>
       )}
     </>
   );
@@ -98,20 +123,27 @@ const Input = <T extends FieldValues>({
         )}
         buttonClass={styles.phoneButton}
         dropdownClass={styles.phoneDropdown}
+        inputProps={{
+          id,
+        }}
       />
     );
-  }, [controlledInputStyles, field, handlePhoneChange]);
+  }, [controlledInputStyles, field, handlePhoneChange, id]);
 
   const AppPhoneInput = (
     <Controller name={name} control={control} render={renderPhoneInput} />
   );
 
   return (
-    <label className={styles.inputComponentWrapper}>
-      {hasLabel && <span className={styles.label}>{label}</span>}
-      <span className={styles.inputWrapper}>
+    <div className={styles.inputComponentWrapper}>
+      {hasLabel && (
+        <label className={styles.label} htmlFor={id}>
+          {label}
+        </label>
+      )}
+      <div className={styles.inputWrapper}>
         {type === 'phone' ? AppPhoneInput : DefaultInput}
-      </span>
+      </div>
       <span
         className={getValidClassNames(
           styles.errorMessage,
@@ -120,7 +152,7 @@ const Input = <T extends FieldValues>({
       >
         {error as string}
       </span>
-    </label>
+    </div>
   );
 };
 
