@@ -38,8 +38,8 @@ const Router = (): JSX.Element => {
           }
         >
           {/* <Route index element={<Orders />} />
-          <Route path="trucks" element={<Trucks />} />
-          <Route path="drivers" element={<Drivers />} /> */}
+          <Route path="trucks" element={<div>Trucks</div>} />
+          <Route path="drivers" element={<div>Drivers</div>} /> */}
         </Route>
       </Route>
       <Route path={AppRoute.ANY} element={<NotFound />} />

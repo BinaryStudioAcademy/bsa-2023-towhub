@@ -6,6 +6,7 @@ import { type TabsName } from '../enums/sidebar-tabs.enum.js';
 type TabsType = {
   name: ValueOf<typeof TabsName>;
   icon: ValueOf<typeof IconName>;
+  path: string;
 };
 
 type TabName = ValueOf<typeof TabsName>;
