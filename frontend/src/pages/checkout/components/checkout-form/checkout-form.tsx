@@ -1,5 +1,6 @@
 import { Button, Input } from '~/libs/components/components.js';
 import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
+import { stripeApi } from '~/packages/stripe/stripe.js';
 
 import { type CheckoutFormData } from './libs/types/types.js';
 import styles from './styles.module.scss';
@@ -11,8 +12,9 @@ const CheckoutForm: React.FC = () => {
 
   const handleFormSubmit = useCallback(
     (event_: React.BaseSyntheticEvent): void => {
-      void handleSubmit(() => {
-        return;
+      void handleSubmit(async (payload) => {
+        const url = await stripeApi.generateCheckoutLink(payload);
+        window.location.href = url;
       })(event_);
     },
     [handleSubmit],

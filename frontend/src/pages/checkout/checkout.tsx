@@ -1,3 +1,4 @@
+import { Button } from '~/libs/components/components.js';
 import { useSearchParameters } from '~/libs/hooks/hooks.js';
 
 import { CheckoutForm } from './components/checkout-form/checkout-form.js';
@@ -11,9 +12,14 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <div className={styles.wrapper}>
-      <CheckoutForm />
-      {isCancel}
-      {isSuccess}
+      <div className={styles.wrapper2}>
+        <CheckoutForm />
+        <div className={styles.secondary}>
+          <Button label="request data" />
+          <div>Cancelled: {isCancel}</div>
+          <div>Successfull: {isSuccess}</div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -12,3 +12,19 @@
   background-size: cover;
   padding-block: 57px;
 }
+
+.wrapper2 {
+  display: flex;
+  gap: 10px;
+}
+
+.secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 448px;
+  padding: 30px 60px 50px;
+  background-color: $white;
+  border-radius: 8px;
+}

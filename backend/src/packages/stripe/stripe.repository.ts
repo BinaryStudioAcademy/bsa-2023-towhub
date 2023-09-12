@@ -49,24 +49,31 @@ class StripeRepository {
       quantity: distance,
     });
 
+    const totalToBusiness = total - this.calculateApplicationFee(total);
+
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
             currency: default_currency ?? 'usd',
-            unit_amount: pricePerUnit,
+            unit_amount: this.inCents(pricePerUnit),
+            product_data: {
+              name: 'Towing services',
+            },
           },
           quantity: distance,
         },
       ],
       payment_intent_data: {
-        application_fee_amount: this.calculateApplicationFee(total),
-        on_behalf_of: business.stripeId,
+        transfer_data: {
+          destination: business.stripeId,
+          amount: this.inCents(totalToBusiness),
+        },
       },
       mode: 'payment',
-      success_url: `${this.config.APP.FRONTEND_BASE_URL}${FrontendPath.CHECKOUT}?cancel=true`,
-      cancel_url: `${this.config.APP.FRONTEND_BASE_URL}${FrontendPath.CHECKOUT}?success=true`,
+      success_url: `${this.config.APP.FRONTEND_BASE_URL}${FrontendPath.CHECKOUT}?success=true`,
+      cancel_url: `${this.config.APP.FRONTEND_BASE_URL}${FrontendPath.CHECKOUT}?cancel=true`,
     });
 
     return session.url;
@@ -120,6 +127,10 @@ class StripeRepository {
 
   private calculateApplicationFee(amount: number): number {
     return amount * this.config.BUSINESS.APPLICATION_FEE_AMOUNT;
+  }
+
+  private inCents(amount: number): number {
+    return Math.round(amount * 100);
   }
 }
 
