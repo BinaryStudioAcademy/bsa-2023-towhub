@@ -15,6 +15,7 @@ const IconName = {
   TRUCK: 'truck',
   USERS: 'users',
   XMARK: 'xmark',
+  EYE: 'eye',
 } as const;
 
 export { IconName };

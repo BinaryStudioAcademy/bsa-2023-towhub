@@ -1,22 +1,21 @@
 import {
   type IconDefinition,
-  faListUl,
-  faTruckPickup,
-  faUsers,
-} from '@fortawesome/free-solid-svg-icons';
-import {
   faArrowDownLong,
   faCaretDown,
   faCheck,
   faChevronDown,
   faChevronLeft,
   faCloudUploadAlt,
+  faEye,
   faFile,
   faGear,
+  faListUl,
   faLocationDot,
   faMap,
   faPlus,
   faStar,
+  faTruckPickup,
+  faUsers,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -40,6 +39,7 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.TRUCK]: faTruckPickup,
   [IconName.USERS]: faUsers,
   [IconName.XMARK]: faXmark,
+  [IconName.EYE]: faEye,
 };
 
 export { iconNameToSvg };

@@ -4,6 +4,8 @@ import {
   driversRelations,
   files,
   groups,
+  orders,
+  ordersRelations,
   trucks,
   trucksRelations,
   users,
@@ -22,8 +24,10 @@ const schema = {
   usersTrucks,
   drivers,
   usersRelations,
-  usersTrucksRelations,
   driversRelations,
+  usersTrucksRelations,
+  orders,
+  ordersRelations,
 };
 
 type DatabaseSchema = typeof schema;
