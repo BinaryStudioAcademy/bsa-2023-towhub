@@ -80,13 +80,6 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   color: $grey-light;
 }
 
-.passwordEye {
-  position: absolute;
-  top: 8px;
-  right: 15px;
-  cursor: pointer;
-}
-
 .inputWrapper {
   position: relative;
   display: block;

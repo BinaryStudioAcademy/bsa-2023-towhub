@@ -41,7 +41,7 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
 
       setAddDriverFields((previousFields) =>
         previousFields.map((field) =>
-          field.name === FormName.DRIVER_LICENSE_NUMBER
+          field.name === FormName.DRIVER_POSSIBLE_TRUCKS
             ? {
                 ...field,
                 options: truckOptions,

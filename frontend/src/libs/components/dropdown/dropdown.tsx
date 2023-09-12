@@ -36,9 +36,21 @@ type Properties<T extends FieldValues> = {
 
 const getClassNames = (
   isMenuOpen: boolean,
+  isMulti: boolean,
 ): ClassNamesConfig<SelectOption, false, GroupBase<SelectOption>> => ({
   container: () => styles.container,
-  control: () => styles.control,
+  control: (providedStyles): string => {
+    const styles = isMulti
+      ? {
+          ...providedStyles,
+          height: 'fit-content',
+          fontSize: '28px',
+        }
+      : providedStyles;
+
+    return getValidClassNames(styles);
+  },
+
   option: () => styles.option,
   menu: () => styles.singleValue,
   placeholder: () => styles.placeholder,
@@ -73,8 +85,8 @@ const Dropdown = <T extends FieldValues>({
   }, []);
 
   const classNamesConfig = useMemo(
-    () => getClassNames(isMenuOpen),
-    [isMenuOpen],
+    () => getClassNames(isMenuOpen, isMulti),
+    [isMenuOpen, isMulti],
   );
 
   const findOptionByValue = (

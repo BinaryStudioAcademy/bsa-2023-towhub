@@ -199,6 +199,20 @@ class TruckController extends Controller {
           }>,
         ),
     });
+
+    this.addRoute({
+      path: `${TruckApiPath.BUSINESS}${TruckApiPath.$ID}`,
+      method: 'GET',
+      validation: {
+        params: truckGetParameters,
+      },
+      handler: (request) =>
+        this.getTrucksByBusinessId(
+          request as ApiHandlerOptions<{
+            params: { id: number };
+          }>,
+        ),
+    });
   }
 
   /**
@@ -375,6 +389,45 @@ class TruckController extends Controller {
     return {
       status: HttpCode.NO_CONTENT,
       payload: await this.truckService.delete(options.params.id),
+    };
+  }
+
+  /**
+   * @swagger
+   * /trucks/business/{id}:
+   *   get:
+   *     summary: Get trucks by business ID
+   *     tags:
+   *       - truck
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: ID of the business to retrieve trucks for
+   *         required: true
+   *         schema:
+   *           type: integer
+   *     responses:
+   *       '200':
+   *         description: Trucks retrieved successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/TruckResponse'
+   *       '404':
+   *         description: Business not found
+   */
+  private async getTrucksByBusinessId(
+    options: ApiHandlerOptions<{ params: { id: number } }>,
+  ): Promise<ApiHandlerResponse> {
+    const { params: id } = options;
+
+    const trucks = await this.truckService.getAll();
+
+    return {
+      status: HttpCode.OK,
+      payload: trucks,
     };
   }
 }
