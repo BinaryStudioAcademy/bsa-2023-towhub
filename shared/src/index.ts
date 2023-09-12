@@ -7,11 +7,12 @@ export {
 } from './libs/enums/enums.js';
 export {
   ApplicationError,
+  ConfigValidationError,
   HttpError,
   ValidationError,
 } from './libs/exceptions/exceptions.js';
 export { configureString } from './libs/helpers/helpers.js';
-export { type IConfig } from './libs/packages/config/config.js';
+export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
 export { type GeolocationLatLng } from './libs/packages/geolocation/geolocation.js';
 export {
   type HttpMethod,
@@ -30,8 +31,10 @@ export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type CapitalizeEnum,
   type EntityPagination,
+  type ErrorConstructor,
   type NullableProperties,
   type OperationResult,
+  type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
