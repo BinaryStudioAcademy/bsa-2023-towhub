@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "b7486ff7-ef67-4b22-ba19-aaf8eac68511",
-  "prevId": "c1163141-c286-41fe-8010-0154a305dc20",
+  "id": "ef7a6b02-9d28-4790-8a9a-652d135732b4",
+  "prevId": "b7486ff7-ef67-4b22-ba19-aaf8eac68511",
   "tables": {
     "business_details": {
       "name": "business_details",
@@ -25,6 +25,19 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "stripe_id": {
+          "name": "stripe_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stripe_activated": {
+          "name": "stripe_activated",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "owner_id": {
           "name": "owner_id",
@@ -53,8 +66,12 @@
           "name": "business_details_owner_id_users_id_fk",
           "tableFrom": "business_details",
           "tableTo": "users",
-          "columnsFrom": ["owner_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -64,7 +81,16 @@
         "business_details_tax_number_unique": {
           "name": "business_details_tax_number_unique",
           "nullsNotDistinct": false,
-          "columns": ["tax_number"]
+          "columns": [
+            "tax_number"
+          ]
+        },
+        "business_details_stripe_id_unique": {
+          "name": "business_details_stripe_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "stripe_id"
+          ]
         }
       }
     },
@@ -117,8 +143,12 @@
           "name": "driver_details_user_id_users_id_fk",
           "tableFrom": "driver_details",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -126,8 +156,12 @@
           "name": "driver_details_business_id_business_details_id_fk",
           "tableFrom": "driver_details",
           "tableTo": "business_details",
-          "columnsFrom": ["business_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "business_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -137,7 +171,9 @@
         "driver_details_driver_license_number_unique": {
           "name": "driver_details_driver_license_number_unique",
           "nullsNotDistinct": false,
-          "columns": ["driver_license_number"]
+          "columns": [
+            "driver_license_number"
+          ]
         }
       }
     },
@@ -281,8 +317,12 @@
           "name": "orders_user_id_users_id_fk",
           "tableFrom": "orders",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -290,8 +330,12 @@
           "name": "orders_business_id_business_details_id_fk",
           "tableFrom": "orders",
           "tableTo": "business_details",
-          "columnsFrom": ["business_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "business_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -299,8 +343,12 @@
           "name": "orders_driver_id_driver_details_id_fk",
           "tableFrom": "orders",
           "tableTo": "driver_details",
-          "columnsFrom": ["driver_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "driver_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -369,8 +417,12 @@
           "name": "shifts_driver_id_users_id_fk",
           "tableFrom": "shifts",
           "tableTo": "users",
-          "columnsFrom": ["driver_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "driver_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -378,8 +430,12 @@
           "name": "shifts_truck_id_trucks_id_fk",
           "tableFrom": "shifts",
           "tableTo": "trucks",
-          "columnsFrom": ["truck_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "truck_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -451,7 +507,9 @@
       "indexes": {
         "trucks_license_plate_number_idx": {
           "name": "trucks_license_plate_number_idx",
-          "columns": ["license_plate_number"],
+          "columns": [
+            "license_plate_number"
+          ],
           "isUnique": true
         }
       },
@@ -535,12 +593,16 @@
       "indexes": {
         "users_phone_unique_idx": {
           "name": "users_phone_unique_idx",
-          "columns": ["phone"],
+          "columns": [
+            "phone"
+          ],
           "isUnique": true
         },
         "users_email_unique_idx": {
           "name": "users_email_unique_idx",
-          "columns": ["email"],
+          "columns": [
+            "email"
+          ],
           "isUnique": true
         }
       },
@@ -549,8 +611,12 @@
           "name": "users_group_id_groups_id_fk",
           "tableFrom": "users",
           "tableTo": "groups",
-          "columnsFrom": ["group_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "group_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -581,8 +647,12 @@
           "name": "users_trucks_user_id_users_id_fk",
           "tableFrom": "users_trucks",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -590,8 +660,12 @@
           "name": "users_trucks_truck_id_trucks_id_fk",
           "tableFrom": "users_trucks",
           "tableTo": "trucks",
-          "columnsFrom": ["truck_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "truck_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -599,7 +673,10 @@
       "compositePrimaryKeys": {
         "users_trucks_user_id_truck_id": {
           "name": "users_trucks_user_id_truck_id",
-          "columns": ["user_id", "truck_id"]
+          "columns": [
+            "user_id",
+            "truck_id"
+          ]
         }
       },
       "uniqueConstraints": {}

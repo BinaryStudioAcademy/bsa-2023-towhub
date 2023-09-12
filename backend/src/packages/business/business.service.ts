@@ -11,6 +11,8 @@ import {
   type DriverGetAllResponseDto,
   type DriverUpdatePayload,
 } from '../drivers/drivers.js';
+import { type ShiftEntity } from '../shifts/shift.js';
+import { type UserEntityT } from '../users/users.js';
 import { BusinessEntity } from './business.entity.js';
 import { type BusinessRepository } from './business.repository.js';
 import {
@@ -174,6 +176,19 @@ class BusinessService implements IService {
 
   public deleteDriver(driverId: number): Promise<boolean> {
     return this.driverService.delete(driverId);
+  }
+
+  public checkisDriverBelongedToBusiness({
+    userId,
+    driverId,
+  }: {
+    userId: UserEntityT['id'];
+    driverId: ShiftEntity['driverId'];
+  }): Promise<boolean> {
+    return this.businessRepository.checkisDriverBelongedToBusiness(
+      userId,
+      driverId,
+    );
   }
 }
 

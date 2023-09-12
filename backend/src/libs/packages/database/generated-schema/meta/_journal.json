@@ -68,8 +68,15 @@
     {
       "idx": 9,
       "version": "5",
-      "when": 1694513806427,
-      "tag": "0009_add_stripe_fields_to_business",
+      "when": 1694518822475,
+      "tag": "0009_create_shifts_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1694531397477,
+      "tag": "0010_add_stripe_fields_to_business",
       "breakpoints": true
     }
   ]
