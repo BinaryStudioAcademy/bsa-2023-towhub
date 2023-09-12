@@ -74,6 +74,7 @@ const Order: React.FC = () => {
           />
           <span>TowTrucks</span>
           <OrderForm
+            // TODO: Add price and distance
             onSubmit={handleSubmit}
             onLocationChange={handleLocatonChange}
             onDestinationChange={handleDestinationChange}
