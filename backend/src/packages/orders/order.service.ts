@@ -113,12 +113,6 @@ class OrderService implements Omit<IService, 'find'> {
     id: OrderEntityT['id'];
     user: UserEntityObjectWithGroupT | null;
   }): Promise<OrderFindByIdResponseDto | null> {
-    let businessId;
-
-    if (user?.group.key === UserGroupKey.BUSINESS) {
-      const business = await this.businessService.findByOwnerId(user.id);
-      businessId = business?.id;
-    }
     const result = await this.orderRepository.findByIdWithDriver(id);
 
     if (!result) {
@@ -131,10 +125,17 @@ class OrderService implements Omit<IService, 'find'> {
 
     const foundOrder = { ...order.toObject(), driver };
 
-    if (user?.group.key === UserGroupKey.BUSINESS && businessId) {
-      this.verifyOrderBelongsToBusiness(foundOrder, businessId);
+    if (user?.group.key === UserGroupKey.BUSINESS) {
+      const business = await this.businessService.findByOwnerId(user.id);
 
-      return foundOrder;
+      if (business) {
+        this.verifyOrderBelongsToBusiness(foundOrder, business.id);
+
+        return foundOrder;
+      }
+      throw new NotFoundError({
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
     }
 
     if (user) {
