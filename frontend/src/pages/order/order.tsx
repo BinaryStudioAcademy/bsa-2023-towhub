@@ -25,16 +25,6 @@ const Order: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const handleLocatonChange = useCallback(
-    (location: { lat: number; lng: number }) => {
-      setLocation({
-        lat: location.lat,
-        lng: location.lng,
-      });
-    },
-    [],
-  );
-
   const handleSubmit = useCallback(
     (payload: OrderCreateRequestDto) => {
       void dispatch(orderActions.createOrder({ ...payload, driverId }))
@@ -46,11 +36,18 @@ const Order: React.FC = () => {
     [dispatch],
   );
 
-  const handleDestinationChange = useCallback(
+  const handleLocatonChange = useCallback(
     (location: { lat: number; lng: number }) => {
-      setDestination({ lat: location.lat, lng: location.lng });
+      setLocation(location);
     },
-    [],
+    [setLocation],
+  );
+
+  const handleDestinationChange = useCallback(
+    (destination: { lat: number; lng: number }) => {
+      setDestination(destination);
+    },
+    [setDestination],
   );
 
   return (

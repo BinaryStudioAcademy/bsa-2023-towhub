@@ -1,6 +1,6 @@
 const LocationFieldName = {
   START: 'startPoint',
-  END: 'endPoibnt',
+  END: 'endPoint',
 } as const;
 
 export { LocationFieldName };
