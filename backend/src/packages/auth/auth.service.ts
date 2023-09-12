@@ -179,7 +179,9 @@ class AuthService {
 
   public async signIn(
     credentials: UserSignInRequestDto,
-  ): Promise<UserEntityObjectWithGroupT> {
+  ): Promise<
+    UserEntityObjectWithGroupAndBusinessT | UserEntityObjectWithGroupT
+  > {
     const { email, password } = credentials;
 
     const user = await this.userService.findByEmailRaw(email);
@@ -199,10 +201,32 @@ class AuthService {
 
     const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
 
+    const userGroup = GroupEntity.initialize(user.group).toObject();
+
+    const userBusiness =
+      userGroup.key === UserGroupKey.BUSINESS
+        ? await this.businessService.findByOwnerId(updatedUser.id)
+        : null;
+
     return {
       ...updatedUser,
-      group: GroupEntity.initialize(user.group).toObject(),
+      group: userGroup,
+      ...(userBusiness && { business: userBusiness }),
     };
+  }
+
+  public async getCurrent(
+    user: UserEntityObjectWithGroupT,
+  ): Promise<
+    UserEntityObjectWithGroupT | UserEntityObjectWithGroupAndBusinessT
+  > {
+    if (user.group.key === UserGroupKey.BUSINESS) {
+      const business = await this.businessService.findByOwnerId(user.id);
+
+      return business ? { ...user, business } : user;
+    }
+
+    return user;
   }
 
   public async generateAccessTokenAndUpdateUser(

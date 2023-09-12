@@ -1,0 +1,41 @@
+@import "src/assets/css/vars.scss";
+
+.truckFilter {
+  display: flex;
+  flex-flow: column;
+}
+
+.locationFilter {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 22px;
+  padding-left: 8px;
+}
+
+.filterTitle {
+  margin-right: 35px;
+}
+
+.filterBar {
+  display: flex;
+  padding: 7px 0 5px;
+  background: $white;
+  border-radius: 10px;
+}
+
+.filterBlock {
+  display: flex;
+  align-items: baseline;
+  width: 50%;
+  padding: 11px 0 17px 21px;
+
+  &:first-child {
+    width: calc(50% - 23px);
+    margin-right: 23px;
+    border-right: 1px solid #c3d4e9;
+  }
+}
+
+.dropdownWrapper {
+  min-width: 150px;
+}

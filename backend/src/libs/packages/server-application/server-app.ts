@@ -15,6 +15,7 @@ import { ServerErrorType } from '~/libs/enums/enums.js';
 import { type ValidationError } from '~/libs/exceptions/exceptions.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
+import { GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { socket as socketService } from '~/libs/packages/socket/socket.js';
@@ -72,6 +73,7 @@ class ServerApp implements IServerApp {
       schema: {
         body: validation?.body,
         params: validation?.params,
+        querystring: validation?.query,
       },
     });
 
@@ -226,7 +228,10 @@ class ServerApp implements IServerApp {
 
     await this.initServe();
 
-    socketService.initializeIo(this.app);
+    socketService.initializeIo({
+      app: this.app,
+      geolocationCacheService: GeolocationCacheService.getInstance(),
+    });
 
     await this.initMiddlewares();
 

@@ -1,24 +1,28 @@
-import { AppRoute, Breakpoint, IconName } from '~/libs/enums/enums.js';
+import { Breakpoint, IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
   useEffect,
   useLocation,
   useNavigate,
+  useRef,
   useState,
 } from '~/libs/hooks/hooks.js';
 import { type BurgerMenuItem } from '~/libs/types/types.js';
 
 import { Button, Icon } from '../components.js';
-import { BURGER_MENU_ITEMS } from './burger-menu-items.js';
 import styles from './styles.module.scss';
 
-let currentMenuItems: BurgerMenuItem[] | null;
+type Properties = {
+  burgerItems: BurgerMenuItem[] | null;
+};
 
-const BurgerMenu: React.FC = () => {
+const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const menuReference = useRef<HTMLDivElement | null>(null);
 
   const toggleMenu = useCallback(() => {
     setIsOpen(!isOpen);
@@ -33,28 +37,32 @@ const BurgerMenu: React.FC = () => {
     setIsOpen(false);
   }, [location]);
 
+  useEffect(() => {
+    const handleDocumentClick = (event: MouseEvent): void => {
+      if (
+        menuReference.current &&
+        !menuReference.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
+
   const isMobile = window.innerWidth <= Breakpoint.MOBILE;
 
-  switch (location.pathname) {
-    case AppRoute.DASHBOARD: {
-      currentMenuItems = BURGER_MENU_ITEMS.BusinessMenu;
-      break;
-    }
-    case AppRoute.ROOT: {
-      currentMenuItems = BURGER_MENU_ITEMS.CustomerMenu;
-      break;
-    }
-    default: {
-      break;
-    }
-  }
-
-  if (!currentMenuItems) {
+  if (!burgerItems) {
     return null;
   }
 
   return (
     <div
+      ref={menuReference}
       className={getValidClassNames(styles.burgerMenu, isOpen && styles.open)}
     >
       <Icon
@@ -65,7 +73,7 @@ const BurgerMenu: React.FC = () => {
       {isOpen && (
         <div className={styles.menu}>
           <ul>
-            {currentMenuItems.map((item, index) => (
+            {burgerItems.map((item, index) => (
               <li key={index}>
                 {isMobile ? (
                   <Icon

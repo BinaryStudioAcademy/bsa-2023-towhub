@@ -6,6 +6,7 @@ import {
   faChevronDown,
   faChevronLeft,
   faClockRotateLeft,
+  faEye,
   faGear,
   faListUl,
   faLocationDot,
@@ -40,6 +41,7 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.RIGHT_FROM_BRACKET]: faRightFromBracket,
   [IconName.TRUCK]: faTruckPickup,
   [IconName.USERS]: faUsers,
+  [IconName.EYE]: faEye,
 };
 
 export { iconNameToSvg };
