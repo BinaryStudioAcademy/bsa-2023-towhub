@@ -27,10 +27,10 @@ type Properties<T extends FieldValues> = {
   btnLabel?: string;
   onSubmit: (payload: T) => void;
   onLocationChange?:
-    | ((place: { lat: number | undefined; lng: number | undefined }) => void)
+    | ((place: { lat: number; lng: number }) => void)
     | undefined;
   onDestinationChange?:
-    | ((place: { lat: number | undefined; lng: number | undefined }) => void)
+    | ((place: { lat: number; lng: number }) => void)
     | undefined;
 };
 

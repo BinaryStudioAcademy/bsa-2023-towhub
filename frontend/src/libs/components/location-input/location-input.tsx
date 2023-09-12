@@ -22,9 +22,8 @@ type Properties<T extends FieldValues> = {
   name: FieldPath<T>;
   placeholder?: string;
   isDisabled?: boolean;
-  onChange?:
-    | ((place: { lat: number | undefined; lng: number | undefined }) => void)
-    | undefined;
+  // FIXME
+  onChange?: ((place: { lat: number; lng: number }) => void) | undefined;
 };
 
 const LocationInput = <T extends FieldValues>({

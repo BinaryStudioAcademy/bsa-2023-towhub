@@ -16,21 +16,20 @@ const libraries: Libraries = ['places'];
 const driverId = 1;
 
 const Order: React.FC = () => {
-  const [location, setLocation] = useState({ lat: 50.4547, lng: 30.5238 });
-  const [destination, setDestination] = useState({
-    lat: 50.4507,
-    lng: 30.5278,
+  const [location, setLocation] = useState<google.maps.LatLngLiteral>({
+    // mock
+    lat: 50.4547,
+    lng: 30.5238,
   });
+  const [destination, setDestination] = useState<google.maps.LatLngLiteral>();
 
   const dispatch = useAppDispatch();
 
   const handleLocatonChange = useCallback(
-    (location: { lat: number | undefined; lng: number | undefined }) => {
-      setLocation((previous) => {
-        return {
-          lat: location.lat ?? previous.lat,
-          lng: location.lng ?? previous.lng,
-        };
+    (location: { lat: number; lng: number }) => {
+      setLocation({
+        lat: location.lat,
+        lng: location.lng,
       });
     },
     [],
@@ -38,25 +37,19 @@ const Order: React.FC = () => {
 
   const handleSubmit = useCallback(
     (payload: OrderCreateRequestDto) => {
-      // console.log("click");
       void dispatch(orderActions.createOrder(payload));
       // FIXME
       // .unwrap()
       // .then((response) => {
-      //   console.log(response);
+      //   Navigate user here
       // });
     },
     [dispatch],
   );
 
   const handleDestinationChange = useCallback(
-    (location: { lat: number | undefined; lng: number | undefined }) => {
-      setDestination((previous) => {
-        return {
-          lat: location.lat ?? previous.lat,
-          lng: location.lng ?? previous.lng,
-        };
-      });
+    (location: { lat: number; lng: number }) => {
+      setDestination({ lat: location.lat, lng: location.lng });
     },
     [],
   );
@@ -68,6 +61,7 @@ const Order: React.FC = () => {
         libraries={libraries}
       >
         <div className={styles.left}>
+          {/* mock */}
           <TowTruckCard
             truck={{
               id: 1,

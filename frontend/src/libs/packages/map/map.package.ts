@@ -68,7 +68,7 @@ class MapService implements IMapService {
       const angle = this.findAngle(response, origin);
 
       this.addMarker(origin, true, angle);
-      this.addMarker(destination, false);
+      this.addMarker(destination);
 
       const duration = response.routes[0]?.legs?.[0]?.duration?.value;
 
@@ -139,7 +139,7 @@ class MapService implements IMapService {
 
   public addMarker(
     position: google.maps.LatLngLiteral,
-    origin = true,
+    origin = false,
     angle = 0,
   ): void {
     this.throwIfMapNotInitialized();

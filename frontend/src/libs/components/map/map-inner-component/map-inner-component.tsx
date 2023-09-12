@@ -30,10 +30,8 @@ const MapInnerComponent: React.FC<Properties> = ({
         zoom,
       });
 
-      mapService.current.addMarker(center);
-
       if (destination) {
-        // mapService.current.addMarker(destination, undefined, true);
+        mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);
       }

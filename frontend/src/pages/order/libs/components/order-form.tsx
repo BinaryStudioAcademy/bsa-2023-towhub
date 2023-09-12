@@ -8,11 +8,9 @@ import styles from './styles.module.scss';
 type Properties = {
   additionalValues: { driverId: number };
   onSubmit: (payload: OrderCreateRequestDto) => void;
-  onLocationChange:
-    | ((place: { lat: number | undefined; lng: number | undefined }) => void)
-    | undefined;
+  onLocationChange: ((place: { lat: number; lng: number }) => void) | undefined;
   onDestinationChange:
-    | ((place: { lat: number | undefined; lng: number | undefined }) => void)
+    | ((place: { lat: number; lng: number }) => void)
     | undefined;
 };
 
@@ -27,6 +25,7 @@ const OrderForm: React.FC<Properties> = ({
       <p className={styles.title}>Please fill the form</p>
       <Form
         validationSchema={orderCreateRequestBody}
+        // FIXME
         fields={[
           { label: 'Name', name: 'customerName' },
           { label: 'Phone', name: 'customerPhone' },
@@ -39,6 +38,7 @@ const OrderForm: React.FC<Properties> = ({
             type: 'number',
           },
         ]}
+        // FIXME
         defaultValues={{
           customerName: '',
           customerPhone: '',
