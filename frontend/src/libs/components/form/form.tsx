@@ -12,6 +12,7 @@ import { Button } from '../button/button.jsx';
 import { DropdownInput } from '../dropdown-input/dropdown-input.js';
 import { Input } from '../input/input.jsx';
 import { LocationInput } from '../location-input/location-input.js';
+import { LocationFieldName } from './libs/location-field-name.enum.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
@@ -21,10 +22,10 @@ type Properties<T extends FieldValues> = {
   btnLabel?: string;
   onSubmit: (payload: T) => void;
   onLocationChange?:
-    | ((place: { lat: number; lng: number }) => void)
+    | ((place: google.maps.LatLngLiteral) => void)
     | undefined;
   onDestinationChange?:
-    | ((place: { lat: number; lng: number }) => void)
+    | ((place: google.maps.LatLngLiteral) => void)
     | undefined;
 };
 
@@ -69,8 +70,7 @@ const Form = <T extends FieldValues = FieldValues>({
         return <Input {...field} control={control} errors={errors} />;
       }
       case 'location': {
-        // FIXME
-        if (field.name === 'startPoint') {
+        if (field.name === LocationFieldName.START) {
           return (
             <LocationInput
               {...field}
@@ -79,8 +79,7 @@ const Form = <T extends FieldValues = FieldValues>({
               onChange={onLocationChange}
             />
           );
-          // FIXME
-        } else if (field.name === 'endPoint') {
+        } else if (field.name === LocationFieldName.END) {
           return (
             <LocationInput
               {...field}

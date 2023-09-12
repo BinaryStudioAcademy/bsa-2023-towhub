@@ -38,9 +38,8 @@ const Order: React.FC = () => {
   const handleSubmit = useCallback(
     (payload: OrderCreateRequestDto) => {
       void dispatch(orderActions.createOrder({ ...payload, driverId }))
-        // FIXME
         .unwrap()
-        .then((response) => {
+        .then(() => {
           // console.log(response);
         });
     },
@@ -81,7 +80,6 @@ const Order: React.FC = () => {
             onSubmit={handleSubmit}
             onLocationChange={handleLocatonChange}
             onDestinationChange={handleDestinationChange}
-            // additionalValues={{ driverId }}
           />
         </div>
         <div className={styles.right}>

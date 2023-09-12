@@ -3,6 +3,8 @@ import { orderCreateRequestBody } from 'shared/build/index.js';
 import { Form } from '~/libs/components/components.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 
+import { CREATE_ORDER_DEFAULT_PAYLOAD } from './libs/constants.js';
+import { OrderFormFields } from './libs/fields.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -21,28 +23,8 @@ const OrderForm: React.FC<Properties> = ({
       <p className={styles.title}>Please fill the form</p>
       <Form
         validationSchema={orderCreateRequestBody}
-        // FIXME
-        fields={[
-          { label: 'Name', name: 'customerName' },
-          { label: 'Phone', name: 'customerPhone' },
-          { label: 'Time', name: 'scheduledTime', type: 'date' },
-          { label: 'Location', name: 'startPoint', type: 'location' },
-          { label: 'Destination', name: 'endPoint', type: 'location' },
-          {
-            label: 'How many cars need to be towed',
-            name: 'carsQty',
-            type: 'number',
-          },
-        ]}
-        // FIXME
-        defaultValues={{
-          customerName: '',
-          customerPhone: '',
-          scheduledTime: '',
-          startPoint: '',
-          endPoint: '',
-          carsQty: 1,
-        }}
+        fields={OrderFormFields}
+        defaultValues={CREATE_ORDER_DEFAULT_PAYLOAD}
         onSubmit={onSubmit}
         onLocationChange={onLocationChange}
         onDestinationChange={onDestinationChange}
