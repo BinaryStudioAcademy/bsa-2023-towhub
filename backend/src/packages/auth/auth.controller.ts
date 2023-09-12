@@ -110,6 +110,7 @@ class AuthController extends Controller {
   private async signIn(
     options: ApiHandlerOptions<{
       body: UserSignInRequestDto;
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
     return {

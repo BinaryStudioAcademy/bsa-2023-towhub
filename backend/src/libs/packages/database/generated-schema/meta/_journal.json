@@ -61,8 +61,15 @@
     {
       "idx": 8,
       "version": "5",
-      "when": 1694515123726,
-      "tag": "0008_add_businessId_in_trucks",
+      "when": 1694326684511,
+      "tag": "0008_create_orders_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1694520790778,
+      "tag": "0009_add_businessId_in_trucks",
       "breakpoints": true
     }
   ]
