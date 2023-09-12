@@ -12,6 +12,9 @@ import styles from './styles.module.scss';
 
 const libraries: Libraries = ['places'];
 
+//  mock
+const driverId = 1;
+
 const Order: React.FC = () => {
   const [location, setLocation] = useState({ lat: 50.4547, lng: 30.5238 });
   const [destination, setDestination] = useState({
@@ -84,6 +87,7 @@ const Order: React.FC = () => {
             onSubmit={handleSubmit}
             onLocationChange={handleLocatonChange}
             onDestinationChange={handleDestinationChange}
+            additionalValues={{ driverId }}
           />
         </div>
         <div className={styles.right}>
