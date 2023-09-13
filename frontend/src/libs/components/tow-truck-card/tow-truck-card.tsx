@@ -2,7 +2,9 @@ import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { type TruckEntity } from '~/libs/types/types.js';
 
-import { Badge, Button, Icon } from '../components.js';
+import { Badge } from '../badge/badge.js';
+import { Button } from '../button/button.js';
+import { Icon } from '../icon/icon.js';
 import { StarRating } from '../star-rating/star-rating.jsx';
 import { getTowTruckImage } from './lib/helpers/helpers.js';
 import styles from './styles.module.scss';

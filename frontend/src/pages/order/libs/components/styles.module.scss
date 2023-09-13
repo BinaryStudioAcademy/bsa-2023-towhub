@@ -3,10 +3,24 @@
 .formWrapper {
   width: 100%;
   max-width: 700px;
-  padding: 0 auto;
+  height: calc(100vh - 271px);
   padding: 20px 100px 35px;
-  background-color: white;
+  overflow: auto;
+  background-color: $white;
   border-radius: 8px;
+}
+
+.formWrapper::-webkit-scrollbar {
+  width: 0;
+}
+
+.formWrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.formWrapper::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border: none;
 }
 
 .title {

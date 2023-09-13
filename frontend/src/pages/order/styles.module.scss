@@ -1,19 +1,28 @@
+@import "src/assets/css/vars.scss";
+
 .page {
   display: flex;
-  padding-top: 10px;
-  padding-right: 18px;
-  padding-left: 47px;
+  height: 100%;
+  padding: 10px 18px 10px 47px;
   overflow: hidden;
 }
 
 .left {
   width: 35%;
+  height: inherit;
   margin-right: 15px;
+
+  // overflow: auto;
 }
 
 .right {
   width: 65%;
-  height: calc(100vh - 117px);
+  height: inherit;
   border: 5px solid white;
   border-radius: 10px;
+}
+
+.towTrucks {
+  color: $grey;
+  font-size: 16px;
 }
