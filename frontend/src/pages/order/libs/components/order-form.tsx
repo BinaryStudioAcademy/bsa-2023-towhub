@@ -1,4 +1,4 @@
-import { orderCreateRequestBody } from 'shared/build/index.js';
+import { orderForm } from 'shared/build/index.js';
 
 import { Form } from '~/libs/components/components.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
@@ -22,7 +22,7 @@ const OrderForm: React.FC<Properties> = ({
     <div className={styles.formWrapper}>
       <p className={styles.title}>Please fill the form</p>
       <Form
-        validationSchema={orderCreateRequestBody}
+        validationSchema={orderForm}
         fields={OrderFormFields}
         defaultValues={CREATE_ORDER_DEFAULT_PAYLOAD}
         onSubmit={onSubmit}
