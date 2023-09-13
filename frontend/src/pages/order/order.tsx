@@ -2,11 +2,13 @@ import { type Libraries, LoadScript } from '@react-google-maps/api';
 
 import { TowTruckCard } from '~/libs/components/components.js';
 import { Map } from '~/libs/components/map/map.js';
+import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppSelector,
   useCallback,
-  useEffect,
+  useGeolocation,
+  useNavigate,
   useState,
 } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
@@ -22,19 +24,35 @@ const libraries: Libraries = ['places'];
 const Order: React.FC = () => {
   const [location, setLocation] = useState<google.maps.LatLngLiteral>();
   const [destination, setDestination] = useState<google.maps.LatLngLiteral>();
+  const [price /*, setPrice*/] = useState<number>(0);
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const chosenTruck = useAppSelector(selectChosenTruck);
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((location) => {
+  if (!chosenTruck) {
+    navigate(AppRoute.ROOT);
+  }
+  useGeolocation({
+    interval: 6000,
+    onUpdateSuccess: (location) => {
       setLocation({
         lng: location.coords.longitude,
         lat: location.coords.latitude,
       });
-    });
-  }, [setLocation, dispatch]);
+    },
+  });
+
+  //FIXME
+  // const handlePriceChange = useCallback(
+  //   (distance: number) => {
+  //     if (chosenTruck) {
+  //       setPrice((distance / 1000) * chosenTruck.pricePerKm);
+  //     }
+  //   },
+  //   [chosenTruck],
+  // );
 
   const handleSubmit = useCallback(
     (payload: OrderCreateRequestDto) => {
@@ -81,12 +99,12 @@ const Order: React.FC = () => {
           ) : (
             <p>No truck is chosen!</p>
           )}
-          <span>TowTrucks</span>
           <OrderForm
             onSubmit={handleSubmit}
             onLocationChange={handleLocatonChange}
             onDestinationChange={handleDestinationChange}
             isDisabled={!chosenTruck}
+            price={price}
           />
         </div>
         <div className={styles.right}>

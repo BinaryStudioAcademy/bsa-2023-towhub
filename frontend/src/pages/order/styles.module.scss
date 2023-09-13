@@ -11,14 +11,12 @@
   width: 35%;
   height: inherit;
   margin-right: 15px;
-
-  // overflow: auto;
 }
 
 .right {
   width: 65%;
   height: inherit;
-  border: 5px solid white;
+  border: 5px solid $white;
   border-radius: 10px;
 }
 

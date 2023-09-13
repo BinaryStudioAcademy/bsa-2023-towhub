@@ -9,7 +9,7 @@ export {
   type OrderCreateResponseDto,
   type OrderEntity,
 } from './types/types.js';
-export { orderCreateRequestBody } from './validation-schemas/validation-schemas.js';
+export { orderForm } from './validation-schemas/validation-schemas.js';
 
 const ordersApi = new OrdersApi({
   baseUrl: config.ENV.API.ORIGIN_URL,

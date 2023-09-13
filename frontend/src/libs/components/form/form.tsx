@@ -21,6 +21,7 @@ type Properties<T extends FieldValues> = {
   validationSchema: ValidationSchema;
   btnLabel?: string;
   isDisabled?: boolean;
+  price?: number;
   onSubmit: (payload: T) => void;
   onLocationChange?: (place: google.maps.LatLngLiteral) => void;
   onDestinationChange?: (place: google.maps.LatLngLiteral) => void;
@@ -32,6 +33,7 @@ const Form = <T extends FieldValues = FieldValues>({
   validationSchema,
   btnLabel,
   isDisabled,
+  price,
   onSubmit,
   onLocationChange,
   onDestinationChange,
@@ -112,6 +114,19 @@ const Form = <T extends FieldValues = FieldValues>({
   return (
     <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
+      {price !== undefined && (
+        <div
+          // FIXME: Move to styles
+          style={{
+            marginBottom: '10px',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <span>Price:</span>
+          <span>${price}</span>
+        </div>
+      )}
       <Button
         type="submit"
         label={btnLabel ?? 'Submit'}

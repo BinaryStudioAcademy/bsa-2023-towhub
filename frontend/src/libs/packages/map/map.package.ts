@@ -72,6 +72,8 @@ class MapService implements IMapService {
 
       const duration = response.routes[0]?.legs?.[0]?.duration?.value;
 
+      // TODO: Add api call
+
       if (!duration) {
         throw new ApplicationError({
           message: 'Duration value not found in the response',
