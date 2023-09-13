@@ -20,6 +20,7 @@ type Properties<T extends FieldValues> = {
   defaultValues: DeepPartial<T>;
   validationSchema: ValidationSchema;
   btnLabel?: string;
+  isDisabled?: boolean;
   onSubmit: (payload: T) => void;
   onLocationChange?: (place: google.maps.LatLngLiteral) => void;
   onDestinationChange?: (place: google.maps.LatLngLiteral) => void;
@@ -30,6 +31,7 @@ const Form = <T extends FieldValues = FieldValues>({
   defaultValues,
   validationSchema,
   btnLabel,
+  isDisabled,
   onSubmit,
   onLocationChange,
   onDestinationChange,
@@ -110,7 +112,12 @@ const Form = <T extends FieldValues = FieldValues>({
   return (
     <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
-      <Button type="submit" label={btnLabel ?? 'Submit'} isFullWidth />
+      <Button
+        type="submit"
+        label={btnLabel ?? 'Submit'}
+        isDisabled={isDisabled}
+        isFullWidth
+      />
     </form>
   );
 };

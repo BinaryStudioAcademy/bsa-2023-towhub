@@ -8,12 +8,14 @@ import { orderFormFields } from './libs/fields.js';
 import styles from './styles.module.scss';
 
 type Properties = {
+  isDisabled?: boolean;
   onSubmit: (payload: OrderCreateRequestDto) => void;
   onLocationChange: (place: google.maps.LatLngLiteral) => void;
   onDestinationChange: (place: google.maps.LatLngLiteral) => void;
 };
 
 const OrderForm: React.FC<Properties> = ({
+  isDisabled,
   onSubmit,
   onLocationChange,
   onDestinationChange,
@@ -28,6 +30,7 @@ const OrderForm: React.FC<Properties> = ({
         onSubmit={onSubmit}
         onLocationChange={onLocationChange}
         onDestinationChange={onDestinationChange}
+        isDisabled={isDisabled}
       />
     </div>
   );

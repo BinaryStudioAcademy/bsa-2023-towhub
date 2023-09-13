@@ -5,7 +5,7 @@ import { MapService } from '~/libs/packages/map/map.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  center: google.maps.LatLngLiteral;
+  center?: google.maps.LatLngLiteral;
   zoom: number;
   origin?: google.maps.LatLngLiteral;
   destination?: google.maps.LatLngLiteral;
@@ -13,7 +13,7 @@ type Properties = {
 };
 
 const Map: React.FC<Properties> = ({
-  center,
+  center = { lat: 1, lng: 1 },
   zoom,
   className,
   destination,

@@ -2,34 +2,52 @@ import { type Libraries, LoadScript } from '@react-google-maps/api';
 
 import { TowTruckCard } from '~/libs/components/components.js';
 import { Map } from '~/libs/components/map/map.js';
-import { useAppDispatch, useCallback, useState } from '~/libs/hooks/hooks.js';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useCallback,
+  useEffect,
+  useState,
+} from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
+import { selectChosenTruck } from '~/slices/trucks/selectors.js';
 
 import { OrderForm } from './libs/components/order-form.js';
 import styles from './styles.module.scss';
 
 const libraries: Libraries = ['places'];
 
-//  mock
-const driverId = 1;
-
 const Order: React.FC = () => {
-  const [location, setLocation] = useState<google.maps.LatLngLiteral>({
-    // mock
-    lat: 50.4547,
-    lng: 30.5238,
-  });
+  const [location, setLocation] = useState<google.maps.LatLngLiteral>();
   const [destination, setDestination] = useState<google.maps.LatLngLiteral>();
 
   const dispatch = useAppDispatch();
 
+  const chosenTruck = useAppSelector(selectChosenTruck);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((location) => {
+      setLocation({
+        lng: location.coords.longitude,
+        lat: location.coords.latitude,
+      });
+    });
+  }, [setLocation, dispatch]);
+
   const handleSubmit = useCallback(
     (payload: OrderCreateRequestDto) => {
-      void dispatch(orderActions.createOrder({ ...payload, driverId }));
+      if (chosenTruck) {
+        void dispatch(
+          orderActions.createOrder({
+            ...payload,
+            driverId: chosenTruck.driverId,
+          }),
+        );
+      }
     },
-    [dispatch],
+    [dispatch, chosenTruck],
   );
 
   const handleLocatonChange = useCallback(
@@ -53,26 +71,22 @@ const Order: React.FC = () => {
         libraries={libraries}
       >
         <div className={styles.left}>
-          {/* mock */}
-          <TowTruckCard
-            truck={{
-              id: 1,
-              year: 2020,
-              capacity: 10,
-              licensePlateNumber: 'AAA',
-              manufacturer: 'volvo',
-              towType: 'hook_and_chain',
-              pricePerKm: 12,
-            }}
-            rating={{ reviewCount: 5, averageRating: 4.3 }}
-            distance={250}
-            hasFooter={false}
-          />
+          {chosenTruck ? (
+            <TowTruckCard
+              truck={chosenTruck}
+              rating={{ reviewCount: 5, averageRating: 4.3 }}
+              distance={250}
+              hasFooter={false}
+            />
+          ) : (
+            <p>No truck is chosen!</p>
+          )}
           <span>TowTrucks</span>
           <OrderForm
             onSubmit={handleSubmit}
             onLocationChange={handleLocatonChange}
             onDestinationChange={handleDestinationChange}
+            isDisabled={!chosenTruck}
           />
         </div>
         <div className={styles.right}>
