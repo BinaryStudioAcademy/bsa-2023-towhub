@@ -39,18 +39,11 @@ const getClassNames = (
   isMulti: boolean,
 ): ClassNamesConfig<SelectOption, false, GroupBase<SelectOption>> => ({
   container: () => styles.container,
-  control: (providedStyles): string => {
-    const styles = isMulti
-      ? {
-          ...providedStyles,
-          height: 'fit-content',
-          fontSize: '28px',
-        }
-      : providedStyles;
-
-    return getValidClassNames(styles);
-  },
-
+  control: () =>
+    isMulti
+      ? getValidClassNames(styles.control, styles.multiControl)
+      : styles.control,
+  multiValueLabel: () => styles.multiValueLabel,
   option: () => styles.option,
   menu: () => styles.singleValue,
   placeholder: () => styles.placeholder,
