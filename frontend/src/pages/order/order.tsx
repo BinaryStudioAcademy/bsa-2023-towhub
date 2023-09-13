@@ -4,8 +4,6 @@ import { TowTruckCard } from '~/libs/components/components.js';
 import { Map } from '~/libs/components/map/map.js';
 import { useAppDispatch, useCallback, useState } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
-import { type HttpError } from '~/libs/packages/http/http.js';
-import { notification } from '~/libs/packages/notification/notification.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
@@ -29,15 +27,7 @@ const Order: React.FC = () => {
 
   const handleSubmit = useCallback(
     (payload: OrderCreateRequestDto) => {
-      void dispatch(orderActions.createOrder({ ...payload, driverId }))
-        .unwrap()
-        .then(() => {
-          notification.success('Order successfully created');
-          // navigate user here
-        })
-        .catch((error: HttpError) => {
-          notification.error(error.message);
-        });
+      void dispatch(orderActions.createOrder({ ...payload, driverId }));
     },
     [dispatch],
   );

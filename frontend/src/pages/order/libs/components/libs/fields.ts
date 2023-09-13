@@ -1,7 +1,7 @@
 import { type FormField } from '~/libs/types/form.type.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 
-const OrderFormFields: FormField<OrderCreateRequestDto>[] = [
+const orderFormFields: FormField<OrderCreateRequestDto>[] = [
   { label: 'Name', name: 'customerName' },
   { label: 'Phone', name: 'customerPhone' },
   { label: 'Time', name: 'scheduledTime', type: 'date' },
@@ -14,4 +14,4 @@ const OrderFormFields: FormField<OrderCreateRequestDto>[] = [
   },
 ];
 
-export { OrderFormFields };
+export { orderFormFields };

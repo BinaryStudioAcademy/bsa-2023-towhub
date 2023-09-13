@@ -1,5 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
   type OrderCreateRequestDto,
@@ -15,7 +17,16 @@ const createOrder = createAsyncThunk<
 >(`${sliceName}/create-order`, (payload, { extra }) => {
   const { ordersApi } = extra;
 
-  return ordersApi.createOrder(payload);
+  try {
+    const result = ordersApi.createOrder(payload);
+
+    notification.success('Order successfully created');
+
+    return result;
+  } catch (error) {
+    notification.warning(getErrorMessage(error));
+    throw error;
+  }
 });
 
 export { createOrder };

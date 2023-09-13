@@ -4,13 +4,13 @@ import { Form } from '~/libs/components/components.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 
 import { CREATE_ORDER_DEFAULT_PAYLOAD } from './libs/constants.js';
-import { OrderFormFields } from './libs/fields.js';
+import { orderFormFields } from './libs/fields.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   onSubmit: (payload: OrderCreateRequestDto) => void;
-  onLocationChange: ((place: google.maps.LatLngLiteral) => void) | undefined;
-  onDestinationChange: ((place: google.maps.LatLngLiteral) => void) | undefined;
+  onLocationChange: (place: google.maps.LatLngLiteral) => void;
+  onDestinationChange: (place: google.maps.LatLngLiteral) => void;
 };
 
 const OrderForm: React.FC<Properties> = ({
@@ -23,7 +23,7 @@ const OrderForm: React.FC<Properties> = ({
       <p className={styles.title}>Please fill the form</p>
       <Form
         validationSchema={orderForm}
-        fields={OrderFormFields}
+        fields={orderFormFields}
         defaultValues={CREATE_ORDER_DEFAULT_PAYLOAD}
         onSubmit={onSubmit}
         onLocationChange={onLocationChange}

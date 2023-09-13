@@ -21,10 +21,8 @@ type Properties<T extends FieldValues> = {
   validationSchema: ValidationSchema;
   btnLabel?: string;
   onSubmit: (payload: T) => void;
-  onLocationChange?: ((place: google.maps.LatLngLiteral) => void) | undefined;
-  onDestinationChange?:
-    | ((place: google.maps.LatLngLiteral) => void)
-    | undefined;
+  onLocationChange?: (place: google.maps.LatLngLiteral) => void;
+  onDestinationChange?: (place: google.maps.LatLngLiteral) => void;
 };
 
 const Form = <T extends FieldValues = FieldValues>({
