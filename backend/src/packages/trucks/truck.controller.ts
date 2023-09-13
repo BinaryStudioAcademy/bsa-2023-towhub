@@ -7,9 +7,14 @@ import { Controller } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 
+import { AuthStrategy } from '../auth/auth.js';
 import { TruckApiPath } from './libs/enums/enums.js';
-import { type TruckEntity } from './libs/types/types.js';
 import {
+  type TruckAddRequestDto,
+  type TruckEntity,
+} from './libs/types/types.js';
+import {
+  truckCreateRequestBody,
   truckGetParameters,
   truckUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';
@@ -137,9 +142,29 @@ class TruckController extends Controller {
   private truckService: TruckService;
 
   public constructor(logger: ILogger, truckService: TruckService) {
+    const defaultStrategies = [
+      AuthStrategy.VERIFY_JWT,
+      AuthStrategy.VERIFY_BUSINESS_GROUP,
+    ];
+
     super(logger, ApiPath.TRUCKS);
 
     this.truckService = truckService;
+
+    this.addRoute({
+      path: TruckApiPath.ROOT,
+      method: 'POST',
+      authStrategy: defaultStrategies,
+      validation: {
+        body: truckCreateRequestBody,
+      },
+      handler: (request) =>
+        this.create(
+          request as ApiHandlerOptions<{
+            body: TruckAddRequestDto;
+          }>,
+        ),
+    });
 
     this.addRoute({
       path: TruckApiPath.$ID,
@@ -190,6 +215,45 @@ class TruckController extends Controller {
           }>,
         ),
     });
+  }
+
+  /**
+   * @swagger
+   * /trucks:
+   *   post:
+   *     summary: Create a new truck
+   *     tags:
+   *       - truck
+   *     requestBody:
+   *       description: Truck data to be added
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Truck'
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       '201':
+   *         description: Truck created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/TruckResponse'
+   *       '400':
+   *         description: Bad request
+   *
+   */
+
+  private async create(
+    options: ApiHandlerOptions<{
+      body: TruckAddRequestDto;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.CREATED,
+      payload: await this.truckService.create(options.body),
+    };
   }
 
   /**

@@ -7,8 +7,6 @@ import {
   type TruckEntity,
 } from '~/libs/types/types.js';
 
-import { type TruckAddPayload } from '../trucks/libs/types/types.js';
-
 type Constructor = {
   baseUrl: string;
   http: IHttp;
@@ -41,23 +39,6 @@ class BusinessApi extends HttpApi {
     );
 
     return await response.json<{ items: TruckEntity[]; total: number }>();
-  }
-
-  public async addTruckByBusinessId({
-    payload,
-    businessId,
-  }: TruckAddPayload): Promise<TruckEntity> {
-    const response = await this.load(
-      this.getFullEndpoint(`/${businessId}/${ApiPath.TRUCKS}`, {}),
-      {
-        method: 'POST',
-        contentType: ContentType.JSON,
-        payload: JSON.stringify(payload),
-        hasAuth: true,
-      },
-    );
-
-    return await response.json<TruckEntity>();
   }
 }
 

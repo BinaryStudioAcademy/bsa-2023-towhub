@@ -2,8 +2,8 @@ import { Form, Icon } from '~/libs/components/components.js';
 import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useAppDispatch, useCallback } from '~/libs/hooks/hooks.js';
-import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
-import { truckCreateRequestBody } from '~/packages/trucks/libs/validation-schemas/validation-schemas.js';
+import { type TruckAddFormPayload } from '~/packages/trucks/libs/types/types.js';
+import { truckCreateForm } from '~/packages/trucks/libs/validation-schemas/validation-schemas.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { DEFAULT_TRUCK_PAYLOAD } from './constants/constants.js';
@@ -24,8 +24,8 @@ const AddTruckForm: React.FC<Properties> = ({
   const dispatch = useAppDispatch();
 
   const handleFormSubmit = useCallback(
-    (payload: Omit<TruckEntity, 'id' | 'businessId' | 'createdAt'>): void => {
-      void dispatch(truckActions.addTruck({ payload, businessId })).then(
+    (payload: TruckAddFormPayload): void => {
+      void dispatch(truckActions.addTruck({ ...payload, businessId })).then(
         updatePage,
       );
       onClose();
@@ -46,7 +46,7 @@ const AddTruckForm: React.FC<Properties> = ({
       <Form
         fields={ADD_TRUCK_FIELDS}
         defaultValues={DEFAULT_TRUCK_PAYLOAD}
-        validationSchema={truckCreateRequestBody}
+        validationSchema={truckCreateForm}
         onSubmit={handleFormSubmit}
         btnLabel="ADD"
       />

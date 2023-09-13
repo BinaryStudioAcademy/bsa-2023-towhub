@@ -15,10 +15,6 @@ import {
 import { type ShiftEntity } from '../shifts/shift.js';
 import { type TruckGetAllResponseDto } from '../trucks/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
-import {
-  type TruckAddPayload,
-  type TruckEntity as TruckEntityT,
-} from '../trucks/trucks.js';
 import { type UserEntityT } from '../users/users.js';
 import { BusinessEntity } from './business.entity.js';
 import { type BusinessRepository } from './business.repository.js';
@@ -182,22 +178,6 @@ class BusinessService implements IService {
     query: PaginationPayload,
   ): Promise<TruckGetAllResponseDto> {
     return this.truckService.findAllByBusinessId(id, query);
-  }
-
-  public async createTruck({
-    payload,
-    businessId,
-  }: TruckAddPayload): Promise<TruckEntityT> {
-    const doesBusinessExist = await this.findById(businessId);
-
-    if (!doesBusinessExist) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
-      });
-    }
-
-    return await this.truckService.create({ payload, businessId });
   }
 
   public checkisDriverBelongedToBusiness({

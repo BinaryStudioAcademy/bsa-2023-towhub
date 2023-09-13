@@ -7,7 +7,7 @@ import {
 } from '~/libs/types/types.js';
 import { TruckSuccessfulMessage } from '~/packages/trucks/libs/enums/enums.js';
 import {
-  type TruckAddPayload,
+  type TruckAddRequestDto,
   type TruckEntity,
 } from '~/packages/trucks/libs/types/types.js';
 
@@ -15,13 +15,13 @@ import { name as sliceName } from './trucks.slice.js';
 
 const addTruck = createAsyncThunk<
   TruckEntity,
-  TruckAddPayload,
+  TruckAddRequestDto,
   AsyncThunkConfig
 >(`${sliceName}/add-truck`, (payload, { extra }) => {
-  const { businessApi, notification } = extra;
+  const { truckApi, notification } = extra;
 
   try {
-    const truck = businessApi.addTruckByBusinessId(payload);
+    const truck = truckApi.addTruck(payload);
     notification.success(TruckSuccessfulMessage.ADD_NEW_TRUCK);
 
     return truck;

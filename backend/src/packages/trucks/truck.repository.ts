@@ -6,6 +6,7 @@ import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { type PaginationPayload } from '~/libs/types/types.js';
 
 import {
+  type TruckAddRequestDto,
   type TruckDatabaseModel,
   type TruckEntity,
 } from './libs/types/types.js';
@@ -62,7 +63,7 @@ class TruckRepository implements IRepository {
   }
 
   public async create(
-    entity: Omit<TruckEntity, 'id' | 'createdAt'>,
+    entity: TruckAddRequestDto,
   ): Promise<TruckDatabaseModel[]> {
     const preparedQuery = this.db
       .driver()

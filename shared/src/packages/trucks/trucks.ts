@@ -11,15 +11,15 @@ export {
 export { LICENSE_PLATE_NUMBER } from './libs/regex-patterns/regex-patterns.js';
 export {
   type BusinessGetAllTrucksRequestParameters,
-  type TruckAddPayload,
-  type TruckCreateRequestParameters,
+  type TruckAddFormPayload,
+  type TruckAddRequestDto,
   type TruckEntity,
   type TruckGetAllResponseDto,
 } from './libs/types/types.js';
 export {
   businessGetAllTrucksParameters,
+  truckCreateForm,
   truckCreateRequestBody,
-  truckCreateRequestParameters,
   truckGetParameters,
   truckUpdateRequestBody,
 } from './libs/validation-schemas/validation-schema.js';

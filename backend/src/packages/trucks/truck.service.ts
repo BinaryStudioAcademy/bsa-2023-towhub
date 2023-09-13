@@ -3,7 +3,7 @@ import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type PaginationPayload } from '~/libs/types/types.js';
 
 import {
-  type TruckAddPayload,
+  type TruckAddRequestDto,
   type TruckEntity as TruckEntityT,
   type TruckGetAllResponseDto,
 } from './libs/types/types.js';
@@ -36,10 +36,7 @@ class TruckService implements IService {
     return { items, total };
   }
 
-  public async create({
-    payload,
-    businessId,
-  }: TruckAddPayload): Promise<TruckEntityT> {
+  public async create(payload: TruckAddRequestDto): Promise<TruckEntityT> {
     const existingTruck = await this.repository.find(
       payload.licensePlateNumber,
     );
@@ -51,7 +48,7 @@ class TruckService implements IService {
       });
     }
 
-    const [result] = await this.repository.create({ ...payload, businessId });
+    const [result] = await this.repository.create(payload);
 
     return TruckEntity.initialize(result).toObject();
   }
