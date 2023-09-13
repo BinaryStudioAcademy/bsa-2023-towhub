@@ -113,6 +113,17 @@ erDiagram
         updated_at timestamp "not null"
     }
 
+    shifts {
+        id serial PK "not null"
+        start_date timestamp "not null"
+        end_date timestamp "nullable"
+        driver_id integer FK "not null"
+        truck_id integer FK "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        deleted_at timestamp "nullable"
+    }
+
     users_trucks one or many -- one trucks: "users_trucks(truck_id) belongs to trucks(id)"
     users_trucks one or many -- one users: "users_trucks(user_id) belongs to users(id)"
     users one or many -- one groups: "users(group_id) belongs to groups(id)"
@@ -123,6 +134,8 @@ erDiagram
     users one -- zero or many orders: "users(id) has orders(user_id)"
     business_details one -- zero or many orders: "business_details(id) has orders(business_id)"
     driver_details one -- zero or many orders: "driver_details(id) has orders(drivers_id)"
+    users zero or one -- one or many shifts: "users(id) has shifts(driver_id)"
+    trucks one -- zero or many shifts: "shifts(truck_id) has trucks(id)"
 ```
 
 ### 🌑 Backend

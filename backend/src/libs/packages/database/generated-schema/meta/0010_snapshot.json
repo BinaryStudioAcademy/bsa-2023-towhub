@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "b7486ff7-ef67-4b22-ba19-aaf8eac68511",
-  "prevId": "c1163141-c286-41fe-8010-0154a305dc20",
+  "id": "58cf66f6-fefe-4069-b415-77d043678da3",
+  "prevId": "b7486ff7-ef67-4b22-ba19-aaf8eac68511",
   "tables": {
     "business_details": {
       "name": "business_details",
@@ -446,6 +446,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "business_id": {
+          "name": "business_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
@@ -455,7 +461,17 @@
           "isUnique": true
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "trucks_business_id_business_details_id_fk": {
+          "name": "trucks_business_id_business_details_id_fk",
+          "tableFrom": "trucks",
+          "tableTo": "business_details",
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
