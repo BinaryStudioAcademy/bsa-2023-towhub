@@ -69,7 +69,7 @@ export {
 } from './packages/business/business.js';
 export {
   type BusinessGetAllDriversRequestParameters,
-  type BusinessGetDriversPageRequestParameters,
+  type BusinessGetDriversPageRequestQuery,
   type DriverAddPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
@@ -82,7 +82,7 @@ export {
   type DriverWithUserData,
   DriverApiPath,
   driverCreateUpdateRequestBody,
-  driverGetPageParameters,
+  driverGetPageQuery,
   driverGetParameters,
   driverUpdateDeleteParameters,
   DriverValidationMessage,

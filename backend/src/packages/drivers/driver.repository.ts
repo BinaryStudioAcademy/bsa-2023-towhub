@@ -24,7 +24,7 @@ class DriverRepository implements IRepository {
     this.driverSchema = driverSchema;
   }
 
-  public find(
+  public async find(
     partial: Partial<Omit<DriverEntityT, 'user'>>,
   ): ReturnType<IRepository<DriverEntityT>['find']> {
     const queries = Object.entries(partial).map(([key, value]) =>
@@ -36,10 +36,18 @@ class DriverRepository implements IRepository {
 
     const finalQuery = queries.length === 1 ? queries[0] : and(...queries);
 
-    return this.db
+    const drivers = await this.db
       .driver()
       .query.drivers.findMany({ where: finalQuery, with: { user: true } })
       .execute();
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return drivers.map(({ createdAt, updatedAt, ...pureDriver }) =>
+      DriverEntity.initialize({
+        ...pureDriver,
+        createdAt: createdAt.toISOString(),
+      }).toObject(),
+    );
   }
 
   public async findAllByBusinessId(
@@ -53,7 +61,12 @@ class DriverRepository implements IRepository {
       })
       .execute();
 
-    return drivers.map((it) => DriverEntity.initialize(it));
+    return drivers.map(({ createdAt, ...pureDriver }) =>
+      DriverEntity.initialize({
+        ...pureDriver,
+        createdAt: createdAt.toISOString(),
+      }),
+    );
   }
 
   public async findPageOfDrivers(
@@ -73,7 +86,12 @@ class DriverRepository implements IRepository {
       })
       .execute();
 
-    return drivers.map((it) => DriverEntity.initialize(it));
+    return drivers.map(({ createdAt, ...pureDriver }) =>
+      DriverEntity.initialize({
+        ...pureDriver,
+        createdAt: createdAt.toISOString(),
+      }),
+    );
   }
 
   public async checkExists({
@@ -98,7 +116,7 @@ class DriverRepository implements IRepository {
       });
     }
 
-    const [driver]: DriverEntityT[] = await this.db
+    const [driver] = await this.db
       .driver()
       .select()
       .from(this.driverSchema)
@@ -112,14 +130,17 @@ class DriverRepository implements IRepository {
   public async create(entity: DriverEntity): Promise<DriverEntity> {
     const { driverLicenseNumber, userId, businessId } = entity.toNewObject();
 
-    const [item] = await this.db
+    const [{ createdAt, ...pureDriver }] = await this.db
       .driver()
       .insert(this.driverSchema)
       .values({ driverLicenseNumber, userId, businessId })
       .returning()
       .execute();
 
-    return DriverEntity.initialize(item);
+    return DriverEntity.initialize({
+      ...pureDriver,
+      createdAt: createdAt.toISOString(),
+    });
   }
 
   public async update({
@@ -129,7 +150,7 @@ class DriverRepository implements IRepository {
     id: number;
     payload: Partial<Pick<DriverEntityT, 'driverLicenseNumber'>>;
   }): Promise<DriverEntity> {
-    const [item] = await this.db
+    const [{ createdAt, ...pureDriver }] = await this.db
       .driver()
       .update(this.driverSchema)
       .set(payload)
@@ -137,7 +158,10 @@ class DriverRepository implements IRepository {
       .returning()
       .execute();
 
-    return DriverEntity.initialize(item);
+    return DriverEntity.initialize({
+      ...pureDriver,
+      createdAt: createdAt.toISOString(),
+    });
   }
 
   public async delete(id: number): Promise<boolean> {

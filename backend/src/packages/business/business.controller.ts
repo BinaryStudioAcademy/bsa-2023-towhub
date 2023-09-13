@@ -10,13 +10,13 @@ import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
   type BusinessGetAllDriversRequestParameters,
-  type BusinessGetDriversPageRequestParameters,
+  type BusinessGetDriversPageRequestQuery,
   type DriverCreateUpdateRequestDto,
   type DriverUpdateDeleteRequestParameters,
 } from '../drivers/drivers.js';
 import {
   driverCreateUpdateRequestBody,
-  driverGetPageParameters,
+  driverGetPageQuery,
   driverGetParameters,
   driverUpdateDeleteParameters,
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
@@ -347,11 +347,13 @@ class BusinessController extends Controller {
       authStrategy: defaultStrategies,
       validation: {
         params: driverGetParameters,
+        query: driverGetPageQuery,
       },
       handler: (options) =>
         this.findAllDrivers(
           options as ApiHandlerOptions<{
             params: BusinessGetAllDriversRequestParameters;
+            query?: BusinessGetDriversPageRequestQuery;
           }>,
         ),
     });
@@ -367,21 +369,6 @@ class BusinessController extends Controller {
         this.deleteDriver(
           options as ApiHandlerOptions<{
             params: DriverUpdateDeleteRequestParameters;
-          }>,
-        ),
-    });
-
-    this.addRoute({
-      path: BusinessApiPath.DRIVERS_BY_PAGE,
-      method: 'GET',
-      authStrategy: defaultStrategies,
-      validation: {
-        params: driverGetPageParameters,
-      },
-      handler: (options) =>
-        this.getDriversPage(
-          options as ApiHandlerOptions<{
-            params: BusinessGetDriversPageRequestParameters;
           }>,
         ),
     });
@@ -749,11 +736,17 @@ class BusinessController extends Controller {
   private async findAllDrivers(
     options: ApiHandlerOptions<{
       params: BusinessGetAllDriversRequestParameters;
+      query?: BusinessGetDriversPageRequestQuery;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const drivers = await this.businessService.findAllDriversByBusinessId(
-      options.params.businessId,
-    );
+    const drivers = await (options.query
+      ? this.businessService.findPageOfDrivers({
+          ...options.params,
+          ...options.query,
+        })
+      : this.businessService.findAllDriversByBusinessId(
+          options.params.businessId,
+        ));
 
     return {
       status: HttpCode.OK,
@@ -806,63 +799,6 @@ class BusinessController extends Controller {
     return {
       status: HttpCode.OK,
       payload: deletionResult,
-    };
-  }
-
-  /**
-   * @swagger
-   * /business/{businessId}/{pageIndex}/{pageSize}/drivers:
-   *    get:
-   *      tags:
-   *       - business/driver
-   *      summary: Find a page of drivers
-   *      description: Find a page of drivers
-   *      parameters:
-   *       - in: path
-   *         name: id
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to create driver
-   *         example: 1
-   *       - in: path
-   *         name: pageIndex
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Number of drivers page
-   *         example: 0
-   *       - in: path
-   *         name: pageSize
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Number of drivers page size
-   *         example: 2
-   *      responses:
-   *        200:
-   *          description: Successful find a drivers page
-   *          content:
-   *            application/json:
-   *              schema:
-   *                type: array
-   *                items:
-   *                  $ref: '#/components/schemas/Driver'
-   *
-   */
-
-  private async getDriversPage(
-    options: ApiHandlerOptions<{
-      params: BusinessGetDriversPageRequestParameters;
-    }>,
-  ): Promise<ApiHandlerResponse> {
-    const drivers = await this.businessService.findPageOfDrivers({
-      ...options.params,
-    });
-
-    return {
-      status: HttpCode.OK,
-      payload: drivers,
     };
   }
 }

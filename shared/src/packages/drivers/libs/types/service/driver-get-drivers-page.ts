@@ -1,5 +1,8 @@
-import { type BusinessGetDriversPageRequestParameters } from '../types.js';
+import { type BusinessGetAllDriversRequestParameters } from '../types.js';
 
-type DriverGetDriversPagePayload = BusinessGetDriversPageRequestParameters;
+type DriverGetDriversPagePayload = {
+  page: number;
+  size: number;
+} & BusinessGetAllDriversRequestParameters;
 
 export { type DriverGetDriversPagePayload };

@@ -1,6 +1,6 @@
 export {
   driverCreateUpdateRequestBody,
-  driverGetPageParameters,
+  driverGetPageQuery,
   driverGetParameters,
   driverUpdateDeleteParameters,
 } from 'shared/build/index.js';

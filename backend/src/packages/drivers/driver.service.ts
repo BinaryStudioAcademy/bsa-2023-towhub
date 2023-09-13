@@ -95,13 +95,13 @@ class DriverService implements IService {
 
   public async findPageOfDrivers({
     businessId,
-    pageIndex,
-    pageSize,
+    page,
+    size,
   }: DriverGetDriversPagePayload): Promise<DriverGetAllResponseDto> {
     const items = await this.driverRepository.findPageOfDrivers(
       businessId,
-      pageIndex,
-      pageSize,
+      page,
+      size,
     );
     const total = await this.driverRepository.getTotal(businessId);
 
@@ -153,6 +153,7 @@ class DriverService implements IService {
         driverLicenseNumber,
         businessId,
         userId: user.id,
+        createdAt: '',
       }),
     );
 

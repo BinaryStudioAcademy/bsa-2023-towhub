@@ -1,7 +1,7 @@
 export { type DriverAddResponseWithGroup } from './driver-add-response-with-group.type.js';
 export {
   type BusinessGetAllDriversRequestParameters,
-  type BusinessGetDriversPageRequestParameters,
+  type BusinessGetDriversPageRequestQuery,
   type DriverAddPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,

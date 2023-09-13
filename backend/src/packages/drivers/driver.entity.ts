@@ -1,6 +1,7 @@
 import { type IEntity } from '~/libs/interfaces/entity.interface.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
+import { type UserEntityT } from '../users/users.js';
 import { type DriverEntity as DriverEntityT } from './libs/types/types.js';
 
 class DriverEntity implements IEntity {
@@ -14,7 +15,7 @@ class DriverEntity implements IEntity {
 
   private createdAt: DriverEntityT['createdAt'];
 
-  private user?: DriverEntityT['user'];
+  private user?: UserEntityT;
 
   private constructor({
     id,
@@ -23,7 +24,7 @@ class DriverEntity implements IEntity {
     businessId,
     createdAt,
     user,
-  }: NullableProperties<DriverEntityT, 'id'>) {
+  }: NullableProperties<DriverEntityT, 'id'> & { user?: UserEntityT }) {
     this.id = id;
     this.driverLicenseNumber = driverLicenseNumber;
     this.userId = userId;
@@ -39,7 +40,7 @@ class DriverEntity implements IEntity {
     businessId,
     createdAt,
     user,
-  }: DriverEntityT): DriverEntity {
+  }: DriverEntityT & { user?: UserEntityT }): DriverEntity {
     return new DriverEntity({
       id,
       driverLicenseNumber,
@@ -55,7 +56,6 @@ class DriverEntity implements IEntity {
     userId,
     businessId,
     createdAt,
-    user,
   }: Omit<DriverEntityT, 'id'>): DriverEntity {
     return new DriverEntity({
       id: null,
@@ -63,7 +63,6 @@ class DriverEntity implements IEntity {
       userId,
       businessId,
       createdAt,
-      user,
     });
   }
 
@@ -86,7 +85,7 @@ class DriverEntity implements IEntity {
     };
   }
 
-  public toObjectWithUser(): DriverEntityT {
+  public toObjectWithUser(): DriverEntityT & { user?: UserEntityT } {
     return {
       id: this.id as number,
       driverLicenseNumber: this.driverLicenseNumber,

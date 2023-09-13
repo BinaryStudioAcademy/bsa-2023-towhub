@@ -1,7 +1,6 @@
-type BusinessGetDriversPageRequestParameters = {
-  businessId: number;
-  pageIndex: number;
-  pageSize: number;
+type BusinessGetDriversPageRequestQuery = {
+  page: number;
+  size: number;
 };
 
-export { type BusinessGetDriversPageRequestParameters };
+export { type BusinessGetDriversPageRequestQuery };
