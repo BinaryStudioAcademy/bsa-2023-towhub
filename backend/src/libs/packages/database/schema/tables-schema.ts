@@ -169,6 +169,24 @@ const usersTrucks = pgTable(
   },
 );
 
+const shifts = pgTable('shifts', {
+  id: serial('id').primaryKey(),
+  startDate: timestamp('start_date', {
+    mode: 'date',
+  }).notNull(),
+  endDate: timestamp('end_date', {
+    mode: 'date',
+  }),
+  driverId: integer('driver_id')
+    .references(() => users.id)
+    .notNull(),
+  truckId: integer('truck_id')
+    .references(() => trucks.id)
+    .notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+});
 const businessRelations = relations(users, ({ many }) => ({
   orders: many(orders),
 }));
@@ -205,6 +223,7 @@ export {
   orders,
   ordersRelations,
   orderStatus,
+  shifts,
   trucks,
   trucksRelations,
   truckStatusEnum,

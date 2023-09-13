@@ -5,6 +5,7 @@ import {
   groups,
   orders,
   ordersRelations,
+  shifts,
   trucks,
   trucksRelations,
   truckStatusEnum,
@@ -17,6 +18,7 @@ import {
 const schema = {
   business,
   groups,
+  shifts,
   trucks,
   trucksRelations,
   users,
