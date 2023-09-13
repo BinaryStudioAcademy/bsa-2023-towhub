@@ -5,17 +5,17 @@ const TABS: TabsType[] = [
   {
     name: TabsName.ORDERS,
     icon: IconName.LIST,
-    path: '',
+    path: 'dashboard',
   },
   {
     name: TabsName.TRUCKS,
     icon: IconName.TRUCK,
-    path: 'trucks',
+    path: 'dashboard/trucks',
   },
   {
     name: TabsName.DRIVERS,
     icon: IconName.USERS,
-    path: 'drivers',
+    path: 'dashboard/drivers',
   },
 ];
 

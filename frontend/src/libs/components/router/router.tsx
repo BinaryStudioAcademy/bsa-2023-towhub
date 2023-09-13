@@ -8,7 +8,7 @@ import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 import { WelcomePage } from '~/pages/welcome/welcome.js';
 
-import { PageLayout, ProtectedRoute } from '../components.js';
+import { Orders, PageLayout, ProtectedRoute } from '../components.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => {
@@ -29,17 +29,12 @@ const Router = (): JSX.Element => {
         path={AppRoute.ROOT}
         element={<ProtectedRoute allowedUserGroup={UserGroupKey.BUSINESS} />}
       >
-        <Route
-          path={AppRoute.DASHBOARD}
-          element={
-            <PageLayout>
-              <Dashboard />
-            </PageLayout>
-          }
-        >
-          {/* <Route index element={<Orders />} />
-          <Route path="trucks" element={<div>Trucks</div>} />
-          <Route path="drivers" element={<div>Drivers</div>} /> */}
+        <Route element={<PageLayout />}>
+          <Route path={AppRoute.DASHBOARD} element={<Dashboard />}>
+            <Route index element={<Orders />} />
+            <Route path="trucks" element={<div>Trucks page</div>} />
+            <Route path="drivers" element={<div>Drivers</div>} />
+          </Route>
         </Route>
       </Route>
       <Route path={AppRoute.ANY} element={<NotFound />} />

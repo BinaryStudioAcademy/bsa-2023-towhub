@@ -8,9 +8,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import { AppEnvironment } from '~/libs/enums/enums.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { authApi } from '~/packages/auth/auth.js';
+import { orderApi } from '~/packages/orders/orders.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
+import { reducer as orderReducer } from '~/slices/orders/orders.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { notification } from '../notification/notification.js';
@@ -18,6 +20,7 @@ import { LocalStorage } from '../storage/storage.js';
 
 type RootReducer = {
   auth: ReturnType<typeof authReducer>;
+  orders: ReturnType<typeof orderReducer>;
   trucks: ReturnType<typeof truckReducer>;
 };
 
@@ -26,6 +29,7 @@ type ExtraArguments = {
   userApi: typeof userApi;
   notification: typeof notification;
   truckApi: typeof truckApi;
+  orderApi: typeof orderApi;
   localStorage: typeof LocalStorage;
 };
 
@@ -43,6 +47,7 @@ class Store {
       devTools: config.ENV.APP.ENVIRONMENT !== AppEnvironment.PRODUCTION,
       reducer: {
         auth: authReducer,
+        orders: orderReducer,
         trucks: truckReducer,
       },
       middleware: (getDefaultMiddleware) => {
@@ -61,6 +66,7 @@ class Store {
       userApi,
       notification,
       truckApi,
+      orderApi,
       localStorage: LocalStorage,
     };
   }
