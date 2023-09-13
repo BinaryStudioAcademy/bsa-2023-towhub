@@ -13,6 +13,7 @@ import {
   truckCreate,
   truckGetParameters,
   truckUpdateRequestBody,
+  userTrucksRequestBody,
 } from './libs/validation-schema/validation-schemas.js';
 import { type TruckService } from './truck.service.js';
 
@@ -210,6 +211,18 @@ class TruckController extends Controller {
         this.getTrucksByBusinessId(
           request as ApiHandlerOptions<{
             params: { id: number };
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: TruckApiPath.USERS_TRUCKS,
+      method: 'POST',
+      validation: { body: userTrucksRequestBody },
+      handler: (request) =>
+        this.addUserTrucks(
+          request as ApiHandlerOptions<{
+            body: { userId: number; trucksId: number[] };
           }>,
         ),
     });
@@ -428,6 +441,59 @@ class TruckController extends Controller {
     return {
       status: HttpCode.OK,
       payload: trucks,
+    };
+  }
+
+  /**
+   * @swagger
+   * /trucks/users-trucks:
+   *   post:
+   *     summary: Add trucks to a user
+   *     tags:
+   *       - truck
+   *     requestBody:
+   *       description: User and trucks data to be added
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               userId:
+   *                 type: number
+   *                 description: ID of the user to add trucks to
+   *               trucksId:
+   *                 type: array
+   *                 items:
+   *                   type: number
+   *                 description: IDs of the trucks to add to the user
+   *     responses:
+   *       '200':
+   *         description: Trucks added to the user successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 userId:
+   *                   type: number
+   *                 truckIds:
+   *                   type: array
+   *                   items:
+   *                     type: number
+   */
+  private async addUserTrucks(
+    options: ApiHandlerOptions<{
+      body: { userId: number; trucksId: number[] };
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const { userId, trucksId } = options.body;
+
+    await this.truckService.addTrucksToUser(userId, trucksId);
+
+    return {
+      status: HttpCode.OK,
+      payload: { userId, trucksId: trucksId },
     };
   }
 }

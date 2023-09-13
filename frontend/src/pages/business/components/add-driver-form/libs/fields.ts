@@ -37,6 +37,7 @@ const addDriverFields: FormField<DriverCreateUpdateRequestDto>[] = [
   },
   {
     id: 6,
+    type: 'text',
     label: FormLabel.DRIVER_LICENSE_NUMBER,
     placeholder: 'Enter driver license number',
     name: FormName.DRIVER_LICENSE_NUMBER,

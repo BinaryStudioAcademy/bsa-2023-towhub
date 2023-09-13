@@ -1,15 +1,20 @@
-import { type UserEntityObjectWithGroupAndBusinessT } from 'shared/build/index.js';
-
 import { Form } from '~/libs/components/components.js';
 import { FormName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useAppSelector, useEffect, useState } from '~/libs/hooks/hooks.js';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useCallback,
+  useEffect,
+} from '~/libs/hooks/hooks.js';
 import {
   type DriverCreateUpdateRequestDto,
   driverCreateUpdateRequestBody,
 } from '~/packages/drivers/drivers.js';
-import { truckApi } from '~/packages/trucks/trucks.js';
+import { type UserEntityObjectWithGroupAndBusinessT } from '~/packages/drivers/libs/types/types.js';
 import { selectUser } from '~/slices/auth/selectors.js';
+import { getTrucksByBusinessId } from '~/slices/trucks/actions.js';
+import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { DEFAULT_ADD_DRIVER_PAYLOAD } from './libs/constants.js';
 import { addDriverFields as initialAddDriverFields } from './libs/fields.js';
@@ -20,39 +25,45 @@ type Properties = {
 };
 
 const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
+  const dispatch = useAppDispatch();
   const user = useAppSelector(
     selectUser,
   ) as UserEntityObjectWithGroupAndBusinessT;
 
-  const [addDriverFields, setAddDriverFields] = useState(
-    initialAddDriverFields,
+  const trucks = useAppSelector((state) => state.trucks.trucks);
+
+  useEffect(
+    () => void dispatch(getTrucksByBusinessId(user.business.id)),
+    [dispatch, user],
   );
 
-  useEffect(() => {
-    const setTrucksOptions = async (): Promise<void> => {
-      const trucks = await truckApi.getTrucksByBusinessId(
-        user.business.ownerId,
-      );
+  const truckOptions = trucks.map((truck) => ({
+    label: truck.licensePlateNumber,
+    value: truck.id.toString(),
+  }));
 
-      const truckOptions = trucks.map((truck) => ({
-        label: truck.licensePlateNumber,
-        value: truck.id.toString(),
-      }));
+  const addDriverFields = initialAddDriverFields.map((field) =>
+    field.name === FormName.DRIVER_POSSIBLE_TRUCKS
+      ? {
+          ...field,
+          options: truckOptions,
+        }
+      : field,
+  );
 
-      setAddDriverFields((previousFields) =>
-        previousFields.map((field) =>
-          field.name === FormName.DRIVER_POSSIBLE_TRUCKS
-            ? {
-                ...field,
-                options: truckOptions,
-              }
-            : field,
-        ),
-      );
-    };
-
-    void setTrucksOptions();
-  }, [user]);
+  const handleFormSubmit = useCallback(
+    (payload: Omit<DriverCreateUpdateRequestDto, 'businessId'>): void => {
+      void dispatch(
+        truckActions.addTrucksByUserId({
+          trucksId: payload.driverTrucks,
+          userId: user.business.ownerId,
+        }),
+      ).then(() => {
+        onSubmit(payload);
+      });
+    },
+    [dispatch, user, onSubmit],
+  );
 
   return (
     <div className={styles.wrapper}>
@@ -62,7 +73,7 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
       <Form
         defaultValues={DEFAULT_ADD_DRIVER_PAYLOAD}
         validationSchema={driverCreateUpdateRequestBody}
-        onSubmit={onSubmit}
+        onSubmit={handleFormSubmit}
         btnLabel="Add driver"
         fields={addDriverFields}
       />

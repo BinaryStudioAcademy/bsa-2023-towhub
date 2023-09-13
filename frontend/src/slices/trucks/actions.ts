@@ -15,4 +15,34 @@ const addTruck = createAsyncThunk<
   return truckApi.addTruck(payload);
 });
 
-export { addTruck };
+const getTrucksByBusinessId = createAsyncThunk<
+  TruckEntity[],
+  number,
+  AsyncThunkConfig
+>(`${sliceName}/get-trucks-by-business-id`, async (businessId, { extra }) => {
+  const { truckApi } = extra;
+
+  return await truckApi.getTrucksByBusinessId(businessId);
+});
+
+const addTrucksByUserId = createAsyncThunk<
+  {
+    trucksId: number[];
+    userId: number;
+  },
+  {
+    trucksId: number[];
+    userId: number;
+  },
+  AsyncThunkConfig
+>(
+  `${sliceName}/add-trucks-by-user-id`,
+  async ({ trucksId, userId }, { extra }) => {
+    const { truckApi } = extra;
+    await truckApi.addTrucksByUserId(userId, trucksId);
+
+    return { trucksId, userId };
+  },
+);
+
+export { addTruck, addTrucksByUserId, getTrucksByBusinessId };

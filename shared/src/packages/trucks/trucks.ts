@@ -15,4 +15,5 @@ export {
   truckCreateRequestBody,
   truckGetParameters,
   truckUpdateRequestBody,
+  userTrucksRequestBody,
 } from './libs/validation-schemas/validation-schema.js';

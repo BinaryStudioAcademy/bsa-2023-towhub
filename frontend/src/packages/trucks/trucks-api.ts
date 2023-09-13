@@ -47,6 +47,18 @@ class TruckApi extends HttpApi {
 
     return await response.json<TruckEntity>();
   }
+
+  public async addTrucksByUserId(
+    userId: number,
+    trucksId: number[],
+  ): Promise<void> {
+    await this.load(this.getFullEndpoint(TruckApiPath.USERS_TRUCKS, {}), {
+      method: 'POST',
+      contentType: ContentType.JSON,
+      payload: JSON.stringify({ userId, trucksId }),
+      hasAuth: false,
+    });
+  }
 }
 
 export { TruckApi };

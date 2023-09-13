@@ -81,6 +81,20 @@ class TruckService implements IService {
 
     return result.map((element) => TruckEntity.initialize(element).toObject());
   }
+
+  public async addTrucksToUser(
+    userId: number,
+    trucksId: number[],
+  ): Promise<{ userId: number; trucksId: number[] }> {
+    const userTrucks: number[] = [];
+
+    for (const truckId of trucksId) {
+      const [result] = await this.repository.insertUserTruck(userId, truckId);
+      userTrucks.push(result.truckId);
+    }
+
+    return { userId, trucksId: userTrucks };
+  }
 }
 
 export { TruckService };
