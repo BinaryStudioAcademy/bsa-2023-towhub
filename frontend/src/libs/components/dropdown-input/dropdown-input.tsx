@@ -47,11 +47,11 @@ const DropdownInput = <T extends FieldValues>({
   const inputStyles = [styles.input, hasError && styles.error];
 
   const handleChange = useCallback(
-    (option: SingleValue<SelectOption> | SingleValue<SelectOption>[]) => {
-      if (!Array.isArray(option) && onChange && option) {
+    (option: SingleValue<SelectOption>) => {
+      if (onChange && option) {
         onChange(option.value);
       }
-      field.onChange(!Array.isArray(option) && option?.value);
+      field.onChange(option?.value);
     },
     [onChange, field],
   );

@@ -1,37 +1,64 @@
 import {
   type Control,
+  type ControllerRenderProps,
   type FieldErrors,
   type FieldPath,
   type FieldValues,
 } from 'react-hook-form';
-import { type SingleValue } from 'react-select';
+import Select, {
+  type ClassNamesConfig,
+  type GroupBase,
+  type MultiValue,
+  type SingleValue,
+} from 'react-select';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useCallback, useFormController } from '~/libs/hooks/hooks.js';
-import { type SelectOption } from '~/libs/types/types.js';
+import {
+  useCallback,
+  useFormController,
+  useMemo,
+  useState,
+} from '~/libs/hooks/hooks.js';
+import { type SelectOption } from '~/libs/types/select-option.type.js';
 
-import { Dropdown } from '../dropdown/dropdown.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
   options: SelectOption[];
-  name: FieldPath<T>;
-  control: Control<T, null>;
+  name?: FieldPath<T>;
+  control?: Control<T, null>;
   errors: FieldErrors<T>;
-  label: string;
-  defaultValue?: SelectOption;
-  onChange?: (value: string[]) => void;
+  label?: string;
+  onChange?: (option: MultiValue<T>) => void;
   placeholder?: string;
-  insideInput?: boolean;
+  field?: ControllerRenderProps<T, FieldPath<T>>;
+  className?: string;
 };
+
+const getClassNames = (
+  isMenuOpen: boolean,
+): ClassNamesConfig<SelectOption, false, GroupBase<SelectOption>> => ({
+  container: () => styles.container,
+  control: () => getValidClassNames(styles.control, styles.multiControl),
+  multiValueLabel: () => styles.multiValueLabel,
+  option: () => styles.option,
+  menu: () => styles.singleValue,
+  placeholder: () => styles.placeholder,
+  singleValue: () => styles.singleValue,
+  valueContainer: () => styles.valueContainer,
+  dropdownIndicator: () =>
+    isMenuOpen
+      ? getValidClassNames(styles.dropdownIndicator, styles.upside)
+      : styles.dropdownIndicator,
+  indicatorSeparator: () => styles.indicatorSeparator,
+});
 
 const DropdownMultiSelect = <T extends FieldValues>({
   options,
   name,
   control,
-  label,
   errors,
-  defaultValue,
+  label,
   placeholder,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({
@@ -42,6 +69,28 @@ const DropdownMultiSelect = <T extends FieldValues>({
   const error = errors[name]?.message;
   const hasLabel = Boolean(label);
   const hasError = Boolean(error);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleOpenMenu = useCallback(() => {
+    setIsMenuOpen(true);
+  }, []);
+
+  const handleCloseMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
+
+  const classNamesConfig = useMemo(
+    () => getClassNames(isMenuOpen),
+    [isMenuOpen],
+  );
+
+  const findOptionByValue = (
+    value: string[] | undefined,
+  ): MultiValue<SelectOption> | undefined => {
+    return options.filter((opt) => (value ?? []).includes(opt.value));
+  };
+
+  type SelectIsMultiType = T extends { isMulti: true } ? true : false;
 
   const inputStyles = [styles.input, hasError && styles.error];
 
@@ -62,16 +111,20 @@ const DropdownMultiSelect = <T extends FieldValues>({
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
-        <Dropdown<T>
-          name={name}
-          control={control}
-          field={field}
+        <Select<SelectOption>
+          {...(name && control && field)}
           options={options}
+          classNamePrefix="react-select"
           className={getValidClassNames(inputStyles)}
+          classNames={classNamesConfig}
+          isSearchable={false}
+          menuIsOpen={isMenuOpen}
+          onMenuOpen={handleOpenMenu}
+          onMenuClose={handleCloseMenu}
           onChange={handleChange}
-          defaultValue={defaultValue}
+          value={findOptionByValue(field.value)}
           placeholder={placeholder}
-          isMulti
+          isMulti={true as SelectIsMultiType}
         />
       </span>
       <span

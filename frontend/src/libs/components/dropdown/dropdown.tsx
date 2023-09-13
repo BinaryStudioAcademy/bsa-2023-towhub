@@ -8,7 +8,6 @@ import {
 import Select, {
   type ClassNamesConfig,
   type GroupBase,
-  type MultiValue,
   type SingleValue,
 } from 'react-select';
 
@@ -25,25 +24,17 @@ type Properties<T extends FieldValues> = {
   errors?: FieldErrors<T>;
   label?: string;
   defaultValue?: SelectOption;
-  onChange?: (
-    option: SingleValue<SelectOption> | SingleValue<SelectOption>[],
-  ) => void;
+  onChange?: (option: SingleValue<SelectOption>) => void;
   placeholder?: string;
   field?: ControllerRenderProps<T, FieldPath<T>>;
   className?: string;
-  isMulti?: boolean;
 };
 
 const getClassNames = (
   isMenuOpen: boolean,
-  isMulti: boolean,
 ): ClassNamesConfig<SelectOption, false, GroupBase<SelectOption>> => ({
   container: () => styles.container,
-  control: () =>
-    isMulti
-      ? getValidClassNames(styles.control, styles.multiControl)
-      : styles.control,
-  multiValueLabel: () => styles.multiValueLabel,
+  control: () => styles.control,
   option: () => styles.option,
   menu: () => styles.singleValue,
   placeholder: () => styles.placeholder,
@@ -65,7 +56,6 @@ const Dropdown = <T extends FieldValues>({
   onChange,
   className,
   placeholder,
-  isMulti = false,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -78,19 +68,15 @@ const Dropdown = <T extends FieldValues>({
   }, []);
 
   const classNamesConfig = useMemo(
-    () => getClassNames(isMenuOpen, isMulti),
-    [isMenuOpen, isMulti],
+    () => getClassNames(isMenuOpen),
+    [isMenuOpen],
   );
 
   const findOptionByValue = (
-    value: string | string[] | undefined,
-  ): SingleValue<SelectOption> | MultiValue<SelectOption> | undefined => {
-    return isMulti
-      ? options.filter((opt) => (value ?? []).includes(opt.value))
-      : options.find((opt) => opt.value === value);
+    value: string | undefined,
+  ): SingleValue<SelectOption> | undefined => {
+    return options.find((opt) => opt.value === value);
   };
-
-  type SelectIsMultiType = T extends { isMulti: true } ? true : false;
 
   return (
     <Select<SelectOption>
@@ -107,7 +93,6 @@ const Dropdown = <T extends FieldValues>({
       defaultValue={defaultValue}
       value={findOptionByValue(field?.value)}
       placeholder={placeholder}
-      isMulti={isMulti as SelectIsMultiType}
     />
   );
 };
