@@ -7,12 +7,10 @@ import { type TruckService } from '~/packages/trucks/truck.service.js';
 import { ClientSocketEvent } from '../../enums/enums.js';
 
 const socketChooseTruck = async (
-  truck: TruckEntityT,
+  truckId: TruckEntityT['id'],
   truckService: TruckService,
   io: Server | null,
 ): Promise<void> => {
-  const { id: truckId } = truck;
-
   await truckService.update(truckId, {
     status: TruckStatus.ACTIVE,
   });

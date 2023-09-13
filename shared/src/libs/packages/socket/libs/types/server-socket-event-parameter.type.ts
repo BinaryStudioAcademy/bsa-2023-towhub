@@ -7,7 +7,7 @@ type ServerSocketEventParameter = {
     latLng: GeolocationLatLng;
     driverId: number;
   };
-  [ServerSocketEvent.CHOOSE_TRUCK]: {
+  [ServerSocketEvent.START_SHIFT]: {
     truckId: number;
   };
   [ServerSocketEvent.END_SHIFT]: undefined;

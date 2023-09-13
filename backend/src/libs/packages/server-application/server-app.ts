@@ -25,8 +25,9 @@ import {
   type ValidationSchema,
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
+import { type ShiftService } from '~/packages/shifts/shift.service';
 import { type TruckService } from '~/packages/trucks/truck.service.js';
-import { userService } from '~/packages/users/users.js';
+import { type UserService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
 import { jwtService } from '../jwt/jwt.js';
@@ -43,6 +44,8 @@ type Constructor = {
   apis: IServerAppApi[];
   geolocationCacheService: GeolocationCacheService;
   truckService: TruckService;
+  userService: UserService;
+  shiftService: ShiftService;
 };
 
 class ServerApp implements IServerApp {
@@ -60,6 +63,10 @@ class ServerApp implements IServerApp {
 
   private truckService: TruckService;
 
+  private userService: UserService;
+
+  private shiftService: ShiftService;
+
   public constructor({
     config,
     logger,
@@ -67,6 +74,8 @@ class ServerApp implements IServerApp {
     apis,
     geolocationCacheService,
     truckService,
+    userService,
+    shiftService,
   }: Constructor) {
     this.config = config;
     this.logger = logger;
@@ -75,6 +84,8 @@ class ServerApp implements IServerApp {
 
     this.geolocationCacheService = geolocationCacheService;
     this.truckService = truckService;
+    this.userService = userService;
+    this.shiftService = shiftService;
 
     this.app = Fastify();
   }
@@ -235,7 +246,7 @@ class ServerApp implements IServerApp {
     await this.app.register(fastifyAuth);
     await this.app.register(authPlugin, {
       config: this.config,
-      userService,
+      userService: this.userService,
       jwtService,
     });
   }
@@ -243,12 +254,16 @@ class ServerApp implements IServerApp {
   public async init(): Promise<void> {
     this.logger.info('Application initialization…');
 
+    this.database.connect();
+
     await this.initServe();
 
-    socketService.initializeIo({
+    await socketService.initializeIo({
+      shiftService: this.shiftService,
       app: this.app,
       geolocationCacheService: this.geolocationCacheService,
       truckService: this.truckService,
+      userService: this.userService,
     });
 
     await this.initMiddlewares();
@@ -260,8 +275,6 @@ class ServerApp implements IServerApp {
     this.initErrorHandler();
 
     this.initRoutes();
-
-    this.database.connect();
 
     await this.app
       .listen({

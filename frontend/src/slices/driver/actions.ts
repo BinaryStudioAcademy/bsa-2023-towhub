@@ -3,19 +3,20 @@ import { createAction } from '@reduxjs/toolkit';
 import { name as sliceName } from './driver.slice.js';
 import { type ShiftStatusValue } from './libs/types/types.js';
 
-const chooseTruck = createAction(
-  `${sliceName}/choose-truck`,
+const endShift = createAction(`${sliceName}/end-shift`);
+const setStartShiftSuccess = createAction(
+  `${sliceName}/set-start-shift-success`,
+  (truckId: number) => {
+    return { payload: { truckId } };
+  },
+);
+
+const startShift = createAction(
+  `${sliceName}/start-shift`,
   (truckId: number) => {
     return {
       payload: { truckId },
     };
-  },
-);
-const endShift = createAction(`${sliceName}/end-shift`);
-const setTruckChoiceSuccess = createAction(
-  `${sliceName}/choose-truck-success`,
-  (truckId: number) => {
-    return { payload: { truckId } };
   },
 );
 
@@ -26,4 +27,4 @@ const setShiftStatus = createAction(
   },
 );
 
-export { chooseTruck, endShift, setShiftStatus, setTruckChoiceSuccess };
+export { endShift, setShiftStatus, setStartShiftSuccess, startShift };

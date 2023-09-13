@@ -1,15 +1,15 @@
 import {
-  chooseTruck,
   endShift,
   setShiftStatus,
-  setTruckChoiceSuccess,
+  setStartShiftSuccess,
+  startShift,
 } from './actions.js';
 import { actions } from './driver.slice.js';
 
 const allActions = {
   ...actions,
-  chooseTruck,
-  setTruckChoiceSuccess,
+  startShift,
+  setStartShiftSuccess,
   setShiftStatus,
   endShift,
 };

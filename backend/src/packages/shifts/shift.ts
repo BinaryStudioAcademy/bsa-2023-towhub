@@ -29,3 +29,4 @@ export {
   shiftCreateValidationSchema,
 } from './libs/validation-schemas/validaion-schemas.js';
 export { shiftController, shiftService };
+export { ShiftService } from './shift.service.js';

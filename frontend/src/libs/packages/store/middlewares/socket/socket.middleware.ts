@@ -1,4 +1,7 @@
-import { type Action, type Dispatch, type Middleware } from '@reduxjs/toolkit';
+import {
+  type ActionCreatorWithPayload,
+  type Middleware,
+} from '@reduxjs/toolkit';
 
 import { type useAppDispatch } from '~/libs/hooks/use-app-dispatch/use-app-dispatch.hook';
 import { notification } from '~/libs/packages/notification/notification.js';
@@ -10,27 +13,22 @@ import {
 } from '~/libs/packages/socket/socket.js';
 import { type RootState } from '~/libs/types/store.type';
 import { type ValueOf } from '~/libs/types/types.js';
-import { setTruckChoiceSuccess } from '~/slices/driver/actions.js';
 import { actions as driverActions } from '~/slices/driver/driver.js';
-import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 const socket: Middleware<
-  object,
+  ReturnType<ReturnType<typeof useAppDispatch>>,
   RootState,
   ReturnType<typeof useAppDispatch>
 > = ({ dispatch }) => {
-  return (next: Dispatch<Action>) => (action: Action) => {
+  return (next) => (action: ReturnType<ActionCreatorWithPayload<unknown>>) => {
     if (action.type === driverActions.endShift.type) {
       socketClient.emit({ event: ServerSocketEvent.END_SHIFT });
-    } else if (action.type === truckActions.chooseTruck.type) {
-      const { truckId } = (
-        action as unknown as {
-          payload: ServerSocketEventParameter[typeof ServerSocketEvent.CHOOSE_TRUCK];
-        }
-      ).payload;
+    } else if (action.type === driverActions.startShift.type) {
+      const { truckId } =
+        action.payload as ServerSocketEventParameter[typeof ServerSocketEvent.START_SHIFT];
 
       socketClient.emitWithAck({
-        event: ServerSocketEvent.CHOOSE_TRUCK,
+        event: ServerSocketEvent.START_SHIFT,
         eventPayload: {
           truckId,
         },
@@ -39,7 +37,7 @@ const socket: Middleware<
           message?: string,
         ): void => {
           if (status === SocketResponseStatus.OK) {
-            dispatch(setTruckChoiceSuccess(truckId));
+            dispatch(driverActions.setStartShiftSuccess(truckId));
 
             return;
           }

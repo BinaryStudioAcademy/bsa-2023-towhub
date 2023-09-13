@@ -4,7 +4,7 @@ import {
   ClientSocketEvent,
   socket as socketClient,
 } from '~/libs/packages/socket/socket.js';
-import { setTruckChoiceSuccess } from '~/slices/driver/actions.js';
+import { setStartShiftSuccess } from '~/slices/driver/actions.js';
 import { actions as driverActions } from '~/slices/driver/driver.js';
 import { ShiftStatus } from '~/slices/driver/libs/enums/enums.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
@@ -40,7 +40,7 @@ const socketAddDefaultListeners = (
     if (!payload) {
       return;
     }
-    dispatch(setTruckChoiceSuccess(payload.truckId));
+    dispatch(setStartShiftSuccess(payload.truckId));
   });
 };
 
