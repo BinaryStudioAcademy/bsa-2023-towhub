@@ -8,14 +8,14 @@ import { DriverActionMessage } from '~/packages/drivers/libs/enums/enums.js';
 import {
   type DriverAddPayload,
   type DriverCreateUpdateRequestDto,
-  type GetPageOfDriversPayload,
+  type DriverGetDriversPagePayload,
 } from '~/packages/drivers/libs/types/types.js';
 
 import { ACTIONS_TYPES } from './common.js';
 
 const getDriversPage = createAsyncThunk<
   DriverGetAllResponseDto,
-  GetPageOfDriversPayload,
+  DriverGetDriversPagePayload,
   AsyncThunkConfig
 >(ACTIONS_TYPES.GET_DRIVERS_PAGE, async (payload, { extra }) => {
   return await extra.driverApi.getPageOfDrivers(payload);

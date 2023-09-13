@@ -35,7 +35,9 @@ const useAppTable = <T, K>({
   const dispatch = useAppDispatch();
 
   const updatePage = useCallback(() => {
-    void dispatch(tableFetchCall({ ...payload, pageSize, pageIndex }));
+    void dispatch(
+      tableFetchCall({ ...payload, page: pageSize, size: pageIndex }),
+    );
   }, [dispatch, pageIndex, pageSize, payload, tableFetchCall]);
 
   useEffect(() => {

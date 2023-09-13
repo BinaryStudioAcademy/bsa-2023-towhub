@@ -8,7 +8,7 @@ import { DriverApiPath } from './libs/enums/enums.js';
 import {
   type DriverAddPayload,
   type DriverCreateUpdateRequestDto,
-  type GetPageOfDriversPayload,
+  type DriverGetDriversPagePayload,
 } from './libs/types/types.js';
 
 type Constructor = {
@@ -24,12 +24,12 @@ class DriverApi extends HttpApi {
 
   public async getPageOfDrivers({
     businessId,
-    pageIndex,
-    pageSize,
-  }: GetPageOfDriversPayload): Promise<DriverGetAllResponseDto> {
+    page,
+    size,
+  }: DriverGetDriversPagePayload): Promise<DriverGetAllResponseDto> {
     const data = await this.load(
       this.getFullEndpoint(
-        `${DriverApiPath.ROOT}${businessId}/${pageIndex}/${pageSize}${ApiPath.DRIVERS}`,
+        `${DriverApiPath.ROOT}${businessId}/${ApiPath.DRIVERS}?page=${page}&size=${size}`,
         {},
       ),
       {

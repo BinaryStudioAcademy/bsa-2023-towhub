@@ -1,5 +1,5 @@
 export {
   type DriverAddPayload,
   type DriverCreateUpdateRequestDto,
-  type BusinessGetDriversPageRequestParameters as GetPageOfDriversPayload,
+  type DriverGetDriversPagePayload,
 } from 'shared/build/index.js';

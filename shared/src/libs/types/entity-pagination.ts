@@ -3,9 +3,4 @@ type EntityPagination<T> = {
   total: number;
 };
 
-type PaginationPayload = {
-  pageSize: number;
-  pageIndex: number;
-};
-
-export { type EntityPagination, type PaginationPayload };
+export { type EntityPagination };
