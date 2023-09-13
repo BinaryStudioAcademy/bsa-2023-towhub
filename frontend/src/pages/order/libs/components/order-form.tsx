@@ -22,7 +22,7 @@ const OrderForm: React.FC<Properties> = ({
 }: Properties) => {
   return (
     <div className={styles.formWrapper}>
-      <p className={styles.title}>Please fill the form</p>
+      <p className={styles.title}>PLEASE FILL THE FORM</p>
       <Form
         validationSchema={orderForm}
         fields={orderFormFields}
@@ -31,6 +31,7 @@ const OrderForm: React.FC<Properties> = ({
         onLocationChange={onLocationChange}
         onDestinationChange={onDestinationChange}
         isDisabled={isDisabled}
+        btnLabel='ORDER'
       />
     </div>
   );
