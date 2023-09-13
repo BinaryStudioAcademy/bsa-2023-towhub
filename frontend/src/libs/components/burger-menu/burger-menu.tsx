@@ -14,7 +14,7 @@ import { Button, Icon } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  burgerItems: BurgerMenuItem[] | null;
+  burgerItems: BurgerMenuItem[];
 };
 
 const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
@@ -55,10 +55,6 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
   }, []);
 
   const isMobile = window.innerWidth <= Breakpoint.MOBILE;
-
-  if (!burgerItems) {
-    return null;
-  }
 
   return (
     <div

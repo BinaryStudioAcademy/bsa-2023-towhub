@@ -7,7 +7,7 @@ import {
 import { selectUser } from '~/slices/auth/selectors.js';
 
 import { AppLogo, BurgerMenu, Button, Link } from '../components.js';
-import { getBurgerMenuItems } from './helpers/helpers.js';
+import { getBurgerMenuItems } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 const Header: React.FC = () => {
@@ -19,7 +19,7 @@ const Header: React.FC = () => {
     navigate(AppRoute.WELCOME);
   }, [navigate]);
 
-  const burgerItems = user && getBurgerMenuItems(user.group.key);
+  const burgerItems = getBurgerMenuItems(user?.group.key);
 
   return (
     <header className={styles.container}>
