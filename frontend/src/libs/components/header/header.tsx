@@ -19,7 +19,7 @@ const Header: React.FC = () => {
     navigate(AppRoute.WELCOME);
   }, [navigate]);
 
-  const burgerItems = getBurgerMenuItems(user?.group.key);
+  const burgerItems = getBurgerMenuItems(user?.group.key ?? null);
 
   return (
     <header className={styles.container}>
