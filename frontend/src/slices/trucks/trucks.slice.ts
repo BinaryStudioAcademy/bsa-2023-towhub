@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
@@ -28,28 +28,13 @@ const { reducer, actions, name } = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(addTruck.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
       .addCase(addTruck.fulfilled, (state, action) => {
         state.trucks.push(action.payload);
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(addTruck.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
-      })
-      .addCase(getTrucksByBusinessId.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
       .addCase(getTrucksByBusinessId.fulfilled, (state, action) => {
         state.trucks = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
-      })
-      .addCase(getTrucksByBusinessId.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
-      })
-      .addCase(addTrucksByUserId.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
       })
       .addCase(addTrucksByUserId.fulfilled, (state, action) => {
         const { userId, trucksId } = action.payload;
@@ -66,7 +51,27 @@ const { reducer, actions, name } = createSlice({
       })
       .addCase(addTrucksByUserId.rejected, (state) => {
         state.dataStatus = DataStatus.REJECTED;
-      });
+      })
+      .addMatcher(
+        isAnyOf(
+          addTrucksByUserId.pending,
+          getTrucksByBusinessId.pending,
+          addTruck.pending,
+        ),
+        (state) => {
+          state.dataStatus = DataStatus.PENDING;
+        },
+      )
+      .addMatcher(
+        isAnyOf(
+          addTrucksByUserId.rejected,
+          getTrucksByBusinessId.rejected,
+          addTruck.rejected,
+        ),
+        (state) => {
+          state.dataStatus = DataStatus.REJECTED;
+        },
+      );
   },
 });
 
