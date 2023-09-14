@@ -4,6 +4,10 @@ import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 
 import { MapApiPath } from './enums/enums.js';
+import {
+  type CalculatePriceRequest,
+  type CalculatePriceResponse,
+} from './types/types.js';
 
 type Constructor = {
   baseUrl: string;
@@ -16,12 +20,9 @@ class MapApi extends HttpApi {
     super({ path: ApiPath.MAP, baseUrl, http, storage });
   }
 
-  // FIXME: MOVE TO SHARED
-  public async calculatePrice(payload: {
-    startPoint: string;
-    endPoint: string;
-    pricePerKm: number;
-  }): Promise<{ price: number }> {
+  public async calculatePrice(
+    payload: CalculatePriceRequest,
+  ): Promise<CalculatePriceResponse> {
     const response = await this.load(
       this.getFullEndpoint(MapApiPath.ROOT, {}),
       {
@@ -32,7 +33,7 @@ class MapApi extends HttpApi {
       },
     );
 
-    return await response.json<{ price: number }>();
+    return await response.json<CalculatePriceResponse>();
   }
 }
 

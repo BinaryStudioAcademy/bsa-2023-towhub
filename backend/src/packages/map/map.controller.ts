@@ -10,6 +10,7 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { AuthStrategy } from '../auth/auth.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { MapApiPath } from './libs/enums/enums.js';
+import { type CalculatePriceRequest } from './libs/types/types.js';
 import { type MapService } from './map.service.js';
 
 class MapController extends Controller {
@@ -33,8 +34,7 @@ class MapController extends Controller {
       handler: (options) =>
         this.calculatePrice(
           options as ApiHandlerOptions<{
-            // FIXME: MOVE TO SHARED
-            body: { startPoint: string; endPoint: string; pricePerKm: number };
+            body: CalculatePriceRequest;
             user: UserEntityObjectWithGroupT | null;
           }>,
         ),
@@ -43,8 +43,7 @@ class MapController extends Controller {
 
   private async calculatePrice(
     options: ApiHandlerOptions<{
-      // FIXME: MOVE TO SHARED
-      body: { startPoint: string; endPoint: string; pricePerKm: number };
+      body: CalculatePriceRequest;
       user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse> {

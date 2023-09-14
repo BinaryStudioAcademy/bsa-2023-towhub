@@ -44,7 +44,7 @@ const Order: React.FC = () => {
         lat: location.coords.latitude,
       });
     });
-  }, [setLocation, dispatch]);
+  }, [dispatch]);
 
   const handlePriceChange = useCallback(
     (price: number) => {

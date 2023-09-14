@@ -4,6 +4,10 @@ import { mapApi } from '~/packages/map/map.js';
 
 import { rotateImg } from './libs/helpers/rotate-img.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
+import {
+  type CalculatePriceRequest,
+  type CalculatePriceResponse,
+} from './libs/types/types.js';
 import mapStyle from './map.config.json';
 
 type Constructor = {
@@ -88,19 +92,9 @@ class MapService implements IMapService {
     }
   }
 
-  // {
-  //   'startPoint': 'Obolonskyi Ave, Kyiv, Ukraine, 02000',
-  //   'endPoint': 'Volodymyr Ivasyuk Ave, Kyiv, Ukraine, 02000',
-  //   'pricePerKm': 20,
-  // }
-
-  // TODO: Add api call
-  // FIXME: MOVE TO SHARED
-  public async calculatePrice(data: {
-    startPoint: string;
-    endPoint: string;
-    pricePerKm: number;
-  }): Promise<{ price: number }> {
+  public async calculatePrice(
+    data: CalculatePriceRequest,
+  ): Promise<CalculatePriceResponse> {
     return await mapApi.calculatePrice(data);
   }
 
