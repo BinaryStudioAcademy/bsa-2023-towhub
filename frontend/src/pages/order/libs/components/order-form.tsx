@@ -10,8 +10,11 @@ type Properties = {
   isDisabled?: boolean;
   price: number;
   onSubmit: (payload: OrderCreateRequestDto) => void;
-  onLocationChange: (place: google.maps.LatLngLiteral) => void;
-  onDestinationChange: (place: google.maps.LatLngLiteral) => void;
+  onLocationChange: (place: google.maps.LatLngLiteral, address: string) => void;
+  onDestinationChange: (
+    place: google.maps.LatLngLiteral,
+    address: string,
+  ) => void;
 };
 
 const OrderForm: React.FC<Properties> = ({

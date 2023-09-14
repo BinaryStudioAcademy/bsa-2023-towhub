@@ -1,5 +1,6 @@
 import truckImg from '~/assets/img/tow-truck.png';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
+import { mapApi } from '~/packages/map/map.js';
 
 import { rotateImg } from './libs/helpers/rotate-img.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
@@ -87,10 +88,21 @@ class MapService implements IMapService {
     }
   }
 
-  // TODO: Add api call
-  // public async calculatePrice(): Promise<number> {
-  //
+  // {
+  //   'startPoint': 'Obolonskyi Ave, Kyiv, Ukraine, 02000',
+  //   'endPoint': 'Volodymyr Ivasyuk Ave, Kyiv, Ukraine, 02000',
+  //   'pricePerKm': 20,
   // }
+
+  // TODO: Add api call
+  // FIXME: MOVE TO SHARED
+  public async calculatePrice(data: {
+    startPoint: string;
+    endPoint: string;
+    pricePerKm: number;
+  }): Promise<{ price: number }> {
+    return await mapApi.calculatePrice(data);
+  }
 
   public async calculateDistance(
     origin: google.maps.LatLngLiteral,

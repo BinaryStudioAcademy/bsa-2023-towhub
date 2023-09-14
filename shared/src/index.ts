@@ -82,6 +82,7 @@ export {
   driverUpdateDeleteParameters,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
+export { MapApiPath } from './packages/map/map.js';
 export {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,

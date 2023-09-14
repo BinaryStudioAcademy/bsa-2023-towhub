@@ -10,6 +10,10 @@ type Properties = {
   origin?: google.maps.LatLngLiteral;
   destination?: google.maps.LatLngLiteral;
   className?: string;
+  pricePerKm?: number;
+  startAddress?: string;
+  endAddress?: string;
+  onPriceChange?: (price: number) => void;
 };
 
 const Map: React.FC<Properties> = ({
@@ -17,6 +21,10 @@ const Map: React.FC<Properties> = ({
   zoom,
   className,
   destination,
+  pricePerKm,
+  startAddress,
+  endAddress,
+  onPriceChange,
 }: Properties) => {
   const mapReference = useRef<HTMLDivElement>(null);
   const mapService = useRef<MapService | null>(null);
@@ -35,11 +43,28 @@ const Map: React.FC<Properties> = ({
 
         void mapService.current.calculateRouteAndTime(center, destination);
 
-        //TODO: Add price calculation here
-        // void mapService.current.calculatePrice(pricePerKm, center, destination)
+        if (onPriceChange && pricePerKm && startAddress && endAddress) {
+          void mapService.current
+            .calculatePrice({
+              startPoint: startAddress,
+              endPoint: endAddress,
+              pricePerKm,
+            })
+            .then((result) => {
+              onPriceChange(result.price);
+            });
+        }
       }
     }
-  }, [center, zoom, destination]);
+  }, [
+    center,
+    zoom,
+    destination,
+    onPriceChange,
+    pricePerKm,
+    startAddress,
+    endAddress,
+  ]);
 
   return <div ref={mapReference} id="map" className={mapClasses} />;
 };

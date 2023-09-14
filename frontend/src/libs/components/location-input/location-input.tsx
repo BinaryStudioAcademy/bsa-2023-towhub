@@ -22,7 +22,7 @@ type Properties<T extends FieldValues> = {
   name: FieldPath<T>;
   placeholder?: string;
   isDisabled?: boolean;
-  onChange?: (place: google.maps.LatLngLiteral) => void;
+  onChange?: (place: google.maps.LatLngLiteral, address: string) => void;
 };
 
 const LocationInput = <T extends FieldValues>({
@@ -62,10 +62,13 @@ const LocationInput = <T extends FieldValues>({
     field.onChange(place?.formatted_address);
 
     if (onChange && place?.geometry?.location) {
-      onChange({
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-      });
+      onChange(
+        {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        },
+        place.formatted_address as string,
+      );
     }
   }, [location, onChange, field]);
 

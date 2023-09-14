@@ -22,9 +22,11 @@ import styles from './styles.module.scss';
 const libraries: Libraries = ['places'];
 
 const Order: React.FC = () => {
+  const [startAddress, setStartAddress] = useState<string>();
+  const [endAddress, setEndAddress] = useState<string>();
   const [location, setLocation] = useState<google.maps.LatLngLiteral>();
   const [destination, setDestination] = useState<google.maps.LatLngLiteral>();
-  const [price /*, setPrice*/] = useState<number>(0);
+  const [price, setPrice] = useState<number>(0);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -44,15 +46,12 @@ const Order: React.FC = () => {
     });
   }, [setLocation, dispatch]);
 
-  //FIXME
-  // const handlePriceChange = useCallback(
-  //   (distance: number) => {
-  //     if (chosenTruck) {
-  //       setPrice((distance / 1000) * chosenTruck.pricePerKm);
-  //     }
-  //   },
-  //   [chosenTruck],
-  // );
+  const handlePriceChange = useCallback(
+    (price: number) => {
+      setPrice(price);
+    },
+    [setPrice],
+  );
 
   const handleSubmit = useCallback(
     (payload: OrderCreateRequestDto) => {
@@ -69,15 +68,17 @@ const Order: React.FC = () => {
   );
 
   const handleLocatonChange = useCallback(
-    (location: { lat: number; lng: number }) => {
+    (location: { lat: number; lng: number }, address: string) => {
       setLocation(location);
+      setStartAddress(address);
     },
     [setLocation],
   );
 
   const handleDestinationChange = useCallback(
-    (destination: { lat: number; lng: number }) => {
+    (destination: { lat: number; lng: number }, address: string) => {
       setDestination(destination);
+      setEndAddress(address);
     },
     [setDestination],
   );
@@ -89,15 +90,13 @@ const Order: React.FC = () => {
         libraries={libraries}
       >
         <div className={styles.left}>
-          {chosenTruck ? (
+          {chosenTruck && (
             <TowTruckCard
               truck={chosenTruck}
               rating={{ reviewCount: 5, averageRating: 4.3 }}
               distance={250}
               hasFooter={false}
             />
-          ) : (
-            <p>No truck is chosen!</p>
           )}
           <OrderForm
             onSubmit={handleSubmit}
@@ -108,7 +107,15 @@ const Order: React.FC = () => {
           />
         </div>
         <div className={styles.right}>
-          <Map center={location} zoom={16} destination={destination} />
+          <Map
+            center={location}
+            zoom={16}
+            destination={destination}
+            onPriceChange={handlePriceChange}
+            pricePerKm={chosenTruck?.pricePerKm}
+            startAddress={startAddress}
+            endAddress={endAddress}
+          />
         </div>
       </LoadScript>
     </section>

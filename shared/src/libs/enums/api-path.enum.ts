@@ -6,6 +6,7 @@ const ApiPath = {
   DRIVERS: '/drivers',
   SHIFTS: '/shifts',
   ORDERS: '/orders',
+  MAP: '/map',
 } as const;
 
 export { ApiPath };

@@ -23,8 +23,14 @@ type Properties<T extends FieldValues> = {
   isDisabled?: boolean;
   price?: number;
   onSubmit: (payload: T) => void;
-  onLocationChange?: (place: google.maps.LatLngLiteral) => void;
-  onDestinationChange?: (place: google.maps.LatLngLiteral) => void;
+  onLocationChange?: (
+    place: google.maps.LatLngLiteral,
+    address: string,
+  ) => void;
+  onDestinationChange?: (
+    place: google.maps.LatLngLiteral,
+    address: string,
+  ) => void;
 };
 
 const Form = <T extends FieldValues = FieldValues>({
