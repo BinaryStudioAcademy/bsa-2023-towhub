@@ -2,6 +2,7 @@ export { useAppDispatch } from './use-app-dispatch/use-app-dispatch.hook.js';
 export { useAppForm } from './use-app-form/use-app-form.hook.js';
 export { useAppSelector } from './use-app-selector/use-app-selector.hook.js';
 export { useAppTable } from './use-app-table/use-app-table.js';
+export { useFormServerError } from './use-form-server-error/use-form-server-error.hook.js';
 export {
   createColumnHelper,
   flexRender,

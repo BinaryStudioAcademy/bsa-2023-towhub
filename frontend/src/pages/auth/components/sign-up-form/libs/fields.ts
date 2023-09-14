@@ -1,4 +1,4 @@
-import { FormLabel, FormName } from '~/libs/enums/enums.js';
+import { FormLabel, FormName, HttpMessage } from '~/libs/enums/enums.js';
 import {
   type BusinessSignUpRequestDto,
   type CustomerSignUpRequestDto,
@@ -21,11 +21,13 @@ const signUpCustomerFields: FormField<CustomerSignUpRequestDto>[] = [
     label: FormLabel.EMAIL,
     placeholder: 'Enter your email',
     name: FormName.EMAIL,
+    associateServerErrors: [HttpMessage.USER_EMAIL_EXISTS],
   },
   {
     label: FormLabel.PHONE,
     placeholder: 'Enter your phone',
     name: FormName.PHONE,
+    associateServerErrors: [HttpMessage.USER_PHONE_EXISTS],
   },
   {
     type: 'password',
@@ -51,11 +53,13 @@ const signUpBusinessFields: FormField<BusinessSignUpRequestDto>[] = [
     label: FormLabel.EMAIL,
     placeholder: 'Enter your email',
     name: FormName.EMAIL,
+    associateServerErrors: [HttpMessage.USER_EMAIL_EXISTS],
   },
   {
     label: FormLabel.PHONE,
     placeholder: 'Enter your phone',
     name: FormName.PHONE,
+    associateServerErrors: [HttpMessage.USER_PHONE_EXISTS],
   },
   {
     label: FormLabel.COMPANY_NAME,

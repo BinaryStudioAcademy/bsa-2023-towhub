@@ -5,14 +5,15 @@ import {
 } from 'react-hook-form';
 
 import { ServerErrorType } from '~/libs/enums/enums.js';
-import { type ServerSerializedError } from '~/libs/packages/store/store.js';
 import {
   type FormField,
   type ServerCommonErrorResponse,
+  type ServerSerializedError,
   type ServerValidationErrorResponse,
 } from '~/libs/types/types.js';
 
-import { FIELD_PATH_DELIMITER, SERVER_ERROR_SYMBOL } from '../consts/consts.js';
+import { FIELD_PATH_DELIMITER } from '../consts/consts.js';
+import { ServerErrorSymbol } from '../enums/enums.js';
 
 const handleServerError = <T extends FieldValues>(
   error: ServerSerializedError,
@@ -40,20 +41,19 @@ const assignCommonErrors = <T extends FieldValues>(
   setError: UseFormSetError<T>,
 ): void => {
   const assignFieldError = (field: FormField<T>): void => {
-    if (!field.associateServerErrors) {
-      return;
-    }
-    for (const errorDescriptor of field.associateServerErrors) {
-      if (
-        typeof errorDescriptor === 'object' &&
-        errorDescriptor.errorMessage === commonError.message
-      ) {
-        setError(field.name, errorDescriptor.error, errorDescriptor.options);
-      } else if (errorDescriptor === commonError.message) {
-        setError(field.name, {
-          type: SERVER_ERROR_SYMBOL,
-          message: errorDescriptor,
-        });
+    if (field.associateServerErrors) {
+      for (const errorDescriptor of field.associateServerErrors) {
+        if (
+          typeof errorDescriptor === 'object' &&
+          errorDescriptor.errorMessage === commonError.message
+        ) {
+          setError(field.name, errorDescriptor.error, errorDescriptor.options);
+        } else if (errorDescriptor === commonError.message) {
+          setError(field.name, {
+            type: ServerErrorSymbol.COMMON,
+            message: errorDescriptor,
+          });
+        }
       }
     }
   };
@@ -78,7 +78,7 @@ const assignValidationErrors = <T extends FieldValues>(
 
     if (fieldsHasName) {
       setError(fieldName as FieldPath<T>, {
-        type: SERVER_ERROR_SYMBOL,
+        type: ServerErrorSymbol.VALIDATION,
         message,
       });
     }

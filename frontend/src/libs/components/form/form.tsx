@@ -1,9 +1,9 @@
 import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
-import { type ServerSerializedError } from '~/libs/packages/store/store.js';
 import {
   type DeepPartial,
   type FieldValues,
   type FormField,
+  type ServerSerializedError,
   type ValidationSchema,
 } from '~/libs/types/types.js';
 
@@ -45,7 +45,13 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
-      <Input {...field} control={control} errors={errors} key={index} />
+      <Input
+        {...field}
+        control={control}
+        errors={errors}
+        key={index}
+        setError={setError}
+      />
     ));
   };
 

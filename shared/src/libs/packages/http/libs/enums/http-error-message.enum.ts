@@ -11,8 +11,8 @@ const HttpMessage = {
     'Driver with such license number already exists!',
   UNAUTHORIZED: 'You are not authorized',
   INVALID_JWT: 'Invalid JWT payload',
-  WRONG_EMAIL: 'This email is not registered',
-  WRONG_PASSWORD: 'The password is wrong',
+  WRONG_EMAIL: 'User with such email is not registered',
+  WRONG_PASSWORD: 'Entered invalid password!',
   INVALID_GROUP: 'Provided group is unavailable',
   CANNOT_DELETE: 'Cannot delete this user',
 } as const;

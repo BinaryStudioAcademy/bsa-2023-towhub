@@ -1,9 +1,5 @@
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
-import {
-  HttpError,
-  PostgresError,
-  UniqueViolationError,
-} from '~/libs/exceptions/exceptions.js';
+import { HttpError } from '~/libs/exceptions/exceptions.js';
 import {
   type IEncryptService,
   type IJwtService,
@@ -64,6 +60,32 @@ class AuthService {
     this.config = config;
   }
 
+  public async checkUserConstraints(
+    payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto,
+  ): Promise<void> {
+    if (payload.email) {
+      const userWithEmail = await this.userService.findByEmail(payload.email);
+
+      if (userWithEmail) {
+        throw new HttpError({
+          message: HttpMessage.USER_EMAIL_EXISTS,
+          status: HttpCode.CONFLICT,
+        });
+      }
+    }
+
+    if ('phone' in payload) {
+      const userWithPhone = await this.userService.findByPhone(payload.phone);
+
+      if (userWithPhone) {
+        throw new HttpError({
+          message: HttpMessage.USER_PHONE_EXISTS,
+          status: HttpCode.CONFLICT,
+        });
+      }
+    }
+  }
+
   public async signUpCustomer(
     payload: CustomerSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupT> {
@@ -76,22 +98,17 @@ class AuthService {
       });
     }
 
-    try {
-      const newUser = await this.userService.create({
-        ...payload,
-        groupId: group.id,
-      });
-      const userWithToken = await this.generateAccessTokenAndUpdateUser(
-        newUser.id,
-      );
+    await this.checkUserConstraints(payload);
 
-      return { ...userWithToken, group };
-    } catch (error) {
-      if (error instanceof PostgresError) {
-        throw new UniqueViolationError(error);
-      }
-      throw error;
-    }
+    const newUser = await this.userService.create({
+      ...payload,
+      groupId: group.id,
+    });
+    const userWithToken = await this.generateAccessTokenAndUpdateUser(
+      newUser.id,
+    );
+
+    return { ...userWithToken, group };
   }
 
   public async signUpBusiness(
@@ -116,6 +133,8 @@ class AuthService {
       });
     }
 
+    await this.checkUserConstraints(payload);
+
     const newUser = await this.userService.create({
       phone,
       email,
@@ -129,22 +148,15 @@ class AuthService {
       newUser.id,
     );
 
-    try {
-      const business = await this.businessService.create({
-        payload: {
-          companyName,
-          taxNumber,
-        },
-        owner: { ...newUser, group },
-      });
+    const business = await this.businessService.create({
+      payload: {
+        companyName,
+        taxNumber,
+      },
+      owner: { ...newUser, group },
+    });
 
-      return { ...userWithToken, group, business };
-    } catch (error: unknown) {
-      if (error instanceof PostgresError) {
-        throw new UniqueViolationError(error);
-      }
-      throw error;
-    }
+    return { ...userWithToken, group, business };
   }
 
   public async signIn(

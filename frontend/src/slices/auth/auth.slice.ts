@@ -41,6 +41,7 @@ const { reducer, actions, name } = createSlice({
       state.dataStatus = DataStatus.REJECTED;
     });
     builder.addCase(signIn.pending, (state) => {
+      state.user = null;
       state.dataStatus = DataStatus.PENDING;
     });
     builder.addCase(signIn.fulfilled, (state, action) => {

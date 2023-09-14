@@ -8,9 +8,8 @@ import {
 } from 'react-hook-form';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useFormController } from '~/libs/hooks/hooks.js';
+import { useFormController, useFormServerError } from '~/libs/hooks/hooks.js';
 
-import { SERVER_ERROR_SYMBOL } from '../form/libs/consts/consts.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
@@ -37,6 +36,7 @@ const Input = <T extends FieldValues>({
   const { field } = useFormController({ name, control });
 
   const error = errors[name]?.message;
+  const serverError = useFormServerError(errors[name]);
   const hasError = Boolean(error);
   const hasValue = Boolean(field.value);
   const hasLabel = Boolean(label);
@@ -48,13 +48,10 @@ const Input = <T extends FieldValues>({
   ];
 
   const clearServerError = useCallback(() => {
-    if (setError) {
-      setError(name, {
-        type: SERVER_ERROR_SYMBOL,
-        message: undefined,
-      });
+    if (setError && (serverError.common || serverError.validation)) {
+      setError(name, {});
     }
-  }, [name, setError]);
+  }, [name, serverError, setError]);
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -67,7 +64,12 @@ const Input = <T extends FieldValues>({
   return (
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
-      <span className={styles.inputWrapper}>
+      <span
+        className={styles.inputWrapper}
+        aria-label={serverError.common ?? undefined}
+        data-balloon-pos="up-right"
+        data-balloon-visible
+      >
         <input
           {...field}
           type={type}
@@ -84,7 +86,7 @@ const Input = <T extends FieldValues>({
       <span
         className={getValidClassNames(
           styles.errorMessage,
-          hasError && styles.visible,
+          hasError && !serverError.common && styles.visible,
         )}
       >
         {error as string}

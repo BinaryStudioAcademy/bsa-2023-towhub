@@ -1,12 +1,8 @@
-import { createAsyncThunk, miniSerializeError } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
-import {
-  getErrorMessage,
-  testServerErrorType,
-} from '~/libs/helpers/helpers.js';
+import { errorSerializerWithServerErrorHandling } from '~/libs/helpers/helpers.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
-import { type ServerSerializedError } from '~/libs/packages/store/store.js';
 import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
 import {
   type BusinessSignUpRequestDto,
@@ -27,20 +23,19 @@ const signUp = createAsyncThunk<
     mode: ValueOf<typeof AuthMode>;
   },
   ThunkConfigWithServerSerializedError
->(`${sliceName}/sign-up`, async ({ payload, mode }, { extra }) => {
-  const { authApi, notification, localStorage } = extra;
+>(
+  `${sliceName}/sign-up`,
+  async ({ payload, mode }, { extra }) => {
+    const { authApi, localStorage } = extra;
 
-  try {
     const result = await authApi.signUp(payload, mode);
 
     await localStorage.set(StorageKey.TOKEN, result.accessToken);
 
     return result;
-  } catch (error) {
-    notification.warning(getErrorMessage(error));
-    throw error;
-  }
-});
+  },
+  { serializeError: errorSerializerWithServerErrorHandling },
+);
 
 const signIn = createAsyncThunk<
   UserSignInResponseDto,
@@ -57,15 +52,7 @@ const signIn = createAsyncThunk<
 
     return result;
   },
-  {
-    serializeError: (error: unknown): ServerSerializedError => {
-      const serializedError = miniSerializeError(error);
-
-      const serverError = testServerErrorType(error) ?? {};
-
-      return { ...serializedError, ...serverError };
-    },
-  },
+  { serializeError: errorSerializerWithServerErrorHandling },
 );
 
 export { signIn, signUp };
