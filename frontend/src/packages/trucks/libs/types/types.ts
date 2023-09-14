@@ -1,5 +1,4 @@
 export {
-  type TruckAddFormPayload,
   type TruckAddRequestDto,
   type TruckEntity,
   type TruckGetAllResponseDto,

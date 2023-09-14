@@ -19,10 +19,9 @@ import {
   driverGetParameters,
   driverUpdateDeleteParameters,
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
-import {
-  type BusinessGetAllTrucksRequestParameters,
-  businessGetAllTrucksParameters,
-} from '../trucks/trucks.js';
+import { type TruckAddRequestDto } from '../trucks/libs/types/types.js';
+import { truckCreateRequestBody } from '../trucks/trucks.js';
+import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 import {
@@ -385,14 +384,28 @@ class BusinessController extends Controller {
       path: BusinessApiPath.TRUCKS,
       method: 'GET',
       authStrategy: defaultStrategies,
-      validation: {
-        params: businessGetAllTrucksParameters,
-      },
+
       handler: (options) =>
         this.findAllTrucks(
           options as ApiHandlerOptions<{
-            params: BusinessGetAllTrucksRequestParameters;
             query: PaginationPayload;
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.TRUCKS,
+      method: 'POST',
+      authStrategy: defaultStrategies,
+      validation: {
+        body: truckCreateRequestBody,
+      },
+      handler: (request) =>
+        this.createTruck(
+          request as ApiHandlerOptions<{
+            body: TruckAddRequestDto;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -861,14 +874,6 @@ class BusinessController extends Controller {
    *       - business/trucks
    *      summary: Find all trucks
    *      description: Find all trucks
-   *      parameters:
-   *       - in: path
-   *         name: businessId
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to find all trucks
-   *         example: 1
    *      security:
    *        - bearerAuth: []
    *      responses:
@@ -879,23 +884,66 @@ class BusinessController extends Controller {
    *              schema:
    *                type: array
    *                items:
-   *                  $ref: '#/components/schemas/Truck'
+   *                  $ref: '#/components/schemas/TruckResponse'
    */
 
   private async findAllTrucks(
     options: ApiHandlerOptions<{
-      params: BusinessGetAllTrucksRequestParameters;
       query: PaginationPayload;
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
     const trucks = await this.businessService.findAllTrucksByBusinessId(
-      options.params.businessId,
+      options.user.id,
       options.query,
     );
 
     return {
       status: HttpCode.OK,
       payload: trucks,
+    };
+  }
+
+  /**
+   * @swagger
+   * /trucks:
+   *   post:
+   *     summary: Create a new truck
+   *     tags:
+   *       - business/trucks
+   *     requestBody:
+   *       description: Truck data to be added
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Truck'
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       '201':
+   *         description: Truck created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/TruckResponse'
+   *       '400':
+   *         description: Bad request
+   *
+   */
+
+  private async createTruck(
+    options: ApiHandlerOptions<{
+      body: TruckAddRequestDto;
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.CREATED,
+      payload: await this.businessService.createTruck(
+        options.body,
+        options.user.id,
+      ),
     };
   }
 }

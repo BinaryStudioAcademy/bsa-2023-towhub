@@ -12,12 +12,10 @@ const truckController = new TruckController(logger, truckService);
 
 export { truckController, truckService };
 export {
-  type BusinessGetAllTrucksRequestParameters,
   type TruckDatabaseModel,
   type TruckEntity,
 } from './libs/types/types.js';
 export {
-  businessGetAllTrucksParameters,
   truckCreateRequestBody,
   truckGetParameters,
   truckUpdateRequestBody,

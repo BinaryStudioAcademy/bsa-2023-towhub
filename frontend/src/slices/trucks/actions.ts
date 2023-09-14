@@ -18,10 +18,10 @@ const addTruck = createAsyncThunk<
   TruckAddRequestDto,
   AsyncThunkConfig
 >(`${sliceName}/add-truck`, (payload, { extra }) => {
-  const { truckApi, notification } = extra;
+  const { businessApi, notification } = extra;
 
   try {
-    const truck = truckApi.addTruck(payload);
+    const truck = businessApi.addTruck(payload);
     notification.success(TruckSuccessfulMessage.ADD_NEW_TRUCK);
 
     return truck;
@@ -33,14 +33,14 @@ const addTruck = createAsyncThunk<
 
 const findAllTrucksForBusiness = createAsyncThunk<
   { items: TruckEntity[]; total: number },
-  Pick<TruckEntity, 'businessId'> & PaginationPayload,
+  PaginationPayload,
   AsyncThunkConfig
 >(`${sliceName}/find-all-trucks-for-business`, (payload, { extra }) => {
-  const { businessId, pageIndex, pageSize } = payload;
+  const { pageIndex, pageSize } = payload;
   const { businessApi, notification } = extra;
 
   try {
-    return businessApi.findAllTrucksByBusinessId(businessId, {
+    return businessApi.findAllTrucksByBusinessId({
       pageIndex,
       pageSize,
     });

@@ -1,5 +1,4 @@
 export {
-  businessGetAllTrucksParameters,
   truckCreateRequestBody,
   truckGetParameters,
   truckUpdateRequestBody,

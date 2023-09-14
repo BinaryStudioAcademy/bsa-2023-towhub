@@ -13,7 +13,11 @@ import {
   type DriverUpdatePayload,
 } from '../drivers/drivers.js';
 import { type ShiftEntity } from '../shifts/shift.js';
-import { type TruckGetAllResponseDto } from '../trucks/libs/types/types.js';
+import {
+  type TruckAddRequestDto,
+  type TruckEntity,
+  type TruckGetAllResponseDto,
+} from '../trucks/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserEntityT } from '../users/users.js';
 import { BusinessEntity } from './business.entity.js';
@@ -173,11 +177,39 @@ class BusinessService implements IService {
     return this.driverService.delete(driverId);
   }
 
-  public findAllTrucksByBusinessId(
-    id: number,
+  public async findAllTrucksByBusinessId(
+    businessId: number,
     query: PaginationPayload,
   ): Promise<TruckGetAllResponseDto> {
-    return this.truckService.findAllByBusinessId(id, query);
+    const business = await this.findByOwnerId(businessId);
+
+    if (!business) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.truckService.findAllByBusinessId(business.id, query);
+  }
+
+  public async createTruck(
+    payload: TruckAddRequestDto,
+    businessId: number,
+  ): Promise<TruckEntity> {
+    const business = await this.findByOwnerId(businessId);
+
+    if (!business) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.truckService.create({
+      ...payload,
+      businessId: business.id,
+    });
   }
 
   public checkisDriverBelongedToBusiness({

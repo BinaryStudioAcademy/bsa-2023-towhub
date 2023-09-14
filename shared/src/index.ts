@@ -108,16 +108,12 @@ export {
   ShiftValidationMessage,
 } from './packages/shifts/shifts.js';
 export {
-  type BusinessGetAllTrucksRequestParameters,
-  type TruckAddFormPayload,
   type TruckAddRequestDto,
   type TruckEntity,
   type TruckGetAllResponseDto,
-  businessGetAllTrucksParameters,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
-  truckCreateForm,
   truckCreateRequestBody,
   truckGetParameters,
   TruckLicensePlateNumber,

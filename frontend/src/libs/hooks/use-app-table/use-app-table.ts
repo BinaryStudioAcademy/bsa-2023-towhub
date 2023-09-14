@@ -10,8 +10,12 @@ import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
 
 type Properties<T, K> = {
-  tableFetchCall: AsyncThunk<T, K & PaginationPayload, AsyncThunkConfig>;
-  payload: K;
+  tableFetchCall: AsyncThunk<
+    T,
+    (K & PaginationPayload) | PaginationPayload,
+    AsyncThunkConfig
+  >;
+  payload?: K;
   initialPageSize?: number;
   initialPageIndex?: number;
 };

@@ -3,7 +3,7 @@ const BusinessApiPath = {
   $ID: '/:id',
   DRIVERS: '/:businessId/drivers',
   DRIVER_$ID: '/:businessId/driver/:driverId',
-  TRUCKS: '/:businessId/trucks',
+  TRUCKS: '/trucks',
 } as const;
 
 export { BusinessApiPath };
