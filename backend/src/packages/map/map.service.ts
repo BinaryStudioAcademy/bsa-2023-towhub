@@ -23,10 +23,10 @@ class MapService {
         mode: TravelMode.driving,
       },
     });
-    const data = response.data;
-    const resultArray = data.rows[0].elements;
+    const [resultArray] = response.data.rows;
+    const [resultElement] = resultArray.elements;
 
-    return resultArray[0].distance;
+    return resultElement.distance;
   }
 
   public async getPriceByDistance({
