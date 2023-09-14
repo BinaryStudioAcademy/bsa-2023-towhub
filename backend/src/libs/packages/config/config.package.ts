@@ -133,6 +133,14 @@ class Config implements IConfig {
           default: null,
         },
       },
+      API: {
+        GOOGLE_MAPS_API_KEY: {
+          doc: 'Key for Google maps API',
+          format: String,
+          env: 'GOOGLE_MAPS_API_KEY',
+          default: null,
+        },
+      },
     });
   }
 }
