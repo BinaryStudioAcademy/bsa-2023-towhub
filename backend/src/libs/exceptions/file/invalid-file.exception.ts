@@ -9,7 +9,7 @@ type Constructor = {
 class InvalidFileError extends HttpError {
   public constructor({ message, cause }: Constructor) {
     super({
-      message: message,
+      message,
       status: HttpCode.BAD_REQUEST,
       cause,
     });
