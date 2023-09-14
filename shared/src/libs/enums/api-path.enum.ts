@@ -5,6 +5,7 @@ const ApiPath = {
   TRUCKS: '/trucks',
   DRIVERS: '/drivers',
   FILES: '/files',
+  SHIFTS: '/shifts',
   ORDERS: '/orders',
 } as const;
 
