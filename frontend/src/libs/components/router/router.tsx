@@ -25,7 +25,7 @@ const Router = (): JSX.Element => {
     <RouterProvider>
       <Route path={AppRoute.ROOT} element={<PageLayout isSidebarHidden />}>
         <Route index element={<HomePage />} />
-      <Route path={AppRoute.WELCOME} element={<WelcomePage />} />
+        <Route path={AppRoute.WELCOME} element={<WelcomePage />} />
         <Route path={AppRoute.SIGN_IN} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP} element={<Auth />} />
       </Route>
