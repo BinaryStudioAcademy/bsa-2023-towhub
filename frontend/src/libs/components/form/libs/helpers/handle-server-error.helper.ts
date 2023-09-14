@@ -19,6 +19,10 @@ const handleServerError = <T extends FieldValues>(
   setError: UseFormSetError<T>,
   fields: FormField<T>[],
 ): void => {
+  if (!('errorType' in error)) {
+    return;
+  }
+
   switch (error.errorType) {
     case ServerErrorType.COMMON: {
       assignCommonErrors(fields, error, setError);
