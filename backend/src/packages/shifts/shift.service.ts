@@ -4,6 +4,7 @@ import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import { UserGroupKey } from '../groups/groups.js';
+import { type TruckEntity } from '../trucks/libs/types/types.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { ShiftEntity } from './shift.entity.js';
 import {
@@ -35,6 +36,10 @@ class ShiftService implements IService {
     const shifts = await this.shiftRepository.getAllOpened();
 
     return shifts.map((it) => ShiftEntity.initialize(it).toObject());
+  }
+
+  public getAllStartedWithTrucks(): Promise<TruckEntity[]> {
+    return this.shiftRepository.getAllOpenedWithTrucks();
   }
 
   public async findById(id: number): Promise<ShiftResponseDto | null> {
