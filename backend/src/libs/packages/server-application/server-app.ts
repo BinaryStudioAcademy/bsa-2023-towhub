@@ -25,6 +25,7 @@ import {
   type ValidationSchema,
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
+import { type ShiftService } from '~/packages/shifts/shift.service.js';
 import { userService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
@@ -40,6 +41,7 @@ type Constructor = {
   logger: ILogger;
   database: IDatabase;
   apis: IServerAppApi[];
+  shiftService: ShiftService;
 };
 
 class ServerApp implements IServerApp {
@@ -53,11 +55,20 @@ class ServerApp implements IServerApp {
 
   private app: ReturnType<typeof Fastify>;
 
-  public constructor({ config, logger, database, apis }: Constructor) {
+  private shiftService: ShiftService;
+
+  public constructor({
+    config,
+    logger,
+    database,
+    apis,
+    shiftService,
+  }: Constructor) {
     this.config = config;
     this.logger = logger;
     this.database = database;
     this.apis = apis;
+    this.shiftService = shiftService;
 
     this.app = Fastify();
   }
@@ -229,8 +240,10 @@ class ServerApp implements IServerApp {
     await this.initServe();
 
     socketService.initializeIo({
+      config: this.config,
       app: this.app,
       geolocationCacheService: GeolocationCacheService.getInstance(),
+      shiftService: this.shiftService,
     });
 
     await this.initMiddlewares();
