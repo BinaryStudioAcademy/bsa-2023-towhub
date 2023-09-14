@@ -1,0 +1,47 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  .control {
+    height: 20px;
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+
+  .option {
+    margin: -4px 0;
+    padding: 10px;
+  }
+
+  .valueContainer {
+    padding: 0;
+    padding-left: 5px;
+    font-weight: $font-weight-regular;
+    font-size: 12px;
+    font-family: $font-family;
+  }
+
+  .dropdownIndicator {
+    margin: 0;
+    padding: 0;
+    transition: all 0.2s ease;
+  }
+
+  .upside {
+    transform: scaleY(-1);
+  }
+
+  .indicatorSeparator {
+    display: none;
+  }
+
+  .menu {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .placeholder {
+    color: $grey;
+  }
+}

@@ -16,6 +16,15 @@ type EnvironmentSchema = {
     POOL_MIN: number;
     POOL_MAX: number;
   };
+  MAILER: {
+    SENDGRID_API_KEY: string;
+    SENDGRID_USER: string;
+    SMTP_TLS: boolean;
+    SENDGRID_SENDER_EMAIL: string;
+  };
+  API: {
+    GOOGLE_MAPS_API_KEY: string;
+  };
 };
 
 export { type EnvironmentSchema };

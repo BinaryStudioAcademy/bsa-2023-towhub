@@ -1,7 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
-import { errorSerializerWithServerErrorHandling } from '~/libs/helpers/helpers.js';
+import {
+  errorSerializerWithServerErrorHandling,
+  getErrorMessage,
+} from '~/libs/helpers/helpers.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
 import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
 import {
@@ -55,4 +58,20 @@ const signIn = createAsyncThunk<
   { serializeError: errorSerializerWithServerErrorHandling },
 );
 
-export { signIn, signUp };
+const getCurrent = createAsyncThunk<
+  CustomerSignUpResponseDto | BusinessSignUpResponseDto,
+  undefined,
+  AsyncThunkConfig
+>(`${sliceName}/current`, async (_, { extra }) => {
+  const { authApi, notification, localStorage } = extra;
+
+  try {
+    return await authApi.getCurrentUser();
+  } catch (error) {
+    notification.warning(getErrorMessage(error));
+    await localStorage.drop(StorageKey.TOKEN);
+    throw error;
+  }
+});
+
+export { getCurrent, signIn, signUp };

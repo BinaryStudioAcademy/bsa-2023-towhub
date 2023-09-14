@@ -1,1 +1,1 @@
-export { type ExtraArguments, type RootRouter } from './store.types.js';
+export { type ExtraArguments, type RootReducer } from './store.types.js';

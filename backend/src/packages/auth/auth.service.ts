@@ -60,29 +60,42 @@ class AuthService {
     this.config = config;
   }
 
-  public async checkUserConstraints(
-    payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto,
-  ): Promise<void> {
-    if (payload.email) {
-      const userWithEmail = await this.userService.findByEmail(payload.email);
+  private async checkIsExistingUser({
+    email,
+    phone,
+  }: CustomerSignUpRequestDto | BusinessSignUpRequestDto): Promise<void> {
+    const existingUser = await this.userService.findByPhoneOrEmail(
+      phone,
+      email,
+    );
 
-      if (userWithEmail) {
-        throw new HttpError({
-          message: HttpMessage.USER_EMAIL_EXISTS,
-          status: HttpCode.CONFLICT,
-        });
-      }
+    if (email === existingUser?.email) {
+      throw new HttpError({
+        message: HttpMessage.USER_EMAIL_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
     }
 
-    if ('phone' in payload) {
-      const userWithPhone = await this.userService.findByPhone(payload.phone);
+    if (phone === existingUser?.phone) {
+      throw new HttpError({
+        message: HttpMessage.USER_PHONE_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
+  }
 
-      if (userWithPhone) {
-        throw new HttpError({
-          message: HttpMessage.USER_PHONE_EXISTS,
-          status: HttpCode.CONFLICT,
-        });
-      }
+  private async checkIsExistingBusiness({
+    taxNumber,
+  }: BusinessSignUpRequestDto): Promise<void> {
+    const existingBusiness = await this.businessService.checkIsExistingBusiness(
+      { taxNumber },
+    );
+
+    if (existingBusiness) {
+      throw new HttpError({
+        message: HttpMessage.BUSINESS_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
     }
   }
 
@@ -97,9 +110,6 @@ class AuthService {
         status: HttpCode.BAD_REQUEST,
       });
     }
-
-    await this.checkUserConstraints(payload);
-
     const newUser = await this.userService.create({
       ...payload,
       groupId: group.id,
@@ -114,6 +124,9 @@ class AuthService {
   public async signUpBusiness(
     payload: BusinessSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupAndBusinessT> {
+    await this.checkIsExistingUser(payload);
+    await this.checkIsExistingBusiness(payload);
+
     const {
       phone,
       email,
@@ -132,8 +145,6 @@ class AuthService {
         status: HttpCode.BAD_REQUEST,
       });
     }
-
-    await this.checkUserConstraints(payload);
 
     const newUser = await this.userService.create({
       phone,
@@ -161,7 +172,9 @@ class AuthService {
 
   public async signIn(
     credentials: UserSignInRequestDto,
-  ): Promise<UserEntityObjectWithGroupT> {
+  ): Promise<
+    UserEntityObjectWithGroupAndBusinessT | UserEntityObjectWithGroupT
+  > {
     const { email, password } = credentials;
 
     const user = await this.userService.findByEmailRaw(email);
@@ -181,12 +194,32 @@ class AuthService {
 
     const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
 
-    const group = GroupEntity.initialize(user.group).toObject();
+    const userGroup = GroupEntity.initialize(user.group).toObject();
+
+    const userBusiness =
+      userGroup.key === UserGroupKey.BUSINESS
+        ? await this.businessService.findByOwnerId(updatedUser.id)
+        : null;
 
     return {
       ...updatedUser,
-      group,
+      group: userGroup,
+      ...(userBusiness && { business: userBusiness }),
     };
+  }
+
+  public async getCurrent(
+    user: UserEntityObjectWithGroupT,
+  ): Promise<
+    UserEntityObjectWithGroupT | UserEntityObjectWithGroupAndBusinessT
+  > {
+    if (user.group.key === UserGroupKey.BUSINESS) {
+      const business = await this.businessService.findByOwnerId(user.id);
+
+      return business ? { ...user, business } : user;
+    }
+
+    return user;
   }
 
   public async generateAccessTokenAndUpdateUser(

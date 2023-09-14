@@ -7,11 +7,13 @@ export {
 } from './libs/enums/enums.js';
 export {
   ApplicationError,
+  ConfigValidationError,
   HttpError,
   ValidationError,
 } from './libs/exceptions/exceptions.js';
 export { configureString, getFullName } from './libs/helpers/helpers.js';
-export { type IConfig } from './libs/packages/config/config.js';
+export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
+export { type GeolocationLatLng } from './libs/packages/geolocation/geolocation.js';
 export {
   type HttpMethod,
   type HttpOptions,
@@ -21,14 +23,18 @@ export {
   HttpMessage,
 } from './libs/packages/http/http.js';
 export {
+  type ServerSocketEventParameter,
   ClientSocketEvent,
   ServerSocketEvent,
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type EntityPagination,
+  type ErrorConstructor,
+  type Id,
   type NullableProperties,
   type OperationResult,
+  type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
@@ -76,6 +82,46 @@ export {
   driverUpdateDeleteParameters,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
+export {
+  type OrderCreateRequestDto,
+  type OrderCreateResponseDto,
+  type OrderEntity,
+  type OrderFindByIdResponseDto,
+  type OrderUpdateRequestDto,
+  type OrderUpdateResponseDto,
+  ORDER_STATUSES,
+  orderCreateRequestBody,
+  orderGetParameter,
+  OrdersApiPath,
+  OrderStatus,
+  OrdersValidationMessage,
+  orderUpdateRequestBody,
+} from './packages/orders/orders.js';
+export {
+  type ShiftCloseRequestDto,
+  type ShiftCreateRequestDto,
+  type ShiftEntity,
+  type ShiftResponseDto,
+  shiftClose as shiftCloseValidationSchema,
+  shiftCreate as shiftCreateValidationSchema,
+  ShiftsApiPath,
+  ShiftValidationMessage,
+} from './packages/shifts/shifts.js';
+export {
+  type TruckEntity,
+  LICENSE_PLATE_NUMBER,
+  TruckApiPath,
+  TruckCapacity,
+  truckCreateRequestBody,
+  truckGetParameters,
+  TruckLicensePlateNumber,
+  TruckManufacturer,
+  TruckPricePerKm,
+  TruckTowType,
+  truckUpdateRequestBody,
+  TruckValidationMessage,
+  TruckYear,
+} from './packages/trucks/trucks.js';
 export {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,

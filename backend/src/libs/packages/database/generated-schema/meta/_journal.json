@@ -43,6 +43,34 @@
       "when": 1693736656473,
       "tag": "0005_create_table_driver_details",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1693992300427,
+      "tag": "0006_create_trucks_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1694154185364,
+      "tag": "0007_del_comp_name_unique_idx",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1694326684511,
+      "tag": "0008_create_orders_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1694518822475,
+      "tag": "0009_create_shifts_table",
+      "breakpoints": true
     }
   ]
 }

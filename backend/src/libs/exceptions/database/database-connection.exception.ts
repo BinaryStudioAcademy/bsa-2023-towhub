@@ -1,10 +1,7 @@
-type Constructor = {
-  message: string;
-  cause?: unknown;
-};
+import { type ErrorConstructor } from '~/libs/types/types.js';
 
 class DatabaseConnectionError extends Error {
-  public constructor({ message, cause }: Constructor) {
+  public constructor({ message, cause }: ErrorConstructor) {
     super(message, {
       cause,
     });

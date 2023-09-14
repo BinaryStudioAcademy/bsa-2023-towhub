@@ -3,6 +3,7 @@ import { type Location } from 'react-router';
 import { AppRoute, AuthMode } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
+  useAuthNavigate,
   useCallback,
   useLocation,
 } from '~/libs/hooks/hooks.js';
@@ -13,8 +14,7 @@ import {
 import { actions as authActions } from '~/slices/auth/auth.js';
 
 import { SignInForm, SignUpForm } from './components/components.js';
-import { useAuthNavigate } from './libs/hooks/hooks.js';
-import styles from './styles.module.css';
+import styles from './styles.module.scss';
 
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();

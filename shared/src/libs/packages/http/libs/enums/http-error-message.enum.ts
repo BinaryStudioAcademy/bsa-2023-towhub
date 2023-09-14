@@ -1,8 +1,12 @@
 const HttpMessage = {
   USER_EMAIL_EXISTS: 'User with this email already exists',
   USER_PHONE_EXISTS: 'User with this phone already exists',
+  BUSINESS_EXISTS: 'Business with specified tax number already exists',
+  TRUCK_EXISTS: 'Truck already exists',
+  NOT_FOUND: 'Not found',
   BUSINESS_ALREADY_EXISTS: 'Owner already has business!',
   DRIVER_ALREADY_EXISTS: 'Driver already exists',
+  DRIVER_LOCATION_UNKNOWN: 'Driver location is unknown',
   NAME_ALREADY_REGISTERED: 'Business with such name already exists!',
   INVALID_USER_GROUP: 'User of the group cannot create or update this!',
   BUSINESS_DOES_NOT_EXIST: 'Business does not exist!',
@@ -15,6 +19,10 @@ const HttpMessage = {
   WRONG_PASSWORD: 'Entered invalid password!',
   INVALID_GROUP: 'Provided group is unavailable',
   CANNOT_DELETE: 'Cannot delete this user',
+  WRONG_SHIFT: 'Specified shift id is not belong to you',
+  SHIFT_ALREADY_CLOSED: 'Specified shift is already closed',
+  NOT_ACCESS: 'You do not have enough rights to operate this shift',
+  ORDER_DOES_NOT_EXIST: 'Order does not exist!',
 } as const;
 
 export { HttpMessage };

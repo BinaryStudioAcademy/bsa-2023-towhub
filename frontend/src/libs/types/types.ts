@@ -5,6 +5,7 @@ export { type FormField } from './form.type.js';
 export { type SelectOption } from './select-option.type.js';
 export { type ServerSerializedError } from './server-serialized-error.type.js';
 export { type TabName, type TabsType } from './sidebar.type.js';
+export { type TruckFilters } from './truck-filters.type.js';
 export { type ColumnDef } from '@tanstack/react-table';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
 export {
@@ -18,6 +19,8 @@ export {
   type ServerErrorResponse,
   type ServerErrorResponseKeys,
   type ServerValidationErrorResponse,
+  type TruckEntity,
+  type TruckTowType,
   type UserEntityT,
   type UserGroupEntityT,
   type UserSignInRequestDto,

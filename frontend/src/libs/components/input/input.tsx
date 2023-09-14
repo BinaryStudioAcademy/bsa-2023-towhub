@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import {
   type Control,
   type FieldErrors,
@@ -7,9 +6,16 @@ import {
   type UseFormSetError,
 } from 'react-hook-form';
 
+import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useFormController, useFormServerError } from '~/libs/hooks/hooks.js';
+import {
+  useCallback,
+  useFormController,
+  useFormServerError,
+  useState,
+} from '~/libs/hooks/hooks.js';
 
+import { Icon } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
@@ -19,8 +25,11 @@ type Properties<T extends FieldValues> = {
   label?: string;
   name: FieldPath<T>;
   placeholder?: string;
-  type?: 'text' | 'email' | 'password';
+  type?: 'text' | 'email' | 'password' | 'number' | 'dropdown';
   isDisabled?: boolean;
+  min?: number;
+  max?: number;
+  step?: number;
 };
 
 const Input = <T extends FieldValues>({
@@ -32,9 +41,12 @@ const Input = <T extends FieldValues>({
   placeholder = '',
   type = 'text',
   isDisabled,
+  min,
+  max,
+  step,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
-
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
   const error = errors[name]?.message;
   const serverError = useFormServerError(errors[name]);
   const hasError = Boolean(error);
@@ -46,6 +58,14 @@ const Input = <T extends FieldValues>({
     isDisabled && styles.disabled,
     hasError && styles.error,
   ];
+
+  const toggleShowPassword = useCallback(
+    (event: React.MouseEvent<HTMLElement>): void => {
+      event.preventDefault();
+      setIsPasswordShown(!isPasswordShown);
+    },
+    [isPasswordShown],
+  );
 
   const clearServerError = useCallback(() => {
     if (setError && (serverError.common || serverError.validation)) {
@@ -72,14 +92,26 @@ const Input = <T extends FieldValues>({
       >
         <input
           {...field}
-          type={type}
+          type={isPasswordShown ? 'text' : type}
           placeholder={placeholder}
           className={getValidClassNames(...inputStyles)}
           disabled={isDisabled}
+          min={min}
+          max={max}
+          step={step}
           onChange={handleInputChange}
         />
         {type === 'password' && (
-          <span className={styles.passwordEye}>&#128065;</span>
+          <button
+            className={getValidClassNames(
+              styles.passwordEye,
+              isPasswordShown && styles.passwordEyeLight,
+            )}
+            onClick={toggleShowPassword}
+            tabIndex={-1}
+          >
+            <Icon iconName={IconName.EYE} size="sm" />
+          </button>
         )}
       </span>
 

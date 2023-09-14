@@ -58,7 +58,6 @@ erDiagram
         created_at timestamp "not null"
         updated_at timestamp "not null"
     }
-
     groups {
         id serial PK "not null"
         name varchar "not null"
@@ -66,7 +65,29 @@ erDiagram
         created_at timestamp "not null"
         updated_at timestamp "not null"
     }
-
+    driver_details {
+        id serial PK "not null"
+        driverLicenseNumber varchar "not null, unique"
+        user_id integer FK "not null"
+        business_id integer FK "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
+    users_trucks {
+        user_id integer FK "not null"
+        truck_id integer FK "not null"
+    }
+    trucks {
+        id serial PK "not null"
+        manufacturer varchar "not null"
+        capacity integer "not null"
+        price_per_km real "not null"
+        license_plate_number varchar "not null"
+        year integer "not null"
+        tow_type varchar "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+    }
     business_details {
         id serial PK "not null"
         company_name varchar "not null, unique"
@@ -75,20 +96,46 @@ erDiagram
         created_at timestamp "not null"
         updated_at timestamp "not null"
     }
-
-    driver_details {
+    orders {
         id serial PK "not null"
-        driverLicenseNumber varchar "not null, unique"
-        userId integer FK "not null"
-        businessId integer FK "not null"
+        price integer "not null"
+        scheduled_time timestamp "not null"
+        start_point varchar "not null"
+        end_point varchar "not null"
+        status enum "not null"
+        user_id integer FK "nullable"
+        business_id integer FK "nullable"
+        driver_id integer FK "nullable"
+        customer_name varchar "nullable"
+        customer_phone varchar "nullable"
+        cars_qty integer "not null"
         created_at timestamp "not null"
         updated_at timestamp "not null"
     }
 
+    shifts {
+        id serial PK "not null"
+        start_date timestamp "not null"
+        end_date timestamp "nullable"
+        driver_id integer FK "not null"
+        truck_id integer FK "not null"
+        created_at timestamp "not null"
+        updated_at timestamp "not null"
+        deleted_at timestamp "nullable"
+    }
+
+    users_trucks one or many -- one trucks: "users_trucks(truck_id) belongs to trucks(id)"
+    users_trucks one or many -- one users: "users_trucks(user_id) belongs to users(id)"
     users one or many -- one groups: "users(group_id) belongs to groups(id)"
-    business_details 0..1 -- one users: "business_details(owner_id) belongs to users(id)"
-    driver_details 0..1 -- one users: "driver_details(user_id) belongs to users(id)"
+    business_details zero or one -- one users: "business_details(owner_id) belongs to users(id)"
+    driver_details zero or one -- one users: "driver_details(user_id) belongs to users(id)"
     driver_details one or many -- one business_details: "driver_details(business_id) belongs to business_details(id)"
+    users one -- zero or many orders: "users(id) has orders(user_id)"
+    users one -- zero or many orders: "users(id) has orders(user_id)"
+    business_details one -- zero or many orders: "business_details(id) has orders(business_id)"
+    driver_details one -- zero or many orders: "driver_details(id) has orders(drivers_id)"
+    users zero or one -- one or many shifts: "users(id) has shifts(driver_id)"
+    trucks one -- zero or many shifts: "shifts(truck_id) has trucks(id)"
 ```
 
 ### 🌑 Backend

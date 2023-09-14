@@ -1,63 +1,62 @@
+import {
+  type Control,
+  type ControllerRenderProps,
+  type FieldErrors,
+  type FieldPath,
+  type FieldValues,
+} from 'react-hook-form';
 import Select, {
+  type ClassNamesConfig,
   type GroupBase,
   type SingleValue,
-  type StylesConfig,
 } from 'react-select';
 
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useMemo, useState } from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 
-type Properties = {
+import styles from './styles.module.scss';
+
+type Properties<T extends FieldValues> = {
   options: SelectOption[];
+  name?: FieldPath<T>;
+  control?: Control<T, null>;
+  errors?: FieldErrors<T>;
+  label?: string;
   defaultValue?: SelectOption;
-  onChange?: (value: string | undefined) => void;
+  onChange?: (option: SingleValue<SelectOption>) => void;
+  placeholder?: string;
+  field?: ControllerRenderProps<T, FieldPath<T>>;
+  className?: string;
 };
 
-const getStyles = (
+const getClassNames = (
   isMenuOpen: boolean,
-): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
-  return {
-    control: (styles) => ({
-      ...styles,
-      height: '20px',
-      minHeight: '20px',
-      border: 'none',
-      boxShadow: 'none',
-      outline: 'none',
-    }),
-    option: (styles) => ({
-      ...styles,
-      padding: '10px',
-      margin: '-4px 0',
-    }),
-    valueContainer: (styles) => ({
-      ...styles,
-      padding: '0',
-      paddingLeft: '5px',
-    }),
-    dropdownIndicator: (styles) => ({
-      ...styles,
-      transition: 'all 0.2s ease',
-      margin: '0',
-      padding: '0',
-      transform: `scaleY(${isMenuOpen ? '-1' : '1'})`,
-    }),
-    indicatorSeparator: () => ({
-      display: 'none',
-    }),
-    menu: (styles) => ({
-      ...styles,
-      overflow: 'hidden',
-      padding: 0,
-    }),
-  };
-};
+): ClassNamesConfig<SelectOption, false, GroupBase<SelectOption>> => ({
+  container: () => styles.container,
+  control: () => styles.control,
+  option: () => styles.option,
+  menu: () => styles.singleValue,
+  placeholder: () => styles.placeholder,
+  singleValue: () => styles.singleValue,
+  valueContainer: () => styles.valueContainer,
+  dropdownIndicator: () =>
+    isMenuOpen
+      ? getValidClassNames(styles.dropdownIndicator, styles.upside)
+      : styles.dropdownIndicator,
+  indicatorSeparator: () => styles.indicatorSeparator,
+});
 
-const Dropdown: React.FC<Properties> = ({
+const Dropdown = <T extends FieldValues>({
   options,
+  name,
+  control,
+  field,
   defaultValue,
   onChange,
-}: Properties): JSX.Element => {
+  className,
+  placeholder,
+}: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleOpenMenu = useCallback(() => {
@@ -68,28 +67,32 @@ const Dropdown: React.FC<Properties> = ({
     setIsMenuOpen(false);
   }, []);
 
-  const stylesConfig = useMemo(() => getStyles(isMenuOpen), [isMenuOpen]);
-
-  const handleChange = useCallback(
-    (option: SingleValue<SelectOption>) => {
-      if (onChange) {
-        onChange(option?.value);
-      }
-    },
-    [onChange],
+  const classNamesConfig = useMemo(
+    () => getClassNames(isMenuOpen),
+    [isMenuOpen],
   );
+
+  const findOptionByValue = (
+    value: string | undefined,
+  ): SingleValue<SelectOption> | undefined => {
+    return options.find((opt) => opt.value === value);
+  };
 
   return (
     <Select<SelectOption>
+      {...(name && control && field)}
       options={options}
       classNamePrefix="react-select"
-      styles={stylesConfig}
+      className={className}
+      classNames={classNamesConfig}
       isSearchable={false}
       menuIsOpen={isMenuOpen}
       onMenuOpen={handleOpenMenu}
       onMenuClose={handleCloseMenu}
-      onChange={handleChange}
+      onChange={onChange}
       defaultValue={defaultValue}
+      value={findOptionByValue(field?.value)}
+      placeholder={placeholder}
     />
   );
 };

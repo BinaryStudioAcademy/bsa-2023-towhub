@@ -13,10 +13,10 @@
 
 .sidebar {
   grid-area: sidebar;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
 
 .content {
   grid-area: content;
-  overflow-y: scroll;
+  overflow-y: auto;
 }

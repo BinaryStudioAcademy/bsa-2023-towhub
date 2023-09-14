@@ -8,20 +8,21 @@ import { configureStore } from '@reduxjs/toolkit';
 import { AppEnvironment } from '~/libs/enums/enums.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { authApi } from '~/packages/auth/auth.js';
+import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
-import { reducer as usersReducer } from '~/slices/users/users.js';
+import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
-import { type ExtraArguments, type RootRouter } from './libs/types/types.js';
+import { type ExtraArguments, type RootReducer } from './libs/types/types.js';
 
 class Store {
   public instance: ReturnType<
     typeof configureStore<
-      RootRouter,
+      RootReducer,
       AnyAction,
-      MiddlewareArray<[ThunkMiddleware<RootRouter, AnyAction, ExtraArguments>]>
+      MiddlewareArray<[ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>]>
     >
   >;
 
@@ -30,7 +31,7 @@ class Store {
       devTools: config.ENV.APP.ENVIRONMENT !== AppEnvironment.PRODUCTION,
       reducer: {
         auth: authReducer,
-        users: usersReducer,
+        trucks: truckReducer,
       },
       middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({
@@ -47,6 +48,7 @@ class Store {
       authApi,
       userApi,
       notification,
+      truckApi,
       localStorage: LocalStorage,
     };
   }
