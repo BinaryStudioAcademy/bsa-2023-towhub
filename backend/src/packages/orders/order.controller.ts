@@ -14,11 +14,13 @@ import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type Id,
   type OrderCreateRequestDto,
+  type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import {
   orderCreateRequestBody,
   orderGetParameter,
+  orderUpdateAcceptStatusRequestBody,
   orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';
 
@@ -260,6 +262,24 @@ class OrderController extends Controller {
     });
 
     this.addRoute({
+      path: OrdersApiPath.$ID,
+      method: 'PATCH',
+      authStrategy: AuthStrategy.INJECT_USER,
+      validation: {
+        params: orderGetParameter,
+        body: orderUpdateAcceptStatusRequestBody,
+      },
+      handler: (options) =>
+        this.updateAcceptStatus(
+          options as ApiHandlerOptions<{
+            params: Id;
+            body: OrderUpdateAcceptStatusRequestDto;
+            user: UserEntityObjectWithGroupT | null;
+          }>,
+        ),
+    });
+
+    this.addRoute({
       path: OrdersApiPath.ROOT,
       method: 'POST',
       authStrategy: AuthStrategy.INJECT_USER,
@@ -425,6 +445,7 @@ class OrderController extends Controller {
    *                - $ref: '#/components/schemas/Order/CreateOrderWithRegisteredUser'
    *                - $ref: '#/components/schemas/Order/CreateOrderWithNotRegisteredUser'
    *      security:
+   *        - {}
    *        - bearerAuth: []
    *      responses:
    *        200:
@@ -466,6 +487,76 @@ class OrderController extends Controller {
       }),
     };
   }
+
+  /**
+   * @swagger
+   * /orders/{id}:
+   *    patch:
+   *      tags:
+   *       - orders
+   *      summary: Update order status by Id
+   *      description: Accept/decline order by Id
+   *      parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the order to update
+   *         example: 1
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                isAccepted:
+   *                  type: boolean
+   *                  example: true
+   *      security:
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Order updated
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Order'
+   *        404:
+   *          description:
+   *            Order with such ID does not found
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/OrderDoesNotExist'
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *
+   */
+
+  private async updateAcceptStatus(
+    options: ApiHandlerOptions<{
+      params: Id;
+      body: OrderUpdateAcceptStatusRequestDto;
+      user: UserEntityObjectWithGroupT | null;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.orderService.updateAcceptStatus({
+        id: options.params.id,
+        payload: options.body,
+        user: options.user,
+      }),
+    };
+  }
+
   /**
    * @swagger
    * /orders:

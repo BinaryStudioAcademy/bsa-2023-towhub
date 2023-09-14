@@ -22,6 +22,9 @@ const HttpMessage = {
   SHIFT_ALREADY_CLOSED: 'Specified shift is already closed',
   NOT_ACCESS: 'You do not have enough rights to operate this shift',
   ORDER_DOES_NOT_EXIST: 'Order does not exist!',
+  USER_CAN_NOT_ACCEPT_OR_DECLINE_ORDER:
+    'You can not decline or accept this order',
+  DRIVER_DOES_NOT_START_SHIFT: 'Driver does not start shift',
 } as const;
 
 export { HttpMessage };

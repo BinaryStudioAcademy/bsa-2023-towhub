@@ -9,11 +9,14 @@ export {
   type OrderCreateResponseDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
+  type OrderStatusValues,
+  type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
 } from './libs/types/types.js';
 export {
   orderCreateRequestBody,
   orderGetParameter,
+  orderUpdateAcceptStatusRequestBody,
   orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';

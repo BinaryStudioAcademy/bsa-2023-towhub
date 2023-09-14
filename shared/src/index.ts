@@ -87,6 +87,8 @@ export {
   type OrderCreateResponseDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
+  type OrderStatusValues,
+  type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
   ORDER_STATUSES,
@@ -95,6 +97,7 @@ export {
   OrdersApiPath,
   OrderStatus,
   OrdersValidationMessage,
+  orderUpdateAcceptStatusRequestBody,
   orderUpdateRequestBody,
 } from './packages/orders/orders.js';
 export {

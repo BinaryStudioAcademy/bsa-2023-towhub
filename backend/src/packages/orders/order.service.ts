@@ -4,6 +4,7 @@ import { type IService } from '~/libs/interfaces/interfaces.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
+import { type ShiftService } from '../shifts/shift.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
@@ -11,6 +12,8 @@ import {
   type OrderCreateResponseDto,
   type OrderEntity as OrderEntityT,
   type OrderFindByIdResponseDto,
+  type OrderStatusValues,
+  type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
 } from './libs/types/types.js';
@@ -24,20 +27,26 @@ class OrderService implements Omit<IService, 'find'> {
 
   private driverService: DriverService;
 
+  private shiftService: ShiftService;
+
   public constructor({
     businessService,
     orderRepository,
     driverService,
+    shiftService,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
     driverService: DriverService;
+    shiftService: ShiftService;
   }) {
     this.orderRepository = orderRepository;
 
     this.businessService = businessService;
 
     this.driverService = driverService;
+
+    this.shiftService = shiftService;
   }
 
   public async create(
@@ -150,6 +159,8 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateRequestDto;
     user: UserEntityObjectWithGroupT;
   }): Promise<OrderUpdateResponseDto> {
+    const foundOrder = await this.orderRepository.findById(parameters.id);
+
     const driver = await this.driverService.findByUserId(parameters.user.id);
 
     if (!driver) {
@@ -157,13 +168,50 @@ class OrderService implements Omit<IService, 'find'> {
         message: HttpMessage.ORDER_DOES_NOT_EXIST,
       });
     }
-    const foundOrder = await this.orderRepository.findById(parameters.id);
 
     if (foundOrder) {
       this.verifyOrderBelongsToDriver(foundOrder.toObject(), driver.id);
     }
 
     return await this.update(parameters);
+  }
+
+  public async updateAcceptStatus(parameters: {
+    id: OrderEntityT['id'];
+    payload: OrderUpdateAcceptStatusRequestDto;
+    user: UserEntityObjectWithGroupT | null;
+  }): Promise<OrderUpdateResponseDto> {
+    let acceptStatus: OrderStatusValues = OrderStatus.CANCELED;
+
+    if (parameters.user && parameters.user.group.key === UserGroupKey.DRIVER) {
+      await this.shiftService.checkDriverStartShift(parameters.user.id);
+      acceptStatus = parameters.payload.isAccepted
+        ? OrderStatus.CONFIRMED
+        : OrderStatus.REFUSED;
+
+      return await this.updateOne({
+        id: parameters.id,
+        payload: { status: acceptStatus },
+        user: parameters.user,
+      });
+    }
+
+    if (
+      (!parameters.user ||
+        parameters.user.group.key === UserGroupKey.CUSTOMER) &&
+      !parameters.payload.isAccepted
+    ) {
+      acceptStatus = OrderStatus.CANCELED;
+
+      return await this.update({
+        id: parameters.id,
+        payload: { status: acceptStatus },
+      });
+    } else {
+      throw new NotFoundError({
+        message: HttpMessage.USER_CAN_NOT_ACCEPT_OR_DECLINE_ORDER,
+      });
+    }
   }
 
   public async findAllBusinessOrders(
