@@ -1,5 +1,6 @@
+import { TravelMode } from './libs/enums/enums.js';
 import { convertMetersToKm } from './libs/helpers/helpers.js';
-import { type Client, type Distance, TravelMode } from './libs/types/types.js';
+import { type Client, type Distance } from './libs/types/types.js';
 
 class MapService {
   private client: Client;
