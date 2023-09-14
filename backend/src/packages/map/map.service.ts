@@ -1,3 +1,4 @@
+import { convertMetersToKm } from './libs/helpers/helpers.js';
 import { type Client, type Distance, TravelMode } from './libs/types/types.js';
 
 class MapService {
@@ -22,8 +23,10 @@ class MapService {
         mode: TravelMode.driving,
       },
     });
+    const data = response.data;
+    const resultArray = data.rows[0].elements;
 
-    return response.data.rows[0].elements[0].distance;
+    return resultArray[0].distance;
   }
 
   public async getPriceByDistance({
@@ -36,7 +39,7 @@ class MapService {
     pricePerKm: number;
   }): Promise<number> {
     const distance = await this.getDistance(startPoint, endPoint);
-    const km = distance.value / 1000;
+    const km = convertMetersToKm(distance.value);
 
     return +(pricePerKm * km).toFixed(2);
   }

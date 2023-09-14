@@ -137,7 +137,7 @@ class Config implements IConfig {
         GOOGLE_MAPS_API_KEY: {
           doc: 'Key for Google maps API',
           format: String,
-          env: 'VITE_APP_GOOGLE_MAPS_API_KEY',
+          env: 'GOOGLE_MAPS_API_KEY',
           default: null,
         },
       },
