@@ -4,7 +4,7 @@ import { Server as SocketServer } from 'socket.io';
 import { type GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { logger } from '~/libs/packages/logger/logger.js';
 
-import { ServerSocketEvent } from './libs/enums/enums.js';
+import { ClientSocketEvent, ServerSocketEvent } from './libs/enums/enums.js';
 import {
   type OrderUpdateResponseDto,
   type ServerSocketEventParameter,
@@ -37,12 +37,19 @@ class SocketService {
         logger.info(`${socket.id} disconnected`);
       });
       socket.on(
-        ServerSocketEvent.DRIVER_LOCATION_UPDATE,
+        ClientSocketEvent.DRIVER_LOCATION_UPDATE,
         (
-          payload: ServerSocketEventParameter[typeof ServerSocketEvent.DRIVER_LOCATION_UPDATE],
+          payload: ServerSocketEventParameter[typeof ClientSocketEvent.DRIVER_LOCATION_UPDATE],
         ): void => {
           const { driverId, latLng } = payload;
           this.geolocationCacheService.setCache(driverId, latLng);
+        },
+      );
+      socket.on(
+        ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES,
+        async (orderId: string) => {
+          await socket.join(orderId);
+          logger.info(`${socket.id} connected to order ${orderId}`);
         },
       );
     });

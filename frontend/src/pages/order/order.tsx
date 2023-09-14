@@ -20,7 +20,7 @@ const OrderPage: React.FC = () => {
     if (orderId) {
       void dispatch(actions.getOrder(orderId));
     }
-  }, [dispatch, orderId]);
+  }, [orderId, dispatch]);
 
   return (
     <div className={styles.container}>

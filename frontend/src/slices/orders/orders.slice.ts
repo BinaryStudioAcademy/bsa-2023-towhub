@@ -4,7 +4,7 @@ import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type OrderFindByIdResponseDto } from '~/packages/orders/libs/types/types.js';
 
-import { getOrder } from './actions.js';
+import { getOrder, updateOrderFromSocket } from './actions.js';
 
 type State = {
   order: OrderFindByIdResponseDto | null;
@@ -31,6 +31,11 @@ const { reducer, actions, name } = createSlice({
       })
       .addCase(getOrder.rejected, (state) => {
         state.dataStatus = DataStatus.REJECTED;
+      })
+      .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
+        if (state.order) {
+          state.order.status = action.payload.status;
+        }
       });
   },
 });

@@ -1,9 +1,15 @@
-import { type ServerSocketEvent } from '../enums/server-socket-event.enum.js';
+import { type ClientSocketEvent } from '../enums/client-socket-event.enum.js';
 
 type ClientToServerEvents = {
-  [ServerSocketEvent.DRIVER_LOCATION_UPDATE]: (payload: {
+  [ClientSocketEvent.DRIVER_LOCATION_UPDATE]: (payload: {
     driverId: number;
-    latLng: { latitude: number; longitude: number };
+    latLng: {
+      latitude: number;
+      longitude: number;
+    };
+  }) => void;
+  [ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES]: (payload: {
+    orderId: string;
   }) => void;
 };
 

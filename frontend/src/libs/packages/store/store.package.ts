@@ -1,5 +1,6 @@
 import {
   type AnyAction,
+  type Middleware,
   type MiddlewareArray,
   type ThunkMiddleware,
 } from '@reduxjs/toolkit';
@@ -15,30 +16,20 @@ import { reducer as authReducer } from '~/slices/auth/auth.js';
 import { reducer as orderReducer } from '~/slices/orders/orders.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
+import { socketMiddleware } from '../middleware/socket.middleware.js';
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
-
-type RootReducer = {
-  auth: ReturnType<typeof authReducer>;
-  trucks: ReturnType<typeof truckReducer>;
-  orders: ReturnType<typeof orderReducer>;
-};
-
-type ExtraArguments = {
-  authApi: typeof authApi;
-  userApi: typeof userApi;
-  notification: typeof notification;
-  truckApi: typeof truckApi;
-  localStorage: typeof LocalStorage;
-  orderApi: typeof orderApi;
-};
+import { type ExtraArguments } from './libs/types/extra-arguments.type.js';
+import { type RootReducer } from './libs/types/root-reducer.type.js';
 
 class Store {
   public instance: ReturnType<
     typeof configureStore<
       RootReducer,
       AnyAction,
-      MiddlewareArray<[ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>]>
+      MiddlewareArray<
+        [ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>, Middleware]
+      >
     >
   >;
 
@@ -55,7 +46,7 @@ class Store {
           thunk: {
             extraArgument: this.extraArguments,
           },
-        });
+        }).prepend(socketMiddleware);
       },
     });
   }

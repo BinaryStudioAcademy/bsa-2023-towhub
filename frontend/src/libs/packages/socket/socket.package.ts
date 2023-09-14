@@ -1,4 +1,3 @@
-import { type ValueOf } from 'shared/build/index.js';
 import { type Socket, io } from 'socket.io-client';
 
 import { config } from '~/libs/packages/config/config.js';
@@ -9,7 +8,7 @@ import {
 } from './libs/types/types.js';
 
 class SocketService {
-  private io: Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
+  private io!: Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
 
   public connect(): void {
     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
@@ -21,6 +20,12 @@ class SocketService {
     this.io = socket;
   }
 
+  public getInstance():
+    | Socket<ServerToClientEvents, ClientToServerEvents>
+    | undefined {
+    return this.io;
+  }
+
   public addListener(
     event: keyof ServerToClientEvents,
     listener: () => void,
@@ -28,11 +33,11 @@ class SocketService {
     this.io?.on(event, listener);
   }
 
-  public emit(
-    event: keyof ClientToServerEvents,
-    eventPayload: Parameters<ValueOf<ClientToServerEvents>>[0],
+  public emit<EventT extends keyof ClientToServerEvents>(
+    event: EventT,
+    eventPayloadParameters: Parameters<ClientToServerEvents[EventT]>,
   ): void {
-    this.io?.emit(event, eventPayload);
+    this.io?.emit(event, ...eventPayloadParameters);
   }
 
   public disconnect(): void {
