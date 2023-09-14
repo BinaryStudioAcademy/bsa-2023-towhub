@@ -14,6 +14,7 @@ type Properties = {
   origin?: google.maps.LatLngLiteral;
   destination?: google.maps.LatLngLiteral;
   className?: string;
+  markers?: google.maps.LatLngLiteral[];
 };
 
 const Map: React.FC<Properties> = ({ ...mapProperties }) => {

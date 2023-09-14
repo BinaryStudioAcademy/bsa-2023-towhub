@@ -10,12 +10,14 @@ type Properties = {
   origin?: google.maps.LatLngLiteral;
   destination?: google.maps.LatLngLiteral;
   className?: string;
+  markers?: google.maps.LatLngLiteral[];
 };
 
 const MapInnerComponent: React.FC<Properties> = ({
   center,
   zoom,
   className,
+  markers = [],
 }: Properties) => {
   const mapReference = useRef<HTMLDivElement>(null);
   const mapService = useRef<MapService | null>(null);
@@ -30,8 +32,12 @@ const MapInnerComponent: React.FC<Properties> = ({
       });
 
       mapService.current.addMarker(center);
+
+      for (const marker of markers) {
+        mapService.current.addMarker(marker);
+      }
     }
-  }, [center, zoom]);
+  }, [center, zoom, markers]);
 
   return <div ref={mapReference} id="map" className={mapClasses} />;
 };
