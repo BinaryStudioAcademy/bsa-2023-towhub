@@ -22,6 +22,9 @@ type EnvironmentSchema = {
     SMTP_TLS: boolean;
     SENDGRID_SENDER_EMAIL: string;
   };
+  SOCKET: {
+    TRUCK_LIST_UPDATE_INTERVAL: number;
+  };
 };
 
 export { type EnvironmentSchema };

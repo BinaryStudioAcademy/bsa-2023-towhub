@@ -133,6 +133,14 @@ class Config implements IConfig {
           default: null,
         },
       },
+      SOCKET: {
+        TRUCK_LIST_UPDATE_INTERVAL: {
+          doc: 'Truck list update interval',
+          format: Number,
+          env: 'TRUCK_LIST_UPDATE_INTERVAL',
+          default: 1000,
+        },
+      },
     });
   }
 }
