@@ -195,14 +195,21 @@ import {
  *           example: +380988000777
  *         email:
  *           type: string
+ *           format: email
  *           minLength: 5
  *           maxLength: 254
  *         firstName:
  *           type: string
- *           format: text
+ *           minLength: 1
+ *           maxLength: 40
+ *           pattern: ^['A-Za-z-]{1,40}$
+ *           example: Bob
  *         lastName:
  *           type: string
- *           format: text
+ *           minLength: 1
+ *           maxLength: 40
+ *           pattern: ^['A-Za-z-]{1,40}$
+ *           example: Sponge
  *         groupId:
  *           type: number
  *           format: number
@@ -592,17 +599,25 @@ class BusinessController extends Controller {
    *               - firstName
    *               - lastName
    *               - driverLicenseNumber
+   *               - password
    *              properties:
    *                phone:
-   *                  $ref: '#/components/schemas/Business/properties/phone'
+   *                  $ref: '#/components/schemas/Driver/properties/phone'
    *                email:
-   *                  $ref: '#/components/schemas/Business/properties/email'
+   *                  $ref: '#/components/schemas/Driver/properties/email'
    *                firstName:
-   *                  $ref: '#/components/schemas/Business/properties/firstName'
+   *                  $ref: '#/components/schemas/Driver/properties/firstName'
    *                lastName:
-   *                  $ref: '#/components/schemas/Business/properties/lastName'
+   *                  $ref: '#/components/schemas/Driver/properties/lastName'
    *                driverLicenseNumber:
-   *                  $ref: '#/components/schemas/Driver/properties/driver/driverLicensename'
+   *                  $ref: '#/components/schemas/Driver/properties/driver/properties/driverLicenseNumber'
+   *                password:
+   *                  type: string
+   *                  minimum: 6
+   *                  maximum: 20
+   *                  pattern: ^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$
+   *      security:
+   *        - bearerAuth: []
    *      responses:
    *        201:
    *          description: Successful driver creation.
@@ -647,6 +662,13 @@ class BusinessController extends Controller {
    *      description: Update driver
    *      parameters:
    *       - in: path
+   *         name: businessId
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the business to update drivers
+   *         example: 1
+   *       - in: path
    *         name: driverId
    *         schema:
    *           type: integer
@@ -660,15 +682,22 @@ class BusinessController extends Controller {
    *              type: object
    *              properties:
    *                phone:
-   *                  $ref: '#/components/schemas/Business/properties/phone'
+   *                  $ref: '#/components/schemas/Driver/properties/phone'
    *                email:
-   *                  $ref: '#/components/schemas/Business/properties/email'
+   *                  $ref: '#/components/schemas/Driver/properties/email'
    *                firstName:
-   *                  $ref: '#/components/schemas/Business/properties/firstName'
+   *                   $ref: '#/components/schemas/Driver/properties/firstName'
    *                lastName:
-   *                  $ref: '#/components/schemas/Business/properties/lastName'
+   *                  $ref: '#/components/schemas/Driver/properties/lastName'
    *                driverLicenseNumber:
-   *                  $ref: '#/components/schemas/Driver/properties/driver/driverLicensename'
+   *                  $ref: '#/components/schemas/Driver/properties/driver/properties/driverLicenseNumber'
+   *                password:
+   *                  type: string
+   *                  minimum: 6
+   *                  maximum: 20
+   *                  pattern: ^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$
+   *      security:
+   *        - bearerAuth: []
    *      responses:
    *        200:
    *          description: Successful driver update.
@@ -712,12 +741,14 @@ class BusinessController extends Controller {
    *      description: Find all drivers
    *      parameters:
    *       - in: path
-   *         name: id
+   *         name: businessId
    *         schema:
    *           type: integer
    *         required: true
-   *         description: Numeric ID of the business to create driver
+   *         description: Numeric ID of the business to find drivers
    *         example: 1
+   *      security:
+   *        - bearerAuth: []
    *      responses:
    *        200:
    *          description: Successful find all drivers
@@ -754,12 +785,21 @@ class BusinessController extends Controller {
    *      description: Delete driver
    *      parameters:
    *       - in: path
+   *         name: businessId
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the business to delete drivers
+   *         example: 1
+   *       - in: path
    *         name: driverId
    *         schema:
    *           type: integer
    *         required: true
    *         description: Numeric ID of the driver to delete
    *         example: 1
+   *      security:
+   *        - bearerAuth: []
    *      responses:
    *        200:
    *          description: Successful driver deletion.
