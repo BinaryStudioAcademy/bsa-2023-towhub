@@ -15,4 +15,9 @@ const addTruck = createAsyncThunk<
   return truckApi.addTruck(payload);
 });
 
-export { addTruck };
+const setTrucks = createAsyncThunk<TruckEntity[], TruckEntity[]>(
+  `${sliceName}/set-trucks`,
+  (payload) => payload,
+);
+
+export { addTruck, setTrucks };
