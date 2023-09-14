@@ -147,7 +147,7 @@ class Config implements IConfig {
           format: String,
           env: 'GOOGLE_MAPS_API_KEY',
           default: null,
-        }
+        },
       },
     });
   }
