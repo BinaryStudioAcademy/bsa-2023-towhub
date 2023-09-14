@@ -34,6 +34,9 @@ const Map: React.FC<Properties> = ({
         mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);
+
+        //TODO: Add price calculation here
+        // void mapService.current.calculatePrice(pricePerKm, center, destination)
       }
     }
   }, [center, zoom, destination]);

@@ -72,8 +72,6 @@ class MapService implements IMapService {
 
       const duration = response.routes[0]?.legs?.[0]?.duration?.value;
 
-      // TODO: Add api call
-
       if (!duration) {
         throw new ApplicationError({
           message: 'Duration value not found in the response',
@@ -88,6 +86,11 @@ class MapService implements IMapService {
       });
     }
   }
+
+  // TODO: Add api call
+  // public async calculatePrice(): Promise<number> {
+  //
+  // }
 
   public async calculateDistance(
     origin: google.maps.LatLngLiteral,

@@ -115,14 +115,7 @@ const Form = <T extends FieldValues = FieldValues>({
     <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
       {price !== undefined && (
-        <div
-          // FIXME: Move to styles
-          style={{
-            marginBottom: '10px',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
+        <div className={styles.price}>
           <span>Price:</span>
           <span>${price}</span>
         </div>

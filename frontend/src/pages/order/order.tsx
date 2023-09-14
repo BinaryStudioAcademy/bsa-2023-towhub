@@ -7,7 +7,7 @@ import {
   useAppDispatch,
   useAppSelector,
   useCallback,
-  useGeolocation,
+  useEffect,
   useNavigate,
   useState,
 } from '~/libs/hooks/hooks.js';
@@ -34,15 +34,15 @@ const Order: React.FC = () => {
   if (!chosenTruck) {
     navigate(AppRoute.ROOT);
   }
-  useGeolocation({
-    interval: 6000,
-    onUpdateSuccess: (location) => {
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((location) => {
       setLocation({
         lng: location.coords.longitude,
         lat: location.coords.latitude,
       });
-    },
-  });
+    });
+  }, [setLocation, dispatch]);
 
   //FIXME
   // const handlePriceChange = useCallback(

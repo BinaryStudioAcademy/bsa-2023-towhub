@@ -33,7 +33,7 @@ const TowTruckCard: React.FC<Properties> = ({
       className={
         hasFooter
           ? styles.container
-          : getValidClassNames(styles.container, styles.noFooter)
+          : getValidClassNames(styles.container, styles['no-footer'])
       }
     >
       <div className={styles.body}>
