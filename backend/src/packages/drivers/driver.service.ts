@@ -1,9 +1,13 @@
+import { type Options } from 'nodemailer/lib/mailer';
+
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import {
   type GeolocationCacheService,
   type GeolocationLatLng,
 } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
+import { MailContent } from '~/libs/packages/mailer/libs/enums/enums.js';
+import { mailer } from '~/libs/packages/mailer/mailer.js';
 
 import { UserGroupKey } from '../auth/libs/enums/enums.js';
 import { DriverEntity } from '../drivers/driver.entity.js';
@@ -93,8 +97,7 @@ class DriverService implements IService {
     payload,
     businessId,
   }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
-    const { password, email, lastName, firstName, phone, driverLicenseNumber } =
-      payload;
+    const { email, lastName, firstName, phone, driverLicenseNumber } = payload;
 
     const { result: doesDriverExist } = await this.driverRepository.checkExists(
       {
@@ -117,6 +120,10 @@ class DriverService implements IService {
       });
     }
 
+    const password = await this.generatePassword();
+
+    void this.sendEmail(email, `${firstName} ${lastName}`, password);
+
     const user = await this.userService.create({
       password,
       email,
@@ -137,6 +144,63 @@ class DriverService implements IService {
     const driverObject = driver.toObject();
 
     return { ...user, ...driverObject, group };
+  }
+
+  private async sendEmail(
+    email: string,
+    name: string,
+    password: string,
+  ): Promise<void> {
+    const options: Options = {
+      to: `${email}`,
+      subject: MailContent.SUBJECT,
+      html: `<p>${MailContent.GREETING} ${name}</p><br>
+             <p>${MailContent.CREDENTIALS}</p>
+             <p>${MailContent.USERNAME} ${email}</p>
+             <p>${MailContent.PASSWORD} ${password}</p><br>
+             <p>${MailContent.SIGNIN_LINK}</p>
+             <p>${MailContent.LINK}</p><br>
+             <p>${MailContent.CLOSING}</p>`,
+    };
+
+    await mailer.send(options);
+  }
+
+  private async generatePassword(): Promise<string> {
+    const alpha = Array.from({ length: 26 }).map((_key, index) => index + 65);
+    const alphabetUpperCase = alpha.map((x) => String.fromCodePoint(x));
+    const alphabetLowerCase = alphabetUpperCase.map((ch) => ch.toLowerCase());
+    const digits = [...Array.from({ length: 10 }).keys()].map(String);
+    const minLength = 6;
+    const maxLength = 20;
+
+    const passwordLength =
+      Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+
+    let password =
+      alphabetLowerCase[Math.floor(Math.random() * alphabetLowerCase.length)];
+
+    for (let index = 1; index < passwordLength; index++) {
+      const characterSet = [
+        ...alphabetUpperCase,
+        ...alphabetLowerCase,
+        ...digits,
+      ];
+      const randomCharacter = characterSet.at(
+        Math.floor(Math.random() * characterSet.length),
+      );
+      password += randomCharacter;
+    }
+
+    const hasDigit = /\d/.test(password);
+    const hasLetter = /[A-Za-z]/.test(password);
+    const hasSpaces = /^\s+$/.test(password);
+
+    if (!hasDigit || !hasLetter || hasSpaces) {
+      return await this.generatePassword();
+    }
+
+    return password;
   }
 
   public async update({

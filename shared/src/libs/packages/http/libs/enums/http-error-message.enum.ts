@@ -22,6 +22,7 @@ const HttpMessage = {
   SHIFT_ALREADY_CLOSED: 'Specified shift is already closed',
   NOT_ACCESS: 'You do not have enough rights to operate this shift',
   ORDER_DOES_NOT_EXIST: 'Order does not exist!',
+  PASSWORD_HASHING: 'Failed to generate hashed password',
 } as const;
 
 export { HttpMessage };
