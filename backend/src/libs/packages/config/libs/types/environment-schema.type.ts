@@ -25,6 +25,9 @@ type EnvironmentSchema = {
   SOCKET: {
     TRUCK_LIST_UPDATE_INTERVAL: number;
   };
+  API: {
+    GOOGLE_MAPS_API_KEY: string;
+  };
 };
 
 export { type EnvironmentSchema };
