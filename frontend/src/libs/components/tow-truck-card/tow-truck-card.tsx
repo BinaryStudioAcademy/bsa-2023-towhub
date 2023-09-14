@@ -20,8 +20,14 @@ const TowTruckCard: React.FC<Properties> = ({
   rating,
   distance,
 }: Properties) => {
-  const { manufacturer, capacity, pricePerKm, towType } = truck;
+  const {
+    manufacturer: manufacturerRaw,
+    capacity,
+    pricePerKm,
+    towType,
+  } = truck;
   const img = getTowTruckImage(towType);
+  const manufacturer = manufacturerRaw.split('_').join(' ');
 
   return (
     <div className={styles.container}>

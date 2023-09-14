@@ -1,7 +1,9 @@
 import { type Socket, io } from 'socket.io-client';
 
 import { config } from '~/libs/packages/config/config.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
+import { type ServerSocketEvent } from './libs/enums/enums.js';
 import {
   type ClientSocketEventValue,
   type ServerSocketEventParameter,
@@ -18,7 +20,7 @@ class SocketService {
 
   public addListener(
     event: ClientSocketEventValue,
-    listener: () => void,
+    listener: (payload?: unknown) => void,
   ): void {
     this.io?.on(event, listener);
   }
@@ -27,8 +29,8 @@ class SocketService {
     event,
     eventPayload,
   }: {
-    event: T;
-    eventPayload: ServerSocketEventParameter[T];
+    event: ValueOf<typeof ServerSocketEvent>;
+    eventPayload?: ServerSocketEventParameter[T];
   }): void {
     this.io?.emit(event, eventPayload);
   }
