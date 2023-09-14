@@ -89,6 +89,7 @@ export {
   type OrderFindByIdResponseDto,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
+  type OrderWithDriverAndTruckDto,
   ORDER_STATUSES,
   orderCreateRequestBody,
   orderGetParameter,

@@ -10,6 +10,7 @@ const HttpMessage = {
   INVALID_USER_GROUP: 'User of the group cannot create or update this!',
   BUSINESS_DOES_NOT_EXIST: 'Business does not exist!',
   DRIVER_DOES_NOT_EXIST: 'Driver does not exist!',
+  SHIFT_DOES_NOT_EXIST: 'Shift does not exist!',
   LICENSE_NUMBER_ALREADY_EXISTS:
     'Driver with such license number already exists!',
   UNAUTHORIZED: 'You are not authorized',

@@ -11,6 +11,7 @@ export {
   type OrderFindByIdResponseDto,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
+  type OrderWithDriverAndTruckDto,
 } from './libs/types/types.js';
 export {
   orderCreateRequestBody,

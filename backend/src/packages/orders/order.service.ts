@@ -4,6 +4,7 @@ import { type IService } from '~/libs/interfaces/interfaces.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
+import { type ShiftService } from '../shifts/shift.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
@@ -13,6 +14,7 @@ import {
   type OrderFindByIdResponseDto,
   type OrderUpdateRequestDto,
   type OrderUpdateResponseDto,
+  type OrderWithDriverAndTruckDto,
 } from './libs/types/types.js';
 import { OrderEntity } from './order.entity.js';
 import { type OrderRepository } from './order.repository.js';
@@ -24,20 +26,23 @@ class OrderService implements Omit<IService, 'find'> {
 
   private driverService: DriverService;
 
+  private shiftService: ShiftService;
+
   public constructor({
     businessService,
     orderRepository,
     driverService,
+    shiftService,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
     driverService: DriverService;
+    shiftService: ShiftService;
   }) {
     this.orderRepository = orderRepository;
-
     this.businessService = businessService;
-
     this.driverService = driverService;
+    this.shiftService = shiftService;
   }
 
   public async create(
@@ -52,14 +57,24 @@ class OrderService implements Omit<IService, 'find'> {
       endPoint,
       customerName,
       customerPhone,
-      driverId,
+      shiftId,
       userId,
     } = payload;
-    const driver = await this.driverService.findById(driverId);
+
+    const shift = await this.shiftService.findById(shiftId);
+
+    if (!shift) {
+      throw new NotFoundError({
+        message: HttpMessage.SHIFT_DOES_NOT_EXIST,
+      });
+    }
+
+    const driver = await this.driverService.findById(shift.driverId);
 
     if (!driver) {
       throw new NotFoundError({ message: HttpMessage.DRIVER_DOES_NOT_EXIST });
     }
+
     const order = await this.orderRepository.create(
       OrderEntity.initializeNew({
         price: 100, //Mock, get price from truck and calculated distance
@@ -70,7 +85,7 @@ class OrderService implements Omit<IService, 'find'> {
         status: OrderStatus.PENDING,
         userId,
         businessId: driver.businessId,
-        driverId,
+        shiftId,
         customerName,
         customerPhone,
       }),
@@ -89,6 +104,39 @@ class OrderService implements Omit<IService, 'find'> {
     }
 
     return foundOrder.toObject();
+  }
+
+  public async findByIdWithDriverAndTruckIds(
+    id: OrderEntityT['id'],
+  ): Promise<OrderWithDriverAndTruckDto | null> {
+    const foundOrder =
+      await this.orderRepository.findByIdWithDriverAndTruckIds(id);
+
+    if (!foundOrder) {
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
+    }
+
+    const { phone, email, firstName, lastName } =
+      foundOrder.driver.asUser.toObject();
+
+    const { driverLicenseNumber } = foundOrder.driver.asDriver.toObject();
+
+    const { licensePlateNumber, pricePerKm, towType } =
+      foundOrder.truck.toObject();
+
+    return {
+      ...foundOrder.order.toObject(),
+      driver: {
+        phone,
+        email,
+        firstName,
+        lastName,
+        driverLicenseNumber,
+      },
+      truck: { licensePlateNumber, pricePerKm, towType },
+    };
   }
 
   public async update(parameters: {
@@ -157,10 +205,15 @@ class OrderService implements Omit<IService, 'find'> {
         message: HttpMessage.ORDER_DOES_NOT_EXIST,
       });
     }
-    const foundOrder = await this.orderRepository.findById(parameters.id);
 
-    if (foundOrder) {
-      this.verifyOrderBelongsToDriver(foundOrder.toObject(), driver.id);
+    const foundOrder = await this.orderRepository.findByIdWithDriverAndTruckIds(
+      parameters.id,
+    );
+
+    if (!foundOrder || foundOrder.driver.asDriver.toObject().id === driver.id) {
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
     }
 
     return await this.update(parameters);
@@ -196,7 +249,7 @@ class OrderService implements Omit<IService, 'find'> {
     return await this.orderRepository.delete(id);
   }
 
-  private verifyOrderBelongsToDriver(
+  /*   private verifyOrderBelongsToDriver(
     foundOrder: OrderEntityT | null,
     driverId: number,
   ): void {
@@ -209,7 +262,7 @@ class OrderService implements Omit<IService, 'find'> {
         message: HttpMessage.ORDER_DOES_NOT_EXIST,
       });
     }
-  }
+  } */
 
   private verifyOrderBelongsToBusiness(
     foundOrder: OrderEntityT | null,

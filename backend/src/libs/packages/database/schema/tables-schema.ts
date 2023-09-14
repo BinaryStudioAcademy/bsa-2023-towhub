@@ -20,10 +20,15 @@ const orders = pgTable('orders', {
   startPoint: varchar('start_point').notNull(),
   endPoint: varchar('end_point').notNull(),
   status: orderStatus('status').notNull(),
-  userId: integer('user_id').references(() => users.id),
-  businessId: integer('business_id').references(() => business.id),
-  driverId: integer('driver_id').references(() => drivers.id),
+  businessId: integer('business_id')
+    .notNull()
+    .references(() => business.id),
+  shiftId: integer('shift_id')
+    .notNull()
+    .references(() => shifts.id),
   carsQty: integer('cars_qty').notNull().default(1),
+  // TODO: This is a customer userId. Should we rename it to reduce ambiguity?
+  userId: integer('user_id').references(() => users.id),
   customerName: varchar('customer_name'),
   customerPhone: varchar('customer_phone'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -39,9 +44,9 @@ const ordersRelations = relations(orders, ({ one }) => ({
     fields: [orders.businessId],
     references: [business.id],
   }),
-  driver: one(drivers, {
-    fields: [orders.driverId],
-    references: [drivers.id],
+  shift: one(shifts, {
+    fields: [orders.shiftId],
+    references: [shifts.id],
   }),
 }));
 
@@ -76,6 +81,11 @@ const usersRelations = relations(users, ({ one, many }) => ({
     fields: [users.groupId],
     references: [groups.id],
   }),
+  // This is one-to-one relation
+  asDriver: one(drivers, {
+    fields: [users.id],
+    references: [drivers.userId],
+  }),
   usersTrucks: many(usersTrucks),
   orders: many(orders),
 }));
@@ -99,11 +109,16 @@ const business = pgTable('business_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+const businessRelations = relations(business, ({ many }) => ({
+  businessOrders: many(orders),
+}));
+
 const drivers = pgTable('driver_details', {
   id: serial('id').primaryKey(),
   driverLicenseNumber: varchar('driver_license_number').unique().notNull(),
   userId: integer('user_id')
     .notNull()
+    .unique() // Must be unique to ensure one-to-one relation
     .references(() => users.id),
   businessId: integer('business_id')
     .notNull()
@@ -111,6 +126,17 @@ const drivers = pgTable('driver_details', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
+
+const driversRelations = relations(drivers, ({ one }) => ({
+  user: one(users, {
+    fields: [drivers.userId],
+    references: [users.id],
+  }),
+  business: one(business, {
+    fields: [drivers.businessId],
+    references: [business.id],
+  }),
+}));
 
 const trucks = pgTable(
   'trucks',
@@ -155,6 +181,17 @@ const usersTrucks = pgTable(
   },
 );
 
+const usersTrucksRelations = relations(usersTrucks, ({ one }) => ({
+  truck: one(trucks, {
+    fields: [usersTrucks.truckId],
+    references: [trucks.id],
+  }),
+  user: one(users, {
+    fields: [usersTrucks.userId],
+    references: [users.id],
+  }),
+}));
+
 const shifts = pgTable('shifts', {
   id: serial('id').primaryKey(),
   startDate: timestamp('start_date', {
@@ -173,29 +210,15 @@ const shifts = pgTable('shifts', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'),
 });
-const businessRelations = relations(users, ({ many }) => ({
-  orders: many(orders),
-}));
 
-const usersTrucksRelations = relations(usersTrucks, ({ one }) => ({
+const shiftsRelations = relations(shifts, ({ one, many }) => ({
+  driver: one(users, {
+    fields: [shifts.driverId],
+    references: [users.id],
+  }),
   truck: one(trucks, {
-    fields: [usersTrucks.truckId],
+    fields: [shifts.truckId],
     references: [trucks.id],
-  }),
-  user: one(users, {
-    fields: [usersTrucks.userId],
-    references: [users.id],
-  }),
-}));
-
-const driversRelations = relations(drivers, ({ one, many }) => ({
-  user: one(users, {
-    fields: [drivers.userId],
-    references: [users.id],
-  }),
-  business: one(business, {
-    fields: [drivers.businessId],
-    references: [business.id],
   }),
   orders: many(orders),
 }));
@@ -210,6 +233,7 @@ export {
   ordersRelations,
   orderStatus,
   shifts,
+  shiftsRelations,
   trucks,
   trucksRelations,
   users,

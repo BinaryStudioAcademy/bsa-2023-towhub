@@ -4,3 +4,4 @@ export { type OrderEntity } from './order-entity.type.js';
 export { type OrderFindByIdResponseDto } from './order-find-by-id-response-dto.type.js';
 export { type OrderUpdateRequestDto } from './order-update-request-dto.type.js';
 export { type OrderUpdateResponseDto } from './order-update-response-dto.type.js';
+export { type OrderWithDriverAndTruckDto } from './order-with-driver-and-truck-dto.type.js';

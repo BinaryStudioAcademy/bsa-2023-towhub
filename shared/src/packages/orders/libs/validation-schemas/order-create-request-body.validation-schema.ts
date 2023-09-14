@@ -13,8 +13,8 @@ const orderCreateRequestBody = joi.object<OrderCreateRequestDto, true>({
   ),
   startPoint: joi.string().required(),
   endPoint: joi.string().required(),
-  driverId: positiveRequiredIntegerSchema(
-    OrdersValidationMessage.DRIVER_ID_MUST_BE_NUMBER,
+  shiftId: positiveRequiredIntegerSchema(
+    OrdersValidationMessage.SHIFT_ID_MUST_BE_NUMBER,
   ),
   customerName: joi.string().pattern(UserValidationRule.NAME).allow(null),
   customerPhone: joi.string().pattern(UserValidationRule.PHONE).allow(null),

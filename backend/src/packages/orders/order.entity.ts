@@ -22,7 +22,7 @@ class OrderEntity implements IEntity {
 
   private businessId: OrderEntityT['businessId'];
 
-  private driverId: OrderEntityT['driverId'];
+  private shiftId: OrderEntityT['shiftId'];
 
   private customerName: OrderEntityT['customerName'] | null;
 
@@ -38,7 +38,7 @@ class OrderEntity implements IEntity {
     status,
     userId,
     businessId,
-    driverId,
+    shiftId,
     customerName,
     customerPhone,
   }: NullableProperties<OrderEntityT, 'id'>) {
@@ -51,7 +51,7 @@ class OrderEntity implements IEntity {
     this.status = status;
     this.userId = userId;
     this.businessId = businessId;
-    this.driverId = driverId;
+    this.shiftId = shiftId;
     this.customerName = customerName;
     this.customerPhone = customerPhone;
   }
@@ -66,7 +66,7 @@ class OrderEntity implements IEntity {
     status,
     userId,
     businessId,
-    driverId,
+    shiftId,
     customerName,
     customerPhone,
   }: OrderEntityT): OrderEntity {
@@ -80,7 +80,7 @@ class OrderEntity implements IEntity {
       status,
       userId,
       businessId,
-      driverId,
+      shiftId,
       customerName,
       customerPhone,
     });
@@ -95,7 +95,7 @@ class OrderEntity implements IEntity {
     status,
     userId,
     businessId,
-    driverId,
+    shiftId,
     customerName,
     customerPhone,
   }: Omit<OrderEntityT, 'id'>): OrderEntity {
@@ -109,7 +109,7 @@ class OrderEntity implements IEntity {
       status,
       userId,
       businessId,
-      driverId,
+      shiftId,
       customerName,
       customerPhone,
     });
@@ -126,7 +126,7 @@ class OrderEntity implements IEntity {
       status: this.status,
       userId: this.userId,
       businessId: this.businessId,
-      driverId: this.driverId,
+      shiftId: this.shiftId,
       customerName: this.customerName,
       customerPhone: this.customerPhone,
     };
@@ -142,7 +142,7 @@ class OrderEntity implements IEntity {
       status: this.status,
       userId: this.userId,
       businessId: this.businessId,
-      driverId: this.driverId,
+      shiftId: this.shiftId,
       customerName: this.customerName,
       customerPhone: this.customerPhone,
     };

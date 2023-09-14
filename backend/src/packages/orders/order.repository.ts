@@ -5,10 +5,14 @@ import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { OrderEntity } from '~/packages/orders/order.entity.js';
 
+import { DriverEntity } from '../drivers/driver.entity.js';
+import { TruckEntity } from '../trucks/truck.entity.js';
+import { UserEntity } from '../users/user.entity.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
   type OrderEntity as OrderEntityT,
   type OrderFindByIdResponseDto,
+  type OrderWithDriverAndTruck,
 } from './libs/types/types.js';
 
 class OrderRepository implements Omit<IRepository, 'find'> {
@@ -31,15 +35,21 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     const result = await this.db.driver().query.orders.findFirst({
       where: (orders) => eq(orders.id, id),
       with: {
-        driver: {
-          columns: { driverLicenseNumber: true },
+        shift: {
           with: {
-            user: {
+            driver: {
               columns: {
                 firstName: true,
                 lastName: true,
                 phone: true,
                 email: true,
+              },
+              with: {
+                asDriver: {
+                  columns: {
+                    driverLicenseNumber: true,
+                  },
+                },
               },
             },
           },
@@ -47,15 +57,18 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       },
     });
 
-    if (!result?.driver) {
+    if (!result?.shift.driver) {
       return null;
     }
-    const { driver, ...order } = result;
-    const { user, ...modifiedDriver } = driver;
+    const {
+      shift: { driver },
+      ...order
+    } = result;
+    const { asDriver, ...asUser } = driver;
 
     return {
       order: OrderEntity.initialize(order as OrderEntityT),
-      driver: { ...modifiedDriver, ...user },
+      driver: { ...asUser, ...asDriver },
     };
   }
 
@@ -67,8 +80,45 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     return (result ?? null) && OrderEntity.initialize(result as OrderEntityT);
   }
 
+  public async findByIdWithDriverAndTruckIds(
+    id: OrderEntityT['id'],
+  ): Promise<OrderWithDriverAndTruck | null> {
+    const result = await this.db.driver().query.orders.findFirst({
+      where: (orders) => eq(orders.id, id),
+      with: {
+        shift: {
+          with: {
+            driver: {
+              with: {
+                asDriver: true,
+              },
+            },
+            truck: true,
+          },
+        },
+      },
+    });
+
+    if (!result?.shift) {
+      return null;
+    }
+
+    const { shift, ...order } = result;
+    const { asDriver, ...asUser } = shift.driver;
+    const { truck } = shift;
+
+    return {
+      order: OrderEntity.initialize(order),
+      driver: {
+        asUser: UserEntity.initialize(asUser),
+        asDriver: DriverEntity.initialize(asDriver),
+      },
+      truck: TruckEntity.initialize(truck),
+    };
+  }
+
   public async find(
-    search: Partial<Pick<OrderEntityT, 'userId' | 'driverId' | 'businessId'>>,
+    search: Partial<Pick<OrderEntityT, 'userId' | 'shiftId' | 'businessId'>>,
   ): Promise<OrderEntity[]> {
     const orders = await this.db
       .driver()

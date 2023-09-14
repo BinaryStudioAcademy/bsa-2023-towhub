@@ -13,8 +13,8 @@ const orderUpdateRequestBody = joi.object<OrderUpdateRequestDto, true>({
   ),
   startPoint: joi.string(),
   endPoint: joi.string(),
-  driverId: positiveRequiredIntegerSchema(
-    OrdersValidationMessage.DRIVER_ID_MUST_BE_NUMBER,
+  shiftId: positiveRequiredIntegerSchema(
+    OrdersValidationMessage.SHIFT_ID_MUST_BE_NUMBER,
   ),
   userId: joi.number().integer().positive().messages({
     'number': OrdersValidationMessage.USER_ID_MUST_BE_NUMBER,

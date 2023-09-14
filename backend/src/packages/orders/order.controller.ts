@@ -106,7 +106,7 @@ import {
  *           format: number
  *           minimum: 1
  *           example: 1
- *         driverId:
+ *         shiftId:
  *           type: number
  *           format: number
  *           minimum: 1
@@ -129,7 +129,7 @@ import {
  *         - carsQty
  *         - startPoint
  *         - endPoint
- *         - driverId
+ *         - sfitId
  *         properties:
  *           scheduledTime:
  *             $ref: '#/components/schemas/Order/properties/scheduledTime'
@@ -139,8 +139,8 @@ import {
  *             $ref: '#/components/schemas/Order/properties/startPoint'
  *           endPoint:
  *             $ref: '#/components/schemas/Order/properties/endPoint'
- *           driverId:
- *             $ref: '#/components/schemas/Order/properties/driverId'
+ *           shiftId:
+ *             $ref: '#/components/schemas/Order/properties/shiftId'
  *       CreateOrderWithNotRegisteredUser:
  *         type: object
  *         required:
@@ -148,7 +148,7 @@ import {
  *         - carsQty
  *         - startPoint
  *         - endPoint
- *         - driverId
+ *         - shiftId
  *         - customerName
  *         - customerPhone
  *         properties:
@@ -160,8 +160,8 @@ import {
  *             $ref: '#/components/schemas/Order/properties/startPoint'
  *           endPoint:
  *             $ref: '#/components/schemas/Order/properties/endPoint'
- *           driverId:
- *             $ref: '#/components/schemas/Order/properties/driverId'
+ *           shiftId:
+ *             $ref: '#/components/schemas/Order/properties/shiftId'
  *           customerName:
  *             $ref: '#/components/schemas/Order/properties/customerName'
  *           customerPhone:

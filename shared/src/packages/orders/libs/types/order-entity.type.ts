@@ -10,7 +10,7 @@ type OrderEntity = {
   status: OrderStatusValues;
   userId: number | null;
   businessId: number;
-  driverId: number;
+  shiftId: number;
   customerName: string | null;
   customerPhone: string | null;
 };
