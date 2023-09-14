@@ -27,6 +27,7 @@ export {
   type ServerSocketEventParameter,
   type ServerToClientEvents,
   ClientSocketEvent,
+  RoomPrefixes,
   ServerSocketEvent,
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';

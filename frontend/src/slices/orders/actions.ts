@@ -6,7 +6,7 @@ import {
   type OrderUpdateResponseDto,
 } from '~/packages/orders/libs/types/types.js';
 
-import { ActionNames } from './libs/enums/action-names.enum.js';
+import { ActionNames } from './libs/enums/enums.js';
 
 const getOrder = createAsyncThunk<
   OrderFindByIdResponseDto,
@@ -30,7 +30,7 @@ const listenOrderUpdates = createAction(
   ActionNames.SOCKET.LISTEN_ORDER_UPDATES,
   (orderId: string) => {
     return {
-      payload: orderId,
+      payload: `${orderId}`,
     };
   },
 );

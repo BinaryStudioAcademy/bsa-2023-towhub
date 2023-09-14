@@ -33,14 +33,14 @@ const socketMiddleware: ThunkMiddleware<
   if (socketInstance) {
     socketInstance.on(
       ServerSocketEvent.ORDER_UPDATED,
-      (post: OrderUpdateResponseDto) => {
-        void dispatch(updateOrderFromSocket(post));
+      (order: OrderUpdateResponseDto) => {
+        void dispatch(updateOrderFromSocket(order));
       },
     );
   }
 
   return (next: Dispatch) => (action: AnyAction) => {
-    if (listenOrderUpdates === action && socketInstance) {
+    if (listenOrderUpdates.type === action.type && socketInstance) {
       socketInstance.emit<typeof ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES>(
         ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES,
         { orderId: `${action.payload as string}` },

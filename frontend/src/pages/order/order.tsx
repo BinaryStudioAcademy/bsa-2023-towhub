@@ -19,6 +19,7 @@ const OrderPage: React.FC = () => {
   useEffect(() => {
     if (orderId) {
       void dispatch(actions.getOrder(orderId));
+      void dispatch(actions.listenOrderUpdates(orderId));
     }
   }, [orderId, dispatch]);
 

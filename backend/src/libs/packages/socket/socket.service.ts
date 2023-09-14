@@ -4,8 +4,13 @@ import { Server as SocketServer } from 'socket.io';
 import { type GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { logger } from '~/libs/packages/logger/logger.js';
 
-import { ClientSocketEvent, ServerSocketEvent } from './libs/enums/enums.js';
 import {
+  ClientSocketEvent,
+  RoomPrefixes,
+  ServerSocketEvent,
+} from './libs/enums/enums.js';
+import {
+  type ClientToServerEvents,
   type OrderUpdateResponseDto,
   type ServerSocketEventParameter,
 } from './libs/types/types.js';
@@ -47,9 +52,13 @@ class SocketService {
       );
       socket.on(
         ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES,
-        async (orderId: string) => {
-          await socket.join(orderId);
-          logger.info(`${socket.id} connected to order ${orderId}`);
+        async ({
+          orderId,
+        }: Parameters<
+          ClientToServerEvents[typeof ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES]
+        >[0]) => {
+          await socket.join(`${RoomPrefixes.ORDER}${orderId}`);
+          logger.info(`${socket.id} connected to ${RoomPrefixes.ORDER}${orderId}`);
         },
       );
     });
@@ -59,7 +68,9 @@ class SocketService {
     id: OrderUpdateResponseDto['id'],
     order: OrderUpdateResponseDto,
   ): void {
-    this.io?.to(id.toString()).emit(ServerSocketEvent.ORDER_UPDATED, order);
+    this.io
+      ?.to(`${RoomPrefixes.ORDER}${id}`)
+      .emit(ServerSocketEvent.ORDER_UPDATED, order);
   }
 }
 
