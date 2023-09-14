@@ -868,7 +868,7 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{businessId}/trucks:
+   * /business/trucks:
    *    get:
    *      tags:
    *       - business/trucks
