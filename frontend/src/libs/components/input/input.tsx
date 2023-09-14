@@ -21,7 +21,6 @@ import styles from './styles.module.scss';
 type Properties<T extends FieldValues> = {
   control: Control<T, null>;
   errors: FieldErrors<T>;
-  setError?: UseFormSetError<T>;
   label?: string;
   name: FieldPath<T>;
   placeholder?: string;
@@ -30,12 +29,12 @@ type Properties<T extends FieldValues> = {
   min?: number;
   max?: number;
   step?: number;
+  setError?: UseFormSetError<T>;
 };
 
 const Input = <T extends FieldValues>({
   control,
   errors,
-  setError,
   label = '',
   name,
   placeholder = '',
@@ -44,6 +43,7 @@ const Input = <T extends FieldValues>({
   min,
   max,
   step,
+  setError,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
   const [isPasswordShown, setIsPasswordShown] = useState(false);
