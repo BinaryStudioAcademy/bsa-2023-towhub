@@ -41,8 +41,9 @@ class MapService {
   }): Promise<number> {
     const distance = await this.getDistance(startPoint, endPoint);
     const km = convertMetersToKm(distance.value);
+    const orderPrice = (pricePerKm * km).toFixed(2);
 
-    return +(pricePerKm * km).toFixed(2);
+    return Number(orderPrice);
   }
 }
 
