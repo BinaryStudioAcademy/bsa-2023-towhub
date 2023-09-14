@@ -10,7 +10,7 @@ export {
   HttpError,
   ValidationError,
 } from './libs/exceptions/exceptions.js';
-export { configureString, objectPick } from './libs/helpers/helpers.js';
+export { configureString, getFullName } from './libs/helpers/helpers.js';
 export { type IConfig } from './libs/packages/config/config.js';
 export {
   type HttpMethod,
@@ -32,6 +32,7 @@ export {
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
+  type ServerErrorResponseKeys,
   type ServerValidationErrorResponse,
   type ValidationSchema,
   type ValueOf,

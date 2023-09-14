@@ -17,7 +17,7 @@ type Properties<T extends FieldValues> = {
   defaultValues: DeepPartial<T>;
   validationSchema: ValidationSchema;
   btnLabel?: string;
-  onSubmit: (payload: T) => Promise<unknown | undefined>;
+  onSubmit: (payload: T) => Promise<unknown>;
 };
 
 const Form = <T extends FieldValues = FieldValues>({

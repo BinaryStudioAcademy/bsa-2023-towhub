@@ -1,3 +1,8 @@
+import pg from 'postgres';
+
+const PostgresError = pg.PostgresError;
+
+export { PostgresError };
 export {
   DatabaseConnectionError,
   UniqueViolationError,

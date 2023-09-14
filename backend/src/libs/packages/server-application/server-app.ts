@@ -9,11 +9,11 @@ import Fastify, {
   type FastifyError,
   type preHandlerHookHandler,
 } from 'fastify';
-import pg from 'postgres';
 
 import { ServerErrorType } from '~/libs/enums/enums.js';
 import {
   type ValidationError,
+  PostgresError,
   UniqueViolationError,
 } from '~/libs/exceptions/exceptions.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
@@ -200,7 +200,7 @@ class ServerApp implements IServerApp {
           return replay.status(error.status).send(response);
         }
 
-        if (error instanceof pg.PostgresError) {
+        if (error instanceof PostgresError) {
           this.logger.error(
             `[DB Error]: ${error.code.toString()} – ${error.message}`,
           );

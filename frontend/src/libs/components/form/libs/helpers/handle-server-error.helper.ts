@@ -12,7 +12,7 @@ import {
   type ServerValidationErrorResponse,
 } from '~/libs/types/types.js';
 
-import { SERVER_ERROR_SYMBOL } from '../consts/consts.js';
+import { FIELD_PATH_DELIMITER, SERVER_ERROR_SYMBOL } from '../consts/consts.js';
 
 const handleServerError = <T extends FieldValues>(
   error: ServerSerializedError,
@@ -30,47 +30,55 @@ const handleServerError = <T extends FieldValues>(
   }
 };
 
-function assignCommonErrors<T extends FieldValues>(
+const assignCommonErrors = <T extends FieldValues>(
   fields: FormField<T>[],
   commonError: Partial<ServerCommonErrorResponse>,
   setError: UseFormSetError<T>,
-): void {
-  for (const field of fields) {
-    if (field.associateServerErrors) {
-      for (const errorDescriptor of field.associateServerErrors) {
-        if (
-          typeof errorDescriptor === 'object' &&
-          errorDescriptor.errorMessage === commonError.message
-        ) {
-          setError(field.name, errorDescriptor.error, errorDescriptor.options);
-        } else if (errorDescriptor === commonError.message) {
-          setError(field.name, {
-            type: SERVER_ERROR_SYMBOL,
-            message: errorDescriptor,
-          });
-        }
-      }
+): void => {
+  const assignFieldError = (field: FormField<T>): void => {
+    if (!field.associateServerErrors) {
+      return;
     }
-  }
-}
-
-function assignValidationErrors<T extends FieldValues>(
-  fields: FormField<T>[],
-  commonError: Partial<ServerValidationErrorResponse>,
-  setError: UseFormSetError<T>,
-): void {
-  if (commonError.details) {
-    for (const { path, message } of commonError.details) {
-      const fieldName = path.join('.');
-
-      if (fields.some((field) => field.name === fieldName)) {
-        setError(fieldName as FieldPath<T>, {
+    for (const errorDescriptor of field.associateServerErrors) {
+      if (
+        typeof errorDescriptor === 'object' &&
+        errorDescriptor.errorMessage === commonError.message
+      ) {
+        setError(field.name, errorDescriptor.error, errorDescriptor.options);
+      } else if (errorDescriptor === commonError.message) {
+        setError(field.name, {
           type: SERVER_ERROR_SYMBOL,
-          message,
+          message: errorDescriptor,
         });
       }
     }
+  };
+
+  for (const field of fields) {
+    assignFieldError(field);
   }
-}
+};
+
+const assignValidationErrors = <T extends FieldValues>(
+  fields: FormField<T>[],
+  commonError: Partial<ServerValidationErrorResponse>,
+  setError: UseFormSetError<T>,
+): void => {
+  if (!commonError.details) {
+    return;
+  }
+  for (const { path, message } of commonError.details) {
+    const fieldName = path.join(FIELD_PATH_DELIMITER);
+
+    const fieldsHasName = fields.some((field) => field.name === fieldName);
+
+    if (fieldsHasName) {
+      setError(fieldName as FieldPath<T>, {
+        type: SERVER_ERROR_SYMBOL,
+        message,
+      });
+    }
+  }
+};
 
 export { handleServerError };

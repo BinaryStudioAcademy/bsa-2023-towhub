@@ -17,8 +17,11 @@ type ServerErrorResponse =
   | ServerValidationErrorResponse
   | ServerCommonErrorResponse;
 
+type ServerErrorResponseKeys = keyof ServerErrorResponse;
+
 export {
   type ServerCommonErrorResponse,
   type ServerErrorResponse,
+  type ServerErrorResponseKeys,
   type ServerValidationErrorResponse,
 };

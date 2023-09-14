@@ -20,7 +20,7 @@ const WelcomePage: React.FC = () => {
           break;
         }
         default: {
-          throw new Error(`Unsupported mode passed: ${String(mode)}`);
+          navigate(AppRoute.WELCOME);
         }
       }
     },

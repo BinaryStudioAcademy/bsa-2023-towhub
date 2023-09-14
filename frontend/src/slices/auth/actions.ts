@@ -58,7 +58,7 @@ const signIn = createAsyncThunk<
     return result;
   },
   {
-    serializeError: (error): ServerSerializedError => {
+    serializeError: (error: unknown): ServerSerializedError => {
       const serializedError = miniSerializeError(error);
 
       const serverError = testServerErrorType(error) ?? {};

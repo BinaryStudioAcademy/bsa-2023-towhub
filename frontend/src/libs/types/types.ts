@@ -15,6 +15,7 @@ export {
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
+  type ServerErrorResponseKeys,
   type ServerValidationErrorResponse,
   type UserEntityT,
   type UserGroupEntityT,

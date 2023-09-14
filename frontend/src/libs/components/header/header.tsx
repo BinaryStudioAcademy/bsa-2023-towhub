@@ -4,6 +4,7 @@ import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 import { useAuthUser } from '~/slices/auth/auth.js';
 
 import { AppLogo, Button, Link } from '../components.js';
+import { getFullName } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 const Header: React.FC = () => {
@@ -28,7 +29,7 @@ const Header: React.FC = () => {
         <div className={styles.navMenu}>
           {user ? (
             <div className={getValidClassNames('textMd', styles.welcome)}>
-              Hello, {user.firstName + ' ' + user.lastName}
+              Hello, {getFullName(user.firstName, user.lastName)}
             </div>
           ) : (
             <>

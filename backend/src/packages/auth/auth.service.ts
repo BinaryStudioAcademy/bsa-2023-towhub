@@ -1,8 +1,7 @@
-import pg from 'postgres';
-
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import {
   HttpError,
+  PostgresError,
   UniqueViolationError,
 } from '~/libs/exceptions/exceptions.js';
 import {
@@ -88,7 +87,7 @@ class AuthService {
 
       return { ...userWithToken, group };
     } catch (error) {
-      if (error instanceof pg.PostgresError) {
+      if (error instanceof PostgresError) {
         throw new UniqueViolationError(error);
       }
       throw error;
@@ -140,8 +139,8 @@ class AuthService {
       });
 
       return { ...userWithToken, group, business };
-    } catch (error) {
-      if (error instanceof pg.PostgresError) {
+    } catch (error: unknown) {
+      if (error instanceof PostgresError) {
         throw new UniqueViolationError(error);
       }
       throw error;
