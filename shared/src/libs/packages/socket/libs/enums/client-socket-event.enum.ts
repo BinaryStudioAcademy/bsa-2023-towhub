@@ -1,6 +1,7 @@
 const ClientSocketEvent = {
   CONNECT: 'connect',
-  GET_TRUCKS_LIST_REQUEST: 'get_trucks_list_request',
+  JOIN_HOME_ROOM: 'join_home_room',
+  LEAVE_HOME_ROOM: 'disconnect_home_room',
 } as const;
 
 export { ClientSocketEvent };

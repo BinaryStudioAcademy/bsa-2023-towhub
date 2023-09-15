@@ -23,6 +23,7 @@ export {
   HttpMessage,
 } from './libs/packages/http/http.js';
 export {
+  type ClientSocketEventParameter,
   type ServerSocketEventParameter,
   ClientSocketEvent,
   ServerSocketEvent,
