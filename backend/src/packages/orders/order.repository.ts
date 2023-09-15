@@ -2,13 +2,16 @@ import { eq } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
-import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
-import { OrderEntity } from '~/packages/orders/order.entity.js';
+import {
+  type DatabaseSchema,
+  schema,
+} from '~/libs/packages/database/schema/schema.js';
 
+import { type UserEntityT } from '../users/users.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
+  type OrderDatabaseModel,
   type OrderEntity as OrderEntityT,
-  type OrderFindByIdResponseDto,
 } from './libs/types/types.js';
 
 class OrderRepository implements Omit<IRepository, 'find'> {
@@ -24,72 +27,111 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     this.ordersSchema = ordersSchema;
   }
 
-  public async findByIdWithDriver(id: OrderEntityT['id']): Promise<{
-    order: OrderEntity;
-    driver: OrderFindByIdResponseDto['driver'];
-  } | null> {
-    const result = await this.db.driver().query.orders.findFirst({
-      where: (orders) => eq(orders.id, id),
-      with: {
-        driver: {
-          columns: { driverLicenseNumber: true },
-          with: {
-            user: {
-              columns: {
-                firstName: true,
-                lastName: true,
-                phone: true,
-                email: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (!result?.driver) {
-      return null;
-    }
-    const { driver, ...order } = result;
-    const { user, ...modifiedDriver } = driver;
-
-    return {
-      order: OrderEntity.initialize(order as OrderEntityT),
-      driver: { ...modifiedDriver, ...user },
-    };
-  }
-
-  public async findById(id: OrderEntityT['id']): Promise<OrderEntity | null> {
-    const result = await this.db.driver().query.orders.findFirst({
-      where: (orders) => eq(orders.id, id),
-    });
-
-    return (result ?? null) && OrderEntity.initialize(result as OrderEntityT);
-  }
-
-  public async find(
-    search: Partial<Pick<OrderEntityT, 'userId' | 'driverId' | 'businessId'>>,
-  ): Promise<OrderEntity[]> {
-    const orders = await this.db
+  public async findById(id: OrderEntityT['id']): Promise<OrderEntityT | null> {
+    const [order = null] = await this.db
       .driver()
-      .select()
+      .select({
+        id: this.ordersSchema.id,
+        userId: this.ordersSchema.userId,
+        businessId: this.ordersSchema.businessId,
+        price: this.ordersSchema.price,
+        scheduledTime: this.ordersSchema.scheduledTime,
+        startPoint: this.ordersSchema.startPoint,
+        endPoint: this.ordersSchema.endPoint,
+        status: this.ordersSchema.status,
+        carsQty: this.ordersSchema.carsQty,
+        customerName: this.ordersSchema.customerName,
+        customerPhone: this.ordersSchema.customerPhone,
+        shift: {
+          id: this.ordersSchema.shiftId,
+        },
+        driver: {
+          id: schema.shifts.driverId,
+          firstName: schema.users.firstName,
+          lastName: schema.users.lastName,
+          email: schema.users.email,
+          phone: schema.users.phone,
+          driverLicenseNumber: schema.drivers.driverLicenseNumber,
+        },
+        truck: {
+          id: schema.shifts.truckId,
+          licensePlateNumber: schema.drivers.driverLicenseNumber,
+        },
+      })
       .from(this.ordersSchema)
+      .innerJoin(schema.shifts, eq(this.ordersSchema.shiftId, schema.shifts.id))
+      .innerJoin(schema.users, eq(schema.shifts.driverId, schema.users.id))
+      .innerJoin(
+        schema.drivers,
+        eq(schema.drivers.userId, schema.shifts.driverId),
+      )
+      .where(eq(this.ordersSchema.id, id));
+
+    return order;
+  }
+
+  public async findAllBusinessOrders(
+    search: Partial<{
+      userId: OrderEntityT['userId'];
+      driverId: UserEntityT['id'];
+      businessId: OrderEntityT['businessId'];
+    }>,
+  ): Promise<OrderEntityT[]> {
+    return await this.db
+      .driver()
+      .select({
+        id: this.ordersSchema.id,
+        userId: this.ordersSchema.userId,
+        businessId: this.ordersSchema.businessId,
+        price: this.ordersSchema.price,
+        scheduledTime: this.ordersSchema.scheduledTime,
+        startPoint: this.ordersSchema.startPoint,
+        endPoint: this.ordersSchema.endPoint,
+        status: this.ordersSchema.status,
+        carsQty: this.ordersSchema.carsQty,
+        customerName: this.ordersSchema.customerName,
+        customerPhone: this.ordersSchema.customerPhone,
+        shift: {
+          id: this.ordersSchema.shiftId,
+        },
+        driver: {
+          id: schema.shifts.driverId,
+          firstName: schema.users.firstName,
+          lastName: schema.users.lastName,
+          email: schema.users.email,
+          phone: schema.users.phone,
+          driverLicenseNumber: schema.drivers.driverLicenseNumber,
+        },
+        truck: {
+          id: schema.shifts.truckId,
+          licensePlateNumber: schema.drivers.driverLicenseNumber,
+        },
+      })
+      .from(this.ordersSchema)
+      .innerJoin(schema.shifts, eq(this.ordersSchema.shiftId, schema.shifts.id))
+      .innerJoin(schema.users, eq(schema.shifts.driverId, schema.users.id))
+      .innerJoin(
+        schema.drivers,
+        eq(schema.drivers.userId, schema.shifts.driverId),
+      )
       .where(
         combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
       );
-
-    return orders.map((it) => OrderEntity.initialize(it as OrderEntityT));
   }
 
-  public async create(entity: OrderEntity): Promise<OrderEntity> {
-    const [result] = await this.db
+  public async create(
+    entity: Omit<OrderEntityT, 'id' | 'shift' | 'driver' | 'truck'> & {
+      shiftId: number;
+    },
+  ): Promise<OrderDatabaseModel | null> {
+    const [result = null] = await this.db
       .driver()
       .insert(this.ordersSchema)
-      .values(entity.toNewObject())
+      .values(entity)
       .returning()
       .execute();
 
-    return OrderEntity.initialize(result as OrderEntityT);
+    return result;
   }
 
   public async update({
@@ -98,7 +140,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
   }: {
     id: OrderEntityT['id'];
     payload: Partial<OrderEntityT>;
-  }): Promise<OrderEntity | null> {
+  }): Promise<OrderDatabaseModel | null> {
     const [result = null] = await this.db
       .driver()
       .update(this.ordersSchema)
@@ -106,7 +148,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .where(eq(this.ordersSchema.id, id))
       .returning();
 
-    return result && OrderEntity.initialize(result as OrderEntityT);
+    return result;
   }
 
   public async delete(

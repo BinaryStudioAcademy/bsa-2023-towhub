@@ -1,7 +1,14 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import { type OrderEntity as OrderEntityT } from './libs/types/types.js';
+import { type DriverEntity } from '../drivers/drivers.js';
+import { type ShiftEntity } from '../shifts/shift.js';
+import { type TruckEntity } from '../trucks/libs/types/types.js';
+import { type UserEntityT } from '../users/users.js';
+import {
+  type OrderEntity as OrderEntityT,
+  type OrderResponseDto,
+} from './libs/types/types.js';
 
 class OrderEntity implements IEntity {
   private id: OrderEntityT['id'] | null;
@@ -22,11 +29,20 @@ class OrderEntity implements IEntity {
 
   private businessId: OrderEntityT['businessId'];
 
-  private driverId: OrderEntityT['driverId'];
-
   private customerName: OrderEntityT['customerName'] | null;
 
   private customerPhone: OrderEntityT['customerPhone'] | null;
+
+  private shift: {
+    id: ShiftEntity['id'];
+  };
+
+  private driver:
+    | (Pick<UserEntityT, 'id' | 'firstName' | 'lastName' | 'email' | 'phone'> &
+        Pick<DriverEntity, 'driverLicenseNumber'>)
+    | null;
+
+  private truck: Pick<TruckEntity, 'id' | 'licensePlateNumber'> | null;
 
   private constructor({
     id,
@@ -38,9 +54,11 @@ class OrderEntity implements IEntity {
     status,
     userId,
     businessId,
-    driverId,
     customerName,
     customerPhone,
+    shift,
+    driver,
+    truck,
   }: NullableProperties<OrderEntityT, 'id'>) {
     this.id = id;
     this.price = price;
@@ -51,9 +69,11 @@ class OrderEntity implements IEntity {
     this.status = status;
     this.userId = userId;
     this.businessId = businessId;
-    this.driverId = driverId;
     this.customerName = customerName;
     this.customerPhone = customerPhone;
+    this.shift = shift;
+    this.driver = driver;
+    this.truck = truck;
   }
 
   public static initialize({
@@ -66,9 +86,11 @@ class OrderEntity implements IEntity {
     status,
     userId,
     businessId,
-    driverId,
+    shift,
     customerName,
     customerPhone,
+    driver,
+    truck,
   }: OrderEntityT): OrderEntity {
     return new OrderEntity({
       id,
@@ -80,13 +102,16 @@ class OrderEntity implements IEntity {
       status,
       userId,
       businessId,
-      driverId,
       customerName,
       customerPhone,
+      shift,
+      driver,
+      truck,
     });
   }
 
-  public static initializeNew({
+  public static initializeDb({
+    id,
     price,
     scheduledTime,
     carsQty,
@@ -95,12 +120,14 @@ class OrderEntity implements IEntity {
     status,
     userId,
     businessId,
-    driverId,
+    shiftId,
     customerName,
     customerPhone,
-  }: Omit<OrderEntityT, 'id'>): OrderEntity {
+  }: Omit<OrderEntityT, 'shift' | 'driver' | 'truck'> & {
+    shiftId: number;
+  }): OrderEntity {
     return new OrderEntity({
-      id: null,
+      id,
       price,
       scheduledTime,
       carsQty,
@@ -109,13 +136,15 @@ class OrderEntity implements IEntity {
       status,
       userId,
       businessId,
-      driverId,
       customerName,
       customerPhone,
+      shift: { id: shiftId },
+      driver: null,
+      truck: null,
     });
   }
 
-  public toObject(): OrderEntityT {
+  public toObject(): OrderResponseDto {
     return {
       id: this.id as number,
       price: this.price,
@@ -126,14 +155,19 @@ class OrderEntity implements IEntity {
       status: this.status,
       userId: this.userId,
       businessId: this.businessId,
-      driverId: this.driverId,
       customerName: this.customerName,
       customerPhone: this.customerPhone,
+      shift: {
+        id: this.shift.id,
+        driver: this.driver,
+        truck: this.truck,
+      },
     };
   }
 
-  public toNewObject(): Omit<OrderEntityT, 'id'> {
+  public toNewObject(): Omit<OrderEntityT, 'driver' | 'truck'> {
     return {
+      id: this.id as number,
       price: this.price,
       scheduledTime: this.scheduledTime,
       carsQty: this.carsQty,
@@ -142,9 +176,11 @@ class OrderEntity implements IEntity {
       status: this.status,
       userId: this.userId,
       businessId: this.businessId,
-      driverId: this.driverId,
       customerName: this.customerName,
       customerPhone: this.customerPhone,
+      shift: {
+        id: this.shift.id,
+      },
     };
   }
 }
