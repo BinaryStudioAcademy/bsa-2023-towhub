@@ -14,6 +14,7 @@ export {
   DriverValidationMessage,
 } from './libs/types/types.js';
 export {
+  driverCreateRequestBody,
   driverCreateUpdateRequestBody,
   driverGetParameters,
   driverUpdateDeleteParameters,

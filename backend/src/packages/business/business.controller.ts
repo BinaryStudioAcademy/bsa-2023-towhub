@@ -14,6 +14,7 @@ import {
   type DriverUpdateDeleteRequestParameters,
 } from '../drivers/drivers.js';
 import {
+  driverCreateRequestBody,
   driverCreateUpdateRequestBody,
   driverGetParameters,
   driverUpdateDeleteParameters,
@@ -311,7 +312,7 @@ class BusinessController extends Controller {
       method: 'POST',
       authStrategy: defaultStrategies,
       validation: {
-        body: driverCreateUpdateRequestBody,
+        body: driverCreateRequestBody,
       },
       handler: (options) =>
         this.createDriver(
