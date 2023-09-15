@@ -1,8 +1,8 @@
 import { type ClientSocketEvent } from '../enums/client-socket-event.enum.js';
 
 type ClientToServerEvents = {
-  [ClientSocketEvent.DRIVER_LOCATION_UPDATE]: (payload: {
-    driverId: number;
+  [ClientSocketEvent.TRUCK_LOCATION_UPDATE]: (payload: {
+    truckId: number;
     latLng: {
       latitude: number;
       longitude: number;

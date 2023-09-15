@@ -1,19 +1,19 @@
 import { ClientSocketEvent } from '~/libs/packages/socket/libs/enums/enums.js';
 import { socket as socketService } from '~/libs/packages/socket/socket.js';
 
-const sendDriverGeolocation = (
-  driverId: number,
+const sendTruckGeolocation = (
+  truckId: number,
   { coords }: GeolocationPosition,
 ): void => {
-  socketService.emit<typeof ClientSocketEvent.DRIVER_LOCATION_UPDATE>(
-    ClientSocketEvent.DRIVER_LOCATION_UPDATE,
+  socketService.emit<typeof ClientSocketEvent.TRUCK_LOCATION_UPDATE>(
+    ClientSocketEvent.TRUCK_LOCATION_UPDATE,
     [
       {
-        driverId,
+        truckId,
         latLng: { latitude: coords.latitude, longitude: coords.longitude },
       },
     ],
   );
 };
 
-export { sendDriverGeolocation };
+export { sendTruckGeolocation };

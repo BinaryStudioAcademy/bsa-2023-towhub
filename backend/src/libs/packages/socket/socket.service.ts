@@ -42,12 +42,12 @@ class SocketService {
         logger.info(`${socket.id} disconnected`);
       });
       socket.on(
-        ClientSocketEvent.DRIVER_LOCATION_UPDATE,
+        ClientSocketEvent.TRUCK_LOCATION_UPDATE,
         (
-          payload: ServerSocketEventParameter[typeof ClientSocketEvent.DRIVER_LOCATION_UPDATE],
+          payload: ServerSocketEventParameter[typeof ClientSocketEvent.TRUCK_LOCATION_UPDATE],
         ): void => {
-          const { driverId, latLng } = payload;
-          this.geolocationCacheService.setCache(driverId, latLng);
+          const { truckId, latLng } = payload;
+          this.geolocationCacheService.setCache(truckId, latLng);
         },
       );
 

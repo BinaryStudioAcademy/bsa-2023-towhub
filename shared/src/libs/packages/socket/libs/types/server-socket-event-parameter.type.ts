@@ -3,9 +3,9 @@ import { type GeolocationLatLng } from '~/libs/packages/geolocation/types/types.
 import { type ClientSocketEvent } from '../enums/enums.js';
 
 type ServerSocketEventParameter = {
-  [ClientSocketEvent.DRIVER_LOCATION_UPDATE]: {
+  [ClientSocketEvent.TRUCK_LOCATION_UPDATE]: {
     latLng: GeolocationLatLng;
-    driverId: number;
+    truckId: number;
   };
 };
 
