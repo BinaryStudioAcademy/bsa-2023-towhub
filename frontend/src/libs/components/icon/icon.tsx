@@ -9,17 +9,20 @@ type Properties = {
   iconName: ValueOf<typeof IconName>;
   className?: string;
   size?: ValueOf<typeof IconSize>;
+  onClick?: () => void;
 };
 
 const Icon: React.FC<Properties> = ({
   iconName,
   className,
   size,
+  onClick,
 }: Properties) => (
   <FontAwesomeIcon
     className={className}
     icon={iconNameToSvg[iconName]}
     size={size}
+    onClick={onClick}
   />
 );
 

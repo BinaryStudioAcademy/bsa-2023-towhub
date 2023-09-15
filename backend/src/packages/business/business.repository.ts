@@ -4,7 +4,10 @@ import { AppErrorMessage } from '~/libs/enums/enums.js';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 import { type IRepository } from '~/libs/interfaces/repository.interface.js';
 import { type IDatabase } from '~/libs/packages/database/libs/interfaces/database.interface.js';
-import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
+import {
+  type DatabaseSchema,
+  schema,
+} from '~/libs/packages/database/schema/schema.js';
 import { type OperationResult } from '~/libs/types/types.js';
 
 import { BusinessEntity } from './business.entity.js';
@@ -119,6 +122,29 @@ class BusinessRepository implements IRepository {
       .delete(this.businessSchema)
       .where(eq(this.businessSchema.id, id))
       .returning()
+      .execute();
+
+    return Boolean(item);
+  }
+
+  public async checkisDriverBelongedToBusiness(
+    userId: number,
+    driverId: number,
+  ): Promise<boolean> {
+    const [item] = await this.db
+      .driver()
+      .select()
+      .from(this.businessSchema)
+      .innerJoin(
+        schema.drivers,
+        eq(this.businessSchema.id, schema.drivers.businessId),
+      )
+      .where(
+        and(
+          eq(this.businessSchema.ownerId, userId),
+          eq(schema.drivers.userId, driverId),
+        ),
+      )
       .execute();
 
     return Boolean(item);
