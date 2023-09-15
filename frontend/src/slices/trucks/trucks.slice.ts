@@ -4,11 +4,7 @@ import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 
-import {
-  addTruck,
-  addTrucksByUserId,
-  getTrucksByBusinessId,
-} from './actions.js';
+import { addTruck, findAllTrucksForBusiness } from './actions.js';
 
 type State = {
   trucks: TruckEntity[];
@@ -32,42 +28,18 @@ const { reducer, actions, name } = createSlice({
         state.trucks.push(action.payload);
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(getTrucksByBusinessId.fulfilled, (state, action) => {
-        state.trucks = action.payload;
+      .addCase(findAllTrucksForBusiness.fulfilled, (state, action) => {
+        state.trucks = action.payload.items;
         state.dataStatus = DataStatus.FULFILLED;
-      })
-      .addCase(addTrucksByUserId.fulfilled, (state, action) => {
-        const { userId, trucksId } = action.payload;
-
-        if (!Array.isArray(state.userTruckMap[userId])) {
-          state.userTruckMap[userId] = [];
-        }
-
-        state.userTruckMap[userId] = [
-          ...state.userTruckMap[userId],
-          ...trucksId,
-        ];
-        state.dataStatus = DataStatus.FULFILLED;
-      })
-      .addCase(addTrucksByUserId.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
       })
       .addMatcher(
-        isAnyOf(
-          addTrucksByUserId.pending,
-          getTrucksByBusinessId.pending,
-          addTruck.pending,
-        ),
+        isAnyOf(findAllTrucksForBusiness.pending, addTruck.pending),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
         },
       )
       .addMatcher(
-        isAnyOf(
-          addTrucksByUserId.rejected,
-          getTrucksByBusinessId.rejected,
-          addTruck.rejected,
-        ),
+        isAnyOf(findAllTrucksForBusiness.rejected, addTruck.rejected),
         (state) => {
           state.dataStatus = DataStatus.REJECTED;
         },

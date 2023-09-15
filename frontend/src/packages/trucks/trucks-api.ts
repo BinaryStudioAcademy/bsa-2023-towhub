@@ -17,21 +17,6 @@ class TruckApi extends HttpApi {
     super({ path: ApiPath.TRUCKS, baseUrl, http, storage });
   }
 
-  public async getTrucksByBusinessId(
-    businessId: number,
-  ): Promise<TruckEntity[]> {
-    const response = await this.load(
-      this.getFullEndpoint(`${TruckApiPath.BUSINESS}/${businessId}`, {}),
-      {
-        method: 'GET',
-        contentType: ContentType.JSON,
-        hasAuth: false,
-      },
-    );
-
-    return await response.json<TruckEntity[]>();
-  }
-
   public async addTruck(
     payload: Omit<TruckEntity, 'id'>,
   ): Promise<TruckEntity> {
@@ -46,18 +31,6 @@ class TruckApi extends HttpApi {
     );
 
     return await response.json<TruckEntity>();
-  }
-
-  public async addTrucksByUserId(
-    userId: number,
-    trucksId: number[],
-  ): Promise<void> {
-    await this.load(this.getFullEndpoint(TruckApiPath.USERS_TRUCKS, {}), {
-      method: 'POST',
-      contentType: ContentType.JSON,
-      payload: JSON.stringify({ userId, trucksId }),
-      hasAuth: false,
-    });
   }
 }
 

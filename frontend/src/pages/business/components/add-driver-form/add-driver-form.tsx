@@ -4,7 +4,6 @@ import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppSelector,
-  useCallback,
   useEffect,
 } from '~/libs/hooks/hooks.js';
 import {
@@ -13,8 +12,7 @@ import {
 } from '~/packages/drivers/drivers.js';
 import { type UserEntityObjectWithGroupAndBusinessT } from '~/packages/drivers/libs/types/types.js';
 import { selectUser } from '~/slices/auth/selectors.js';
-import { getTrucksByBusinessId } from '~/slices/trucks/actions.js';
-import { actions as truckActions } from '~/slices/trucks/trucks.js';
+import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
 
 import { DEFAULT_ADD_DRIVER_PAYLOAD } from './libs/constants.js';
 import { addDriverFields as initialAddDriverFields } from './libs/fields.js';
@@ -32,10 +30,7 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
 
   const trucks = useAppSelector((state) => state.trucks.trucks);
 
-  useEffect(
-    () => void dispatch(getTrucksByBusinessId(user.business.id)),
-    [dispatch, user],
-  );
+  useEffect(() => void dispatch(findAllTrucksForBusiness()), [dispatch, user]);
 
   const truckOptions = trucks.map((truck) => ({
     label: truck.licensePlateNumber,
@@ -51,20 +46,6 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
       : field,
   );
 
-  const handleFormSubmit = useCallback(
-    (payload: Omit<DriverCreateUpdateRequestDto, 'businessId'>): void => {
-      void dispatch(
-        truckActions.addTrucksByUserId({
-          trucksId: payload.driverTrucks,
-          userId: user.business.ownerId,
-        }),
-      ).then(() => {
-        onSubmit(payload);
-      });
-    },
-    [dispatch, user, onSubmit],
-  );
-
   return (
     <div className={styles.wrapper}>
       <h3 className={getValidClassNames('h4', 'uppercase', styles.title)}>
@@ -73,7 +54,7 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
       <Form
         defaultValues={DEFAULT_ADD_DRIVER_PAYLOAD}
         validationSchema={driverCreateUpdateRequestBody}
-        onSubmit={handleFormSubmit}
+        onSubmit={onSubmit}
         btnLabel="Add driver"
         fields={addDriverFields}
       />

@@ -1,6 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import {
+  type AsyncThunkConfig,
+  type PaginationPayload,
+} from '~/libs/types/types.js';
 import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 
 import { name as sliceName } from './trucks.slice.js';
@@ -15,34 +19,23 @@ const addTruck = createAsyncThunk<
   return truckApi.addTruck(payload);
 });
 
-const getTrucksByBusinessId = createAsyncThunk<
-  TruckEntity[],
-  number,
+const findAllTrucksForBusiness = createAsyncThunk<
+  { items: TruckEntity[]; total: number },
+  PaginationPayload | undefined,
   AsyncThunkConfig
->(`${sliceName}/get-trucks-by-business-id`, async (businessId, { extra }) => {
-  const { truckApi } = extra;
+>(`${sliceName}/find-all-trucks-for-business`, (payload, { extra }) => {
+  const { pageIndex, pageSize } = payload ?? {};
 
-  return await truckApi.getTrucksByBusinessId(businessId);
+  const { businessApi, notification } = extra;
+
+  try {
+    return pageIndex && pageSize
+      ? businessApi.findAllTrucksByBusinessId({ pageIndex, pageSize })
+      : businessApi.findAllTrucksByBusinessId();
+  } catch (error) {
+    notification.error(getErrorMessage(error));
+    throw error;
+  }
 });
 
-const addTrucksByUserId = createAsyncThunk<
-  {
-    trucksId: number[];
-    userId: number;
-  },
-  {
-    trucksId: number[];
-    userId: number;
-  },
-  AsyncThunkConfig
->(
-  `${sliceName}/add-trucks-by-user-id`,
-  async ({ trucksId, userId }, { extra }) => {
-    const { truckApi } = extra;
-    await truckApi.addTrucksByUserId(userId, trucksId);
-
-    return { trucksId, userId };
-  },
-);
-
-export { addTruck, addTrucksByUserId, getTrucksByBusinessId };
+export { addTruck, findAllTrucksForBusiness };

@@ -35,6 +35,7 @@ export {
   type Id,
   type NullableProperties,
   type OperationResult,
+  type PaginationPayload,
   type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
@@ -109,10 +110,10 @@ export {
 } from './packages/shifts/shifts.js';
 export {
   type TruckEntity,
+  type TruckGetAllResponseDto,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
-  truckCreate,
   truckCreateRequestBody,
   truckGetParameters,
   TruckLicensePlateNumber,

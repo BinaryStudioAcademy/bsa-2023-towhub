@@ -1,6 +1,10 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
+import {
+  type PaginationPayload,
+  type TruckGetAllResponseDto,
+} from '../business/libs/types/types.js';
 import { type TruckEntity as TruckEntityT } from './libs/types/types.js';
 import { TruckEntity } from './truck.entity.js';
 import { type TruckRepository } from './truck.repository.js';
@@ -67,21 +71,6 @@ class TruckService implements IService {
     return result.map((element) => TruckEntity.initialize(element).toObject());
   }
 
-  public async getTrucksByBusinessId(
-    id: number,
-  ): Promise<TruckEntityT[] | null> {
-    const result = await this.repository.getTrucksByBusinessId(id);
-
-    if (result.length === 0) {
-      throw new HttpError({
-        status: HttpCode.NOT_FOUND,
-        message: HttpMessage.NOT_FOUND,
-      });
-    }
-
-    return result.map((element) => TruckEntity.initialize(element).toObject());
-  }
-
   public async addTrucksToUser(
     userId: number,
     trucksId: number[],
@@ -94,6 +83,19 @@ class TruckService implements IService {
     }
 
     return { userId, trucksId: userTrucks };
+  }
+
+  public async findAllByBusinessId(
+    businessId: number,
+    query: PaginationPayload,
+  ): Promise<TruckGetAllResponseDto> {
+    const data = await this.repository.findAllByBusinessId(businessId, query);
+
+    const items = data.map((it) => TruckEntity.initialize(it).toObject());
+
+    const total = await this.repository.getTotal(businessId);
+
+    return { items, total };
   }
 }
 

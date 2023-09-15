@@ -9,9 +9,11 @@ export {
   TruckYear,
 } from './libs/enums/enums.js';
 export { LICENSE_PLATE_NUMBER } from './libs/regex-patterns/regex-patterns.js';
-export { type TruckEntity } from './libs/types/types.js';
 export {
-  truckCreate,
+  type TruckEntity,
+  type TruckGetAllResponseDto,
+} from './libs/types/types.js';
+export {
   truckCreateRequestBody,
   truckGetParameters,
   truckUpdateRequestBody,

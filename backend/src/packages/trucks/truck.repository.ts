@@ -1,9 +1,10 @@
-import { eq, ilike, placeholder } from 'drizzle-orm';
+import { desc, eq, ilike, placeholder, sql } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
+import { type PaginationPayload } from '../business/libs/types/types.js';
 import {
   type TruckDatabaseModel,
   type TruckEntity,
@@ -115,6 +116,32 @@ class TruckRepository implements IRepository {
       .prepare('insertUserTruck');
 
     return await preparedQuery.execute();
+  }
+
+  public async findAllByBusinessId(
+    businessId: number,
+    query: PaginationPayload,
+  ): Promise<TruckDatabaseModel[]> {
+    const index = query.pageIndex * query.pageSize;
+
+    return await this.db
+      .driver()
+      .select()
+      .from(this.trucksSchema)
+      .where(eq(this.trucksSchema.businessId, businessId))
+      .orderBy(desc(this.trucksSchema.createdAt))
+      .offset(index)
+      .limit(query.pageSize);
+  }
+
+  public async getTotal(businessId: number): Promise<number> {
+    const [total] = await this.db
+      .driver()
+      .select({ count: sql<number>`count(${this.trucksSchema.businessId})` })
+      .from(this.trucksSchema)
+      .where(eq(this.trucksSchema.businessId, businessId));
+
+    return total.count;
   }
 }
 

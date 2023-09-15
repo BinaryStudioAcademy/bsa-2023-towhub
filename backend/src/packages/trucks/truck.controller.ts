@@ -10,10 +10,9 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { TruckApiPath } from './libs/enums/enums.js';
 import { type TruckEntity } from './libs/types/types.js';
 import {
-  truckCreate,
+  truckCreateRequestBody,
   truckGetParameters,
   truckUpdateRequestBody,
-  userTrucksRequestBody,
 } from './libs/validation-schema/validation-schemas.js';
 import { type TruckService } from './truck.service.js';
 
@@ -141,7 +140,7 @@ class TruckController extends Controller {
       path: TruckApiPath.ROOT,
       method: 'POST',
       validation: {
-        body: truckCreate,
+        body: { ...truckCreateRequestBody },
       },
       handler: (request) =>
         this.create(
@@ -197,32 +196,6 @@ class TruckController extends Controller {
         this.delete(
           request as ApiHandlerOptions<{
             params: { id: number };
-          }>,
-        ),
-    });
-
-    this.addRoute({
-      path: `${TruckApiPath.BUSINESS}${TruckApiPath.$ID}`,
-      method: 'GET',
-      validation: {
-        params: truckGetParameters,
-      },
-      handler: (request) =>
-        this.getTrucksByBusinessId(
-          request as ApiHandlerOptions<{
-            params: { id: number };
-          }>,
-        ),
-    });
-
-    this.addRoute({
-      path: TruckApiPath.USERS_TRUCKS,
-      method: 'POST',
-      validation: { body: userTrucksRequestBody },
-      handler: (request) =>
-        this.addUserTrucks(
-          request as ApiHandlerOptions<{
-            body: { userId: number; trucksId: number[] };
           }>,
         ),
     });
@@ -402,98 +375,6 @@ class TruckController extends Controller {
     return {
       status: HttpCode.NO_CONTENT,
       payload: await this.truckService.delete(options.params.id),
-    };
-  }
-
-  /**
-   * @swagger
-   * /trucks/business/{id}:
-   *   get:
-   *     summary: Get trucks by business ID
-   *     tags:
-   *       - truck
-   *     parameters:
-   *       - name: id
-   *         in: path
-   *         description: ID of the business to retrieve trucks for
-   *         required: true
-   *         schema:
-   *           type: integer
-   *     responses:
-   *       '200':
-   *         description: Trucks retrieved successfully
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: array
-   *               items:
-   *                 $ref: '#/components/schemas/TruckResponse'
-   *       '404':
-   *         description: Business not found
-   */
-  private async getTrucksByBusinessId(
-    options: ApiHandlerOptions<{ params: { id: number } }>,
-  ): Promise<ApiHandlerResponse> {
-    const { id } = options.params;
-
-    const trucks = await this.truckService.getTrucksByBusinessId(id);
-
-    return {
-      status: HttpCode.OK,
-      payload: trucks,
-    };
-  }
-
-  /**
-   * @swagger
-   * /trucks/users-trucks:
-   *   post:
-   *     summary: Add trucks to a user
-   *     tags:
-   *       - truck
-   *     requestBody:
-   *       description: User and trucks data to be added
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             properties:
-   *               userId:
-   *                 type: number
-   *                 description: ID of the user to add trucks to
-   *               trucksId:
-   *                 type: array
-   *                 items:
-   *                   type: number
-   *                 description: IDs of the trucks to add to the user
-   *     responses:
-   *       '200':
-   *         description: Trucks added to the user successfully
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 userId:
-   *                   type: number
-   *                 truckIds:
-   *                   type: array
-   *                   items:
-   *                     type: number
-   */
-  private async addUserTrucks(
-    options: ApiHandlerOptions<{
-      body: { userId: number; trucksId: number[] };
-    }>,
-  ): Promise<ApiHandlerResponse> {
-    const { userId, trucksId } = options.body;
-
-    await this.truckService.addTrucksToUser(userId, trucksId);
-
-    return {
-      status: HttpCode.OK,
-      payload: { userId, trucksId: trucksId },
     };
   }
 }

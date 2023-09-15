@@ -1,5 +1,4 @@
 export {
-  truckCreate,
   truckCreateRequestBody,
   truckGetParameters,
   truckUpdateRequestBody,
