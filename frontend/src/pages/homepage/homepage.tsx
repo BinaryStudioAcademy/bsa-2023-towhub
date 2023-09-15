@@ -5,11 +5,16 @@ import { TruckList } from './components/truck-list/truck-list.js';
 import styles from './styles.module.scss';
 
 const HomePage: React.FC = () => {
-  const { connectToHomeRoom } = useHomePageSocketService();
+  const { connectToHomeRoom, disconnectFromHomeRoom } =
+    useHomePageSocketService();
 
   useEffect(() => {
     connectToHomeRoom();
-  }, [connectToHomeRoom]);
+
+    return () => {
+      disconnectFromHomeRoom();
+    };
+  }, [connectToHomeRoom, disconnectFromHomeRoom]);
 
   return (
     <div className={styles.container}>
