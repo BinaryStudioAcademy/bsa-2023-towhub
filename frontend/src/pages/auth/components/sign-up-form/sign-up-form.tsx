@@ -18,7 +18,7 @@ import { signUpBusinessFields, signUpCustomerFields } from './libs/fields.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onSubmit: (payload: CustomerSignUpRequestDto) => Promise<void>;
+  onSubmit: (payload: CustomerSignUpRequestDto) => void;
   mode: ValueOf<typeof AuthMode>;
 };
 

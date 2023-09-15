@@ -10,4 +10,4 @@ const allActions = {
 
 export { allActions as actions };
 export { reducer } from './auth.slice.js';
-export { useAuthUser } from './libs/hooks/hooks.js';
+export { useAuthServerError, useAuthUser } from './libs/hooks/hooks.js';

@@ -12,4 +12,8 @@ const selectUser = (
   store: RootState,
 ): RootState[typeof AuthSliceName]['user'] => store[AuthSliceName].user;
 
-export { selectIsLoading, selectUser };
+const selectAuthServerError = (
+  store: RootState,
+): RootState[typeof AuthSliceName]['error'] => store[AuthSliceName].error;
+
+export { selectAuthServerError, selectIsLoading, selectUser };

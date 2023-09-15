@@ -10,7 +10,7 @@ import { addDriverFields } from './libs/fields.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onSubmit: (payload: DriverCreateUpdateRequestDto) => Promise<void>;
+  onSubmit: (payload: DriverCreateUpdateRequestDto) => void;
 };
 
 const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {

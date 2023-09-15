@@ -4,14 +4,14 @@ import {
   type UseFormSetError,
 } from 'react-hook-form';
 
-import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
+import { useAppForm, useCallback, useEffect } from '~/libs/hooks/hooks.js';
 import {
   type DeepPartial,
   type FieldValues,
   type FormField,
-  type ServerSerializedError,
   type ValidationSchema,
 } from '~/libs/types/types.js';
+import { useAuthServerError } from '~/slices/auth/auth.js';
 
 import { Button } from '../button/button.jsx';
 import { DropdownInput } from '../dropdown-input/dropdown-input.js';
@@ -24,7 +24,7 @@ type Properties<T extends FieldValues> = {
   defaultValues: DeepPartial<T>;
   validationSchema: ValidationSchema;
   btnLabel?: string;
-  onSubmit: (payload: T) => Promise<void>;
+  onSubmit: (payload: T) => void;
 };
 
 type RenderFieldProperties<T extends FieldValues = FieldValues> = {
@@ -85,15 +85,21 @@ const Form = <T extends FieldValues = FieldValues>({
     validationSchema,
   });
 
+  const [serverError] = useAuthServerError();
+
+  useEffect(() => {
+    if (serverError) {
+      handleServerError(serverError, setError, fields);
+    }
+  }, [fields, serverError, setError]);
+
   const handleFormSubmit = useCallback(
     (event_: React.BaseSyntheticEvent): void => {
       event_.preventDefault();
 
-      handleSubmit(onSubmit)(event_).catch((error) => {
-        handleServerError(error as ServerSerializedError, setError, fields);
-      });
+      void handleSubmit(onSubmit)(event_);
     },
-    [fields, handleSubmit, onSubmit, setError],
+    [handleSubmit, onSubmit],
   );
 
   const createInputs = (): JSX.Element[] => {

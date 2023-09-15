@@ -13,8 +13,8 @@ const AddTruckForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleFormSubmit = useCallback(
-    async (payload: TruckEntity): Promise<void> => {
-      await dispatch(truckActions.addTruck(payload));
+    (payload: TruckEntity): void => {
+      void dispatch(truckActions.addTruck(payload));
     },
     [dispatch],
   );

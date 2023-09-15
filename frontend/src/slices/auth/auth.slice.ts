@@ -4,6 +4,7 @@ import { DataStatus } from '~/libs/enums/enums.js';
 import {
   type BusinessSignUpResponseDto,
   type CustomerSignUpResponseDto,
+  type ServerSerializedError,
   type UserSignInResponseDto,
   type ValueOf,
 } from '~/libs/types/types.js';
@@ -11,6 +12,7 @@ import {
 import { getCurrent, signIn, signUp } from './actions.js';
 
 type State = {
+  error?: ServerSerializedError;
   dataStatus: ValueOf<typeof DataStatus>;
   user:
     | UserSignInResponseDto
@@ -20,6 +22,7 @@ type State = {
 };
 
 const initialState: State = {
+  error: undefined,
   dataStatus: DataStatus.IDLE,
   user: null,
 };
@@ -27,7 +30,11 @@ const initialState: State = {
 const { reducer, actions, name } = createSlice({
   initialState,
   name: 'auth',
-  reducers: {},
+  reducers: {
+    clearAuthServerError: (store) => {
+      store.error = undefined;
+    },
+  },
   extraReducers(builder) {
     builder.addCase(signUp.pending, (state) => {
       state.user = null;
@@ -45,10 +52,12 @@ const { reducer, actions, name } = createSlice({
       state.dataStatus = DataStatus.PENDING;
     });
     builder.addCase(signIn.fulfilled, (state, action) => {
+      state.error = undefined;
       state.user = action.payload;
       state.dataStatus = DataStatus.FULFILLED;
     });
-    builder.addCase(signIn.rejected, (state) => {
+    builder.addCase(signIn.rejected, (state, action) => {
+      state.error = action.payload || action.error;
       state.dataStatus = DataStatus.REJECTED;
     });
     builder.addCase(getCurrent.pending, (state) => {
