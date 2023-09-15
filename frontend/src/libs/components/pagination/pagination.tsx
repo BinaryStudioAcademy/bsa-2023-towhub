@@ -1,6 +1,5 @@
 import { type SingleValue } from 'react-select';
 
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 
@@ -81,15 +80,13 @@ const Pagination: React.FC<Properties> = ({
       const buttons: JSX.Element[] = [];
 
       for (let index = startIndex; index <= endIndex; index++) {
-        const buttonClass = getValidClassNames(styles.btn, {
-          [styles.active]: index === pageIndex,
-        });
         buttons.push(
           <Button
-            className={buttonClass}
-            onClick={handlePageClick}
             key={index}
+            className={styles.btn}
             label={`${convertToNumber(index)}`}
+            variant={index === pageIndex ? 'outlined' : 'text'}
+            onClick={handlePageClick}
           ></Button>,
         );
       }
@@ -122,17 +119,41 @@ const Pagination: React.FC<Properties> = ({
     <div className={styles.container}>
       <div className={styles.pagination}>
         <Button
+          className={styles['text-btn']}
           label="Prev"
           size="sm"
+          variant="text"
           onClick={handlePreviousClick}
           isDisabled={isFirstPage}
         />
-        {isHiddenFirstPage ? <div className={styles.dots}>...</div> : null}
+        {isHiddenFirstPage ? (
+          <>
+            <Button
+              className={styles.btn}
+              label={'1'}
+              variant="text"
+              onClick={handlePageClick}
+            ></Button>
+            <div className={styles.dots}>...</div>
+          </>
+        ) : null}
         {showButtons()}
-        {isHiddenLastPage ? <div className={styles.dots}>...</div> : null}
+        {isHiddenLastPage ? (
+          <>
+            <div className={styles.dots}>...</div>
+            <Button
+              className={styles.btn}
+              label={`${pageCount}`}
+              variant="text"
+              onClick={handlePageClick}
+            ></Button>
+          </>
+        ) : null}
         <Button
+          className={styles['text-btn']}
           label="Next"
           size="sm"
+          variant="text"
           onClick={handleNextClick}
           isDisabled={isLastPage}
         />
@@ -143,6 +164,7 @@ const Pagination: React.FC<Properties> = ({
           <Dropdown
             options={createOptions([5, 10, 20, 50, 100])}
             defaultValue={createOption(pageSize)}
+            isValueCustomized
             onChange={handleChangePageSize}
           />
         </div>
