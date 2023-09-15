@@ -71,7 +71,7 @@ class TruckEntity implements IEntity {
       licensePlateNumber,
       year,
       businessId,
-      createdAt,
+      createdAt:  new Date(createdAt).toDateString(),
     });
   }
 
@@ -94,7 +94,7 @@ class TruckEntity implements IEntity {
       licensePlateNumber,
       year,
       businessId,
-      createdAt,
+      createdAt:  new Date(createdAt).toDateString(),
     });
   }
 

@@ -40,9 +40,7 @@ const columns: ColumnDef<TruckEntity>[] = [
   },
   {
     header: 'Created At',
-    accessorFn: (trucks): string | undefined => {
-      return new Date(trucks.createdAt).toDateString();
-    },
+    accessorFn: (trucks): string | undefined => trucks.createdAt,
     footer: 'Phone',
     size: 200,
   },
