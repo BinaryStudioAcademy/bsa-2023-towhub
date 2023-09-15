@@ -1,4 +1,4 @@
 export {
-  type CalculatePriceRequest,
-  type CalculatePriceResponse,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
 } from 'shared/build/index.js';

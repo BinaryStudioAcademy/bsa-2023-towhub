@@ -1,5 +1,7 @@
 export {
   type Id,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
   type OrderEntity,

@@ -1,12 +1,12 @@
 import truckImg from '~/assets/img/tow-truck.png';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
-import { mapApi } from '~/packages/map/map.js';
+import { ordersApi } from '~/packages/orders/orders.js';
 
 import { rotateImg } from './libs/helpers/rotate-img.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
 import {
-  type CalculatePriceRequest,
-  type CalculatePriceResponse,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
 } from './libs/types/types.js';
 import mapStyle from './map.config.json';
 
@@ -93,9 +93,9 @@ class MapService implements IMapService {
   }
 
   public async calculatePrice(
-    data: CalculatePriceRequest,
-  ): Promise<CalculatePriceResponse> {
-    return await mapApi.calculatePrice(data);
+    data: OrderCalculatePriceRequestDto,
+  ): Promise<OrderCalculatePriceResponseDto> {
+    return await ordersApi.calculatePrice(data);
   }
 
   public async calculateDistance(

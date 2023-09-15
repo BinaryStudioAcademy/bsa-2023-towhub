@@ -5,6 +5,8 @@ export {
   OrdersValidationMessage,
 } from './libs/enums/enums.js';
 export {
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
   type OrderEntity,

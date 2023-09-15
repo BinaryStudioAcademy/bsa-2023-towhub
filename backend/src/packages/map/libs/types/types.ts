@@ -3,6 +3,6 @@ export {
   type Distance,
 } from '@googlemaps/google-maps-services-js';
 export {
-  type CalculatePriceRequest,
-  type CalculatePriceResponse,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
 } from 'shared/build/index.js';

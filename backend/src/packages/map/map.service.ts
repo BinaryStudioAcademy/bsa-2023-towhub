@@ -1,9 +1,10 @@
 import { TravelMode } from './libs/enums/enums.js';
 import { convertMetersToKm } from './libs/helpers/helpers.js';
 import {
-  type CalculatePriceResponse,
   type Client,
   type Distance,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
 } from './libs/types/types.js';
 
 class MapService {
@@ -38,11 +39,7 @@ class MapService {
     startPoint,
     endPoint,
     pricePerKm,
-  }: {
-    startPoint: string;
-    endPoint: string;
-    pricePerKm: number;
-  }): Promise<CalculatePriceResponse> {
+  }: OrderCalculatePriceRequestDto): Promise<OrderCalculatePriceResponseDto> {
     const distance = await this.getDistance(startPoint, endPoint);
     const km = convertMetersToKm(distance.value);
     const orderPrice = (pricePerKm * km).toFixed(2);

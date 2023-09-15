@@ -83,11 +83,8 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
-  type CalculatePriceRequest,
-  type CalculatePriceResponse,
-  MapApiPath,
-} from './packages/map/map.js';
-export {
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
   type OrderEntity,

@@ -6,6 +6,7 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { type MapService } from '~/packages/map/map.service.js';
 import { type OrderService } from '~/packages/orders/order.service.js';
 
 import { AuthStrategy } from '../auth/auth.js';
@@ -13,6 +14,7 @@ import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type Id,
+  type OrderCalculatePriceRequestDto,
   type OrderCreateRequestDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
@@ -199,16 +201,21 @@ import {
 class OrderController extends Controller {
   private orderService: OrderService;
 
+  private mapService: MapService;
+
   public constructor({
     logger,
     orderService,
+    mapService,
   }: {
     logger: ILogger;
     orderService: OrderService;
+    mapService: MapService;
   }) {
     super(logger, ApiPath.ORDERS);
 
     this.orderService = orderService;
+    this.mapService = mapService;
 
     this.addRoute({
       path: OrdersApiPath.ROOT,
@@ -287,6 +294,19 @@ class OrderController extends Controller {
           options as ApiHandlerOptions<{
             params: Id;
             user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: OrdersApiPath.CALCULATE_PRICE,
+      method: 'POST',
+      authStrategy: AuthStrategy.INJECT_USER,
+      handler: (options) =>
+        this.calculatePrice(
+          options as ApiHandlerOptions<{
+            body: OrderCalculatePriceRequestDto;
+            user: UserEntityObjectWithGroupT | null;
           }>,
         ),
     });
@@ -570,6 +590,20 @@ class OrderController extends Controller {
     return {
       status: HttpCode.OK,
       payload: result,
+    };
+  }
+
+  private async calculatePrice(
+    options: ApiHandlerOptions<{
+      body: OrderCalculatePriceRequestDto;
+      user: UserEntityObjectWithGroupT | null;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.mapService.getPriceByDistance({
+        ...options.body,
+      }),
     };
   }
 }
