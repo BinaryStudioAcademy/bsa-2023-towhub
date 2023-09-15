@@ -19,6 +19,7 @@ type Properties = {
 
 const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -54,7 +55,19 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
     };
   }, []);
 
-  const isMobile = window.innerWidth <= Breakpoint.MOBILE;
+  const handleWindowResize = useCallback(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, [handleWindowResize]);
+
+  const isMobile = windowWidth <= Breakpoint.MOBILE;
 
   return (
     <div
