@@ -1,5 +1,5 @@
 import { Button, Modal, Table } from '~/libs/components/components.js';
-import { DataStatus } from '~/libs/enums/enums.js';
+import { DataStatus, IconName } from '~/libs/enums/enums.js';
 import {
   useAppSelector,
   useAppTable,
@@ -41,8 +41,8 @@ const TrucksTable: React.FC = () => {
       <div className={styles.container}>
         <h2 className={styles.title}>Trucks Table</h2>
         <Button
-          label=""
-          frontIcon={'plus'}
+          label="Add a truck"
+          frontIcon={IconName.PLUS}
           className={styles.btn}
           onClick={openModal}
         />

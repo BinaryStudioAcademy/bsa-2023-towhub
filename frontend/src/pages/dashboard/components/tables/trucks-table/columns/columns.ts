@@ -40,7 +40,7 @@ const columns: ColumnDef<TruckEntity>[] = [
   },
   {
     header: 'Created At',
-    accessorFn: (trucks): string | undefined => trucks.createdAt,
+    accessorFn: (trucks): string => trucks.createdAt,
     footer: 'Phone',
     size: 200,
   },
