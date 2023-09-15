@@ -16,6 +16,8 @@ type Properties = {
   initialStatus: OrderInitialStatus;
   currentStatus: OrderCurrentStatus;
   className?: string;
+  isDriverShown?: boolean;
+  price: number;
 };
 
 const OrderCard: React.FC<Properties> = ({
@@ -24,8 +26,30 @@ const OrderCard: React.FC<Properties> = ({
   initialStatus: { startLocation, endLocation },
   currentStatus: { timespanLastUpdated, location, distanceLeft, timespanLeft },
   className,
+  isDriverShown = true,
+  price,
 }: Properties) => {
   const areManyKilometers = distanceLeft > 1;
+
+  const CardHeader = (): JSX.Element => (
+    <div className={styles.header}>
+      <div className={styles.headerImageContainer}>
+        <img className={styles.profileImage} src={profileURL} alt="header" />
+      </div>
+      <div className={styles.headerInfoContainer}>
+        <div className={styles.headerTitleContainer}>
+          <span className="textMd">
+            {firstName} {lastName}
+          </span>
+        </div>
+        <div className={styles.headerSubtitleContainer}>
+          <span className={getValidClassNames(styles.subtitle, 'textSm')}>
+            {licensePlate}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div
@@ -40,27 +64,7 @@ const OrderCard: React.FC<Properties> = ({
             <PlainSvgIcon name={PlainSvgIconName.HORIZONTAL_BAR} />
           </div>
         </div>
-        <div className={styles.header}>
-          <div className={styles.headerImageContainer}>
-            <img
-              className={styles.profileImage}
-              src={profileURL}
-              alt="header"
-            />
-          </div>
-          <div className={styles.headerInfoContainer}>
-            <div className={styles.headerTitleContainer}>
-              <span className="textMd">
-                {firstName} {lastName}
-              </span>
-            </div>
-            <div className={styles.headerSubtitleContainer}>
-              <span className={getValidClassNames(styles.subtitle, 'textSm')}>
-                {licensePlate}
-              </span>
-            </div>
-          </div>
-        </div>
+        {isDriverShown && <CardHeader />}
         <div className={styles.body}>
           <div className={styles.bodyContent}>
             <div className={styles.locationDot}>
@@ -120,6 +124,9 @@ const OrderCard: React.FC<Properties> = ({
             >
               {distanceLeft} km{areManyKilometers && 's'}, {timespanLeft}
             </span>
+          </div>
+          <div className={styles.priceContainer}>
+            <span className={styles.price}>Total price: {price}$</span>
           </div>
         </div>
       </div>

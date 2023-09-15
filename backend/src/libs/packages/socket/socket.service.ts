@@ -58,7 +58,9 @@ class SocketService {
           ClientToServerEvents[typeof ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES]
         >[0]) => {
           await socket.join(`${RoomPrefixes.ORDER}${orderId}`);
-          logger.info(`${socket.id} connected to ${RoomPrefixes.ORDER}${orderId}`);
+          logger.info(
+            `${socket.id} connected to ${RoomPrefixes.ORDER}${orderId}`,
+          );
         },
       );
     });

@@ -1,27 +1,115 @@
 @import "src/assets/css/vars.scss";
 
+$section-max-width: 416px;
+
 .container {
   display: flex;
   flex-flow: row-reverse wrap;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   gap: 18px;
-  padding: 154px 24px 0;
+  padding: 55px 24px 0;
   background-color: $background-color-grey;
 }
 
+.cardSection {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 593px;
+  margin: 10px 25px 0;
+  margin: 0 10px;
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+}
+
+.mapSection {
+  margin: 0 10px;
+  padding: 5px;
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+}
+
 .card {
-  max-width: 416px;
-  margin: 0 25px;
+  max-width: $section-max-width;
+  margin-top: 44px;
+}
+
+.map {
+  width: 539px;
+  height: 729px;
 }
 
 .status {
-  flex-grow: 1;
-  margin: 0 30px;
+  max-width: $section-max-width;
+  height: 175px;
+  margin: 10px 0 0;
+  font-size: 23px;
 }
 
-@media screen and (width <= 400px) {
+.buttonsSection {
+  display: flex;
+  justify-content: space-between;
+  max-width: $section-max-width;
+  margin: 20px 0;
+}
+
+.statusTop {
+  display: none;
+}
+
+.buttonDecline {
+  font-weight: $font-weight-normal;
+  background-color: $red-light;
+}
+
+.buttonPayNow {
+  font-weight: $font-weight-normal;
+  background-color: $green;
+}
+
+.buttonHomepage {
+  font-weight: $font-weight-normal;
+  background-color: $black-light;
+}
+
+@media screen and (width <= 600px) {
+  $section-max-width-sm: calc(100vw - 50px);
+
+  .cardSection {
+    max-width: $section-max-width-sm;
+  }
+
+  .card {
+    max-width: 100%;
+    margin-top: 10px;
+  }
+
+  .map {
+    width: $section-max-width-sm;
+    height: 240px;
+  }
+
+  .status {
+    min-width: 300px;
+    max-width: $section-max-width-sm;
+    height: 72px;
+    font-size: 17px;
+  }
+
+  .statusTop {
+    display: flex;
+  }
+
+  .statusBottom {
+    display: none;
+  }
+
   .container {
-    padding: 54px 24px 0;
+    padding: 10px 5px 0;
   }
 }

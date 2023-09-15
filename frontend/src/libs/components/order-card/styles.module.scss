@@ -16,9 +16,8 @@ $blue-shallow: #becee8;
   width: 75vmin;
   height: min-content;
   padding: 0 $side-padding 6vmin $side-padding;
-  background-color: $white;
-  border-radius: 5%;
-  box-shadow: $shadow-dark;
+  border: 0.5px solid $blue-dark;
+  border-radius: 8px;
 }
 
 .cardLayout {
@@ -194,4 +193,26 @@ $routes-margin-bottom: 3.5vmin;
 .distanceInfo {
   grid-area: distanceInfo;
   color: $grey-darker;
+}
+
+.priceContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 48px;
+}
+
+.price {
+  color: $blue-extra-dark;
+  font-weight: $font-weight-normal;
+  font-size: 20px;
+}
+
+@media screen and (width <= 600px) {
+  .priceContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+  }
 }
