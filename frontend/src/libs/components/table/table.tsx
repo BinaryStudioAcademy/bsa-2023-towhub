@@ -94,10 +94,13 @@ const Table = <T,>({
     <tbody>
       {table.getRowModel().rows.map((row) => (
         <tr key={row.id} className={styles.tr}>
-          {row.getVisibleCells().map((cell) => (
+          {row.getVisibleCells().map((cell, index) => (
             <td
               key={cell.id}
-              className={styles.td}
+              className={getValidClassNames(
+                styles.td,
+                index === 0 && styles['text-left'],
+              )}
               style={{
                 width: cell.column.getSize(),
               }}
@@ -112,15 +115,17 @@ const Table = <T,>({
 
   return (
     <div className={styles.container}>
-      <table
-        className={styles.table}
-        style={{
-          width: table.getCenterTotalSize(),
-        }}
-      >
-        {createThead()}
-        {createTbody()}
-      </table>
+      <div className={styles.wrapper}>
+        <table
+          className={styles.table}
+          style={{
+            width: table.getCenterTotalSize(),
+          }}
+        >
+          {createThead()}
+          {createTbody()}
+        </table>
+      </div>
       <Pagination
         pageCount={pagesRange}
         onClick={changePageIndex}
