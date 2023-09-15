@@ -155,12 +155,12 @@ class DriverService implements IService {
       to: `${email}`,
       subject: MailContent.SUBJECT,
       html: `<p>${MailContent.GREETING} ${name}</p><br>
-             <p>${MailContent.CREDENTIALS}</p>
-             <p>${MailContent.USERNAME} ${email}</p>
-             <p>${MailContent.PASSWORD} ${password}</p><br>
-             <p>${MailContent.SIGNIN_LINK}</p>
-             <p>${MailContent.LINK}</p><br>
-             <p>${MailContent.CLOSING}</p>`,
+<p>${MailContent.CREDENTIALS}</p>
+<p>${MailContent.USERNAME} ${email}</p>
+<p>${MailContent.PASSWORD} ${password}</p><br>
+<p>${MailContent.SIGNIN_LINK}</p>
+<p>${MailContent.LINK}</p><br>
+<p>${MailContent.CLOSING}</p>`,
     };
 
     await mailer.send(options);
