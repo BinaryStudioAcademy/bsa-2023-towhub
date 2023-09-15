@@ -52,12 +52,7 @@ const OrderCard: React.FC<Properties> = ({
   );
 
   return (
-    <div
-      className={getValidClassNames(
-        styles.container,
-        Boolean(className) && className,
-      )}
-    >
+    <div className={getValidClassNames(styles.container, className)}>
       <div className={styles.cardLayout}>
         <div className={styles.horizontalBar}>
           <div>
