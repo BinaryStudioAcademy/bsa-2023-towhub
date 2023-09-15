@@ -1,1 +1,1 @@
-export { sendDriverGeolocation } from './send-driver-geolocation/send-driver-geolocation.helper.js';
+export { sendTruckGeolocation } from './send-truck-geolocation/send-truck-geolocation.helper.js';
