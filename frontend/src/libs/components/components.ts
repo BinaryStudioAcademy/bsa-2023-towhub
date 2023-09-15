@@ -1,6 +1,7 @@
 export { App } from './app/app.js';
 export { AppLogo } from './app-logo/app-logo.js';
 export { Badge } from './badge/badge.js';
+export { BurgerMenu } from './burger-menu/burger-menu.js';
 export { BusinessCard } from './business-card/business-card.js';
 export { Button } from './button/button.js';
 export { Checkbox } from './checkbox/checkbox.js';
