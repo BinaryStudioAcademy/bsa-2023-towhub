@@ -3,21 +3,23 @@ import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 import { useAuthUser } from '~/slices/auth/auth.js';
 
-import { AppLogo, Button, Link } from '../components.js';
-import { getFullName } from './libs/helpers/helpers.js';
+import { AppLogo, BurgerMenu, Button, Link } from '../components.js';
+import { getBurgerMenuItems, getFullName } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 const Header: React.FC = () => {
-  const navigate = useNavigate();
-
   const user = useAuthUser();
 
-  const handleSignUp = useCallback(() => {
-    navigate(AppRoute.WELCOME);
-  }, [navigate]);
+  const navigate = useNavigate();
+
+  const burgerItems = getBurgerMenuItems(user?.group.key ?? null);
 
   const handleSignIn = useCallback(() => {
     navigate(AppRoute.SIGN_IN);
+  }, [navigate]);
+
+  const handleSignUp = useCallback(() => {
+    navigate(AppRoute.WELCOME);
   }, [navigate]);
 
   return (
@@ -28,20 +30,23 @@ const Header: React.FC = () => {
         </Link>
         <div className={styles.navMenu}>
           {user ? (
-            <div className={getValidClassNames('textMd', styles.welcome)}>
-              Hello, {getFullName(user.firstName, user.lastName)}
-            </div>
+            <>
+              <div className={getValidClassNames('textMd', styles.welcome)}>
+                Hello, {getFullName(user.firstName, user.lastName)}
+              </div>
+              <BurgerMenu burgerItems={burgerItems} />
+            </>
           ) : (
             <>
               <Button
                 label="Sign Up"
-                className={styles.btn}
+                className={styles.button}
                 type="button"
                 onClick={handleSignUp}
               />
               <Button
                 label="Sign In"
-                className={styles.btn}
+                className={styles.button}
                 type="button"
                 onClick={handleSignIn}
               />

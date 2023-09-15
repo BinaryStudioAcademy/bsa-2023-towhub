@@ -1,4 +1,6 @@
 export { AppRoute } from './app-route.enum.js';
+export { Breakpoint } from './breakpoint.js';
+export { BurgerMenuItemsName } from './burger-menu-items-name.enum.js';
 export { DataStatus } from './data-status.enum.js';
 export { FormLabel, FormName } from './form.enum.js';
 export { IconName } from './icon-name.enum.js';
