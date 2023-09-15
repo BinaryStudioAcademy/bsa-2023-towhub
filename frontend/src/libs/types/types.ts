@@ -1,5 +1,6 @@
 export { type AppThunk } from './app-think.type.js';
 export { type AsyncThunkConfig } from './async-thunk-config.type.js';
+export { type BurgerMenuItem } from './burger-menu-item.type.js';
 export { type DarkColor, type LightColor } from './color.type.js';
 export { type FormField } from './form.type.js';
 export { type SelectOption } from './select-option.type.js';
@@ -13,6 +14,7 @@ export {
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type EntityPagination,
   type PaginationPayload,
   type ServerErrorDetail,
   type ServerErrorResponse,
