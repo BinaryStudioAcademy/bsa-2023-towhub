@@ -41,7 +41,7 @@ $section-max-width: 416px;
 
 .map {
   width: 539px;
-  height: 729px;
+  height: 100%;
 }
 
 .status {
@@ -91,7 +91,7 @@ $section-max-width: 416px;
 
   .map {
     width: $section-max-width-sm;
-    height: 240px;
+    height: 100%;
   }
 
   .status {
