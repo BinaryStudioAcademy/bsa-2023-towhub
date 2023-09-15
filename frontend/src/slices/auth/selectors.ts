@@ -17,7 +17,6 @@ const selectUser = (
   | UserSignInResponseDto
   | CustomerSignUpResponseDto
   | BusinessSignUpResponseDto
-  | null
-  | undefined => state.auth.user;
+  | null => state.auth.user;
 
 export { selectIsLoading, selectUser };
