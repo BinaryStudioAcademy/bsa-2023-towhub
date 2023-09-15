@@ -23,8 +23,11 @@ export {
   HttpMessage,
 } from './libs/packages/http/http.js';
 export {
+  type ClientToServerEvents,
   type ServerSocketEventParameter,
+  type ServerToClientEvents,
   ClientSocketEvent,
+  RoomPrefixes,
   ServerSocketEvent,
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';

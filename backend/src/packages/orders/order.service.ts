@@ -1,6 +1,7 @@
 import { HttpMessage } from '~/libs/enums/enums.js';
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
+import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
@@ -29,16 +30,20 @@ class OrderService implements Omit<IService, 'find'> {
 
   private shiftService: ShiftService;
 
+  private socketService: SocketService;
+
   public constructor({
     businessService,
     orderRepository,
     driverService,
     shiftService,
+    socket,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
     driverService: DriverService;
     shiftService: ShiftService;
+    socket: SocketService;
   }) {
     this.orderRepository = orderRepository;
 
@@ -47,6 +52,8 @@ class OrderService implements Omit<IService, 'find'> {
     this.driverService = driverService;
 
     this.shiftService = shiftService;
+
+    this.socketService = socket;
   }
 
   public async create(
@@ -112,7 +119,11 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
-    return updatedOrder.toObject();
+    const order = updatedOrder.toObject();
+
+    this.socketService.notifyOrderUpdate(order.id, order);
+
+    return order;
   }
 
   public async findOne({
@@ -181,7 +192,7 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT | null;
   }): Promise<OrderUpdateResponseDto> {
-    let acceptStatus: OrderStatusValues = OrderStatus.CANCELED;
+    let acceptStatus: OrderStatusValues = OrderStatus.PENDING;
 
     if (parameters.user && parameters.user.group.key === UserGroupKey.DRIVER) {
       await this.shiftService.checkDriverStartShift(parameters.user.id);
