@@ -178,10 +178,10 @@ class BusinessService implements IService {
   }
 
   public async findAllTrucksByBusinessId(
-    businessId: number,
+    userId: number,
     query: PaginationPayload,
   ): Promise<TruckGetAllResponseDto> {
-    const business = await this.findByOwnerId(businessId);
+    const business = await this.findByOwnerId(userId);
 
     if (!business) {
       throw new HttpError({
@@ -195,9 +195,9 @@ class BusinessService implements IService {
 
   public async createTruck(
     payload: TruckAddRequestDto,
-    businessId: number,
+    userId: number,
   ): Promise<TruckEntity> {
-    const business = await this.findByOwnerId(businessId);
+    const business = await this.findByOwnerId(userId);
 
     if (!business) {
       throw new HttpError({

@@ -27,7 +27,7 @@ class TruckEntity implements IEntity {
 
   private businessId: number;
 
-  private createdAt: Date;
+  private createdAt: string;
 
   private constructor({
     id,

@@ -26,7 +26,7 @@ const addTruck = createAsyncThunk<
 
     return truck;
   } catch (error) {
-    notification.warning(getErrorMessage(error));
+    notification.error(getErrorMessage(error));
     throw error;
   }
 });
@@ -45,7 +45,7 @@ const findAllTrucksForBusiness = createAsyncThunk<
       pageSize,
     });
   } catch (error) {
-    notification.warning(getErrorMessage(error));
+    notification.error(getErrorMessage(error));
     throw error;
   }
 });

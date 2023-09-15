@@ -15,9 +15,11 @@ import { columns } from './columns/columns.js';
 import styles from './styles.module.scss';
 
 const TrucksTable: React.FC = () => {
-  const trucks = useAppSelector((state) => state.trucks.trucks);
-  const total = useAppSelector((state) => state.trucks.total);
-  const status = useAppSelector((state) => state.trucks.dataStatus);
+  const { trucks, total, dataStatus } = useAppSelector(({ trucks }) => ({
+    trucks: trucks.trucks,
+    total: trucks.total,
+    dataStatus: trucks.dataStatus,
+  }));
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -50,7 +52,7 @@ const TrucksTable: React.FC = () => {
           totalRow={total}
           pageIndex={pageIndex}
           pageSize={pageSize}
-          isLoading={status === DataStatus.PENDING}
+          isLoading={dataStatus === DataStatus.PENDING}
           changePageSize={changePageSize}
           changePageIndex={changePageIndex}
         />
