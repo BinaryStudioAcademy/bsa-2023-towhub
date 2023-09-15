@@ -19,13 +19,55 @@ class OrderRepository implements Omit<IRepository, 'find'> {
 
   private ordersSchema: DatabaseSchema['orders'];
 
+  private trucksSchema: DatabaseSchema['trucks'];
+
+  private usersSchema: DatabaseSchema['users'];
+
+  private shiftsSchema: DatabaseSchema['shifts'];
+
+  private driversSchema: DatabaseSchema['drivers'];
+
   public constructor(
     database: Pick<IDatabase, 'driver'>,
-    ordersSchema: DatabaseSchema['orders'],
+    {
+      orders,
+      trucks,
+      users,
+      shifts,
+      drivers,
+    }: Pick<
+      DatabaseSchema,
+      'orders' | 'users' | 'trucks' | 'shifts' | 'drivers'
+    >,
   ) {
     this.db = database;
-    this.ordersSchema = ordersSchema;
+    this.ordersSchema = orders;
+    this.trucksSchema = trucks;
+    this.usersSchema = users;
+    this.shiftsSchema = shifts;
+    this.driversSchema = drivers;
   }
+
+  // public async findByOpenByUser(
+  //   userId: UserEntityT['id'] | null,
+  //   userPhone: UserEntityT['phone'] | null,
+  // ): Promise<boolean> {
+  //   const [order = null] = await this.db
+  //     .driver()
+  //     .select()
+  //     .from(this.ordersSchema)
+  //     .where(
+  //       and(
+  //         eq(this.ordersSchema.status, OrderStatus.PENDING),
+  //         or(
+  //           eq(this.ordersSchema.userId, userId),
+  //           eq(this.ordersSchema.customerPhone, userPhone),
+  //         ),
+  //       ),
+  //     );
+
+  //   return Boolean(order);
+  // }
 
   public async findById(id: OrderEntityT['id']): Promise<OrderEntityT | null> {
     const [order = null] = await this.db
@@ -42,20 +84,18 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         carsQty: this.ordersSchema.carsQty,
         customerName: this.ordersSchema.customerName,
         customerPhone: this.ordersSchema.customerPhone,
-        shift: {
-          id: this.ordersSchema.shiftId,
-        },
+        shiftId: this.ordersSchema.shiftId,
         driver: {
-          id: schema.shifts.driverId,
-          firstName: schema.users.firstName,
-          lastName: schema.users.lastName,
-          email: schema.users.email,
-          phone: schema.users.phone,
-          driverLicenseNumber: schema.drivers.driverLicenseNumber,
+          id: this.shiftsSchema.driverId,
+          firstName: this.usersSchema.firstName,
+          lastName: this.usersSchema.lastName,
+          email: this.usersSchema.email,
+          phone: this.usersSchema.phone,
+          driverLicenseNumber: this.driversSchema.driverLicenseNumber,
         },
         truck: {
-          id: schema.shifts.truckId,
-          licensePlateNumber: schema.drivers.driverLicenseNumber,
+          id: this.shiftsSchema.truckId,
+          licensePlateNumber: this.trucksSchema.licensePlateNumber,
         },
       })
       .from(this.ordersSchema)
@@ -91,20 +131,18 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         carsQty: this.ordersSchema.carsQty,
         customerName: this.ordersSchema.customerName,
         customerPhone: this.ordersSchema.customerPhone,
-        shift: {
-          id: this.ordersSchema.shiftId,
-        },
+        shiftId: this.ordersSchema.shiftId,
         driver: {
-          id: schema.shifts.driverId,
-          firstName: schema.users.firstName,
-          lastName: schema.users.lastName,
-          email: schema.users.email,
-          phone: schema.users.phone,
-          driverLicenseNumber: schema.drivers.driverLicenseNumber,
+          id: this.shiftsSchema.driverId,
+          firstName: this.usersSchema.firstName,
+          lastName: this.usersSchema.lastName,
+          email: this.usersSchema.email,
+          phone: this.usersSchema.phone,
+          driverLicenseNumber: this.driversSchema.driverLicenseNumber,
         },
         truck: {
-          id: schema.shifts.truckId,
-          licensePlateNumber: schema.drivers.driverLicenseNumber,
+          id: this.shiftsSchema.truckId,
+          licensePlateNumber: this.trucksSchema.licensePlateNumber,
         },
       })
       .from(this.ordersSchema)
@@ -123,8 +161,8 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     entity: Omit<OrderEntityT, 'id' | 'shift' | 'driver' | 'truck'> & {
       shiftId: number;
     },
-  ): Promise<OrderDatabaseModel | null> {
-    const [result = null] = await this.db
+  ): Promise<OrderDatabaseModel> {
+    const [result] = await this.db
       .driver()
       .insert(this.ordersSchema)
       .values(entity)

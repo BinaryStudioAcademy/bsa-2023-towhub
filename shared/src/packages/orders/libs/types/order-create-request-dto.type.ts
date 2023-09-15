@@ -1,15 +1,13 @@
 import { type OrderEntity } from './order-entity.type.js';
 
-type OrderCreateRequestDto = Omit<
+type OrderCreateRequestDto = Pick<
   OrderEntity,
-  | 'id'
-  | 'userId'
-  | 'businessId'
-  | 'price'
-  | 'status'
-  | 'driver'
-  | 'shift'
-  | 'truck'
+  | 'scheduledTime'
+  | 'carsQty'
+  | 'startPoint'
+  | 'endPoint'
+  | 'customerName'
+  | 'customerPhone'
 > & { truckId: number };
 
 export { type OrderCreateRequestDto };

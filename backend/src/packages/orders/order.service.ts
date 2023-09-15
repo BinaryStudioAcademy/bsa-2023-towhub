@@ -111,15 +111,9 @@ class OrderService implements Omit<IService, 'find'> {
       customerPhone,
     });
 
-    if (!order) {
-      throw new NotFoundError({
-        message: HttpMessage.ORDER_DOES_NOT_EXIST,
-      });
-    }
-
     const orderExtended = {
-      ...OrderEntity.initializeDb(order).toNewObject(),
-      shift: { id: shift.id },
+      ...OrderEntity.initializeNew(order).toNewObject(),
+      shiftId: shift.id,
       driver: {
         id: driver.id,
         firstName: driver.firstName,
@@ -152,14 +146,14 @@ class OrderService implements Omit<IService, 'find'> {
     if (user?.group.key === UserGroupKey.BUSINESS) {
       const business = await this.businessService.findByOwnerId(user.id);
 
-      if (business) {
-        this.verifyOrderBelongsToBusiness(order, business.id);
-
-        return OrderEntity.initialize(order).toObject();
+      if (!business) {
+        throw new NotFoundError({
+          message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+        });
       }
-      throw new NotFoundError({
-        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
-      });
+      this.verifyOrderBelongsToBusiness(order, business.id);
+
+      return OrderEntity.initialize(order).toObject();
     }
 
     if (user) {
@@ -192,7 +186,7 @@ class OrderService implements Omit<IService, 'find'> {
 
     this.verifyOrderBelongsToDriver(foundOrder, parameters.user.id);
 
-    const shift = await this.shiftService.findByShiftId(foundOrder.shift.id);
+    const shift = await this.shiftService.findByShiftId(foundOrder.shiftId);
 
     const truck = await this.truckService.findById(shift.truckId);
 
@@ -309,6 +303,23 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
   }
+
+  // private async verifyHasUserOpenOrder(
+  //   payload: OrderCreateRequestDto & {
+  //     userId: number | null;
+  //   },
+  // ): Promise<void> {
+  //   const hasUserOpenOrder = await this.orderRepository.findByOpenByUser(
+  //     payload.userId,
+  //     payload.customerPhone,
+  //   );
+
+  //   if (hasUserOpenOrder) {
+  //     throw new NotFoundError({
+  //       message: HttpMessage.ORDER_DOES_NOT_EXIST, //TODO change
+  //     });
+  //   }
+  // }
 }
 
 export { OrderService };

@@ -1,11 +1,10 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import { type DriverEntity } from '../drivers/drivers.js';
 import { type ShiftEntity } from '../shifts/shift.js';
 import { type TruckEntity } from '../trucks/libs/types/types.js';
-import { type UserEntityT } from '../users/users.js';
 import {
+  type DriverInfo,
   type OrderEntity as OrderEntityT,
   type OrderResponseDto,
 } from './libs/types/types.js';
@@ -33,14 +32,9 @@ class OrderEntity implements IEntity {
 
   private customerPhone: OrderEntityT['customerPhone'] | null;
 
-  private shift: {
-    id: ShiftEntity['id'];
-  };
+  private shiftId: ShiftEntity['id'];
 
-  private driver:
-    | (Pick<UserEntityT, 'id' | 'firstName' | 'lastName' | 'email' | 'phone'> &
-        Pick<DriverEntity, 'driverLicenseNumber'>)
-    | null;
+  private driver: DriverInfo | null;
 
   private truck: Pick<TruckEntity, 'id' | 'licensePlateNumber'> | null;
 
@@ -56,7 +50,7 @@ class OrderEntity implements IEntity {
     businessId,
     customerName,
     customerPhone,
-    shift,
+    shiftId,
     driver,
     truck,
   }: NullableProperties<OrderEntityT, 'id'>) {
@@ -71,7 +65,7 @@ class OrderEntity implements IEntity {
     this.businessId = businessId;
     this.customerName = customerName;
     this.customerPhone = customerPhone;
-    this.shift = shift;
+    this.shiftId = shiftId;
     this.driver = driver;
     this.truck = truck;
   }
@@ -86,7 +80,7 @@ class OrderEntity implements IEntity {
     status,
     userId,
     businessId,
-    shift,
+    shiftId,
     customerName,
     customerPhone,
     driver,
@@ -104,13 +98,13 @@ class OrderEntity implements IEntity {
       businessId,
       customerName,
       customerPhone,
-      shift,
+      shiftId,
       driver,
       truck,
     });
   }
 
-  public static initializeDb({
+  public static initializeNew({
     id,
     price,
     scheduledTime,
@@ -138,7 +132,7 @@ class OrderEntity implements IEntity {
       businessId,
       customerName,
       customerPhone,
-      shift: { id: shiftId },
+      shiftId,
       driver: null,
       truck: null,
     });
@@ -158,14 +152,14 @@ class OrderEntity implements IEntity {
       customerName: this.customerName,
       customerPhone: this.customerPhone,
       shift: {
-        id: this.shift.id,
+        id: this.shiftId,
         driver: this.driver,
         truck: this.truck,
       },
     };
   }
 
-  public toNewObject(): Omit<OrderEntityT, 'driver' | 'truck'> {
+  public toNewObject(): Omit<OrderEntityT, 'shiftId' | 'driver' | 'truck'> {
     return {
       id: this.id as number,
       price: this.price,
@@ -178,9 +172,6 @@ class OrderEntity implements IEntity {
       businessId: this.businessId,
       customerName: this.customerName,
       customerPhone: this.customerPhone,
-      shift: {
-        id: this.shift.id,
-      },
     };
   }
 }
