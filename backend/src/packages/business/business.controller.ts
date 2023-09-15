@@ -480,6 +480,7 @@ class BusinessController extends Controller {
     const updatedBusiness = await this.businessService.update({
       id: options.params.id,
       payload: options.body,
+      owner: options.user,
     });
 
     return {
@@ -525,7 +526,10 @@ class BusinessController extends Controller {
       params: BusinessDeleteRequestParameters;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const deletionResult = await this.businessService.delete(options.params.id);
+    const deletionResult = await this.businessService.delete(
+      options.params.id,
+      { owner: options.user },
+    );
 
     return {
       status: HttpCode.OK,
@@ -564,6 +568,7 @@ class BusinessController extends Controller {
   ): Promise<ApiHandlerResponse> {
     const findBusinessById = await this.businessService.findById(
       options.params.id,
+      { owner: options.user },
     );
 
     return {
@@ -644,6 +649,7 @@ class BusinessController extends Controller {
     const createdDriver = await this.businessService.createDriver({
       payload: options.body,
       businessId: options.params.businessId,
+      owner: options.user,
     });
 
     return {
