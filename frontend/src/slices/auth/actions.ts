@@ -2,8 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
 import {
-  errorSerializerWithServerErrorHandling,
   getErrorMessage,
+  testServerErrorType,
 } from '~/libs/helpers/helpers.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
 import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
@@ -17,7 +17,6 @@ import {
 } from '~/packages/users/users.js';
 
 import { name as sliceName } from './auth.slice.js';
-import { type ThunkConfigWithServerSerializedError } from './libs/types/types.js';
 
 const signUp = createAsyncThunk<
   CustomerSignUpResponseDto | BusinessSignUpResponseDto,
@@ -25,38 +24,49 @@ const signUp = createAsyncThunk<
     payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto;
     mode: ValueOf<typeof AuthMode>;
   },
-  ThunkConfigWithServerSerializedError
+  AsyncThunkConfig
 >(
   `${sliceName}/sign-up`,
-  async ({ payload, mode }, { extra }) => {
+  async ({ payload, mode }, { extra, rejectWithValue }) => {
     const { authApi, localStorage } = extra;
 
-    const result = await authApi.signUp(payload, mode);
+    try {
+      const result = await authApi.signUp(payload, mode);
+      await localStorage.set(StorageKey.TOKEN, result.accessToken);
 
-    await localStorage.set(StorageKey.TOKEN, result.accessToken);
+      return result;
+    } catch (error: unknown) {
+      const serverError = testServerErrorType(error);
 
-    return result;
+      if (serverError) {
+        return rejectWithValue(serverError);
+      }
+      throw error;
+    }
   },
-  { serializeError: errorSerializerWithServerErrorHandling },
 );
 
 const signIn = createAsyncThunk<
   UserSignInResponseDto,
   UserSignInRequestDto,
   AsyncThunkConfig
->(
-  `${sliceName}/sign-in`,
-  async (signInPayload, { extra }) => {
-    const { authApi, localStorage } = extra;
+>(`${sliceName}/sign-in`, async (signInPayload, { extra, rejectWithValue }) => {
+  const { authApi, localStorage } = extra;
 
+  try {
     const result = await authApi.signIn(signInPayload);
-
     await localStorage.set(StorageKey.TOKEN, result.accessToken);
 
     return result;
-  },
-  { serializeError: errorSerializerWithServerErrorHandling },
-);
+  } catch (error: unknown) {
+    const serverError = testServerErrorType(error);
+
+    if (serverError) {
+      return rejectWithValue(serverError);
+    }
+    throw error;
+  }
+});
 
 const getCurrent = createAsyncThunk<
   CustomerSignUpResponseDto | BusinessSignUpResponseDto,
