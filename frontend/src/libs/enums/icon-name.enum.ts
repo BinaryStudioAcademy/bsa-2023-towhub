@@ -12,9 +12,13 @@ const IconName = {
   FILE: 'file',
   CHECK: 'check',
   LIST: 'list',
+  BARS: 'bars',
+  XMARK: 'xmark',
+  CLOCK_ROTATE_LEFT: 'clock rotate left',
+  USER_PEN: 'user pen',
+  RIGHT_FROM_BRACKET: 'right from bracket',
   TRUCK: 'truck',
   USERS: 'users',
-  XMARK: 'xmark',
   EYE: 'eye',
 } as const;
 
