@@ -6,8 +6,12 @@ import { logger } from '~/libs/packages/logger/logger.js';
 import { type ShiftService } from '~/packages/shifts/shift.service.js';
 
 import { type IConfig } from '../config/config.js';
-import { ServerSocketEvent } from './libs/enums/enums.js';
-import { sendTrucksList } from './libs/helpers/send-trucks-list/send-trucks-list.helper.js';
+import {
+  ClientSocketEvent,
+  ServerSocketEvent,
+  SocketRoom,
+} from './libs/enums/enums.js';
+import { getTrucksList } from './libs/helpers/get-trucks-list/get-trucks-list.helper.js';
 import { type ServerSocketEventParameter } from './libs/types/types.js';
 
 class SocketService {
@@ -56,21 +60,22 @@ class SocketService {
           this.geolocationCacheService.setCache(driverId, latLng);
         },
       );
-      socket.on(ServerSocketEvent.TRUCKS_LIST_UPDATE, () => {
-        void sendTrucksList(
-          this.shiftService,
-          this.geolocationCacheService,
-          socket,
-        );
-        setInterval(() => {
-          void sendTrucksList(
-            this.shiftService,
-            this.geolocationCacheService,
-            socket,
-          );
-        }, this.appConfig.ENV.SOCKET.TRUCK_LIST_UPDATE_INTERVAL);
-      });
+      socket.on(ClientSocketEvent.JOIN_HOME_ROOM, () =>
+        socket.join(SocketRoom.HOME_ROOM),
+      );
+      socket.on(ClientSocketEvent.LEAVE_HOME_ROOM, () =>
+        socket.leave(SocketRoom.HOME_ROOM),
+      );
     });
+    setInterval(() => {
+      void getTrucksList(this.shiftService, this.geolocationCacheService).then(
+        (result) => {
+          this.io
+            ?.to(SocketRoom.HOME_ROOM)
+            .emit(ServerSocketEvent.TRUCKS_LIST_UPDATE, result);
+        },
+      );
+    }, this.appConfig.ENV.SOCKET.TRUCK_LIST_UPDATE_INTERVAL);
   }
 }
 
