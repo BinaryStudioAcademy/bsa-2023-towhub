@@ -96,6 +96,7 @@ const Input = <T extends FieldValues>({
           )}
           onClick={toggleShowPassword}
           tabIndex={-1}
+          type="button"
         >
           <Icon iconName={IconName.EYE} size="sm" />
         </button>
