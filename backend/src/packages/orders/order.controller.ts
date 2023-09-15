@@ -514,6 +514,7 @@ class OrderController extends Controller {
    *                  type: boolean
    *                  example: true
    *      security:
+   *        - {}
    *        - bearerAuth: []
    *      responses:
    *        200:
