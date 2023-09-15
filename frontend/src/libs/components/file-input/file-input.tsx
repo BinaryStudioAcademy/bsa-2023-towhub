@@ -5,22 +5,23 @@ import {
   type FileRejection,
   useDropzone,
 } from 'react-dropzone';
-import { useFieldArray, useForm } from 'react-hook-form';
+import {
+  type Control,
+  type FieldValues,
+  type UseFormReturn,
+  useFieldArray,
+} from 'react-hook-form';
 
 import { ChosenFilePreview } from '~/libs/components/chosen-file-preview/chosen-file-preview.js';
 import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
-  useAppDispatch,
-  useAppSelector,
   useBindEnterToClick,
   useCallback,
   useMemo,
   useRef,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { type HttpError } from '~/libs/packages/http/libs/exceptions/exceptions.js';
-import { filesActions, FileStatus } from '~/slices/files/files.js';
 
 import { Icon } from '../icon/icon.jsx';
 import { fileInputDefaultsConfig } from './libs/config/config.js';
@@ -29,60 +30,33 @@ import {
   DropzoneFormatErrorMessage,
 } from './libs/helpers/helpers.js';
 import {
+  type FileFormType,
   type FileInputConfig,
-  type FileUploadResponseDto,
+  type FileObject,
 } from './libs/types/types.js';
 import styles from './styles.module.scss';
 
-type Properties = {
+type Properties<T extends FieldValues> = {
   label: string;
   isDisabled?: boolean;
   fileInputCustomConfig?: FileInputConfig;
-  handleAfterSubmit?: (
-    response: FileUploadResponseDto | null,
-    error: HttpError | null,
-  ) => unknown;
+  control: Control<FileFormType, null>;
+  setError: UseFormReturn<FileFormType>['setError'];
+  errors: UseFormReturn<T>['formState']['errors'];
+  clearErrors: UseFormReturn<FileFormType>['clearErrors'];
 };
 
-type FileObject = {
-  id: string;
-  webkitRelativePath: File['webkitRelativePath'];
-  arrayBuffer: ReturnType<File['arrayBuffer']>;
-  name: File['name'];
-  size: File['size'];
-  type: File['type'];
-};
-
-type FormType = { files: FileObject[] };
-
-const FileInput = ({
+const FileInput = <T extends FieldValues & FileFormType>({
   label,
   isDisabled = false,
   fileInputCustomConfig,
-  handleAfterSubmit,
-}: Properties): JSX.Element => {
+  control,
+  setError,
+  errors,
+  clearErrors,
+}: Properties<T>): JSX.Element => {
   const uploadButtonReference = useRef<HTMLButtonElement>(null);
   useBindEnterToClick(uploadButtonReference);
-  const dispatch = useAppDispatch();
-  const { uploadStatus, error: uploadError } = useAppSelector((state) => ({
-    uploadStatus: state.files.fileStatus,
-    error: state.files.error,
-  }));
-  const isUploading = uploadStatus === FileStatus.UPLOADING;
-  const isUploaded = uploadStatus === FileStatus.UPLOADED;
-
-  const isFormNotAvailable = useMemo<boolean>(
-    () => isDisabled || isUploading,
-    [isDisabled, isUploading],
-  );
-
-  const {
-    control,
-    handleSubmit,
-    setError,
-    formState: { errors },
-    clearErrors,
-  } = useForm<FormType>();
   const {
     fields: files,
     append,
@@ -91,12 +65,6 @@ const FileInput = ({
     control,
     name: 'files',
   });
-
-  const isEmpty = useMemo(() => files.length === 0, [files]);
-  const isFormNotSubmittable = useMemo<boolean>(
-    () => isEmpty || isDisabled || isUploading,
-    [isEmpty, isDisabled, isUploading],
-  );
 
   const handleDeleteFile = useCallback(
     (id: string) => {
@@ -162,7 +130,7 @@ const FileInput = ({
     async (event: DropEvent) => {
       const { dataTransfer } = event as DragEvent;
 
-      let files: File[] = [];
+      let files: File[];
 
       if (dataTransfer) {
         files = [...dataTransfer.files];
@@ -193,8 +161,8 @@ const FileInput = ({
     onDrop: handleDrop,
     onDropRejected: handleDropRejected,
     getFilesFromEvent: handleFilesFromEvent,
-    noDrag: isFormNotAvailable,
-    noClick: isFormNotAvailable,
+    noDrag: isDisabled,
+    noClick: isDisabled,
     noKeyboard: true,
     ...fileInputConfig,
   });
@@ -202,139 +170,75 @@ const FileInput = ({
   const validationError = errors.files?.message;
   const hasError = Boolean(validationError);
 
-  const onFileSubmit = useCallback(
-    async (data: FormType) => {
-      const files = await Promise.all(
-        data.files.map(async (fileObject) => {
-          const contentBuffer = await fileObject.arrayBuffer;
-
-          return new File([contentBuffer], fileObject.name, {
-            type: fileObject.type,
-          });
-        }),
-      );
-
-      let response: FileUploadResponseDto | null = null;
-      let error: HttpError | null = null;
-
-      try {
-        response = await dispatch(filesActions.uploadFile(files)).unwrap();
-      } catch (error_) {
-        error = error_ as HttpError;
-      }
-
-      if (!handleAfterSubmit) {
-        return;
-      }
-
-      if (response) {
-        return handleAfterSubmit(response, null);
-      }
-
-      handleAfterSubmit(null, error);
-    },
-    [dispatch, handleAfterSubmit],
-  );
-
-  const handleFormSubmit = useCallback(
-    (event_: React.BaseSyntheticEvent): void => {
-      void handleSubmit(onFileSubmit)(event_);
-    },
-    [handleSubmit, onFileSubmit],
-  );
-
   const [isInputBeingUsed, setIsInputBeingUsed] = useState(false);
 
-  let formMessage = label;
-
-  if (isUploading) {
-    formMessage = 'Uploading...';
-  } else if (isUploaded) {
-    formMessage = 'Uploaded';
-  }
-
   return (
-    <form onSubmit={handleFormSubmit}>
-      <div className={styles.wrapper}>
-        <div
-          {...getRootProps({
-            onDragEnter: () => {
-              setIsInputBeingUsed(true);
-            },
-            onDragLeave: () => {
-              setIsInputBeingUsed(false);
-            },
-            onMouseEnter: () => {
-              setIsInputBeingUsed(true);
-            },
-            onMouseLeave: () => {
-              setIsInputBeingUsed(false);
-            },
-            className: getValidClassNames(
-              styles.inputWrapper,
-              isInputBeingUsed &&
-                !isFormNotAvailable &&
-                styles.inputWrapperAnimated,
-              isFormNotAvailable && styles.disabled,
-            ),
+    <div className={styles.wrapper}>
+      <div
+        {...getRootProps({
+          onDragEnter: () => {
+            setIsInputBeingUsed(true);
+          },
+          onDragLeave: () => {
+            setIsInputBeingUsed(false);
+          },
+          onMouseEnter: () => {
+            setIsInputBeingUsed(true);
+          },
+          onMouseLeave: () => {
+            setIsInputBeingUsed(false);
+          },
+          className: getValidClassNames(
+            styles.inputWrapper,
+            isInputBeingUsed && !isDisabled && styles.inputWrapperAnimated,
+            isDisabled && styles.disabled,
+          ),
+        })}
+      >
+        <input
+          {...getInputProps({
+            className: styles.fileInput,
           })}
-        >
-          <input
-            {...getInputProps({
-              className: styles.fileInput,
-            })}
-          />
-          <Icon
-            className={getValidClassNames(
-              styles.icon,
-              isFormNotAvailable && styles.disabled,
-            )}
-            iconName={IconName.CLOUD_UPLOAD}
-          />
-          <p
-            className={getValidClassNames(
-              styles.label,
-              isFormNotAvailable && styles.disabled,
-              styles.textMd,
-            )}
-          >
-            {formMessage}
-          </p>
-          <p
-            className={getValidClassNames(
-              styles.errorMessage,
-              styles.textSm,
-              hasError && styles.visible,
-            )}
-          >
-            {uploadError?.message ?? validationError}
-          </p>
-        </div>
-        <div className={styles.uploadedArea}>
-          {files.map((file) => {
-            return (
-              <ChosenFilePreview
-                key={file.id}
-                file={file}
-                handleDeleteFile={handleDeleteFile}
-              />
-            );
-          })}
-        </div>
-        <button
-          ref={uploadButtonReference}
-          disabled={isFormNotSubmittable}
+        />
+        <Icon
           className={getValidClassNames(
-            styles.uploadFilesButton,
-            isFormNotSubmittable && styles.disabled,
+            styles.icon,
+            isDisabled && styles.disabled,
+          )}
+          iconName={IconName.CLOUD_UPLOAD}
+        />
+        <p
+          className={getValidClassNames(
+            styles.label,
+            isDisabled && styles.disabled,
+            styles.textMd,
           )}
         >
-          Upload
-        </button>
+          {label}
+        </p>
+        <p
+          className={getValidClassNames(
+            styles.errorMessage,
+            styles.textSm,
+            hasError && styles.visible,
+          )}
+        >
+          {String(validationError)}
+        </p>
       </div>
-    </form>
+      <div className={styles.uploadedArea}>
+        {files.map((file) => {
+          return (
+            <ChosenFilePreview
+              key={file.id}
+              file={file}
+              handleDeleteFile={handleDeleteFile}
+            />
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
-export { type FileObject };
 export { FileInput };

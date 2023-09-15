@@ -55,8 +55,5 @@
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
     "commit-msg": "npx commitlint --edit $1"
-  },
-  "dependencies": {
-    "mime-types": "2.1.35"
   }
 }

@@ -5,6 +5,7 @@ export {
   type FileEntityObjectT,
 } from './file-models.type.js';
 export { type MultipartParsedFile } from './multipart-parsed-file.type.js';
+export { type MultipartFile } from '@fastify/multipart';
 export {
   type DeleteFileRequestParameters,
   type FileEntityT,

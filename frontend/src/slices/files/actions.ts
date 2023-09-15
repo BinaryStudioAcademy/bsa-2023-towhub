@@ -21,7 +21,7 @@ const uploadFile = createAsyncThunk<
 
   try {
     return await filesApi.upload(formData);
-  } catch (error_) {
+  } catch (error_: unknown) {
     const error = error_ as HttpError;
 
     return rejectWithValue({ ...error, message: error.message });

@@ -1,100 +1,19 @@
-import { type MultipartFile } from '@fastify/multipart';
 import { type FastifyReply, type FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
-import { lookup } from 'mime-types';
 
 import { type HttpError } from '~/libs/exceptions/exceptions.js';
-import { InvalidFileError } from '~/libs/exceptions/file/file.js';
 
+import { FilesValidationStrategy } from './libs/enums/enums.js';
 import {
-  FilesValidationErrorMessage,
-  FilesValidationStrategy,
-} from './libs/enums/enums.js';
-import {
-  checkValidFileName,
-  createInvalidFileErrorMessage,
+  checkFileName,
+  checkFilesCount,
+  checkFileSize,
+  checkFileType,
 } from './libs/helpers/helpers.js';
 import {
   type FileInputConfig,
   type MultipartParsedFile,
 } from './libs/types/types.js';
-
-const checkName = (
-  fileInputConfig: Partial<FileInputConfig>,
-  temporaryFile: MultipartFile,
-): void => {
-  const isValidFilename = checkValidFileName(temporaryFile.filename);
-
-  if (!isValidFilename) {
-    const message = createInvalidFileErrorMessage(
-      FilesValidationErrorMessage.INVALID_FILE_NAME,
-      fileInputConfig,
-      temporaryFile,
-    );
-
-    throw new InvalidFileError({ message });
-  }
-};
-const checkSize = async (
-  fileInputConfig: Partial<FileInputConfig>,
-  temporaryFile: MultipartFile,
-): Promise<Buffer> => {
-  const bufferedContent = await temporaryFile.toBuffer();
-
-  if (
-    fileInputConfig.maxSize &&
-    bufferedContent.length > fileInputConfig.maxSize
-  ) {
-    const message = createInvalidFileErrorMessage(
-      FilesValidationErrorMessage.FILE_TOO_BIG,
-      fileInputConfig,
-      temporaryFile,
-    );
-
-    throw new InvalidFileError({ message });
-  }
-
-  return bufferedContent;
-};
-
-const checkType = (
-  fileInputConfig: Partial<FileInputConfig>,
-  temporaryFile: MultipartFile,
-): string | null => {
-  const fileMimeType = lookup(temporaryFile.filename);
-
-  if (fileInputConfig.accept) {
-    const matchedType = Object.entries(fileInputConfig.accept).some(
-      ([mimeType]) => fileMimeType === mimeType,
-    );
-
-    if (!matchedType) {
-      const message = createInvalidFileErrorMessage(
-        FilesValidationErrorMessage.INVALID_FILE_TYPE,
-        fileInputConfig,
-        temporaryFile,
-      );
-
-      throw new InvalidFileError({ message });
-    }
-  }
-
-  return fileMimeType || null;
-};
-
-const checkFilesCount = (
-  fileInputConfig: Partial<FileInputConfig>,
-  filesCount: number,
-): void => {
-  if (fileInputConfig.maxFiles && filesCount > fileInputConfig.maxFiles) {
-    const message = createInvalidFileErrorMessage(
-      FilesValidationErrorMessage.TOO_MANY_FILES,
-      fileInputConfig,
-    );
-
-    throw new InvalidFileError({ message });
-  }
-};
 
 const filesValidationPlugin = fp((fastify, _, done) => {
   fastify.decorateRequest('parsedFiles', []);
@@ -119,11 +38,14 @@ const filesValidationPlugin = fp((fastify, _, done) => {
           try {
             checkFilesCount(fileInputConfig, filesCount);
 
-            checkName(fileInputConfig, temporaryFile);
+            checkFileName(fileInputConfig, temporaryFile);
 
-            const actualMimeType = checkType(fileInputConfig, temporaryFile);
+            const actualMimeType = checkFileType(
+              fileInputConfig,
+              temporaryFile,
+            );
 
-            const bufferedContent = await checkSize(
+            const bufferedContent = await checkFileSize(
               fileInputConfig,
               temporaryFile,
             );

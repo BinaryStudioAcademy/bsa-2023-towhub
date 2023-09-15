@@ -57,6 +57,7 @@
     "pino-pretty": "10.2.0",
     "postgres": "3.3.5",
     "socket.io": "4.7.2",
-    "swagger-jsdoc": "6.2.8"
+    "swagger-jsdoc": "6.2.8",
+    "mime-types": "2.1.35"
   }
 }

@@ -100,7 +100,7 @@ class FilesController extends Controller {
       validateFilesStrategy: {
         strategy: FilesValidationStrategy.BASIC,
         filesInputConfig: {
-          maxSize: fileInputDefaultsConfig.maxSize,
+          maxSizeBytes: fileInputDefaultsConfig.maxSizeBytes,
           maxFiles: fileInputDefaultsConfig.maxFiles,
           accept: fileInputDefaultsConfig.accept,
         },

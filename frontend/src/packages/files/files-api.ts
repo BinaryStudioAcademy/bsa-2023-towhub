@@ -24,7 +24,7 @@ class FilesApi extends HttpApi {
         method: 'POST',
         contentType: ContentType.FORM_DATA,
         payload: formData,
-        hasAuth: false,
+        hasAuth: true,
       },
     );
 

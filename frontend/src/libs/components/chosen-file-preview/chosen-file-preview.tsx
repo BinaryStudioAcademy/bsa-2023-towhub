@@ -1,4 +1,4 @@
-import { type FileObject } from '~/libs/components/file-input/file-input.js';
+import { type FileObject } from '~/libs/components/file-input/libs/types/types.js';
 import { Icon } from '~/libs/components/icon/icon.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { filesize, getValidClassNames } from '~/libs/helpers/helpers.js';
@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from '~/libs/hooks/hooks.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { FileStatus } from '~/slices/files/files.js';
 
+import { DELETE_TIME_OFFSET } from './libs/constants/constants.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -35,7 +36,6 @@ const ChosenFilePreview = ({
 
   const [beforeDeletionState, setBeforeDeletionState] = useState(false);
 
-  const DELETE_TIME_OFFSET = 200;
   useEffect(() => {
     if (beforeDeletionState) {
       const zoomOutSpeed = Number.parseInt(styles['zoom-out-speed']);

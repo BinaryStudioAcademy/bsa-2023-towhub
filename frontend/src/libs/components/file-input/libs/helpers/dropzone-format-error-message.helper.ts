@@ -1,10 +1,12 @@
-import { type Accept, type DropzoneOptions, ErrorCode } from 'react-dropzone';
+import { type Accept, ErrorCode } from 'react-dropzone';
 
 import { filesize, pluralizeString } from '~/libs/helpers/helpers.js';
 
+import { type FileInputConfig } from '../types/types.js';
+
 const DropzoneFormatErrorMessage = (
   type: ErrorCode,
-  dropzoneOptions: DropzoneOptions,
+  dropzoneOptions: FileInputConfig,
   file: File,
 ): string => {
   switch (type) {
@@ -16,7 +18,7 @@ const DropzoneFormatErrorMessage = (
         .join(', ')}`;
     }
     case ErrorCode.FileTooLarge: {
-      const maxSize = filesize(dropzoneOptions.maxSize as number);
+      const maxSize = filesize(dropzoneOptions.maxSizeBytes as number);
 
       return `File '${file.name}': size must be less than ${maxSize}`;
     }

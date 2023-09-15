@@ -17,7 +17,7 @@ const createInvalidFileErrorMessage = (
 ): string => {
   switch (errorType) {
     case FilesValidationErrorMessage.FILE_TOO_BIG: {
-      if (!fileInputConfig.maxSize) {
+      if (!fileInputConfig.maxSizeBytes) {
         throw new FileValidatorError({
           message: FileValidatorErrorMessage.MAX_SIZE,
         });
@@ -26,7 +26,7 @@ const createInvalidFileErrorMessage = (
       const problemFile = file as MultipartFile;
 
       return `File '${problemFile.filename}': size must be less than ${filesize(
-        fileInputConfig.maxSize,
+        fileInputConfig.maxSizeBytes,
       )}`;
     }
     case FilesValidationErrorMessage.TOO_MANY_FILES: {
