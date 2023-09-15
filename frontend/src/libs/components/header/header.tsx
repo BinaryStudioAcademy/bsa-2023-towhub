@@ -1,15 +1,25 @@
 import { AppRoute } from '~/libs/enums/enums.js';
-import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
+import {
+  useAppSelector,
+  useCallback,
+  useNavigate,
+} from '~/libs/hooks/hooks.js';
+import { selectUser } from '~/slices/auth/selectors.js';
 
-import { AppLogo, Button, Link } from '../components.js';
+import { AppLogo, BurgerMenu, Button, Link } from '../components.js';
+import { getBurgerMenuItems } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const user = useAppSelector(selectUser);
+  const hasUser = Boolean(user);
 
   const handleSignIn = useCallback(() => {
     navigate(AppRoute.WELCOME);
   }, [navigate]);
+
+  const burgerItems = getBurgerMenuItems(user?.group.key ?? null);
 
   return (
     <header className={styles.container}>
@@ -18,12 +28,16 @@ const Header: React.FC = () => {
           <AppLogo />
         </Link>
         <div className={styles.navMenu}>
-          <Button
-            label="Sign In"
-            className={styles.btn}
-            type="button"
-            onClick={handleSignIn}
-          />
+          {hasUser ? (
+            <BurgerMenu burgerItems={burgerItems} />
+          ) : (
+            <Button
+              label="Sign In"
+              className={styles.btn}
+              type="button"
+              onClick={handleSignIn}
+            />
+          )}
         </div>
       </div>
     </header>
