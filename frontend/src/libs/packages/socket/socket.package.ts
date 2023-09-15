@@ -8,7 +8,6 @@ import {
   type ServerSocketEvent,
 } from './libs/enums/enums.js';
 import {
-  type ClientSocketEventParameter,
   type ClientSocketEventValue,
   type ServerSocketEventParameter,
   type ServerSocketEventValue,
@@ -32,9 +31,7 @@ class SocketService {
     this.io?.on(event, listener);
   }
 
-  public emit<
-    T extends keyof (ServerSocketEventParameter | ClientSocketEventParameter),
-  >({
+  public emit<T extends keyof ServerSocketEventParameter>({
     event,
     eventPayload,
   }: {
