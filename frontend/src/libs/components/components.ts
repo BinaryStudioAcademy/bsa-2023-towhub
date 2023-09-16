@@ -18,6 +18,7 @@ export { LocationInput } from './location-input/location-input.js';
 export { Modal } from './modal/modal.js';
 export { Notification } from './notification/notification.js';
 export { OrderCard } from './order-card/order-card.js';
+export { OrderList } from './order-list/order-list.js';
 export { Orders } from './orders/orders.js';
 export { PageLayout } from './page-layout/page-layout.js';
 export { Pagination } from './pagination/pagination.js';
