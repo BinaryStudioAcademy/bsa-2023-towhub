@@ -12,7 +12,7 @@ import {
 import { config } from '~/libs/packages/config/config.js';
 import { type Libraries, LoadScript } from '~/libs/types/types.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
-import { actions as orderActions } from '~/slices/orders/order.js';
+import { actions as orderActions, selectPrice } from '~/slices/orders/order.js';
 import { selectChosenTruck } from '~/slices/trucks/selectors.js';
 
 import { OrderForm } from './libs/components/order-form.js';
@@ -26,12 +26,12 @@ const Order: React.FC = () => {
   const [startLocation, setStartLocation] =
     useState<google.maps.LatLngLiteral>();
   const [endLocation, setEndLocation] = useState<google.maps.LatLngLiteral>();
-  const [price, setPrice] = useState<number>(0);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const chosenTruck = useAppSelector(selectChosenTruck);
+  const price = useAppSelector(selectPrice);
 
   if (!chosenTruck) {
     navigate(AppRoute.ROOT);
@@ -45,13 +45,6 @@ const Order: React.FC = () => {
       });
     });
   }, [dispatch]);
-
-  const handlePriceChange = useCallback(
-    (price: number) => {
-      setPrice(price);
-    },
-    [setPrice],
-  );
 
   const handleSubmit = useCallback(
     (payload: OrderCreateRequestDto) => {
@@ -111,7 +104,6 @@ const Order: React.FC = () => {
               <Map
                 center={startLocation}
                 destination={endLocation}
-                onPriceChange={handlePriceChange}
                 pricePerKm={chosenTruck.pricePerKm}
                 startAddress={startAddress}
                 endAddress={endAddress}

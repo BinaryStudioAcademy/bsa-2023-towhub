@@ -1,6 +1,5 @@
 import truckImg from '~/assets/img/tow-truck.png';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
-import { ordersApi } from '~/packages/orders/orders.js';
 
 import {
   TRUCK_IMG_HEIGHT,
@@ -8,10 +7,6 @@ import {
 } from './libs/constants/constants.js';
 import { rotateImg } from './libs/helpers/rotate-img.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
-import {
-  type OrderCalculatePriceRequestDto,
-  type OrderCalculatePriceResponseDto,
-} from './libs/types/types.js';
 import mapStyle from './map.config.json';
 
 type Constructor = {
@@ -79,7 +74,9 @@ class MapService implements IMapService {
       this.addMarker(origin, true, angle);
       this.addMarker(destination);
 
-      const duration = response.routes[0]?.legs?.[0]?.duration?.value;
+      const [route] = response.routes;
+      const [leg] = route.legs;
+      const duration = leg.duration?.value;
 
       if (!duration) {
         throw new ApplicationError({
@@ -94,12 +91,6 @@ class MapService implements IMapService {
         cause: error,
       });
     }
-  }
-
-  public async calculatePrice(
-    data: OrderCalculatePriceRequestDto,
-  ): Promise<OrderCalculatePriceResponseDto> {
-    return await ordersApi.calculatePrice(data);
   }
 
   public async calculateDistance(
@@ -118,7 +109,10 @@ class MapService implements IMapService {
 
     try {
       const response = await service.getDistanceMatrix(request);
-      const distance = response.rows[0]?.elements[0]?.distance?.value;
+
+      const [row] = response.rows;
+      const [element] = row.elements;
+      const distance = element.distance.value;
 
       if (!distance) {
         throw new ApplicationError({
@@ -139,15 +133,17 @@ class MapService implements IMapService {
     response: google.maps.DirectionsResult,
     origin: google.maps.LatLngLiteral,
   ): number {
-    const firstRoute = response.routes[0];
+    const [firstRoute] = response.routes;
 
     let nextPoint = null;
 
-    const firstLeg = firstRoute.legs[0];
+    const [firstLeg] = firstRoute.legs;
+
+    const [firstStep, secondStep] = firstLeg.steps;
 
     firstLeg.steps.length > 1
-      ? (nextPoint = firstLeg.steps[1].start_location)
-      : (nextPoint = firstLeg.steps[0].end_location);
+      ? (nextPoint = secondStep.start_location)
+      : (nextPoint = firstStep.end_location);
 
     return google.maps.geometry.spherical.computeHeading(origin, nextPoint);
   }
@@ -167,7 +163,10 @@ class MapService implements IMapService {
       icon: origin
         ? {
             url: rotatedIconUrl,
-            anchor: new google.maps.Point(TRUCK_IMG_WIDTH / 2, TRUCK_IMG_HEIGHT / 2),
+            anchor: new google.maps.Point(
+              TRUCK_IMG_WIDTH / 2,
+              TRUCK_IMG_HEIGHT / 2,
+            ),
             size: new google.maps.Size(TRUCK_IMG_WIDTH, TRUCK_IMG_HEIGHT),
             scale: 1,
           }

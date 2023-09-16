@@ -29,7 +29,6 @@ type Properties<T extends FieldValues> = {
   min?: number;
   max?: number;
   step?: number;
-  onChange?: () => void;
 };
 
 const Input = <T extends FieldValues>({
@@ -43,7 +42,6 @@ const Input = <T extends FieldValues>({
   min,
   max,
   step,
-  onChange,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
   const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -79,7 +77,6 @@ const Input = <T extends FieldValues>({
           min={min}
           max={max}
           step={step}
-          onChange={onChange}
         />
         {type === 'password' && (
           <button

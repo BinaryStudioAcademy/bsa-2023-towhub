@@ -5,6 +5,8 @@ import { LocalStorage } from '~/libs/packages/storage/storage.js';
 import { OrdersApi } from './orders-api.js';
 
 export {
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderResponseDto,

@@ -1,6 +1,7 @@
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useEffect, useRef } from '~/libs/hooks/hooks.js';
+import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
 import { MapService } from '~/libs/packages/map/map.js';
+import { actions as orderActions } from '~/slices/orders/order.js';
 
 import styles from './styles.module.scss';
 
@@ -26,11 +27,12 @@ const Map: React.FC<Properties> = ({
   pricePerKm,
   startAddress,
   endAddress,
-  onPriceChange,
 }: Properties) => {
   const mapReference = useRef<HTMLDivElement>(null);
   const mapService = useRef<MapService | null>(null);
   const mapClasses = getValidClassNames(styles.map, className);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (mapReference.current) {
@@ -43,19 +45,16 @@ const Map: React.FC<Properties> = ({
       if (center && destination) {
         mapService.current.addMarker(destination);
 
-        // TODO: MOVE IT TO SLICES
         void mapService.current.calculateRouteAndTime(center, destination);
 
-        if (onPriceChange && pricePerKm && startAddress && endAddress) {
-          void mapService.current
-            .calculatePrice({
+        if (pricePerKm && startAddress && endAddress) {
+          void dispatch(
+            orderActions.calculateOrderPrice({
               startPoint: startAddress,
               endPoint: endAddress,
               pricePerKm,
-            })
-            .then((result) => {
-              onPriceChange(result.price);
-            });
+            }),
+          );
         }
       }
     }
@@ -63,10 +62,10 @@ const Map: React.FC<Properties> = ({
     center,
     zoom,
     destination,
-    onPriceChange,
     pricePerKm,
     startAddress,
     endAddress,
+    dispatch,
   ]);
 
   return <div ref={mapReference} id="map" className={mapClasses} />;

@@ -6,7 +6,7 @@ const calculateRad = (rotationAngle: number): number =>
 const rotateCanvas = (
   canvas: HTMLCanvasElement,
   image: HTMLImageElement,
-  rotationRad: number
+  rotationRad: number,
 ): void => {
   const context = canvas.getContext('2d');
 

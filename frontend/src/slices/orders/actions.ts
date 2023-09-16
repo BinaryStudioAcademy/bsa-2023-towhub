@@ -4,6 +4,8 @@ import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderResponseDto,
 } from '~/packages/orders/orders.js';
@@ -29,4 +31,14 @@ const createOrder = createAsyncThunk<
   }
 });
 
-export { createOrder };
+const calculateOrderPrice = createAsyncThunk<
+  OrderCalculatePriceResponseDto,
+  OrderCalculatePriceRequestDto,
+  AsyncThunkConfig
+>(`${sliceName}/calculateOrderPrice`, (payload, { extra }) => {
+  const { ordersApi } = extra;
+
+  return ordersApi.calculatePrice(payload);
+});
+
+export { calculateOrderPrice, createOrder };
