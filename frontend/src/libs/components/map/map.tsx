@@ -41,6 +41,7 @@ const Map: React.FC<Properties> = ({
       if (center && destination) {
         mapService.current.addMarker(destination);
 
+        // TODO: MOVE IT TO SLICES
         void mapService.current.calculateRouteAndTime(center, destination);
 
         if (onPriceChange && pricePerKm && startAddress && endAddress) {

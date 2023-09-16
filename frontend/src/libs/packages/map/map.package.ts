@@ -163,6 +163,7 @@ class MapService implements IMapService {
       icon: origin
         ? {
             url: rotatedIconUrl,
+            // TODO: REMOVE MAGIC NUMBERS
             anchor: new google.maps.Point(73, 84),
             size: new google.maps.Size(146, 168),
             scale: 1,

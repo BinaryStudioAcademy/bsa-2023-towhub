@@ -13,8 +13,10 @@ const rotateImg = (url: string, degrees: number): string => {
   img.src = url;
 
   const rotationAngle = degrees;
+  // TODO: CREATE HELPER
   const rotationRad = (rotationAngle * Math.PI) / 180;
 
+  // TODO: CREATE HELPER
   context?.translate(canvas.width / 2, canvas.height / 2);
   context?.rotate(rotationRad);
   context?.drawImage(img, -img.width / 2, -img.height / 2);

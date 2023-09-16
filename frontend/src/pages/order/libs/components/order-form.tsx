@@ -17,7 +17,7 @@ type Properties = {
     address: string,
   ) => void;
 };
-
+// TODO: Create separate order form component
 const OrderForm: React.FC<Properties> = ({
   isDisabled,
   price,

@@ -21,8 +21,9 @@ type Properties<T extends FieldValues> = {
   validationSchema: ValidationSchema;
   btnLabel?: string;
   isDisabled?: boolean;
-  price?: number;
   onSubmit: (payload: T) => void;
+  // TODO: REMOVE THIS
+  price?: number;
   onLocationChange?: (
     place: google.maps.LatLngLiteral,
     address: string,
@@ -76,6 +77,7 @@ const Form = <T extends FieldValues = FieldValues>({
         return <Input {...field} control={control} errors={errors} />;
       }
       case 'location': {
+        // TODO: CLEAN THIS UP
         if (field.name === LocationFieldName.START) {
           return (
             <LocationInput
@@ -120,6 +122,7 @@ const Form = <T extends FieldValues = FieldValues>({
   return (
     <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
+      {/* TODO: REMOVE */}
       {price !== undefined && (
         <div className={styles.price}>
           <span>Price:</span>

@@ -1,3 +1,4 @@
+// TODO: MOVE TO libs/types
 import { type Libraries, LoadScript } from '@react-google-maps/api';
 
 import { TowTruckCard } from '~/libs/components/components.js';
@@ -84,12 +85,13 @@ const Order: React.FC = () => {
         googleMapsApiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
         libraries={libraries}
       >
+        {/* TODO: REMOVE THIS CHECK */}
         {chosenTruck && (
           <>
             <div className={styles.left}>
               <TowTruckCard
                 truck={chosenTruck}
-                // mock
+                // TODO: REMOVE MOCK
                 rating={{ reviewCount: 5, averageRating: 4.3 }}
                 distance={250}
                 hasFooter={false}

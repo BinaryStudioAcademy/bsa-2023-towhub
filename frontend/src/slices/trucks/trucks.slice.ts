@@ -14,6 +14,7 @@ type State = {
 
 const initialState: State = {
   trucks: [],
+  // FIXME: remove mock
   chosenTruck: {
     id: 1,
     capacity: 12,

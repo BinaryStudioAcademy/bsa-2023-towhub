@@ -36,8 +36,8 @@ const LocationInput = <T extends FieldValues>({
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
   const [location, setLocation] = useState<
-    google.maps.places.Autocomplete | undefined
-  >();
+    google.maps.places.Autocomplete | null
+  >(null);
 
   const error = errors[name]?.message;
   const hasError = Boolean(error);
