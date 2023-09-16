@@ -1,5 +1,3 @@
-@import "./vars.scss";
-
 .h2,
 .h3,
 .h4,
@@ -62,6 +60,11 @@
 .textSm {
   font-weight: $font-weight-regular;
   font-size: 14px;
+}
+
+.textLg {
+  font-weight: $font-weight-regular;
+  font-size: 30px;
 }
 
 .textXs {
