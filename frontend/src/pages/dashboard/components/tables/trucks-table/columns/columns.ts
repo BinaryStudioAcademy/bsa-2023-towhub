@@ -41,7 +41,7 @@ const columns: ColumnDef<TruckEntity>[] = [
   {
     header: 'Created At',
     accessorFn: (trucks): string => trucks.createdAt,
-    footer: 'Phone',
+    footer: 'Created At',
     size: 200,
   },
 ];
