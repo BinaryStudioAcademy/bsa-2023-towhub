@@ -2,11 +2,11 @@ export { type DriverAddResponseWithGroup } from './driver-add-response-with-grou
 export {
   type BusinessGetAllDriversRequestParameters,
   type DriverAddPayload,
-  type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverEntity,
   type DriverGetAllResponseDto,
   type DriverGetRequestParameters,
   type DriverUpdateDeleteRequestParameters,
   type DriverUpdatePayload,
+  type DriverUpdateRequestDto,
 } from 'shared/build/index.js';

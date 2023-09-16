@@ -2,7 +2,7 @@ import { Form } from '~/libs/components/components.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   type DriverDto,
-  driverCreateUpdateRequestBody,
+  driverUpdateRequestBody,
 } from '~/packages/drivers/drivers.js';
 
 import { DEFAULT_ADD_DRIVER_PAYLOAD } from './libs/constants.js';
@@ -21,7 +21,7 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
       </h3>
       <Form
         defaultValues={DEFAULT_ADD_DRIVER_PAYLOAD}
-        validationSchema={driverCreateUpdateRequestBody}
+        validationSchema={driverUpdateRequestBody}
         onSubmit={onSubmit}
         btnLabel="Add driver"
         fields={addDriverFields}

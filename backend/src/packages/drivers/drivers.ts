@@ -19,11 +19,11 @@ export {
   type BusinessGetAllDriversRequestParameters,
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
-  type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverEntity,
   type DriverGetAllResponseDto,
   type DriverGetRequestParameters,
   type DriverUpdateDeleteRequestParameters,
   type DriverUpdatePayload,
+  type DriverUpdateRequestDto,
 } from './libs/types/types.js';

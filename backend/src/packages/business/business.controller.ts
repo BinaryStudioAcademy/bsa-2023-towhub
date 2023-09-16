@@ -10,14 +10,14 @@ import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
   type BusinessGetAllDriversRequestParameters,
-  type DriverCreateUpdateRequestDto,
   type DriverUpdateDeleteRequestParameters,
+  type DriverUpdateRequestDto,
 } from '../drivers/drivers.js';
 import {
   driverCreateRequestBody,
-  driverCreateUpdateRequestBody,
   driverGetParameters,
   driverUpdateDeleteParameters,
+  driverUpdateRequestBody,
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
@@ -324,7 +324,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.createDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateUpdateRequestDto;
+            body: DriverUpdateRequestDto;
             params: { businessId: number };
           }>,
         ),
@@ -335,13 +335,13 @@ class BusinessController extends Controller {
       method: 'PUT',
       authStrategy: defaultStrategies,
       validation: {
-        body: driverCreateUpdateRequestBody,
+        body: driverUpdateRequestBody,
         params: driverUpdateDeleteParameters,
       },
       handler: (options) =>
         this.updateDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateUpdateRequestDto;
+            body: DriverUpdateRequestDto;
             params: DriverUpdateDeleteRequestParameters;
           }>,
         ),
@@ -638,7 +638,7 @@ class BusinessController extends Controller {
 
   private async createDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateUpdateRequestDto;
+      body: DriverUpdateRequestDto;
       params: { businessId: number };
     }>,
   ): Promise<ApiHandlerResponse> {
@@ -717,7 +717,7 @@ class BusinessController extends Controller {
 
   private async updateDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateUpdateRequestDto;
+      body: DriverUpdateRequestDto;
       params: DriverUpdateDeleteRequestParameters;
     }>,
   ): Promise<ApiHandlerResponse> {
