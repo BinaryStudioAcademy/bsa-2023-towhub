@@ -13,7 +13,7 @@ class DriverEntity implements IEntity {
 
   private businessId: DriverEntityT['businessId'];
 
-  private createdAt: DriverEntityT['createdAt'];
+  private createdAt: DriverEntityT['createdAt'] | null;
 
   private user?: UserEntityT;
 
@@ -24,7 +24,9 @@ class DriverEntity implements IEntity {
     businessId,
     createdAt,
     user,
-  }: NullableProperties<DriverEntityT, 'id'> & { user?: UserEntityT }) {
+  }: NullableProperties<DriverEntityT, 'id' | 'createdAt'> & {
+    user?: UserEntityT;
+  }) {
     this.id = id;
     this.driverLicenseNumber = driverLicenseNumber;
     this.userId = userId;
@@ -55,14 +57,13 @@ class DriverEntity implements IEntity {
     driverLicenseNumber,
     userId,
     businessId,
-    createdAt,
-  }: Omit<DriverEntityT, 'id'>): DriverEntity {
+  }: Omit<DriverEntityT, 'id' | 'createdAt'>): DriverEntity {
     return new DriverEntity({
       id: null,
       driverLicenseNumber,
       userId,
       businessId,
-      createdAt,
+      createdAt: null,
     });
   }
 
@@ -72,7 +73,7 @@ class DriverEntity implements IEntity {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
-      createdAt: this.createdAt,
+      createdAt: this.createdAt as string,
     };
   }
 
@@ -81,7 +82,7 @@ class DriverEntity implements IEntity {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
-      createdAt: this.createdAt,
+      createdAt: this.createdAt as string,
     };
   }
 
@@ -91,7 +92,7 @@ class DriverEntity implements IEntity {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
-      createdAt: this.createdAt,
+      createdAt: this.createdAt as string,
       user: this.user,
     };
   }

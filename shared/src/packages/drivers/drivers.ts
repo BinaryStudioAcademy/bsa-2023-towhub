@@ -1,6 +1,4 @@
 export {
-  type BusinessGetAllDriversRequestParameters,
-  type BusinessGetDriversPageRequestQuery,
   type DriverAddPayload,
   type DriverCommonDetails,
   type DriverCreateUpdateRequestDto,
@@ -18,7 +16,5 @@ export {
 } from './libs/types/types.js';
 export {
   driverCreateUpdateRequestBody,
-  driverGetPageQuery,
-  driverGetParameters,
   driverUpdateDeleteParameters,
 } from './libs/validation-schemas/validation-schemas.js';

@@ -11,7 +11,7 @@ import styles from './styles.module.scss';
 type Properties = {
   isHeaderHidden?: boolean;
   isSidebarHidden?: boolean;
-  children?: JSX.Element | ((a: TabName) => JSX.Element);
+  children?: JSX.Element;
 };
 
 const PageLayout: FC<Properties> = ({
@@ -40,7 +40,7 @@ const PageLayout: FC<Properties> = ({
       )}
       <main className={styles.content}>
         <RouterOutlet />
-        {typeof children === 'function' ? children(selectedTab) : children}
+        {children}
       </main>
     </div>
   );

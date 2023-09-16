@@ -7,14 +7,14 @@ import { DriverCreationMessage } from '~/packages/drivers/libs/enums/enums.js';
 import {
   type DriverAddPayload,
   type DriverCreateUpdateRequestDto,
-  type DriverGetDriversPagePayload,
+  type GetPaginatedPageQuery,
 } from '~/packages/drivers/libs/types/types.js';
 
 import { ACTIONS_TYPES } from './common.js';
 
 const getDriversPage = createAsyncThunk<
   DriverGetAllResponseDto,
-  DriverGetDriversPagePayload,
+  GetPaginatedPageQuery,
   AsyncThunkConfig
 >(ACTIONS_TYPES.GET_DRIVERS_PAGE, async (payload, { extra }) => {
   return await extra.driverApi.getPageOfDrivers(payload);
@@ -22,7 +22,7 @@ const getDriversPage = createAsyncThunk<
 
 const addDriver = createAsyncThunk<
   DriverCreateUpdateRequestDto,
-  DriverAddPayload,
+  Omit<DriverAddPayload, 'businessId'>,
   AsyncThunkConfig
 >(ACTIONS_TYPES.ADD_DRIVER, async (payload, { rejectWithValue, extra }) => {
   try {

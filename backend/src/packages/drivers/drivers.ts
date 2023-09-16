@@ -16,8 +16,6 @@ const driverService = new DriverService({
 
 export { driverRepository, driverService };
 export {
-  type BusinessGetAllDriversRequestParameters,
-  type BusinessGetDriversPageRequestQuery,
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateRequestDto,

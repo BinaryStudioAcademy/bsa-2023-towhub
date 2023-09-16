@@ -44,7 +44,7 @@ const Pagination: React.FC<Properties> = ({
     pageIndex > 0;
 
   const isHiddenLastPage =
-    pageIndex + middleValue < convertToIndex(pageCount) &&
+    pageIndex + middleValue <= convertToIndex(pageCount) &&
     paginationSize < pageCount;
 
   const handlePageClick = useCallback(

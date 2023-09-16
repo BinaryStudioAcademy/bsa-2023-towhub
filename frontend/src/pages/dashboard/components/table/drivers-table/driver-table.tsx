@@ -7,15 +7,10 @@ import {
   useAppSelector,
   useAppTable,
   useCallback,
-  useMemo,
   useState,
 } from '~/libs/hooks/hooks.js';
-import {
-  type DriverGetAllResponseDto,
-  type UserEntityObjectWithGroupAndBusinessT,
-} from '~/libs/types/types.js';
+import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 import { AddDriverForm } from '~/pages/business/components/add-driver-form/add-driver-form.js';
-import { selectUser } from '~/slices/auth/selectors.js';
 import { getDriversPage } from '~/slices/driver-table/actions.js';
 import { actions } from '~/slices/driver-table/driver-table.js';
 
@@ -23,24 +18,15 @@ import { columns } from './columns/columns.js';
 import styles from './styles.module.scss';
 
 const DriverTable: React.FC = () => {
-  const user = useAppSelector(
-    selectUser,
-  ) as UserEntityObjectWithGroupAndBusinessT;
-
   const dispatch = useAppDispatch();
 
   const data = useAppSelector((state) => state.driversTable.drivers);
   const total = useAppSelector((state) => state.driversTable.total);
   const status = useAppSelector((state) => state.driversTable.dataStatus);
 
-  const payload = useMemo(() => ({ businessId: user.business.id }), [user]);
   const [isActiveModal, setIsActiveModal] = useState(false);
 
-  const tableHook = useAppTable<
-    DriverGetAllResponseDto,
-    { businessId: number }
-  >({
-    payload,
+  const tableHook = useAppTable<DriverGetAllResponseDto>({
     tableFetchCall: getDriversPage,
   });
 
@@ -54,12 +40,10 @@ const DriverTable: React.FC = () => {
 
   const handleSubmit = useCallback(
     (payload: DriverCreateUpdateRequestDto) => {
-      void dispatch(
-        actions.addDriver({ businessId: user.business.id, payload }),
-      ).then(tableHook.updatePage);
+      void dispatch(actions.addDriver({ payload })).then(tableHook.updatePage);
       setIsActiveModal(false);
     },
-    [dispatch, tableHook, user.business.id],
+    [dispatch, tableHook],
   );
 
   return (

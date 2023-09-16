@@ -2,6 +2,7 @@ export {
   ApiPath,
   AppEnvironment,
   AppErrorMessage,
+  CommonValidationMessage,
   ContentType,
   ServerErrorType,
 } from './libs/enums/enums.js';
@@ -32,6 +33,7 @@ export {
   type CapitalizeEnum,
   type EntityPagination,
   type ErrorConstructor,
+  type GetPaginatedPageQuery,
   type Id,
   type NullableProperties,
   type OperationResult,
@@ -44,6 +46,7 @@ export {
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
+export { commonGetPageQuery } from './libs/validation-schemas/validation-schemas.js';
 export {
   type JwtPayload,
   AuthApiPath,
@@ -68,8 +71,6 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
-  type BusinessGetAllDriversRequestParameters,
-  type BusinessGetDriversPageRequestQuery,
   type DriverAddPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
@@ -82,8 +83,6 @@ export {
   type DriverWithUserData,
   DriverApiPath,
   driverCreateUpdateRequestBody,
-  driverGetPageQuery,
-  driverGetParameters,
   driverUpdateDeleteParameters,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';

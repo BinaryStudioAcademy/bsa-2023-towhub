@@ -1,8 +1,8 @@
-import { type BusinessGetAllDriversRequestParameters } from '../types.js';
+import { type GetPaginatedPageQuery } from '~/libs/types/get-page-request-dto.type';
 
 type DriverGetDriversPagePayload = {
-  page: number;
-  size: number;
-} & BusinessGetAllDriversRequestParameters;
+  businessId: number;
+  query: GetPaginatedPageQuery;
+};
 
 export { type DriverGetDriversPagePayload };

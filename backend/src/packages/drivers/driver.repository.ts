@@ -9,6 +9,7 @@ import { type OperationResult } from '~/libs/types/types.js';
 
 import { DriverEntity } from './driver.entity.js';
 import { type DriverEntity as DriverEntityT } from './drivers.js';
+import { type GetPaginatedPageQuery } from './libs/types/types.js';
 
 class DriverRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -52,33 +53,13 @@ class DriverRepository implements IRepository {
 
   public async findAllByBusinessId(
     businessId: number,
+    query: GetPaginatedPageQuery,
   ): Promise<DriverEntity[]> {
+    const offset = query.page * query.size;
     const drivers = await this.db
       .driver()
       .query.drivers.findMany({
-        where: eq(this.driverSchema.businessId, businessId),
-        with: { user: true },
-      })
-      .execute();
-
-    return drivers.map(({ createdAt, ...pureDriver }) =>
-      DriverEntity.initialize({
-        ...pureDriver,
-        createdAt: createdAt.toISOString(),
-      }),
-    );
-  }
-
-  public async findPageOfDrivers(
-    businessId: number,
-    pageIndex: number,
-    pageSize: number,
-  ): Promise<DriverEntity[]> {
-    const offset = pageIndex * pageSize;
-    const drivers = await this.db
-      .driver()
-      .query.drivers.findMany({
-        limit: pageSize,
+        limit: query.size,
         offset,
         where: eq(this.driverSchema.businessId, businessId),
         with: { user: true },

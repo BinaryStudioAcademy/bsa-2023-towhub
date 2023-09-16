@@ -1,7 +1,5 @@
 export { type DriverAddResponseWithGroup } from './driver-add-response-with-group.type.js';
 export {
-  type BusinessGetAllDriversRequestParameters,
-  type BusinessGetDriversPageRequestQuery,
   type DriverAddPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
@@ -11,4 +9,5 @@ export {
   type DriverGetRequestParameters,
   type DriverUpdateDeleteRequestParameters,
   type DriverUpdatePayload,
+  type GetPaginatedPageQuery,
 } from 'shared/build/index.js';

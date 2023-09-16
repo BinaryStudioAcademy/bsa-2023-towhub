@@ -30,7 +30,7 @@ const Table = <T,>({
   totalRow,
   pageSize,
   pageIndex,
-  isLoading,
+  isLoading = false,
   changePageIndex,
   changePageSize,
 }: Properties<T>): JSX.Element => {

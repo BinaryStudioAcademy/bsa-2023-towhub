@@ -9,15 +9,11 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
-  type BusinessGetAllDriversRequestParameters,
-  type BusinessGetDriversPageRequestQuery,
   type DriverCreateUpdateRequestDto,
   type DriverUpdateDeleteRequestParameters,
 } from '../drivers/drivers.js';
 import {
   driverCreateUpdateRequestBody,
-  driverGetPageQuery,
-  driverGetParameters,
   driverUpdateDeleteParameters,
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
 import { type BusinessService } from './business.service.js';
@@ -28,6 +24,7 @@ import {
   type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,
+  type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 import {
   businessAddRequestBody,
@@ -35,6 +32,7 @@ import {
   businessGetParameters,
   businessUpdateParameters,
   businessUpdateRequestBody,
+  commonGetPageQuery,
 } from './libs/validation-schemas/validation-schemas.js';
 
 /**
@@ -326,7 +324,6 @@ class BusinessController extends Controller {
         this.createDriver(
           options as ApiHandlerOptions<{
             body: DriverCreateUpdateRequestDto;
-            params: { businessId: number };
           }>,
         ),
     });
@@ -353,14 +350,12 @@ class BusinessController extends Controller {
       method: 'GET',
       authStrategy: defaultStrategies,
       validation: {
-        params: driverGetParameters,
-        query: driverGetPageQuery,
+        query: commonGetPageQuery,
       },
       handler: (options) =>
         this.findAllDrivers(
           options as ApiHandlerOptions<{
-            params: BusinessGetAllDriversRequestParameters;
-            query?: BusinessGetDriversPageRequestQuery;
+            query: GetPaginatedPageQuery;
           }>,
         ),
     });
@@ -642,12 +637,11 @@ class BusinessController extends Controller {
   private async createDriver(
     options: ApiHandlerOptions<{
       body: DriverCreateUpdateRequestDto;
-      params: { businessId: number };
     }>,
   ): Promise<ApiHandlerResponse> {
     const createdDriver = await this.businessService.createDriver({
       payload: options.body,
-      businessId: options.params.businessId,
+      ownerId: options.user.id,
     });
 
     return {
@@ -766,18 +760,13 @@ class BusinessController extends Controller {
 
   private async findAllDrivers(
     options: ApiHandlerOptions<{
-      params: BusinessGetAllDriversRequestParameters;
-      query?: BusinessGetDriversPageRequestQuery;
+      query: GetPaginatedPageQuery;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const drivers = await (options.query
-      ? this.businessService.findPageOfDrivers({
-          ...options.params,
-          ...options.query,
-        })
-      : this.businessService.findAllDriversByBusinessId(
-          options.params.businessId,
-        ));
+    const drivers = await this.businessService.findAllDriversByBusinessId({
+      ownerId: options.user.id,
+      query: options.query,
+    });
 
     return {
       status: HttpCode.OK,

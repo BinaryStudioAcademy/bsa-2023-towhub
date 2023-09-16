@@ -1,6 +1,7 @@
 export { type CapitalizeEnum } from './capitalize-enum.type.js';
 export { type EntityPagination } from './entity-pagination.js';
 export { type ErrorConstructor } from './error-constructor.type.js';
+export { type GetPaginatedPageQuery } from './get-page-request-dto.type.js';
 export { type NullableProperties } from './nullable-properties.type.js';
 export { type OperationResult } from './operation-result.type.js';
 export { type PaginationPayload } from './pagination-payload.type.js';

@@ -81,27 +81,13 @@ class DriverService implements IService {
     return driver ? DriverEntity.initialize(driver).toObject() : null;
   }
 
-  public async findAllByBusinessId(
-    businessId: number,
-  ): Promise<DriverGetAllResponseDto> {
-    const items = await this.driverRepository.findAllByBusinessId(businessId);
-    const total = await this.driverRepository.getTotal(businessId);
-
-    return {
-      items: items.map((item) => convertToDriverUser(item)),
-      total,
-    };
-  }
-
-  public async findPageOfDrivers({
+  public async findAllByBusinessId({
     businessId,
-    page,
-    size,
+    query,
   }: DriverGetDriversPagePayload): Promise<DriverGetAllResponseDto> {
-    const items = await this.driverRepository.findPageOfDrivers(
+    const items = await this.driverRepository.findAllByBusinessId(
       businessId,
-      page,
-      size,
+      query,
     );
     const total = await this.driverRepository.getTotal(businessId);
 
@@ -153,7 +139,6 @@ class DriverService implements IService {
         driverLicenseNumber,
         businessId,
         userId: user.id,
-        createdAt: '',
       }),
     );
 

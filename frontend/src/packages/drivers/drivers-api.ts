@@ -4,11 +4,10 @@ import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 
-import { DriverApiPath } from './libs/enums/enums.js';
 import {
   type DriverAddPayload,
   type DriverCreateUpdateRequestDto,
-  type DriverGetDriversPagePayload,
+  type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 
 type Constructor = {
@@ -23,15 +22,11 @@ class DriverApi extends HttpApi {
   }
 
   public async getPageOfDrivers({
-    businessId,
     page,
     size,
-  }: DriverGetDriversPagePayload): Promise<DriverGetAllResponseDto> {
+  }: GetPaginatedPageQuery): Promise<DriverGetAllResponseDto> {
     const data = await this.load(
-      this.getFullEndpoint(
-        `${DriverApiPath.ROOT}${businessId}/${ApiPath.DRIVERS}?page=${page}&size=${size}`,
-        {},
-      ),
+      this.getFullEndpoint(`${ApiPath.DRIVERS}?page=${page}&size=${size}`, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,
@@ -43,14 +38,13 @@ class DriverApi extends HttpApi {
   }
 
   public async addDriver({
-    businessId,
     payload,
-  }: DriverAddPayload): Promise<DriverCreateUpdateRequestDto> {
+  }: Omit<
+    DriverAddPayload,
+    'businessId'
+  >): Promise<DriverCreateUpdateRequestDto> {
     const data = await this.load(
-      this.getFullEndpoint(
-        `${DriverApiPath.ROOT}${businessId}${ApiPath.DRIVERS}`,
-        {},
-      ),
+      this.getFullEndpoint(`${ApiPath.DRIVERS}`, {}),
       {
         method: 'POST',
         contentType: ContentType.JSON,

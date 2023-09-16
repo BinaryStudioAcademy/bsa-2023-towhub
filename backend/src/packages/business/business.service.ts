@@ -133,18 +133,23 @@ class BusinessService implements IService {
 
   public async createDriver({
     payload,
-    businessId,
-  }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
-    const doesBusinessExist = await this.findById(businessId);
+    ownerId,
+  }: Omit<DriverAddPayload, 'businessId'> & {
+    ownerId: number;
+  }): Promise<DriverAddResponseWithGroup> {
+    const business = await this.findByOwnerId(ownerId);
 
-    if (!doesBusinessExist) {
+    if (!business) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
       });
     }
 
-    return await this.driverService.create({ payload, businessId });
+    return await this.driverService.create({
+      payload,
+      businessId: business.id,
+    });
   }
 
   public updateDriver({
@@ -157,16 +162,25 @@ class BusinessService implements IService {
     });
   }
 
-  public findAllDriversByBusinessId(
-    id: number,
-  ): Promise<DriverGetAllResponseDto> {
-    return this.driverService.findAllByBusinessId(id);
-  }
+  public async findAllDriversByBusinessId({
+    ownerId,
+    query,
+  }: Omit<DriverGetDriversPagePayload, 'businessId'> & {
+    ownerId: number;
+  }): Promise<DriverGetAllResponseDto> {
+    const business = await this.findByOwnerId(ownerId);
 
-  public findPageOfDrivers(
-    payload: DriverGetDriversPagePayload,
-  ): Promise<DriverGetAllResponseDto> {
-    return this.driverService.findPageOfDrivers(payload);
+    if (!business) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.driverService.findAllByBusinessId({
+      businessId: business.id,
+      query,
+    });
   }
 
   public deleteDriver(driverId: number): Promise<boolean> {
