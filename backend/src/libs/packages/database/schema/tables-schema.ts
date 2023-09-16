@@ -103,6 +103,7 @@ const business = pgTable('business_details', {
 const files = pgTable('files', {
   id: serial('id').primaryKey(),
   key: varchar('key').unique().notNull(),
+  name: varchar('name').notNull(),
   contentType: varchar('content_type').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),

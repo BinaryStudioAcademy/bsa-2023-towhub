@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "d6a27b02-cdf7-458a-aaed-cb1860bd747e",
+  "id": "1344a105-d723-4f2d-981d-75699929a282",
   "prevId": "99701008-5106-4115-b599-2bdc540412d8",
   "tables": {
     "business_details": {
@@ -153,6 +153,12 @@
         },
         "key": {
           "name": "key",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -660,7 +666,8 @@
         "pending": "pending",
         "confirmed": "confirmed",
         "canceled": "canceled",
-        "done": "done"
+        "done": "done",
+        "picking_up": "picking_up"
       }
     }
   },

@@ -29,10 +29,9 @@ const { reducer, actions, name } = createSlice({
     builder.addCase(uploadFile.rejected, (state, { payload }) => {
       state.fileStatus = FileStatus.REJECTED;
 
-      if (!payload) {
-        return;
+      if (payload) {
+        state.error = payload;
       }
-      state.error = payload;
     });
   },
 });

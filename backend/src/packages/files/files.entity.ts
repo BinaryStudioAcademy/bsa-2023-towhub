@@ -8,33 +8,45 @@ class FilesEntity implements IEntity {
 
   private key: string;
 
+  private name: string;
+
   private contentType: string;
 
   private constructor({
     id,
     key,
+    name,
     contentType,
   }: NullableProperties<FileEntityT, 'id'>) {
     this.id = id;
     this.key = key;
+    this.name = name;
     this.contentType = contentType;
   }
 
-  public static initialize({ id, key, contentType }: FileEntityT): FilesEntity {
+  public static initialize({
+    id,
+    key,
+    name,
+    contentType,
+  }: FileEntityT): FilesEntity {
     return new FilesEntity({
       id,
       key,
+      name,
       contentType,
     });
   }
 
   public static initializeNew({
     key,
+    name,
     contentType,
   }: Omit<FileEntityT, 'id'>): FilesEntity {
     return new FilesEntity({
       id: null,
       key,
+      name,
       contentType,
     });
   }
@@ -43,6 +55,7 @@ class FilesEntity implements IEntity {
     return {
       id: this.id as number,
       key: this.key,
+      name: this.name,
       contentType: this.contentType,
     };
   }
@@ -50,6 +63,7 @@ class FilesEntity implements IEntity {
   public toNewObject(): Omit<FileEntityT, 'id'> {
     return {
       key: this.key,
+      name: this.name,
       contentType: this.contentType,
     };
   }

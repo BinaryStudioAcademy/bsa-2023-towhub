@@ -1,3 +1,5 @@
+import { v4 } from 'uuid';
+
 import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import {
   FileTransactionError,
@@ -66,7 +68,8 @@ class FilesService
     const filesRecords: FileEntityObjectT[] = [];
 
     for (const parsedFile of parsedFiles) {
-      const key = parsedFile.filename;
+      const key = v4();
+      const name = parsedFile.filename;
       const body = parsedFile.content;
       let S3OperationSuccess = false;
 
@@ -85,17 +88,18 @@ class FilesService
 
         const result = await this.fileRepository.create({
           contentType: parsedFile.mimetype,
+          name,
           key,
         });
         filesRecords.push(FilesEntity.initialize(result).toObject());
-      } catch {
-        this.logger.error(`[CREATE_FILE]: File transaction error. Key: ${key}`);
+      } catch (error_) {
+        const error = error_ as Error;
 
         if (S3OperationSuccess) {
           await this.s3ClientService.deleteObject(parsedFile.filename);
         }
 
-        throw new FileTransactionError({});
+        throw new FileTransactionError({ message: error.message });
       }
     }
 
