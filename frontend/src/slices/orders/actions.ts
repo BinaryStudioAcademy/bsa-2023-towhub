@@ -1,24 +1,20 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
-import {
-  type OrderFindByIdResponseDto,
-  type OrderResponseDto,
-} from '~/packages/orders/libs/types/types.js';
+import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
 
 import { ActionNames } from './libs/enums/enums.js';
 import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.helper.js';
 import { type OrderPoints } from './libs/types/types.js';
 
-const getOrder = createAsyncThunk<
-  OrderFindByIdResponseDto,
-  string,
-  AsyncThunkConfig
->(ActionNames.GET_ORDER, (orderId, { extra }) => {
-  const { orderApi } = extra;
+const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
+  ActionNames.GET_ORDER,
+  (orderId, { extra }) => {
+    const { orderApi } = extra;
 
-  return orderApi.getOrder(orderId);
-});
+    return orderApi.getOrder(orderId);
+  },
+);
 
 const getPointsNames = createAsyncThunk<
   OrderPoints,

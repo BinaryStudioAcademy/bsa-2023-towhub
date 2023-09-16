@@ -73,14 +73,14 @@ const OrderPage: React.FC = () => {
   }, []);
 
   const Card = (): JSX.Element | null => {
-    if (order && !cancelScreen && !doneScreen) {
+    if (order?.shift.driver && !cancelScreen && !doneScreen) {
       return (
         <OrderCard
           isDriverShown={confirmScreen || onPointScreen || doneScreen}
           className={styles.card}
           driver={{
-            firstName: order.driver.firstName,
-            lastName: order.driver.lastName,
+            firstName: order.shift.driver.firstName,
+            lastName: order.shift.driver.lastName,
             profileURL: 'https://i.pravatar.cc/300',
           }}
           truck={{ licensePlate: 'GB 555' }}

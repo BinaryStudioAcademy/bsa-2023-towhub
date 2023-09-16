@@ -4,7 +4,7 @@ import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 
 import { OrdersApiPath } from './libs/enums/enums.js';
-import { type OrderFindByIdResponseDto } from './libs/types/types.js';
+import { type OrderResponseDto } from './libs/types/types.js';
 
 type Constructor = {
   baseUrl: string;
@@ -17,7 +17,7 @@ class OrderApi extends HttpApi {
     super({ path: ApiPath.ORDERS, baseUrl, http, storage });
   }
 
-  public async getOrder(orderId: string): Promise<OrderFindByIdResponseDto> {
+  public async getOrder(orderId: string): Promise<OrderResponseDto> {
     const response = await this.load(
       this.getFullEndpoint(OrdersApiPath.$ID, { id: orderId }),
       {
@@ -27,7 +27,7 @@ class OrderApi extends HttpApi {
       },
     );
 
-    return await response.json<OrderFindByIdResponseDto>();
+    return await response.json<OrderResponseDto>();
   }
 }
 

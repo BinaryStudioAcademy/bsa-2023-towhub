@@ -8,7 +8,6 @@ export {
   type DriverInfo,
   type OrderCreateRequestDto,
   type OrderEntity,
-  type OrderFindByIdResponseDto,
   type OrderResponseDto,
   type OrderStatusValues,
   type OrderUpdateRequestDto,

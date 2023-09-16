@@ -9,7 +9,6 @@ export {
   type Id,
   type OrderCreateRequestDto,
   type OrderEntity,
-  type OrderFindByIdResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from 'shared/build/index.js';

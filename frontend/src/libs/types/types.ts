@@ -15,7 +15,7 @@ export {
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type EntityPagination,
-  type OrderFindByIdResponseDto,
+  type OrderResponseDto,
   type ServerErrorDetail,
   type ServerErrorResponse,
   type TruckEntity,
