@@ -83,14 +83,15 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
+  // FIXME uncomment
+  // type DriverInfo,
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderCreateResponseDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
+  type OrderResponseDto,
   type OrderUpdateRequestDto,
-  type OrderUpdateResponseDto,
   ORDER_STATUSES,
   orderCreateRequestBody,
   orderGetParameter,
