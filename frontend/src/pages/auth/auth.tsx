@@ -11,7 +11,10 @@ import {
   type CustomerSignUpRequestDto,
   type UserSignInRequestDto,
 } from '~/packages/users/users.js';
-import { actions as authActions } from '~/slices/auth/auth.js';
+import {
+  actions as authActions,
+  useAuthServerError,
+} from '~/slices/auth/auth.js';
 
 import { SignInForm, SignUpForm } from './components/components.js';
 import styles from './styles.module.scss';
@@ -19,6 +22,8 @@ import styles from './styles.module.scss';
 const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
   const { navigateAuthUser } = useAuthNavigate();
+
+  const serverError = useAuthServerError();
 
   const location: Location = useLocation();
 
@@ -48,22 +53,32 @@ const Auth: React.FC = () => {
   const getScreen = useCallback((): React.ReactNode => {
     switch (location.pathname) {
       case AppRoute.SIGN_IN: {
-        return <SignInForm onSubmit={handleSignInSubmit} />;
+        return (
+          <SignInForm onSubmit={handleSignInSubmit} serverError={serverError} />
+        );
       }
       case AppRoute.SIGN_UP_BUSINESS: {
         return (
-          <SignUpForm onSubmit={handleSignUpSubmit} mode={AuthMode.BUSINESS} />
+          <SignUpForm
+            onSubmit={handleSignUpSubmit}
+            mode={AuthMode.BUSINESS}
+            serverError={serverError}
+          />
         );
       }
       case AppRoute.SIGN_UP_CUSTOMER: {
         return (
-          <SignUpForm onSubmit={handleSignUpSubmit} mode={AuthMode.CUSTOMER} />
+          <SignUpForm
+            onSubmit={handleSignUpSubmit}
+            mode={AuthMode.CUSTOMER}
+            serverError={serverError}
+          />
         );
       }
     }
 
     return null;
-  }, [handleSignInSubmit, handleSignUpSubmit, location.pathname]);
+  }, [handleSignInSubmit, handleSignUpSubmit, location.pathname, serverError]);
 
   return <div className={styles.page}>{getScreen()}</div>;
 };

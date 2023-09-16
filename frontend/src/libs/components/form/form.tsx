@@ -9,9 +9,9 @@ import {
   type DeepPartial,
   type FieldValues,
   type FormField,
+  type ServerErrorHandling,
   type ValidationSchema,
 } from '~/libs/types/types.js';
-import { useAuthServerError } from '~/slices/auth/auth.js';
 
 import { Button } from '../button/button.jsx';
 import { DropdownInput } from '../dropdown-input/dropdown-input.js';
@@ -25,6 +25,7 @@ type Properties<T extends FieldValues> = {
   validationSchema: ValidationSchema;
   btnLabel?: string;
   onSubmit: (payload: T) => void;
+  serverError?: ServerErrorHandling;
 };
 
 type RenderFieldProperties<T extends FieldValues = FieldValues> = {
@@ -32,6 +33,7 @@ type RenderFieldProperties<T extends FieldValues = FieldValues> = {
   control: Control<T, null>;
   errors: FieldErrors<T>;
   setError: UseFormSetError<T>;
+  clearServerError?: ServerErrorHandling['clearError'];
 };
 
 const renderField = <T extends FieldValues = FieldValues>({
@@ -39,6 +41,7 @@ const renderField = <T extends FieldValues = FieldValues>({
   control,
   errors,
   setError,
+  clearServerError,
 }: RenderFieldProperties<T>): JSX.Element => {
   switch (field.type) {
     case 'dropdown': {
@@ -64,6 +67,7 @@ const renderField = <T extends FieldValues = FieldValues>({
           control={control}
           errors={errors}
           setError={setError}
+          clearServerError={clearServerError}
         />
       );
     }
@@ -79,19 +83,18 @@ const Form = <T extends FieldValues = FieldValues>({
   validationSchema,
   btnLabel,
   onSubmit,
+  serverError,
 }: Properties<T>): JSX.Element => {
   const { control, errors, setError, handleSubmit } = useAppForm<T>({
     defaultValues,
     validationSchema,
   });
 
-  const [serverError] = useAuthServerError();
-
   useEffect(() => {
-    if (serverError) {
-      handleServerError(serverError, setError, fields);
+    if (serverError?.error) {
+      handleServerError(serverError.error, setError, fields);
     }
-  }, [fields, serverError, setError]);
+  }, [fields, serverError?.error, setError]);
 
   const handleFormSubmit = useCallback(
     (event_: React.BaseSyntheticEvent): void => {
@@ -105,7 +108,13 @@ const Form = <T extends FieldValues = FieldValues>({
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
       <div key={(field.id = index)}>
-        {renderField({ field, control, errors, setError })}
+        {renderField({
+          field,
+          control,
+          errors,
+          setError,
+          clearServerError: serverError?.clearError,
+        })}
       </div>
     ));
   };

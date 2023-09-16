@@ -14,6 +14,7 @@ import {
   useFormServerError,
   useState,
 } from '~/libs/hooks/hooks.js';
+import { type ServerErrorHandling } from '~/libs/types/types.js';
 
 import { Icon } from '../components.js';
 import styles from './styles.module.scss';
@@ -30,6 +31,7 @@ type Properties<T extends FieldValues> = {
   max?: number;
   step?: number;
   setError?: UseFormSetError<T>;
+  clearServerError?: ServerErrorHandling['clearError'];
 };
 
 const Input = <T extends FieldValues>({
@@ -44,6 +46,7 @@ const Input = <T extends FieldValues>({
   max,
   step,
   setError,
+  clearServerError,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
   const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -67,18 +70,29 @@ const Input = <T extends FieldValues>({
     [isPasswordShown],
   );
 
-  const clearServerError = useCallback(() => {
+  const clearError = useCallback(() => {
     if (setError && (serverError.common || serverError.validation)) {
       setError(name, {});
+
+      if (clearServerError) {
+        clearServerError();
+      }
     }
-  }, [name, serverError, setError]);
+  }, [
+    clearServerError,
+    name,
+    serverError.common,
+    serverError.validation,
+    setError,
+  ]);
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>): void => {
-      clearServerError();
       field.onChange(event);
+
+      clearError();
     },
-    [field, clearServerError],
+    [clearError, field],
   );
 
   return (
