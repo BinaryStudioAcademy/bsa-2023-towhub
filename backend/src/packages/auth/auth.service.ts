@@ -199,7 +199,11 @@ class AuthService {
       throw createUnauthorizedError(HttpMessage.WRONG_PASSWORD);
     }
 
-    const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
+    const updatedUser =
+      user.accessToken &&
+      (await this.isValidToken(user.accessToken, this.config.ACCESS_LIFETIME))
+        ? user
+        : await this.generateAccessTokenAndUpdateUser(user.id);
 
     const userGroup = GroupEntity.initialize(user.group).toObject();
 
@@ -240,6 +244,28 @@ class AuthService {
     );
 
     return await this.userService.setAccessToken(userId, accessToken);
+  }
+
+  private async isValidToken(
+    accessToken: string,
+    accessLifetime: string,
+  ): Promise<boolean> {
+    const payload = await this.jwtService.verifyToken(accessToken);
+
+    if (!payload.iat) {
+      return false;
+    }
+
+    const currentTimestamp = Date.now();
+    const tokenIssuedAtTimestamp = payload.iat * 1000;
+    const timeDifferenceInMilliseconds = Math.abs(
+      currentTimestamp - tokenIssuedAtTimestamp,
+    );
+
+    const lifetimeInMilliseconds =
+      Number.parseInt(accessLifetime) * 60 * 60 * 1000;
+
+    return lifetimeInMilliseconds >= timeDifferenceInMilliseconds;
   }
 }
 
