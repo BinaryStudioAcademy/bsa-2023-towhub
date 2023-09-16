@@ -1,7 +1,6 @@
-import { type DriverCreateUpdateRequestDto } from 'shared/build/index.js';
-
 import { Button, Modal, Table } from '~/libs/components/components.js';
-import { DataStatus } from '~/libs/enums/data-status.enum.js';
+import { DataStatus } from '~/libs/enums/enums.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppSelector,
@@ -10,6 +9,7 @@ import {
   useState,
 } from '~/libs/hooks/hooks.js';
 import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
+import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
 import { AddDriverForm } from '~/pages/business/components/add-driver-form/add-driver-form.js';
 import { getDriversPage } from '~/slices/driver-table/actions.js';
 import { actions } from '~/slices/driver-table/driver-table.js';
@@ -48,10 +48,10 @@ const DriverTable: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Drivers Table</h2>
+      <h2 className={getValidClassNames('h3', styles.title)}>Drivers Table</h2>
       <Button
         label=""
-        frontIcon={'plus'}
+        frontIcon="plus"
         className={styles.btn}
         onClick={handleOpenModal}
       />
@@ -62,11 +62,7 @@ const DriverTable: React.FC = () => {
         columns={columns}
         isLoading={status === DataStatus.PENDING}
       />
-      <Modal
-        isOpen={isActiveModal}
-        isCentered={true}
-        onClose={handleCloseModal}
-      >
+      <Modal isOpen={isActiveModal} isCentered onClose={handleCloseModal}>
         <div className={styles.formWrapper}>
           <AddDriverForm onSubmit={handleSubmit} />
         </div>

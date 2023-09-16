@@ -1,24 +1,21 @@
-import {
-  type DriverWithUserData,
-  HttpCode,
-  HttpError,
-  HttpMessage,
-} from 'shared/build/index.js';
-
 import { type DriverEntity } from '../../driver.entity.js';
+import { type DriverWithUserData } from '../types/types.js';
 
 const convertToDriverUser = (driver: DriverEntity): DriverWithUserData => {
   const { user, ...pureDriver } = driver.toObjectWithUser();
-
-  if (!user) {
-    throw new HttpError({
-      status: HttpCode.BAD_REQUEST,
-      message: HttpMessage.DRIVER_DOES_NOT_EXIST,
-    });
-  }
   const { id, phone, email, firstName, lastName, groupId } = user;
 
   return { id, phone, email, firstName, lastName, groupId, driver: pureDriver };
 };
 
-export { convertToDriverUser };
+const countOffsetByQuery = ({
+  page,
+  size,
+}: {
+  page: number;
+  size: number;
+}): number => {
+  return page * size;
+};
+
+export { convertToDriverUser, countOffsetByQuery };

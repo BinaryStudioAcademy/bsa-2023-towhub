@@ -24,7 +24,7 @@ const columns: ColumnDef<DriverWithUserData>[] = [
 
       return new Date(driver.driver.createdAt).toDateString();
     },
-    footer: 'Phone',
+    footer: 'Created At',
     size: 250,
   },
 ];

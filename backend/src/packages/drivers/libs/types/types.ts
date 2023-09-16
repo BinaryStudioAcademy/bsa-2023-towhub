@@ -9,5 +9,6 @@ export {
   type DriverGetRequestParameters,
   type DriverUpdateDeleteRequestParameters,
   type DriverUpdatePayload,
+  type DriverWithUserData,
   type GetPaginatedPageQuery,
 } from 'shared/build/index.js';

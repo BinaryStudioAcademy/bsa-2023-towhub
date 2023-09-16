@@ -86,14 +86,14 @@ class DriverEntity implements IEntity {
     };
   }
 
-  public toObjectWithUser(): DriverEntityT & { user?: UserEntityT } {
+  public toObjectWithUser(): DriverEntityT & { user: UserEntityT } {
     return {
       id: this.id as number,
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
       createdAt: this.createdAt as string,
-      user: this.user,
+      user: this.user as UserEntityT,
     };
   }
 }

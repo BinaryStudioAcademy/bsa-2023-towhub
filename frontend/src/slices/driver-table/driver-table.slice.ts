@@ -1,4 +1,4 @@
-import { createSlice, isAnyOf } from '@reduxjs/toolkit';
+import { type SerializedError, createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/data-status.enum';
 import { type DriverWithUserData, type ValueOf } from '~/libs/types/types.js';
@@ -8,12 +8,14 @@ import { addDriver, getDriversPage } from './actions.js';
 type State = {
   drivers: DriverWithUserData[];
   dataStatus: ValueOf<typeof DataStatus>;
+  error: SerializedError | null;
   total: number;
 };
 
 const initialState: State = {
   drivers: [],
   dataStatus: DataStatus.IDLE,
+  error: null,
   total: 0,
 };
 
@@ -39,8 +41,9 @@ const { actions, reducer, name } = createSlice({
       )
       .addMatcher(
         isAnyOf(getDriversPage.rejected, addDriver.rejected),
-        (state) => {
+        (state, action) => {
           state.dataStatus = DataStatus.REJECTED;
+          state.error = action.error;
         },
       );
   },

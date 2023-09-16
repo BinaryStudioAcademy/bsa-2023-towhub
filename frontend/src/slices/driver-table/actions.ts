@@ -30,7 +30,7 @@ const addDriver = createAsyncThunk<
     extra.notification.success(DriverCreationMessage.SUCCESS);
 
     return result;
-  } catch (error) {
+  } catch (error: unknown) {
     let message = DriverCreationMessage.ERROR;
 
     if (error instanceof HttpError) {

@@ -9,6 +9,7 @@ import { type OperationResult } from '~/libs/types/types.js';
 
 import { DriverEntity } from './driver.entity.js';
 import { type DriverEntity as DriverEntityT } from './drivers.js';
+import { countOffsetByQuery } from './libs/helpers/helpers.js';
 import { type GetPaginatedPageQuery } from './libs/types/types.js';
 
 class DriverRepository implements IRepository {
@@ -42,7 +43,6 @@ class DriverRepository implements IRepository {
       .query.drivers.findMany({ where: finalQuery, with: { user: true } })
       .execute();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return drivers.map(({ createdAt, updatedAt, ...pureDriver }) =>
       DriverEntity.initialize({
         ...pureDriver,
@@ -55,7 +55,7 @@ class DriverRepository implements IRepository {
     businessId: number,
     query: GetPaginatedPageQuery,
   ): Promise<DriverEntity[]> {
-    const offset = query.page * query.size;
+    const offset = countOffsetByQuery(query);
     const drivers = await this.db
       .driver()
       .query.drivers.findMany({
