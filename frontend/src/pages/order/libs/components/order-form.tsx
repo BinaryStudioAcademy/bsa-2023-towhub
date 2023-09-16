@@ -1,5 +1,5 @@
 import { Form } from '~/libs/components/components.js';
-import { orderForm } from '~/packages/orders/orders.js';
+import { orderCreateRequestBody } from '~/packages/orders/orders.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 
 import { CREATE_ORDER_DEFAULT_PAYLOAD } from './libs/constants.js';
@@ -9,6 +9,8 @@ import styles from './styles.module.scss';
 type Properties = {
   isDisabled?: boolean;
   price: number;
+  // TODO: Change driverId to truckId
+  driverId: number;
   onSubmit: (payload: OrderCreateRequestDto) => void;
   onLocationChange: (place: google.maps.LatLngLiteral, address: string) => void;
   onDestinationChange: (
@@ -20,6 +22,8 @@ type Properties = {
 const OrderForm: React.FC<Properties> = ({
   isDisabled,
   price,
+  // TODO: Change driverId to truckId
+  driverId,
   onSubmit,
   onLocationChange,
   onDestinationChange,
@@ -28,9 +32,10 @@ const OrderForm: React.FC<Properties> = ({
     <div className={styles.formWrapper}>
       <p className={styles.title}>PLEASE FILL THE FORM</p>
       <Form
-        validationSchema={orderForm}
+        validationSchema={orderCreateRequestBody}
         fields={orderFormFields}
-        defaultValues={CREATE_ORDER_DEFAULT_PAYLOAD}
+        // TODO: Change driverId to truckId
+        defaultValues={{ ...CREATE_ORDER_DEFAULT_PAYLOAD, driverId }}
         onSubmit={onSubmit}
         onLocationChange={onLocationChange}
         onDestinationChange={onDestinationChange}

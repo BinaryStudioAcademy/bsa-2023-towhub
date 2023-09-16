@@ -56,12 +56,7 @@ const Order: React.FC = () => {
   const handleSubmit = useCallback(
     (payload: OrderCreateRequestDto) => {
       if (chosenTruck) {
-        void dispatch(
-          orderActions.createOrder({
-            ...payload,
-            driverId: chosenTruck.driverId,
-          }),
-        );
+        void dispatch(orderActions.createOrder(payload));
       }
     },
     [dispatch, chosenTruck],
@@ -89,34 +84,38 @@ const Order: React.FC = () => {
         googleMapsApiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
         libraries={libraries}
       >
-        <div className={styles.left}>
-          {chosenTruck && (
-            <TowTruckCard
-              truck={chosenTruck}
-              rating={{ reviewCount: 5, averageRating: 4.3 }}
-              distance={250}
-              hasFooter={false}
-            />
-          )}
-          <OrderForm
-            onSubmit={handleSubmit}
-            onLocationChange={handleLocatonChange}
-            onDestinationChange={handleDestinationChange}
-            isDisabled={!chosenTruck}
-            price={price}
-          />
-        </div>
-        <div className={styles.right}>
-          <Map
-            center={location}
-            zoom={16}
-            destination={destination}
-            onPriceChange={handlePriceChange}
-            pricePerKm={chosenTruck?.pricePerKm}
-            startAddress={startAddress}
-            endAddress={endAddress}
-          />
-        </div>
+        {chosenTruck && (
+          <>
+            <div className={styles.left}>
+              <TowTruckCard
+                truck={chosenTruck}
+                rating={{ reviewCount: 5, averageRating: 4.3 }}
+                distance={250}
+                hasFooter={false}
+              />
+              <OrderForm
+                onSubmit={handleSubmit}
+                onLocationChange={handleLocatonChange}
+                onDestinationChange={handleDestinationChange}
+                // TODO: Change driverId to truckId
+                driverId={chosenTruck.driverId}
+                isDisabled={!chosenTruck}
+                price={price}
+              />
+            </div>
+            <div className={styles.right}>
+              <Map
+                center={location}
+                zoom={16}
+                destination={destination}
+                onPriceChange={handlePriceChange}
+                pricePerKm={chosenTruck.pricePerKm}
+                startAddress={startAddress}
+                endAddress={endAddress}
+              />
+            </div>
+          </>
+        )}
       </LoadScript>
     </section>
   );
