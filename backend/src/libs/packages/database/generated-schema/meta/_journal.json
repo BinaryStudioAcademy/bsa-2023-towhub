@@ -71,13 +71,6 @@
       "when": 1694518822475,
       "tag": "0009_create_shifts_table",
       "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "5",
-      "when": 1694595127164,
-      "tag": "0010_add_status_to_trucks_add_pk_id_to_users_trucks",
-      "breakpoints": true
     }
   ]
 }
