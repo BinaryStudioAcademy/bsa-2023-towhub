@@ -103,12 +103,24 @@ const Order: React.FC = () => {
                 onEndLocationChange={handleDestinationChange}
                 truckId={chosenTruck.id}
                 isDisabled={!chosenTruck}
-                price={price}
-              />
+              >
+                {/* TODO: MOVE THIS TO .SCSS */}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '10px',
+                  }}
+                >
+                  <span>Price:</span>
+                  <span>${price}</span>
+                </div>
+              </OrderForm>
             </div>
             <div className={styles.right}>
               <Map
                 center={startLocation}
+                // TODO: REMOVE MAGIC NUMBER
                 zoom={16}
                 destination={endLocation}
                 onPriceChange={handlePriceChange}

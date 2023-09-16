@@ -8,8 +8,8 @@ import styles from './styles.module.scss';
 
 type Properties = {
   isDisabled?: boolean;
-  price: number;
   truckId: number;
+  children: JSX.Element;
   onSubmit: (payload: OrderCreateRequestDto) => void;
   onStartLocationChange: (
     place: google.maps.LatLngLiteral,
@@ -20,11 +20,10 @@ type Properties = {
     address: string,
   ) => void;
 };
-// TODO: Create separate order form component
 const OrderForm: React.FC<Properties> = ({
   isDisabled,
-  price,
   truckId,
+  children,
   onSubmit,
   onStartLocationChange,
   onEndLocationChange,
@@ -39,7 +38,7 @@ const OrderForm: React.FC<Properties> = ({
         onSubmit={onSubmit}
         isDisabled={isDisabled}
         btnLabel="ORDER"
-        price={price}
+        additionalFields={children}
       />
     </div>
   );

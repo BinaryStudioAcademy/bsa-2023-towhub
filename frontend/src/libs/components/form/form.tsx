@@ -21,8 +21,7 @@ type Properties<T extends FieldValues> = {
   btnLabel?: string;
   isDisabled?: boolean;
   onSubmit: (payload: T) => void;
-  // TODO: REMOVE THIS
-  price?: number;
+  additionalFields?: JSX.Element;
 };
 
 const Form = <T extends FieldValues = FieldValues>({
@@ -31,8 +30,8 @@ const Form = <T extends FieldValues = FieldValues>({
   validationSchema,
   btnLabel,
   isDisabled,
-  price,
   onSubmit,
+  additionalFields,
 }: Properties<T>): JSX.Element => {
   const { control, errors, handleSubmit } = useAppForm<T>({
     defaultValues,
@@ -90,13 +89,7 @@ const Form = <T extends FieldValues = FieldValues>({
   return (
     <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
-      {/* TODO: REMOVE THIS*/}
-      {price !== undefined && (
-        <div className={styles.price}>
-          <span>Price:</span>
-          <span>${price}</span>
-        </div>
-      )}
+      {additionalFields}
       <Button
         type="submit"
         label={btnLabel ?? 'Submit'}
