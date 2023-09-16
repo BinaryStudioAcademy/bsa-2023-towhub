@@ -1,5 +1,6 @@
 const HttpMessage = {
   USER_EXISTS: 'User already exists',
+  FILE_DOES_NOT_EXIST: 'File with such id does not exist!',
   BUSINESS_EXISTS: 'Business with specified tax number already exists',
   TRUCK_EXISTS: 'Truck already exists',
   NOT_FOUND: 'Not found',
@@ -22,7 +23,8 @@ const HttpMessage = {
   SHIFT_ALREADY_CLOSED: 'Specified shift is already closed',
   NOT_ACCESS: 'You do not have enough rights to operate this shift',
   ORDER_DOES_NOT_EXIST: 'Order does not exist!',
-  PASSWORD_HASHING: 'Failed to generate hashed password',
+  SHIFT_NOT_OPEN: 'This truck is not inactive, please choose another one',
+  TRUCK_DOES_NOT_EXISTS: 'Truck does not exist',
 } as const;
 
 export { HttpMessage };
