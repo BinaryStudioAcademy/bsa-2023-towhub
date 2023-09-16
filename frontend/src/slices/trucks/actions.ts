@@ -25,7 +25,7 @@ const addTruck = createAsyncThunk<
     notification.success(TruckSuccessfulMessage.ADD_NEW_TRUCK);
 
     return truck;
-  } catch (error) {
+  } catch (error: unknown) {
     notification.error(getErrorMessage(error));
     throw error;
   }
@@ -44,7 +44,7 @@ const findAllTrucksForBusiness = createAsyncThunk<
       pageIndex,
       pageSize,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     notification.error(getErrorMessage(error));
     throw error;
   }
