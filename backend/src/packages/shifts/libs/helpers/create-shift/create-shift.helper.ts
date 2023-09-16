@@ -1,7 +1,7 @@
-import { type ShiftService } from '~/packages/shifts/shift.js';
 import { type TruckEntityT } from '~/packages/trucks/libs/types/types.js';
 import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/types.js';
 
+import { type ShiftService } from '../../../shift.service.js';
 import {
   type StartedShift,
   type StartedShiftsStore,

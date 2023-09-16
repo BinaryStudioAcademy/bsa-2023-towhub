@@ -25,7 +25,7 @@ import {
   type ValidationSchema,
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
-import { type ShiftService } from '~/packages/shifts/shift.service';
+import { type ShiftSocketService } from '~/packages/shifts/shift.js';
 import { type TruckService } from '~/packages/trucks/truck.service.js';
 import { type UserService } from '~/packages/users/users.js';
 
@@ -45,7 +45,7 @@ type Constructor = {
   geolocationCacheService: GeolocationCacheService;
   truckService: TruckService;
   userService: UserService;
-  shiftService: ShiftService;
+  shiftSocketService: ShiftSocketService;
 };
 
 class ServerApp implements IServerApp {
@@ -65,7 +65,7 @@ class ServerApp implements IServerApp {
 
   private userService: UserService;
 
-  private shiftService: ShiftService;
+  private shiftSocketService: ShiftSocketService;
 
   public constructor({
     config,
@@ -75,7 +75,7 @@ class ServerApp implements IServerApp {
     geolocationCacheService,
     truckService,
     userService,
-    shiftService,
+    shiftSocketService,
   }: Constructor) {
     this.config = config;
     this.logger = logger;
@@ -85,7 +85,7 @@ class ServerApp implements IServerApp {
     this.geolocationCacheService = geolocationCacheService;
     this.truckService = truckService;
     this.userService = userService;
-    this.shiftService = shiftService;
+    this.shiftSocketService = shiftSocketService;
 
     this.app = Fastify();
   }
@@ -259,10 +259,9 @@ class ServerApp implements IServerApp {
     await this.initServe();
 
     await socketService.initializeIo({
-      shiftService: this.shiftService,
+      shiftSocketService: this.shiftSocketService,
       app: this.app,
       geolocationCacheService: this.geolocationCacheService,
-      truckService: this.truckService,
       userService: this.userService,
     });
 

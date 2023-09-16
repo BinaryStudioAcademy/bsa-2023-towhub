@@ -1,6 +1,5 @@
+import { type ShiftEntityT } from 'shared/build/index.js';
 import { type Socket } from 'socket.io';
-
-import { type ShiftEntityT } from '~/packages/shifts/libs/types/types.js';
 
 type StartedShift = {
   timer?: NodeJS.Timeout;

@@ -5,7 +5,10 @@ import { logger } from '~/libs/packages/logger/logger.js';
 import { authController } from '~/packages/auth/auth.js';
 import { businessController } from '~/packages/business/business.js';
 import { orderController } from '~/packages/orders/orders.js';
-import { shiftController, shiftService } from '~/packages/shifts/shift.js';
+import {
+  shiftController,
+  shiftSocketService,
+} from '~/packages/shifts/shift.js';
 import { truckController, truckService } from '~/packages/trucks/trucks.js';
 import { userController, userService } from '~/packages/users/users.js';
 
@@ -31,7 +34,7 @@ const serverApp = new ServerApp({
   truckService,
   geolocationCacheService: GeolocationCacheService.getInstance(),
   userService,
-  shiftService,
+  shiftSocketService,
 });
 
 export { type ServerAppRouteParameters } from './libs/types/types.js';

@@ -1,10 +1,9 @@
 import { type Server } from 'socket.io';
 
+import { ClientSocketEvent } from '~/libs/packages/socket/libs/enums/enums.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
 import { type TruckEntityT } from '~/packages/trucks/libs/types/types.js';
 import { type TruckService } from '~/packages/trucks/truck.service.js';
-
-import { ClientSocketEvent } from '../../enums/enums.js';
 
 const socketChooseTruck = async (
   truckId: TruckEntityT['id'],

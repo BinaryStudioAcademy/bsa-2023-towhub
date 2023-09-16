@@ -1,23 +1,26 @@
 import { type Socket } from 'socket.io';
 
 import {
+  ClientSocketEvent,
+} from '~/libs/packages/socket/libs/types/types.js';
+
+import {
   type StartedShift,
   type StartedShiftsStore,
-  ClientSocketEvent,
 } from '../../types/types.js';
 
 const socketSyncShift = ({
   startedShiftsStore,
-  socketUserId,
+  userId,
   socket,
 }: {
   startedShiftsStore: StartedShiftsStore;
-  socketUserId: number;
+  userId: number;
   socket: Socket;
 }): void => {
-  const shift = startedShiftsStore.get(socketUserId) as StartedShift;
+  const shift = startedShiftsStore.get(userId) as StartedShift;
 
-  startedShiftsStore.set(socketUserId, { ...shift, socket });
+  startedShiftsStore.set(userId, { ...shift, socket });
 
   const { truckId } = shift.data;
   socket.emit(ClientSocketEvent.SHIFT_SYNC, {

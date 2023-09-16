@@ -1,5 +1,5 @@
-import { type StartedShiftsStore } from '~/libs/packages/socket/libs/types/types.js';
-import { type ShiftService } from '~/packages/shifts/shift.service';
+import { type ShiftService } from '../../../shift.service.js';
+import { type StartedShiftsStore } from '../../types/types.js';
 
 const syncStartedShifts = async ({
   startedShiftsStore,
