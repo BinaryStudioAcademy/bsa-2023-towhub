@@ -2,12 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
-import { type OrderCreateResponseDto } from '~/packages/orders/orders.js';
+import { type OrderResponseDto } from '~/packages/orders/orders.js';
 
 import { createOrder } from './actions.js';
 
 type State = {
-  orders: OrderCreateResponseDto[];
+  orders: OrderResponseDto[];
   dataStatus: ValueOf<typeof DataStatus>;
 };
 

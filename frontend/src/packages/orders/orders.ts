@@ -6,8 +6,8 @@ import { OrdersApi } from './orders-api.js';
 
 export {
   type OrderCreateRequestDto,
-  type OrderCreateResponseDto,
   type OrderEntity,
+  type OrderResponseDto,
 } from './types/types.js';
 export { orderCreateRequestBody } from './validation-schemas/validation-schemas.js';
 

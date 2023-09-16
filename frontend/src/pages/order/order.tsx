@@ -98,8 +98,7 @@ const Order: React.FC = () => {
                 onSubmit={handleSubmit}
                 onLocationChange={handleLocatonChange}
                 onDestinationChange={handleDestinationChange}
-                // TODO: Change driverId to truckId
-                driverId={chosenTruck.driverId}
+                truckId={chosenTruck.id}
                 isDisabled={!chosenTruck}
                 price={price}
               />

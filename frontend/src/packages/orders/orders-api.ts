@@ -8,7 +8,7 @@ import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderCreateResponseDto,
+  type OrderResponseDto,
 } from './types/types.js';
 
 type Constructor = {
@@ -24,7 +24,7 @@ class OrdersApi extends HttpApi {
 
   public async createOrder(
     payload: OrderCreateRequestDto,
-  ): Promise<OrderCreateResponseDto> {
+  ): Promise<OrderResponseDto> {
     const response = await this.load(
       this.getFullEndpoint(OrdersApiPath.ROOT, {}),
       {
@@ -35,7 +35,7 @@ class OrdersApi extends HttpApi {
       },
     );
 
-    return await response.json<OrderCreateResponseDto>();
+    return await response.json<OrderResponseDto>();
   }
 
   public async calculatePrice(

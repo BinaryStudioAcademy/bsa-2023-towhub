@@ -9,8 +9,7 @@ import styles from './styles.module.scss';
 type Properties = {
   isDisabled?: boolean;
   price: number;
-  // TODO: Change driverId to truckId
-  driverId: number;
+  truckId: number;
   onSubmit: (payload: OrderCreateRequestDto) => void;
   onLocationChange: (place: google.maps.LatLngLiteral, address: string) => void;
   onDestinationChange: (
@@ -22,8 +21,7 @@ type Properties = {
 const OrderForm: React.FC<Properties> = ({
   isDisabled,
   price,
-  // TODO: Change driverId to truckId
-  driverId,
+  truckId,
   onSubmit,
   onLocationChange,
   onDestinationChange,
@@ -34,8 +32,7 @@ const OrderForm: React.FC<Properties> = ({
       <Form
         validationSchema={orderCreateRequestBody}
         fields={orderFormFields}
-        // TODO: Change driverId to truckId
-        defaultValues={{ ...CREATE_ORDER_DEFAULT_PAYLOAD, driverId }}
+        defaultValues={{ ...CREATE_ORDER_DEFAULT_PAYLOAD, truckId }}
         onSubmit={onSubmit}
         onLocationChange={onLocationChange}
         onDestinationChange={onDestinationChange}

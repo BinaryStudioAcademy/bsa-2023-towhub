@@ -5,13 +5,13 @@ import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
   type OrderCreateRequestDto,
-  type OrderCreateResponseDto,
+  type OrderResponseDto,
 } from '~/packages/orders/orders.js';
 
 import { name as sliceName } from './order.slice.js';
 
 const createOrder = createAsyncThunk<
-  OrderCreateResponseDto,
+  OrderResponseDto,
   OrderCreateRequestDto,
   AsyncThunkConfig
 >(`${sliceName}/create-order`, (payload, { extra }) => {

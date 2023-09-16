@@ -2,6 +2,6 @@ export {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderCreateResponseDto,
   type OrderEntity,
+  type OrderResponseDto,
 } from 'shared/build/index.js';
