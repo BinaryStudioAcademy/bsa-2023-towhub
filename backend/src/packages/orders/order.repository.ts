@@ -48,27 +48,6 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     this.driversSchema = drivers;
   }
 
-  // public async findByOpenByUser(
-  //   userId: UserEntityT['id'] | null,
-  //   userPhone: UserEntityT['phone'] | null,
-  // ): Promise<boolean> {
-  //   const [order = null] = await this.db
-  //     .driver()
-  //     .select()
-  //     .from(this.ordersSchema)
-  //     .where(
-  //       and(
-  //         eq(this.ordersSchema.status, OrderStatus.PENDING),
-  //         or(
-  //           eq(this.ordersSchema.userId, userId),
-  //           eq(this.ordersSchema.customerPhone, userPhone),
-  //         ),
-  //       ),
-  //     );
-
-  //   return Boolean(order);
-  // }
-
   public async findById(id: OrderEntityT['id']): Promise<OrderEntityT | null> {
     const [order = null] = await this.db
       .driver()
