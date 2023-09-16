@@ -108,7 +108,7 @@ class BusinessRepository implements IRepository {
     const [item] = await this.db
       .driver()
       .update(this.businessSchema)
-      .set(payload)
+      .set({ ...payload, updatedAt: new Date() })
       .where(eq(this.businessSchema.id, id))
       .returning()
       .execute();
