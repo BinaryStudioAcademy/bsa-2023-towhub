@@ -1,4 +1,4 @@
-import { Breakpoint, IconName } from '~/libs/enums/enums.js';
+import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
@@ -19,7 +19,6 @@ type Properties = {
 
 const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -55,20 +54,6 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
     };
   }, []);
 
-  const handleWindowResize = useCallback(() => {
-    setWindowWidth(window.innerWidth);
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowResize);
-
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, [handleWindowResize]);
-
-  const isMobile = windowWidth <= Breakpoint.MOBILE;
-
   return (
     <div
       ref={menuReference}
@@ -84,21 +69,18 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
           <ul>
             {burgerItems.map((item, index) => (
               <li key={index}>
-                {isMobile ? (
-                  <Icon
-                    iconName={item.icon}
-                    onClick={handleNavigate(item.navigateTo)}
-                    className={styles.menuIcon}
-                  />
-                ) : (
-                  <Button
-                    frontIcon={item.icon}
-                    isFullWidth
-                    label={item.name}
-                    onClick={handleNavigate(item.navigateTo)}
-                    className={styles.btn}
-                  />
-                )}
+                <Icon
+                  iconName={item.icon}
+                  onClick={handleNavigate(item.navigateTo)}
+                  className={styles.menuIcon}
+                />
+                <Button
+                  frontIcon={item.icon}
+                  isFullWidth
+                  label={item.name}
+                  onClick={handleNavigate(item.navigateTo)}
+                  className={styles.btn}
+                />
               </li>
             ))}
           </ul>
