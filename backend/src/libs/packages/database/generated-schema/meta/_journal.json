@@ -71,6 +71,20 @@
       "when": 1694518822475,
       "tag": "0009_create_shifts_table",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1694683536028,
+      "tag": "0010_change_orders_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1694857987736,
+      "tag": "0011_create_files_table",
+      "breakpoints": true
     }
   ]
 }
