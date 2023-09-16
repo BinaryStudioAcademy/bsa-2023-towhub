@@ -2,10 +2,7 @@ import { eq } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
-import {
-  type DatabaseSchema,
-  schema,
-} from '~/libs/packages/database/schema/schema.js';
+import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
 import { type UserEntityT } from '../users/users.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
@@ -78,11 +75,21 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         },
       })
       .from(this.ordersSchema)
-      .innerJoin(schema.shifts, eq(this.ordersSchema.shiftId, schema.shifts.id))
-      .innerJoin(schema.users, eq(schema.shifts.driverId, schema.users.id))
       .innerJoin(
-        schema.drivers,
-        eq(schema.drivers.userId, schema.shifts.driverId),
+        this.shiftsSchema,
+        eq(this.ordersSchema.shiftId, this.shiftsSchema.id),
+      )
+      .innerJoin(
+        this.usersSchema,
+        eq(this.shiftsSchema.driverId, this.usersSchema.id),
+      )
+      .innerJoin(
+        this.driversSchema,
+        eq(this.driversSchema.userId, this.shiftsSchema.driverId),
+      )
+      .innerJoin(
+        this.trucksSchema,
+        eq(this.trucksSchema.id, this.shiftsSchema.truckId),
       )
       .where(eq(this.ordersSchema.id, id));
 
@@ -125,11 +132,21 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         },
       })
       .from(this.ordersSchema)
-      .innerJoin(schema.shifts, eq(this.ordersSchema.shiftId, schema.shifts.id))
-      .innerJoin(schema.users, eq(schema.shifts.driverId, schema.users.id))
       .innerJoin(
-        schema.drivers,
-        eq(schema.drivers.userId, schema.shifts.driverId),
+        this.shiftsSchema,
+        eq(this.ordersSchema.shiftId, this.shiftsSchema.id),
+      )
+      .innerJoin(
+        this.usersSchema,
+        eq(this.shiftsSchema.driverId, this.usersSchema.id),
+      )
+      .innerJoin(
+        this.driversSchema,
+        eq(this.driversSchema.userId, this.shiftsSchema.driverId),
+      )
+      .innerJoin(
+        this.trucksSchema,
+        eq(this.trucksSchema.id, this.shiftsSchema.truckId),
       )
       .where(
         combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
