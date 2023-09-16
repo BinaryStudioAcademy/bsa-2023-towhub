@@ -17,7 +17,7 @@ type Properties = {
 };
 
 const Map: React.FC<Properties> = ({
-  center = { lat: 1, lng: 1 },
+  center,
   zoom,
   className,
   destination,
@@ -38,7 +38,7 @@ const Map: React.FC<Properties> = ({
         zoom,
       });
 
-      if (destination) {
+      if (center && destination) {
         mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);

@@ -12,7 +12,7 @@ import mapStyle from './map.config.json';
 
 type Constructor = {
   mapElement: HTMLDivElement;
-  center: google.maps.LatLngLiteral;
+  center?: google.maps.LatLngLiteral;
   zoom: number;
 };
 
@@ -34,8 +34,8 @@ class MapService implements IMapService {
 
   private initMap(
     mapElement: HTMLDivElement,
-    center: google.maps.LatLngLiteral,
-    zoom: number,
+    center?: google.maps.LatLngLiteral,
+    zoom?: number,
   ): void {
     this.map = new google.maps.Map(mapElement, {
       center,

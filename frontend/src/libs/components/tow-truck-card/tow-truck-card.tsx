@@ -1,5 +1,4 @@
 import { IconName } from '~/libs/enums/icon-name.enum.js';
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { type TruckEntity } from '~/libs/types/types.js';
 
 import { Badge } from '../badge/badge.js';
@@ -29,13 +28,7 @@ const TowTruckCard: React.FC<Properties> = ({
   const img = getTowTruckImage(towType);
 
   return (
-    <div
-      className={
-        hasFooter
-          ? styles.container
-          : getValidClassNames(styles.container, styles['no-footer'])
-      }
-    >
+    <div className={styles.container}>
       <div className={styles.body}>
         <div className={styles.description}>
           <div className={styles.name}>{manufacturer}</div>

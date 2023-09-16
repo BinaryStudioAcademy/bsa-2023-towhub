@@ -14,11 +14,11 @@ const createOrder = createAsyncThunk<
   OrderResponseDto,
   OrderCreateRequestDto,
   AsyncThunkConfig
->(`${sliceName}/create-order`, (payload, { extra }) => {
+>(`${sliceName}/create-order`, async (payload, { extra }) => {
   const { ordersApi } = extra;
 
   try {
-    const result = ordersApi.createOrder(payload);
+    const result = await ordersApi.createOrder(payload);
 
     notification.success('Order successfully created');
 
