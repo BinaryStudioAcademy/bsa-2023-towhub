@@ -14,6 +14,7 @@ import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type Id,
   type OrderCreateRequestDto,
+  type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import {
@@ -333,7 +334,7 @@ class OrderController extends Controller {
       body: OrderCreateRequestDto;
       user: UserEntityObjectWithGroupT | null;
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<OrderResponseDto>> {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.create({
@@ -391,10 +392,10 @@ class OrderController extends Controller {
       params: Id;
       user: UserEntityObjectWithGroupT | null;
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<OrderResponseDto | null>> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findOne({
+      payload: await this.orderService.findById({
         id: options.params.id,
         user: options.user,
       }),
@@ -456,10 +457,10 @@ class OrderController extends Controller {
       body: OrderUpdateRequestDto;
       user: UserEntityObjectWithGroupT;
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<OrderResponseDto>> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.updateOne({
+      payload: await this.orderService.update({
         id: options.params.id,
         payload: options.body,
         user: options.user,
@@ -510,7 +511,7 @@ class OrderController extends Controller {
     options: ApiHandlerOptions<{
       user: UserEntityObjectWithGroupT;
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<OrderResponseDto[]>> {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.findAllBusinessOrders(options.user),
@@ -564,12 +565,13 @@ class OrderController extends Controller {
       params: Id;
       user: UserEntityObjectWithGroupT;
     }>,
-  ): Promise<ApiHandlerResponse> {
-    const result = await this.orderService.delete(options.params.id);
-
+  ): Promise<ApiHandlerResponse<boolean>> {
     return {
       status: HttpCode.OK,
-      payload: result,
+      payload: await this.orderService.delete({
+        id: options.params.id,
+        user: options.user,
+      }),
     };
   }
 }

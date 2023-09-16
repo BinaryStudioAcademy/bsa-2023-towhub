@@ -22,7 +22,14 @@ type Properties<T extends FieldValues> = {
   label?: string;
   name: FieldPath<T>;
   placeholder?: string;
-  type?: 'text' | 'email' | 'password' | 'number' | 'dropdown' | 'multi';
+  type?:
+    | 'text'
+    | 'email'
+    | 'password'
+    | 'number'
+    | 'dropdown'
+    | 'multi'
+    | 'file';
   isDisabled?: boolean;
   min?: number;
   max?: number;
