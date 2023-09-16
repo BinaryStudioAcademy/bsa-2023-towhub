@@ -3,7 +3,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
   type OrderFindByIdResponseDto,
-  type OrderUpdateResponseDto,
+  type OrderResponseDto,
 } from '~/packages/orders/libs/types/types.js';
 
 import { ActionNames } from './libs/enums/enums.js';
@@ -41,8 +41,8 @@ const getPointsNames = createAsyncThunk<
 });
 
 const updateOrderFromSocket = createAsyncThunk<
-  OrderUpdateResponseDto,
-  OrderUpdateResponseDto,
+  OrderResponseDto,
+  OrderResponseDto,
   AsyncThunkConfig
 >(ActionNames.SOCKET.UPDATE_ORDER, (order) => {
   return order;

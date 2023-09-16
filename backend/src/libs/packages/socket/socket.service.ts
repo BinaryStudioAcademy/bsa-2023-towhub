@@ -11,7 +11,7 @@ import {
 } from './libs/enums/enums.js';
 import {
   type ClientToServerEvents,
-  type OrderUpdateResponseDto,
+  type OrderResponseDto,
 } from './libs/types/types.js';
 
 class SocketService {
@@ -68,8 +68,8 @@ class SocketService {
   }
 
   public notifyOrderUpdate(
-    id: OrderUpdateResponseDto['id'],
-    order: OrderUpdateResponseDto,
+    id: OrderResponseDto['id'],
+    order: OrderResponseDto,
   ): void {
     this.io
       ?.to(`${RoomPrefixes.ORDER}${id}`)
@@ -77,7 +77,7 @@ class SocketService {
   }
 
   public notifyOrderForTruckPositionUpdate(
-    id: OrderUpdateResponseDto['id'],
+    id: OrderResponseDto['id'],
     truckPosition: string,
   ): void {
     this.io

@@ -5,7 +5,7 @@ import {
   type ThunkMiddleware,
 } from '@reduxjs/toolkit';
 
-import { type OrderUpdateResponseDto } from '~/packages/orders/libs/types/types.js';
+import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
 import {
   listenOrderUpdates,
   updateOrderFromSocket,
@@ -33,7 +33,7 @@ const socketMiddleware: ThunkMiddleware<
   if (socketInstance) {
     socketInstance.on(
       ServerSocketEvent.ORDER_UPDATED,
-      (order: OrderUpdateResponseDto) => {
+      (order: OrderResponseDto) => {
         void dispatch(updateOrderFromSocket(order));
       },
     );

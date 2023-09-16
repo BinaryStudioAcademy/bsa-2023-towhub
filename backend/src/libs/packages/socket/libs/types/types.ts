@@ -1,4 +1,4 @@
 export {
   type ClientToServerEvents,
-  type OrderUpdateResponseDto,
+  type OrderResponseDto,
 } from 'shared/build/index.js';

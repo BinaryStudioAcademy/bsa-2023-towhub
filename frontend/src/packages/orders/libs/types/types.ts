@@ -1,4 +1,4 @@
 export {
   type OrderFindByIdResponseDto,
-  type OrderUpdateResponseDto,
+  type OrderResponseDto,
 } from 'shared/build/index.js';
