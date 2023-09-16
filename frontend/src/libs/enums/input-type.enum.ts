@@ -6,6 +6,8 @@ const InputType = {
   DROPDOWN: 'dropdown',
   DATE: 'date',
   LOCATION: 'location',
+  FORM: 'form',
+  FILE: 'file',
 } as const;
 
 export { InputType };

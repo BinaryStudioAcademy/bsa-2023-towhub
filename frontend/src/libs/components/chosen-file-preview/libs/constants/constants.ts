@@ -1,0 +1,3 @@
+const DELETE_TIME_OFFSET = 200;
+
+export { DELETE_TIME_OFFSET };

@@ -89,7 +89,6 @@ const groups = pgTable('groups', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
-
 const business = pgTable('business_details', {
   id: serial('id').primaryKey(),
   companyName: varchar('company_name').notNull(),
@@ -97,6 +96,15 @@ const business = pgTable('business_details', {
   ownerId: integer('owner_id')
     .notNull()
     .references(() => users.id),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+const files = pgTable('files', {
+  id: serial('id').primaryKey(),
+  key: varchar('key').unique().notNull(),
+  name: varchar('name').notNull(),
+  contentType: varchar('content_type').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
@@ -207,6 +215,7 @@ export {
   businessRelations,
   drivers,
   driversRelations,
+  files,
   groups,
   orders,
   ordersRelations,

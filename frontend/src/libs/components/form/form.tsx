@@ -1,4 +1,10 @@
-import { type Control, type FieldErrors } from 'react-hook-form';
+import {
+  type Control,
+  type FieldErrors,
+  type UseFormClearErrors,
+  type UseFormReturn,
+  type UseFormSetError,
+} from 'react-hook-form';
 
 import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
 import {
@@ -10,6 +16,9 @@ import {
 
 import { Button } from '../button/button.jsx';
 import { DropdownInput } from '../dropdown-input/dropdown-input.js';
+import { FileInput } from '../file-input/file-input.js';
+import { fileInputDefaultsConfig } from '../file-input/libs/config/config.js';
+import { type FileFormType } from '../file-input/libs/types/types.js';
 import { Input } from '../input/input.jsx';
 import { LocationInput } from '../location-input/location-input.js';
 import styles from './styles.module.scss';
@@ -24,54 +33,81 @@ type Properties<T extends FieldValues> = {
   additionalFields?: JSX.Element;
 };
 
+type Parameters<T extends FieldValues = FieldValues> = {
+  field: FormField<T>;
+  control: Control<T, null>;
+  errors: FieldErrors<T>;
+  setError: UseFormReturn<T>['setError'];
+  clearErrors: UseFormReturn<T>['clearErrors'];
+};
+
+const renderField = <T extends FieldValues = FieldValues>({
+  field,
+  control,
+  errors,
+  setError,
+  clearErrors,
+}: Parameters<T>): JSX.Element => {
+  switch (field.type) {
+    case 'dropdown': {
+      const { options, name, label } = field;
+
+      return (
+        <DropdownInput
+          options={options ?? []}
+          name={name}
+          control={control}
+          errors={errors}
+          label={label}
+        />
+      );
+    }
+    case 'number':
+    case 'text':
+    case 'email':
+    case 'file': {
+      const { label } = field;
+
+      return (
+        <FileInput
+          setError={setError as unknown as UseFormSetError<FileFormType>}
+          clearErrors={
+            clearErrors as unknown as UseFormClearErrors<FileFormType>
+          }
+          label={label}
+          control={control as unknown as Control<FileFormType, null>}
+          errors={errors}
+          isDisabled={false}
+          fileInputCustomConfig={fileInputDefaultsConfig}
+        />
+      );
+    }
+    case 'location': {
+      return <LocationInput {...field} control={control} errors={errors} />;
+    }
+    case 'password': {
+      return <Input {...field} control={control} errors={errors} />;
+    }
+    default: {
+      return <Input {...field} control={control} errors={errors} />;
+    }
+  }
+};
+
 const Form = <T extends FieldValues = FieldValues>({
   fields,
   defaultValues,
   validationSchema,
   btnLabel,
+  additionalFields,
   isDisabled,
   onSubmit,
-  additionalFields,
 }: Properties<T>): JSX.Element => {
-  const { control, errors, handleSubmit } = useAppForm<T>({
-    defaultValues,
-    validationSchema,
-  });
-
-  const renderField = <T extends FieldValues = FieldValues>(
-    field: FormField<T>,
-    control: Control<T, null>,
-    errors: FieldErrors<T>,
-  ): JSX.Element => {
-    switch (field.type) {
-      case 'dropdown': {
-        const { options, name, label } = field;
-
-        return (
-          <DropdownInput
-            options={options ?? []}
-            name={name}
-            control={control}
-            errors={errors}
-            label={label}
-          />
-        );
-      }
-      case 'number':
-      case 'date':
-      case 'text':
-      case 'email':
-      case 'password': {
-        return <Input {...field} control={control} errors={errors} />;
-      }
-      case 'location': {
-        return <LocationInput {...field} control={control} errors={errors} />;
-      }
-      default: {
-        return <Input {...field} control={control} errors={errors} />;
-      }
-    }
-  };
+  const { control, errors, handleSubmit, setError, clearErrors } =
+    useAppForm<T>({
+      defaultValues,
+      validationSchema,
+    });
 
   const handleFormSubmit = useCallback(
     (event_: React.BaseSyntheticEvent): void => {
@@ -82,7 +118,9 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
-      <div key={(field.id = index)}>{renderField(field, control, errors)}</div>
+      <div key={(field.id = index)}>
+        {renderField({ field, control, errors, setError, clearErrors })}
+      </div>
     ));
   };
 
