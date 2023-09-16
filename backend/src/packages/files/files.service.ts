@@ -4,7 +4,6 @@ import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
 import {
   FileTransactionError,
   HttpError,
-  InvalidFileError,
 } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/service.interface.js';
 import { type ILogger } from '~/libs/packages/logger/libs/interfaces/logger.interface.js';
