@@ -89,6 +89,7 @@ const Order: React.FC = () => {
             <div className={styles.left}>
               <TowTruckCard
                 truck={chosenTruck}
+                // mock
                 rating={{ reviewCount: 5, averageRating: 4.3 }}
                 distance={250}
                 hasFooter={false}
