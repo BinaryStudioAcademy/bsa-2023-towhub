@@ -1,8 +1,6 @@
 import { type Server } from 'socket.io';
 
-import {
-  ClientSocketEvent,
-} from '~/libs/packages/socket/libs/types/types.js';
+import { ClientSocketEvent } from '~/libs/packages/socket/libs/types/types.js';
 import { type ShiftService } from '~/packages/shifts/shift.service.js';
 import { type TruckService } from '~/packages/trucks/truck.service.js';
 import { type UserEntityObjectWithGroupT } from '~/packages/users/users.js';

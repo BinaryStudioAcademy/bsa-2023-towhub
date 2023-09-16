@@ -1,8 +1,6 @@
 import { type Socket } from 'socket.io';
 
-import {
-  ClientSocketEvent,
-} from '~/libs/packages/socket/libs/types/types.js';
+import { ClientSocketEvent } from '~/libs/packages/socket/libs/types/types.js';
 
 import {
   type StartedShift,

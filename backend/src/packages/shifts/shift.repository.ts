@@ -2,7 +2,10 @@ import { and, desc, eq, isNull } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/libs/interfaces/database.interface.js';
-import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
+import {
+  type DatabaseSchema,
+  schema,
+} from '~/libs/packages/database/schema/schema.js';
 
 import { type ShiftDatabaseModel } from './libs/types/types.js';
 import { type ShiftEntityT as ShiftEntityT } from './shift.js';
@@ -38,6 +41,55 @@ class ShiftRepository implements IRepository {
         where: finalQuery,
       })
       .execute();
+  }
+
+  public async getOpenedByDriver(
+    driverId: number,
+  ): Promise<ShiftDatabaseModel | null> {
+    const [shift = null] = await this.db
+      .driver()
+      .select()
+      .from(this.shiftSchema)
+      .where(
+        and(
+          isNull(this.shiftSchema.endDate),
+          eq(this.shiftSchema.driverId, driverId),
+        ),
+      )
+      .execute();
+
+    return shift;
+  }
+
+  public async getOpenedByTruckWithBusiness(
+    truckId: number,
+  ): Promise<
+    | (ShiftDatabaseModel & { businessId: number; driverLicenseNumber: string })
+    | null
+  > {
+    const [shift = null] = await this.db
+      .driver()
+      .select()
+      .from(this.shiftSchema)
+      .innerJoin(
+        schema.drivers,
+        eq(this.shiftSchema.driverId, schema.drivers.userId),
+      )
+      .where(
+        and(
+          isNull(this.shiftSchema.endDate),
+          eq(this.shiftSchema.truckId, truckId),
+        ),
+      )
+      .execute();
+
+    return shift
+      ? {
+          ...shift.shifts,
+          businessId: shift.driver_details.businessId,
+          driverLicenseNumber: shift.driver_details.driverLicenseNumber,
+        }
+      : null;
   }
 
   public getAllOpened(): Promise<ShiftDatabaseModel[]> {

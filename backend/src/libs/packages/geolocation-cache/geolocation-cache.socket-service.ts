@@ -29,16 +29,16 @@ class GeolocationCacheSocketService {
       (
         payload: ServerSocketEventParameter[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATE],
       ): void => {
-            this.truckLocationUpdate(payload);
+        this.truckLocationUpdate(payload);
       },
     );
   }
 
   private truckLocationUpdate(
     payload: ServerSocketEventParameter[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATE],
-  ):void {
-      const { truckId, latLng } = payload;
-      this.geolocationCacheService.setCache(truckId, latLng);
+  ): void {
+    const { truckId, latLng } = payload;
+    this.geolocationCacheService.setCache(truckId, latLng);
   }
 }
 

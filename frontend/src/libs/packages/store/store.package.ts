@@ -9,10 +9,12 @@ import { AppEnvironment } from '~/libs/enums/enums.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { socket } from '~/libs/packages/store/middlewares/middlewares.js';
 import { authApi } from '~/packages/auth/auth.js';
+import { filesApi } from '~/packages/files/files.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
 import { reducer as driverReducer } from '~/slices/driver/driver.js';
+import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { notification } from '../notification/notification.js';
@@ -21,12 +23,14 @@ import { LocalStorage } from '../storage/storage.js';
 type RootReducer = {
   auth: ReturnType<typeof authReducer>;
   trucks: ReturnType<typeof truckReducer>;
+  files: ReturnType<typeof filesReducer>;
   driver: ReturnType<typeof driverReducer>;
 };
 
 type ExtraArguments = {
   authApi: typeof authApi;
   userApi: typeof userApi;
+  filesApi: typeof filesApi;
   notification: typeof notification;
   truckApi: typeof truckApi;
   localStorage: typeof LocalStorage;
@@ -48,6 +52,7 @@ class Store {
         auth: authReducer,
         trucks: truckReducer,
         driver: driverReducer,
+        files: filesReducer,
       },
       middleware: (getDefaultMiddleware) => [
         ...getDefaultMiddleware({
@@ -64,6 +69,7 @@ class Store {
     return {
       authApi,
       userApi,
+      filesApi,
       notification,
       truckApi,
       localStorage: LocalStorage,

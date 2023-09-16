@@ -1,8 +1,13 @@
-import { type OrderEntity } from './order-entity.type.js';
+import { type OrderEntityT } from './order-entity.type.js';
 
-type OrderCreateRequestDto = Omit<
-  OrderEntity,
-  'id' | 'userId' | 'businessId' | 'price' | 'status' | 'driver'
->;
+type OrderCreateRequestDto = Pick<
+  OrderEntityT,
+  | 'scheduledTime'
+  | 'carsQty'
+  | 'startPoint'
+  | 'endPoint'
+  | 'customerName'
+  | 'customerPhone'
+> & { truckId: number };
 
 export { type OrderCreateRequestDto };

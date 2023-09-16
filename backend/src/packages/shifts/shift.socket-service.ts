@@ -9,7 +9,6 @@ import {
 import { type ServerSocketEventParameter } from '~/libs/packages/socket/libs/types/types.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
-import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/libs/types/types.js';
 import { HOUR_IN_MS } from './libs/constants/constants.js';
@@ -149,10 +148,7 @@ class ShiftSocketService {
   }
 
   private async endShift(): Promise<void> {
-    if (
-      !this.currentUser ||
-      !this.startedShiftsStore.has(this.currentUser.id)
-    ) {
+    if (!this.startedShiftsStore.has(this.currentUser.id)) {
       return;
     }
     await socketEndShift({

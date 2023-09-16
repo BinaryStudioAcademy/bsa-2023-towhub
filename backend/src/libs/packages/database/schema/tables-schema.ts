@@ -23,7 +23,9 @@ const orders = pgTable('orders', {
   status: orderStatus('status').notNull(),
   userId: integer('user_id').references(() => users.id),
   businessId: integer('business_id').references(() => business.id),
-  driverId: integer('driver_id').references(() => drivers.id),
+  shiftId: integer('shift_id')
+    .references(() => shifts.id)
+    .notNull(),
   carsQty: integer('cars_qty').notNull().default(1),
   customerName: varchar('customer_name'),
   customerPhone: varchar('customer_phone'),
@@ -40,9 +42,9 @@ const ordersRelations = relations(orders, ({ one }) => ({
     fields: [orders.businessId],
     references: [business.id],
   }),
-  driver: one(drivers, {
-    fields: [orders.driverId],
-    references: [drivers.id],
+  shift: one(shifts, {
+    fields: [orders.shiftId],
+    references: [shifts.id],
   }),
 }));
 
@@ -88,7 +90,6 @@ const groups = pgTable('groups', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
-
 const business = pgTable('business_details', {
   id: serial('id').primaryKey(),
   companyName: varchar('company_name').notNull(),
@@ -96,6 +97,15 @@ const business = pgTable('business_details', {
   ownerId: integer('owner_id')
     .notNull()
     .references(() => users.id),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+const files = pgTable('files', {
+  id: serial('id').primaryKey(),
+  key: varchar('key').unique().notNull(),
+  name: varchar('name').notNull(),
+  contentType: varchar('content_type').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
@@ -219,6 +229,7 @@ export {
   businessRelations,
   drivers,
   driversRelations,
+  files,
   groups,
   orders,
   ordersRelations,
