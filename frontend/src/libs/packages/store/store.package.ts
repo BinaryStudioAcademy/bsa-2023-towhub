@@ -8,9 +8,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import { AppEnvironment } from '~/libs/enums/enums.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { authApi } from '~/packages/auth/auth.js';
+import { filesApi } from '~/packages/files/files.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
+import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { notification } from '../notification/notification.js';
@@ -32,6 +34,7 @@ class Store {
       reducer: {
         auth: authReducer,
         trucks: truckReducer,
+        files: filesReducer,
       },
       middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({
@@ -47,6 +50,7 @@ class Store {
     return {
       authApi,
       userApi,
+      filesApi,
       notification,
       truckApi,
       localStorage: LocalStorage,

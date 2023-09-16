@@ -5,18 +5,14 @@ import {
 } from 'react-hook-form';
 
 import { ServerErrorType } from '~/libs/enums/enums.js';
-import {
-  type FormField,
-  type ServerCommonErrorResponse,
-  type ServerSerializedError,
-  type ServerValidationErrorResponse,
-} from '~/libs/types/types.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
+import { type FormField } from '~/libs/types/types.js';
 
 import { FIELD_PATH_DELIMITER } from '../consts/consts.js';
 import { ServerErrorSymbol } from '../enums/enums.js';
 
 const handleServerError = <T extends FieldValues>(
-  error: ServerSerializedError,
+  error: HttpError,
   setError: UseFormSetError<T>,
   fields: FormField<T>[],
 ): void => {
@@ -37,7 +33,7 @@ const handleServerError = <T extends FieldValues>(
 
 const assignCommonErrors = <T extends FieldValues>(
   fields: FormField<T>[],
-  commonError: Partial<ServerCommonErrorResponse>,
+  commonError: Partial<HttpError>,
   setError: UseFormSetError<T>,
 ): void => {
   const assignFieldError = (field: FormField<T>): void => {
@@ -65,7 +61,7 @@ const assignCommonErrors = <T extends FieldValues>(
 
 const assignValidationErrors = <T extends FieldValues>(
   fields: FormField<T>[],
-  commonError: Partial<ServerValidationErrorResponse>,
+  commonError: Partial<HttpError>,
   setError: UseFormSetError<T>,
 ): void => {
   if (!commonError.details) {

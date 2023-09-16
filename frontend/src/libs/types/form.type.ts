@@ -22,7 +22,7 @@ type ErrorDescriptor =
   | KnownErrorMessages;
 
 type FormField<T extends FieldValues> = {
-  type?: 'text' | 'email' | 'password' | 'number' | 'dropdown';
+  type?: 'text' | 'email' | 'password' | 'number' | 'dropdown' | 'file';
   label: string;
   placeholder?: string;
   name: FieldPath<T>;

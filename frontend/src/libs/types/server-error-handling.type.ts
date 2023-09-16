@@ -1,7 +1,7 @@
-import { type ServerSerializedError } from './types.js';
+import { type HttpError } from '../packages/http/http.js';
 
 type ServerErrorHandling = {
-  error: ServerSerializedError | undefined;
+  error: HttpError | undefined;
   clearError: () => void;
 };
 

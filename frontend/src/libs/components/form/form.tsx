@@ -1,6 +1,7 @@
 import {
   type Control,
   type FieldErrors,
+  type UseFormClearErrors,
   type UseFormSetError,
 } from 'react-hook-form';
 
@@ -15,6 +16,9 @@ import {
 
 import { Button } from '../button/button.jsx';
 import { DropdownInput } from '../dropdown-input/dropdown-input.js';
+import { FileInput } from '../file-input/file-input.js';
+import { fileInputDefaultsConfig } from '../file-input/libs/config/config.js';
+import { type FileFormType } from '../file-input/libs/types/types.js';
 import { Input } from '../input/input.jsx';
 import { handleServerError } from './libs/helpers/handle-server-error.helper.js';
 import styles from './styles.module.scss';
@@ -33,6 +37,7 @@ type RenderFieldProperties<T extends FieldValues = FieldValues> = {
   control: Control<T, null>;
   errors: FieldErrors<T>;
   setError: UseFormSetError<T>;
+  clearErrors: UseFormClearErrors<T>;
   clearServerError?: ServerErrorHandling['clearError'];
 };
 
@@ -41,12 +46,13 @@ const renderField = <T extends FieldValues = FieldValues>({
   control,
   errors,
   setError,
+  clearErrors,
   clearServerError,
 }: RenderFieldProperties<T>): JSX.Element => {
+  const { options, name, label } = field;
+
   switch (field.type) {
     case 'dropdown': {
-      const { options, name, label } = field;
-
       return (
         <DropdownInput
           options={options ?? []}
@@ -71,8 +77,30 @@ const renderField = <T extends FieldValues = FieldValues>({
         />
       );
     }
+    case 'file': {
+      return (
+        <FileInput
+          setError={setError as unknown as UseFormSetError<FileFormType>}
+          clearErrors={
+            clearErrors as unknown as UseFormClearErrors<FileFormType>
+          }
+          label={label}
+          control={control as unknown as Control<FileFormType, null>}
+          errors={errors}
+          isDisabled={false}
+          fileInputCustomConfig={fileInputDefaultsConfig}
+        />
+      );
+    }
     default: {
-      return <Input {...field} control={control} errors={errors} />;
+      return (
+        <Input
+          {...field}
+          control={control}
+          errors={errors}
+          setError={setError}
+        />
+      );
     }
   }
 };
@@ -85,10 +113,11 @@ const Form = <T extends FieldValues = FieldValues>({
   onSubmit,
   serverError,
 }: Properties<T>): JSX.Element => {
-  const { control, errors, setError, handleSubmit } = useAppForm<T>({
-    defaultValues,
-    validationSchema,
-  });
+  const { control, errors, handleSubmit, setError, clearErrors } =
+    useAppForm<T>({
+      defaultValues,
+      validationSchema,
+    });
 
   useEffect(() => {
     if (serverError?.error) {
@@ -113,6 +142,7 @@ const Form = <T extends FieldValues = FieldValues>({
           control,
           errors,
           setError,
+          clearErrors,
           clearServerError: serverError?.clearError,
         })}
       </div>

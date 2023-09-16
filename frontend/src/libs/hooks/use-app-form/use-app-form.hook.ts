@@ -4,6 +4,7 @@ import {
   type DeepPartial,
   type FieldErrors,
   type FieldValues,
+  type UseFormClearErrors,
   type UseFormHandleSubmit,
   type UseFormSetError,
   type ValidationMode,
@@ -20,9 +21,10 @@ type Parameters<T extends FieldValues = FieldValues> = {
 
 type ReturnValue<T extends FieldValues = FieldValues> = {
   control: Control<T, null>;
+  handleSubmit: UseFormHandleSubmit<T>;
   errors: FieldErrors<T>;
   setError: UseFormSetError<T>;
-  handleSubmit: UseFormHandleSubmit<T>;
+  clearErrors: UseFormClearErrors<T>;
 };
 
 const useAppForm = <T extends FieldValues = FieldValues>({
@@ -35,6 +37,7 @@ const useAppForm = <T extends FieldValues = FieldValues>({
     handleSubmit,
     formState: { errors },
     setError,
+    clearErrors,
   } = useForm<T>({
     mode,
     defaultValues,
@@ -43,9 +46,10 @@ const useAppForm = <T extends FieldValues = FieldValues>({
 
   return {
     control,
+    handleSubmit,
     errors,
     setError,
-    handleSubmit,
+    clearErrors,
   };
 };
 

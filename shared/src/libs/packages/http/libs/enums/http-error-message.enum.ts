@@ -1,6 +1,7 @@
 const HttpMessage = {
   USER_EMAIL_EXISTS: 'User with this email already exists',
   USER_PHONE_EXISTS: 'User with this phone already exists',
+  FILE_DOES_NOT_EXIST: 'File with such id does not exist!',
   BUSINESS_EXISTS: 'Business with specified tax number already exists',
   TRUCK_EXISTS: 'Truck already exists',
   NOT_FOUND: 'Not found',
@@ -23,6 +24,8 @@ const HttpMessage = {
   SHIFT_ALREADY_CLOSED: 'Specified shift is already closed',
   NOT_ACCESS: 'You do not have enough rights to operate this shift',
   ORDER_DOES_NOT_EXIST: 'Order does not exist!',
+  SHIFT_NOT_OPEN: 'This truck is not inactive, please choose another one',
+  TRUCK_DOES_NOT_EXISTS: 'Truck does not exist',
 } as const;
 
 export { HttpMessage };

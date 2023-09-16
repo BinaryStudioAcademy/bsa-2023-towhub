@@ -1,10 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
-import {
-  getErrorMessage,
-  testServerErrorType,
-} from '~/libs/helpers/helpers.js';
+import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
 import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
 import {
@@ -35,13 +33,10 @@ const signUp = createAsyncThunk<
       await localStorage.set(StorageKey.TOKEN, result.accessToken);
 
       return result;
-    } catch (error: unknown) {
-      const serverError = testServerErrorType(error);
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
 
-      if (serverError) {
-        return rejectWithValue(serverError);
-      }
-      throw error;
+      return rejectWithValue({ ...error, message: error.message });
     }
   },
 );
@@ -58,13 +53,10 @@ const signIn = createAsyncThunk<
     await localStorage.set(StorageKey.TOKEN, result.accessToken);
 
     return result;
-  } catch (error: unknown) {
-    const serverError = testServerErrorType(error);
+  } catch (error_: unknown) {
+    const error = error_ as HttpError;
 
-    if (serverError) {
-      return rejectWithValue(serverError);
-    }
-    throw error;
+    return rejectWithValue({ ...error, message: error.message });
   }
 });
 

@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
 import {
   type BusinessSignUpResponseDto,
   type CustomerSignUpResponseDto,
-  type ServerSerializedError,
   type UserSignInResponseDto,
   type ValueOf,
 } from '~/libs/types/types.js';
@@ -12,7 +12,7 @@ import {
 import { getCurrent, signIn, signUp } from './actions.js';
 
 type State = {
-  error?: ServerSerializedError;
+  error?: HttpError;
   dataStatus: ValueOf<typeof DataStatus>;
   user:
     | UserSignInResponseDto
@@ -44,8 +44,12 @@ const { reducer, actions, name } = createSlice({
       state.user = action.payload;
       state.dataStatus = DataStatus.FULFILLED;
     });
-    builder.addCase(signUp.rejected, (state) => {
+    builder.addCase(signUp.rejected, (state, { payload }) => {
       state.dataStatus = DataStatus.REJECTED;
+
+      if (payload) {
+        state.error = payload;
+      }
     });
     builder.addCase(signIn.pending, (state) => {
       state.user = null;
@@ -56,9 +60,12 @@ const { reducer, actions, name } = createSlice({
       state.user = action.payload;
       state.dataStatus = DataStatus.FULFILLED;
     });
-    builder.addCase(signIn.rejected, (state, action) => {
-      state.error = action.payload || action.error;
+    builder.addCase(signIn.rejected, (state, { payload }) => {
       state.dataStatus = DataStatus.REJECTED;
+
+      if (payload) {
+        state.error = payload;
+      }
     });
     builder.addCase(getCurrent.pending, (state) => {
       state.dataStatus = DataStatus.PENDING;
