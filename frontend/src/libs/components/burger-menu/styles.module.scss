@@ -1,0 +1,59 @@
+@import "src/assets/css/vars.scss";
+
+.burgerMenu {
+  position: relative;
+  cursor: pointer;
+}
+
+.burgerIcon {
+  width: 100%;
+  color: $red;
+  font-size: 24px;
+}
+
+.open .burgerIcon {
+  color: $red-light;
+}
+
+.menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  z-index: 10;
+  width: 220px;
+  overflow: hidden;
+  border: none;
+  border-radius: 16px;
+
+  .btn {
+    display: inline-flex;
+    justify-content: start;
+    background-color: $blue-dark;
+    border-radius: 0;
+
+    &:hover {
+      background-color: $blue;
+    }
+  }
+
+  .menuIcon {
+    width: 100%;
+    color: $white;
+    font-size: 24px;
+  }
+}
+
+@media (width <= $screen-size-lg) {
+  .menu {
+    width: 80px;
+    background-color: $blue-dark;
+
+    li {
+      padding: 10px 20px;
+
+      &:hover {
+        background-color: $blue;
+      }
+    }
+  }
+}

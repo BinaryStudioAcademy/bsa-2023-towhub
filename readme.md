@@ -105,7 +105,7 @@ erDiagram
         status enum "not null"
         user_id integer FK "nullable"
         business_id integer FK "nullable"
-        driver_id integer FK "nullable"
+        shift_id integer FK "nullable"
         customer_name varchar "nullable"
         customer_phone varchar "nullable"
         cars_qty integer "not null"
@@ -133,7 +133,7 @@ erDiagram
     users one -- zero or many orders: "users(id) has orders(user_id)"
     users one -- zero or many orders: "users(id) has orders(user_id)"
     business_details one -- zero or many orders: "business_details(id) has orders(business_id)"
-    driver_details one -- zero or many orders: "driver_details(id) has orders(drivers_id)"
+    shifts one -- zero or many orders: "shifts(id) has orders(shift_id)"
     users zero or one -- one or many shifts: "users(id) has shifts(driver_id)"
     trucks one -- zero or many shifts: "shifts(truck_id) has trucks(id)"
 ```
