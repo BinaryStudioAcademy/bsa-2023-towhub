@@ -1,12 +1,15 @@
-import { type IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import {
+  type IconDefinition,
   faArrowDownLong,
   faBars,
   faCaretDown,
+  faCheck,
   faChevronDown,
   faChevronLeft,
   faClockRotateLeft,
+  faCloudUploadAlt,
   faEye,
+  faFile,
   faGear,
   faListUl,
   faLocationDot,
@@ -31,9 +34,12 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.CHEVRON_LEFT]: faChevronLeft,
   [IconName.GEAR]: faGear,
   [IconName.STAR]: faStar,
-  [IconName.LIST]: faListUl,
   [IconName.LOCATION_DOT]: faLocationDot,
   [IconName.MAP]: faMap,
+  [IconName.CLOUD_UPLOAD]: faCloudUploadAlt,
+  [IconName.FILE]: faFile,
+  [IconName.CHECK]: faCheck,
+  [IconName.LIST]: faListUl,
   [IconName.BARS]: faBars,
   [IconName.XMARK]: faXmark,
   [IconName.CLOCK_ROTATE_LEFT]: faClockRotateLeft,
@@ -41,6 +47,7 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.RIGHT_FROM_BRACKET]: faRightFromBracket,
   [IconName.TRUCK]: faTruckPickup,
   [IconName.USERS]: faUsers,
+  [IconName.XMARK]: faXmark,
   [IconName.EYE]: faEye,
 };
 
