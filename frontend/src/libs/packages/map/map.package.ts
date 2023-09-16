@@ -8,7 +8,10 @@ type Constructor = {
   mapElement?: HTMLDivElement;
   center?: google.maps.LatLngLiteral;
   zoom?: number;
-  extraLibraries?: { geocoding: google.maps.Geocoder };
+  extraLibraries?: {
+    geocoding: google.maps.Geocoder;
+    routes: google.maps.DistanceMatrixService;
+  };
 };
 
 class MapService implements IMapService {
@@ -18,7 +21,9 @@ class MapService implements IMapService {
 
   private directionsRenderer!: google.maps.DirectionsRenderer;
 
-  private geocoder: google.maps.Geocoder;
+  private geocoder!: google.maps.Geocoder;
+
+  private routes!: google.maps.DistanceMatrixService;
 
   public constructor({
     mapElement,
@@ -28,12 +33,12 @@ class MapService implements IMapService {
   }: Constructor) {
     if (extraLibraries) {
       this.geocoder = extraLibraries.geocoding;
+      this.routes = extraLibraries.routes;
 
       return;
     }
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
-    this.geocoder = new google.maps.Geocoder();
 
     if (mapElement && center && zoom) {
       this.initMap(mapElement, center, zoom);
@@ -97,11 +102,45 @@ class MapService implements IMapService {
   }
 
   public async getPointName(point: google.maps.LatLngLiteral): Promise<string> {
-    const {
-      results: [result],
-    } = await this.geocoder.geocode({ location: point });
+    try {
+      const {
+        results: [result],
+      } = await this.geocoder.geocode({ location: point });
 
-    return result.formatted_address;
+      return result.formatted_address;
+    } catch (error: unknown) {
+      throw new ApplicationError({
+        message: 'Error decoding coordinates',
+        cause: error,
+      });
+    }
+  }
+
+  public async calculateDistanceAndDuration(
+    origin: google.maps.LatLngLiteral,
+    destination: google.maps.LatLngLiteral,
+  ): Promise<{
+    distance: { text: string; value: number };
+    duration: { text: string; value: number };
+  }> {
+    try {
+      const routes = await this.routes.getDistanceMatrix({
+        origins: [origin],
+        destinations: [destination],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false,
+      });
+      const firstRow = routes.rows[0].elements[0];
+
+      return { distance: firstRow.distance, duration: firstRow.duration };
+    } catch (error: unknown) {
+      throw new ApplicationError({
+        message: 'Error calculating distance and time',
+        cause: error,
+      });
+    }
   }
 
   public async calculateDistance(

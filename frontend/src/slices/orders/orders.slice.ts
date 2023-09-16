@@ -4,18 +4,18 @@ import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
 
-import { getOrder, getPointsNames, updateOrderFromSocket } from './actions.js';
-import { type OrderPoints } from './libs/types/types.js';
+import { getOrder, getRouteData, updateOrderFromSocket } from './actions.js';
+import { type RouteData } from './libs/types/types.js';
 
 type State = {
   order: OrderResponseDto | null;
-  orderPoints: OrderPoints;
+  routeData: RouteData;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
 const initialState: State = {
   order: null,
-  orderPoints: { origin: null, destination: null },
+  routeData: { origin: null, destination: null, distanceAndDuration: null },
   dataStatus: DataStatus.IDLE,
 };
 
@@ -40,8 +40,8 @@ const { reducer, actions, name } = createSlice({
           state.order.status = action.payload.status;
         }
       })
-      .addCase(getPointsNames.fulfilled, (state, action) => {
-        state.orderPoints = action.payload;
+      .addCase(getRouteData.fulfilled, (state, action) => {
+        state.routeData = action.payload;
       });
   },
 });

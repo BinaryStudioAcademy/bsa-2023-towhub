@@ -1,1 +1,1 @@
-export { type OrderPoints } from './order-points.type.js';
+export { type RouteData } from './route-data.type.js';

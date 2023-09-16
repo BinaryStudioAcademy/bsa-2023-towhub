@@ -5,7 +5,7 @@ import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
 
 import { ActionNames } from './libs/enums/enums.js';
 import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.helper.js';
-import { type OrderPoints } from './libs/types/types.js';
+import { type RouteData } from './libs/types/types.js';
 
 const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
   ActionNames.GET_ORDER,
@@ -16,24 +16,32 @@ const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
   },
 );
 
-const getPointsNames = createAsyncThunk<
-  OrderPoints,
+const getRouteData = createAsyncThunk<
+  RouteData,
   { origin: string; destination: string },
   AsyncThunkConfig
 >(ActionNames.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
   const { mapServiceFactory } = extra;
-  const orderPoints = {
+  const routeData = {
     origin: jsonToLatLngLiteral(origin),
     destination: jsonToLatLngLiteral(destination),
   };
 
   const mapService = await mapServiceFactory();
-  const [originName, destinationName] = await Promise.all([
-    mapService.getPointName(orderPoints.origin),
-    mapService.getPointName(orderPoints.destination),
+  const [originName, destinationName, distanceAndDuration] = await Promise.all([
+    mapService.getPointName(routeData.origin),
+    mapService.getPointName(routeData.destination),
+    mapService.calculateDistanceAndDuration(
+      routeData.origin,
+      routeData.destination,
+    ),
   ]);
 
-  return { origin: originName, destination: destinationName };
+  return {
+    origin: originName,
+    destination: destinationName,
+    distanceAndDuration,
+  };
 });
 
 const updateOrderFromSocket = createAsyncThunk<
@@ -64,7 +72,7 @@ const stopListenOrderUpdates = createAction(
 
 export {
   getOrder,
-  getPointsNames,
+  getRouteData,
   listenOrderUpdates,
   stopListenOrderUpdates,
   updateOrderFromSocket,

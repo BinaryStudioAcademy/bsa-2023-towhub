@@ -13,7 +13,7 @@ import {
   useState,
 } from '~/libs/hooks/hooks.js';
 import { actions } from '~/slices/orders/orders.js';
-import { selectOrder, selectPointsNames } from '~/slices/orders/selectors.js';
+import { selectOrder, selectOrderData } from '~/slices/orders/selectors.js';
 
 import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
 import styles from './styles.module.scss';
@@ -32,7 +32,7 @@ const OrderPage: React.FC = () => {
   const onPointScreen = status === OrderStatusEnum.PICKING_UP;
   const doneScreen = status === OrderStatusEnum.DONE;
   const truckArrivalTime = 10;
-  const pointsNames = useAppSelector(selectPointsNames);
+  const routeData = useAppSelector(selectOrderData);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((location) => {
@@ -53,7 +53,7 @@ const OrderPage: React.FC = () => {
   useEffect(() => {
     if (order) {
       void dispatch(
-        actions.getPointsNames({
+        actions.getRouteData({
           origin: order.startPoint,
           destination: order.endPoint,
         }),
@@ -66,31 +66,31 @@ const OrderPage: React.FC = () => {
   }, [navigate]);
 
   const handleCancelClick = useCallback(() => {
-    //
+    //TODO
   }, []);
   const handlePayClick = useCallback(() => {
-    //
+    //TODO
   }, []);
 
   const Card = (): JSX.Element | null => {
-    if (order?.shift.driver && !cancelScreen && !doneScreen) {
+    if (order && !cancelScreen && !doneScreen) {
       return (
         <OrderCard
           isDriverShown={confirmScreen || onPointScreen || doneScreen}
           className={styles.card}
           driver={{
-            firstName: order.shift.driver.firstName,
-            lastName: order.shift.driver.lastName,
+            firstName: order.shift.driver?.firstName ?? '',
+            lastName: order.shift.driver?.lastName ?? '',
             profileURL: 'https://i.pravatar.cc/300',
           }}
-          truck={{ licensePlate: 'GB 555' }}
+          truck={{ licensePlate: order.shift.truck?.licensePlateNumber ?? '' }}
           initialStatus={{
-            startLocation: pointsNames.origin ?? '',
-            endLocation: pointsNames.destination ?? '',
+            startLocation: routeData.origin ?? '',
+            endLocation: routeData.destination ?? '',
           }}
           currentStatus={{
-            distanceLeft: 12,
-            timespanLeft: '1 hrs 24 mins',
+            distanceLeft: routeData.distanceAndDuration?.distance.text ?? '',
+            timespanLeft: routeData.distanceAndDuration?.duration.text ?? '',
           }}
           price={order.price}
         />

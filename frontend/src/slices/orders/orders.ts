@@ -1,6 +1,6 @@
 import {
   getOrder,
-  getPointsNames,
+  getRouteData,
   listenOrderUpdates,
   stopListenOrderUpdates,
   updateOrderFromSocket,
@@ -13,7 +13,7 @@ const allActions = {
   listenOrderUpdates,
   stopListenOrderUpdates,
   updateOrderFromSocket,
-  getPointsNames,
+  getRouteData,
 };
 
 export { allActions as actions };

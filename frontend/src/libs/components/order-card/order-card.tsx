@@ -29,8 +29,6 @@ const OrderCard: React.FC<Properties> = ({
   isDriverShown = true,
   price,
 }: Properties) => {
-  const areManyKilometers = distanceLeft > 1;
-
   const CardHeader = (): JSX.Element => (
     <div className={styles.header}>
       <div className={styles.headerImageContainer}>
@@ -108,7 +106,7 @@ const OrderCard: React.FC<Properties> = ({
                 'text-md',
               )}
             >
-              {distanceLeft} km{areManyKilometers && 's'}, {timespanLeft}
+              {distanceLeft}, {timespanLeft}
             </span>
           </div>
           <div className={styles.priceContainer}>
