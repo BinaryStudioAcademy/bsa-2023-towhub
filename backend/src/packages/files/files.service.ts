@@ -73,14 +73,6 @@ class FilesService
       const body = parsedFile.content;
       let S3OperationSuccess = false;
 
-      const foundFiles = await this.fileRepository.find({ key });
-
-      if (foundFiles.length > 0) {
-        throw new InvalidFileError({
-          message: `File '${key}' already exists.`,
-        });
-      }
-
       try {
         await this.s3ClientService.putObject(key, body);
 
