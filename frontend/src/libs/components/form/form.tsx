@@ -12,7 +12,6 @@ import { Button } from '../button/button.jsx';
 import { DropdownInput } from '../dropdown-input/dropdown-input.js';
 import { Input } from '../input/input.jsx';
 import { LocationInput } from '../location-input/location-input.js';
-import { LocationFieldName } from './libs/location-field-name.enum.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
@@ -24,14 +23,6 @@ type Properties<T extends FieldValues> = {
   onSubmit: (payload: T) => void;
   // TODO: REMOVE THIS
   price?: number;
-  onLocationChange?: (
-    place: google.maps.LatLngLiteral,
-    address: string,
-  ) => void;
-  onDestinationChange?: (
-    place: google.maps.LatLngLiteral,
-    address: string,
-  ) => void;
 };
 
 const Form = <T extends FieldValues = FieldValues>({
@@ -42,8 +33,6 @@ const Form = <T extends FieldValues = FieldValues>({
   isDisabled,
   price,
   onSubmit,
-  onLocationChange,
-  onDestinationChange,
 }: Properties<T>): JSX.Element => {
   const { control, errors, handleSubmit } = useAppForm<T>({
     defaultValues,
@@ -77,27 +66,6 @@ const Form = <T extends FieldValues = FieldValues>({
         return <Input {...field} control={control} errors={errors} />;
       }
       case 'location': {
-        // TODO: CLEAN THIS UP
-        if (field.name === LocationFieldName.START) {
-          return (
-            <LocationInput
-              {...field}
-              control={control}
-              errors={errors}
-              onChange={onLocationChange}
-            />
-          );
-        } else if (field.name === LocationFieldName.END) {
-          return (
-            <LocationInput
-              {...field}
-              control={control}
-              errors={errors}
-              onChange={onDestinationChange}
-            />
-          );
-        }
-
         return <LocationInput {...field} control={control} errors={errors} />;
       }
       default: {
@@ -122,7 +90,7 @@ const Form = <T extends FieldValues = FieldValues>({
   return (
     <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
-      {/* TODO: REMOVE */}
+      {/* TODO: REMOVE THIS*/}
       {price !== undefined && (
         <div className={styles.price}>
           <span>Price:</span>

@@ -22,7 +22,10 @@ type Properties<T extends FieldValues> = {
   name: FieldPath<T>;
   placeholder?: string;
   isDisabled?: boolean;
-  onChange?: (place: google.maps.LatLngLiteral, address: string) => void;
+  onLocationChange?: (
+    place: google.maps.LatLngLiteral,
+    address: string,
+  ) => void;
 };
 
 const LocationInput = <T extends FieldValues>({
@@ -32,12 +35,11 @@ const LocationInput = <T extends FieldValues>({
   name,
   placeholder = '',
   isDisabled,
-  onChange,
+  onLocationChange,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
-  const [location, setLocation] = useState<
-    google.maps.places.Autocomplete | null
-  >(null);
+  const [location, setLocation] =
+    useState<google.maps.places.Autocomplete | null>(null);
 
   const error = errors[name]?.message;
   const hasError = Boolean(error);
@@ -61,8 +63,8 @@ const LocationInput = <T extends FieldValues>({
     const place = location?.getPlace();
     field.onChange(place?.formatted_address);
 
-    if (onChange && place?.geometry?.location) {
-      onChange(
+    if (onLocationChange && place?.geometry?.location) {
+      onLocationChange(
         {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
@@ -70,7 +72,7 @@ const LocationInput = <T extends FieldValues>({
         place.formatted_address as string,
       );
     }
-  }, [location, onChange, field]);
+  }, [location, onLocationChange, field]);
 
   return (
     <label className={styles.inputComponentWrapper}>

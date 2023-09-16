@@ -16,6 +16,10 @@ type FormField<T extends FieldValues> = {
   currency?: string;
   step?: number;
   id?: number;
+  onLocationChange?: (
+    location: google.maps.LatLngLiteral,
+    address: string,
+  ) => void;
 };
 
 export { type FormField };

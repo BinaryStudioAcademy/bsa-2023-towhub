@@ -25,8 +25,9 @@ const libraries: Libraries = ['places'];
 const Order: React.FC = () => {
   const [startAddress, setStartAddress] = useState<string>();
   const [endAddress, setEndAddress] = useState<string>();
-  const [location, setLocation] = useState<google.maps.LatLngLiteral>();
-  const [destination, setDestination] = useState<google.maps.LatLngLiteral>();
+  const [startLocation, setStartLocation] =
+    useState<google.maps.LatLngLiteral>();
+  const [endLocation, setEndLocation] = useState<google.maps.LatLngLiteral>();
   const [price, setPrice] = useState<number>(0);
 
   const dispatch = useAppDispatch();
@@ -40,7 +41,7 @@ const Order: React.FC = () => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((location) => {
-      setLocation({
+      setStartLocation({
         lng: location.coords.longitude,
         lat: location.coords.latitude,
       });
@@ -65,18 +66,18 @@ const Order: React.FC = () => {
 
   const handleLocatonChange = useCallback(
     (location: { lat: number; lng: number }, address: string) => {
-      setLocation(location);
+      setStartLocation(location);
       setStartAddress(address);
     },
-    [setLocation],
+    [setStartLocation],
   );
 
   const handleDestinationChange = useCallback(
     (destination: { lat: number; lng: number }, address: string) => {
-      setDestination(destination);
+      setEndLocation(destination);
       setEndAddress(address);
     },
-    [setDestination],
+    [setEndLocation],
   );
 
   return (
@@ -98,8 +99,8 @@ const Order: React.FC = () => {
               />
               <OrderForm
                 onSubmit={handleSubmit}
-                onLocationChange={handleLocatonChange}
-                onDestinationChange={handleDestinationChange}
+                onStartLocationChange={handleLocatonChange}
+                onEndLocationChange={handleDestinationChange}
                 truckId={chosenTruck.id}
                 isDisabled={!chosenTruck}
                 price={price}
@@ -107,9 +108,9 @@ const Order: React.FC = () => {
             </div>
             <div className={styles.right}>
               <Map
-                center={location}
+                center={startLocation}
                 zoom={16}
-                destination={destination}
+                destination={endLocation}
                 onPriceChange={handlePriceChange}
                 pricePerKm={chosenTruck.pricePerKm}
                 startAddress={startAddress}

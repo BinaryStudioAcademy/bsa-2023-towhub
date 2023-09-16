@@ -1,12 +1,25 @@
 import { type FormField } from '~/libs/types/form.type.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 
-const orderFormFields: FormField<OrderCreateRequestDto>[] = [
+const getOrderFormFields = (
+  onStartChange: (place: google.maps.LatLngLiteral, address: string) => void,
+  onEndChange: (place: google.maps.LatLngLiteral, address: string) => void,
+): FormField<OrderCreateRequestDto>[] => [
   { label: 'Name', name: 'customerName' },
   { label: 'Phone', name: 'customerPhone' },
   { label: 'Time', name: 'scheduledTime', type: 'date' },
-  { label: 'Location', name: 'startPoint', type: 'location' },
-  { label: 'Destination', name: 'endPoint', type: 'location' },
+  {
+    label: 'Location',
+    name: 'startPoint',
+    type: 'location',
+    onLocationChange: onStartChange,
+  },
+  {
+    label: 'Destination',
+    name: 'endPoint',
+    type: 'location',
+    onLocationChange: onEndChange,
+  },
   {
     label: 'How many cars need to be towed',
     name: 'carsQty',
@@ -14,4 +27,4 @@ const orderFormFields: FormField<OrderCreateRequestDto>[] = [
   },
 ];
 
-export { orderFormFields };
+export { getOrderFormFields };
