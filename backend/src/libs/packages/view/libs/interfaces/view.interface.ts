@@ -1,5 +1,5 @@
-interface IView {
-  render(parameters: unknown): string;
+interface IView<T extends Record<string, unknown>> {
+  render(parameters: T): string;
 }
 
 export { type IView };
