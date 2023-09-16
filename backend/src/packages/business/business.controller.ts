@@ -753,9 +753,14 @@ class BusinessController extends Controller {
    *          content:
    *            application/json:
    *              schema:
-   *                type: array
-   *                items:
-   *                  $ref: '#/components/schemas/Driver'
+   *                type: object
+   *                properties:
+   *                    items:
+   *                      $ref: '#/components/schemas/Driver'
+   *                    total:
+   *                      type: number
+   *                      example: 1
+   *
    */
 
   private async findAllDrivers(
