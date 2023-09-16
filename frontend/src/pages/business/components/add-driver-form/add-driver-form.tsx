@@ -10,8 +10,6 @@ import {
   type DriverCreateUpdateRequestDto,
   driverCreateUpdateRequestBody,
 } from '~/packages/drivers/drivers.js';
-import { type UserEntityObjectWithGroupAndBusinessT } from '~/packages/drivers/libs/types/types.js';
-import { selectUser } from '~/slices/auth/selectors.js';
 import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
 
 import { DEFAULT_ADD_DRIVER_PAYLOAD } from './libs/constants.js';
@@ -24,13 +22,10 @@ type Properties = {
 
 const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector(
-    selectUser,
-  ) as UserEntityObjectWithGroupAndBusinessT;
 
   const trucks = useAppSelector((state) => state.trucks.trucks);
 
-  useEffect(() => void dispatch(findAllTrucksForBusiness()), [dispatch, user]);
+  useEffect(() => void dispatch(findAllTrucksForBusiness()), [dispatch]);
 
   const truckOptions = trucks.map((truck) => ({
     label: truck.licensePlateNumber,
