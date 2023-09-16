@@ -12,6 +12,7 @@
     "build": "npx tsc && tsc-alias"
   },
   "dependencies": {
+    "filesize": "10.0.12",
     "joi": "17.9.2",
     "tsc-alias": "1.8.2",
     "typescript": "5.1.6"
