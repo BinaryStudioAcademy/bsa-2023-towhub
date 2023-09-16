@@ -111,8 +111,8 @@ class OrderService implements Omit<IService, 'find'> {
       customerPhone,
     });
 
-    const orderExtended = {
-      ...OrderEntity.initializeNew(order).toNewObject(),
+    return OrderEntity.initialize({
+      ...order,
       shiftId: shift.id,
       driver: {
         id: driver.id,
@@ -123,9 +123,7 @@ class OrderService implements Omit<IService, 'find'> {
         driverLicenseNumber: shift.driverLicenseNumber,
       },
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
-    };
-
-    return OrderEntity.initialize(orderExtended).toObject();
+    }).toObject();
   }
 
   public async findById({

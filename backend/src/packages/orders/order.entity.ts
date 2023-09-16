@@ -105,7 +105,6 @@ class OrderEntity implements IEntity {
   }
 
   public static initializeNew({
-    id,
     price,
     scheduledTime,
     carsQty,
@@ -117,11 +116,11 @@ class OrderEntity implements IEntity {
     shiftId,
     customerName,
     customerPhone,
-  }: Omit<OrderEntityT, 'shift' | 'driver' | 'truck'> & {
+  }: Omit<OrderEntityT, 'id' | 'driver' | 'truck'> & {
     shiftId: number;
   }): OrderEntity {
     return new OrderEntity({
-      id,
+      id: null,
       price,
       scheduledTime,
       carsQty,
