@@ -24,7 +24,6 @@ export {
 } from './libs/packages/http/http.js';
 export {
   type ClientToServerEvents,
-  type ServerSocketEventParameter,
   type ServerToClientEvents,
   ClientSocketEvent,
   RoomPrefixes,

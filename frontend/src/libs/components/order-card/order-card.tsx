@@ -24,7 +24,7 @@ const OrderCard: React.FC<Properties> = ({
   driver: { firstName, lastName, profileURL },
   truck: { licensePlate },
   initialStatus: { startLocation, endLocation },
-  currentStatus: { timespanLastUpdated, location, distanceLeft, timespanLeft },
+  currentStatus: { distanceLeft, timespanLeft },
   className,
   isDriverShown = true,
   price,
@@ -62,15 +62,6 @@ const OrderCard: React.FC<Properties> = ({
         {isDriverShown && <CardHeader />}
         <div className={styles.body}>
           <div className={styles.bodyContent}>
-            <div className={styles.locationDot}>
-              <PlainSvgIcon name={PlainSvgIconName.LOCATION_DOT} />
-            </div>
-            <span className={getValidClassNames(styles.location, 'textSm')}>
-              {location}
-            </span>
-            <span className={getValidClassNames(styles.lastUpdate, 'textSm')}>
-              last updated {timespanLastUpdated} ago
-            </span>
             <div
               className={getValidClassNames(
                 styles.routeDot,

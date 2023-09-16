@@ -1,4 +1,5 @@
 export {
+  ClientSocketEvent,
   OrdersApiPath,
   OrderStatus,
   UserGroupKey,

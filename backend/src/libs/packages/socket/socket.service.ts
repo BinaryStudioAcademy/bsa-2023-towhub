@@ -12,7 +12,6 @@ import {
 import {
   type ClientToServerEvents,
   type OrderUpdateResponseDto,
-  type ServerSocketEventParameter,
 } from './libs/types/types.js';
 
 class SocketService {
@@ -44,7 +43,9 @@ class SocketService {
       socket.on(
         ClientSocketEvent.TRUCK_LOCATION_UPDATE,
         (
-          payload: ServerSocketEventParameter[typeof ClientSocketEvent.TRUCK_LOCATION_UPDATE],
+          payload: Parameters<
+            ClientToServerEvents[typeof ClientSocketEvent.TRUCK_LOCATION_UPDATE]
+          >[0],
         ): void => {
           const { truckId, latLng } = payload;
           this.geolocationCacheService.setCache(truckId, latLng);
@@ -73,6 +74,15 @@ class SocketService {
     this.io
       ?.to(`${RoomPrefixes.ORDER}${id}`)
       .emit(ServerSocketEvent.ORDER_UPDATED, order);
+  }
+
+  public notifyOrderForTruckPositionUpdate(
+    id: OrderUpdateResponseDto['id'],
+    truckPosition: string,
+  ): void {
+    this.io
+      ?.to(`${RoomPrefixes.ORDER}${id}`)
+      .emit(ServerSocketEvent.ORDER_UPDATED, truckPosition);
   }
 }
 

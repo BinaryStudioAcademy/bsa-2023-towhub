@@ -5,23 +5,39 @@ import { type IMapService } from './libs/interfaces/interfaces.js';
 import mapStyle from './map.config.json';
 
 type Constructor = {
-  mapElement: HTMLDivElement;
-  center: google.maps.LatLngLiteral;
-  zoom: number;
+  mapElement?: HTMLDivElement;
+  center?: google.maps.LatLngLiteral;
+  zoom?: number;
+  extraLibraries?: { geocoding: google.maps.Geocoder };
 };
 
 class MapService implements IMapService {
   private map: google.maps.Map | null = null;
 
-  private directionsService: google.maps.DirectionsService;
+  private directionsService!: google.maps.DirectionsService;
 
-  private directionsRenderer: google.maps.DirectionsRenderer;
+  private directionsRenderer!: google.maps.DirectionsRenderer;
 
-  public constructor({ mapElement, center, zoom }: Constructor) {
+  private geocoder: google.maps.Geocoder;
+
+  public constructor({
+    mapElement,
+    center,
+    zoom,
+    extraLibraries,
+  }: Constructor) {
+    if (extraLibraries) {
+      this.geocoder = extraLibraries.geocoding;
+
+      return;
+    }
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
+    this.geocoder = new google.maps.Geocoder();
 
-    this.initMap(mapElement, center, zoom);
+    if (mapElement && center && zoom) {
+      this.initMap(mapElement, center, zoom);
+    }
   }
 
   private initMap(
@@ -33,6 +49,7 @@ class MapService implements IMapService {
       center,
       zoom,
       styles: mapStyle as google.maps.MapTypeStyle[],
+      disableDefaultUI: true,
     });
   }
 
@@ -77,6 +94,14 @@ class MapService implements IMapService {
         cause: error,
       });
     }
+  }
+
+  public async getPointName(point: google.maps.LatLngLiteral): Promise<string> {
+    const {
+      results: [result],
+    } = await this.geocoder.geocode({ location: point });
+
+    return result.formatted_address;
   }
 
   public async calculateDistance(

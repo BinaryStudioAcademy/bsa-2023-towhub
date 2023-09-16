@@ -6,7 +6,11 @@ import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
-import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
+import {
+  // ClientSocketEvent,
+  OrderStatus,
+  UserGroupKey,
+} from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
   type OrderCreateResponseDto,
@@ -205,6 +209,12 @@ class OrderService implements Omit<IService, 'find'> {
     }
 
     return await this.orderRepository.delete(id);
+  }
+
+  private listenForTruckPositionUpdate(id: OrderEntityT['id']): void {
+    //
+    id;
+    // this.socketService.getIo().on(ClientSocketEvent.TRUCK_LOCATION_UPDATE,);
   }
 
   private verifyOrderBelongsToDriver(

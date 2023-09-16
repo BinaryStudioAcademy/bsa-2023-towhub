@@ -13,7 +13,7 @@ import {
   useState,
 } from '~/libs/hooks/hooks.js';
 import { actions } from '~/slices/orders/orders.js';
-import { selectOrder } from '~/slices/orders/selectors.js';
+import { selectOrder, selectPointsNames } from '~/slices/orders/selectors.js';
 
 import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
 import styles from './styles.module.scss';
@@ -32,6 +32,7 @@ const OrderPage: React.FC = () => {
   const onPointScreen = status === OrderStatusEnum.PICKING_UP;
   const doneScreen = status === OrderStatusEnum.DONE;
   const truckArrivalTime = 10;
+  const pointsNames = useAppSelector(selectPointsNames);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((location) => {
@@ -48,6 +49,17 @@ const OrderPage: React.FC = () => {
       void dispatch(actions.listenOrderUpdates(orderId));
     }
   }, [orderId, dispatch]);
+
+  useEffect(() => {
+    if (order) {
+      void dispatch(
+        actions.getPointsNames({
+          origin: order.startPoint,
+          destination: order.endPoint,
+        }),
+      );
+    }
+  }, [dispatch, order]);
 
   const handleHomepageClick = useCallback(() => {
     navigate(AppRoute.ROOT);
@@ -73,12 +85,10 @@ const OrderPage: React.FC = () => {
           }}
           truck={{ licensePlate: 'GB 555' }}
           initialStatus={{
-            startLocation: order.startPoint,
-            endLocation: order.endPoint,
+            startLocation: pointsNames.origin ?? '',
+            endLocation: pointsNames.destination ?? '',
           }}
           currentStatus={{
-            timespanLastUpdated: '30 seconds',
-            location: 'Birmingham',
             distanceLeft: 12,
             timespanLeft: '1 hrs 24 mins',
           }}

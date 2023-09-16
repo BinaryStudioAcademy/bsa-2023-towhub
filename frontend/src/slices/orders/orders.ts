@@ -1,5 +1,6 @@
 import {
   getOrder,
+  getPointsNames,
   listenOrderUpdates,
   stopListenOrderUpdates,
   updateOrderFromSocket,
@@ -12,6 +13,7 @@ const allActions = {
   listenOrderUpdates,
   stopListenOrderUpdates,
   updateOrderFromSocket,
+  getPointsNames,
 };
 
 export { allActions as actions };

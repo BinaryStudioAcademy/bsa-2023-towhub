@@ -86,8 +86,6 @@ $blue-shallow: #becee8;
   display: grid;
   grid-template-columns: 20px auto;
   grid-template-areas:
-    "locationDot         location"
-    "    .             lastUpdate"
     "routeDotStart routeInfoStart"
     "routeArrow          .       "
     "routeDotEnd   routeInfoEnd  "

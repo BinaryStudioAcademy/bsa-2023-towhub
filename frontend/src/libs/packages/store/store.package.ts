@@ -16,6 +16,7 @@ import { reducer as authReducer } from '~/slices/auth/auth.js';
 import { reducer as orderReducer } from '~/slices/orders/orders.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
+import { mapServiceFactory } from '../map/map.js';
 import { socketMiddleware } from '../middleware/socket.middleware.js';
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
@@ -59,6 +60,7 @@ class Store {
       truckApi,
       orderApi,
       localStorage: LocalStorage,
+      mapServiceFactory,
     };
   }
 }

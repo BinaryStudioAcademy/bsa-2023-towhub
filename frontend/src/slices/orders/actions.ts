@@ -7,6 +7,8 @@ import {
 } from '~/packages/orders/libs/types/types.js';
 
 import { ActionNames } from './libs/enums/enums.js';
+import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.helper.js';
+import { type OrderPoints } from './libs/types/types.js';
 
 const getOrder = createAsyncThunk<
   OrderFindByIdResponseDto,
@@ -16,6 +18,26 @@ const getOrder = createAsyncThunk<
   const { orderApi } = extra;
 
   return orderApi.getOrder(orderId);
+});
+
+const getPointsNames = createAsyncThunk<
+  OrderPoints,
+  { origin: string; destination: string },
+  AsyncThunkConfig
+>(ActionNames.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
+  const { mapServiceFactory } = extra;
+  const orderPoints = {
+    origin: jsonToLatLngLiteral(origin),
+    destination: jsonToLatLngLiteral(destination),
+  };
+
+  const mapService = await mapServiceFactory();
+  const [originName, destinationName] = await Promise.all([
+    mapService.getPointName(orderPoints.origin),
+    mapService.getPointName(orderPoints.destination),
+  ]);
+
+  return { origin: originName, destination: destinationName };
 });
 
 const updateOrderFromSocket = createAsyncThunk<
@@ -46,6 +68,7 @@ const stopListenOrderUpdates = createAction(
 
 export {
   getOrder,
+  getPointsNames,
   listenOrderUpdates,
   stopListenOrderUpdates,
   updateOrderFromSocket,

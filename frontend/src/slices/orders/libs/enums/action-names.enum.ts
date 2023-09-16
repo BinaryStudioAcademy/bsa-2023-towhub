@@ -7,6 +7,7 @@ const ActionNames = {
     LISTEN_ORDER_UPDATES: `${sliceName}/listen-order-updates`,
     STOP_LISTEN_ORDER_UPDATES: `${sliceName}/stop-listen-order-updates`,
   },
+  GET_ORDER_POINTS: `${sliceName}/get-order-points`,
 };
 
 export { ActionNames };

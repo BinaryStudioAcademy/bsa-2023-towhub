@@ -1,3 +1,4 @@
+import { type MapService } from '~/libs/packages/map/map.package';
 import { type notification } from '~/libs/packages/notification/notification.js';
 import { type LocalStorage } from '~/libs/packages/storage/storage.js';
 import { type authApi } from '~/packages/auth/auth.js';
@@ -12,5 +13,6 @@ type ExtraArguments = {
   truckApi: typeof truckApi;
   localStorage: typeof LocalStorage;
   orderApi: typeof orderApi;
+  mapServiceFactory: () => Promise<MapService>;
 };
 export { type ExtraArguments };
