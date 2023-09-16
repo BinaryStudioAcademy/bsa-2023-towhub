@@ -1,6 +1,3 @@
-// TODO: MOVE TO libs/types
-import { type Libraries, LoadScript } from '@react-google-maps/api';
-
 import { TowTruckCard } from '~/libs/components/components.js';
 import { Map } from '~/libs/components/map/map.js';
 import { AppRoute } from '~/libs/enums/enums.js';
@@ -13,6 +10,7 @@ import {
   useState,
 } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
+import { type Libraries, LoadScript } from '~/libs/types/types.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectChosenTruck } from '~/slices/trucks/selectors.js';
@@ -86,7 +84,6 @@ const Order: React.FC = () => {
         googleMapsApiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
         libraries={libraries}
       >
-        {/* TODO: REMOVE THIS CHECK */}
         {chosenTruck && (
           <>
             <div className={styles.left}>
@@ -104,14 +101,7 @@ const Order: React.FC = () => {
                 truckId={chosenTruck.id}
                 isDisabled={!chosenTruck}
               >
-                {/* TODO: MOVE THIS TO .SCSS */}
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '10px',
-                  }}
-                >
+                <div className={styles.price}>
                   <span>Price:</span>
                   <span>${price}</span>
                 </div>
@@ -120,8 +110,6 @@ const Order: React.FC = () => {
             <div className={styles.right}>
               <Map
                 center={startLocation}
-                // TODO: REMOVE MAGIC NUMBER
-                zoom={16}
                 destination={endLocation}
                 onPriceChange={handlePriceChange}
                 pricePerKm={chosenTruck.pricePerKm}

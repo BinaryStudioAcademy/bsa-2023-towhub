@@ -4,9 +4,11 @@ import { MapService } from '~/libs/packages/map/map.js';
 
 import styles from './styles.module.scss';
 
+const DEFAULT_ZOOM = 16;
+
 type Properties = {
   center?: google.maps.LatLngLiteral;
-  zoom: number;
+  zoom?: number;
   origin?: google.maps.LatLngLiteral;
   destination?: google.maps.LatLngLiteral;
   className?: string;
@@ -18,7 +20,7 @@ type Properties = {
 
 const Map: React.FC<Properties> = ({
   center,
-  zoom,
+  zoom = DEFAULT_ZOOM,
   className,
   destination,
   pricePerKm,
