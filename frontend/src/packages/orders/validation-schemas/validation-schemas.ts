@@ -1,1 +1,1 @@
-export { orderCreateRequestBody, orderForm } from 'shared/build/index.js';
+export { orderCreateRequestBody } from 'shared/build/index.js';
