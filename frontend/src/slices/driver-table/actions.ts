@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { ServerErrorType } from 'shared/build/index.js';
 
-import { HttpError } from '~/libs/packages/http/http.js';
+import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import { type AsyncThunkConfig } from '~/libs/types/async-thunk-config.type';
 import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 import { DriverCreationMessage } from '~/packages/drivers/libs/enums/enums.js';
@@ -38,7 +39,14 @@ const addDriver = createAsyncThunk<
     }
     extra.notification.error(message);
 
-    return rejectWithValue(message);
+    return rejectWithValue(
+      new HttpError({
+        message,
+        status: HttpCode.BAD_REQUEST,
+        errorType: ServerErrorType.COMMON,
+        details: [],
+      }),
+    );
   }
 });
 
