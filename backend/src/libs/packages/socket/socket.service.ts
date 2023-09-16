@@ -1,19 +1,18 @@
 import { type FastifyInstance } from 'fastify/types/instance';
 import { type Server, type Socket, Server as SocketServer } from 'socket.io';
 
-import { type GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
+import { type GeolocationCacheSocketService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { logger } from '~/libs/packages/logger/logger.js';
 import { type ShiftSocketService } from '~/packages/shifts/shift.js';
 import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service';
 
 import { ServerSocketEvent } from './libs/enums/enums.js';
-import { type ServerSocketEventParameter } from './libs/types/types.js';
 
 class SocketService {
   private io: SocketServer | null = null;
 
-  private geolocationCacheService!: GeolocationCacheService;
+  private geolocationCacheSocketService!: GeolocationCacheSocketService;
 
   private userService!: UserService;
 
@@ -25,16 +24,16 @@ class SocketService {
 
   public async initializeIo({
     app,
-    geolocationCacheService,
+    geolocationCacheSocketService,
     userService,
     shiftSocketService,
   }: {
     app: FastifyInstance;
-    geolocationCacheService: GeolocationCacheService;
+    geolocationCacheSocketService: GeolocationCacheSocketService;
     userService: UserService;
     shiftSocketService: ShiftSocketService;
   }): Promise<void> {
-    this.geolocationCacheService = geolocationCacheService;
+    this.geolocationCacheSocketService = geolocationCacheSocketService;
     this.userService = userService;
     this.shiftSocketService = shiftSocketService;
     this.io = new SocketServer(app.server, {
@@ -59,21 +58,13 @@ class SocketService {
           socket,
           io: this.io as Server,
         });
+
+        this.geolocationCacheSocketService.initialize({ socket });
       }
 
       socket.on(ServerSocketEvent.DISCONNECT, () => {
         logger.info(`${socket.id} disconnected`);
       });
-
-      socket.on(
-        ServerSocketEvent.TRUCK_LOCATION_UPDATE,
-        (
-          payload: ServerSocketEventParameter[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATE],
-        ): void => {
-          const { truckId, latLng } = payload;
-          this.geolocationCacheService.setCache(truckId, latLng);
-        },
-      );
     });
   }
 }

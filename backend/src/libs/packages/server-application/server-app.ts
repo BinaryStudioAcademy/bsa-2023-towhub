@@ -15,7 +15,9 @@ import { ServerErrorType } from '~/libs/enums/enums.js';
 import { type ValidationError } from '~/libs/exceptions/exceptions.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
-import { type GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
+import {
+  type GeolocationCacheSocketService
+} from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { socket as socketService } from '~/libs/packages/socket/socket.js';
@@ -42,7 +44,7 @@ type Constructor = {
   logger: ILogger;
   database: IDatabase;
   apis: IServerAppApi[];
-  geolocationCacheService: GeolocationCacheService;
+  geolocationCacheSocketService: GeolocationCacheSocketService;
   truckService: TruckService;
   userService: UserService;
   shiftSocketService: ShiftSocketService;
@@ -59,7 +61,7 @@ class ServerApp implements IServerApp {
 
   private app: ReturnType<typeof Fastify>;
 
-  private geolocationCacheService: GeolocationCacheService;
+  private geolocationCacheSocketService: GeolocationCacheSocketService;
 
   private truckService: TruckService;
 
@@ -72,7 +74,7 @@ class ServerApp implements IServerApp {
     logger,
     database,
     apis,
-    geolocationCacheService,
+    geolocationCacheSocketService,
     truckService,
     userService,
     shiftSocketService,
@@ -82,7 +84,7 @@ class ServerApp implements IServerApp {
     this.database = database;
     this.apis = apis;
 
-    this.geolocationCacheService = geolocationCacheService;
+    this.geolocationCacheSocketService = geolocationCacheSocketService;
     this.truckService = truckService;
     this.userService = userService;
     this.shiftSocketService = shiftSocketService;
@@ -261,7 +263,7 @@ class ServerApp implements IServerApp {
     await socketService.initializeIo({
       shiftSocketService: this.shiftSocketService,
       app: this.app,
-      geolocationCacheService: this.geolocationCacheService,
+      geolocationCacheSocketService: this.geolocationCacheSocketService,
       userService: this.userService,
     });
 
