@@ -2,6 +2,10 @@ import truckImg from '~/assets/img/tow-truck.png';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 import { ordersApi } from '~/packages/orders/orders.js';
 
+import {
+  TRUCK_IMG_HEIGHT,
+  TRUCK_IMG_WIDTH,
+} from './libs/constants/constants.js';
 import { rotateImg } from './libs/helpers/rotate-img.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
 import {
@@ -163,9 +167,8 @@ class MapService implements IMapService {
       icon: origin
         ? {
             url: rotatedIconUrl,
-            // TODO: REMOVE MAGIC NUMBERS
-            anchor: new google.maps.Point(73, 84),
-            size: new google.maps.Size(146, 168),
+            anchor: new google.maps.Point(TRUCK_IMG_WIDTH / 2, TRUCK_IMG_HEIGHT / 2),
+            size: new google.maps.Size(TRUCK_IMG_WIDTH, TRUCK_IMG_HEIGHT),
             scale: 1,
           }
         : undefined,

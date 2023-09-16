@@ -1,25 +1,32 @@
-const TRUCK_IMG_WIDTH = 146;
-const TRUCK_IMG_HEIGHT = 168;
+import { TRUCK_IMG_HEIGHT, TRUCK_IMG_WIDTH } from '../constants/constants.js';
 
-const rotateImg = (url: string, degrees: number): string => {
+const calculateRad = (rotationAngle: number): number =>
+  (rotationAngle * Math.PI) / 180;
+
+const rotateCanvas = (
+  canvas: HTMLCanvasElement,
+  image: HTMLImageElement,
+  rotationRad: number
+): void => {
+  const context = canvas.getContext('2d');
+
+  context?.translate(canvas.width / 2, canvas.height / 2);
+  context?.rotate(rotationRad);
+  context?.drawImage(image, -image.width / 2, -image.height / 2);
+};
+
+const rotateImg = (url: string, rotationAngle: number): string => {
   const canvas = document.createElement('canvas');
 
   canvas.width = TRUCK_IMG_WIDTH;
   canvas.height = TRUCK_IMG_HEIGHT;
 
-  const context = canvas.getContext('2d');
+  const image = new Image();
+  image.src = url;
 
-  const img = new Image();
-  img.src = url;
+  const rotationRad = calculateRad(rotationAngle);
 
-  const rotationAngle = degrees;
-  // TODO: CREATE HELPER
-  const rotationRad = (rotationAngle * Math.PI) / 180;
-
-  // TODO: CREATE HELPER
-  context?.translate(canvas.width / 2, canvas.height / 2);
-  context?.rotate(rotationRad);
-  context?.drawImage(img, -img.width / 2, -img.height / 2);
+  rotateCanvas(canvas, image, rotationRad);
 
   return canvas.toDataURL();
 };
