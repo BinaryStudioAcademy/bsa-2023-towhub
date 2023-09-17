@@ -12,8 +12,10 @@ import {
   useParams,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { actions } from '~/slices/orders/orders.js';
+import { actions as orderActions } from '~/slices/orders/orders.js';
 import { selectOrder, selectOrderData } from '~/slices/orders/selectors.js';
+import { selectTruckLocation } from '~/slices/trucks/selectors.js';
+import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
 import styles from './styles.module.scss';
@@ -22,8 +24,10 @@ const OrderPage: React.FC = () => {
   const { orderId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [location, setLocation] = useState<google.maps.LatLngLiteral>();
-  const [destination] = useState<google.maps.LatLngLiteral>();
+  const [location, setLocation] = useState<google.maps.LatLngLiteral>({
+    lat: 0,
+    lng: 0,
+  });
   const order = useAppSelector(selectOrder);
   const status = order?.status;
   const pendingScreen = status === OrderStatusEnum.PENDING;
@@ -32,28 +36,29 @@ const OrderPage: React.FC = () => {
   const onPointScreen = status === OrderStatusEnum.PICKING_UP;
   const doneScreen = status === OrderStatusEnum.DONE;
   const truckArrivalTime = 10;
+  const truckId = '1'; //Mock
   const routeData = useAppSelector(selectOrderData);
+  const truckLocation = useAppSelector(selectTruckLocation);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((location) => {
-      setLocation({
-        lng: location.coords.longitude,
-        lat: location.coords.latitude,
-      });
-    });
-  }, [setLocation, dispatch]);
+    if (truckLocation) {
+      //Mock
+      setLocation(truckLocation);
+    }
+  }, [truckLocation, setLocation]);
 
   useEffect(() => {
     if (orderId) {
-      void dispatch(actions.getOrder(orderId));
-      void dispatch(actions.listenOrderUpdates(orderId));
+      void dispatch(orderActions.getOrder(orderId));
+      void dispatch(orderActions.listenOrderUpdates(orderId));
+      void dispatch(truckActions.listenTruckUpdates(truckId));
     }
   }, [orderId, dispatch]);
 
   useEffect(() => {
     if (order) {
       void dispatch(
-        actions.getRouteData({
+        orderActions.getRouteData({
           origin: order.startPoint,
           destination: order.endPoint,
         }),
@@ -143,14 +148,7 @@ const OrderPage: React.FC = () => {
           />
           {!cancelScreen && !doneScreen && (
             <section className={styles.mapSection}>
-              {location && (
-                <Map
-                  center={location}
-                  zoom={16}
-                  destination={destination}
-                  className={styles.map}
-                />
-              )}
+              <Map center={location} zoom={16} className={styles.map} />
             </section>
           )}
           <section className={styles.cardSection}>

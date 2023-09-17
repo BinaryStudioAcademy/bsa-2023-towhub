@@ -12,6 +12,7 @@ import {
 import {
   type ClientToServerEvents,
   type OrderResponseDto,
+  type ServerToClientEvents,
 } from './libs/types/types.js';
 
 class SocketService {
@@ -64,6 +65,35 @@ class SocketService {
           );
         },
       );
+      socket.on(
+        ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES,
+        async ({
+          truckId,
+        }: Parameters<
+          ClientToServerEvents[typeof ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES]
+        >[0]) => {
+          await socket.join(`${RoomPrefixes.TRUCK}${truckId}`);
+          logger.info(
+            `${socket.id} connected to ${RoomPrefixes.TRUCK}${truckId}`,
+          );
+        },
+      );
+      // //Mock start
+      // let lat = 49.4466;
+      // let lng = 24.5806;
+      // setInterval(() => {
+      //   lat = +(lat + 0.013).toFixed(4);
+      //   lng = +(lng + 0.015).toFixed(4);
+      //   console.log({ lat, lng });
+      //   this.notifyCustomerForTruckLocationUpdate(1, {
+      //     truckId: 1,
+      //     latLng: {
+      //       latitude: lat,
+      //       longitude: lng,
+      //     },
+      //   });
+      // }, 10_000);
+      // //Mock end
     });
   }
 
@@ -76,13 +106,15 @@ class SocketService {
       .emit(ServerSocketEvent.ORDER_UPDATED, order);
   }
 
-  public notifyOrderForTruckPositionUpdate(
-    id: OrderResponseDto['id'],
-    truckPosition: string,
+  public notifyCustomerForTruckLocationUpdate(
+    truckId: number,
+    truckLocation: Parameters<
+      ServerToClientEvents[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATED]
+    >[0],
   ): void {
     this.io
-      ?.to(`${RoomPrefixes.ORDER}${id}`)
-      .emit(ServerSocketEvent.ORDER_UPDATED, truckPosition);
+      ?.to(`${RoomPrefixes.TRUCK}${truckId}`)
+      .emit(ServerSocketEvent.TRUCK_LOCATION_UPDATED, truckLocation);
   }
 }
 

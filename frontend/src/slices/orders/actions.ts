@@ -65,7 +65,7 @@ const stopListenOrderUpdates = createAction(
   ActionNames.SOCKET.STOP_LISTEN_ORDER_UPDATES,
   (orderId: string) => {
     return {
-      payload: orderId,
+      payload: `${orderId}`,
     };
   },
 );

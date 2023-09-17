@@ -10,11 +10,16 @@ import {
   listenOrderUpdates,
   updateOrderFromSocket,
 } from '~/slices/orders/actions.js';
+import {
+  listenTruckUpdates,
+  updateTruckLocationFromSocket,
+} from '~/slices/trucks/actions.js';
 
 import {
   ClientSocketEvent,
   ServerSocketEvent,
 } from '../socket/libs/enums/enums.js';
+import { type ServerToClientEvents } from '../socket/libs/types/types.js';
 import { socket } from '../socket/socket.js';
 import { type ExtraArguments } from '../store/libs/types/extra-arguments.type.js';
 import { type RootReducer } from '../store/libs/types/root-reducer.type.js';
@@ -37,14 +42,33 @@ const socketMiddleware: ThunkMiddleware<
         void dispatch(updateOrderFromSocket(order));
       },
     );
+    socketInstance.on(
+      ServerSocketEvent.TRUCK_LOCATION_UPDATED,
+      (
+        location: Parameters<
+          ServerToClientEvents[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATED]
+        >[0],
+      ) => {
+        void dispatch(updateTruckLocationFromSocket(location));
+      },
+    );
   }
 
   return (next: Dispatch) => (action: AnyAction) => {
-    if (listenOrderUpdates.type === action.type && socketInstance) {
-      socketInstance.emit<typeof ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES>(
-        ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES,
-        { orderId: `${action.payload as string}` },
-      );
+    if (socketInstance) {
+      if (listenOrderUpdates.type === action.type) {
+        socketInstance.emit<typeof ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES>(
+          ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES,
+          { orderId: `${action.payload as string}` },
+        );
+      }
+
+      if (listenTruckUpdates.type === action.type) {
+        socketInstance.emit<typeof ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES>(
+          ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES,
+          { truckId: `${action.payload as string}` },
+        );
+      }
     }
 
     return next(action);
