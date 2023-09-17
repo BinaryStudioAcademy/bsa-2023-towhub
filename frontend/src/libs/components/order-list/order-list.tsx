@@ -18,13 +18,13 @@ const OrderList: React.FC<Properties> = ({ orders }: Properties) => {
           shift: { driver, truck },
         } = order;
         const driverProperty = {
-          firstName: driver?.firstName as string,
-          lastName: driver?.lastName as string,
+          firstName: driver.firstName,
+          lastName: driver.lastName,
           profileURL:
             'https://qph.cf2.quoracdn.net/main-thumb-97945175-200-uwsogrwpgplqopsksieeysyifvfvwiaj.jpeg',
         };
         const truckProperty = {
-          licensePlate: truck?.licensePlateNumber as string,
+          licensePlate: truck.licensePlateNumber,
         };
         const initialStatus = { startLocation, endLocation };
         const currentStatus = {
