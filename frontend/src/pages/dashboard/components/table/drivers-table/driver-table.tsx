@@ -11,8 +11,8 @@ import {
 import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
 import { AddDriverForm } from '~/pages/business/components/add-driver-form/add-driver-form.js';
-import { getDriversPage } from '~/slices/driver/actions.js';
-import { actions } from '~/slices/driver/driver.js';
+import { getDriversPage } from '~/slices/drivers/actions.js';
+import { actions } from '~/slices/drivers/drivers.js';
 
 import { columns } from './columns/columns.js';
 import styles from './styles.module.scss';

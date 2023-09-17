@@ -21,7 +21,7 @@ const initialState: State = {
 
 const { actions, reducer, name } = createSlice({
   initialState,
-  name: 'drivers-table',
+  name: 'drivers',
   reducers: {},
   extraReducers(builder) {
     builder

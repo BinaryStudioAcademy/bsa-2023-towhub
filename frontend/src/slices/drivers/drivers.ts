@@ -1,5 +1,5 @@
 import { addDriver, getDriversPage } from './actions.js';
-import { actions } from './driver.slice.js';
+import { actions } from './drivers.slice.js';
 
 const allAction = {
   ...actions,
@@ -8,4 +8,4 @@ const allAction = {
 };
 
 export { allAction as actions };
-export { reducer } from './driver.slice.js';
+export { reducer } from './drivers.slice.js';
