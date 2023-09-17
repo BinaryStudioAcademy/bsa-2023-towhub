@@ -225,9 +225,11 @@ class OrderService implements Omit<IService, 'find'> {
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     };
 
-    this.socketService.notifyOrderUpdate(orderExtended.id, orderExtended);
+    const order = OrderEntity.initialize(orderExtended).toObject();
 
-    return OrderEntity.initialize(orderExtended).toObject();
+    this.socketService.notifyOrderUpdate(order.id, order);
+
+    return order;
   }
 
   public async updateByCustomer(parameters: {
@@ -282,9 +284,11 @@ class OrderService implements Omit<IService, 'find'> {
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     };
 
-    this.socketService.notifyOrderUpdate(orderExtended.id, orderExtended);
+    const order = OrderEntity.initialize(orderExtended).toObject();
 
-    return OrderEntity.initialize(orderExtended).toObject();
+    this.socketService.notifyOrderUpdate(order.id, order);
+
+    return order;
   }
 
   public async updateAcceptStatus(parameters: {
