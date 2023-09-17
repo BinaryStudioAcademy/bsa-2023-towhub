@@ -2,14 +2,14 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
+  type OrderResponseDto,
   type OrderUpdateAcceptStatusRequestDto,
-  type OrderUpdateResponseDto,
 } from '~/packages/orders/libs/types/types.js';
 
 import { ActionNames } from './libs/enums/enums.js';
 
 const changeAcceptOrderStatus = createAsyncThunk<
-  OrderUpdateResponseDto,
+  OrderResponseDto,
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
   AsyncThunkConfig
 >(
@@ -22,8 +22,8 @@ const changeAcceptOrderStatus = createAsyncThunk<
 );
 
 const updateOrderFromSocket = createAsyncThunk<
-  OrderUpdateResponseDto,
-  OrderUpdateResponseDto,
+  OrderResponseDto,
+  OrderResponseDto,
   AsyncThunkConfig
 >(ActionNames.SOCKET.UPDATE_ORDER, (order) => {
   return order;

@@ -5,14 +5,14 @@ export {
   OrdersValidationMessage,
 } from './libs/enums/enums.js';
 export {
+  type DriverInfo,
   type OrderCreateRequestDto,
-  type OrderCreateResponseDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
+  type OrderResponseDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateRequestDto,
-  type OrderUpdateResponseDto,
 } from './libs/types/types.js';
 export {
   orderCreateRequestBody,

@@ -1,5 +1,6 @@
 const HttpMessage = {
   USER_EXISTS: 'User already exists',
+  FILE_DOES_NOT_EXIST: 'File with such id does not exist!',
   BUSINESS_EXISTS: 'Business with specified tax number already exists',
   TRUCK_EXISTS: 'Truck already exists',
   NOT_FOUND: 'Not found',
@@ -25,6 +26,8 @@ const HttpMessage = {
   USER_CAN_NOT_ACCEPT_OR_DECLINE_ORDER:
     'You can not decline or accept this order',
   DRIVER_DOES_NOT_START_SHIFT: 'Driver does not start shift',
+  SHIFT_NOT_OPEN: 'This truck is not inactive, please choose another one',
+  TRUCK_DOES_NOT_EXISTS: 'Truck does not exist',
 } as const;
 
 export { HttpMessage };

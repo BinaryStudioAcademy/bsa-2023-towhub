@@ -11,7 +11,7 @@ import {
 } from './libs/enums/enums.js';
 import {
   type ClientToServerEvents,
-  type OrderUpdateResponseDto,
+  type OrderResponseDto,
   type ServerSocketEventParameter,
 } from './libs/types/types.js';
 
@@ -68,8 +68,8 @@ class SocketService {
   }
 
   public notifyOrderUpdate(
-    id: OrderUpdateResponseDto['id'],
-    order: OrderUpdateResponseDto,
+    id: OrderResponseDto['id'],
+    order: OrderResponseDto,
   ): void {
     this.io
       ?.to(`${RoomPrefixes.ORDER}${id}`)

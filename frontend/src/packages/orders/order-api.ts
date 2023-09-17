@@ -5,8 +5,8 @@ import { type IStorage } from '~/libs/packages/storage/storage.js';
 
 import { OrdersApiPath } from './libs/enums/enums.js';
 import {
+  type OrderResponseDto,
   type OrderUpdateAcceptStatusRequestDto,
-  type OrderUpdateResponseDto,
 } from './libs/types/types.js';
 
 type Constructor = {
@@ -23,7 +23,7 @@ class OrderApi extends HttpApi {
   public async changeAcceptOrderStatus(
     orderId: string,
     payload: OrderUpdateAcceptStatusRequestDto,
-  ): Promise<OrderUpdateResponseDto> {
+  ): Promise<OrderResponseDto> {
     const response = await this.load(
       this.getFullEndpoint(OrdersApiPath.$ID, { id: orderId }),
       {
@@ -34,7 +34,7 @@ class OrderApi extends HttpApi {
       },
     );
 
-    return await response.json<OrderUpdateResponseDto>();
+    return await response.json<OrderResponseDto>();
   }
 }
 

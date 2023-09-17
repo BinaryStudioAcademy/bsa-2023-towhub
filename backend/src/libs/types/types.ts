@@ -1,5 +1,6 @@
 export {
   type ErrorConstructor,
+  type FileInputConfig,
   type Id,
   type NullableProperties,
   type OperationResult,
