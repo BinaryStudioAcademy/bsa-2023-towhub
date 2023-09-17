@@ -41,7 +41,7 @@ $section-max-width: 416px;
 
 .map {
   width: 539px;
-  height: 100%;
+  min-height: 300px;
 }
 
 .status {

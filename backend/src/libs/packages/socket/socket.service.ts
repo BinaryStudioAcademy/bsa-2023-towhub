@@ -92,7 +92,7 @@ class SocketService {
       //       longitude: lng,
       //     },
       //   });
-      // }, 20_000);
+      // }, 10_000);
       // //Mock end
     });
   }

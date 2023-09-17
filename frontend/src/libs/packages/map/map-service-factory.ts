@@ -12,8 +12,10 @@ const mapServiceFactory = async (): Promise<MapService> => {
   const loader = new Loader({
     apiKey,
   });
-  const GeocodingLibrary = await loader.importLibrary('geocoding');
-  const RoutesLibrary = await loader.importLibrary('routes');
+  const [GeocodingLibrary, RoutesLibrary] = await Promise.all([
+    loader.importLibrary('geocoding'),
+    loader.importLibrary('routes'),
+  ]);
   const extraLibraries = {
     geocoding: new GeocodingLibrary.Geocoder(),
     routes: new RoutesLibrary.DistanceMatrixService(),

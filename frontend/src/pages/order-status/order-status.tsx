@@ -23,14 +23,10 @@ import { actions as truckActions } from '~/slices/trucks/trucks.js';
 import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
 import styles from './styles.module.scss';
 
-const OrderPage: React.FC = () => {
+const OrderStatusPage: React.FC = () => {
   const { orderId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [location, setLocation] = useState<google.maps.LatLngLiteral>({
-    lat: 0,
-    lng: 0,
-  });
   const order = useAppSelector(selectOrder);
   const status = order?.status;
   const pendingScreen = status === OrderStatusEnum.PENDING;
@@ -42,13 +38,6 @@ const OrderPage: React.FC = () => {
   const routeData = useAppSelector(selectOrderData);
   const truckLocation = useAppSelector(selectTruckLocation);
   const truckArrivalTime = useAppSelector(selectTruckArrivalTime);
-
-  useEffect(() => {
-    if (truckLocation) {
-      //Mock
-      setLocation(truckLocation);
-    }
-  }, [truckLocation, setLocation]);
 
   useEffect(() => {
     if (orderId) {
@@ -152,7 +141,16 @@ const OrderPage: React.FC = () => {
           />
           {!cancelScreen && !doneScreen && (
             <section className={styles.mapSection}>
-              <Map center={location} zoom={13} className={styles.map} />
+              <Map
+                center={
+                  truckLocation ?? {
+                    lat: 0,
+                    lng: 0,
+                  }
+                }
+                zoom={13}
+                className={styles.map}
+              />
             </section>
           )}
           <section className={styles.cardSection}>
@@ -170,4 +168,4 @@ const OrderPage: React.FC = () => {
   );
 };
 
-export { OrderPage as Order };
+export { OrderStatusPage as OrderStatus };
