@@ -1,5 +1,3 @@
-import { type Options } from 'nodemailer/lib/mailer';
-
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import {
   type GeolocationCacheService,
@@ -7,7 +5,6 @@ import {
 } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { MailContent } from '~/libs/packages/mailer/libs/enums/enums.js';
-import { mailer } from '~/libs/packages/mailer/mailer.js';
 
 import { UserGroupKey } from '../auth/libs/enums/enums.js';
 import { DriverEntity } from '../drivers/driver.entity.js';
@@ -21,6 +18,7 @@ import {
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
+import { mailService } from '../mail/mail.js';
 import { type UserService } from '../users/user.service.js';
 
 class DriverService implements IService {
@@ -122,7 +120,22 @@ class DriverService implements IService {
 
     const password = await this.generatePassword();
 
-    void this.sendEmail(email, `${firstName} ${lastName}`, password);
+    // const view = new PlainView(
+    //   '/Users/denis/Desktop/bsa-2023-towhub/backend/src/packages/mail/libs/views/plain/layout/plain.hbs',
+    // );
+
+    const emailData = {
+      name: `${firstName} ${lastName}`,
+      email: email,
+      password: password,
+      signInLink: MailContent.LINK,
+    };
+
+    await mailService.sendPage(
+      { to: email, subject: MailContent.SUBJECT },
+      'plain',
+      emailData,
+    );
 
     const user = await this.userService.create({
       password,
@@ -144,26 +157,6 @@ class DriverService implements IService {
     const driverObject = driver.toObject();
 
     return { ...user, ...driverObject, group };
-  }
-
-  private async sendEmail(
-    email: string,
-    name: string,
-    password: string,
-  ): Promise<void> {
-    const options: Options = {
-      to: `${email}`,
-      subject: MailContent.SUBJECT,
-      html: `<p>${MailContent.GREETING} ${name}</p><br>
-<p>${MailContent.CREDENTIALS}</p>
-<p>${MailContent.USERNAME} ${email}</p>
-<p>${MailContent.PASSWORD} ${password}</p><br>
-<p>${MailContent.SIGNIN_LINK}</p>
-<p>${MailContent.LINK}</p><br>
-<p>${MailContent.CLOSING}</p>`,
-    };
-
-    await mailer.send(options);
   }
 
   private async generatePassword(): Promise<string> {
