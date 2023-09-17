@@ -10,14 +10,10 @@ import {
   useEffect,
   useNavigate,
   useParams,
-  useState,
 } from '~/libs/hooks/hooks.js';
 import { actions as orderActions } from '~/slices/orders/orders.js';
-import { selectOrder, selectOrderData } from '~/slices/orders/selectors.js';
-import {
-  selectTruckArrivalTime,
-  selectTruckLocation,
-} from '~/slices/trucks/selectors.js';
+import { selectOrder } from '~/slices/orders/selectors.js';
+import { selectTruckLocation } from '~/slices/trucks/selectors.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
@@ -35,9 +31,8 @@ const OrderStatusPage: React.FC = () => {
   const onPointScreen = status === OrderStatusEnum.PICKING_UP;
   const doneScreen = status === OrderStatusEnum.DONE;
   const truckId = '1'; //Mock
-  const routeData = useAppSelector(selectOrderData);
+
   const truckLocation = useAppSelector(selectTruckLocation);
-  const truckArrivalTime = useAppSelector(selectTruckArrivalTime);
 
   useEffect(() => {
     if (orderId) {
@@ -46,17 +41,6 @@ const OrderStatusPage: React.FC = () => {
       void dispatch(truckActions.listenTruckUpdates(truckId));
     }
   }, [orderId, dispatch]);
-
-  useEffect(() => {
-    if (order) {
-      void dispatch(
-        orderActions.getRouteData({
-          origin: order.startPoint,
-          destination: order.endPoint,
-        }),
-      );
-    }
-  }, [dispatch, order]);
 
   const handleHomepageClick = useCallback(() => {
     navigate(AppRoute.ROOT);
@@ -70,27 +54,11 @@ const OrderStatusPage: React.FC = () => {
   }, []);
 
   const Card = (): JSX.Element | null => {
-    if (order && !cancelScreen && !doneScreen) {
+    if (!cancelScreen && !doneScreen) {
       return (
         <OrderCard
           isDriverShown={confirmScreen || onPointScreen || doneScreen}
           className={styles.card}
-          driver={{
-            firstName: order.shift.driver?.firstName ?? '',
-            lastName: order.shift.driver?.lastName ?? '',
-            profileURL:
-              'https://images.freeimages.com/images/large-previews/962/avatar-man-with-mustages-1632966.jpg?fmt=webp&w=350',
-          }}
-          truck={{ licensePlate: order.shift.truck?.licensePlateNumber ?? '' }}
-          initialStatus={{
-            startLocation: routeData.origin ?? '',
-            endLocation: routeData.destination ?? '',
-          }}
-          currentStatus={{
-            distanceLeft: routeData.distanceAndDuration?.distance.text ?? '',
-            timespanLeft: routeData.distanceAndDuration?.duration.text ?? '',
-          }}
-          price={order.price}
         />
       );
     }
@@ -132,38 +100,30 @@ const OrderStatusPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      {order && (
-        <>
-          <OrderStatus
-            status={order.status}
-            time={truckArrivalTime ? truckArrivalTime.text : '...'}
-            className={getValidClassNames(styles.status, styles.statusTop)}
+      <OrderStatus
+        className={getValidClassNames(styles.status, styles.statusTop)}
+      />
+      {!cancelScreen && !doneScreen && (
+        <section className={styles.mapSection}>
+          <Map
+            center={
+              truckLocation ?? {
+                lat: 0,
+                lng: 0,
+              }
+            }
+            zoom={13}
+            className={styles.map}
           />
-          {!cancelScreen && !doneScreen && (
-            <section className={styles.mapSection}>
-              <Map
-                center={
-                  truckLocation ?? {
-                    lat: 0,
-                    lng: 0,
-                  }
-                }
-                zoom={13}
-                className={styles.map}
-              />
-            </section>
-          )}
-          <section className={styles.cardSection}>
-            <OrderStatus
-              status={order.status}
-              className={getValidClassNames(styles.status, styles.statusBottom)}
-              time={truckArrivalTime ? truckArrivalTime.text : '...'}
-            />
-            <Card />
-            <ButtonsSection />
-          </section>
-        </>
+        </section>
       )}
+      <section className={styles.cardSection}>
+        <OrderStatus
+          className={getValidClassNames(styles.status, styles.statusBottom)}
+        />
+        <Card />
+        <ButtonsSection />
+      </section>
     </div>
   );
 };

@@ -1,34 +1,49 @@
 import { PlainSvgIconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useEffect,
+} from '~/libs/hooks/hooks.js';
+import { actions as orderActions } from '~/slices/orders/orders.js';
+import { selectOrder, selectOrderData } from '~/slices/orders/selectors.js';
 
 import { PlainSvgIcon } from '../plain-svg-icon/plain-svg-icon.js';
-import {
-  type DriverProfileInfo,
-  type OrderCurrentStatus,
-  type OrderedTruckInfo,
-  type OrderInitialStatus,
-} from './libs/types/types.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  driver: DriverProfileInfo;
-  truck: OrderedTruckInfo;
-  initialStatus: OrderInitialStatus;
-  currentStatus: OrderCurrentStatus;
   className?: string;
   isDriverShown?: boolean;
-  price: number;
 };
 
 const OrderCard: React.FC<Properties> = ({
-  driver: { firstName, lastName, profileURL },
-  truck: { licensePlate },
-  initialStatus: { startLocation, endLocation },
-  currentStatus: { distanceLeft, timespanLeft },
   className,
   isDriverShown = true,
-  price,
 }: Properties) => {
+  const order = useAppSelector(selectOrder);
+  const routeData = useAppSelector(selectOrderData);
+  const startLocation = routeData.origin ?? '';
+  const endLocation = routeData.destination ?? '';
+  const distanceLeft = routeData.distanceAndDuration?.distance.text ?? '';
+  const timespanLeft = routeData.distanceAndDuration?.duration.text ?? '';
+  const licensePlate = order?.shift.truck?.licensePlateNumber ?? '';
+  const price = order?.price;
+  const firstName = order?.shift.driver?.firstName ?? '';
+  const lastName = order?.shift.driver?.lastName ?? '';
+  const profileURL =
+    'https://images.freeimages.com/images/large-previews/962/avatar-man-with-mustages-1632966.jpg?fmt=webp&w=350';
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (order) {
+      void dispatch(
+        orderActions.getRouteData({
+          origin: order.startPoint,
+          destination: order.endPoint,
+        }),
+      );
+    }
+  }, [dispatch, order]);
   const CardHeader = (): JSX.Element => (
     <div className={styles.header}>
       <div className={styles.headerImageContainer}>

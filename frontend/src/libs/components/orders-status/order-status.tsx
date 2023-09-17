@@ -1,4 +1,7 @@
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { useAppSelector } from '~/libs/hooks/hooks.js';
+import { selectOrder } from '~/slices/orders/selectors.js';
+import { selectTruckArrivalTime } from '~/slices/trucks/selectors.js';
 
 import {
   OrderStatus as OrderStatusEnum,
@@ -8,36 +11,38 @@ import { type OrderStatusValues } from './libs/types/types.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  status: OrderStatusValues;
   className?: string;
-  time: string;
 };
 
-const OrderStatus: React.FC<Properties> = ({
-  status,
-  className,
-  time,
-}: Properties) => {
+const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
+  const time = useAppSelector(selectTruckArrivalTime);
+  const order = useAppSelector(selectOrder);
   const statusMessageMapper = (status: OrderStatusValues): string => {
     if (status === OrderStatusEnum.CONFIRMED) {
-      return `${STATUS_MESSAGES[status]} ${time}`;
+      return `${STATUS_MESSAGES[status]} ${time ? time.text : '...'}`;
     }
 
     return STATUS_MESSAGES[status];
   };
 
-  return (
-    <div
-      className={getValidClassNames(
-        styles.container,
-        className,
-        styles[status],
-      )}
-    >
-      <div className={styles.square}></div>
-      <span className={styles.text}>{statusMessageMapper(status)}</span>
-    </div>
-  );
+  if (order) {
+    const status = order.status;
+
+    return (
+      <div
+        className={getValidClassNames(
+          styles.container,
+          className,
+          styles[status],
+        )}
+      >
+        <div className={styles.square}></div>
+        <span className={styles.text}>{statusMessageMapper(status)}</span>
+      </div>
+    );
+  }
+
+  return <> </>;
 };
 
 export { OrderStatus };
