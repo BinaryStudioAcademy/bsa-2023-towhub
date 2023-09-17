@@ -131,11 +131,22 @@ $blue-shallow: #becee8;
 }
 
 .routeInfo {
+  position: relative;
   display: inline-block;
   overflow: hidden;
   color: $grey-darker;
   white-space: nowrap;
-  text-overflow: ellipsis;
+}
+
+.routeInfoInner {
+  display: inline-block;
+  animation:
+    swap 10s linear infinite,
+    marquee 10s linear infinite;
+}
+
+.routeInfoInner:hover {
+  animation: none;
 }
 
 $routes-margin-top: 1.5vmin;
@@ -212,5 +223,27 @@ $routes-margin-bottom: 3.5vmin;
     justify-content: center;
     width: 100%;
     margin-top: 10px;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes swap {
+  0%,
+  50% {
+    left: 0%;
+  }
+
+  50.01%,
+  100% {
+    left: 100%;
   }
 }

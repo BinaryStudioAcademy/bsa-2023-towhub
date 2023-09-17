@@ -68,15 +68,18 @@ const OrderCard: React.FC<Properties> = ({
             >
               <PlainSvgIcon name={PlainSvgIconName.BLUE_CIRCLE} />
             </div>
-            <span
+            <div
               className={getValidClassNames(
-                styles.routeInfo,
                 styles.routeInfoStart,
-                'text-sm',
+                styles.routeInfo,
               )}
             >
-              {startLocation}
-            </span>
+              <span
+                className={getValidClassNames('text-sm', styles.routeInfoInner)}
+              >
+                {startLocation}
+              </span>
+            </div>
             <div className={styles.routeArrow}>
               <PlainSvgIcon name={PlainSvgIconName.ARROW_DOWN} />
             </div>
@@ -88,14 +91,18 @@ const OrderCard: React.FC<Properties> = ({
             >
               <PlainSvgIcon name={PlainSvgIconName.RED_CIRCLE} />
             </div>
-            <span
+            <div
               className={getValidClassNames(
-                styles.routeInfo,
                 styles.routeInfoEnd,
+                styles.routeInfo,
               )}
             >
-              {endLocation}
-            </span>
+              <span
+                className={getValidClassNames('text-sm', styles.routeInfoInner)}
+              >
+                {endLocation}
+              </span>
+            </div>
             <div className={styles.distanceIcon}>
               <PlainSvgIcon name={PlainSvgIconName.MAP} />
             </div>
