@@ -11,7 +11,7 @@ import {
   type GetPaginatedPageQuery,
 } from '~/packages/drivers/libs/types/types.js';
 
-import { ACTIONS_TYPES } from './common.js';
+import { ACTIONS_TYPES } from './libs/enums/driver-action.js';
 
 const getDriversPage = createAsyncThunk<
   DriverGetAllResponseDto,

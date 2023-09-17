@@ -28,7 +28,7 @@ const { actions, reducer, name } = createSlice({
       .addCase(getDriversPage.fulfilled, (state, actions) => {
         state.drivers = actions.payload.items;
         state.total = actions.payload.total;
-        state.dataStatus = DataStatus.IDLE;
+        state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(addDriver.fulfilled, (state) => {
         state.dataStatus = DataStatus.IDLE;

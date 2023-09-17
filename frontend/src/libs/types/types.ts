@@ -17,7 +17,7 @@ export {
   type DriverGetAllResponseDto,
   type DriverWithUserData,
   type EntityPagination,
-  type PaginationPayload,
+  type PaginationParameters,
   type ServerErrorDetail,
   type ServerErrorResponse,
   type TruckEntity,

@@ -573,20 +573,12 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{businessId}/drivers:
+   * /business/drivers:
    *    post:
    *      tags:
    *       - business/driver
    *      summary: Create driver
    *      description: Create driver
-   *      parameters:
-   *       - in: path
-   *         name: businessId
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to create driver
-   *         example: 1
    *      requestBody:
    *        content:
    *          application/json:
@@ -731,20 +723,12 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{businessId}/drivers:
+   * /business/drivers:
    *    get:
    *      tags:
    *       - business/driver
    *      summary: Find all drivers
    *      description: Find all drivers
-   *      parameters:
-   *       - in: path
-   *         name: businessId
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to find drivers
-   *         example: 1
    *      security:
    *        - bearerAuth: []
    *      responses:
@@ -756,9 +740,11 @@ class BusinessController extends Controller {
    *                type: object
    *                properties:
    *                    items:
-   *                      $ref: '#/components/schemas/Driver'
+   *                      type: array
+   *                      items:
+   *                        $ref: '#/components/schemas/Driver'
    *                    total:
-   *                      type: number
+   *                      type: string
    *                      example: 1
    *
    */

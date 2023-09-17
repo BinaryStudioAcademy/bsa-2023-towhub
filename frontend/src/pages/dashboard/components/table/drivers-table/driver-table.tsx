@@ -11,8 +11,8 @@ import {
 import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
 import { AddDriverForm } from '~/pages/business/components/add-driver-form/add-driver-form.js';
-import { getDriversPage } from '~/slices/driver-table/actions.js';
-import { actions } from '~/slices/driver-table/driver-table.js';
+import { getDriversPage } from '~/slices/driver/actions.js';
+import { actions } from '~/slices/driver/driver.js';
 
 import { columns } from './columns/columns.js';
 import styles from './styles.module.scss';
@@ -50,7 +50,7 @@ const DriverTable: React.FC = () => {
     <div className={styles.container}>
       <h2 className={getValidClassNames('h3', styles.title)}>Drivers Table</h2>
       <Button
-        label=""
+        label="Add a driver"
         frontIcon="plus"
         className={styles.btn}
         onClick={handleOpenModal}

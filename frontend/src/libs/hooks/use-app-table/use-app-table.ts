@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import {
   type AsyncThunkConfig,
-  type PaginationPayload,
+  type PaginationParameters,
 } from '~/libs/types/types.js';
 
 import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
@@ -12,7 +12,7 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
 type Properties<T, K> = {
   tableFetchCall: AsyncThunk<
     T,
-    (K & PaginationPayload) | PaginationPayload,
+    (K & PaginationParameters) | PaginationParameters,
     AsyncThunkConfig
   >;
   payload?: K;
@@ -28,7 +28,7 @@ type ReturnValue = {
   updatePage: () => void;
 };
 
-const useAppTable = <T, K = PaginationPayload>({
+const useAppTable = <T, K = PaginationParameters>({
   tableFetchCall,
   payload,
   initialPageSize = DEFAULT_PAGE_SIZE,
