@@ -6,3 +6,4 @@ import { RekognitionService } from './rekognition.package.js';
 const rekognitionService = new RekognitionService({ logger, config });
 
 export { rekognitionService };
+export { RekognitionService } from './rekognition.package.js';

@@ -93,7 +93,12 @@ class DriverRepository implements IRepository {
     const [item] = await this.db
       .driver()
       .insert(this.driverSchema)
-      .values({ driverLicenseNumber, userId, businessId })
+      .values({
+        driverLicenseNumber,
+        userId,
+        businessId,
+        driverLicenseFileId: 1,
+      })
       .returning()
       .execute();
 

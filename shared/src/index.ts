@@ -16,6 +16,7 @@ export {
   filesize,
   pluralizeString,
 } from './libs/helpers/helpers.js';
+export { type IEventEmitter } from './libs/interfaces/interfaces.js';
 export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
 export { type GeolocationLatLng } from './libs/packages/geolocation/geolocation.js';
 export {
@@ -86,6 +87,15 @@ export {
   driverUpdateDeleteParameters,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
+export {
+  type FileVerificationNameValues,
+  type FileVerificationStatusEntityT,
+  type FileVerificationStatusValues,
+  FILE_VERIFICATION_NAMES,
+  FILE_VERIFICATION_STATUSES,
+  FileVerificationName,
+  FileVerificationStatus,
+} from './packages/file-verification-status/file-verification-status.js';
 export {
   type DeleteFileRequestParameters,
   type FileEntityT,
