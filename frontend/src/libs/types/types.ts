@@ -14,7 +14,7 @@ export {
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
-  type PaginationPayload,
+  type PaginationParameters,
   type ServerErrorDetail,
   type ServerErrorResponse,
   type TruckEntity,

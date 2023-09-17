@@ -34,7 +34,7 @@ export {
   type Id,
   type NullableProperties,
   type OperationResult,
-  type PaginationPayload,
+  type PaginationParameters,
   type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,

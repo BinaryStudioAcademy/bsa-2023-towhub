@@ -1,11 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
 import {
   type AsyncThunkConfig,
-  type PaginationPayload,
+  type PaginationParameters,
 } from '~/libs/types/types.js';
-import { TruckSuccessfulMessage } from '~/packages/trucks/libs/enums/enums.js';
+import { TruckNotificationMessage } from '~/packages/trucks/libs/enums/enums.js';
 import {
   type TruckAddRequestDto,
   type TruckEntity,
@@ -17,37 +18,47 @@ const addTruck = createAsyncThunk<
   TruckEntity,
   TruckAddRequestDto,
   AsyncThunkConfig
->(`${sliceName}/add-truck`, (payload, { extra }) => {
+>(`${sliceName}/add-truck`, async (payload, { rejectWithValue, extra }) => {
   const { businessApi, notification } = extra;
 
   try {
-    const truck = businessApi.addTruck(payload);
-    notification.success(TruckSuccessfulMessage.ADD_NEW_TRUCK);
+    const truck = await businessApi.addTruck(payload);
+
+    notification.success(TruckNotificationMessage.SUCCESS_ADD_NEW_TRUCK);
 
     return truck;
-  } catch (error: unknown) {
-    notification.error(getErrorMessage(error));
-    throw error;
+  } catch (error_: unknown) {
+    const error = error_ as HttpError;
+
+    notification.error(getErrorMessage(error.message));
+
+    return rejectWithValue({ ...error, message: error.message });
   }
 });
 
 const findAllTrucksForBusiness = createAsyncThunk<
   { items: TruckEntity[]; total: number },
-  PaginationPayload,
+  PaginationParameters,
   AsyncThunkConfig
->(`${sliceName}/find-all-trucks-for-business`, (payload, { extra }) => {
-  const { pageIndex, pageSize } = payload;
-  const { businessApi, notification } = extra;
+>(
+  `${sliceName}/find-all-trucks-for-business`,
+  async (payload, { rejectWithValue, extra }) => {
+    const { pageIndex, pageSize } = payload;
+    const { businessApi, notification } = extra;
 
-  try {
-    return businessApi.findAllTrucksByBusinessId({
-      pageIndex,
-      pageSize,
-    });
-  } catch (error: unknown) {
-    notification.error(getErrorMessage(error));
-    throw error;
-  }
-});
+    try {
+      return await businessApi.findAllTrucksByBusinessId({
+        pageIndex,
+        pageSize,
+      });
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
+
+      notification.error(getErrorMessage(error.message));
+
+      return rejectWithValue({ ...error, message: error.message });
+    }
+  },
+);
 
 export { addTruck, findAllTrucksForBusiness };

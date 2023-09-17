@@ -6,7 +6,7 @@ import {
   useCallback,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { type PaginationPayload } from '~/libs/types/types.js';
+import { type PaginationParameters } from '~/libs/types/types.js';
 import { type TruckGetAllResponseDto } from '~/packages/trucks/libs/types/types.js';
 import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
 
@@ -24,7 +24,7 @@ const TrucksTable: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { pageSize, pageIndex, changePageSize, changePageIndex, updatePage } =
-    useAppTable<TruckGetAllResponseDto, PaginationPayload>({
+    useAppTable<TruckGetAllResponseDto, PaginationParameters>({
       tableFetchCall: findAllTrucksForBusiness,
     });
 
@@ -46,16 +46,21 @@ const TrucksTable: React.FC = () => {
           className={styles.btn}
           onClick={openModal}
         />
-        <Table
-          data={trucks}
-          columns={columns}
-          totalRow={total}
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-          isLoading={dataStatus === DataStatus.PENDING}
-          changePageSize={changePageSize}
-          changePageIndex={changePageIndex}
-        />
+        {trucks.length > 0 ? (
+          <Table
+            data={trucks}
+            columns={columns}
+            totalRow={total}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            isLoading={dataStatus === DataStatus.PENDING}
+            changePageSize={changePageSize}
+            changePageIndex={changePageIndex}
+          />
+        ) : (
+          // TODO: Ask QA on Monday what text and styles should be
+          <div> Some text </div>
+        )}
       </div>
 
       <Modal isOpen={isModalOpen} isCentered={true} onClose={closeModal}>

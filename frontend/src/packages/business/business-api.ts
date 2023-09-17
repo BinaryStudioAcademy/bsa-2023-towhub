@@ -3,7 +3,7 @@ import { HttpApi } from '~/libs/packages/api/http-api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 import {
-  type PaginationPayload,
+  type PaginationParameters,
   type TruckEntity,
 } from '~/libs/types/types.js';
 
@@ -22,7 +22,7 @@ class BusinessApi extends HttpApi {
   }
 
   public async findAllTrucksByBusinessId(
-    query?: PaginationPayload,
+    query?: PaginationParameters,
   ): Promise<{ items: TruckEntity[]; total: number }> {
     const queryParameters = query
       ? `?pageIndex=${query.pageIndex}&pageSize=${query.pageSize}`

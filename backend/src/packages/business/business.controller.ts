@@ -6,7 +6,7 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
-import { type PaginationPayload } from '~/libs/types/types.js';
+import { type PaginationParameters } from '~/libs/types/types.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
@@ -388,7 +388,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.findAllTrucks(
           options as ApiHandlerOptions<{
-            query: PaginationPayload;
+            query: PaginationParameters;
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -889,7 +889,7 @@ class BusinessController extends Controller {
 
   private async findAllTrucks(
     options: ApiHandlerOptions<{
-      query: PaginationPayload;
+      query: PaginationParameters;
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {

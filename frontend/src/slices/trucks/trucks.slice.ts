@@ -1,6 +1,7 @@
 import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 
@@ -9,12 +10,14 @@ import { addTruck, findAllTrucksForBusiness } from './actions.js';
 type State = {
   trucks: TruckEntity[];
   total: number;
+  error: HttpError | null;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
 const initialState: State = {
   trucks: [],
   total: 0,
+  error: null,
   dataStatus: DataStatus.IDLE,
 };
 
@@ -41,8 +44,9 @@ const { reducer, actions, name } = createSlice({
       )
       .addMatcher(
         isAnyOf(addTruck.rejected, findAllTrucksForBusiness.rejected),
-        (state) => {
+        (state, action) => {
           state.dataStatus = DataStatus.REJECTED;
+          state.error = action.payload as HttpError | null;
         },
       );
   },

@@ -2,7 +2,7 @@ export {
   type ErrorConstructor,
   type NullableProperties,
   type OperationResult,
-  type PaginationPayload,
+  type PaginationParameters,
   type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorResponse,
