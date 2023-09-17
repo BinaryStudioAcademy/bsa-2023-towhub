@@ -21,30 +21,26 @@ const TrucksTable: React.FC = () => {
     dataStatus: trucks.dataStatus,
   }));
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const { pageSize, pageIndex, changePageSize, changePageIndex, updatePage } =
     useAppTable<TruckGetAllResponseDto, PaginationParameters>({
       tableFetchCall: findAllTrucksForBusiness,
     });
 
-  const openModal = useCallback(() => {
-    setIsModalOpen(true);
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-  }, []);
+  const handleAddTruckModalVisibility = useCallback(() => {
+    setIsModalOpen(!isModalOpen);
+  }, [isModalOpen]);
 
   return (
     <>
       <div className={styles.container}>
-        <h2 className={styles.title}>Trucks Table</h2>
+        <h2 className={styles.title}>Trucks</h2>
         <Button
           label="Add a truck"
           frontIcon={IconName.PLUS}
           className={styles.btn}
-          onClick={openModal}
+          onClick={handleAddTruckModalVisibility}
         />
         {trucks.length > 0 ? (
           <Table
@@ -63,9 +59,16 @@ const TrucksTable: React.FC = () => {
         )}
       </div>
 
-      <Modal isOpen={isModalOpen} isCentered={true} onClose={closeModal}>
+      <Modal
+        isOpen={isModalOpen}
+        isCentered={true}
+        onClose={handleAddTruckModalVisibility}
+      >
         <div className={styles.formWrapper}>
-          <AddTruckForm updatePage={updatePage} onClose={closeModal} />
+          <AddTruckForm
+            updatePage={updatePage}
+            onClose={handleAddTruckModalVisibility}
+          />
         </div>
       </Modal>
     </>
