@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 type Properties = {
   status: OrderStatusValues;
   className?: string;
-  time: number;
+  time: string;
 };
 
 const OrderStatus: React.FC<Properties> = ({
@@ -20,7 +20,7 @@ const OrderStatus: React.FC<Properties> = ({
 }: Properties) => {
   const statusMessageMapper = (status: OrderStatusValues): string => {
     if (status === OrderStatusEnum.CONFIRMED) {
-      return `${STATUS_MESSAGES[status]} ${time} minutes`;
+      return `${STATUS_MESSAGES[status]} ${time}`;
     }
 
     return STATUS_MESSAGES[status];

@@ -1,5 +1,6 @@
 import {
   addTruck,
+  calculateArrivalTime,
   listenTruckUpdates,
   stopListenTruckUpdates,
   updateTruckLocationFromSocket,
@@ -12,6 +13,7 @@ const allActions = {
   listenTruckUpdates,
   stopListenTruckUpdates,
   updateTruckLocationFromSocket,
+  calculateArrivalTime,
 };
 
 export { allActions as actions };

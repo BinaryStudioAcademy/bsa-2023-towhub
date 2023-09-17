@@ -6,6 +6,7 @@ const ActionNames = {
     LISTEN_TRUCK_UPDATES: `${sliceName}/listen-truck-updates`,
     STOP_LISTEN_TRUCK_UPDATES: `${sliceName}/stop-listen-truck-updates`,
   },
+  CALCULATE_ARRIVAL_TIME: `${sliceName}/calculate-arrival-time`,
 };
 
 export { ActionNames };

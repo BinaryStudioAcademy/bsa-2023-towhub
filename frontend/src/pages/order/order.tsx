@@ -14,7 +14,10 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { actions as orderActions } from '~/slices/orders/orders.js';
 import { selectOrder, selectOrderData } from '~/slices/orders/selectors.js';
-import { selectTruckLocation } from '~/slices/trucks/selectors.js';
+import {
+  selectTruckArrivalTime,
+  selectTruckLocation,
+} from '~/slices/trucks/selectors.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
@@ -35,10 +38,10 @@ const OrderPage: React.FC = () => {
   const confirmScreen = status === OrderStatusEnum.CONFIRMED;
   const onPointScreen = status === OrderStatusEnum.PICKING_UP;
   const doneScreen = status === OrderStatusEnum.DONE;
-  const truckArrivalTime = 10;
   const truckId = '1'; //Mock
   const routeData = useAppSelector(selectOrderData);
   const truckLocation = useAppSelector(selectTruckLocation);
+  const truckArrivalTime = useAppSelector(selectTruckArrivalTime);
 
   useEffect(() => {
     if (truckLocation) {
@@ -86,7 +89,8 @@ const OrderPage: React.FC = () => {
           driver={{
             firstName: order.shift.driver?.firstName ?? '',
             lastName: order.shift.driver?.lastName ?? '',
-            profileURL: 'https://i.pravatar.cc/300',
+            profileURL:
+              'https://images.freeimages.com/images/large-previews/962/avatar-man-with-mustages-1632966.jpg?fmt=webp&w=350',
           }}
           truck={{ licensePlate: order.shift.truck?.licensePlateNumber ?? '' }}
           initialStatus={{
@@ -143,19 +147,19 @@ const OrderPage: React.FC = () => {
         <>
           <OrderStatus
             status={order.status}
-            time={truckArrivalTime}
+            time={truckArrivalTime ? truckArrivalTime.text : '...'}
             className={getValidClassNames(styles.status, styles.statusTop)}
           />
           {!cancelScreen && !doneScreen && (
             <section className={styles.mapSection}>
-              <Map center={location} zoom={16} className={styles.map} />
+              <Map center={location} zoom={13} className={styles.map} />
             </section>
           )}
           <section className={styles.cardSection}>
             <OrderStatus
               status={order.status}
               className={getValidClassNames(styles.status, styles.statusBottom)}
-              time={truckArrivalTime}
+              time={truckArrivalTime ? truckArrivalTime.text : '...'}
             />
             <Card />
             <ButtonsSection />

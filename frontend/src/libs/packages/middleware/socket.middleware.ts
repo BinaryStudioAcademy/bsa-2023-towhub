@@ -11,6 +11,7 @@ import {
   updateOrderFromSocket,
 } from '~/slices/orders/actions.js';
 import {
+  calculateArrivalTime,
   listenTruckUpdates,
   updateTruckLocationFromSocket,
 } from '~/slices/trucks/actions.js';
@@ -32,8 +33,10 @@ const socketMiddleware: ThunkMiddleware<
   ExtraArguments
 > = ({
   dispatch,
+  getState,
 }: {
   dispatch: ThunkDispatch<RootReducer, ExtraArguments, AnyAction>;
+  getState: () => RootReducer;
 }) => {
   if (socketInstance) {
     socketInstance.on(
@@ -45,11 +48,21 @@ const socketMiddleware: ThunkMiddleware<
     socketInstance.on(
       ServerSocketEvent.TRUCK_LOCATION_UPDATED,
       (
-        location: Parameters<
+        truckLocation: Parameters<
           ServerToClientEvents[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATED]
         >[0],
       ) => {
-        void dispatch(updateTruckLocationFromSocket(location));
+        void dispatch(updateTruckLocationFromSocket(truckLocation));
+        const startPoint = getState().orders.order?.startPoint;
+
+        if (startPoint) {
+          void dispatch(
+            calculateArrivalTime({
+              origin: truckLocation,
+              destination: startPoint,
+            }),
+          );
+        }
       },
     );
   }

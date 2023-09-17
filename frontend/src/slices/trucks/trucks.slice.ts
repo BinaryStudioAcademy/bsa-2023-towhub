@@ -4,19 +4,25 @@ import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 
-import { addTruck, updateTruckLocationFromSocket } from './actions.js';
+import {
+  addTruck,
+  calculateArrivalTime,
+  updateTruckLocationFromSocket,
+} from './actions.js';
 import { type TruckLocation } from './types/types.js';
 
 type State = {
   trucks: TruckEntity[];
   dataStatus: ValueOf<typeof DataStatus>;
   truckLocation: TruckLocation | null;
+  truckArrivalTime: { text: string; value: number } | null;
 };
 
 const initialState: State = {
   trucks: [],
   dataStatus: DataStatus.IDLE,
   truckLocation: null,
+  truckArrivalTime: null,
 };
 
 const { reducer, actions, name } = createSlice({
@@ -38,6 +44,9 @@ const { reducer, actions, name } = createSlice({
       .addCase(updateTruckLocationFromSocket.fulfilled, (state, action) => {
         const { latitude, longitude } = action.payload.latLng;
         state.truckLocation = { lat: latitude, lng: longitude };
+      })
+      .addCase(calculateArrivalTime.fulfilled, (state, action) => {
+        state.truckArrivalTime = action.payload;
       });
   },
 });
