@@ -1,0 +1,78 @@
+@import "src/assets/css/vars.scss";
+@import "src/assets/css/typography.scss";
+
+.uploadedArea {
+  overflow-y: scroll;
+}
+
+.uploadedArea::-webkit-scrollbar {
+  width: 0;
+}
+
+$zoom-in-speed: 1000ms;
+$zoom-out-speed: 600ms;
+
+:export {
+  zoom-out-speed: $zoom-out-speed;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2vmin;
+  padding: 4vmin;
+  list-style: none;
+  background: $grey-extra-light;
+  border-radius: 1.2vmin;
+  animation: zoom-in $zoom-in-speed ease 1 forwards;
+}
+
+.rowBeforeDeletion {
+  animation: zoom-out $zoom-out-speed ease 1 forwards;
+}
+
+@keyframes zoom-in {
+  0% {
+    transform: scale(0, 0);
+  }
+
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes zoom-out {
+  0% {
+    transform: scale(1, 1);
+  }
+
+  100% {
+    transform: scale(0, 0);
+  }
+}
+
+.rowContent {
+  display: flex;
+  align-items: center;
+}
+
+.rowContentDetails {
+  display: flex;
+  flex-direction: column;
+  margin-left: 3vmin;
+}
+
+.rowActionButton {
+  background: none;
+  border: none;
+}
+
+.rowIcon {
+  color: $blue-light;
+}
+
+.rowIcon:hover {
+  color: $red-dark;
+  cursor: pointer;
+}

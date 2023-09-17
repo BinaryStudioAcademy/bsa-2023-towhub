@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "66e29120-505d-43bd-aa60-657f610ece8d",
+  "id": "99701008-5106-4115-b599-2bdc540412d8",
   "prevId": "b7486ff7-ef67-4b22-ba19-aaf8eac68511",
   "tables": {
     "business_details": {
@@ -235,11 +235,11 @@
           "primaryKey": false,
           "notNull": false
         },
-        "driver_id": {
-          "name": "driver_id",
+        "shift_id": {
+          "name": "shift_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "cars_qty": {
           "name": "cars_qty",
@@ -295,11 +295,11 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "orders_driver_id_driver_details_id_fk": {
-          "name": "orders_driver_id_driver_details_id_fk",
+        "orders_shift_id_shifts_id_fk": {
+          "name": "orders_shift_id_shifts_id_fk",
           "tableFrom": "orders",
-          "tableTo": "driver_details",
-          "columnsFrom": ["driver_id"],
+          "tableTo": "shifts",
+          "columnsFrom": ["shift_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -411,12 +411,6 @@
           "notNull": true,
           "default": "now()"
         },
-        "business_id": {
-          "name": "business_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
         "manufacturer": {
           "name": "manufacturer",
           "type": "varchar",
@@ -461,17 +455,7 @@
           "isUnique": true
         }
       },
-      "foreignKeys": {
-        "trucks_business_id_business_details_id_fk": {
-          "name": "trucks_business_id_business_details_id_fk",
-          "tableFrom": "trucks",
-          "tableTo": "business_details",
-          "columnsFrom": ["business_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

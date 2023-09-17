@@ -1,0 +1,144 @@
+@import "src/assets/css/vars.scss";
+@import "src/assets/css/typography.scss";
+
+.wrapper {
+  display: grid;
+  flex-direction: column;
+  width: 90vmin;
+  min-height: 10vmin;
+  margin: 5vmin;
+  padding: 7vmin;
+  background: $white;
+  border-radius: 1.2vmin;
+  box-shadow: $shadow-light;
+}
+
+@keyframes line-inserted {
+  from {
+    height: 0;
+  }
+
+  to {
+    height: 20px;
+  }
+}
+
+div[contenteditable] > div {
+  transition: height 0.3s;
+  animation-name: line-inserted;
+  animation-duration: 0.3s;
+}
+
+:root {
+  --a: 2vmin;
+  --b: 0.5vmin;
+}
+
+.wrapper .inputWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 35vmin;
+  margin: 6.5vmin 0;
+  border: var(--b) solid $blue-light;
+  cursor: pointer;
+  user-select: none;
+}
+
+.inputWrapper.disabled {
+  color: $grey-dark;
+  border-color: $grey-dark;
+  cursor: default;
+}
+
+.wrapper div.inputWrapperAnimated {
+  background:
+    linear-gradient(90deg, $blue-light 50%, transparent 0) repeat-x,
+    linear-gradient(90deg, $blue-light 50%, transparent 0) repeat-x,
+    linear-gradient(0deg, $blue-light 50%, transparent 0) repeat-y,
+    linear-gradient(0deg, $blue-light 50%, transparent 0) repeat-y;
+  background-position:
+    0 0,
+    0 100%,
+    0 0,
+    100% 0;
+  background-size:
+    var(--a) var(--b),
+    var(--a) var(--b),
+    var(--b) var(--a),
+    var(--b) var(--a);
+  border: initial;
+  animation: border-dance 1s infinite linear;
+  animation-fill-mode: forwards;
+}
+
+.inputWrapperAnimated.disabled {
+  background: initial;
+  border: initial;
+  animation: initial;
+}
+
+@keyframes border-dance {
+  100% {
+    background-position:
+      var(--a) 0,
+      calc(-1 * var(--a)) 100%,
+      0 calc(-1 * var(--a)),
+      100% var(--a);
+  }
+}
+
+.inputWrapper :where(.icon, p) {
+  color: $blue-light;
+}
+
+.inputWrapper .icon {
+  font-size: 50px;
+}
+
+.icon.disabled {
+  color: $grey-dark;
+  border-color: $grey-dark;
+  cursor: default;
+}
+
+.label {
+  margin-top: 3vmin;
+}
+
+.label.disabled {
+  color: $grey-dark;
+  border-color: $grey-dark;
+  cursor: default;
+}
+
+.errorMessage {
+  margin-top: 0.9vmin;
+  color: $red-dark;
+}
+
+.uploadFilesButton {
+  margin-top: 4.5vmin;
+  padding: 2.5vmin;
+  color: $blue-dark;
+  background-color: transparent;
+  border: 0.5vmin solid $blue-light;
+  border-radius: 0.7vmin;
+}
+
+.uploadFilesButton.disabled {
+  color: $grey-dark;
+  border-color: $grey-dark;
+}
+
+.uploadFilesButton.disabled:hover {
+  color: $grey-dark;
+  background-color: initial;
+  cursor: default;
+}
+
+.uploadFilesButton:hover {
+  color: $white;
+  background-color: $blue-light;
+}
