@@ -10,11 +10,13 @@ import { type IConfig } from '~/libs/packages/config/config.js';
 import { authApi } from '~/packages/auth/auth.js';
 import { driverApi } from '~/packages/drivers/drivers.js';
 import { filesApi } from '~/packages/files/files.js';
+import { ordersApi } from '~/packages/orders/orders.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
 import { reducer as drivers } from '~/slices/drivers/drivers.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
+import { reducer as orderReducer } from '~/slices/orders/order.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { notification } from '../notification/notification.js';
@@ -25,6 +27,7 @@ type RootReducer = {
   trucks: ReturnType<typeof truckReducer>;
   drivers: ReturnType<typeof drivers>;
   files: ReturnType<typeof filesReducer>;
+  orders: ReturnType<typeof orderReducer>;
 };
 
 type ExtraArguments = {
@@ -35,6 +38,7 @@ type ExtraArguments = {
   truckApi: typeof truckApi;
   driverApi: typeof driverApi;
   localStorage: typeof LocalStorage;
+  ordersApi: typeof ordersApi;
 };
 
 class Store {
@@ -54,6 +58,7 @@ class Store {
         trucks: truckReducer,
         drivers: drivers,
         files: filesReducer,
+        orders: orderReducer,
       },
       middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({
@@ -73,6 +78,7 @@ class Store {
       notification,
       truckApi,
       driverApi,
+      ordersApi,
       localStorage: LocalStorage,
     };
   }
