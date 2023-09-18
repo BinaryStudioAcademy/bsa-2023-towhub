@@ -73,6 +73,34 @@
   box-shadow: 0 -1px 0 0 $grey-light inset;
 }
 
+.icon-edit {
+  color: $grey;
+  cursor: pointer;
+}
+
+.icon-delete {
+  color: $grey-light;
+}
+
+.icon-edit,
+.icon-delete {
+  cursor: pointer;
+
+  &:hover {
+    background-color: $grey-extra-light;
+  }
+}
+
+.sorted {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sorting {
+  cursor: pointer;
+}
+
 @media (hover: hover) {
   .resizer {
     opacity: 0;
