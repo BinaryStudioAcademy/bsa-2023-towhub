@@ -3,11 +3,15 @@ const IconName = {
   CARET_DOWN: 'caret down',
   CHEVRON_DOWN: 'chevron down',
   CHEVRON_LEFT: 'chevron left',
+  CHEVRON_UP: 'chevron up',
+  EYE: 'eye',
+  EDIT: 'edit',
   GEAR: 'gear',
   LOCATION_DOT: 'location dot',
   MAP: 'map',
   PLUS: 'plus',
   STAR: 'star',
+  TRASH: 'trash',
   CLOUD_UPLOAD: 'cloud-upload',
   FILE: 'file',
   CHECK: 'check',
@@ -20,7 +24,6 @@ const IconName = {
   TRUCK: 'truck',
   USERS: 'users',
   SYNC: 'sync',
-  EYE: 'eye',
 } as const;
 
 export { IconName };
