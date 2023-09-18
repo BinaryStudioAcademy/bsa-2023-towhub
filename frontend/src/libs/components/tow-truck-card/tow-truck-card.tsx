@@ -4,25 +4,17 @@ import { type TruckEntity } from '~/libs/types/types.js';
 import { Badge } from '../badge/badge.js';
 import { Button } from '../button/button.js';
 import { Icon } from '../icon/icon.js';
-// TODO: Uncomment when rating will be implemented
-// import { StarRating } from '../star-rating/star-rating.jsx';
 import { getTowTruckImage } from './lib/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   truck: TruckEntity;
-  // TODO: Uncomment when rating will be implemented
-  // rating: {
-  //   averageRating: number;
-  //   reviewCount: number;
-  // };
   distance?: number;
   hasFooter?: boolean;
 };
 
 const TowTruckCard: React.FC<Properties> = ({
   truck,
-  // rating,
   distance,
   hasFooter = true,
 }: Properties) => {
@@ -34,14 +26,7 @@ const TowTruckCard: React.FC<Properties> = ({
       <div className={styles.body}>
         <div className={styles.description}>
           <div className={styles.name}>{manufacturer}</div>
-          <div className={styles.rating}>
-            {/* TODO: Uncomment when rating will be implemented */}
-            {/* <StarRating rating={rating.averageRating} />
-            <div className={styles.reviews}>
-              <span className={styles.bold}>{rating.averageRating}</span> (
-              {rating.reviewCount} Reviews)
-            </div> */}
-          </div>
+          <div className={styles.rating}></div>
           <div className={styles.capacity}>
             <Icon iconName={IconName.GEAR} />
             {capacity} ton

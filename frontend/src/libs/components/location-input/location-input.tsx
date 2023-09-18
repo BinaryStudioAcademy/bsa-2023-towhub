@@ -12,6 +12,7 @@ import {
   useFormController,
   useState,
 } from '~/libs/hooks/hooks.js';
+import { type LocationChangeHandler } from '~/libs/types/location-change-handler.type';
 
 import styles from './styles.module.scss';
 
@@ -22,10 +23,7 @@ type Properties<T extends FieldValues> = {
   name: FieldPath<T>;
   placeholder?: string;
   isDisabled?: boolean;
-  onLocationChange?: (
-    place: google.maps.LatLngLiteral,
-    address: string,
-  ) => void;
+  onLocationChange?: LocationChangeHandler;
 };
 
 const LocationInput = <T extends FieldValues>({
