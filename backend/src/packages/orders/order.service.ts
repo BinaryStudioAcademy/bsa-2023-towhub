@@ -7,9 +7,11 @@ import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
 import { type TruckService } from '../trucks/truck.service.js';
+import { type UserGroupKeyT } from '../users/libs/types/types.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
+import { checkIsCustomer, checkIsDriver } from './libs/helpers/helpers.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
@@ -232,11 +234,14 @@ class OrderService implements Omit<IService, 'find'> {
     return order;
   }
 
-  public async updateByCustomer(parameters: {
+  public async updateByCustomer({
+    id,
+    payload,
+  }: {
     id: OrderEntityT['id'];
     payload: OrderUpdateRequestDto;
   }): Promise<OrderResponseDto> {
-    const foundOrder = await this.orderRepository.findById(parameters.id);
+    const foundOrder = await this.orderRepository.findById(id);
 
     if (!foundOrder?.driver) {
       throw new NotFoundError({
@@ -262,7 +267,7 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
-    const updatedOrder = await this.orderRepository.update(parameters);
+    const updatedOrder = await this.orderRepository.update({ id, payload });
 
     if (!updatedOrder) {
       throw new NotFoundError({
@@ -291,35 +296,30 @@ class OrderService implements Omit<IService, 'find'> {
     return order;
   }
 
-  public async updateAcceptStatus(parameters: {
+  public async updateAcceptStatus({
+    id,
+    payload,
+    user,
+  }: {
     id: OrderEntityT['id'];
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT | null;
   }): Promise<OrderResponseDto> {
-    let acceptStatus: OrderStatusValues = OrderStatus.PENDING;
+    const acceptStatus = this.checkIsOrderAccepted(payload.isAccepted, user);
 
-    if (parameters.user && parameters.user.group.key === UserGroupKey.DRIVER) {
-      await this.shiftService.checkDriverStartShift(parameters.user.id);
-      acceptStatus = parameters.payload.isAccepted
-        ? OrderStatus.CONFIRMED
-        : OrderStatus.REFUSED;
+    if (user && checkIsDriver(user.group.key as UserGroupKeyT)) {
+      await this.shiftService.checkDriverStartShift(user.id);
 
       return await this.update({
-        id: parameters.id,
+        id,
         payload: { status: acceptStatus },
-        user: parameters.user,
+        user,
       });
     }
 
-    if (
-      (!parameters.user ||
-        parameters.user.group.key === UserGroupKey.CUSTOMER) &&
-      !parameters.payload.isAccepted
-    ) {
-      acceptStatus = OrderStatus.CANCELED;
-
+    if (checkIsCustomer(user?.group.key as UserGroupKeyT)) {
       return await this.updateByCustomer({
-        id: parameters.id,
+        id,
         payload: { status: acceptStatus },
       });
     } else {
@@ -408,6 +408,24 @@ class OrderService implements Omit<IService, 'find'> {
     if (!orderBelongsToUser) {
       throw new NotFoundError({
         message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
+    }
+  }
+
+  private checkIsOrderAccepted(
+    isAccepted: boolean,
+    user: UserEntityObjectWithGroupT | null,
+  ): OrderStatusValues {
+    if (user && checkIsDriver(user.group.key as UserGroupKeyT)) {
+      return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REFUSED;
+    } else if (
+      (!user || checkIsCustomer(user.group.key as UserGroupKeyT)) &&
+      !isAccepted
+    ) {
+      return OrderStatus.CANCELED;
+    } else {
+      throw new NotFoundError({
+        message: HttpMessage.USER_CAN_NOT_ACCEPT_OR_DECLINE_ORDER,
       });
     }
   }
