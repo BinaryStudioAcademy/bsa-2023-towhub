@@ -1,10 +1,10 @@
 import { type AnyAction, type ThunkAction } from '@reduxjs/toolkit';
 
-import { type store } from '~/libs/packages/store/store.js';
+import { type RootState, type store } from '~/libs/packages/store/store.js';
 
 type AppThunk<T> = ThunkAction<
   T,
-  ReturnType<typeof store.instance.getState>,
+  RootState,
   typeof store.extraArguments,
   AnyAction
 >;
