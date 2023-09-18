@@ -71,6 +71,34 @@ class ShiftService implements IService {
     return shifts.map((it) => ShiftEntity.initialize(it).toObject());
   }
 
+  public async findOpenedByDriver(
+    driverId: number,
+  ): Promise<ShiftResponseDto | null> {
+    const shift = await this.shiftRepository.getOpenedByDriver(driverId);
+
+    return shift ? ShiftEntity.initialize(shift).toObject() : null;
+  }
+
+  public async findOpenedByTruckWithBusiness(
+    truckId: number,
+  ): Promise<
+    (ShiftEntityT & { businessId: number; driverLicenseNumber: string }) | null
+  > {
+    const shiftDatabase =
+      await this.shiftRepository.getOpenedByTruckWithBusiness(truckId);
+
+    if (!shiftDatabase) {
+      return null;
+    }
+    const shift = ShiftEntity.initialize(shiftDatabase).toObject();
+
+    return {
+      ...shift,
+      businessId: shiftDatabase.businessId,
+      driverLicenseNumber: shiftDatabase.driverLicenseNumber,
+    };
+  }
+
   public async create({
     body,
     user,

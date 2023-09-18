@@ -43,11 +43,7 @@ const TruckList: React.FC = () => {
       <ul className={styles.list}>
         {trucks.map((truck, index) => (
           <li className={styles.card} key={truck.id}>
-            <TowTruckCard
-              truck={truck}
-              rating={mockData[index].rating}
-              distance={mockData[index].distance}
-            />
+            <TowTruckCard truck={truck} distance={mockData[index].distance} />
           </li>
         ))}
       </ul>

@@ -1,5 +1,5 @@
 import { PlainSvgIconName } from '~/libs/enums/enums.js';
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { getValidClassNames, pluralizeString } from '~/libs/helpers/helpers.js';
 
 import { PlainSvgIcon } from '../plain-svg-icon/plain-svg-icon.js';
 import {
@@ -23,7 +23,7 @@ const OrderCard: React.FC<Properties> = ({
   initialStatus: { startLocation, endLocation },
   currentStatus: { timespanLastUpdated, location, distanceLeft, timespanLeft },
 }: Properties) => {
-  const areManyKilometers = distanceLeft > 1;
+  const pluralizedKilometers = pluralizeString('km', distanceLeft);
 
   return (
     <div className={styles.container}>
@@ -111,7 +111,7 @@ const OrderCard: React.FC<Properties> = ({
                 'text-md',
               )}
             >
-              {distanceLeft} km{areManyKilometers && 's'}, {timespanLeft}
+              {distanceLeft} {pluralizedKilometers}, {timespanLeft}
             </span>
           </div>
         </div>

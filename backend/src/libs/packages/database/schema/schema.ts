@@ -2,6 +2,7 @@ import {
   business,
   drivers,
   driversRelations,
+  files,
   groups,
   orders,
   ordersRelations,
@@ -16,6 +17,7 @@ import {
 } from './tables-schema.js';
 
 const schema = {
+  files,
   business,
   groups,
   shifts,

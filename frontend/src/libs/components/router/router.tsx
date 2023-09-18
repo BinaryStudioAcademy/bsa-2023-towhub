@@ -8,6 +8,7 @@ import {
   Dashboard,
   HomePage,
   NotFound,
+  Order,
   WelcomePage,
 } from '~/pages/pages.js';
 
@@ -28,6 +29,7 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.WELCOME} element={<WelcomePage />} />
         <Route path={AppRoute.SIGN_IN} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP} element={<Auth />} />
+        <Route path={AppRoute.ORDER} element={<Order />} />
       </Route>
       <Route
         path={AppRoute.ROOT}

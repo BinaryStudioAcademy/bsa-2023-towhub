@@ -6,6 +6,7 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { type MapService } from '~/packages/map/map.service.js';
 import { type OrderService } from '~/packages/orders/order.service.js';
 
 import { AuthStrategy } from '../auth/auth.js';
@@ -13,7 +14,9 @@ import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type Id,
+  type OrderCalculatePriceRequestDto,
   type OrderCreateRequestDto,
+  type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import {
@@ -199,16 +202,21 @@ import {
 class OrderController extends Controller {
   private orderService: OrderService;
 
+  private mapService: MapService;
+
   public constructor({
     logger,
     orderService,
+    mapService,
   }: {
     logger: ILogger;
     orderService: OrderService;
+    mapService: MapService;
   }) {
     super(logger, ApiPath.ORDERS);
 
     this.orderService = orderService;
+    this.mapService = mapService;
 
     this.addRoute({
       path: OrdersApiPath.ROOT,
@@ -290,6 +298,19 @@ class OrderController extends Controller {
           }>,
         ),
     });
+
+    this.addRoute({
+      path: OrdersApiPath.CALCULATE_PRICE,
+      method: 'POST',
+      authStrategy: AuthStrategy.INJECT_USER,
+      handler: (options) =>
+        this.calculatePrice(
+          options as ApiHandlerOptions<{
+            body: OrderCalculatePriceRequestDto;
+            user: UserEntityObjectWithGroupT | null;
+          }>,
+        ),
+    });
   }
 
   /**
@@ -333,7 +354,7 @@ class OrderController extends Controller {
       body: OrderCreateRequestDto;
       user: UserEntityObjectWithGroupT | null;
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<OrderResponseDto>> {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.create({
@@ -391,10 +412,10 @@ class OrderController extends Controller {
       params: Id;
       user: UserEntityObjectWithGroupT | null;
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<OrderResponseDto | null>> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findOne({
+      payload: await this.orderService.findById({
         id: options.params.id,
         user: options.user,
       }),
@@ -456,10 +477,10 @@ class OrderController extends Controller {
       body: OrderUpdateRequestDto;
       user: UserEntityObjectWithGroupT;
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<OrderResponseDto>> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.updateOne({
+      payload: await this.orderService.update({
         id: options.params.id,
         payload: options.body,
         user: options.user,
@@ -510,7 +531,7 @@ class OrderController extends Controller {
     options: ApiHandlerOptions<{
       user: UserEntityObjectWithGroupT;
     }>,
-  ): Promise<ApiHandlerResponse> {
+  ): Promise<ApiHandlerResponse<OrderResponseDto[]>> {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.findAllBusinessOrders(options.user),
@@ -564,12 +585,27 @@ class OrderController extends Controller {
       params: Id;
       user: UserEntityObjectWithGroupT;
     }>,
-  ): Promise<ApiHandlerResponse> {
-    const result = await this.orderService.delete(options.params.id);
-
+  ): Promise<ApiHandlerResponse<boolean>> {
     return {
       status: HttpCode.OK,
-      payload: result,
+      payload: await this.orderService.delete({
+        id: options.params.id,
+        user: options.user,
+      }),
+    };
+  }
+
+  private async calculatePrice(
+    options: ApiHandlerOptions<{
+      body: OrderCalculatePriceRequestDto;
+      user: UserEntityObjectWithGroupT | null;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.mapService.getPriceByDistance({
+        ...options.body,
+      }),
     };
   }
 }
