@@ -99,7 +99,7 @@ class TruckRepository implements IRepository {
       .where(eq(this.trucksSchema.businessId, id));
   }
 
-  public async insertUserTruck(
+  public async addUser(
     userId: number,
     truckId: number,
   ): Promise<
@@ -113,7 +113,7 @@ class TruckRepository implements IRepository {
       .insert(this.usersTrucksSchema)
       .values({ userId, truckId })
       .returning()
-      .prepare('insertUserTruck');
+      .prepare('addUser');
 
     return await preparedQuery.execute();
   }
@@ -122,7 +122,7 @@ class TruckRepository implements IRepository {
     businessId: number,
     query: PaginationPayload,
   ): Promise<TruckDatabaseModel[]> {
-    const index = query.pageIndex * query.pageSize;
+    const index = query.page * query.perPage;
 
     return await this.db
       .driver()
@@ -131,7 +131,7 @@ class TruckRepository implements IRepository {
       .where(eq(this.trucksSchema.businessId, businessId))
       .orderBy(desc(this.trucksSchema.createdAt))
       .offset(index)
-      .limit(query.pageSize);
+      .limit(query.perPage);
   }
 
   public async getTotal(businessId: number): Promise<number> {

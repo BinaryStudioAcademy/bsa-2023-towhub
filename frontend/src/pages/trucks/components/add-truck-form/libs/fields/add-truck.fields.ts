@@ -26,21 +26,21 @@ const convertToSelectOptions = (
 
 const ADD_TRUCK_FIELDS: FormField<Omit<TruckEntity, 'businessId'>>[] = [
   {
-    fieldId: 1,
+    id: 1,
     type: 'dropdown',
     label: FormLabel.MANUFACTURER,
     name: FormName.MANUFACTURER,
     options: convertToSelectOptions(TruckManufacturer),
   },
   {
-    fieldId: 2,
+    id: 2,
     type: 'dropdown',
     label: FormLabel.TOW_TYPE,
     name: FormName.TOW_TYPE,
     options: convertToSelectOptions(TruckTowType),
   },
   {
-    fieldId: 3,
+    id: 3,
     type: 'number',
     label: FormLabel.YEAR,
     name: FormName.YEAR,
@@ -48,21 +48,21 @@ const ADD_TRUCK_FIELDS: FormField<Omit<TruckEntity, 'businessId'>>[] = [
     max: TruckYear.MAX,
   },
   {
-    fieldId: 4,
+    id: 4,
     type: 'text',
     label: FormLabel.LICENSE_PLATE,
     placeholder: PLACEHOLDER_LICENSE_PLATE,
     name: FormName.LICENSE_PLATE,
   },
   {
-    fieldId: 5,
+    id: 5,
     type: 'number',
     label: FormLabel.CAPACITY,
     name: FormName.CAPACITY,
     min: TruckCapacity.MIN,
   },
   {
-    fieldId: 6,
+    id: 6,
     type: 'number',
     label: FormLabel.PRICE_PER_KM,
     name: FormName.PRICE_PER_KM,

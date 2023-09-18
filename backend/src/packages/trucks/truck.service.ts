@@ -1,10 +1,8 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
+import { type EntityPagination } from '~/libs/types/types.js';
 
-import {
-  type PaginationPayload,
-  type TruckGetAllResponseDto,
-} from '../business/libs/types/types.js';
+import { type PaginationPayload } from '../business/libs/types/types.js';
 import { type TruckEntity as TruckEntityT } from './libs/types/types.js';
 import { TruckEntity } from './truck.entity.js';
 import { type TruckRepository } from './truck.repository.js';
@@ -78,7 +76,7 @@ class TruckService implements IService {
     const userTrucks: number[] = [];
 
     for (const truckId of trucksId) {
-      const [result] = await this.repository.insertUserTruck(userId, truckId);
+      const [result] = await this.repository.addUser(userId, truckId);
       userTrucks.push(result.truckId);
     }
 
@@ -88,7 +86,7 @@ class TruckService implements IService {
   public async findAllByBusinessId(
     businessId: number,
     query: PaginationPayload,
-  ): Promise<TruckGetAllResponseDto> {
+  ): Promise<EntityPagination<TruckEntityT>> {
     const data = await this.repository.findAllByBusinessId(businessId, query);
 
     const items = data.map((it) => TruckEntity.initialize(it).toObject());

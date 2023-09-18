@@ -1,6 +1,7 @@
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
+import { type EntityPagination } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { type DriverService } from '../drivers/driver.service.js';
@@ -12,6 +13,7 @@ import {
   type DriverUpdatePayload,
 } from '../drivers/drivers.js';
 import { type ShiftEntity } from '../shifts/shift.js';
+import { type TruckEntity } from '../trucks/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserEntityT } from '../users/users.js';
 import { BusinessEntity } from './business.entity.js';
@@ -22,7 +24,6 @@ import {
   type BusinessEntityT,
   type BusinessUpdateResponseDto,
   type PaginationPayload,
-  type TruckGetAllResponseDto,
 } from './libs/types/types.js';
 
 class BusinessService implements IService {
@@ -194,7 +195,7 @@ class BusinessService implements IService {
   public async findAllTrucksByBusinessId(
     userId: number,
     query: PaginationPayload,
-  ): Promise<TruckGetAllResponseDto> {
+  ): Promise<EntityPagination<TruckEntity>> {
     const business = await this.findByOwnerId(userId);
 
     if (!business) {

@@ -9,5 +9,4 @@ export {
   type BusinessUpdateRequestParameters,
   type BusinessUpdateResponseDto,
   type PaginationPayload,
-  type TruckGetAllResponseDto,
 } from 'shared/build/index.js';

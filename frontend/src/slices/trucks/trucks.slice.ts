@@ -8,14 +8,12 @@ import { addTruck, getTruckForBusiness } from './actions.js';
 
 type State = {
   trucks: TruckEntity[];
-  userTruckMap: Record<number, number[]>;
   chosenTruck: (TruckEntity & { driverId: number }) | null;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
 const initialState: State = {
   trucks: [],
-  userTruckMap: {},
   chosenTruck: null,
   dataStatus: DataStatus.IDLE,
 };

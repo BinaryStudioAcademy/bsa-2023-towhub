@@ -1,6 +1,6 @@
 type PaginationPayload = {
-  pageSize: number;
-  pageIndex: number;
+  page: number;
+  perPage: number;
 };
 
 export { type PaginationPayload };

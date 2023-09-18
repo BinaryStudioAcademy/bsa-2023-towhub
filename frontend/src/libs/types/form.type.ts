@@ -33,7 +33,7 @@ type FormField<T extends FieldValues> = {
   max?: number;
   currency?: string;
   step?: number;
-  fieldId?: number;
+  id?: number;
   onLocationChange?: LocationChangeHandler;
   associateServerErrors?: ErrorDescriptor[];
 };

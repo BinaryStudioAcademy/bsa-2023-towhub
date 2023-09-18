@@ -94,11 +94,9 @@ const DropdownMultiSelect = <T extends FieldValues>({
 
   const handleChange = useCallback(
     (option: MultiValue<SelectOption> | SingleValue<SelectOption>[]) => {
-      const selectedValues =
-        Array.isArray(option) &&
-        (option
-          .map((opt) => opt?.value)
-          .filter((value) => typeof value === 'string') as string[]);
+      const selectedValues = option
+        .map((opt) => opt?.value)
+        .filter((value) => typeof value === 'string') as string[];
 
       field.onChange(selectedValues);
     },

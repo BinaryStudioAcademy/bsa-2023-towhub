@@ -156,7 +156,7 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
-      <div key={field.fieldId ?? index}>
+      <div key={field.id ?? index}>
         {renderField({
           field,
           control,

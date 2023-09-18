@@ -1,3 +1,5 @@
+import { type TruckEntity } from 'shared/build/index.js';
+
 import { Form } from '~/libs/components/components.js';
 import { FormName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
@@ -6,6 +8,7 @@ import {
   useAppSelector,
   useEffect,
 } from '~/libs/hooks/hooks.js';
+import { type FormField } from '~/libs/types/types.js';
 import {
   type DriverCreateUpdateRequestDto,
   driverCreateUpdateRequestBody,
@@ -15,6 +18,24 @@ import { actions as truckActions } from '~/slices/trucks/trucks.js';
 import { DEFAULT_ADD_DRIVER_PAYLOAD } from './libs/constants.js';
 import { addDriverFields as initialAddDriverFields } from './libs/fields.js';
 import styles from './styles.module.scss';
+
+const getInitialFields = (
+  trucks: TruckEntity[],
+): FormField<DriverCreateUpdateRequestDto>[] => {
+  const truckOptions = trucks.map((truck) => ({
+    label: truck.licensePlateNumber,
+    value: truck.id.toString(),
+  }));
+
+  return initialAddDriverFields.map((field) =>
+    field.name === FormName.DRIVER_POSSIBLE_TRUCKS
+      ? {
+          ...field,
+          options: truckOptions,
+        }
+      : field,
+  );
+};
 
 type Properties = {
   onSubmit: (payload: DriverCreateUpdateRequestDto) => void;
@@ -30,19 +51,7 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
     [dispatch],
   );
 
-  const truckOptions = trucks.map((truck) => ({
-    label: truck.licensePlateNumber,
-    value: truck.id.toString(),
-  }));
-
-  const addDriverFields = initialAddDriverFields.map((field) =>
-    field.name === FormName.DRIVER_POSSIBLE_TRUCKS
-      ? {
-          ...field,
-          options: truckOptions,
-        }
-      : field,
-  );
+  const addDriverFields = getInitialFields(trucks);
 
   return (
     <div className={styles.wrapper}>
