@@ -17,7 +17,6 @@ import styles from './styles.module.scss';
 
 type Properties<T> = {
   data: T[];
-  isLoading?: boolean;
   isTableEditable?: boolean;
   columns: ColumnDef<T>[];
   pageSize: number;
