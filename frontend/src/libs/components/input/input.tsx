@@ -79,13 +79,7 @@ const Input = <T extends FieldValues>({
         clearServerError();
       }
     }
-  }, [
-    clearServerError,
-    name,
-    serverError.common,
-    serverError.validation,
-    setError,
-  ]);
+  }, [clearServerError, name, serverError, setError]);
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>): void => {
