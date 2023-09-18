@@ -54,7 +54,7 @@ const calculateArrivalTime = createAsyncThunk<
       destination: jsonToLatLngLiteral(destination),
     };
 
-    const mapService = await mapServiceFactory();
+    const mapService = await mapServiceFactory({ mapElement: null });
     const distanceAndDuration = await mapService.calculateDistanceAndDuration(
       routeData.origin,
       routeData.destination,

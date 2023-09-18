@@ -1,3 +1,4 @@
+import { type MapServiceParameters } from '~/libs/packages/map/libs/types/types.js';
 import { type MapService } from '~/libs/packages/map/map.package.js';
 import { type notification } from '~/libs/packages/notification/notification.js';
 import { type LocalStorage } from '~/libs/packages/storage/storage.js';
@@ -26,7 +27,7 @@ type ExtraArguments = {
   truckApi: typeof truckApi;
   localStorage: typeof LocalStorage;
   ordersApi: typeof ordersApi;
-  mapServiceFactory: () => Promise<MapService>;
+  mapServiceFactory: (parameters: MapServiceParameters) => Promise<MapService>;
 };
 
 export { type ExtraArguments, type RootReducer };

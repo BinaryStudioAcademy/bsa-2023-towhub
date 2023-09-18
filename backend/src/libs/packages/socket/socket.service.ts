@@ -79,11 +79,11 @@ class SocketService {
         },
       );
       // //Mock start, for demo purposes
-      // let lat = 49.4466;
-      // let lng = 24.5806;
+      // let lat = 48.8325;
+      // let lng = 24.5701;
       // setInterval(() => {
-      //   lat = +(lat + 0.013).toFixed(4);
-      //   lng = +(lng + 0.065).toFixed(4);
+      //   lat = +(lat + 0.1106).toFixed(4);
+      //   lng = +(lng + 0.0185).toFixed(4);
       //   console.log({ lat, lng });
       //   this.notifyCustomerForTruckLocationUpdate(1, {
       //     truckId: 1,

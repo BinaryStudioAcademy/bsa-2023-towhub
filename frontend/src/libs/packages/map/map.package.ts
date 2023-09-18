@@ -9,15 +9,15 @@ import {
 } from './libs/constants/constants.js';
 import { rotateImg } from './libs/helpers/rotate-img.helper.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
+import { type MapServiceParameters } from './libs/types/types.js';
 import mapStyle from './map.config.json';
 
-type Constructor = {
-  mapElement?: HTMLDivElement;
-  center?: google.maps.LatLngLiteral;
-  zoom?: number;
+type Constructor = MapServiceParameters & {
   extraLibraries?: {
     geocoding: google.maps.Geocoder;
     routes: google.maps.DistanceMatrixService;
+    directionsService: google.maps.DirectionsService;
+    directionsRenderer: google.maps.DirectionsRenderer;
   };
 };
 
@@ -41,6 +41,12 @@ class MapService implements IMapService {
     if (extraLibraries) {
       this.geocoder = extraLibraries.geocoding;
       this.routes = extraLibraries.routes;
+      this.directionsRenderer = extraLibraries.directionsRenderer;
+      this.directionsService = extraLibraries.directionsService;
+
+      if (mapElement && center && zoom) {
+        this.initMap(mapElement, center, zoom);
+      }
 
       return;
     }

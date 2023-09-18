@@ -1,15 +1,16 @@
 import { Button, OrderCard } from '~/libs/components/components.js';
-import { Map } from '~/libs/components/map/map.js';
 import { OrderStatus } from '~/libs/components/orders-status/order-status.js';
 import { AppRoute } from '~/libs/enums/app-route.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
+  useAppMap,
   useAppSelector,
   useCallback,
   useEffect,
   useNavigate,
   useParams,
+  useRef,
 } from '~/libs/hooks/hooks.js';
 import { jsonToLatLngLiteral } from '~/slices/orders/libs/helpers/json-to-lat-lng-literal.helper.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
@@ -106,20 +107,29 @@ const OrderStatusPage: React.FC = () => {
       )}
     </section>
   );
+  const mapReference = useRef<HTMLDivElement>(null);
+
+  useAppMap({
+    center: truckLocation,
+    destination: order ? jsonToLatLngLiteral(order.startPoint) : null,
+    zoom: 15,
+    className: styles.map,
+    mapReference: mapReference,
+  });
+
+  const MapElement = useCallback(
+    () => <div ref={mapReference} id="map" className={styles.map} />,
+    [],
+  );
 
   return (
     <div className={styles.container}>
       <OrderStatus
         className={getValidClassNames(styles.status, styles.statusTop)}
       />
-      {order && truckLocation && !cancelScreen && !doneScreen && (
+      {!cancelScreen && !doneScreen && (
         <section className={styles.mapSection}>
-          <Map
-            center={truckLocation}
-            destination={jsonToLatLngLiteral(order.startPoint)}
-            zoom={15}
-            className={styles.map}
-          />
+          <MapElement />
         </section>
       )}
       <section className={styles.cardSection}>
