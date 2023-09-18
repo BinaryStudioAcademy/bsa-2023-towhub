@@ -1,6 +1,6 @@
 import { Form, Link } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/app-route.enum.js';
-import { type ServerErrorHandling } from '~/libs/types/server-error-handling.type.js';
+import { type ServerErrorHandling } from '~/libs/types/types.js';
 import {
   type UserSignInRequestDto,
   userSignInValidationSchema,

@@ -6,12 +6,8 @@ import { type ServerErrorHandling } from '~/libs/types/types.js';
 
 import { useAppDispatch, useAppSelector } from '../hooks.js';
 
-/**
- * This hook requires asyncThunk to have a state field holding HttpError
- * and an action which clears it
- */
 const useServerErrorFromThunk = (
-  selector: (state: RootState) => HttpError | undefined,
+  selector: (state: RootState) => HttpError | null,
   clearAction: ActionCreatorWithoutPayload,
 ): ServerErrorHandling => {
   const dispatch = useAppDispatch();

@@ -31,31 +31,35 @@ const handleServerError = <T extends FieldValues>(
   }
 };
 
+const assignCommonError = <T extends FieldValues>(
+  field: FormField<T>,
+  commonError: Partial<HttpError>,
+  setError: UseFormSetError<T>,
+): void => {
+  if (field.associateServerErrors) {
+    for (const errorDescriptor of field.associateServerErrors) {
+      if (
+        typeof errorDescriptor === 'object' &&
+        errorDescriptor.errorMessage === commonError.message
+      ) {
+        setError(field.name, errorDescriptor.error, errorDescriptor.options);
+      } else if (errorDescriptor === commonError.message) {
+        setError(field.name, {
+          type: ServerErrorSymbol.COMMON,
+          message: errorDescriptor,
+        });
+      }
+    }
+  }
+};
+
 const assignCommonErrors = <T extends FieldValues>(
   fields: FormField<T>[],
   commonError: Partial<HttpError>,
   setError: UseFormSetError<T>,
 ): void => {
-  const assignFieldError = (field: FormField<T>): void => {
-    if (field.associateServerErrors) {
-      for (const errorDescriptor of field.associateServerErrors) {
-        if (
-          typeof errorDescriptor === 'object' &&
-          errorDescriptor.errorMessage === commonError.message
-        ) {
-          setError(field.name, errorDescriptor.error, errorDescriptor.options);
-        } else if (errorDescriptor === commonError.message) {
-          setError(field.name, {
-            type: ServerErrorSymbol.COMMON,
-            message: errorDescriptor,
-          });
-        }
-      }
-    }
-  };
-
   for (const field of fields) {
-    assignFieldError(field);
+    assignCommonError(field, commonError, setError);
   }
 };
 

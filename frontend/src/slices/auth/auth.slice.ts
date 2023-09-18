@@ -12,7 +12,7 @@ import {
 import { getCurrent, signIn, signUp } from './actions.js';
 
 type State = {
-  error?: HttpError;
+  error: HttpError | null;
   dataStatus: ValueOf<typeof DataStatus>;
   user:
     | UserSignInResponseDto
@@ -22,7 +22,7 @@ type State = {
 };
 
 const initialState: State = {
-  error: undefined,
+  error: null,
   dataStatus: DataStatus.IDLE,
   user: null,
 };
@@ -32,7 +32,7 @@ const { reducer, actions, name } = createSlice({
   name: 'auth',
   reducers: {
     clearAuthServerError: (store) => {
-      store.error = undefined;
+      store.error = null;
     },
   },
   extraReducers(builder) {
@@ -41,31 +41,26 @@ const { reducer, actions, name } = createSlice({
       state.dataStatus = DataStatus.PENDING;
     });
     builder.addCase(signUp.fulfilled, (state, action) => {
+      state.error = null;
       state.user = action.payload;
       state.dataStatus = DataStatus.FULFILLED;
     });
     builder.addCase(signUp.rejected, (state, { payload }) => {
       state.dataStatus = DataStatus.REJECTED;
-
-      if (payload) {
-        state.error = payload;
-      }
+      state.error = payload ?? null;
     });
     builder.addCase(signIn.pending, (state) => {
       state.user = null;
       state.dataStatus = DataStatus.PENDING;
     });
     builder.addCase(signIn.fulfilled, (state, action) => {
-      state.error = undefined;
+      state.error = null;
       state.user = action.payload;
       state.dataStatus = DataStatus.FULFILLED;
     });
     builder.addCase(signIn.rejected, (state, { payload }) => {
       state.dataStatus = DataStatus.REJECTED;
-
-      if (payload) {
-        state.error = payload;
-      }
+      state.error = payload ?? null;
     });
     builder.addCase(getCurrent.pending, (state) => {
       state.dataStatus = DataStatus.PENDING;
