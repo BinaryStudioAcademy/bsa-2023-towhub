@@ -5,18 +5,22 @@ import {
   type FieldErrors,
   type FieldPath,
   type FieldValues,
+  type UseFormSetError,
   Controller,
 } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
 
+import { type InputType } from '~/libs/enums/enums.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
   useFormController,
+  useFormServerError,
   useMemo,
   useState,
 } from '~/libs/hooks/hooks.js';
+import { type ServerErrorHandling, type ValueOf } from '~/libs/types/types.js';
 
 import { Icon } from '../components.js';
 import styles from './styles.module.scss';
@@ -27,11 +31,13 @@ type Properties<T extends FieldValues> = {
   label?: string;
   name: FieldPath<T>;
   placeholder?: string;
-  type?: 'text' | 'email' | 'password' | 'number' | 'dropdown' | 'phone';
+  type?: ValueOf<typeof InputType>;
   isDisabled?: boolean;
   min?: number;
   max?: number;
   step?: number;
+  setError?: UseFormSetError<T>;
+  clearServerError?: ServerErrorHandling['clearError'];
 };
 
 const Input = <T extends FieldValues>({
@@ -45,10 +51,13 @@ const Input = <T extends FieldValues>({
   min,
   max,
   step,
+  setError,
+  clearServerError,
 }: Properties<T>): JSX.Element => {
   const { field } = useFormController({ name, control });
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const error = errors[name]?.message;
+  const serverError = useFormServerError(errors[name]);
   const hasError = Boolean(error);
   const hasValue = Boolean(field.value);
   const hasLabel = Boolean(label);
@@ -58,6 +67,24 @@ const Input = <T extends FieldValues>({
       setIsPasswordShown(!isPasswordShown);
     },
     [isPasswordShown],
+  );
+  const clearError = useCallback(() => {
+    if (setError && (serverError.common || serverError.validation)) {
+      setError(name, {});
+
+      if (clearServerError) {
+        clearServerError();
+      }
+    }
+  }, [clearServerError, name, serverError, setError]);
+
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
+      field.onChange(event);
+
+      clearError();
+    },
+    [clearError, field],
   );
   const id = `input-${name}`;
 
@@ -86,6 +113,7 @@ const Input = <T extends FieldValues>({
         min={min}
         max={max}
         step={step}
+        onChange={handleInputChange}
         id={id}
       />
       {type === 'password' && (
@@ -142,13 +170,18 @@ const Input = <T extends FieldValues>({
           {label}
         </label>
       )}
-      <div className={styles.inputWrapper}>
+      <div
+        className={styles.inputWrapper}
+        aria-label={serverError.common ?? undefined}
+        data-balloon-pos="up-right"
+        data-balloon-visible
+      >
         {type === 'phone' ? AppPhoneInput : DefaultInput}
       </div>
       <span
         className={getValidClassNames(
           styles.errorMessage,
-          hasError && styles.visible,
+          hasError && !serverError.common && styles.visible,
         )}
       >
         {error as string}
