@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
@@ -8,18 +8,27 @@ import { addTruck } from './actions.js';
 
 type State = {
   trucks: TruckEntity[];
+  chosenTruck: (TruckEntity & { driverId: number }) | null;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
 const initialState: State = {
   trucks: [],
+  chosenTruck: null,
   dataStatus: DataStatus.IDLE,
 };
 
 const { reducer, actions, name } = createSlice({
   initialState,
   name: 'trucks',
-  reducers: {},
+  reducers: {
+    setChosenTruck: (
+      state,
+      action: PayloadAction<TruckEntity & { driverId: number }>,
+    ) => {
+      state.chosenTruck = action.payload;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(addTruck.pending, (state) => {
