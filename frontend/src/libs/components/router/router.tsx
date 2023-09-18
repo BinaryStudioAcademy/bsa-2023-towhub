@@ -28,7 +28,8 @@ const Router = (): JSX.Element => {
         <Route index element={<HomePage />} />
         <Route path={AppRoute.WELCOME} element={<WelcomePage />} />
         <Route path={AppRoute.SIGN_IN} element={<Auth />} />
-        <Route path={AppRoute.SIGN_UP} element={<Auth />} />
+        <Route path={AppRoute.SIGN_UP_BUSINESS} element={<Auth />} />
+        <Route path={AppRoute.SIGN_UP_CUSTOMER} element={<Auth />} />
         <Route path={AppRoute.ORDER} element={<Order />} />
       </Route>
       <Route

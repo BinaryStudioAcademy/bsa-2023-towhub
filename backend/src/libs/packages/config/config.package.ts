@@ -93,10 +93,10 @@ class Config implements IConfig {
             env: 'S3_REGION',
             default: null,
           },
-          SIGNED_URL_EXPIRES_IN: {
+          SIGNED_URL_EXPIRES_IN_SECONDS: {
             doc: 'Number of seconds a signed URL expires in',
             format: String,
-            env: 'SIGNED_URL_EXPIRES_IN',
+            env: 'SIGNED_URL_EXPIRES_IN_SECONDS',
             default: null,
           },
         },

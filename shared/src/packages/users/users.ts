@@ -10,10 +10,8 @@ export {
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
-  type UserGroupEntityObjectT,
   type UserGroupEntityT,
   type UserGroupKeyT,
-  type UserGroupNameT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
 } from './libs/types/types.js';

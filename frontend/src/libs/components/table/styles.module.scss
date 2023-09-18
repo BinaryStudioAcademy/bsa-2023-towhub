@@ -1,4 +1,4 @@
-@import "src/assets/css/styles.scss";
+@import "src/assets/css/vars.scss";
 
 .container {
   display: flex;
@@ -8,25 +8,33 @@
   gap: 20px;
 }
 
-.table {
-  background-color: rgb(248 246 246);
+.wrapper {
+  overflow: hidden;
+  border: 1px solid $white-blue;
   border-radius: 8px;
+}
+
+.table {
   border-collapse: collapse;
 }
 
 .thead {
-  color: white;
-  background-color: $header-background;
+  color: $black;
+  text-align: center;
+  background-color: $grey-light;
 }
 
 .th,
 .td {
-  padding: 10px 15px;
-  border: 1px solid white;
+  padding: 18px 16px;
 }
 
 .th {
   position: relative;
+
+  &:first-child {
+    text-align: left;
+  }
 }
 
 .resizer {
@@ -47,38 +55,50 @@
   opacity: 1;
 }
 
-.th:first-child {
-  border: none;
-  border-top-left-radius: 8px;
-}
-
-.th:last-child {
-  border: none;
-  border-top-right-radius: 8px;
-
-  .resizer {
-    border-top-right-radius: 8px;
-  }
-}
-
 .td {
+  font-weight: $font-weight-regular;
+  font-size: 14px;
   text-align: center;
+
+  &:first-child {
+    font-size: 16px;
+  }
 }
 
-.tr:nth-child(even) {
-  background-color: #b9d1f1fa;
+.text-left {
+  text-align: left;
 }
 
-.tr:last-child {
-  .td:first-child {
-    border: none;
-    border-bottom-left-radius: 8px;
-  }
+.tr:not(:last-child) {
+  box-shadow: 0 -1px 0 0 $grey-light inset;
+}
 
-  .td:last-child {
-    border: none;
-    border-bottom-right-radius: 8px;
+.icon-edit {
+  color: $grey;
+  cursor: pointer;
+}
+
+.icon-delete {
+  color: $grey-light;
+}
+
+.icon-edit,
+.icon-delete {
+  cursor: pointer;
+
+  &:hover {
+    background-color: $grey-extra-light;
   }
+}
+
+.sorted {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sorting {
+  cursor: pointer;
 }
 
 @media (hover: hover) {
