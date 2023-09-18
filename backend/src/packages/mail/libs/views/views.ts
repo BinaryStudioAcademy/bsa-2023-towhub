@@ -1,1 +1,1 @@
-export { plainView } from './plain/plain.js';
+export { driverCredentials, plainView } from './plain/plain.js';

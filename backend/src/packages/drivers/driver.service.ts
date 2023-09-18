@@ -18,6 +18,7 @@ import {
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
+import { TemplateName } from '../mail/libs/enums/template-name.enum.js';
 import { mailService } from '../mail/mail.js';
 import { type UserService } from '../users/user.service.js';
 
@@ -120,23 +121,6 @@ class DriverService implements IService {
 
     const password = await this.generatePassword();
 
-    // const view = new PlainView(
-    //   '/Users/denis/Desktop/bsa-2023-towhub/backend/src/packages/mail/libs/views/plain/layout/plain.hbs',
-    // );
-
-    const emailData = {
-      name: `${firstName} ${lastName}`,
-      email: email,
-      password: password,
-      signInLink: MailContent.LINK,
-    };
-
-    await mailService.sendPage(
-      { to: email, subject: MailContent.SUBJECT },
-      'plain',
-      emailData,
-    );
-
     const user = await this.userService.create({
       password,
       email,
@@ -155,6 +139,19 @@ class DriverService implements IService {
     );
 
     const driverObject = driver.toObject();
+
+    const emailData = {
+      name: `${firstName} ${lastName}`,
+      email: email,
+      password: password,
+      signInLink: MailContent.LINK,
+    };
+
+    await mailService.sendPage(
+      { to: email, subject: MailContent.SUBJECT },
+      TemplateName.DRIVER_CREDENTIALS,
+      emailData,
+    );
 
     return { ...user, ...driverObject, group };
   }

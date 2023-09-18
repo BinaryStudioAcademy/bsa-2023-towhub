@@ -5,9 +5,14 @@ import { PlainView } from './plain.view.js';
 
 const pathToTemplate = path.join(
   path.dirname(url.fileURLToPath(import.meta.url)),
-  './layout/plain.hbs',
+  'libs/layout/plain.hbs',
+);
+const pathToDriverCredentials = path.join(
+  path.dirname(url.fileURLToPath(import.meta.url)),
+  'libs/layout/driver-credentials.hbs',
 );
 
 const plainView = new PlainView(pathToTemplate);
+const driverCredentials = new PlainView(pathToDriverCredentials);
 
-export { plainView };
+export { driverCredentials, plainView };
