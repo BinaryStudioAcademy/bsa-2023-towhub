@@ -6,7 +6,7 @@ type CheckIsIconCell = {
   isDeleteCell: boolean;
 };
 
-const checkIsIconCell = (
+const checkIsActionCell = (
   isTableEditable: boolean,
   index: number,
   arrayLength: number,
@@ -20,4 +20,4 @@ const checkIsIconCell = (
   };
 };
 
-export { checkIsIconCell };
+export { checkIsActionCell };

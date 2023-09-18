@@ -1,9 +1,6 @@
 import { type OnChangeFn, type SortingState } from '@tanstack/react-table';
 
-import { IconName } from '~/libs/enums/enums.js';
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
-  flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useCallback,
@@ -12,10 +9,10 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { type ColumnDef } from '~/libs/types/types.js';
 
-import { Icon } from '../components.js';
 import { Pagination } from '../pagination/pagination.jsx';
+import { Tbody, Thead } from './libs/components/components.js';
 import { DEFAULT_COLUMN } from './libs/constant.js';
-import { addIconsToData, checkIsIconCell } from './libs/helpers/helpers.js';
+import { addIconsToData } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties<T> = {
@@ -45,8 +42,7 @@ const Table = <T,>({
   setSorting,
   changePageIndex,
   changePageSize,
-  onEditClick,
-  onDeleteClick,
+  ...properties
 }: Properties<T>): JSX.Element => {
   const pagesRange = Math.ceil(totalRow / pageSize);
   const dataAndColumns = useMemo(() => {
@@ -78,105 +74,6 @@ const Table = <T,>({
     },
     [changePageSize, table, changePageIndex],
   );
-  const createThead = (): JSX.Element => (
-    <thead className={styles.thead}>
-      {table.getHeaderGroups().map((headerGroup) => (
-        <tr key={headerGroup.id} className={styles.tr}>
-          {headerGroup.headers.map((header) => (
-            <th
-              key={header.id}
-              className={getValidClassNames(
-                styles.th,
-                header.column.getCanSort() && styles.sorting,
-                header.column.getIsSorted() && styles.sorted,
-              )}
-              style={{
-                width: header.getSize(),
-              }}
-              onClick={header.column.getToggleSortingHandler()}
-            >
-              {header.isPlaceholder
-                ? null
-                : flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-              {{
-                asc: <Icon iconName={IconName.CHEVRON_UP} />,
-                desc: <Icon iconName={IconName.CHEVRON_DOWN} />,
-              }[header.column.getIsSorted() as string] ?? null}
-              <div
-                {...(header.column.getCanResize() && {
-                  onMouseDown: header.getResizeHandler(),
-                  onTouchStart: header.getResizeHandler(),
-                  className: getValidClassNames(
-                    styles.resizer,
-                    header.column.getIsResizing() && styles.isResizing,
-                  ),
-                })}
-              />
-            </th>
-          ))}
-        </tr>
-      ))}
-    </thead>
-  );
-
-  const getHandler = (
-    index: number,
-    arrayLength: number,
-  ): typeof onEditClick | typeof onDeleteClick => {
-    if (!isTableEditable) {
-      return;
-    }
-    const { isEditCell } = checkIsIconCell(isTableEditable, index, arrayLength);
-
-    if (isEditCell) {
-      return onEditClick;
-    }
-
-    return onDeleteClick;
-  };
-
-  const createTbody = (): JSX.Element => (
-    <tbody>
-      {table.getRowModel().rows.map((row) => (
-        <tr key={row.id} className={styles.tr}>
-          {row.getVisibleCells().map((cell, index, array) => {
-            const { isEditCell, isDeleteCell } = checkIsIconCell(
-              isTableEditable,
-              index,
-              array.length,
-            );
-            const shouldAddIconToCell = isEditCell || isDeleteCell;
-            const iconToDisplay = isEditCell ? IconName.EDIT : IconName.TRASH;
-
-            return (
-              <td
-                key={cell.id}
-                className={getValidClassNames(
-                  styles.td,
-                  index === 0 && styles['text-left'],
-                  isEditCell && styles['icon-edit'],
-                  isDeleteCell && styles['icon-delete'],
-                )}
-                style={{
-                  width: cell.column.getSize(),
-                }}
-                onClick={getHandler(index, array.length)?.bind(null, row.id)}
-              >
-                {!shouldAddIconToCell &&
-                  flexRender(cell.column.columnDef.cell, cell.getContext())}
-                {shouldAddIconToCell && (
-                  <Icon iconName={iconToDisplay} size="xl" />
-                )}
-              </td>
-            );
-          })}
-        </tr>
-      ))}
-    </tbody>
-  );
 
   return (
     <div className={styles.container}>
@@ -187,8 +84,12 @@ const Table = <T,>({
             width: table.getCenterTotalSize(),
           }}
         >
-          {createThead()}
-          {createTbody()}
+          <Thead table={table} />
+          <Tbody
+            table={table}
+            isTableEditable={isTableEditable}
+            {...properties}
+          />
         </table>
       </div>
       <Pagination
