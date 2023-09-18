@@ -62,6 +62,7 @@ const Table = <T,>({
     state: {
       sorting,
     },
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
