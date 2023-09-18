@@ -121,15 +121,13 @@ class BusinessService implements IService {
   }
 
   public async update({
-    id,
     payload,
     owner,
   }: {
-    id: number;
     payload: BusinessUpdateRequestDto;
     owner: UserEntityObjectWithGroupT;
   }): Promise<BusinessUpdateResponseDto> {
-    const foundBusiness = await this.findById(id, { owner });
+    const foundBusiness = await this.findByOwnerId(owner.id);
 
     if (!foundBusiness) {
       throw new NotFoundError({});
@@ -155,17 +153,14 @@ class BusinessService implements IService {
     return business.toObject();
   }
 
-  public async delete(
-    id: number,
-    { owner }: { owner: UserEntityObjectWithGroupT },
-  ): Promise<boolean> {
-    const foundBusiness = await this.findById(id, { owner });
+  public async delete(owner: UserEntityObjectWithGroupT): Promise<boolean> {
+    const foundBusiness = await this.findByOwnerId(owner.id);
 
     if (!foundBusiness) {
       throw new NotFoundError({});
     }
 
-    return await this.businessRepository.delete(id);
+    return await this.businessRepository.delete(foundBusiness.id);
   }
 
   public async createDriver({

@@ -22,16 +22,10 @@ import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 import {
   type BusinessAddRequestDto,
-  type BusinessDeleteRequestParameters,
-  type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
-  type BusinessUpdateRequestParameters,
 } from './libs/types/types.js';
 import {
   businessAddRequestBody,
-  businessDeleteParameters,
-  businessGetParameters,
-  businessUpdateParameters,
   businessUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';
 
@@ -270,47 +264,29 @@ class BusinessController extends Controller {
     });
 
     this.addRoute({
-      path: BusinessApiPath.$ID,
+      path: BusinessApiPath.ROOT,
       method: 'PUT',
       validation: {
         body: businessUpdateRequestBody,
-        params: businessUpdateParameters,
       },
       handler: (options) =>
         this.update(
           options as ApiHandlerOptions<{
             body: BusinessUpdateRequestDto;
-            params: BusinessUpdateRequestParameters;
           }>,
         ),
     });
 
     this.addRoute({
-      path: BusinessApiPath.$ID,
+      path: BusinessApiPath.ROOT,
       method: 'DELETE',
-      validation: {
-        params: businessDeleteParameters,
-      },
-      handler: (options) =>
-        this.delete(
-          options as ApiHandlerOptions<{
-            params: BusinessDeleteRequestParameters;
-          }>,
-        ),
+      handler: (options) => this.delete(options),
     });
 
     this.addRoute({
-      path: BusinessApiPath.$ID,
+      path: BusinessApiPath.ROOT,
       method: 'GET',
-      validation: {
-        params: businessGetParameters,
-      },
-      handler: (options) =>
-        this.find(
-          options as ApiHandlerOptions<{
-            params: BusinessGetRequestParameters;
-          }>,
-        ),
+      handler: (options) => this.find(options),
     });
 
     this.addRoute({
@@ -432,20 +408,12 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{id}:
+   * /business:
    *    put:
    *      tags:
    *       - business
    *      summary: Update business
    *      description: Update business
-   *      parameters:
-   *       - in: path
-   *         name: id
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to update
-   *         example: 1
    *      requestBody:
    *        content:
    *          application/json:
@@ -474,11 +442,9 @@ class BusinessController extends Controller {
   private async update(
     options: ApiHandlerOptions<{
       body: BusinessUpdateRequestDto;
-      params: BusinessUpdateRequestParameters;
     }>,
   ): Promise<ApiHandlerResponse> {
     const updatedBusiness = await this.businessService.update({
-      id: options.params.id,
       payload: options.body,
       owner: options.user,
     });
@@ -491,20 +457,12 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{id}:
+   * /business:
    *    delete:
    *      tags:
    *       - business
    *      summary: Delete business
    *      description: Delete business
-   *      parameters:
-   *       - in: path
-   *         name: id
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to delete
-   *         example: 1
    *      responses:
    *        200:
    *          description: Successful business deletion.
@@ -522,14 +480,9 @@ class BusinessController extends Controller {
    *
    */
   private async delete(
-    options: ApiHandlerOptions<{
-      params: BusinessDeleteRequestParameters;
-    }>,
+    options: ApiHandlerOptions,
   ): Promise<ApiHandlerResponse> {
-    const deletionResult = await this.businessService.delete(
-      options.params.id,
-      { owner: options.user },
-    );
+    const deletionResult = await this.businessService.delete(options.user);
 
     return {
       status: HttpCode.OK,
@@ -539,20 +492,12 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{id}:
+   * /business:
    *    get:
    *      tags:
    *       - business
    *      summary: Find business
    *      description: Find business
-   *      parameters:
-   *       - in: path
-   *         name: id
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to get
-   *         example: 1
    *      responses:
    *        200:
    *          description: Find operation had no errors.
@@ -561,19 +506,14 @@ class BusinessController extends Controller {
    *              schema:
    *                $ref: '#/components/schemas/BusinessFindResult'
    */
-  private async find(
-    options: ApiHandlerOptions<{
-      params: BusinessGetRequestParameters;
-    }>,
-  ): Promise<ApiHandlerResponse> {
-    const findBusinessById = await this.businessService.findById(
-      options.params.id,
-      { owner: options.user },
+  private async find(options: ApiHandlerOptions): Promise<ApiHandlerResponse> {
+    const findBusinessByOwnerId = await this.businessService.findByOwnerId(
+      options.user.id,
     );
 
     return {
       status: HttpCode.OK,
-      payload: { result: findBusinessById },
+      payload: { result: findBusinessByOwnerId },
     };
   }
 
