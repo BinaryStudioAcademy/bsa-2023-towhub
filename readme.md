@@ -105,14 +105,20 @@ erDiagram
         status enum "not null"
         user_id integer FK "nullable"
         business_id integer FK "nullable"
-        driver_id integer FK "nullable"
+        shift_id integer FK "nullable"
         customer_name varchar "nullable"
         customer_phone varchar "nullable"
         cars_qty integer "not null"
         created_at timestamp "not null"
         updated_at timestamp "not null"
     }
-
+    files {
+      id serial PK "not null"
+      key varchar "not null, unique"
+      content_type varchar "not null"
+      created_at timestamp "not null"
+      updated_at timestamp "not null"
+    }
     shifts {
         id serial PK "not null"
         start_date timestamp "not null"
@@ -123,7 +129,6 @@ erDiagram
         updated_at timestamp "not null"
         deleted_at timestamp "nullable"
     }
-
     users_trucks one or many -- one trucks: "users_trucks(truck_id) belongs to trucks(id)"
     users_trucks one or many -- one users: "users_trucks(user_id) belongs to users(id)"
     users one or many -- one groups: "users(group_id) belongs to groups(id)"
@@ -133,7 +138,7 @@ erDiagram
     users one -- zero or many orders: "users(id) has orders(user_id)"
     users one -- zero or many orders: "users(id) has orders(user_id)"
     business_details one -- zero or many orders: "business_details(id) has orders(business_id)"
-    driver_details one -- zero or many orders: "driver_details(id) has orders(drivers_id)"
+    shifts one -- zero or many orders: "shifts(id) has orders(shift_id)"
     users zero or one -- one or many shifts: "users(id) has shifts(driver_id)"
     trucks one -- zero or many shifts: "shifts(truck_id) has trucks(id)"
 ```

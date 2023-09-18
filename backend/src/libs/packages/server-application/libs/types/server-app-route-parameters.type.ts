@@ -4,10 +4,13 @@ import { type AuthStrategyHandler } from '~/libs/packages/controller/controller.
 import { type HttpMethod } from '~/libs/packages/http/http.js';
 import { type ValidationSchema } from '~/libs/types/types.js';
 
+import { type ValidateFilesStrategyOptions } from './types.js';
+
 type ServerAppRouteParameters = {
   path: string;
   method: HttpMethod;
   authStrategy?: AuthStrategyHandler;
+  validateFilesStrategy?: ValidateFilesStrategyOptions;
   handler: (
     request: FastifyRequest,
     reply: FastifyReply,
