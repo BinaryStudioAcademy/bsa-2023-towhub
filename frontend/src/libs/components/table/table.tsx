@@ -15,11 +15,7 @@ import { type ColumnDef } from '~/libs/types/types.js';
 import { Icon } from '../components.js';
 import { Pagination } from '../pagination/pagination.jsx';
 import { DEFAULT_COLUMN } from './libs/constant.js';
-import {
-  type Icons,
-  addIconsToData,
-} from './libs/helpers/add-icons-to-data.helper.js';
-import { checkIconCell } from './libs/helpers/check-icon-cell.helper.js';
+import { addIconsToData, checkIsIconCell } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties<T> = {
@@ -133,8 +129,9 @@ const Table = <T,>({
     if (!isTableEditable) {
       return;
     }
+    const { isEditCell } = checkIsIconCell(isTableEditable, index, arrayLength);
 
-    if (checkIconCell(index, arrayLength).isEditCell) {
+    if (isEditCell) {
       return onEditClick;
     }
 
@@ -143,49 +140,41 @@ const Table = <T,>({
 
   const createTbody = (): JSX.Element => (
     <tbody>
-      {table.getRowModel().rows.map((row) => {
-        const rowWithIcons = row.original as T & Icons;
+      {table.getRowModel().rows.map((row) => (
+        <tr key={row.id} className={styles.tr}>
+          {row.getVisibleCells().map((cell, index, array) => {
+            const { isEditCell, isDeleteCell } = checkIsIconCell(
+              isTableEditable,
+              index,
+              array.length,
+            );
+            const shouldAddIconToCell = isEditCell || isDeleteCell;
+            const iconToDisplay = isEditCell ? IconName.EDIT : IconName.TRASH;
 
-        return (
-          <tr key={row.id} className={styles.tr}>
-            {row.getVisibleCells().map((cell, index, array) => {
-              const isEditIconCell =
-                isTableEditable &&
-                checkIconCell(index, array.length).isEditCell;
-              const isDeleteIconCell =
-                isTableEditable &&
-                checkIconCell(index, array.length).isDeleteCell;
-              let icon = null;
-
-              if (isEditIconCell) {
-                icon = rowWithIcons.iconEdit;
-              } else if (isDeleteIconCell) {
-                icon = rowWithIcons.iconDelete;
-              }
-
-              return (
-                <td
-                  key={cell.id}
-                  className={getValidClassNames(
-                    styles.td,
-                    index === 0 && styles['text-left'],
-                    isEditIconCell && styles['icon-edit'],
-                    isDeleteIconCell && styles['icon-delete'],
-                  )}
-                  style={{
-                    width: cell.column.getSize(),
-                  }}
-                  onClick={getHandler(index, array.length)?.bind(null, row.id)}
-                >
-                  {!icon &&
-                    flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  {icon && <Icon iconName={icon} size="xl" />}
-                </td>
-              );
-            })}
-          </tr>
-        );
-      })}
+            return (
+              <td
+                key={cell.id}
+                className={getValidClassNames(
+                  styles.td,
+                  index === 0 && styles['text-left'],
+                  isEditCell && styles['icon-edit'],
+                  isDeleteCell && styles['icon-delete'],
+                )}
+                style={{
+                  width: cell.column.getSize(),
+                }}
+                onClick={getHandler(index, array.length)?.bind(null, row.id)}
+              >
+                {!shouldAddIconToCell &&
+                  flexRender(cell.column.columnDef.cell, cell.getContext())}
+                {shouldAddIconToCell && (
+                  <Icon iconName={iconToDisplay} size="xl" />
+                )}
+              </td>
+            );
+          })}
+        </tr>
+      ))}
     </tbody>
   );
 

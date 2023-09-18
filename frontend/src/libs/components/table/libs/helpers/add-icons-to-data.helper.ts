@@ -1,25 +1,14 @@
-import { IconName } from '~/libs/enums/enums.js';
-import { type ColumnDef, type ValueOf } from '~/libs/types/types.js';
+import { type ColumnDef } from '~/libs/types/types.js';
 
-type Icons = {
-  iconEdit: ValueOf<typeof IconName>;
-  iconDelete: ValueOf<typeof IconName>;
-};
-
-type ReturnType<T> = {
-  data: (T & Icons)[];
+type addIconsToData<T> = {
+  data: T[];
   columns: ColumnDef<T>[];
 };
 
 const addIconsToData = <T>(
   data: T[],
   columns: ColumnDef<T>[],
-): ReturnType<T> => {
-  const dataWithIcons = data.map((it) => ({
-    ...it,
-    iconEdit: IconName.EDIT,
-    iconDelete: IconName.TRASH,
-  }));
+): addIconsToData<T> => {
   const columnsWithIcons = [
     ...columns,
     {
@@ -38,7 +27,7 @@ const addIconsToData = <T>(
     },
   ];
 
-  return { data: dataWithIcons, columns: columnsWithIcons };
+  return { data, columns: columnsWithIcons };
 };
 
-export { type Icons, addIconsToData };
+export { addIconsToData };
