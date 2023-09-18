@@ -31,15 +31,25 @@
     background-color: $blue-dark;
     border-radius: 0;
 
-    &:hover {
+    &:hover,
+    &:active,
+    &:focus {
       background-color: $blue;
     }
   }
 
   .menuIcon {
     width: 100%;
+    padding: 10px 20px;
     color: $white;
     font-size: 24px;
+    background-color: $blue-dark;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: $blue;
+    }
   }
 }
 
@@ -47,13 +57,5 @@
   .menu {
     width: 80px;
     background-color: $blue-dark;
-
-    li {
-      padding: 10px 20px;
-
-      &:hover {
-        background-color: $blue;
-      }
-    }
   }
 }

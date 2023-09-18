@@ -1,6 +1,12 @@
-import { Breakpoint, IconName } from '~/libs/enums/enums.js';
+import {
+  AppRoute,
+  Breakpoint,
+  BurgerMenuItemsName,
+  IconName,
+} from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
+  useAppDispatch,
   useCallback,
   useEffect,
   useLocation,
@@ -9,6 +15,7 @@ import {
   useState,
 } from '~/libs/hooks/hooks.js';
 import { type BurgerMenuItem } from '~/libs/types/types.js';
+import { actions as authActions } from '~/slices/auth/auth.js';
 
 import { Button, Icon } from '../components.js';
 import styles from './styles.module.scss';
@@ -21,6 +28,7 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const menuReference = useRef<HTMLDivElement | null>(null);
 
@@ -29,8 +37,15 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
   }, [isOpen]);
 
   const handleNavigate = useCallback(
-    (navigateTo: string) => () => navigate(navigateTo),
+    (navigateTo: string) => () => {
+      navigate(navigateTo);
+    },
     [navigate],
+  );
+
+  const handleLogOutClick = useCallback(
+    () => dispatch(authActions.logOut()).then(() => navigate(AppRoute.SIGN_IN)),
+    [dispatch, navigate],
   );
 
   useEffect(() => {
@@ -69,25 +84,24 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
       {isOpen && (
         <div className={styles.menu}>
           <ul>
-            {burgerItems.map((item, index) => (
-              <li key={index}>
-                {isMobile ? (
-                  <Icon
-                    iconName={item.icon}
-                    onClick={handleNavigate(item.navigateTo)}
-                    className={styles.menuIcon}
-                  />
-                ) : (
+            {burgerItems.map((item, index) => {
+              const clickHandler =
+                item.name === BurgerMenuItemsName.LOG_OUT
+                  ? handleLogOutClick
+                  : handleNavigate(item.navigateTo);
+
+              return (
+                <li key={index}>
                   <Button
                     frontIcon={item.icon}
-                    isFullWidth
-                    label={item.name}
-                    onClick={handleNavigate(item.navigateTo)}
-                    className={styles.btn}
+                    isFullWidth={!isMobile}
+                    label={isMobile ? '' : item.name}
+                    onClick={clickHandler}
+                    className={isMobile ? styles.menuIcon : styles.btn}
                   />
-                )}
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
