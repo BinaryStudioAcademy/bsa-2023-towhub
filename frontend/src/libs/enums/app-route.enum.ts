@@ -11,6 +11,7 @@ const AppRoute = {
   DASHBOARD_ORDERS: '/dashboard/orders',
   DASHBOARD_TRUCKS: '/dashboard/trucks',
   DASHBOARD_DRIVERS: '/dashboard/drivers',
+  ORDER: '/order',
 } as const;
 
 export { AppRoute };

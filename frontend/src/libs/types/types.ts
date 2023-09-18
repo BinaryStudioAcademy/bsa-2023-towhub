@@ -7,6 +7,7 @@ export { type SelectOption } from './select-option.type.js';
 export { type TabName, type TabsType } from './sidebar.type.js';
 export { type RootState } from './store.type.js';
 export { type TruckFilters } from './truck-filters.type.js';
+export { type Libraries, LoadScript } from '@react-google-maps/api';
 export { type ColumnDef } from '@tanstack/react-table';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
 export {
