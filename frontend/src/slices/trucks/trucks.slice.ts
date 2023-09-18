@@ -21,18 +21,18 @@ type State = {
 
 const initialState: State = {
   trucks: [],
-  // chosenTruck: null,
-  //Mock
-  chosenTruck: {
-    'id': 1,
-    'manufacturer': 'ford',
-    'towType': 'hook_and_chain',
-    'year': 1991,
-    'capacity': 1,
-    'pricePerKm': 10,
-    'driverId': 5,
-    'licensePlateNumber': 'GB 88888',
-  },
+  chosenTruck: null,
+  //Mock for demo
+  // chosenTruck: {
+  //   'id': 1,
+  //   'manufacturer': 'ford',
+  //   'towType': 'hook_and_chain',
+  //   'year': 1991,
+  //   'capacity': 1,
+  //   'pricePerKm': 10,
+  //   'driverId': 5,
+  //   'licensePlateNumber': 'GB 88888',
+  // },
   dataStatus: DataStatus.IDLE,
   truckLocation: null,
   truckArrivalTime: null,

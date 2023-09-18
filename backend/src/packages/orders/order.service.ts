@@ -9,11 +9,7 @@ import { type ShiftService } from '../shifts/shift.service.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
-import {
-  // ClientSocketEvent,
-  OrderStatus,
-  UserGroupKey,
-} from './libs/enums/enums.js';
+import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
