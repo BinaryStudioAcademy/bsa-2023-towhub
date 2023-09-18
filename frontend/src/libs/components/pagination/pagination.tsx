@@ -130,7 +130,7 @@ const Pagination: React.FC<Properties> = ({
           <>
             <Button
               className={styles.btn}
-              label={'1'}
+              label="1"
               variant="text"
               onClick={handlePageClick}
             ></Button>
@@ -143,7 +143,7 @@ const Pagination: React.FC<Properties> = ({
             <div className={styles.dots}>...</div>
             <Button
               className={styles.btn}
-              label={`${pageCount}`}
+              label={pageCount}
               variant="text"
               onClick={handlePageClick}
             ></Button>

@@ -19,6 +19,7 @@ import {
   type Icons,
   addIconsToData,
 } from './libs/helpers/add-icons-to-data.helper.js';
+import { checkIconCell } from './libs/helpers/check-icon-cell.helper.js';
 import styles from './styles.module.scss';
 
 type Properties<T> = {
@@ -129,11 +130,15 @@ const Table = <T,>({
     index: number,
     arrayLength: number,
   ): typeof onEditClick | typeof onDeleteClick => {
-    if (isTableEditable && index === arrayLength - 2) {
-      return onEditClick;
-    } else if (isTableEditable && index === arrayLength - 1) {
-      return onDeleteClick;
+    if (!isTableEditable) {
+      return;
     }
+
+    if (checkIconCell(index, arrayLength).isEditCell) {
+      return onEditClick;
+    }
+
+    return onDeleteClick;
   };
 
   const createTbody = (): JSX.Element => (
@@ -145,9 +150,11 @@ const Table = <T,>({
           <tr key={row.id} className={styles.tr}>
             {row.getVisibleCells().map((cell, index, array) => {
               const isEditIconCell =
-                isTableEditable && index === array.length - 2;
+                isTableEditable &&
+                checkIconCell(index, array.length).isEditCell;
               const isDeleteIconCell =
-                isTableEditable && index === array.length - 1;
+                isTableEditable &&
+                checkIconCell(index, array.length).isDeleteCell;
               let icon = null;
 
               if (isEditIconCell) {
