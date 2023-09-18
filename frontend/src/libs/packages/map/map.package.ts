@@ -45,6 +45,12 @@ class MapService implements IMapService {
       this.directionsService = extraLibraries.directionsService;
 
       if (mapElement && center && zoom) {
+        if (this.map) {
+          this.map.panTo(center);
+
+          return;
+        }
+
         this.initMap(mapElement, center, zoom);
       }
 

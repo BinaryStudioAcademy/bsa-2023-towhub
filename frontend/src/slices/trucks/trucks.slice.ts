@@ -22,7 +22,7 @@ type State = {
 const initialState: State = {
   trucks: [],
   chosenTruck: null,
-  //Mock for demo
+  // Mock for demo
   // chosenTruck: {
   //   'id': 1,
   //   'manufacturer': 'ford',

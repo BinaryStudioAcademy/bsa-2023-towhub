@@ -78,7 +78,7 @@ class SocketService {
           );
         },
       );
-      // //Mock start, for demo purposes
+      //Mock start, for demo purposes
       // let lat = 48.8325;
       // let lng = 24.5701;
       // setInterval(() => {
