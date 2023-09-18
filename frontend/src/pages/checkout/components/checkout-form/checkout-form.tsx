@@ -30,23 +30,25 @@ const CheckoutForm: React.FC = () => {
           status: 'pending',
           userId: user?.id ?? null,
           businessId: 4,
-          driverId: 123,
           customerName: 'Test user',
           customerPhone: '+380671111111',
-        };
-
-        const shift: ShiftEntity = {
-          id: 0,
-          driverId: 123,
-          startDate: new Date(Date.now() - 10_000),
-          endDate: new Date(Date.now()),
-          truckId: 1,
+          shiftId: 0,
+          driver: {
+            driverLicenseNumber: '',
+            email: '',
+            firstName: '',
+            id: 123,
+            lastName: '',
+            phone: '',
+          },
+          truck: {
+            id: 1,
+            licensePlateNumber: '',
+          },
         };
 
         const url = await stripeApi.generateCheckoutLink({
           order,
-          shift,
-          distance: payload.distance,
         });
         window.location.href = url;
       })(event_);

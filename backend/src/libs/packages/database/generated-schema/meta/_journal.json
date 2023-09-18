@@ -75,8 +75,22 @@
     {
       "idx": 10,
       "version": "5",
-      "when": 1694531397477,
-      "tag": "0010_add_stripe_fields_to_business",
+      "when": 1694683536028,
+      "tag": "0010_change_orders_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1694869716680,
+      "tag": "0011_create_files_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1695059484421,
+      "tag": "0012_add_stripe_fields_to_business",
       "breakpoints": true
     }
   ]

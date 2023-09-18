@@ -16,5 +16,4 @@ export {
   type UserGetAllResponseDto,
   type UserGroupEntityT,
   type UserGroupKeyT,
-  type UserGroupNameT,
 } from 'shared/build/index.js';

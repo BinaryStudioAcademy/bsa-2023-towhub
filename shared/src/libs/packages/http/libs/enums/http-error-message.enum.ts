@@ -1,5 +1,7 @@
 const HttpMessage = {
-  USER_EXISTS: 'User already exists',
+  USER_EMAIL_EXISTS: 'User with this email already exists',
+  USER_PHONE_EXISTS: 'User with this phone already exists',
+  FILE_DOES_NOT_EXIST: 'File with such id does not exist!',
   BUSINESS_EXISTS: 'Business with specified tax number already exists',
   TRUCK_EXISTS: 'Truck already exists',
   NOT_FOUND: 'Not found',
@@ -15,14 +17,16 @@ const HttpMessage = {
     'Driver with such license number already exists!',
   UNAUTHORIZED: 'You are not authorized',
   INVALID_JWT: 'Invalid JWT payload',
-  WRONG_EMAIL: 'This email is not registered',
-  WRONG_PASSWORD: 'The password is wrong',
+  WRONG_EMAIL: 'User with such email is not registered',
+  WRONG_PASSWORD: 'Entered invalid password!',
   INVALID_GROUP: 'Provided group is unavailable',
   CANNOT_DELETE: 'Cannot delete this user',
   WRONG_SHIFT: 'Specified shift id is not belong to you',
   SHIFT_ALREADY_CLOSED: 'Specified shift is already closed',
   NOT_ACCESS: 'You do not have enough rights to operate this shift',
   ORDER_DOES_NOT_EXIST: 'Order does not exist!',
+  SHIFT_NOT_OPEN: 'This truck is not inactive, please choose another one',
+  TRUCK_DOES_NOT_EXISTS: 'Truck does not exist',
 } as const;
 
 export { HttpMessage };

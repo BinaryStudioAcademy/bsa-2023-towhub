@@ -1,5 +1,6 @@
 import { Form, Link } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
+import { type ServerErrorHandling } from '~/libs/types/types.js';
 import {
   type UserSignInRequestDto,
   userSignInValidationSchema,
@@ -11,9 +12,13 @@ import styles from './styles.module.scss';
 
 type Properties = {
   onSubmit: (payload: UserSignInRequestDto) => void;
+  serverError: ServerErrorHandling;
 };
 
-const SignInForm: React.FC<Properties> = ({ onSubmit }: Properties) => (
+const SignInForm: React.FC<Properties> = ({
+  onSubmit,
+  serverError,
+}: Properties) => (
   <div className={styles.formWrapper}>
     <h3 className={styles.title}>Sign in</h3>
     <Form
@@ -22,6 +27,7 @@ const SignInForm: React.FC<Properties> = ({ onSubmit }: Properties) => (
       onSubmit={onSubmit}
       btnLabel="Sign In"
       fields={signInFields}
+      serverError={serverError}
     />
     <p className={styles.text}>
       Don`t have an account yet?{' '}

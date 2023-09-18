@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "ef7a6b02-9d28-4790-8a9a-652d135732b4",
+  "id": "99701008-5106-4115-b599-2bdc540412d8",
   "prevId": "b7486ff7-ef67-4b22-ba19-aaf8eac68511",
   "tables": {
     "business_details": {
@@ -25,19 +25,6 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
-        },
-        "stripe_id": {
-          "name": "stripe_id",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "stripe_activated": {
-          "name": "stripe_activated",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         },
         "owner_id": {
           "name": "owner_id",
@@ -78,11 +65,6 @@
           "name": "business_details_tax_number_unique",
           "nullsNotDistinct": false,
           "columns": ["tax_number"]
-        },
-        "business_details_stripe_id_unique": {
-          "name": "business_details_stripe_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["stripe_id"]
         }
       }
     },
@@ -253,11 +235,11 @@
           "primaryKey": false,
           "notNull": false
         },
-        "driver_id": {
-          "name": "driver_id",
+        "shift_id": {
+          "name": "shift_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "cars_qty": {
           "name": "cars_qty",
@@ -313,11 +295,11 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "orders_driver_id_driver_details_id_fk": {
-          "name": "orders_driver_id_driver_details_id_fk",
+        "orders_shift_id_shifts_id_fk": {
+          "name": "orders_shift_id_shifts_id_fk",
           "tableFrom": "orders",
-          "tableTo": "driver_details",
-          "columnsFrom": ["driver_id"],
+          "tableTo": "shifts",
+          "columnsFrom": ["shift_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"

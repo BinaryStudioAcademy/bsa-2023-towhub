@@ -4,6 +4,8 @@ import { type Stripe } from 'stripe';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
 import { type BusinessService } from '../business/business.service.js';
+import { convertMetersToKm } from '../map/map.js';
+import { type MapService } from '../map/map.service.js';
 import { type OrderEntity } from '../orders/libs/types/types.js';
 import { type ShiftEntity } from '../shifts/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
@@ -18,6 +20,13 @@ import {
 import { PaymentEntity } from './payment.entity.js';
 import { type StripeRepository } from './stripe.repository.js';
 
+type StripeServiceProperties = {
+  stripeRepository: StripeRepository;
+  businessService: BusinessService;
+  truckService: TruckService;
+  mapService: MapService;
+};
+
 class StripeService {
   private stripeRepository: StripeRepository;
 
@@ -25,14 +34,18 @@ class StripeService {
 
   private truckService: TruckService;
 
-  public constructor(
-    stripeRepository: StripeRepository,
-    businessService: BusinessService,
-    truckService: TruckService,
-  ) {
+  private mapService: MapService;
+
+  public constructor({
+    stripeRepository,
+    businessService,
+    truckService,
+    mapService,
+  }: StripeServiceProperties) {
     this.stripeRepository = stripeRepository;
     this.businessService = businessService;
     this.truckService = truckService;
+    this.mapService = mapService;
   }
 
   public async generateExpressAccountLink(
@@ -106,8 +119,6 @@ class StripeService {
 
   public async generateCheckoutLink(
     order: OrderEntity,
-    shift: ShiftEntity,
-    distance: number,
   ): Promise<string | null> {
     const business = await this.businessService.findById(order.businessId);
 
@@ -118,7 +129,18 @@ class StripeService {
       });
     }
 
-    const truck = await this.truckService.findById(shift.truckId);
+    if (!order.truck) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.TRUCK_DOES_NOT_EXIST,
+      });
+    }
+    const truck = await this.truckService.findById(order.truck.id);
+
+    const distanceInMeters = await this.mapService.getDistance(
+      order.startPoint,
+      order.endPoint,
+    );
 
     if (!truck) {
       throw new HttpError({
@@ -143,7 +165,7 @@ class StripeService {
 
     return await this.stripeRepository.createCheckoutSession({
       businessStripeId: business.stripeId,
-      distance,
+      distance: convertMetersToKm(distanceInMeters.value),
       pricePerUnit: truck.pricePerKm,
       metadata,
     });

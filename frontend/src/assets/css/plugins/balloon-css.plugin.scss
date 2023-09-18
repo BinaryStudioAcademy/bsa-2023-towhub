@@ -1,0 +1,30 @@
+@use "sass:color";
+
+@import "../vars.scss";
+@import "balloon-css/src/balloon.scss";
+
+:root [aria-label][data-balloon-pos] {
+  --balloon-border-radius: 4px;
+  --balloon-color: #{color.adjust($red-dark, $lightness: -10%)};
+  --balloon-font-size: 16px;
+  --balloon-move: 30px;
+  --balloon-text-color: #{$white};
+
+  &::before {
+    right: 8px;
+    z-index: 11;
+  }
+
+  &::after {
+    right: 4px;
+    max-width: calc(100% - 8px);
+    font-weight: $font-weight-regular;
+    font-family: $font-family;
+    white-space: normal;
+    box-shadow: 0 3px 6px 0 #{color.adjust(
+        $red-dark,
+        $lightness: - 30%,
+        $alpha: - 0.5
+      )};
+  }
+}

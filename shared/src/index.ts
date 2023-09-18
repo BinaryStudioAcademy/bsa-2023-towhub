@@ -12,7 +12,12 @@ export {
   HttpError,
   ValidationError,
 } from './libs/exceptions/exceptions.js';
-export { configureString } from './libs/helpers/helpers.js';
+export {
+  configureString,
+  filesize,
+  getFullName,
+  pluralizeString,
+} from './libs/helpers/helpers.js';
 export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
 export { type GeolocationLatLng } from './libs/packages/geolocation/geolocation.js';
 export {
@@ -30,7 +35,6 @@ export {
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
-  type CapitalizeEnum,
   type EntityPagination,
   type ErrorConstructor,
   type Id,
@@ -85,12 +89,30 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
+  type DeleteFileRequestParameters,
+  type FileEntityT,
+  type FileInputConfig,
+  type FileUploadResponseDto,
+  type GetFileRequestParameters,
+  type UpdateFileKeyRequestDto,
+  type UpdateFileKeyRequestParameters,
+  checkValidFileName,
+  fileInputDefaultsConfig,
+  FilesApiPath,
+  filesDeleteRequestParameters,
+  filesGetRequestParameters,
+  filesUpdateKeyRequestBody,
+  filesUpdateKeyRequestParameters,
+} from './packages/files/files.js';
+export {
+  type DriverInfo,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderCreateResponseDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
+  type OrderResponseDto,
   type OrderUpdateRequestDto,
-  type OrderUpdateResponseDto,
   ORDER_STATUSES,
   orderCreateRequestBody,
   orderGetParameter,
@@ -124,6 +146,7 @@ export {
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
+  TruckCarsQuantity,
   truckCreateRequestBody,
   truckGetParameters,
   TruckLicensePlateNumber,
@@ -144,10 +167,8 @@ export {
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
-  type UserGroupEntityObjectT,
   type UserGroupEntityT,
   type UserGroupKeyT,
-  type UserGroupNameT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
   businessSignUpValidationSchema,

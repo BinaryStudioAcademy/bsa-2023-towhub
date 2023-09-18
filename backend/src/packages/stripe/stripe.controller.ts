@@ -127,8 +127,6 @@ class StripeController extends Controller {
   ): Promise<ApiHandlerResponse> {
     const result = await this.stripeService.generateCheckoutLink(
       options.body.order,
-      options.body.shift,
-      options.body.distance,
     );
 
     return {

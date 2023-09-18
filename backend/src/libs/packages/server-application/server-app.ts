@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import fastifyAuth from '@fastify/auth';
 import cors from '@fastify/cors';
+import fastifyMultipart from '@fastify/multipart';
 import fastifyStatic from '@fastify/static';
 import swagger, { type StaticDocumentSpec } from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
@@ -28,6 +29,7 @@ import {
   type ValidationSchema,
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
+import { filesValidationPlugin } from '~/packages/files/files.js';
 import { stripeRepository } from '~/packages/stripe/stripe.js';
 import { userService } from '~/packages/users/users.js';
 
@@ -37,7 +39,10 @@ import {
   type IServerApp,
   type IServerAppApi,
 } from './libs/interfaces/interfaces.js';
-import { type ServerAppRouteParameters } from './libs/types/types.js';
+import {
+  type ServerAppRouteParameters,
+  type ValidateFilesStrategyOptions,
+} from './libs/types/types.js';
 
 type Constructor = {
   config: IConfig;
@@ -67,7 +72,31 @@ class ServerApp implements IServerApp {
   }
 
   public addRoute(parameters: ServerAppRouteParameters): void {
-    const { path, method, handler, validation, authStrategy } = parameters;
+    const {
+      path,
+      method,
+      handler,
+      validation,
+      authStrategy,
+      validateFilesStrategy,
+    } = parameters;
+
+    const preHandler: preHandlerHookHandler[] = [];
+
+    if (authStrategy) {
+      const authStrategyHandler = this.resolveAuthStrategy(authStrategy);
+
+      if (authStrategyHandler) {
+        preHandler.push(authStrategyHandler);
+      }
+    }
+
+    if (validateFilesStrategy) {
+      preHandler.push(
+        this.resolveFileValidationStrategy(validateFilesStrategy),
+      );
+    }
+
     const schema: FastifySchema = {};
 
     if (validation?.body) {
@@ -86,11 +115,19 @@ class ServerApp implements IServerApp {
       url: path,
       method,
       handler,
-      preHandler: this.resolveAuthStrategy(authStrategy),
+      preHandler,
       schema,
     });
 
     this.logger.info(`Route: ${method as string} ${path} is registered`);
+  }
+
+  private resolveFileValidationStrategy(
+    validateFilesStrategy: ValidateFilesStrategyOptions,
+  ): preHandlerHookHandler {
+    const { strategy, filesInputConfig } = validateFilesStrategy;
+
+    return this.app[strategy](filesInputConfig);
   }
 
   private resolveAuthStrategy(
@@ -245,6 +282,8 @@ class ServerApp implements IServerApp {
         it.buildFullPath(ApiPath.STRIPE + StripeApiPath.WEBHOOK),
       ),
     });
+    await this.app.register(fastifyMultipart);
+    await this.app.register(filesValidationPlugin);
   }
 
   public async init(): Promise<void> {
