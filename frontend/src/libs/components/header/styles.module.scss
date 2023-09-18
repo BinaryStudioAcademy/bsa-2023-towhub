@@ -18,6 +18,16 @@
   width: 186px;
 }
 
-.btn {
+.button {
   padding-inline: 60px;
+}
+
+.navMenu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.welcome {
+  color: $white;
 }
