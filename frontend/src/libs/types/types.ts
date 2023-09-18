@@ -18,7 +18,6 @@ export {
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
-  type ServerErrorResponseKeys,
   type ServerValidationErrorResponse,
   type TruckEntity,
   type TruckTowType,
