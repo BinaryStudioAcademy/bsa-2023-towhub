@@ -22,8 +22,8 @@ import {
 } from '../socket/libs/enums/enums.js';
 import { type ServerToClientEvents } from '../socket/libs/types/types.js';
 import { socket } from '../socket/socket.js';
-import { type ExtraArguments } from '../store/libs/types/extra-arguments.type.js';
 import { type RootReducer } from '../store/libs/types/root-reducer.type.js';
+import { type ExtraArguments } from '../store/libs/types/store.types.js';
 
 const socketInstance = socket.getInstance();
 

@@ -22,8 +22,7 @@ import { mapServiceFactory } from '../map/map-service-factory.js';
 import { socketMiddleware } from '../middleware/socket.middleware.js';
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
-import { type ExtraArguments } from './libs/types/extra-arguments.type.js';
-import { type RootReducer } from './libs/types/root-reducer.type.js';
+import { type ExtraArguments, type RootReducer } from './libs/types/types.js';
 
 class Store {
   public instance: ReturnType<

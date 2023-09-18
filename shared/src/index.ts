@@ -14,6 +14,7 @@ export {
 export {
   configureString,
   filesize,
+  getFullName,
   pluralizeString,
 } from './libs/helpers/helpers.js';
 export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
@@ -35,7 +36,6 @@ export {
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
-  type CapitalizeEnum,
   type EntityPagination,
   type ErrorConstructor,
   type Id,
@@ -157,10 +157,8 @@ export {
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
-  type UserGroupEntityObjectT,
   type UserGroupEntityT,
   type UserGroupKeyT,
-  type UserGroupNameT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
   businessSignUpValidationSchema,
