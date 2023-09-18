@@ -2,8 +2,8 @@ import { Form } from '~/libs/components/components.js';
 import { orderCreateRequestBody } from '~/packages/orders/orders.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 
-import { CREATE_ORDER_DEFAULT_PAYLOAD } from './libs/constants.js';
 import { getOrderFormFields } from './libs/fields.js';
+import { getCreateOrderDefaultPayload } from './libs/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -34,7 +34,7 @@ const OrderForm: React.FC<Properties> = ({
       <Form
         validationSchema={orderCreateRequestBody}
         fields={getOrderFormFields(onStartLocationChange, onEndLocationChange)}
-        defaultValues={{ ...CREATE_ORDER_DEFAULT_PAYLOAD, truckId }}
+        defaultValues={getCreateOrderDefaultPayload(truckId)}
         onSubmit={onSubmit}
         isDisabled={isDisabled}
         btnLabel="ORDER"

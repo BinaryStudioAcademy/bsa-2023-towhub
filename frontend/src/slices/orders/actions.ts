@@ -25,8 +25,8 @@ const createOrder = createAsyncThunk<
     notification.success('Order successfully created');
 
     return result;
-  } catch (error) {
-    notification.warning(getErrorMessage(error));
+  } catch (error: unknown) {
+    notification.error(getErrorMessage(error));
     throw error;
   }
 });

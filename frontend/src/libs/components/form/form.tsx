@@ -65,6 +65,10 @@ const renderField = <T extends FieldValues = FieldValues>({
     case 'number':
     case 'text':
     case 'email':
+    case 'password': {
+      return <Input {...field} control={control} errors={errors} />;
+    }
+
     case 'file': {
       const { label } = field;
 
@@ -85,9 +89,7 @@ const renderField = <T extends FieldValues = FieldValues>({
     case 'location': {
       return <LocationInput {...field} control={control} errors={errors} />;
     }
-    case 'password': {
-      return <Input {...field} control={control} errors={errors} />;
-    }
+
     default: {
       return <Input {...field} control={control} errors={errors} />;
     }

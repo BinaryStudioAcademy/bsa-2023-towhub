@@ -1,12 +1,10 @@
 import { TowTruckCard } from '~/libs/components/components.js';
 import { Map } from '~/libs/components/map/map.js';
-import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppSelector,
   useCallback,
   useEffect,
-  useNavigate,
   useState,
 } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
@@ -15,12 +13,13 @@ import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 import { actions as orderActions, selectPrice } from '~/slices/orders/order.js';
 import { selectChosenTruck } from '~/slices/trucks/selectors.js';
 
+import { NotFound } from '../not-found/not-found.js';
 import { OrderForm } from './libs/components/order-form.js';
 import styles from './styles.module.scss';
 
 const libraries: Libraries = ['places'];
 
-const Order: React.FC = () => {
+const Order = (): JSX.Element => {
   const [startAddress, setStartAddress] = useState<string>();
   const [endAddress, setEndAddress] = useState<string>();
   const [startLocation, setStartLocation] =
@@ -28,14 +27,9 @@ const Order: React.FC = () => {
   const [endLocation, setEndLocation] = useState<google.maps.LatLngLiteral>();
 
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const chosenTruck = useAppSelector(selectChosenTruck);
   const price = useAppSelector(selectPrice);
-
-  if (!chosenTruck) {
-    navigate(AppRoute.ROOT);
-  }
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((location) => {
@@ -71,46 +65,40 @@ const Order: React.FC = () => {
     [setEndLocation],
   );
 
+  if (!chosenTruck) {
+    return <NotFound />;
+  }
+
   return (
     <section className={styles.page}>
       <LoadScript
         googleMapsApiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
         libraries={libraries}
       >
-        {chosenTruck && (
-          <>
-            <div className={styles.left}>
-              <TowTruckCard
-                truck={chosenTruck}
-                // TODO: REMOVE MOCK
-                rating={{ reviewCount: 5, averageRating: 4.3 }}
-                distance={250}
-                hasFooter={false}
-              />
-              <OrderForm
-                onSubmit={handleSubmit}
-                onStartLocationChange={handleLocatonChange}
-                onEndLocationChange={handleDestinationChange}
-                truckId={chosenTruck.id}
-                isDisabled={!chosenTruck}
-              >
-                <div className={styles.price}>
-                  <span>Price:</span>
-                  <span>${price}</span>
-                </div>
-              </OrderForm>
+        <div className={styles.left}>
+          <TowTruckCard truck={chosenTruck} distance={250} hasFooter={false} />
+          <OrderForm
+            onSubmit={handleSubmit}
+            onStartLocationChange={handleLocatonChange}
+            onEndLocationChange={handleDestinationChange}
+            truckId={chosenTruck.id}
+            isDisabled={!chosenTruck}
+          >
+            <div className={styles.price}>
+              <span>Price:</span>
+              <span>${price}</span>
             </div>
-            <div className={styles.right}>
-              <Map
-                center={startLocation}
-                destination={endLocation}
-                pricePerKm={chosenTruck.pricePerKm}
-                startAddress={startAddress}
-                endAddress={endAddress}
-              />
-            </div>
-          </>
-        )}
+          </OrderForm>
+        </div>
+        <div className={styles.right}>
+          <Map
+            center={startLocation}
+            destination={endLocation}
+            pricePerKm={chosenTruck.pricePerKm}
+            startAddress={startAddress}
+            endAddress={endAddress}
+          />
+        </div>
       </LoadScript>
     </section>
   );

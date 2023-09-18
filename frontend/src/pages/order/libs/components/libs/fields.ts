@@ -1,9 +1,12 @@
 import { type FormField } from '~/libs/types/form.type.js';
+import { type LocationChangeHandler } from '~/libs/types/location-change-handler.type.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 
+import { TruckCarsQuantity } from './enums.js';
+
 const getOrderFormFields = (
-  onStartChange: (place: google.maps.LatLngLiteral, address: string) => void,
-  onEndChange: (place: google.maps.LatLngLiteral, address: string) => void,
+  onStartChange: LocationChangeHandler,
+  onEndChange: LocationChangeHandler,
 ): FormField<OrderCreateRequestDto>[] => [
   { label: 'Name', name: 'customerName' },
   { label: 'Phone', name: 'customerPhone' },
@@ -24,6 +27,8 @@ const getOrderFormFields = (
     label: 'How many cars need to be towed',
     name: 'carsQty',
     type: 'number',
+    min: TruckCarsQuantity.MIN,
+    max: TruckCarsQuantity.MAX,
   },
 ];
 

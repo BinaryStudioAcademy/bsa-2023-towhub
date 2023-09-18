@@ -1,6 +1,6 @@
 const OrdersApiPath = {
   ROOT: '',
-  CALCULATE_PRICE: '/calculatePrice',
+  CALCULATE_PRICE: '/calculate-price',
   $ID: '/:id',
 } as const;
 

@@ -1,7 +1,8 @@
 import { TRUCK_IMG_HEIGHT, TRUCK_IMG_WIDTH } from '../constants/constants.js';
 
-const calculateRad = (rotationAngle: number): number =>
-  (rotationAngle * Math.PI) / 180;
+const calculateRad = (rotationAngle: number): number => {
+  return (rotationAngle * Math.PI) / 180;
+};
 
 const rotateCanvas = (
   canvas: HTMLCanvasElement,

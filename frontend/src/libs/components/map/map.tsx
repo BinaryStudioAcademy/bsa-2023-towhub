@@ -10,7 +10,6 @@ const DEFAULT_ZOOM = 16;
 type Properties = {
   center?: google.maps.LatLngLiteral;
   zoom?: number;
-  origin?: google.maps.LatLngLiteral;
   destination?: google.maps.LatLngLiteral;
   className?: string;
   pricePerKm?: number;

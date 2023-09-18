@@ -2,10 +2,12 @@ import truckImg from '~/assets/img/tow-truck.png';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 
 import {
+  TRUCK_IMG_ANCHOR_X,
+  TRUCK_IMG_ANCHOR_Y,
   TRUCK_IMG_HEIGHT,
   TRUCK_IMG_WIDTH,
 } from './libs/constants/constants.js';
-import { rotateImg } from './libs/helpers/rotate-img.js';
+import { rotateImg } from './libs/helpers/rotate-img.helper.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
 import mapStyle from './map.config.json';
 
@@ -40,6 +42,9 @@ class MapService implements IMapService {
       center,
       zoom,
       styles: mapStyle as google.maps.MapTypeStyle[],
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false,
     });
   }
 
@@ -134,23 +139,20 @@ class MapService implements IMapService {
     origin: google.maps.LatLngLiteral,
   ): number {
     const [firstRoute] = response.routes;
-
-    let nextPoint = null;
-
     const [firstLeg] = firstRoute.legs;
-
     const [firstStep, secondStep] = firstLeg.steps;
 
-    firstLeg.steps.length > 1
-      ? (nextPoint = secondStep.start_location)
-      : (nextPoint = firstStep.end_location);
+    const nextPoint =
+      firstLeg.steps.length > 1
+        ? secondStep.start_location
+        : firstStep.end_location;
 
     return google.maps.geometry.spherical.computeHeading(origin, nextPoint);
   }
 
   public addMarker(
     position: google.maps.LatLngLiteral,
-    origin = false,
+    isOrigin = false,
     angle = 0,
   ): void {
     this.throwIfMapNotInitialized();
@@ -160,12 +162,12 @@ class MapService implements IMapService {
     new google.maps.Marker({
       position,
       map: this.map,
-      icon: origin
+      icon: isOrigin
         ? {
             url: rotatedIconUrl,
             anchor: new google.maps.Point(
-              TRUCK_IMG_WIDTH / 2,
-              TRUCK_IMG_HEIGHT / 2,
+              TRUCK_IMG_ANCHOR_X,
+              TRUCK_IMG_ANCHOR_Y,
             ),
             size: new google.maps.Size(TRUCK_IMG_WIDTH, TRUCK_IMG_HEIGHT),
             scale: 1,
