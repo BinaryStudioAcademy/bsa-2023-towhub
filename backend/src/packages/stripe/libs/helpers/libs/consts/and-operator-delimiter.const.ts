@@ -1,0 +1,3 @@
+const AND_OPERATOR_DELIMITER = ' AND ';
+
+export { AND_OPERATOR_DELIMITER };

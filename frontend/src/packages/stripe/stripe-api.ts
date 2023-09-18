@@ -1,3 +1,8 @@
+import {
+  type GetPaymentsRequest,
+  type GetPaymentsResponse,
+} from 'shared/build/index.js';
+
 import { ApiPath, ContentType } from '~/libs/enums/enums.js';
 import { HttpApi } from '~/libs/packages/api/api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
@@ -46,6 +51,22 @@ class StripeApi extends HttpApi {
     const decoded = await response.json<{ result: string }>();
 
     return decoded.result;
+  }
+
+  public async getPayments(
+    payload: GetPaymentsRequest,
+  ): Promise<GetPaymentsResponse> {
+    const response = await this.load(
+      this.getFullEndpoint(StripeApiPath.REQUEST_BUSINESS_PAYMENTS, {}),
+      {
+        method: 'POST',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+        payload: JSON.stringify(payload),
+      },
+    );
+
+    return await response.json<GetPaymentsResponse>();
   }
 }
 

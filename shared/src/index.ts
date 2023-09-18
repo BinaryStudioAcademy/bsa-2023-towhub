@@ -36,6 +36,7 @@ export {
   type Id,
   type NullableProperties,
   type OperationResult,
+  type Paginated,
   type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
@@ -109,7 +110,11 @@ export {
   ShiftValidationMessage,
 } from './packages/shifts/shifts.js';
 export {
+  type CheckoutMetadata,
   type GenerateCheckoutLinkRequest,
+  type GetPaymentsRequest,
+  type GetPaymentsResponse,
+  type PaymentDto,
   type SetupPaymentFormData,
   connectStripeValidationSchema,
   StripeApiPath,

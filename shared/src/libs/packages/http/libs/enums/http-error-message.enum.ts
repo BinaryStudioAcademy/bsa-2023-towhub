@@ -9,6 +9,7 @@ const HttpMessage = {
   NAME_ALREADY_REGISTERED: 'Business with such name already exists!',
   INVALID_USER_GROUP: 'User of the group cannot create or update this!',
   BUSINESS_DOES_NOT_EXIST: 'Business does not exist!',
+  TRUCK_DOES_NOT_EXIST: 'Truck does not exist!',
   DRIVER_DOES_NOT_EXIST: 'Driver does not exist!',
   LICENSE_NUMBER_ALREADY_EXISTS:
     'Driver with such license number already exists!',

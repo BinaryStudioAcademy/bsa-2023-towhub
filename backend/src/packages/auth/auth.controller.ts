@@ -67,6 +67,7 @@ class AuthController extends Controller {
         this.signIn(
           options as ApiHandlerOptions<{
             body: UserSignInRequestDto;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });

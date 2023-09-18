@@ -1,3 +1,5 @@
+import { type GetPaymentsResponse } from 'shared/build/index.js';
+
 import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
@@ -8,8 +10,12 @@ import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
+import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { StripeApiPath } from './libs/enums/enums.js';
-import { type GenerateCheckoutLinkRequest } from './libs/types/types.js';
+import {
+  type GenerateCheckoutLinkRequest,
+  type GetPaymentsRequest,
+} from './libs/types/types.js';
 import { type WebhookBody } from './libs/types/webhook-body.type.js';
 import { type StripeService } from './stripe.service.js';
 
@@ -17,18 +23,17 @@ class StripeController extends Controller {
   private stripeService: StripeService;
 
   public constructor(logger: ILogger, stripeService: StripeService) {
-    const defaultStrategy = [
-      AuthStrategy.VERIFY_JWT,
-      AuthStrategy.VERIFY_BUSINESS_GROUP,
-    ];
-
-    super(logger, ApiPath.STRIPE, defaultStrategy);
+    super(logger, ApiPath.STRIPE);
 
     this.stripeService = stripeService;
 
     this.addRoute({
       path: StripeApiPath.GENERATE_EXPRESS_ACCOUNT_LINK,
       method: 'GET',
+      authStrategy: [
+        AuthStrategy.VERIFY_JWT,
+        AuthStrategy.VERIFY_BUSINESS_GROUP,
+      ],
       handler: (options) => this.generateExpressAccountLink(options),
     });
 
@@ -51,6 +56,22 @@ class StripeController extends Controller {
         this.generateCheckoutLink(
           options as ApiHandlerOptions<{
             body: GenerateCheckoutLinkRequest;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: StripeApiPath.REQUEST_BUSINESS_PAYMENTS,
+      method: 'POST',
+      authStrategy: [
+        AuthStrategy.VERIFY_JWT,
+        AuthStrategy.VERIFY_BUSINESS_GROUP,
+      ],
+      handler: (options) =>
+        this.getPayments(
+          options as ApiHandlerOptions<{
+            body: GetPaymentsRequest;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -91,9 +112,7 @@ class StripeController extends Controller {
       body: WebhookBody;
     }>,
   ): Promise<ApiHandlerResponse> {
-    await this.stripeService.processWebhookEvent(
-      options.body.stripeWebhookEvent,
-    );
+    await this.stripeService.processWebhook(options.body.stripeWebhookEvent);
 
     return {
       status: HttpCode.OK,
@@ -106,14 +125,32 @@ class StripeController extends Controller {
       body: GenerateCheckoutLinkRequest;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const result = await this.stripeService.createCheckoutSession(
-      options.user.id,
-      options.body,
+    const result = await this.stripeService.generateCheckoutLink(
+      options.body.order,
+      options.body.shift,
+      options.body.distance,
     );
 
     return {
       status: HttpCode.OK,
       payload: { result },
+    };
+  }
+
+  private async getPayments(
+    options: ApiHandlerOptions<{
+      body: GetPaymentsRequest;
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse<GetPaymentsResponse>> {
+    const result = await this.stripeService.getPayments(
+      options.user,
+      options.body,
+    );
+
+    return {
+      status: HttpCode.OK,
+      payload: result,
     };
   }
 }

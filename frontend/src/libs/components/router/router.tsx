@@ -26,6 +26,7 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.WELCOME} element={<WelcomePage />} />
         <Route path={AppRoute.SIGN_IN} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP} element={<Auth />} />
+        <Route path={AppRoute.CHECKOUT} element={<CheckoutPage />} />
       </Route>
       <Route
         path={AppRoute.ROOT}
@@ -36,14 +37,6 @@ const Router = (): JSX.Element => {
           element={
             <PageLayout isSidebarHidden>
               <SetupPayment />
-            </PageLayout>
-          }
-        />
-        <Route
-          path={AppRoute.CHECKOUT}
-          element={
-            <PageLayout isSidebarHidden>
-              <CheckoutPage />
             </PageLayout>
           }
         />

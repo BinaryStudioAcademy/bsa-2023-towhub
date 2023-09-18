@@ -1,11 +1,6 @@
 {
   "extends": "../tsconfig.json",
-  "include": [
-    "src",
-    "react-component.d.ts",
-    "../shared/src/packages/business/libs/types/setup-payment-form-data.type.ts",
-    "../shared/src/packages/business/libs/validation-schemas/connect-stripe.validation-schema.ts"
-  ],
+  "include": ["src", "react-component.d.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ESNext",

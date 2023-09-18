@@ -1,8 +1,13 @@
 import { Button, Input } from '~/libs/components/components.js';
-import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
+import { useAppForm, useAppSelector, useCallback } from '~/libs/hooks/hooks.js';
 import { stripeApi } from '~/packages/stripe/stripe.js';
+import { selectUser } from '~/slices/auth/selectors.js';
 
-import { type CheckoutFormData } from './libs/types/types.js';
+import {
+  type CheckoutFormData,
+  type OrderEntity,
+  type ShiftEntity,
+} from './libs/types/types.js';
 import styles from './styles.module.scss';
 
 const CheckoutForm: React.FC = () => {
@@ -10,14 +15,43 @@ const CheckoutForm: React.FC = () => {
     defaultValues: { distance: 0, pricePerUnit: 10 },
   });
 
+  const user = useAppSelector(selectUser);
+
   const handleFormSubmit = useCallback(
     (event_: React.BaseSyntheticEvent): void => {
       void handleSubmit(async (payload) => {
-        const url = await stripeApi.generateCheckoutLink(payload);
+        const order: OrderEntity = {
+          id: 321,
+          price: payload.distance * payload.pricePerUnit,
+          scheduledTime: '',
+          carsQty: 1,
+          startPoint: '',
+          endPoint: '',
+          status: 'pending',
+          userId: user?.id ?? null,
+          businessId: 4,
+          driverId: 123,
+          customerName: 'Test user',
+          customerPhone: '+380671111111',
+        };
+
+        const shift: ShiftEntity = {
+          id: 0,
+          driverId: 123,
+          startDate: new Date(Date.now() - 10_000),
+          endDate: new Date(Date.now()),
+          truckId: 1,
+        };
+
+        const url = await stripeApi.generateCheckoutLink({
+          order,
+          shift,
+          distance: payload.distance,
+        });
         window.location.href = url;
       })(event_);
     },
-    [handleSubmit],
+    [handleSubmit, user?.id],
   );
 
   return (

@@ -1,5 +1,7 @@
-import { type GenerateCheckoutLinkRequest } from '~/packages/stripe/types/types.js';
-
-type CheckoutFormData = GenerateCheckoutLinkRequest;
+type CheckoutFormData = {
+  distance: number;
+  pricePerUnit: number;
+};
 
 export { type CheckoutFormData };
+export { type OrderEntity, type ShiftEntity } from 'shared/build/index.js';
