@@ -10,7 +10,7 @@ import {
   type DriverCreateUpdateRequestDto,
   driverCreateUpdateRequestBody,
 } from '~/packages/drivers/drivers.js';
-import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
+import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { DEFAULT_ADD_DRIVER_PAYLOAD } from './libs/constants.js';
 import { addDriverFields as initialAddDriverFields } from './libs/fields.js';
@@ -25,7 +25,10 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
 
   const trucks = useAppSelector((state) => state.trucks.trucks);
 
-  useEffect(() => void dispatch(findAllTrucksForBusiness()), [dispatch]);
+  useEffect(
+    () => void dispatch(truckActions.getTruckForBusiness()),
+    [dispatch],
+  );
 
   const truckOptions = trucks.map((truck) => ({
     label: truck.licensePlateNumber,

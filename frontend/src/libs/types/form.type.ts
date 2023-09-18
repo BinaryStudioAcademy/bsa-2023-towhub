@@ -19,7 +19,7 @@ type FormField<T extends FieldValues> = {
   max?: number;
   currency?: string;
   step?: number;
-  id?: number;
+  fieldId?: number;
 };
 
 export { type FormField };
