@@ -47,11 +47,7 @@ const Map: React.FC<Properties> = ({
         void mapService.current.calculateRouteAndTime(center, destination);
       }
     }
-  }, [
-    center,
-    zoom,
-    destination,
-  ]);
+  }, [center, zoom, destination]);
 
   useEffect(() => {
     if (pricePerKm && startAddress && endAddress) {
