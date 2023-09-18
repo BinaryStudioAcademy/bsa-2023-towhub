@@ -1,6 +1,7 @@
 export {
   TruckApiPath,
   TruckCapacity,
+  TruckCarsQuantity,
   TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
