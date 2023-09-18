@@ -31,6 +31,7 @@ export { Spinner } from './spinner/spinner.js';
 export { StarRating } from './star-rating/star-rating.jsx';
 export { Table } from './table/table.js';
 export { Toggle } from './toggle/toggle.js';
+export { TowTruckCard } from './tow-truck-card/tow-truck-card.js';
 export { TruckFilter } from './truck-filter/truck-filter.js';
 export { Provider as StoreProvider } from 'react-redux';
 export { Outlet as RouterOutlet } from 'react-router-dom';

@@ -1,23 +1,54 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { type OrderResponseDto } from 'shared/build/index.js';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import {
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
+  type OrderCreateRequestDto,
+  type OrderResponseDto,
+} from '~/packages/orders/orders.js';
 
-import { name as sliceName } from './orders.slice.js';
+import { name as sliceName } from './order.slice.js';
 
 const getOrders = createAsyncThunk<
   OrderResponseDto[],
   undefined,
   AsyncThunkConfig
->(`${sliceName}/orders`, async (thunkAPI, { extra, rejectWithValue }) => {
-  try {
-    const { orderApi } = extra;
+>(`${sliceName}/orders`, async (_, { extra }) => {
+  const { ordersApi } = extra;
 
-    return await orderApi.getOrders();
+  return await ordersApi.getOrders();
+});
+
+const createOrder = createAsyncThunk<
+  OrderResponseDto,
+  OrderCreateRequestDto,
+  AsyncThunkConfig
+>(`${sliceName}/create-order`, async (payload, { extra }) => {
+  const { ordersApi } = extra;
+
+  try {
+    const result = await ordersApi.createOrder(payload);
+
+    notification.success('Order successfully created');
+
+    return result;
   } catch (error: unknown) {
-    return rejectWithValue(getErrorMessage(error));
+    notification.error(getErrorMessage(error));
+    throw error;
   }
 });
 
-export { getOrders };
+const calculateOrderPrice = createAsyncThunk<
+  OrderCalculatePriceResponseDto,
+  OrderCalculatePriceRequestDto,
+  AsyncThunkConfig
+>(`${sliceName}/calculateOrderPrice`, (payload, { extra }) => {
+  const { ordersApi } = extra;
+
+  return ordersApi.calculatePrice(payload);
+});
+
+export { calculateOrderPrice, createOrder, getOrders };

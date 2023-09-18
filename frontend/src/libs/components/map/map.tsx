@@ -1,17 +1,15 @@
-import { Status, Wrapper } from '@googlemaps/react-wrapper';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
+import { MapService } from '~/libs/packages/map/map.js';
+import { actions as orderActions } from '~/slices/orders/order.js';
 
-import { useCallback } from '~/libs/hooks/hooks.js';
-import { config } from '~/libs/packages/config/config.js';
+import styles from './styles.module.scss';
 
-import { Spinner } from '../components.js';
-import { MapInnerComponent } from './map-inner-component/map-inner-component.js';
-
-const apiMapKey = config.ENV.API.GOOGLE_MAPS_API_KEY;
+const DEFAULT_ZOOM = 16;
 
 type Properties = {
-  center: google.maps.LatLngLiteral;
-  zoom: number;
-  origin?: google.maps.LatLngLiteral;
+  center?: google.maps.LatLngLiteral;
+  zoom?: number;
   destination?: google.maps.LatLngLiteral;
   className?: string;
   markers?: google.maps.LatLngLiteral[];
@@ -19,27 +17,56 @@ type Properties = {
     startPoint: google.maps.LatLngLiteral;
     endPoint: google.maps.LatLngLiteral;
   };
+  pricePerKm?: number;
+  startAddress?: string;
+  endAddress?: string;
+  onPriceChange?: (price: number) => void;
 };
 
-const Map: React.FC<Properties> = ({ ...mapProperties }) => {
-  const renderMap = useCallback(
-    (status: Status): React.ReactElement => {
-      switch (status) {
-        case Status.LOADING: {
-          return <Spinner />;
-        }
-        case Status.FAILURE: {
-          return <div>Error loading Google Maps</div>;
-        }
-        case Status.SUCCESS: {
-          return <MapInnerComponent {...mapProperties} />;
-        }
-      }
-    },
-    [mapProperties],
-  );
+const Map: React.FC<Properties> = ({
+  center,
+  zoom = DEFAULT_ZOOM,
+  className,
+  destination,
+  pricePerKm,
+  startAddress,
+  endAddress,
+}: Properties) => {
+  const mapReference = useRef<HTMLDivElement>(null);
+  const mapService = useRef<MapService | null>(null);
+  const mapClasses = getValidClassNames(styles.map, className);
 
-  return <Wrapper apiKey={apiMapKey} render={renderMap} />;
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (mapReference.current) {
+      mapService.current = new MapService({
+        mapElement: mapReference.current,
+        center,
+        zoom,
+      });
+
+      if (center && destination) {
+        mapService.current.addMarker(destination);
+
+        void mapService.current.calculateRouteAndTime(center, destination);
+      }
+    }
+  }, [center, zoom, destination]);
+
+  useEffect(() => {
+    if (pricePerKm && startAddress && endAddress) {
+      void dispatch(
+        orderActions.calculateOrderPrice({
+          startAddress,
+          endAddress,
+          pricePerKm,
+        }),
+      );
+    }
+  }, [dispatch, endAddress, startAddress, pricePerKm]);
+
+  return <div ref={mapReference} id="map" className={mapClasses} />;
 };
 
 export { Map };
