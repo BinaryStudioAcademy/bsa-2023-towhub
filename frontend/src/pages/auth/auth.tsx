@@ -5,6 +5,7 @@ import {
   useAppDispatch,
   useAuthNavigate,
   useCallback,
+  useEffect,
   useLocation,
 } from '~/libs/hooks/hooks.js';
 import {
@@ -14,6 +15,7 @@ import {
 import {
   actions as authActions,
   useAuthServerError,
+  useAuthUser,
 } from '~/slices/auth/auth.js';
 
 import { SignInForm, SignUpForm } from './components/components.js';
@@ -29,11 +31,9 @@ const Auth: React.FC = () => {
 
   const handleSignInSubmit = useCallback(
     (payload: UserSignInRequestDto): void => {
-      void dispatch(authActions.signIn(payload))
-        .unwrap()
-        .then((user) => navigateAuthUser(user));
+      void dispatch(authActions.signIn(payload));
     },
-    [dispatch, navigateAuthUser],
+    [dispatch],
   );
 
   const handleSignUpSubmit = useCallback(
@@ -43,12 +43,16 @@ const Auth: React.FC = () => {
           ? AuthMode.BUSINESS
           : AuthMode.CUSTOMER;
 
-      void dispatch(authActions.signUp({ payload, mode }))
-        .unwrap()
-        .then((user) => navigateAuthUser(user));
+      void dispatch(authActions.signUp({ payload, mode }));
     },
-    [dispatch, location, navigateAuthUser],
+    [dispatch, location],
   );
+
+  const user = useAuthUser();
+
+  if (user) {
+    navigateAuthUser(user);
+  }
 
   const getScreen = useCallback((): React.ReactNode => {
     switch (location.pathname) {
