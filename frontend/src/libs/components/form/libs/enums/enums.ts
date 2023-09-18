@@ -1,1 +1,1 @@
-export { ServerErrorSymbol } from './server-error-symbol.js';
+export { ServerErrorSymbol } from './server-error-symbol.enum.js';
