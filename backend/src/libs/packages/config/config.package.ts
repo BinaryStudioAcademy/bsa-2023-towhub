@@ -172,7 +172,7 @@ class Config implements IConfig {
           doc: 'Truck list update interval',
           format: Number,
           env: 'TRUCK_LIST_UPDATE_INTERVAL',
-          default: 1000,
+          default: 10_000,
         },
       },
       API: {
