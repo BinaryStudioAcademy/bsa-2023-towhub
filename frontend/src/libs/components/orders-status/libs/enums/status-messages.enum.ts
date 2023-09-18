@@ -5,7 +5,7 @@ const STATUS_MESSAGES = {
   [OrderStatus.CANCELED]:
     'The order has been canceled, please select another vehicle',
   [OrderStatus.CONFIRMED]: 'Driver on the way! Approximate waiting time:',
-  [OrderStatus.PICKING_UP]: 'The driver has arrived,please, pay your order!',
+  [OrderStatus.PICKING_UP]: 'The driver has arrived, please, pay your order!',
   [OrderStatus.DONE]: 'Thank you for your order!',
 };
 

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "prebuild": "npm install",
-    "lint:css": "npx stylelint \"src/**/*.scss\"",
+    "lint:css": "npx stylelint \"src/**/*.scss\" --fix",
     "lint:js": "npx eslint \"src/**/*.{ts,tsx}\"",
     "lint:type": "npx tsc --noEmit",
     "stylelint:fix": "npx stylelint \"src/**/*.scss\" --fix",

@@ -227,7 +227,10 @@ class OrderService implements Omit<IService, 'find'> {
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     };
 
-    return OrderEntity.initialize(orderExtended).toObject();
+    const order = OrderEntity.initialize(orderExtended).toObject();
+    this.socketService.notifyOrderUpdate(order.id, order);
+
+    return order;
   }
 
   public async findAllBusinessOrders(
@@ -262,12 +265,6 @@ class OrderService implements Omit<IService, 'find'> {
     }
 
     return await this.orderRepository.delete(id);
-  }
-
-  private listenForTruckPositionUpdate(id: OrderEntityT['id']): void {
-    //
-    id;
-    // this.socketService.getIo().on(ClientSocketEvent.TRUCK_LOCATION_UPDATE,);
   }
 
   private verifyOrderBelongsToDriver(

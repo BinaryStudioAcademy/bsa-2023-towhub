@@ -103,18 +103,9 @@ const OrderStatusPage: React.FC = () => {
       <OrderStatus
         className={getValidClassNames(styles.status, styles.statusTop)}
       />
-      {!cancelScreen && !doneScreen && (
+      {truckLocation && !cancelScreen && !doneScreen && (
         <section className={styles.mapSection}>
-          <Map
-            center={
-              truckLocation ?? {
-                lat: 0,
-                lng: 0,
-              }
-            }
-            zoom={13}
-            className={styles.map}
-          />
+          <Map center={truckLocation} zoom={15} className={styles.map} />
         </section>
       )}
       <section className={styles.cardSection}>
