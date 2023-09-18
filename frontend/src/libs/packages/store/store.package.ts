@@ -13,7 +13,7 @@ import { filesApi } from '~/packages/files/files.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
-import { reducer as driversTableReducer } from '~/slices/drivers/drivers.js';
+import { reducer as drivers } from '~/slices/drivers/drivers.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
@@ -23,7 +23,7 @@ import { LocalStorage } from '../storage/storage.js';
 type RootReducer = {
   auth: ReturnType<typeof authReducer>;
   trucks: ReturnType<typeof truckReducer>;
-  driversTable: ReturnType<typeof driversTableReducer>;
+  drivers: ReturnType<typeof drivers>;
   files: ReturnType<typeof filesReducer>;
 };
 
@@ -52,7 +52,7 @@ class Store {
       reducer: {
         auth: authReducer,
         trucks: truckReducer,
-        driversTable: driversTableReducer,
+        drivers: drivers,
         files: filesReducer,
       },
       middleware: (getDefaultMiddleware) => {

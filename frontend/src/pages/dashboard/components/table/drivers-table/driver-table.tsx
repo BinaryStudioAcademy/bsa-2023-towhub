@@ -6,6 +6,7 @@ import {
   useAppSelector,
   useAppTable,
   useCallback,
+  useQueryParameters,
   useState,
 } from '~/libs/hooks/hooks.js';
 import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
@@ -19,15 +20,19 @@ import styles from './styles.module.scss';
 
 const DriverTable: React.FC = () => {
   const dispatch = useAppDispatch();
-
-  const data = useAppSelector((state) => state.driversTable.drivers);
-  const total = useAppSelector((state) => state.driversTable.total);
-  const status = useAppSelector((state) => state.driversTable.dataStatus);
+  const { getQueryParameters } = useQueryParameters();
+  const data = useAppSelector((state) => state.drivers.drivers);
+  const total = useAppSelector((state) => state.drivers.total);
+  const status = useAppSelector((state) => state.drivers.dataStatus);
+  const initialSize = getQueryParameters('size') as string | null;
+  const initialPage = getQueryParameters('page') as string | null;
 
   const [isActiveModal, setIsActiveModal] = useState(false);
 
   const tableHook = useAppTable<DriverGetAllResponseDto>({
     tableFetchCall: getDriversPage,
+    initialPageIndex: initialPage ? +initialPage : undefined,
+    initialPageSize: initialSize ? +initialSize : undefined,
   });
 
   const handleOpenModal = useCallback(() => {
@@ -40,27 +45,33 @@ const DriverTable: React.FC = () => {
 
   const handleSubmit = useCallback(
     (payload: DriverCreateUpdateRequestDto) => {
-      void dispatch(actions.addDriver({ payload })).then(tableHook.updatePage);
+      void (async (): Promise<void> => {
+        const size = getQueryParameters('size') as string;
+        const page = getQueryParameters('page') as string;
+        await dispatch(actions.addDriver({ payload }));
+        await dispatch(actions.getDriversPage({ page: +page, size: +size }));
+      })();
       setIsActiveModal(false);
     },
-    [dispatch, tableHook],
+    [dispatch, getQueryParameters],
   );
 
   return (
     <div className={styles.container}>
       <h2 className={getValidClassNames('h3', styles.title)}>Drivers Table</h2>
-      <Button
-        label="Add a driver"
-        frontIcon="plus"
-        className={styles.btn}
-        onClick={handleOpenModal}
-      />
       <Table
         {...tableHook}
         data={data}
         totalRow={total}
         columns={columns}
         isLoading={status === DataStatus.PENDING}
+        emptyTableMessage="add new driver"
+      />
+      <Button
+        label="Add a driver"
+        frontIcon="plus"
+        className={styles.btn}
+        onClick={handleOpenModal}
       />
       <Modal isOpen={isActiveModal} isCentered onClose={handleCloseModal}>
         <div className={styles.formWrapper}>

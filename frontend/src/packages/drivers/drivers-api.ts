@@ -6,7 +6,7 @@ import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 
 import {
   type DriverAddPayload,
-  type DriverCreateUpdateRequestDto,
+  type DriverAddResponseWithGroup,
   type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 
@@ -42,7 +42,7 @@ class DriverApi extends HttpApi {
   }: Omit<
     DriverAddPayload,
     'businessId'
-  >): Promise<DriverCreateUpdateRequestDto> {
+  >): Promise<DriverAddResponseWithGroup> {
     const data = await this.load(
       this.getFullEndpoint(`${ApiPath.DRIVERS}`, {}),
       {
@@ -53,7 +53,7 @@ class DriverApi extends HttpApi {
       },
     );
 
-    return await data.json<DriverCreateUpdateRequestDto>();
+    return await data.json<DriverAddResponseWithGroup>();
   }
 }
 

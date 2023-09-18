@@ -76,6 +76,7 @@ export {
 } from './packages/business/business.js';
 export {
   type DriverAddPayload,
+  type DriverAddResponseWithGroup,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverEntity,

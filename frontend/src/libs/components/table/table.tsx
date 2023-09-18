@@ -17,6 +17,7 @@ type Properties<T> = {
   data: T[];
   isLoading?: boolean;
   columns: ColumnDef<T>[];
+  emptyTableMessage?: string;
   pageSize: number;
   totalRow: number;
   pageIndex: number;
@@ -33,6 +34,7 @@ const Table = <T,>({
   isLoading = false,
   changePageIndex,
   changePageSize,
+  emptyTableMessage,
 }: Properties<T>): JSX.Element => {
   const pagesRange = Math.ceil(totalRow / pageSize);
   const table = useReactTable({
@@ -57,6 +59,19 @@ const Table = <T,>({
     },
     [changePageSize, table, changePageIndex],
   );
+
+  if (data.length === 0) {
+    return emptyTableMessage ? (
+      <div className={getValidClassNames('h3', styles.message)}>
+        There are no data here yet. Please,{' '}
+        <span className={styles.red}>{emptyTableMessage}</span>
+      </div>
+    ) : (
+      <div className={getValidClassNames('h3', styles.message)}>
+        There are no data here yet.
+      </div>
+    );
+  }
 
   const createThead = (): JSX.Element => (
     <thead className={styles.thead}>

@@ -9,6 +9,7 @@ export {
   type DriverUpdateDeleteRequestParameters,
 } from './request/request.js';
 export {
+  type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
 } from './response/response.js';

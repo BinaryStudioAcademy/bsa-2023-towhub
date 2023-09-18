@@ -1,5 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ServerErrorType } from 'shared/build/index.js';
+import {
+  type DriverAddResponseWithGroup,
+  ServerErrorType,
+} from 'shared/build/index.js';
 
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import { type AsyncThunkConfig } from '~/libs/types/async-thunk-config.type';
@@ -7,7 +10,6 @@ import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 import { DriverCreationMessage } from '~/packages/drivers/libs/enums/enums.js';
 import {
   type DriverAddPayload,
-  type DriverCreateUpdateRequestDto,
   type GetPaginatedPageQuery,
 } from '~/packages/drivers/libs/types/types.js';
 
@@ -22,7 +24,7 @@ const getDriversPage = createAsyncThunk<
 });
 
 const addDriver = createAsyncThunk<
-  DriverCreateUpdateRequestDto,
+  DriverAddResponseWithGroup,
   Omit<DriverAddPayload, 'businessId'>,
   AsyncThunkConfig
 >(ACTIONS_TYPES.ADD_DRIVER, async (payload, { rejectWithValue, extra }) => {

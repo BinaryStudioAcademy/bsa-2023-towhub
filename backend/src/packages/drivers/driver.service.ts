@@ -18,6 +18,7 @@ import {
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
+import { type UserGroupEntityT } from '../users/libs/types/types.js';
 import { type UserService } from '../users/user.service.js';
 import { convertToDriverUser } from './libs/helpers/helpers.js';
 
@@ -116,7 +117,9 @@ class DriverService implements IService {
         message: HttpMessage.DRIVER_ALREADY_EXISTS,
       });
     }
-    const group = await this.groupService.findByKey(UserGroupKey.DRIVER);
+    const group = (await this.groupService.findByKey(
+      UserGroupKey.DRIVER,
+    )) as UserGroupEntityT | null;
 
     if (!group) {
       throw new HttpError({

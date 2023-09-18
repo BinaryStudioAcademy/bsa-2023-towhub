@@ -8,6 +8,16 @@
   gap: 20px;
 }
 
+.message {
+  margin-top: 100px;
+  color: $title-color;
+  text-align: center;
+}
+
+.red {
+  color: $red;
+}
+
 .table {
   background-color: rgb(248 246 246);
   border-radius: 8px;
