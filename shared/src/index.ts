@@ -105,6 +105,8 @@ export {
 } from './packages/files/files.js';
 export {
   type DriverInfo,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
@@ -134,6 +136,7 @@ export {
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
+  TruckCarsQuantity,
   truckCreateRequestBody,
   truckGetParameters,
   TruckLicensePlateNumber,

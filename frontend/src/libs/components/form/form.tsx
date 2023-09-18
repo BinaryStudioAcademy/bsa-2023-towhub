@@ -21,6 +21,7 @@ import { FileInput } from '../file-input/file-input.js';
 import { fileInputDefaultsConfig } from '../file-input/libs/config/config.js';
 import { type FileFormType } from '../file-input/libs/types/types.js';
 import { Input } from '../input/input.jsx';
+import { LocationInput } from '../location-input/location-input.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
@@ -28,7 +29,9 @@ type Properties<T extends FieldValues> = {
   defaultValues: DeepPartial<T>;
   validationSchema: ValidationSchema;
   btnLabel?: string;
+  isDisabled?: boolean;
   onSubmit: (payload: T) => void;
+  additionalFields?: JSX.Element;
 };
 
 type Parameters<T extends FieldValues = FieldValues> = {
@@ -46,28 +49,24 @@ const renderField = <T extends FieldValues = FieldValues>({
   setError,
   clearErrors,
 }: Parameters<T>): JSX.Element => {
-  const { options, name, label } = field;
-
   switch (field.type) {
     case 'dropdown': {
       return (
         <DropdownInput
-          options={options ?? []}
-          name={name}
+          {...field}
+          options={field.options ?? []}
           control={control}
           errors={errors}
-          label={label}
         />
       );
     }
     case 'multi-select': {
       return (
         <DropdownMultiSelect
-          options={options ?? []}
-          name={name}
+          {...field}
+          options={field.options ?? []}
           control={control}
           errors={errors}
-          label={label}
         />
       );
     }
@@ -77,7 +76,10 @@ const renderField = <T extends FieldValues = FieldValues>({
     case 'password': {
       return <Input {...field} control={control} errors={errors} />;
     }
+
     case 'file': {
+      const { label } = field;
+
       return (
         <FileInput
           setError={setError as unknown as UseFormSetError<FileFormType>}
@@ -92,6 +94,10 @@ const renderField = <T extends FieldValues = FieldValues>({
         />
       );
     }
+    case 'location': {
+      return <LocationInput {...field} control={control} errors={errors} />;
+    }
+
     default: {
       return <Input {...field} control={control} errors={errors} />;
     }
@@ -103,6 +109,8 @@ const Form = <T extends FieldValues = FieldValues>({
   defaultValues,
   validationSchema,
   btnLabel,
+  additionalFields,
+  isDisabled,
   onSubmit,
 }: Properties<T>): JSX.Element => {
   const { control, errors, handleSubmit, setError, clearErrors } =
@@ -120,7 +128,7 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
-      <div key={(field.id = index)}>
+      <div key={field.fieldId ?? index}>
         {renderField({ field, control, errors, setError, clearErrors })}
       </div>
     ));
@@ -129,7 +137,13 @@ const Form = <T extends FieldValues = FieldValues>({
   return (
     <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
-      <Button type="submit" label={btnLabel ?? 'Submit'} isFullWidth />
+      {additionalFields}
+      <Button
+        type="submit"
+        label={btnLabel ?? 'Submit'}
+        isDisabled={isDisabled}
+        isFullWidth
+      />
     </form>
   );
 };

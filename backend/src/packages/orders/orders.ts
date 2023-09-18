@@ -3,6 +3,7 @@ import { logger } from '~/libs/packages/logger/logger.js';
 
 import { businessService } from '../business/business.js';
 import { driverService } from '../drivers/drivers.js';
+import { mapService } from '../map/map.js';
 import { shiftService } from '../shifts/shift.js';
 import { truckService } from '../trucks/trucks.js';
 import { userService } from '../users/users.js';
@@ -22,6 +23,7 @@ const orderService = new OrderService({
 const orderController = new OrderController({
   logger,
   orderService,
+  mapService,
 });
 
 export { orderController, orderService };

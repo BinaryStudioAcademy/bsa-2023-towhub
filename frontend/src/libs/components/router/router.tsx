@@ -6,6 +6,7 @@ import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
 import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
+import { Order } from '~/pages/order/order.js';
 import { WelcomePage } from '~/pages/welcome/welcome.js';
 
 import { PageLayout, ProtectedRoute } from '../components.js';
@@ -24,6 +25,7 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.WELCOME} element={<WelcomePage />} />
         <Route path={AppRoute.SIGN_IN} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP} element={<Auth />} />
+        <Route path={AppRoute.ORDER} element={<Order />} />
       </Route>
       <Route
         path={AppRoute.ROOT}

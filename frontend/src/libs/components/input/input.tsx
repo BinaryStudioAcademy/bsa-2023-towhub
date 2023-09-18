@@ -5,6 +5,7 @@ import {
   type FieldValues,
 } from 'react-hook-form';
 
+import { type InputType } from '~/libs/enums/enums.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
@@ -12,6 +13,7 @@ import {
   useFormController,
   useState,
 } from '~/libs/hooks/hooks.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
 import { Icon } from '../components.js';
 import styles from './styles.module.scss';
@@ -22,14 +24,7 @@ type Properties<T extends FieldValues> = {
   label?: string;
   name: FieldPath<T>;
   placeholder?: string;
-  type?:
-    | 'text'
-    | 'email'
-    | 'password'
-    | 'number'
-    | 'dropdown'
-    | 'multi-select'
-    | 'file';
+  type?: ValueOf<typeof InputType>;
   isDisabled?: boolean;
   min?: number;
   max?: number;

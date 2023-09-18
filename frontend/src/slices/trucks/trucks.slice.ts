@@ -1,4 +1,4 @@
-import { createSlice, isAnyOf } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
@@ -9,19 +9,28 @@ import { addTruck, getTruckForBusiness } from './actions.js';
 type State = {
   trucks: TruckEntity[];
   userTruckMap: Record<number, number[]>;
+  chosenTruck: (TruckEntity & { driverId: number }) | null;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
 const initialState: State = {
   trucks: [],
   userTruckMap: {},
+  chosenTruck: null,
   dataStatus: DataStatus.IDLE,
 };
 
 const { reducer, actions, name } = createSlice({
   initialState,
   name: 'trucks',
-  reducers: {},
+  reducers: {
+    setChosenTruck: (
+      state,
+      action: PayloadAction<TruckEntity & { driverId: number }>,
+    ) => {
+      state.chosenTruck = action.payload;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(addTruck.fulfilled, (state, action) => {
