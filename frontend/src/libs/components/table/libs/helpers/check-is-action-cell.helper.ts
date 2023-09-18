@@ -1,22 +1,29 @@
 const EDIT_ICON_POSITION_FROM_RIGHT = 2;
 const DELETE_ICON_POSITION_FROM_RIGHT = 1;
 
+type Arguments = {
+  isTableEditable: boolean;
+  index: number;
+  totalCellsInRow: number;
+};
+
 type CheckIsIconCell = {
   isEditCell: boolean;
   isDeleteCell: boolean;
 };
 
-const checkIsActionCell = (
-  isTableEditable: boolean,
-  index: number,
-  arrayLength: number,
-): CheckIsIconCell => {
+const checkIsActionCell = ({
+  isTableEditable,
+  index,
+  totalCellsInRow,
+}: Arguments): CheckIsIconCell => {
   return {
     isEditCell:
-      isTableEditable && index === arrayLength - EDIT_ICON_POSITION_FROM_RIGHT,
+      isTableEditable &&
+      index === totalCellsInRow - EDIT_ICON_POSITION_FROM_RIGHT,
     isDeleteCell:
       isTableEditable &&
-      index === arrayLength - DELETE_ICON_POSITION_FROM_RIGHT,
+      index === totalCellsInRow - DELETE_ICON_POSITION_FROM_RIGHT,
   };
 };
 

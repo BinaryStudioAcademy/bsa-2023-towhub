@@ -1,4 +1,5 @@
 import { type Table } from '@tanstack/react-table';
+import { type RowData } from '@tanstack/table-core/src/types';
 
 import { Icon } from '~/libs/components/components.js';
 import { IconName } from '~/libs/enums/enums.js';
@@ -15,7 +16,7 @@ type Properties<T> = {
   onDeleteClick?: (rowId: string) => void;
 };
 
-const Tbody = <T,>({
+const Tbody = <T extends RowData>({
   table,
   isTableEditable = false,
   ...properties
@@ -24,11 +25,11 @@ const Tbody = <T,>({
     {table.getRowModel().rows.map((row) => (
       <tr key={row.id} className={styles.tr}>
         {row.getVisibleCells().map((cell, index, array) => {
-          const { isEditCell, isDeleteCell } = checkIsActionCell(
+          const { isEditCell, isDeleteCell } = checkIsActionCell({
             isTableEditable,
             index,
-            array.length,
-          );
+            totalCellsInRow: array.length,
+          });
           const shouldAddIconToCell = isEditCell || isDeleteCell;
           const iconToDisplay = isEditCell ? IconName.EDIT : IconName.TRASH;
 
@@ -46,7 +47,7 @@ const Tbody = <T,>({
               }}
               onClick={getCellClickHandler({
                 index,
-                arrayLength: array.length,
+                totalCellsInRow: array.length,
                 isTableEditable,
                 ...properties,
               })?.bind(null, row.id)}

@@ -1,8 +1,8 @@
 import { checkIsActionCell } from './check-is-action-cell.helper.js';
 
-type Parameters = {
+type Arguments = {
   index: number;
-  arrayLength: number;
+  totalCellsInRow: number;
   isTableEditable: boolean;
   onEditClick?: (rowId: string) => void;
   onDeleteClick?: (rowId: string) => void;
@@ -10,15 +10,19 @@ type Parameters = {
 
 const getCellClickHandler = ({
   index,
-  arrayLength,
+  totalCellsInRow,
   isTableEditable = false,
   onEditClick,
   onDeleteClick,
-}: Parameters): typeof onEditClick | typeof onDeleteClick => {
+}: Arguments): typeof onEditClick | typeof onDeleteClick => {
   if (!isTableEditable) {
     return;
   }
-  const { isEditCell } = checkIsActionCell(isTableEditable, index, arrayLength);
+  const { isEditCell } = checkIsActionCell({
+    isTableEditable,
+    index,
+    totalCellsInRow,
+  });
 
   if (isEditCell) {
     return onEditClick;

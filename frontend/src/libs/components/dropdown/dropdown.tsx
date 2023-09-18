@@ -31,23 +31,41 @@ type Properties<T extends FieldValues> = {
   isCustomValueContainer?: boolean;
 };
 
-const getClassNames = (
-  isMenuOpen: boolean,
-  isCustomValueContainer: boolean,
-): ClassNamesConfig<SelectOption, false, GroupBase<SelectOption>> => ({
-  container: () => styles.container,
-  control: () => styles.control,
-  option: () => styles.option,
-  menu: () => styles.singleValue,
-  placeholder: () => styles.placeholder,
-  singleValue: () => styles.singleValue,
-  valueContainer: () => (isCustomValueContainer ? '' : styles.valueContainer),
-  dropdownIndicator: () =>
-    isMenuOpen
-      ? getValidClassNames(styles.dropdownIndicator, styles.upside)
-      : styles.dropdownIndicator,
-  indicatorSeparator: () => styles.indicatorSeparator,
-});
+type GetClassNamesArguments = {
+  isMenuOpen: boolean;
+  isCustomValueContainer: boolean;
+};
+
+const getClassNames = ({
+  isMenuOpen,
+  isCustomValueContainer,
+}: GetClassNamesArguments): ClassNamesConfig<
+  SelectOption,
+  false,
+  GroupBase<SelectOption>
+> => {
+  const commonStylesConfig: ClassNamesConfig<
+    SelectOption,
+    false,
+    GroupBase<SelectOption>
+  > = {
+    container: () => styles.container,
+    control: () => styles.control,
+    option: () => styles.option,
+    menu: () => styles.singleValue,
+    placeholder: () => styles.placeholder,
+    singleValue: () => styles.singleValue,
+    dropdownIndicator: () =>
+      isMenuOpen
+        ? getValidClassNames(styles.dropdownIndicator, styles.upside)
+        : styles.dropdownIndicator,
+    indicatorSeparator: () => styles.indicatorSeparator,
+  };
+
+  return isCustomValueContainer
+    ? commonStylesConfig
+    : { ...commonStylesConfig, valueContainer: () => styles.valueContainer };
+};
 
 const Dropdown = <T extends FieldValues>({
   options,
@@ -71,7 +89,7 @@ const Dropdown = <T extends FieldValues>({
   }, []);
 
   const classNamesConfig = useMemo(
-    () => getClassNames(isMenuOpen, isCustomValueContainer),
+    () => getClassNames({ isMenuOpen, isCustomValueContainer }),
     [isMenuOpen, isCustomValueContainer],
   );
 

@@ -1,4 +1,5 @@
 import { type Table } from '@tanstack/react-table';
+import { type RowData } from '@tanstack/table-core/src/types';
 
 import { Icon } from '~/libs/components/components.js';
 import { IconName } from '~/libs/enums/enums.js';
@@ -11,7 +12,7 @@ type Properties<T> = {
   table: Table<T>;
 };
 
-const Thead = <T,>({ table }: Properties<T>): JSX.Element => (
+const Thead = <T extends RowData>({ table }: Properties<T>): JSX.Element => (
   <thead className={styles.thead}>
     {table.getHeaderGroups().map((headerGroup) => (
       <tr key={headerGroup.id} className={styles.tr}>

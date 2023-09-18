@@ -1,6 +1,6 @@
 import { type ColumnDef } from '~/libs/types/types.js';
 
-type addIconsToData<T> = {
+type AddIconsToData<T> = {
   data: T[];
   columns: ColumnDef<T>[];
 };
@@ -8,7 +8,7 @@ type addIconsToData<T> = {
 const addIconsToData = <T>(
   data: T[],
   columns: ColumnDef<T>[],
-): addIconsToData<T> => {
+): AddIconsToData<T> => {
   const columnsWithIcons = [
     ...columns,
     {
