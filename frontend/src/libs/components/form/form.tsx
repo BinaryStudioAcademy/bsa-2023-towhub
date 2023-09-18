@@ -20,6 +20,7 @@ import { FileInput } from '../file-input/file-input.js';
 import { fileInputDefaultsConfig } from '../file-input/libs/config/config.js';
 import { type FileFormType } from '../file-input/libs/types/types.js';
 import { Input } from '../input/input.jsx';
+import { LocationInput } from '../location-input/location-input.js';
 import { handleServerError } from './libs/helpers/handle-server-error.helper.js';
 import styles from './styles.module.scss';
 
@@ -28,8 +29,10 @@ type Properties<T extends FieldValues> = {
   defaultValues: DeepPartial<T>;
   validationSchema: ValidationSchema;
   btnLabel?: string;
+  isDisabled?: boolean;
   onSubmit: (payload: T) => void;
   serverError?: ServerErrorHandling;
+  additionalFields?: JSX.Element;
 };
 
 type RenderFieldProperties<T extends FieldValues = FieldValues> = {
@@ -49,10 +52,10 @@ const renderField = <T extends FieldValues = FieldValues>({
   clearErrors,
   clearServerError,
 }: RenderFieldProperties<T>): JSX.Element => {
-  const { options, name, label } = field;
-
   switch (field.type) {
     case 'dropdown': {
+      const { options, name, label } = field;
+
       return (
         <DropdownInput
           options={options ?? []}
@@ -77,7 +80,10 @@ const renderField = <T extends FieldValues = FieldValues>({
         />
       );
     }
+
     case 'file': {
+      const { label } = field;
+
       return (
         <FileInput
           setError={setError as unknown as UseFormSetError<FileFormType>}
@@ -92,6 +98,10 @@ const renderField = <T extends FieldValues = FieldValues>({
         />
       );
     }
+    case 'location': {
+      return <LocationInput {...field} control={control} errors={errors} />;
+    }
+
     default: {
       return (
         <Input
@@ -110,6 +120,8 @@ const Form = <T extends FieldValues = FieldValues>({
   defaultValues,
   validationSchema,
   btnLabel,
+  additionalFields,
+  isDisabled,
   onSubmit,
   serverError,
 }: Properties<T>): JSX.Element => {
@@ -152,7 +164,13 @@ const Form = <T extends FieldValues = FieldValues>({
   return (
     <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
-      <Button type="submit" label={btnLabel ?? 'Submit'} isFullWidth />
+      {additionalFields}
+      <Button
+        type="submit"
+        label={btnLabel ?? 'Submit'}
+        isDisabled={isDisabled}
+        isFullWidth
+      />
     </form>
   );
 };

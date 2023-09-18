@@ -9,6 +9,7 @@ const AppRoute = {
   EDIT_PROFILE: '/edit-profile',
   TRUCKS: '/trucks',
   DASHBOARD: '/dashboard',
+  ORDER: '/order',
 } as const;
 
 export { AppRoute };

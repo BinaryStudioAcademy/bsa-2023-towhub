@@ -6,6 +6,8 @@ import {
 
 import { type HttpMessage } from '~/libs/enums/enums.js';
 
+import { type InputType } from '../enums/input-type.enum.js';
+import { type LocationChangeHandler } from './location-change-handler.type.js';
 import { type SelectOption } from './select-option.type.js';
 import { type ValueOf } from './types.js';
 
@@ -22,7 +24,7 @@ type ErrorDescriptor =
   | KnownErrorMessages;
 
 type FormField<T extends FieldValues> = {
-  type?: 'text' | 'email' | 'password' | 'number' | 'dropdown' | 'file';
+  type?: ValueOf<typeof InputType>;
   label: string;
   placeholder?: string;
   name: FieldPath<T>;
@@ -32,6 +34,7 @@ type FormField<T extends FieldValues> = {
   currency?: string;
   step?: number;
   id?: number;
+  onLocationChange?: LocationChangeHandler;
   associateServerErrors?: ErrorDescriptor[];
 };
 

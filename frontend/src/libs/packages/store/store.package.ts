@@ -9,10 +9,12 @@ import { AppEnvironment } from '~/libs/enums/enums.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { authApi } from '~/packages/auth/auth.js';
 import { filesApi } from '~/packages/files/files.js';
+import { ordersApi } from '~/packages/orders/orders.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
+import { reducer as orderReducer } from '~/slices/orders/order.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { notification } from '../notification/notification.js';
@@ -35,6 +37,7 @@ class Store {
         auth: authReducer,
         trucks: truckReducer,
         files: filesReducer,
+        orders: orderReducer,
       },
       middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({
@@ -53,6 +56,7 @@ class Store {
       filesApi,
       notification,
       truckApi,
+      ordersApi,
       localStorage: LocalStorage,
     };
   }

@@ -50,11 +50,12 @@ const SignUpForm: React.FC<Properties> = ({
           onSubmit={onSubmit}
           btnLabel="Create Account"
           fields={signUpBusinessFields}
+          serverError={serverError}
         />
       )}
 
       <p className={getValidClassNames('textSm', styles.text)}>
-        Already have an account? Go to
+        Already have an account? Go to{' '}
         <Link to={AppRoute.SIGN_IN} className={styles.link}>
           Sign in
         </Link>

@@ -102,6 +102,7 @@ class AuthService {
   public async signUpCustomer(
     payload: CustomerSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupT> {
+    await this.checkIsExistingUser(payload);
     const group = await this.groupService.findByKey(UserGroupKey.CUSTOMER);
 
     if (!group) {
