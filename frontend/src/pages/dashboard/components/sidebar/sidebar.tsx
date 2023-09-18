@@ -31,7 +31,7 @@ const Sidebar: React.FC<Properties> = ({
     >
       <ul className={styles.list}>
         {TABS.map((tab) => (
-          <li key={tab.name}>
+          <li className={styles.item} key={tab.name}>
             <Button
               label={isCollapsed ? '' : tab.name}
               className={[
@@ -39,7 +39,6 @@ const Sidebar: React.FC<Properties> = ({
                 styles.btn,
                 { [styles.active]: selectedTab === tab.name },
               ]}
-              frontIcon={tab.icon}
               variant="text"
               onClick={handleTabClick(tab.name)}
             >
