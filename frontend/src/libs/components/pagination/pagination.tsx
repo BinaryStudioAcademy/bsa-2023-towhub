@@ -126,7 +126,7 @@ const Pagination: React.FC<Properties> = ({
           onClick={handlePreviousClick}
           isDisabled={isFirstPage}
         />
-        {isHiddenFirstPage ? (
+        {isHiddenFirstPage && (
           <>
             <Button
               className={styles.btn}
@@ -136,9 +136,9 @@ const Pagination: React.FC<Properties> = ({
             ></Button>
             <div className={styles.dots}>...</div>
           </>
-        ) : null}
+        )}
         {showButtons()}
-        {isHiddenLastPage ? (
+        {isHiddenLastPage && (
           <>
             <div className={styles.dots}>...</div>
             <Button
@@ -148,7 +148,7 @@ const Pagination: React.FC<Properties> = ({
               onClick={handlePageClick}
             ></Button>
           </>
-        ) : null}
+        )}
         <Button
           className={styles['text-btn']}
           label="Next"
@@ -164,7 +164,7 @@ const Pagination: React.FC<Properties> = ({
           <Dropdown
             options={createOptions([5, 10, 20, 50, 100])}
             defaultValue={createOption(pageSize)}
-            isValueCustomized
+            isCustomValueContainer
             onChange={handleChangePageSize}
           />
         </div>

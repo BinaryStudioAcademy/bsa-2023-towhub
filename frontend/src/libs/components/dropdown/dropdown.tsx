@@ -28,12 +28,12 @@ type Properties<T extends FieldValues> = {
   placeholder?: string;
   field?: ControllerRenderProps<T, FieldPath<T>>;
   className?: string;
-  isValueCustomized?: boolean;
+  isCustomValueContainer?: boolean;
 };
 
 const getClassNames = (
   isMenuOpen: boolean,
-  isValueCustomized: boolean,
+  isCustomValueContainer: boolean,
 ): ClassNamesConfig<SelectOption, false, GroupBase<SelectOption>> => ({
   container: () => styles.container,
   control: () => styles.control,
@@ -41,7 +41,7 @@ const getClassNames = (
   menu: () => styles.singleValue,
   placeholder: () => styles.placeholder,
   singleValue: () => styles.singleValue,
-  valueContainer: () => (isValueCustomized ? '' : styles.valueContainer),
+  valueContainer: () => (isCustomValueContainer ? '' : styles.valueContainer),
   dropdownIndicator: () =>
     isMenuOpen
       ? getValidClassNames(styles.dropdownIndicator, styles.upside)
@@ -58,7 +58,7 @@ const Dropdown = <T extends FieldValues>({
   onChange,
   className,
   placeholder,
-  isValueCustomized = false,
+  isCustomValueContainer = false,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -71,8 +71,8 @@ const Dropdown = <T extends FieldValues>({
   }, []);
 
   const classNamesConfig = useMemo(
-    () => getClassNames(isMenuOpen, isValueCustomized),
-    [isMenuOpen, isValueCustomized],
+    () => getClassNames(isMenuOpen, isCustomValueContainer),
+    [isMenuOpen, isCustomValueContainer],
   );
 
   const findOptionByValue = (
