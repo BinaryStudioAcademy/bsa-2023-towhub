@@ -1,4 +1,4 @@
-import { name as sliceName } from '~/slices/orders/orders.slice.js';
+import { name as sliceName } from '~/slices/orders/order.slice.js';
 
 const ActionNames = {
   CHANGE_ACCEPT_ORDER_STATUS: `${sliceName}/vhange-accept-order-status`,

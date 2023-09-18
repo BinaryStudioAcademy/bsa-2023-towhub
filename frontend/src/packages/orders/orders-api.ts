@@ -5,9 +5,12 @@ import { type IStorage } from '~/libs/packages/storage/storage.js';
 
 import { OrdersApiPath } from './libs/enums/enums.js';
 import {
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderResponseDto,
   type OrderUpdateAcceptStatusRequestDto,
 } from './libs/types/types.js';
+import { type OrderCreateRequestDto } from './orders.js';
 
 type Constructor = {
   baseUrl: string;
@@ -15,9 +18,41 @@ type Constructor = {
   storage: IStorage;
 };
 
-class OrderApi extends HttpApi {
+class OrdersApi extends HttpApi {
   public constructor({ baseUrl, http, storage }: Constructor) {
     super({ path: ApiPath.ORDERS, baseUrl, http, storage });
+  }
+
+  public async createOrder(
+    payload: OrderCreateRequestDto,
+  ): Promise<OrderResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(OrdersApiPath.ROOT, {}),
+      {
+        method: 'POST',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: false,
+      },
+    );
+
+    return await response.json<OrderResponseDto>();
+  }
+
+  public async calculatePrice(
+    payload: OrderCalculatePriceRequestDto,
+  ): Promise<OrderCalculatePriceResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(OrdersApiPath.CALCULATE_PRICE, {}),
+      {
+        method: 'POST',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: false,
+      },
+    );
+
+    return await response.json<OrderCalculatePriceResponseDto>();
   }
 
   public async changeAcceptOrderStatus(
@@ -38,4 +73,4 @@ class OrderApi extends HttpApi {
   }
 }
 
-export { OrderApi };
+export { OrdersApi };

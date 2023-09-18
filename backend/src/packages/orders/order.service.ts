@@ -307,7 +307,7 @@ class OrderService implements Omit<IService, 'find'> {
   }): Promise<OrderResponseDto> {
     const acceptStatus = this.checkIsOrderAccepted(payload.isAccepted, user);
 
-    if (user && checkIsDriver(user.group.key as UserGroupKeyT)) {
+    if (user && checkIsDriver(user.group.key)) {
       await this.shiftService.checkDriverStartShift(user.id);
 
       return await this.update({
@@ -416,12 +416,9 @@ class OrderService implements Omit<IService, 'find'> {
     isAccepted: boolean,
     user: UserEntityObjectWithGroupT | null,
   ): OrderStatusValues {
-    if (user && checkIsDriver(user.group.key as UserGroupKeyT)) {
+    if (user && checkIsDriver(user.group.key)) {
       return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REFUSED;
-    } else if (
-      (!user || checkIsCustomer(user.group.key as UserGroupKeyT)) &&
-      !isAccepted
-    ) {
+    } else if ((!user || checkIsCustomer(user.group.key)) && !isAccepted) {
       return OrderStatus.CANCELED;
     } else {
       throw new NotFoundError({

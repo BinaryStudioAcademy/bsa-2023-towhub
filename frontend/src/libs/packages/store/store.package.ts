@@ -10,19 +10,18 @@ import { AppEnvironment } from '~/libs/enums/enums.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { authApi } from '~/packages/auth/auth.js';
 import { filesApi } from '~/packages/files/files.js';
-import { orderApi } from '~/packages/orders/orders.js';
+import { ordersApi } from '~/packages/orders/orders.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
-import { reducer as orderReducer } from '~/slices/orders/orders.js';
+import { reducer as orderReducer } from '~/slices/orders/order.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { socketMiddleware } from '../middleware/socket.middleware.js';
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
-import { type ExtraArguments } from './libs/types/extra-arguments.type.js';
-import { type RootReducer } from './libs/types/root-reducer.type.js';
+import { type ExtraArguments, type RootReducer } from './libs/types/types.js';
 
 class Store {
   public instance: ReturnType<
@@ -61,7 +60,7 @@ class Store {
       filesApi,
       notification,
       truckApi,
-      orderApi,
+      ordersApi,
       localStorage: LocalStorage,
     };
   }

@@ -1,18 +1,21 @@
 import { type Location } from 'react-router';
 
-import { type AuthMode, AppRoute } from '~/libs/enums/enums.js';
+import { AppRoute, AuthMode } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAuthNavigate,
   useCallback,
   useLocation,
 } from '~/libs/hooks/hooks.js';
-import { type ValueOf } from '~/libs/types/types.js';
 import {
   type CustomerSignUpRequestDto,
   type UserSignInRequestDto,
 } from '~/packages/users/users.js';
-import { actions as authActions } from '~/slices/auth/auth.js';
+import {
+  actions as authActions,
+  useAuthServerError,
+  useAuthUser,
+} from '~/slices/auth/auth.js';
 
 import { SignInForm, SignUpForm } from './components/components.js';
 import styles from './styles.module.scss';
@@ -21,45 +24,66 @@ const Auth: React.FC = () => {
   const dispatch = useAppDispatch();
   const { navigateAuthUser } = useAuthNavigate();
 
+  const serverError = useAuthServerError();
+
   const location: Location = useLocation();
-  const mode = location.state as ValueOf<typeof AuthMode>;
 
   const handleSignInSubmit = useCallback(
     (payload: UserSignInRequestDto): void => {
-      void dispatch(authActions.signIn(payload))
-        .unwrap()
-        .then((user) => {
-          navigateAuthUser(user);
-        });
+      void dispatch(authActions.signIn(payload));
     },
-    [dispatch, navigateAuthUser],
+    [dispatch],
   );
 
   const handleSignUpSubmit = useCallback(
     (payload: CustomerSignUpRequestDto): void => {
-      void dispatch(authActions.signUp({ payload, mode }))
-        .unwrap()
-        .then((user) => {
-          navigateAuthUser(user);
-        });
+      const mode =
+        location.pathname === AppRoute.SIGN_UP_BUSINESS
+          ? AuthMode.BUSINESS
+          : AuthMode.CUSTOMER;
+
+      void dispatch(authActions.signUp({ payload, mode }));
     },
-    [dispatch, mode, navigateAuthUser],
+    [dispatch, location],
   );
 
-  const getScreen = (screen: string): React.ReactNode => {
-    switch (screen) {
+  const user = useAuthUser();
+
+  if (user) {
+    navigateAuthUser(user);
+  }
+
+  const getScreen = useCallback((): React.ReactNode => {
+    switch (location.pathname) {
       case AppRoute.SIGN_IN: {
-        return <SignInForm onSubmit={handleSignInSubmit} />;
+        return (
+          <SignInForm onSubmit={handleSignInSubmit} serverError={serverError} />
+        );
       }
-      case AppRoute.SIGN_UP: {
-        return <SignUpForm onSubmit={handleSignUpSubmit} mode={mode} />;
+      case AppRoute.SIGN_UP_BUSINESS: {
+        return (
+          <SignUpForm
+            onSubmit={handleSignUpSubmit}
+            mode={AuthMode.BUSINESS}
+            serverError={serverError}
+          />
+        );
+      }
+      case AppRoute.SIGN_UP_CUSTOMER: {
+        return (
+          <SignUpForm
+            onSubmit={handleSignUpSubmit}
+            mode={AuthMode.CUSTOMER}
+            serverError={serverError}
+          />
+        );
       }
     }
 
     return null;
-  };
+  }, [handleSignInSubmit, handleSignUpSubmit, location.pathname, serverError]);
 
-  return <div className={styles.page}>{getScreen(location.pathname)}</div>;
+  return <div className={styles.page}>{getScreen()}</div>;
 };
 
 export { Auth };

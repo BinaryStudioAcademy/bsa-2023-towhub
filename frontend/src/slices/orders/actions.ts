@@ -1,12 +1,18 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
+import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import { type OrderUpdateAcceptStatusRequestDto } from '~/packages/orders/libs/types/types.js';
 import {
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
+  type OrderCreateRequestDto,
   type OrderResponseDto,
-  type OrderUpdateAcceptStatusRequestDto,
-} from '~/packages/orders/libs/types/types.js';
+} from '~/packages/orders/orders.js';
 
 import { ActionNames } from './libs/enums/enums.js';
+import { name as sliceName } from './order.slice.js';
 
 const changeAcceptOrderStatus = createAsyncThunk<
   OrderResponseDto,
@@ -15,9 +21,9 @@ const changeAcceptOrderStatus = createAsyncThunk<
 >(
   ActionNames.CHANGE_ACCEPT_ORDER_STATUS,
   ({ isAccepted, orderId }, { extra }) => {
-    const { orderApi } = extra;
+    const { ordersApi } = extra;
 
-    return orderApi.changeAcceptOrderStatus(orderId, { isAccepted });
+    return ordersApi.changeAcceptOrderStatus(orderId, { isAccepted });
   },
 );
 
@@ -47,8 +53,39 @@ const stopListenOrderUpdates = createAction(
   },
 );
 
+const createOrder = createAsyncThunk<
+  OrderResponseDto,
+  OrderCreateRequestDto,
+  AsyncThunkConfig
+>(`${sliceName}/create-order`, async (payload, { extra }) => {
+  const { ordersApi } = extra;
+
+  try {
+    const result = await ordersApi.createOrder(payload);
+
+    notification.success('Order successfully created');
+
+    return result;
+  } catch (error: unknown) {
+    notification.error(getErrorMessage(error));
+    throw error;
+  }
+});
+
+const calculateOrderPrice = createAsyncThunk<
+  OrderCalculatePriceResponseDto,
+  OrderCalculatePriceRequestDto,
+  AsyncThunkConfig
+>(`${sliceName}/calculateOrderPrice`, (payload, { extra }) => {
+  const { ordersApi } = extra;
+
+  return ordersApi.calculatePrice(payload);
+});
+
 export {
+  calculateOrderPrice,
   changeAcceptOrderStatus,
+  createOrder,
   listenOrderUpdates,
   stopListenOrderUpdates,
   updateOrderFromSocket,
