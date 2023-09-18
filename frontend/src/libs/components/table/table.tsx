@@ -1,5 +1,6 @@
 import { type OnChangeFn, type SortingState } from '@tanstack/react-table';
 
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   getCoreRowModel,
   getPaginationRowModel,
@@ -47,7 +48,6 @@ const Table = <T,>({
   changePageIndex,
   changePageSize,
   ...properties
-
 }: Properties<T>): JSX.Element => {
   const pagesRange = Math.ceil(totalRow / pageSize);
   const dataAndColumns = useMemo(() => {
@@ -80,23 +80,40 @@ const Table = <T,>({
     [changePageSize, table, changePageIndex],
   );
 
+  if (data.length === 0 && !isLoading) {
+    return emptyTableMessage ? (
+      <div className={getValidClassNames('h4', styles.message)}>
+        There are no data here yet. Please,{' '}
+        <span className={styles.red}>{emptyTableMessage}</span>
+      </div>
+    ) : (
+      <div className={getValidClassNames('h4', styles.message)}>
+        There are no data here yet.
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
-      <div className={styles.wrapper}>
-        <table
-          className={styles.table}
-          style={{
-            width: table.getCenterTotalSize(),
-          }}
-        >
-          <Thead table={table} />
-          <Tbody
-            table={table}
-            isTableEditable={isTableEditable}
-            {...properties}
-          />
-        </table>
-      </div>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className={styles.wrapper}>
+          <table
+            className={styles.table}
+            style={{
+              width: table.getCenterTotalSize(),
+            }}
+          >
+            <Thead table={table} />
+            <Tbody
+              table={table}
+              isTableEditable={isTableEditable}
+              {...properties}
+            />
+          </table>
+        </div>
+      )}
       <Pagination
         pageCount={pagesRange}
         onClick={changePageIndex}
