@@ -60,7 +60,7 @@ const Table = <T,>({
     [changePageSize, table, changePageIndex],
   );
 
-  if (data.length === 0) {
+  if (data.length === 0 && !isLoading) {
     return emptyTableMessage ? (
       <div className={getValidClassNames('h3', styles.message)}>
         There are no data here yet. Please,{' '}
