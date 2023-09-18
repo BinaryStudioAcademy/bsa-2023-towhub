@@ -19,6 +19,7 @@ export { Modal } from './modal/modal.js';
 export { Notification } from './notification/notification.js';
 export { OrderCard } from './order-card/order-card.js';
 export { OrderList } from './order-list/order-list.js';
+export { OrderListCardBusiness } from './order-list-card/order-list-card-business.js';
 export { Orders } from './orders/orders.js';
 export { PageLayout } from './page-layout/page-layout.js';
 export { Pagination } from './pagination/pagination.js';

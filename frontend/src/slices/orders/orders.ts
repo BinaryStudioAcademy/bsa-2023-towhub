@@ -1,5 +1,5 @@
 import { getOrders } from './actions.js';
-import { actions } from './orders.slice.js';
+import { actions } from './order.slice.js';
 
 const allActions = {
   ...actions,
@@ -7,4 +7,4 @@ const allActions = {
 };
 
 export { allActions as actions };
-export { reducer } from './orders.slice.js';
+export { reducer } from './order.slice.js';

@@ -1,149 +1,56 @@
-@import "src/assets/css/styles.scss";
-
-$row-gap-sm: 0.5vmin;
-$row-gap-md: 1vmin;
-$row-gap-lg: 2vmin;
-$shadow-dark: 0 4px 4px #00000021;
-$grey-darker: #7e818f;
-$violet-shallow: #93a1ff;
-$blue-shallower: #6c91f9;
-$blue-shallow: #becee8;
+@import "src/assets/css/vars.scss";
 
 .container {
-  $side-padding: 4.25vmin;
-
   display: flex;
-  width: auto;
-  height: min-content;
-  padding: 0 $side-padding 6vmin $side-padding;
+  flex-direction: column;
+  min-width: 400px;
   background-color: $white;
-  border-radius: 5%;
-  box-shadow: $shadow-dark;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
 }
 
-// .cardLayout {
-//   display: flex;
-//   flex-direction: column;
-//   width: 100%;
-//   height: auto;
-// }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2.25vmin;
+  border-bottom: 1px solid $grey-light;
+}
 
-// .header {
-//   $side-padding: 2.25vmin;
+.content {
+  display: flex;
+  padding: 2.25vmin;
+}
 
-//   display: grid;
-//   grid-template-rows: 1fr;
-//   grid-template-columns: 1fr 3fr;
-//   padding: 0 $side-padding 0 $side-padding;
-//   column-gap: 2.25vmin;
-// }
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
 
-// .cardName {
-// }
+.driver {
+  align-self: center;
+  margin-left: 15px;
+}
 
-// .cardContent {
-//   align-items: center;
-//   row-gap: $row-gap-md;
-//   height: max-content;
-//   column-gap: 1.7vmin;
-// }
+.driverPhone {
+  margin-top: 15px;
+  color: $grey-dark;
+}
 
-// .driver {
-// }
+.truck {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
 
-// .locationDot {
-//   display: flex;
-//   grid-area: locationDot;
-//   justify-self: flex-end;
-//   height: 20px;
-//   color: $violet-shallow;
-// }
+.icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  color: $scroll-bar-thumb;
+}
 
-// .location {
-//   grid-area: location;
-
-//   $color: $grey-dark;
-// }
-
-// .lastUpdate {
-//   grid-area: lastUpdate;
-
-//   $color: $grey;
-
-//   grid-column: 2 / span 1;
-// }
-
-// .routesContainer {
-//   display: grid;
-//   grid-template-rows: repeat(3, min-content);
-// }
-
-// .routePoint {
-//   display: grid;
-//   grid-template-columns: 3.3vmin auto;
-//   align-items: center;
-//   column-gap: 1.7vmin;
-// }
-
-// .routeInfo {
-//   display: inline-block;
-//   overflow: hidden;
-//   color: $grey-darker;
-//   white-space: nowrap;
-//   text-overflow: ellipsis;
-// }
-
-// $routes-margin-top: 1.5vmin;
-// $routes-margin-bottom: 3.5vmin;
-
-// .routeInfoStart {
-//   grid-area: routeInfoStart;
-//   margin-top: $routes-margin-top;
-// }
-
-// .routeInfoEnd {
-//   grid-area: routeInfoEnd;
-//   margin-bottom: $routes-margin-bottom;
-// }
-
-// .routeDot {
-//   display: inline-block;
-//   justify-self: center;
-// }
-
-// .routeDotStart {
-//   grid-area: routeDotStart;
-//   margin-top: $routes-margin-top;
-// }
-
-// .routeDotEnd {
-//   grid-area: routeDotEnd;
-//   margin-bottom: $routes-margin-bottom;
-// }
-
-// .routeArrow {
-//   display: grid;
-//   grid-area: routeArrow;
-//   justify-content: center;
-//   margin-top: -1vmin;
-//   margin-bottom: -1vmin;
-// }
-
-// .distanceContainer {
-//   display: grid;
-//   grid-template-columns: min-content max-content;
-//   align-items: end;
-//   align-self: end;
-//   column-gap: 0.7vmin;
-// }
-
-// .distanceIcon {
-//   display: grid;
-//   grid-area: distanceIcon;
-//   padding-right: 1vmin;
-// }
-
-// .distanceInfo {
-//   grid-area: distanceInfo;
-//   color: $grey-darker;
-// }
+.truckNumber {
+  align-self: center;
+}
