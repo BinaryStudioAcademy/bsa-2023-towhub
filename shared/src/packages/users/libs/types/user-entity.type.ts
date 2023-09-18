@@ -1,6 +1,6 @@
 import { type BusinessEntityT } from '~/packages/business/business.js';
 
-import { type UserGroupEntityObjectT } from './user-group-entity.type.js';
+import { type UserGroupEntityT } from './types.js';
 
 type UserEntity = {
   id: number;
@@ -18,7 +18,7 @@ type UserEntityObjectWithGroupT = Omit<
   UserEntity,
   'groupId' | 'passwordHash' | 'passwordSalt'
 > & {
-  group: UserGroupEntityObjectT;
+  group: UserGroupEntityT;
 };
 
 type UserEntityObjectWithGroupAndBusinessT = UserEntityObjectWithGroupT & {

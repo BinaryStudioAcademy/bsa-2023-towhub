@@ -104,7 +104,6 @@ class HttpApi implements IHttpApi {
     )) as ServerErrorResponse;
 
     const isCustomException = Boolean(parsedException.errorType);
-
     throw new HttpError({
       status: response.status as ValueOf<typeof HttpCode>,
       errorType: isCustomException

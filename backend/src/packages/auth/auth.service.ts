@@ -63,37 +63,46 @@ class AuthService {
   private async checkIsExistingUser({
     email,
     phone,
-  }: CustomerSignUpRequestDto | BusinessSignUpRequestDto): Promise<boolean> {
+  }: CustomerSignUpRequestDto | BusinessSignUpRequestDto): Promise<void> {
     const existingUser = await this.userService.findByPhoneOrEmail(
       phone,
       email,
     );
 
-    return Boolean(existingUser);
+    if (email === existingUser?.email) {
+      throw new HttpError({
+        message: HttpMessage.USER_EMAIL_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
+
+    if (phone === existingUser?.phone) {
+      throw new HttpError({
+        message: HttpMessage.USER_PHONE_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
   }
 
   private async checkIsExistingBusiness({
     taxNumber,
-  }: BusinessSignUpRequestDto): Promise<boolean> {
+  }: BusinessSignUpRequestDto): Promise<void> {
     const existingBusiness = await this.businessService.checkIsExistingBusiness(
       { taxNumber },
     );
 
-    return Boolean(existingBusiness);
+    if (existingBusiness) {
+      throw new HttpError({
+        message: HttpMessage.BUSINESS_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
   }
 
   public async signUpCustomer(
     payload: CustomerSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupT> {
-    const isExistingUser = await this.checkIsExistingUser(payload);
-
-    if (isExistingUser) {
-      throw new HttpError({
-        message: HttpMessage.USER_EXISTS,
-        status: HttpCode.CONFLICT,
-      });
-    }
-
+    await this.checkIsExistingUser(payload);
     const group = await this.groupService.findByKey(UserGroupKey.CUSTOMER);
 
     if (!group) {
@@ -106,7 +115,6 @@ class AuthService {
       ...payload,
       groupId: group.id,
     });
-
     const userWithToken = await this.generateAccessTokenAndUpdateUser(
       newUser.id,
     );
@@ -117,22 +125,8 @@ class AuthService {
   public async signUpBusiness(
     payload: BusinessSignUpRequestDto,
   ): Promise<UserEntityObjectWithGroupAndBusinessT> {
-    const isExistingUser = await this.checkIsExistingUser(payload);
-    const isExistingBusiness = await this.checkIsExistingBusiness(payload);
-
-    if (isExistingUser) {
-      throw new HttpError({
-        message: HttpMessage.USER_EXISTS,
-        status: HttpCode.CONFLICT,
-      });
-    }
-
-    if (isExistingBusiness) {
-      throw new HttpError({
-        message: HttpMessage.BUSINESS_EXISTS,
-        status: HttpCode.CONFLICT,
-      });
-    }
+    await this.checkIsExistingUser(payload);
+    await this.checkIsExistingBusiness(payload);
 
     const {
       phone,
