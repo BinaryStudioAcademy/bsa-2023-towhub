@@ -1,4 +1,3 @@
-
 export { type ErrorConstructor } from './error-constructor.type.js';
 export { type NullableProperties } from './nullable-properties.type.js';
 export { type OperationResult } from './operation-result.type.js';

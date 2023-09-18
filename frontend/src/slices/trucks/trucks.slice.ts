@@ -1,4 +1,3 @@
-
 import { type PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
