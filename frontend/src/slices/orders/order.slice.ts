@@ -14,7 +14,7 @@ import {
 import { type RouteData } from './libs/types/route-data.type.js';
 
 type State = {
-  orders: OrderResponseDto[];
+  orders: (OrderResponseDto | undefined)[];
   price: number;
   dataStatus: ValueOf<typeof DataStatus>;
   routeData: RouteData;

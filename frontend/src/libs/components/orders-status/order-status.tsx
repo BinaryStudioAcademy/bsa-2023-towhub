@@ -25,9 +25,9 @@ const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
     return STATUS_MESSAGES[status];
   };
 
-  const status = order.status;
+  const status = order?.status;
 
-  return (
+  return status ? (
     <div
       className={getValidClassNames(
         styles.container,
@@ -38,6 +38,8 @@ const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
       <div className={styles.square}></div>
       <span className={styles.text}>{statusMessageMapper(status)}</span>
     </div>
+  ) : (
+    <div></div>
   );
 };
 

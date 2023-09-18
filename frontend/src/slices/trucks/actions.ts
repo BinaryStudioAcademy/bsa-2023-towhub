@@ -34,7 +34,7 @@ const updateTruckLocationFromSocket = createAsyncThunk<
 
 const listenTruckUpdates = createAction(
   ActionNames.SOCKET.LISTEN_TRUCK_UPDATES,
-  (truckId: string) => {
+  (truckId: number) => {
     return {
       payload: `${truckId}`,
     };

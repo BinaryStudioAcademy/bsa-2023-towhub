@@ -11,9 +11,13 @@ import {
   useNavigate,
   useParams,
 } from '~/libs/hooks/hooks.js';
+import { jsonToLatLngLiteral } from '~/slices/orders/libs/helpers/json-to-lat-lng-literal.helper.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectOrder } from '~/slices/orders/selectors.js';
-import { selectTruckLocation } from '~/slices/trucks/selectors.js';
+import {
+  selectChosenTruck,
+  selectTruckLocation,
+} from '~/slices/trucks/selectors.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
@@ -24,13 +28,13 @@ const OrderStatusPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [order] = useAppSelector(selectOrder);
-  const status = order.status;
+  const status = order?.status;
   const pendingScreen = status === OrderStatusEnum.PENDING;
   const cancelScreen = status === OrderStatusEnum.CANCELED;
   const confirmScreen = status === OrderStatusEnum.CONFIRMED;
   const onPointScreen = status === OrderStatusEnum.PICKING_UP;
   const doneScreen = status === OrderStatusEnum.DONE;
-  const truckId = '1'; //Mock
+  const truckId = useAppSelector(selectChosenTruck)?.id;
 
   const truckLocation = useAppSelector(selectTruckLocation);
 
@@ -38,9 +42,14 @@ const OrderStatusPage: React.FC = () => {
     if (orderId) {
       void dispatch(orderActions.getOrder(orderId));
       void dispatch(orderActions.listenOrderUpdates(orderId));
-      void dispatch(truckActions.listenTruckUpdates(truckId));
     }
   }, [orderId, dispatch]);
+
+  useEffect(() => {
+    if (truckId) {
+      void dispatch(truckActions.listenTruckUpdates(truckId));
+    }
+  }, [truckId, dispatch]);
 
   const handleHomepageClick = useCallback(() => {
     navigate(AppRoute.ROOT);
@@ -103,9 +112,14 @@ const OrderStatusPage: React.FC = () => {
       <OrderStatus
         className={getValidClassNames(styles.status, styles.statusTop)}
       />
-      {truckLocation && !cancelScreen && !doneScreen && (
+      {order && truckLocation && !cancelScreen && !doneScreen && (
         <section className={styles.mapSection}>
-          <Map center={truckLocation} zoom={15} className={styles.map} />
+          <Map
+            center={truckLocation}
+            destination={jsonToLatLngLiteral(order.startPoint)}
+            zoom={15}
+            className={styles.map}
+          />
         </section>
       )}
       <section className={styles.cardSection}>

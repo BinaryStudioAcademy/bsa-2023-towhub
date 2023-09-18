@@ -26,21 +26,23 @@ const OrderCard: React.FC<Properties> = ({
   const endLocation = routeData.destination ?? '';
   const distanceLeft = routeData.distanceAndDuration?.distance.text ?? '';
   const timespanLeft = routeData.distanceAndDuration?.duration.text ?? '';
-  const licensePlate = order.shift.truck?.licensePlateNumber ?? '';
-  const price = order.price;
-  const firstName = order.shift.driver?.firstName ?? '';
-  const lastName = order.shift.driver?.lastName ?? '';
+  const licensePlate = order?.shift.truck?.licensePlateNumber ?? '';
+  const price = order?.price;
+  const firstName = order?.shift.driver?.firstName ?? '';
+  const lastName = order?.shift.driver?.lastName ?? '';
   const profileURL =
     'https://images.freeimages.com/images/large-previews/962/avatar-man-with-mustages-1632966.jpg?fmt=webp&w=350';
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    void dispatch(
-      orderActions.getRouteData({
-        origin: order.startPoint,
-        destination: order.endPoint,
-      }),
-    );
+    if (order) {
+      void dispatch(
+        orderActions.getRouteData({
+          origin: order.startPoint,
+          destination: order.endPoint,
+        }),
+      );
+    }
   }, [dispatch, order]);
   const CardHeader = (): JSX.Element => (
     <div className={styles.header}>
