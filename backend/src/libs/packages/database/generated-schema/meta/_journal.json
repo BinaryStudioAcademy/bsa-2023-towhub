@@ -92,6 +92,13 @@
       "when": 1695059484421,
       "tag": "0012_add_stripe_fields_to_business",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1695069461146,
+      "tag": "0013_make_orders_businessid_non_nullable",
+      "breakpoints": true
     }
   ]
 }

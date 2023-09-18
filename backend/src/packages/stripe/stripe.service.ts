@@ -7,7 +7,6 @@ import { type BusinessService } from '../business/business.service.js';
 import { convertMetersToKm } from '../map/map.js';
 import { type MapService } from '../map/map.service.js';
 import { type OrderEntity } from '../orders/libs/types/types.js';
-import { type ShiftEntity } from '../shifts/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { DEFAULT_PAGE_SIZE } from './libs/consts/const.js';

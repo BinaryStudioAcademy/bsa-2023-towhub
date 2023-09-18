@@ -3,11 +3,7 @@ import { useAppForm, useAppSelector, useCallback } from '~/libs/hooks/hooks.js';
 import { stripeApi } from '~/packages/stripe/stripe.js';
 import { selectUser } from '~/slices/auth/selectors.js';
 
-import {
-  type CheckoutFormData,
-  type OrderEntity,
-  type ShiftEntity,
-} from './libs/types/types.js';
+import { type CheckoutFormData, type OrderEntity } from './libs/types/types.js';
 import styles from './styles.module.scss';
 
 const CheckoutForm: React.FC = () => {

@@ -22,7 +22,9 @@ const orders = pgTable('orders', {
   endPoint: varchar('end_point').notNull(),
   status: orderStatus('status').notNull(),
   userId: integer('user_id').references(() => users.id),
-  businessId: integer('business_id').references(() => business.id),
+  businessId: integer('business_id')
+    .references(() => business.id)
+    .notNull(),
   shiftId: integer('shift_id')
     .references(() => shifts.id)
     .notNull(),
