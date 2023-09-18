@@ -1,0 +1,3 @@
+const FIELD_PATH_DELIMITER = '.';
+
+export { FIELD_PATH_DELIMITER };
