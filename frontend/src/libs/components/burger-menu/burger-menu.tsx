@@ -44,8 +44,8 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
   );
 
   const handleLogOutClick = useCallback(
-    () => dispatch(authActions.logOut()).then(() => navigate(AppRoute.SIGN_IN)),
-    [dispatch, navigate],
+    () => dispatch(authActions.logOut()),
+    [dispatch],
   );
 
   useEffect(() => {
