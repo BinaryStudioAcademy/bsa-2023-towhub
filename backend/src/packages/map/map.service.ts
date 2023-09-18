@@ -36,11 +36,11 @@ class MapService {
   }
 
   public async getPriceByDistance({
-    startPoint,
-    endPoint,
+    startAddress,
+    endAddress,
     pricePerKm,
   }: OrderCalculatePriceRequestDto): Promise<OrderCalculatePriceResponseDto> {
-    const distance = await this.getDistance(startPoint, endPoint);
+    const distance = await this.getDistance(startAddress, endAddress);
     const km = convertMetersToKm(distance.value);
     const orderPrice = (pricePerKm * km).toFixed(2);
 

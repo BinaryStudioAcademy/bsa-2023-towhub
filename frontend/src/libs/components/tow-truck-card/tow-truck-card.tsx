@@ -16,7 +16,7 @@ type Properties = {
   //   averageRating: number;
   //   reviewCount: number;
   // };
-  distance: number;
+  distance?: number;
   hasFooter?: boolean;
 };
 

@@ -45,27 +45,25 @@ const Map: React.FC<Properties> = ({
         mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);
-
-        if (pricePerKm && startAddress && endAddress) {
-          void dispatch(
-            orderActions.calculateOrderPrice({
-              startPoint: startAddress,
-              endPoint: endAddress,
-              pricePerKm,
-            }),
-          );
-        }
       }
     }
   }, [
     center,
     zoom,
     destination,
-    pricePerKm,
-    startAddress,
-    endAddress,
-    dispatch,
   ]);
+
+  useEffect(() => {
+    if (pricePerKm && startAddress && endAddress) {
+      void dispatch(
+        orderActions.calculateOrderPrice({
+          startAddress,
+          endAddress,
+          pricePerKm,
+        }),
+      );
+    }
+  }, [dispatch, endAddress, startAddress, pricePerKm]);
 
   return <div ref={mapReference} id="map" className={mapClasses} />;
 };

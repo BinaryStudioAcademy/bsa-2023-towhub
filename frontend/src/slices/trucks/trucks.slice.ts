@@ -14,16 +14,7 @@ type State = {
 
 const initialState: State = {
   trucks: [],
-  chosenTruck: {
-    id: 1,
-    capacity: 12,
-    driverId: 1,
-    licensePlateNumber: 'AAA 123123',
-    manufacturer: 'ford',
-    pricePerKm: 12,
-    towType: 'hook_and_chain',
-    year: 2003,
-  },
+  chosenTruck: null,
   dataStatus: DataStatus.IDLE,
 };
 

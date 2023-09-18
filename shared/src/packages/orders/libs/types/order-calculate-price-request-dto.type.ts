@@ -1,6 +1,6 @@
 type OrderCalculatePriceRequestDto = {
-  startPoint: string;
-  endPoint: string;
+  startAddress: string;
+  endAddress: string;
   pricePerKm: number;
 };
 
