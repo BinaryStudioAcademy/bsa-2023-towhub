@@ -9,8 +9,8 @@ class View {
 
   protected compiledTemplate: HandlebarsTemplateDelegate;
 
-  protected constructor(path: string) {
-    this.templatePath = path;
+  protected constructor(templatePath: string) {
+    this.templatePath = templatePath;
     this.compiledTemplate = this.compileTemplate();
   }
 
