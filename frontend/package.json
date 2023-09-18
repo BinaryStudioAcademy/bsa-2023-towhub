@@ -27,6 +27,7 @@
     "@rollup/pluginutils": "5.0.4",
     "@svgr/core": "8.1.0",
     "@tanstack/react-table": "8.9.3",
+    "balloon-css": "1.2.0",
     "clsx": "2.0.0",
     "modern-normalize": "2.0.0",
     "react": "18.2.0",

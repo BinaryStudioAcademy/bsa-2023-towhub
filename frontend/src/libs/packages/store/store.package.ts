@@ -19,23 +19,7 @@ import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
-
-type RootReducer = {
-  auth: ReturnType<typeof authReducer>;
-  trucks: ReturnType<typeof truckReducer>;
-  files: ReturnType<typeof filesReducer>;
-  orders: ReturnType<typeof orderReducer>;
-};
-
-type ExtraArguments = {
-  authApi: typeof authApi;
-  userApi: typeof userApi;
-  filesApi: typeof filesApi;
-  notification: typeof notification;
-  truckApi: typeof truckApi;
-  localStorage: typeof LocalStorage;
-  ordersApi: typeof ordersApi;
-};
+import { type ExtraArguments, type RootReducer } from './libs/types/types.js';
 
 class Store {
   public instance: ReturnType<

@@ -13,5 +13,6 @@ export {
   AppEnvironment,
   AuthMode,
   ContentType,
+  HttpMessage,
   ServerErrorType,
 } from 'shared/build/index.js';
