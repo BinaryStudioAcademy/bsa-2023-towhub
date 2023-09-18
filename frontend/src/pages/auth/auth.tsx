@@ -5,7 +5,6 @@ import {
   useAppDispatch,
   useAuthNavigate,
   useCallback,
-  useEffect,
   useLocation,
 } from '~/libs/hooks/hooks.js';
 import {
