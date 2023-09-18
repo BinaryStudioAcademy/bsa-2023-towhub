@@ -35,7 +35,7 @@ class S3ClientService {
       },
     });
     this.bucketName = config.ENV.AWS.S3.BUCKET_NAME;
-    this.signedUrlExpiresIn = config.ENV.AWS.S3.SIGNED_URL_EXPIRES_IN;
+    this.signedUrlExpiresIn = config.ENV.AWS.S3.SIGNED_URL_EXPIRES_IN_SECONDS;
     this.logger = logger;
   }
 

@@ -2,12 +2,13 @@ import rocket from '~/assets/img/welcome-page/rocket.png';
 import { AuthMode } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
 import { Button, Image } from '../components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onClick: (mode: string) => void;
+  onClick: (mode: ValueOf<typeof AuthMode>) => void;
 };
 
 const BusinessCard: React.FC<Properties> = ({ onClick }: Properties) => {
