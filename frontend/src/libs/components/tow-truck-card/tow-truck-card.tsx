@@ -25,7 +25,7 @@ const TowTruckCard: React.FC<Properties> = ({
     towType,
   } = truck;
   const img = getTowTruckImage(towType);
-  const manufacturer = manufacturerRaw.split('_').join(' ');
+  const manufacturer = manufacturerRaw.replaceAll('_', ' ');
 
   return (
     <div className={styles.container}>

@@ -49,7 +49,7 @@ const Order = (): JSX.Element => {
     [dispatch, chosenTruck],
   );
 
-  const handleLocatonChange = useCallback(
+  const handleLocationChange = useCallback(
     (location: { lat: number; lng: number }, address: string) => {
       setStartLocation(location);
       setStartAddress(address);
@@ -79,7 +79,7 @@ const Order = (): JSX.Element => {
           <TowTruckCard truck={chosenTruck} hasFooter={false} />
           <OrderForm
             onSubmit={handleSubmit}
-            onStartLocationChange={handleLocatonChange}
+            onStartLocationChange={handleLocationChange}
             onEndLocationChange={handleDestinationChange}
             truckId={chosenTruck.id}
             isDisabled={!chosenTruck}
