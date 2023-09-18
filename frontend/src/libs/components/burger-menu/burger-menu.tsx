@@ -1,5 +1,4 @@
 import {
-  AppRoute,
   Breakpoint,
   BurgerMenuItemsName,
   IconName,
