@@ -1,4 +1,4 @@
-import { type ContentType, ServerErrorType } from '~/libs/enums/enums.js';
+import { ContentType, ServerErrorType } from '~/libs/enums/enums.js';
 import { configureString } from '~/libs/helpers/helpers.js';
 import { type HttpCode, type IHttp } from '~/libs/packages/http/http.js';
 import { HttpError, HttpHeader } from '~/libs/packages/http/http.js';
@@ -72,13 +72,17 @@ class HttpApi implements IHttpApi {
   ): Promise<Headers> {
     const headers = new Headers();
 
-    headers.append(HttpHeader.CONTENT_TYPE, contentType);
-
     if (hasAuth) {
       const token = await this.storage.get<string>(StorageKey.TOKEN);
 
       headers.append(HttpHeader.AUTHORIZATION, `Bearer ${token ?? ''}`);
     }
+
+    if (contentType === ContentType.FORM_DATA) {
+      return headers;
+    }
+
+    headers.append(HttpHeader.CONTENT_TYPE, contentType);
 
     return headers;
   }
@@ -100,7 +104,6 @@ class HttpApi implements IHttpApi {
     )) as ServerErrorResponse;
 
     const isCustomException = Boolean(parsedException.errorType);
-
     throw new HttpError({
       status: response.status as ValueOf<typeof HttpCode>,
       errorType: isCustomException

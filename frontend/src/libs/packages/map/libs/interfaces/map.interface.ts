@@ -7,7 +7,7 @@ interface IMapService {
     origin: google.maps.LatLngLiteral,
     destination: google.maps.LatLngLiteral,
   ): Promise<number>;
-  addMarker(position: google.maps.LatLngLiteral, label?: string): void;
+  addMarker(position: google.maps.LatLngLiteral): void;
 }
 
 export { type IMapService };
