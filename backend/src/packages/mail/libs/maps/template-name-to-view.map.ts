@@ -1,8 +1,9 @@
 import { TemplateName } from '../enums/enums.js';
+import { type TemplateNameToView } from '../types/types.js';
 import { plainView } from '../views/views.js';
 
-const templateNameToView = {
+const templateNameToView: TemplateNameToView = {
   [TemplateName.PLAIN]: plainView,
-} as const;
+};
 
 export { templateNameToView };

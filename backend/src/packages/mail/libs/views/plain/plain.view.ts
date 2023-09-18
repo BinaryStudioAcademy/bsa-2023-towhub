@@ -9,10 +9,10 @@ import { type PlainViewRenderParameter } from './libs/types/types.js';
 class PlainView extends View implements IView<PlainViewRenderParameter> {
   public constructor(templateName: TemplateNameValues) {
     const templatePath = path.join(
-        path.dirname(url.fileURLToPath(import.meta.url)),
-        'libs',
-        'layout',
-        `${templateName}.hbs`,
+      path.dirname(url.fileURLToPath(import.meta.url)),
+      'libs',
+      'layout',
+      `${templateName}.hbs`,
     );
     super(templatePath);
   }
