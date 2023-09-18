@@ -140,7 +140,7 @@ class TruckController extends Controller {
       path: TruckApiPath.ROOT,
       method: 'POST',
       validation: {
-        body: { ...truckCreateRequestBody },
+        body: truckCreateRequestBody,
       },
       handler: (request) =>
         this.create(

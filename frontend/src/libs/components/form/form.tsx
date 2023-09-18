@@ -60,7 +60,7 @@ const renderField = <T extends FieldValues = FieldValues>({
         />
       );
     }
-    case 'multi': {
+    case 'multi-select': {
       return (
         <DropdownMultiSelect
           options={options ?? []}

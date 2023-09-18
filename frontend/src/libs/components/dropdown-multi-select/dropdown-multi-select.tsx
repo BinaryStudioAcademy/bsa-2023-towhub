@@ -37,7 +37,7 @@ type Properties<T extends FieldValues> = {
 
 const getClassNames = (
   isMenuOpen: boolean,
-): ClassNamesConfig<SelectOption, false, GroupBase<SelectOption>> => ({
+): ClassNamesConfig<SelectOption, true, GroupBase<SelectOption>> => ({
   container: () => styles.container,
   control: () => getValidClassNames(styles.control, styles.multiControl),
   multiValueLabel: () => styles.multiValueLabel,
@@ -90,12 +90,10 @@ const DropdownMultiSelect = <T extends FieldValues>({
     return options.filter((opt) => (value ?? []).includes(opt.value));
   };
 
-  type SelectIsMultiType = T extends { isMulti: true } ? true : false;
-
   const inputStyles = [styles.input, hasError && styles.error];
 
   const handleChange = useCallback(
-    (option: SingleValue<SelectOption> | SingleValue<SelectOption>[]) => {
+    (option: MultiValue<SelectOption> | SingleValue<SelectOption>[]) => {
       const selectedValues =
         Array.isArray(option) &&
         (option
@@ -111,7 +109,7 @@ const DropdownMultiSelect = <T extends FieldValues>({
     <label className={styles.inputComponentWrapper}>
       {hasLabel && <span className={styles.label}>{label}</span>}
       <span className={styles.inputWrapper}>
-        <Select<SelectOption>
+        <Select<SelectOption, true>
           {...(name && control && field)}
           options={options}
           classNamePrefix="react-select"
@@ -124,7 +122,7 @@ const DropdownMultiSelect = <T extends FieldValues>({
           onChange={handleChange}
           value={findOptionByValue(field.value)}
           placeholder={placeholder}
-          isMulti={true as SelectIsMultiType}
+          isMulti
         />
       </span>
       <span

@@ -10,7 +10,7 @@ type FormField<T extends FieldValues> = {
     | 'number'
     | 'dropdown'
     | 'file'
-    | 'multi';
+    | 'multi-select';
   label: string;
   placeholder?: string;
   name: FieldPath<T>;

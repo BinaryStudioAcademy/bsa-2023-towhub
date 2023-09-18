@@ -28,7 +28,7 @@ type Properties<T extends FieldValues> = {
     | 'password'
     | 'number'
     | 'dropdown'
-    | 'multi'
+    | 'multi-select'
     | 'file';
   isDisabled?: boolean;
   min?: number;
