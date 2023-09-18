@@ -58,7 +58,16 @@ const DriverTable: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={getValidClassNames('h3', styles.title)}>Drivers Table</h2>
+      <div className={styles.header}>
+        <h2 className={getValidClassNames('h3', styles.title)}>
+          Company Drivers
+        </h2>
+        <Button
+          label="Add a Driver"
+          className={styles.btn}
+          onClick={handleOpenModal}
+        />
+      </div>
       <Table
         {...tableHook}
         data={data}
@@ -66,12 +75,6 @@ const DriverTable: React.FC = () => {
         columns={columns}
         isLoading={status === DataStatus.PENDING}
         emptyTableMessage="add new driver"
-      />
-      <Button
-        label="Add a driver"
-        frontIcon="plus"
-        className={styles.btn}
-        onClick={handleOpenModal}
       />
       <Modal isOpen={isActiveModal} isCentered onClose={handleCloseModal}>
         <div className={styles.formWrapper}>

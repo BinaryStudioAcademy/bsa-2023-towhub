@@ -7,13 +7,13 @@ const columns: ColumnDef<DriverWithUserData>[] = [
     header: 'Full Name',
     accessorFn: (driver) => `${driver.firstName} ${driver.lastName}`,
     footer: 'Full name',
-    size: 250,
+    size: 300,
   },
   {
     header: 'Driver License Number',
     accessorKey: 'driver.driverLicenseNumber',
     footer: 'Driver License Number',
-    size: 250,
+    size: 300,
   },
   {
     header: 'Created At',
@@ -25,7 +25,7 @@ const columns: ColumnDef<DriverWithUserData>[] = [
       return new Date(driver.driver.createdAt).toDateString();
     },
     footer: 'Created At',
-    size: 250,
+    size: 356,
   },
 ];
 
