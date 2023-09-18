@@ -11,7 +11,11 @@ export {
   HttpError,
   ValidationError,
 } from './libs/exceptions/exceptions.js';
-export { configureString } from './libs/helpers/helpers.js';
+export {
+  configureString,
+  filesize,
+  pluralizeString,
+} from './libs/helpers/helpers.js';
 export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
 export { type GeolocationLatLng } from './libs/packages/geolocation/geolocation.js';
 export {
@@ -85,7 +89,25 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
+  type DeleteFileRequestParameters,
+  type FileEntityT,
+  type FileInputConfig,
+  type FileUploadResponseDto,
+  type GetFileRequestParameters,
+  type UpdateFileKeyRequestDto,
+  type UpdateFileKeyRequestParameters,
+  checkValidFileName,
+  fileInputDefaultsConfig,
+  FilesApiPath,
+  filesDeleteRequestParameters,
+  filesGetRequestParameters,
+  filesUpdateKeyRequestBody,
+  filesUpdateKeyRequestParameters,
+} from './packages/files/files.js';
+export {
   type DriverInfo,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderResponseDto,
@@ -114,6 +136,7 @@ export {
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
+  TruckCarsQuantity,
   truckCreateRequestBody,
   truckGetParameters,
   TruckLicensePlateNumber,

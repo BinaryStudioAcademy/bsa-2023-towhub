@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "53c70f1e-a14d-43f2-b76b-06a17abafe4f",
+  "id": "1344a105-d723-4f2d-981d-75699929a282",
   "prevId": "99701008-5106-4115-b599-2bdc540412d8",
   "tables": {
     "business_details": {
@@ -138,6 +138,60 @@
           "name": "driver_details_driver_license_number_unique",
           "nullsNotDistinct": false,
           "columns": ["driver_license_number"]
+        }
+      }
+    },
+    "files": {
+      "name": "files",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content_type": {
+          "name": "content_type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "files_key_unique": {
+          "name": "files_key_unique",
+          "nullsNotDistinct": false,
+          "columns": ["key"]
         }
       }
     },
@@ -612,8 +666,8 @@
         "pending": "pending",
         "confirmed": "confirmed",
         "canceled": "canceled",
-        "picking_up": "picking_up",
-        "done": "done"
+        "done": "done",
+        "picking_up": "picking_up"
       }
     }
   },

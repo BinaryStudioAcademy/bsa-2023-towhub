@@ -11,7 +11,7 @@ import {
   useNavigate,
   useParams,
 } from '~/libs/hooks/hooks.js';
-import { actions as orderActions } from '~/slices/orders/orders.js';
+import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectOrder } from '~/slices/orders/selectors.js';
 import { selectTruckLocation } from '~/slices/trucks/selectors.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
@@ -23,8 +23,8 @@ const OrderStatusPage: React.FC = () => {
   const { orderId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const order = useAppSelector(selectOrder);
-  const status = order?.status;
+  const [order] = useAppSelector(selectOrder);
+  const status = order.status;
   const pendingScreen = status === OrderStatusEnum.PENDING;
   const cancelScreen = status === OrderStatusEnum.CANCELED;
   const confirmScreen = status === OrderStatusEnum.CONFIRMED;

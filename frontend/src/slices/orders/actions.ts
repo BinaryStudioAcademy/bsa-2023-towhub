@@ -1,18 +1,55 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
+import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
-import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
+import {
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
+  type OrderCreateRequestDto,
+  type OrderResponseDto,
+} from '~/packages/orders/orders.js';
 
 import { ActionNames } from './libs/enums/enums.js';
 import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.helper.js';
 import { type RouteData } from './libs/types/types.js';
+import { name as sliceName } from './order.slice.js';
+
+const createOrder = createAsyncThunk<
+  OrderResponseDto,
+  OrderCreateRequestDto,
+  AsyncThunkConfig
+>(`${sliceName}/create-order`, async (payload, { extra }) => {
+  const { ordersApi } = extra;
+
+  try {
+    const result = await ordersApi.createOrder(payload);
+
+    notification.success('Order successfully created');
+
+    return result;
+  } catch (error: unknown) {
+    notification.error(getErrorMessage(error));
+    throw error;
+  }
+});
+
+const calculateOrderPrice = createAsyncThunk<
+  OrderCalculatePriceResponseDto,
+  OrderCalculatePriceRequestDto,
+  AsyncThunkConfig
+>(`${sliceName}/calculateOrderPrice`, (payload, { extra }) => {
+  const { ordersApi } = extra;
+
+  return ordersApi.calculatePrice(payload);
+});
 
 const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
   ActionNames.GET_ORDER,
   (orderId, { extra }) => {
-    const { orderApi } = extra;
+    const { ordersApi } = extra;
 
-    return orderApi.getOrder(orderId);
+    return ordersApi.getOrder(orderId);
   },
 );
 
@@ -71,6 +108,8 @@ const stopListenOrderUpdates = createAction(
 );
 
 export {
+  calculateOrderPrice,
+  createOrder,
   getOrder,
   getRouteData,
   listenOrderUpdates,

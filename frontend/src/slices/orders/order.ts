@@ -1,14 +1,18 @@
 import {
+  calculateOrderPrice,
+  createOrder,
   getOrder,
   getRouteData,
   listenOrderUpdates,
   stopListenOrderUpdates,
   updateOrderFromSocket,
 } from './actions.js';
-import { actions } from './orders.slice.js';
+import { actions } from './order.slice.js';
 
 const allActions = {
   ...actions,
+  createOrder,
+  calculateOrderPrice,
   getOrder,
   listenOrderUpdates,
   stopListenOrderUpdates,
@@ -17,4 +21,5 @@ const allActions = {
 };
 
 export { allActions as actions };
-export { reducer } from './orders.slice.js';
+export { reducer } from './order.slice.js';
+export { selectPrice } from './selectors.js';

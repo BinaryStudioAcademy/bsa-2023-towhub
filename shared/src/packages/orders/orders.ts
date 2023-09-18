@@ -6,6 +6,8 @@ export {
 } from './libs/enums/enums.js';
 export {
   type DriverInfo,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderResponseDto,

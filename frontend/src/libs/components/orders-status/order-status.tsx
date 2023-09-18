@@ -16,7 +16,7 @@ type Properties = {
 
 const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
   const time = useAppSelector(selectTruckArrivalTime);
-  const order = useAppSelector(selectOrder);
+  const [order] = useAppSelector(selectOrder);
   const statusMessageMapper = (status: OrderStatusValues): string => {
     if (status === OrderStatusEnum.CONFIRMED) {
       return `${STATUS_MESSAGES[status]} ${time ? time.text : '...'}`;
@@ -25,24 +25,20 @@ const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
     return STATUS_MESSAGES[status];
   };
 
-  if (order) {
-    const status = order.status;
+  const status = order.status;
 
-    return (
-      <div
-        className={getValidClassNames(
-          styles.container,
-          className,
-          styles[status],
-        )}
-      >
-        <div className={styles.square}></div>
-        <span className={styles.text}>{statusMessageMapper(status)}</span>
-      </div>
-    );
-  }
-
-  return <> </>;
+  return (
+    <div
+      className={getValidClassNames(
+        styles.container,
+        className,
+        styles[status],
+      )}
+    >
+      <div className={styles.square}></div>
+      <span className={styles.text}>{statusMessageMapper(status)}</span>
+    </div>
+  );
 };
 
 export { OrderStatus };
