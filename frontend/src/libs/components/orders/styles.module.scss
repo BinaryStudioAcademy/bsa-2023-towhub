@@ -1,7 +1,23 @@
 .orders {
   display: flex;
+  height: 100%;
+}
+
+.orderlistArea {
+  width: 50%;
 }
 
 .mapArea {
-  height: 100%;
+  position: relative;
+  width: 50%;
+  margin-left: 20px;
+}
+
+.mapWrapper {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 4px 4px #00000021;
 }

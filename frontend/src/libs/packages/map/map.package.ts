@@ -1,4 +1,4 @@
-import truckImg from '~/assets/img/tow-truck.png';
+import truckImg from '~/assets/img/tow-truck-small.svg';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 
 import { type IMapService } from './libs/interfaces/interfaces.js';
@@ -120,6 +120,28 @@ class MapService implements IMapService {
       label,
       map: this.map,
       icon: truckImg,
+    });
+  }
+
+  public async addRoute({
+    startPoint,
+    endPoint,
+  }: {
+    startPoint: google.maps.LatLngLiteral;
+    endPoint: google.maps.LatLngLiteral;
+  }): Promise<void> {
+    this.throwIfMapNotInitialized();
+
+    const path = await this.directionsService.route({
+      destination: endPoint,
+      origin: startPoint,
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+
+    this.directionsRenderer.setOptions({
+      directions: path,
+      map: this.map,
+      preserveViewport: true,
     });
   }
 }

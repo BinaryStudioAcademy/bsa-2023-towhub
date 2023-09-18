@@ -1,15 +1,33 @@
+import { useCallback } from 'react';
 import { type OrderResponseDto } from 'shared/build';
 
 import { OrderCard } from '../components.js';
+import { makeLatLngLiteral } from '../orders/libs/helpers/make-lat-lng-literal.helper.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   orders: OrderResponseDto[];
+  select: ({
+    startPoint,
+    endPoint,
+  }: {
+    startPoint: google.maps.LatLngLiteral;
+    endPoint: google.maps.LatLngLiteral;
+  }) => void;
 };
 
-const OrderList: React.FC<Properties> = ({ orders }: Properties) => {
+const OrderList: React.FC<Properties> = ({ orders, select }: Properties) => {
+  const selectCard = useCallback(
+    (startLocation: string, endLocation: string) => () =>
+      select({
+        startPoint: makeLatLngLiteral(startLocation),
+        endPoint: makeLatLngLiteral(endLocation),
+      }),
+    [select],
+  );
+
   return (
-    <ul>
+    <ul className={styles.orderList}>
       {orders.map((order) => {
         const {
           id,
@@ -35,7 +53,11 @@ const OrderList: React.FC<Properties> = ({ orders }: Properties) => {
         };
 
         return (
-          <li key={id} className={styles.orderList}>
+          <li
+            key={id}
+            className={styles.orderItem}
+            onMouseEnter={selectCard(startLocation, endLocation)}
+          >
             <OrderCard
               driver={driverProperty}
               truck={truckProperty}
