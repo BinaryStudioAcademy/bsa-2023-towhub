@@ -37,7 +37,6 @@ const { reducer, actions, name } = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(signUp.pending, (state) => {
-      state.user = null;
       state.dataStatus = DataStatus.PENDING;
     });
     builder.addCase(signUp.fulfilled, (state, action) => {
@@ -50,7 +49,6 @@ const { reducer, actions, name } = createSlice({
       state.error = payload ?? null;
     });
     builder.addCase(signIn.pending, (state) => {
-      state.user = null;
       state.dataStatus = DataStatus.PENDING;
     });
     builder.addCase(signIn.fulfilled, (state, action) => {
