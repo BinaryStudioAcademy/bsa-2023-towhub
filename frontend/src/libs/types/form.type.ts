@@ -1,10 +1,27 @@
-import { type FieldPath, type FieldValues } from 'react-hook-form';
+import {
+  type ErrorOption,
+  type FieldPath,
+  type FieldValues,
+} from 'react-hook-form';
 
-import { type ValueOf } from '~/libs/types/types.js';
+import { type HttpMessage } from '~/libs/enums/enums.js';
 
 import { type InputType } from '../enums/input-type.enum.js';
 import { type LocationChangeHandler } from './location-change-handler.type.js';
 import { type SelectOption } from './select-option.type.js';
+import { type ValueOf } from './types.js';
+
+type KnownErrorMessages = ValueOf<typeof HttpMessage>;
+
+type ErrorDescriptor =
+  | {
+      errorMessage: KnownErrorMessages;
+      error: ErrorOption;
+      options?: {
+        shouldFocus: boolean;
+      };
+    }
+  | KnownErrorMessages;
 
 type FormField<T extends FieldValues> = {
   type?: ValueOf<typeof InputType>;
@@ -18,6 +35,7 @@ type FormField<T extends FieldValues> = {
   step?: number;
   fieldId?: number;
   onLocationChange?: LocationChangeHandler;
+  associateServerErrors?: ErrorDescriptor[];
 };
 
-export { type FormField };
+export { type ErrorDescriptor, type FormField };
