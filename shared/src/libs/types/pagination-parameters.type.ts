@@ -1,6 +1,6 @@
 type PaginationParameters = {
-  pageSize: number;
-  pageIndex: number;
+  size: number;
+  page: number;
 };
 
 export { type PaginationParameters };

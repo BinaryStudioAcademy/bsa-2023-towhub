@@ -1,5 +1,6 @@
 import { desc, eq, ilike, placeholder, sql } from 'drizzle-orm';
 
+import { countOffsetByQuery } from '~/libs/helpers/helpers.js';
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
@@ -39,7 +40,7 @@ class TruckRepository implements IRepository {
     businessId: number,
     query: PaginationParameters,
   ): Promise<TruckDatabaseModel[]> {
-    const index = query.pageIndex * query.pageSize;
+    const offset = countOffsetByQuery(query);
 
     return await this.db
       .driver()
@@ -47,8 +48,8 @@ class TruckRepository implements IRepository {
       .from(this.trucksSchema)
       .where(eq(this.trucksSchema.businessId, businessId))
       .orderBy(desc(this.trucksSchema.createdAt))
-      .offset(index)
-      .limit(query.pageSize);
+      .offset(offset)
+      .limit(query.size);
   }
 
   public async getTotal(businessId: number): Promise<number> {

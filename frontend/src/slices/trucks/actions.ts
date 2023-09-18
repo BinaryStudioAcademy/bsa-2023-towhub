@@ -16,25 +16,30 @@ import { name as sliceName } from './trucks.slice.js';
 
 const addTruck = createAsyncThunk<
   TruckEntity,
-  TruckAddRequestDto,
+  TruckAddRequestDto & PaginationParameters,
   AsyncThunkConfig
->(`${sliceName}/add-truck`, async (payload, { rejectWithValue, extra }) => {
-  const { businessApi, notification } = extra;
+>(
+  `${sliceName}/add-truck`,
+  async ({ page, size, ...payload }, { rejectWithValue, extra, dispatch }) => {
+    const { businessApi, notification } = extra;
 
-  try {
-    const truck = await businessApi.addTruck(payload);
+    try {
+      const truck = await businessApi.addTruck(payload);
 
-    notification.success(TruckNotificationMessage.SUCCESS_ADD_NEW_TRUCK);
+      await dispatch(findAllTrucksForBusiness({ page, size }));
 
-    return truck;
-  } catch (error_: unknown) {
-    const error = error_ as HttpError;
+      notification.success(TruckNotificationMessage.SUCCESS_ADD_NEW_TRUCK);
 
-    notification.error(getErrorMessage(error.message));
+      return truck;
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
 
-    return rejectWithValue({ ...error, message: error.message });
-  }
-});
+      notification.error(getErrorMessage(error.message));
+
+      return rejectWithValue({ ...error, message: error.message });
+    }
+  },
+);
 
 const findAllTrucksForBusiness = createAsyncThunk<
   { items: TruckEntity[]; total: number },
@@ -43,13 +48,13 @@ const findAllTrucksForBusiness = createAsyncThunk<
 >(
   `${sliceName}/find-all-trucks-for-business`,
   async (payload, { rejectWithValue, extra }) => {
-    const { pageIndex, pageSize } = payload;
+    const { page, size } = payload;
     const { businessApi, notification } = extra;
 
     try {
       return await businessApi.findAllTrucksByBusinessId({
-        pageIndex,
-        pageSize,
+        page,
+        size,
       });
     } catch (error_: unknown) {
       const error = error_ as HttpError;

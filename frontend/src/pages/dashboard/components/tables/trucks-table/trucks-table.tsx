@@ -1,14 +1,20 @@
 import { Button, Modal, Table } from '~/libs/components/components.js';
 import { DataStatus, IconName } from '~/libs/enums/enums.js';
 import {
+  useAppDispatch,
   useAppSelector,
   useAppTable,
   useCallback,
+  useQueryParameters,
   useState,
 } from '~/libs/hooks/hooks.js';
 import { type PaginationParameters } from '~/libs/types/types.js';
-import { type TruckGetAllResponseDto } from '~/packages/trucks/libs/types/types.js';
+import {
+  type TruckAddRequestDto,
+  type TruckGetAllResponseDto,
+} from '~/packages/trucks/libs/types/types.js';
 import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
+import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { AddTruckForm } from '../../form/form.js';
 import { columns } from './columns/columns.js';
@@ -20,17 +26,38 @@ const TrucksTable: React.FC = () => {
     total: trucks.total,
     dataStatus: trucks.dataStatus,
   }));
+  const { getQueryParameters } = useQueryParameters();
+
+  const initialSize = getQueryParameters('size') as string | null;
+  const initialPage = getQueryParameters('page') as string | null;
+
+  const dispatch = useAppDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const { pageSize, pageIndex, changePageSize, changePageIndex, updatePage } =
-    useAppTable<TruckGetAllResponseDto, PaginationParameters>({
-      tableFetchCall: findAllTrucksForBusiness,
-    });
+  const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
+    TruckGetAllResponseDto,
+    PaginationParameters
+  >({
+    tableFetchCall: findAllTrucksForBusiness,
+    initialPageIndex: initialPage ? +initialPage : undefined,
+    initialPageSize: initialSize ? +initialSize : undefined,
+  });
 
   const handleAddTruckModalVisibility = useCallback(() => {
     setIsModalOpen(!isModalOpen);
   }, [isModalOpen]);
+
+  const handleSubmit = useCallback(
+    (payload: TruckAddRequestDto) => {
+      void dispatch(
+        truckActions.addTruck({ ...payload, page: pageIndex, size: pageSize }),
+      );
+
+      handleAddTruckModalVisibility();
+    },
+    [dispatch, handleAddTruckModalVisibility, pageIndex, pageSize],
+  );
 
   return (
     <>
@@ -42,31 +69,27 @@ const TrucksTable: React.FC = () => {
           className={styles.btn}
           onClick={handleAddTruckModalVisibility}
         />
-        {trucks.length > 0 ? (
-          <Table
-            data={trucks}
-            columns={columns}
-            totalRow={total}
-            pageIndex={pageIndex}
-            pageSize={pageSize}
-            isLoading={dataStatus === DataStatus.PENDING}
-            changePageSize={changePageSize}
-            changePageIndex={changePageIndex}
-          />
-        ) : (
-          // TODO: Ask QA on Monday what text and styles should be
-          <div> Some text </div>
-        )}
+        <Table
+          data={trucks}
+          columns={columns}
+          totalRow={total}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          isLoading={dataStatus === DataStatus.PENDING}
+          changePageSize={changePageSize}
+          changePageIndex={changePageIndex}
+          emptyTableMessage="add new truck"
+        />
       </div>
 
       <Modal
         isOpen={isModalOpen}
-        isCentered={true}
+        isCentered
         onClose={handleAddTruckModalVisibility}
       >
         <div className={styles.formWrapper}>
           <AddTruckForm
-            updatePage={updatePage}
+            onSubmit={handleSubmit}
             onClose={handleAddTruckModalVisibility}
           />
         </div>

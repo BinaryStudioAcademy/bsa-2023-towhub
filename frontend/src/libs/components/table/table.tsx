@@ -19,6 +19,7 @@ type Properties<T> = {
   pageSize: number;
   totalRow: number;
   pageIndex: number;
+  emptyTableMessage?: string;
   isLoading?: boolean;
   changePageIndex: React.Dispatch<React.SetStateAction<number>>;
   changePageSize: React.Dispatch<React.SetStateAction<number>>;
@@ -31,6 +32,7 @@ const Table = <T,>({
   pageSize,
   pageIndex,
   isLoading,
+  emptyTableMessage,
   changePageIndex,
   changePageSize,
 }: Properties<T>): JSX.Element => {
@@ -57,6 +59,19 @@ const Table = <T,>({
     },
     [changePageSize, table, changePageIndex],
   );
+
+  if (data.length === 0) {
+    return emptyTableMessage ? (
+      <div className={getValidClassNames('h3', styles.message)}>
+        There are no data here yet. Please,{' '}
+        <span className={styles.red}>{emptyTableMessage}</span>
+      </div>
+    ) : (
+      <div className={getValidClassNames('h3', styles.message)}>
+        There are no data here yet.
+      </div>
+    );
+  }
 
   const createThead = (): JSX.Element => (
     <thead className={styles.thead}>

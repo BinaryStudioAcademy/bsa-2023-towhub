@@ -6,6 +6,7 @@ import {
   type PaginationParameters,
 } from '~/libs/types/types.js';
 
+import { useQueryParameters } from '../hooks.js';
 import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
 
@@ -36,11 +37,21 @@ const useAppTable = <T, K>({
 }: Properties<T, K>): ReturnValue => {
   const [pageSize, changePageSize] = useState(initialPageSize);
   const [pageIndex, changePageIndex] = useState(initialPageIndex);
+  const { setQueryParameters } = useQueryParameters();
   const dispatch = useAppDispatch();
 
   const updatePage = useCallback(() => {
-    void dispatch(tableFetchCall({ ...payload, pageSize, pageIndex }));
-  }, [dispatch, pageIndex, pageSize, payload, tableFetchCall]);
+    const actionPayload = { ...payload, page: pageIndex, size: pageSize };
+    setQueryParameters({ ...actionPayload, page: pageIndex });
+    void dispatch(tableFetchCall(actionPayload));
+  }, [
+    dispatch,
+    pageIndex,
+    pageSize,
+    payload,
+    setQueryParameters,
+    tableFetchCall,
+  ]);
 
   useEffect(() => {
     updatePage();
