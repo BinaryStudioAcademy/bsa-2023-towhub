@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
 import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
 import {
@@ -22,33 +23,41 @@ const signUp = createAsyncThunk<
     mode: ValueOf<typeof AuthMode>;
   },
   AsyncThunkConfig
->(`${sliceName}/sign-up`, async ({ payload, mode }, { extra }) => {
-  const { authApi, notification, localStorage } = extra;
+>(
+  `${sliceName}/sign-up`,
+  async ({ payload, mode }, { extra, rejectWithValue }) => {
+    const { authApi, localStorage } = extra;
 
-  try {
-    const result = await authApi.signUp(payload, mode);
+    try {
+      const result = await authApi.signUp(payload, mode);
+      await localStorage.set(StorageKey.TOKEN, result.accessToken);
 
-    await localStorage.set(StorageKey.TOKEN, result.accessToken);
+      return result;
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
 
-    return result;
-  } catch (error) {
-    notification.warning(getErrorMessage(error));
-    throw error;
-  }
-});
+      return rejectWithValue({ ...error, message: error.message });
+    }
+  },
+);
 
 const signIn = createAsyncThunk<
   UserSignInResponseDto,
   UserSignInRequestDto,
   AsyncThunkConfig
->(`${sliceName}/sign-in`, async (signInPayload, { extra }) => {
+>(`${sliceName}/sign-in`, async (signInPayload, { extra, rejectWithValue }) => {
   const { authApi, localStorage } = extra;
 
-  const result = await authApi.signIn(signInPayload);
+  try {
+    const result = await authApi.signIn(signInPayload);
+    await localStorage.set(StorageKey.TOKEN, result.accessToken);
 
-  await localStorage.set(StorageKey.TOKEN, result.accessToken);
+    return result;
+  } catch (error_: unknown) {
+    const error = error_ as HttpError;
 
-  return result;
+    return rejectWithValue({ ...error, message: error.message });
+  }
 });
 
 const getCurrent = createAsyncThunk<

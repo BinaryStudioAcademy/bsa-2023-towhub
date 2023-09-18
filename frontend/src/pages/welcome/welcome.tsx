@@ -1,16 +1,28 @@
 import { BusinessCard, CustomerCard } from '~/libs/components/components.js';
-import { AppRoute } from '~/libs/enums/enums.js';
+import { AppRoute, AuthMode } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
 import styles from './styles.module.scss';
 
 const WelcomePage: React.FC = () => {
   const navigate = useNavigate();
-
   const handleClick = useCallback(
-    (mode: string) => {
-      navigate(AppRoute.SIGN_UP, { state: mode });
+    (mode: ValueOf<typeof AuthMode>) => {
+      switch (mode) {
+        case AuthMode.CUSTOMER: {
+          navigate(AppRoute.SIGN_UP_CUSTOMER);
+          break;
+        }
+        case AuthMode.BUSINESS: {
+          navigate(AppRoute.SIGN_UP_BUSINESS);
+          break;
+        }
+        default: {
+          navigate(AppRoute.WELCOME);
+        }
+      }
     },
     [navigate],
   );

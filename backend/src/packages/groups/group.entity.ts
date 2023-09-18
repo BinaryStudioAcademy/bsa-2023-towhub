@@ -1,6 +1,10 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
+import {
+  type UserGroupEntityT,
+  type UserGroupKeyT,
+} from '../users/libs/types/types.js';
 import { type GroupEntityT } from './libs/types/types.js';
 
 class GroupEntity implements IEntity {
@@ -8,7 +12,7 @@ class GroupEntity implements IEntity {
 
   private 'name': string;
 
-  private 'key': string;
+  private 'key': UserGroupKeyT;
 
   private constructor({
     id,
@@ -17,7 +21,7 @@ class GroupEntity implements IEntity {
   }: NullableProperties<GroupEntityT, 'id'>) {
     this.id = id;
     this.name = name;
-    this.key = key;
+    this.key = key as UserGroupKeyT;
   }
 
   public static initialize({
@@ -43,7 +47,7 @@ class GroupEntity implements IEntity {
     });
   }
 
-  public toObject(): GroupEntityT {
+  public toObject(): UserGroupEntityT {
     return {
       id: this.id as number,
       name: this.name,
@@ -51,7 +55,7 @@ class GroupEntity implements IEntity {
     };
   }
 
-  public toNewObject(): Omit<GroupEntityT, 'id'> {
+  public toNewObject(): Omit<UserGroupEntityT, 'id'> {
     return {
       name: this.name,
       key: this.key,

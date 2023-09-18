@@ -1,4 +1,4 @@
-import { FormLabel, FormName } from '~/libs/enums/enums.js';
+import { FormLabel, FormName, HttpMessage } from '~/libs/enums/enums.js';
 import {
   type FormField,
   type UserSignInRequestDto,
@@ -10,12 +10,14 @@ const signInFields: FormField<UserSignInRequestDto>[] = [
     label: FormLabel.EMAIL,
     placeholder: 'Enter your email',
     name: FormName.EMAIL,
+    associateServerErrors: [HttpMessage.WRONG_EMAIL],
   },
   {
     type: 'password',
     label: FormLabel.PASSWORD,
     placeholder: 'Enter your password',
     name: FormName.PASSWORD,
+    associateServerErrors: [HttpMessage.WRONG_PASSWORD],
   },
 ];
 
