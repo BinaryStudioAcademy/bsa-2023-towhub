@@ -182,6 +182,10 @@ import {
  *           minimum: 1
  *           description: User id to which the business belongs
  *           example: 1
+ *     BusinessFindResult:
+ *       allOf:
+ *         - $ref: '#/components/schemas/Business'
+ *       nullable: true
  *     Driver:
  *       type: object
  *       properties:
@@ -380,6 +384,8 @@ class BusinessController extends Controller {
    * @swagger
    * /business/:
    *    post:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - business
    *      summary: Create business
@@ -433,6 +439,8 @@ class BusinessController extends Controller {
    * @swagger
    * /business/{id}:
    *    put:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - business
    *      summary: Update business
@@ -491,6 +499,8 @@ class BusinessController extends Controller {
    * @swagger
    * /business/{id}:
    *    delete:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - business
    *      summary: Delete business
@@ -536,6 +546,8 @@ class BusinessController extends Controller {
    * @swagger
    * /business/{id}:
    *    get:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - business
    *      summary: Find business
