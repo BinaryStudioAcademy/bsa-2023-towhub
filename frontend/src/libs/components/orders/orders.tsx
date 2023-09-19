@@ -8,6 +8,7 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
 import { actions as ordersActions } from '~/slices/orders/orders.js';
+import { selectOrders } from '~/slices/orders/selectors.js';
 
 import { OrderList } from '../components.js';
 import { Map } from '../map/map.js';
@@ -19,7 +20,7 @@ const libraries: Libraries = ['places'];
 const Orders: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const orders = useAppSelector((state) => state.orders.orders);
+  const orders = useAppSelector(selectOrders);
 
   const [endPointMarkers, setEndPointMarkers] = useState<
     {
