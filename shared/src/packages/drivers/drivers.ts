@@ -1,6 +1,7 @@
 export {
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
+  type DriverBusinessIdPayload,
   type DriverCommonDetails,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,

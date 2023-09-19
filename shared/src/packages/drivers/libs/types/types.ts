@@ -15,6 +15,7 @@ export {
 } from './response/response.js';
 export {
   type DriverAddPayload,
+  type DriverBusinessIdPayload,
   type DriverGetDriversPagePayload,
   type DriverUpdatePayload,
 } from './service/service.js';

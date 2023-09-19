@@ -11,6 +11,7 @@ import { type DriverRepository } from '../drivers/driver.repository.js';
 import {
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
+  type DriverBusinessIdPayload,
   type DriverCreateUpdateResponseDto,
   type DriverEntity as DriverEntityT,
   type DriverGetAllResponseDto,
@@ -84,7 +85,8 @@ class DriverService implements IService {
   public async findAllByBusinessId({
     businessId,
     query,
-  }: DriverGetDriversPagePayload): Promise<DriverGetAllResponseDto> {
+  }: DriverGetDriversPagePayload &
+    DriverBusinessIdPayload): Promise<DriverGetAllResponseDto> {
     const items = await this.driverRepository.findAllByBusinessId(
       businessId,
       query,
@@ -100,7 +102,8 @@ class DriverService implements IService {
   public async create({
     payload,
     businessId,
-  }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
+  }: DriverAddPayload &
+    DriverBusinessIdPayload): Promise<DriverAddResponseWithGroup> {
     const { password, email, lastName, firstName, phone, driverLicenseNumber } =
       payload;
 

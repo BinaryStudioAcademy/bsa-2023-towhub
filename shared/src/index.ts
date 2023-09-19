@@ -77,6 +77,7 @@ export {
 export {
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
+  type DriverBusinessIdPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverEntity,

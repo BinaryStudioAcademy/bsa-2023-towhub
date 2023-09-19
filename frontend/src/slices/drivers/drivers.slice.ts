@@ -31,7 +31,7 @@ const { actions, reducer, name } = createSlice({
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(addDriver.fulfilled, (state) => {
-        state.dataStatus = DataStatus.IDLE;
+        state.dataStatus = DataStatus.FULFILLED;
       })
       .addMatcher(
         isAnyOf(getDriversPage.pending, addDriver.pending),

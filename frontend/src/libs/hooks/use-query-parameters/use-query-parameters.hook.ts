@@ -61,4 +61,4 @@ const useQueryParameters = (): ReturnType => {
   return { getQueryParameters, setQueryParameters, removeQueryParameters };
 };
 
-export { useQueryParameters };
+export { type Queries, useQueryParameters };

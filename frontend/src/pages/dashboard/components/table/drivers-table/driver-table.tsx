@@ -9,6 +9,7 @@ import {
   useQueryParameters,
   useState,
 } from '~/libs/hooks/hooks.js';
+import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
 import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
 import { AddDriverForm } from '~/pages/business/components/add-driver-form/add-driver-form.js';
@@ -21,11 +22,15 @@ import styles from './styles.module.scss';
 const DriverTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const { getQueryParameters } = useQueryParameters();
-  const data = useAppSelector((state) => state.drivers.drivers);
-  const total = useAppSelector((state) => state.drivers.total);
-  const status = useAppSelector((state) => state.drivers.dataStatus);
-  const initialSize = getQueryParameters('size') as string | null;
-  const initialPage = getQueryParameters('page') as string | null;
+  const { drivers, total, dataStatus } = useAppSelector(({ drivers }) => ({
+    drivers: drivers.drivers,
+    total: drivers.total,
+    dataStatus: drivers.dataStatus,
+  }));
+  const { size: initialSize, page: initialPage } = getQueryParameters(
+    'size',
+    'page',
+  ) as Queries;
 
   const [isActiveModal, setIsActiveModal] = useState(false);
 
@@ -35,19 +40,17 @@ const DriverTable: React.FC = () => {
     initialPageSize: initialSize ? +initialSize : undefined,
   });
 
-  const handleOpenModal = useCallback(() => {
-    setIsActiveModal(true);
-  }, []);
-
-  const handleCloseModal = useCallback(() => {
-    setIsActiveModal(false);
-  }, []);
+  const handleModal = useCallback(() => {
+    setIsActiveModal(!isActiveModal);
+  }, [isActiveModal]);
 
   const handleSubmit = useCallback(
     (payload: DriverCreateUpdateRequestDto) => {
       void (async (): Promise<void> => {
-        const size = getQueryParameters('size') as string;
-        const page = getQueryParameters('page') as string;
+        const { size, page } = getQueryParameters('size', 'page') as Record<
+          string,
+          string
+        >;
         await dispatch(actions.addDriver({ payload }));
         await dispatch(actions.getDriversPage({ page: +page, size: +size }));
       })();
@@ -65,18 +68,19 @@ const DriverTable: React.FC = () => {
         <Button
           label="Add a Driver"
           className={styles.btn}
-          onClick={handleOpenModal}
+          onClick={handleModal}
         />
       </div>
       <Table
         {...tableHook}
-        data={data}
+        data={drivers}
         totalRow={total}
+        isTableEditable
         columns={columns}
-        isLoading={status === DataStatus.PENDING}
+        isLoading={dataStatus === DataStatus.PENDING}
         emptyTableMessage="add new driver"
       />
-      <Modal isOpen={isActiveModal} isCentered onClose={handleCloseModal}>
+      <Modal isOpen={isActiveModal} isCentered onClose={handleModal}>
         <div className={styles.formWrapper}>
           <AddDriverForm onSubmit={handleSubmit} />
         </div>

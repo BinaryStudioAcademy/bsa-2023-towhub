@@ -134,7 +134,7 @@ class BusinessService implements IService {
   public async createDriver({
     payload,
     ownerId,
-  }: Omit<DriverAddPayload, 'businessId'> & {
+  }: DriverAddPayload & {
     ownerId: number;
   }): Promise<DriverAddResponseWithGroup> {
     const business = await this.findByOwnerId(ownerId);
@@ -165,7 +165,7 @@ class BusinessService implements IService {
   public async findAllDriversByBusinessId({
     ownerId,
     query,
-  }: Omit<DriverGetDriversPagePayload, 'businessId'> & {
+  }: DriverGetDriversPagePayload & {
     ownerId: number;
   }): Promise<DriverGetAllResponseDto> {
     const business = await this.findByOwnerId(ownerId);
