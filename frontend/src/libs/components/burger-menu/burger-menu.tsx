@@ -1,4 +1,4 @@
-import { Breakpoint, IconName } from '~/libs/enums/enums.js';
+import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
@@ -54,8 +54,6 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
     };
   }, []);
 
-  const isMobile = window.innerWidth <= Breakpoint.MOBILE;
-
   return (
     <div
       ref={menuReference}
@@ -71,21 +69,18 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
           <ul>
             {burgerItems.map((item, index) => (
               <li key={index}>
-                {isMobile ? (
-                  <Icon
-                    iconName={item.icon}
-                    onClick={handleNavigate(item.navigateTo)}
-                    className={styles.menuIcon}
-                  />
-                ) : (
-                  <Button
-                    frontIcon={item.icon}
-                    isFullWidth
-                    label={item.name}
-                    onClick={handleNavigate(item.navigateTo)}
-                    className={styles.btn}
-                  />
-                )}
+                <Icon
+                  iconName={item.icon}
+                  onClick={handleNavigate(item.navigateTo)}
+                  className={styles.menuIcon}
+                />
+                <Button
+                  frontIcon={item.icon}
+                  isFullWidth
+                  label={item.name}
+                  onClick={handleNavigate(item.navigateTo)}
+                  className={styles.btn}
+                />
               </li>
             ))}
           </ul>
