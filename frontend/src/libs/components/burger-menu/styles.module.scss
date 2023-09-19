@@ -26,7 +26,6 @@
   border-radius: 16px;
 
   .btn {
-    display: inline-flex;
     justify-content: start;
     background-color: $blue-dark;
     border-radius: 0;
@@ -48,6 +47,10 @@
     width: 80px;
     background-color: $blue-dark;
 
+    .btn {
+      display: none;
+    }
+
     li {
       padding: 10px 20px;
 
@@ -55,5 +58,15 @@
         background-color: $blue;
       }
     }
+  }
+}
+
+@media (width > $screen-size-lg) {
+  .btn {
+    display: inline-flex;
+  }
+
+  .menuIcon {
+    display: none;
   }
 }
