@@ -1,8 +1,4 @@
-import {
-  Breakpoint,
-  BurgerMenuItemsName,
-  IconName,
-} from '~/libs/enums/enums.js';
+import { BurgerMenuItemsName, IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
@@ -91,10 +87,15 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
                 <li key={index}>
                   <Button
                     frontIcon={item.icon}
-                    isFullWidth={!isMobile}
-                    label={isMobile ? '' : item.name}
+                    label=""
                     onClick={clickHandler}
-                    className={isMobile ? styles.menuIcon : styles.btn}
+                    className={styles.menuIcon}
+                  />
+                  <Button
+                    frontIcon={item.icon}
+                    label={item.name}
+                    onClick={clickHandler}
+                    className={styles.btn}
                   />
                 </li>
               );

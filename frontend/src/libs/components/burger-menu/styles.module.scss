@@ -27,6 +27,7 @@
 
   .btn {
     justify-content: start;
+    width: 100%;
     background-color: $blue-dark;
     border-radius: 0;
 
@@ -56,15 +57,21 @@
   .menu {
     width: 80px;
     background-color: $blue-dark;
+
+    .btn {
+      display: none;
+    }
   }
 }
 
 @media (width > $screen-size-lg) {
-  .btn {
-    display: inline-flex;
-  }
+  .menu {
+    .btn {
+      display: inline-flex;
+    }
 
-  .menuIcon {
-    display: none;
+    .menuIcon {
+      display: none;
+    }
   }
 }
