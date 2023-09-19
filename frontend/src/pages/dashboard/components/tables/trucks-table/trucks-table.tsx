@@ -8,11 +8,11 @@ import {
   useAppSelector,
   useAppTable,
   useCallback,
-  useEffect,
   useQueryParameters,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { type PaginationParameters } from '~/libs/types/types.js';
+import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
+import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import {
   type TruckAddRequestDto,
   type TruckGetAllResponseDto,
@@ -32,29 +32,30 @@ const TrucksTable: React.FC = () => {
   }));
   const { getQueryParameters } = useQueryParameters();
 
-  const initialSize = getQueryParameters('size') as string | null;
-  const initialPage = getQueryParameters('page') as string | null;
+  const { size: initialSize, page: initialPage } = getQueryParameters(
+    'size',
+    'page',
+  ) as Queries;
 
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'Year', desc: true },
-  ]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const dispatch = useAppDispatch();
-
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const sortMethod = sorting.map((sort) => (sort.desc ? 'desc' : 'asc'))[0];
 
   const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
     TruckGetAllResponseDto,
-    PaginationParameters
+    PaginationWithSortingParameters
   >({
     tableFetchCall: findAllTrucksForBusiness,
-    initialPageIndex: initialPage ? +initialPage : undefined,
-    initialPageSize: initialSize ? +initialSize : undefined,
-    sorting: sorting[0].desc,
+    initialPageIndex: initialPage ? Number(initialPage) : null,
+    initialPageSize: initialSize ? Number(initialSize) : null,
+    sort: sortMethod,
   });
 
   const handleAddTruckModalVisibility = useCallback(() => {
-    setIsModalOpen(!isModalOpen);
-  }, [isModalOpen]);
+    setIsModalOpen((previous) => !previous);
+  }, []);
 
   const handleSubmit = useCallback(
     (payload: TruckAddRequestDto) => {
@@ -63,27 +64,36 @@ const TrucksTable: React.FC = () => {
           ...payload,
           page: pageIndex,
           size: pageSize,
-          sorting: sorting[0].desc,
+          sort: sortMethod,
         }),
       );
 
       handleAddTruckModalVisibility();
     },
-    [dispatch, handleAddTruckModalVisibility, pageIndex, pageSize, sorting],
+    [dispatch, handleAddTruckModalVisibility, pageIndex, pageSize, sortMethod],
+  );
+
+  const message = (
+    <div>
+      There are no data here yet. Please,{' '}
+      <span className={styles.red}>add new driver</span>
+    </div>
   );
 
   return (
     <>
       <div className={styles.container}>
-        <h2 className={getValidClassNames('uppercase', styles.title)}>
-          Company Trucks
-        </h2>
-        <Button
-          label="Add a truck"
-          frontIcon={IconName.PLUS}
-          className={styles.btn}
-          onClick={handleAddTruckModalVisibility}
-        />
+        <div className={styles.header}>
+          <h2 className={getValidClassNames('uppercase', styles.title)}>
+            Company Trucks
+          </h2>
+          <Button
+            label="Add a truck"
+            frontIcon={IconName.PLUS}
+            className={styles.btn}
+            onClick={handleAddTruckModalVisibility}
+          />
+        </div>
         <Table
           data={trucks}
           columns={columns}
@@ -95,7 +105,7 @@ const TrucksTable: React.FC = () => {
           isLoading={dataStatus === DataStatus.PENDING}
           changePageSize={changePageSize}
           changePageIndex={changePageIndex}
-          emptyTableMessage="add new truck"
+          emptyTableMessage={message}
         />
       </div>
       <Modal

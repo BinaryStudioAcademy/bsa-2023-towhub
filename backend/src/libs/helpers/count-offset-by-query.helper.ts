@@ -1,10 +1,6 @@
-const countOffsetByQuery = ({
-  page,
-  size,
-}: {
-  page: number;
-  size: number;
-}): number => {
+import { type PaginationParameters } from '../types/types.js';
+
+const countOffsetByQuery = ({ page, size }: PaginationParameters): number => {
   return page * size;
 };
 

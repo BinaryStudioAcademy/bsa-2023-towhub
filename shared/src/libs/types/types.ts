@@ -2,6 +2,7 @@ export { type ErrorConstructor } from './error-constructor.type.js';
 export { type NullableProperties } from './nullable-properties.type.js';
 export { type OperationResult } from './operation-result.type.js';
 export { type PaginationParameters } from './pagination-parameters.type.js';
+export { type PaginationWithSortingParameters } from './pagination-with-sorting-parameters.type.js';
 export { type RequireProperty } from './require-property.js';
 export { type Id } from './route-parameters.type.js';
 export { type ServerErrorDetail } from './server-error-detail.type.js';
@@ -10,5 +11,6 @@ export {
   type ServerErrorResponse,
   type ServerValidationErrorResponse,
 } from './server-error-response.type.js';
+export { type SortMethodValue } from './sort-method-value.type.js';
 export { type ValidationSchema } from './validation-schema.type.js';
 export { type ValueOf } from './value-of.type.js';

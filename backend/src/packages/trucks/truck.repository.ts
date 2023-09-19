@@ -1,10 +1,10 @@
-import { asc, desc, eq, ilike, placeholder, sql } from 'drizzle-orm';
+import { eq, ilike, placeholder, sql } from 'drizzle-orm';
 
-import { countOffsetByQuery } from '~/libs/helpers/helpers.js';
+import { countOffsetByQuery, getSortedBy } from '~/libs/helpers/helpers.js';
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
-import { type PaginationParameters } from '~/libs/types/types.js';
+import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 
 import {
   type TruckDatabaseModel,
@@ -38,21 +38,22 @@ class TruckRepository implements IRepository {
 
   public async findAllByBusinessId(
     businessId: number,
-    query: PaginationParameters & { sorting: string },
+    query: PaginationWithSortingParameters,
   ): Promise<TruckDatabaseModel[]> {
     const offset = countOffsetByQuery({ size: query.size, page: query.page });
 
-    const orderBy = query.sorting === 'true' ? desc : asc;
+    const sortedBy = getSortedBy(
+      query.sort,
+      this.trucksSchema.createdAt,
+      this.trucksSchema.year,
+    );
 
     return await this.db
       .driver()
       .select()
       .from(this.trucksSchema)
       .where(eq(this.trucksSchema.businessId, businessId))
-      .orderBy(
-        orderBy(this.trucksSchema.year),
-        desc(this.trucksSchema.createdAt),
-      )
+      .orderBy(...sortedBy)
       .offset(offset)
       .limit(query.size);
   }

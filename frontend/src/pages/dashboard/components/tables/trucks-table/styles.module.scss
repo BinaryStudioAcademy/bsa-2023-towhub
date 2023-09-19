@@ -1,24 +1,26 @@
 @import "src/assets/css/styles.scss";
 
 .container {
-  position: relative;
   height: 100%;
-  padding: 50px 0;
+  padding: 60px 100px 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 50px;
 }
 
 .btn {
-  position: absolute;
-  top: 50px;
-  right: 50px;
-  padding: 8px 10px;
+  padding: 13px;
   font-size: 16px;
+  text-transform: none;
+  border-radius: 8px;
 }
 
 .title {
-  margin-bottom: 50px;
-  padding-left: 60px;
-  color: $title-color;
-  text-align: start;
+  color: $blue-extra-dark;
+  text-align: center;
 }
 
 .formWrapper {

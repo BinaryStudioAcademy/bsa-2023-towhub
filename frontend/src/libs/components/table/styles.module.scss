@@ -10,7 +10,7 @@
 
 .message {
   margin-top: 100px;
-  color: $title-color;
+  color: $blue-extra-dark;
   text-align: center;
 }
 
@@ -112,10 +112,10 @@
 }
 
 @media (hover: hover) {
-.resizer {
+  .resizer {
     opacity: 0;
   }
-  
+
   *:hover > .resizer {
     opacity: 1;
   }

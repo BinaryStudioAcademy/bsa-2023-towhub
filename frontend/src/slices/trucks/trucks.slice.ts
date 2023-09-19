@@ -9,7 +9,6 @@ import { addTruck, findAllTrucksForBusiness } from './actions.js';
 
 type State = {
   trucks: TruckEntity[];
-
   total: number;
   error: HttpError | null;
   chosenTruck: (TruckEntity & { driverId: number }) | null;
@@ -38,7 +37,7 @@ const { reducer, actions, name } = createSlice({
   extraReducers(builder) {
     builder
       .addCase(addTruck.fulfilled, (state, action) => {
-        state.trucks.push(action.payload);
+        state.trucks.unshift(action.payload);
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(findAllTrucksForBusiness.fulfilled, (state, action) => {

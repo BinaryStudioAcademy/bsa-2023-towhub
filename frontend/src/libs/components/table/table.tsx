@@ -22,7 +22,7 @@ type Properties<T> = {
   isLoading?: boolean;
   isTableEditable?: boolean;
   columns: ColumnDef<T>[];
-  emptyTableMessage?: string;
+  emptyTableMessage?: JSX.Element;
   pageSize: number;
   totalRow: number;
   pageIndex: number;
@@ -82,14 +82,9 @@ const Table = <T,>({
   );
 
   if (data.length === 0 && !isLoading) {
-    return emptyTableMessage ? (
+    return (
       <div className={getValidClassNames('h4', styles.message)}>
-        There are no data here yet. Please,{' '}
-        <span className={styles.red}>{emptyTableMessage}</span>
-      </div>
-    ) : (
-      <div className={getValidClassNames('h4', styles.message)}>
-        There are no data here yet.
+        {emptyTableMessage ?? 'There are no data here yet.'}
       </div>
     );
   }

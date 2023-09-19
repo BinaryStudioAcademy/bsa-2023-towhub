@@ -7,12 +7,14 @@ const columns: ColumnDef<TruckEntity>[] = [
     accessorFn: (trucks): string => capitalizeFirstLetter(trucks.manufacturer),
     footer: 'Manufacturer',
     size: 200,
+    enableSorting: false,
   },
   {
     header: 'Tow Type',
     accessorFn: (trucks): string => capitalizeFirstLetter(trucks.towType),
     footer: 'Tow Type',
     size: 200,
+    enableSorting: false,
   },
   {
     header: 'Year',
@@ -24,25 +26,29 @@ const columns: ColumnDef<TruckEntity>[] = [
     header: 'Plate Number',
     accessorFn: (trucks): string => trucks.licensePlateNumber,
     footer: 'Plate Number',
-    size: 200,
+    size: 250,
+    enableSorting: false,
   },
   {
     header: 'Capacity',
     accessorFn: (trucks) => trucks.capacity,
     footer: 'Capacity',
     size: 200,
+    enableSorting: false,
   },
   {
     header: 'Price Per Km',
     accessorFn: (trucks) => trucks.pricePerKm,
     footer: 'Price Per Km',
     size: 200,
+    enableSorting: false,
   },
   {
     header: 'Created At',
     accessorFn: (trucks): string => trucks.createdAt,
     footer: 'Created At',
     size: 200,
+    enableSorting: false,
   },
 ];
 

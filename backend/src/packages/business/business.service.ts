@@ -1,7 +1,7 @@
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
-import { type PaginationParameters } from '~/libs/types/types.js';
+import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { type DriverService } from '../drivers/driver.service.js';
@@ -179,7 +179,7 @@ class BusinessService implements IService {
 
   public async findAllTrucksByBusinessId(
     userId: number,
-    query: PaginationParameters & { sorting: string },
+    query: PaginationWithSortingParameters,
   ): Promise<TruckGetAllResponseDto> {
     const business = await this.findByOwnerId(userId);
 

@@ -4,6 +4,7 @@ export {
   AppErrorMessage,
   ContentType,
   ServerErrorType,
+  SortMethod,
 } from './libs/enums/enums.js';
 export {
   ApplicationError,
@@ -39,11 +40,13 @@ export {
   type NullableProperties,
   type OperationResult,
   type PaginationParameters,
+  type PaginationWithSortingParameters,
   type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
   type ServerValidationErrorResponse,
+  type SortMethodValue,
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
