@@ -23,7 +23,7 @@ class BusinessApi extends HttpApi {
   }
 
   public async findAllTrucksByBusinessId(
-    query: PaginationParameters | null,
+    query: (PaginationParameters & { sorting: boolean }) | null,
   ): Promise<{ items: TruckEntity[]; total: number }> {
     const queryString = buildQueryString(query);
 

@@ -388,7 +388,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.findAllTrucks(
           options as ApiHandlerOptions<{
-            query: PaginationParameters;
+            query: PaginationParameters & { sorting: string };
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -889,7 +889,7 @@ class BusinessController extends Controller {
 
   private async findAllTrucks(
     options: ApiHandlerOptions<{
-      query: PaginationParameters;
+      query: PaginationParameters & { sorting: string };
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {

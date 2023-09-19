@@ -1,10 +1,14 @@
+import { type SortingState } from '@tanstack/react-table';
+
 import { Button, Modal, Table } from '~/libs/components/components.js';
 import { DataStatus, IconName } from '~/libs/enums/enums.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppSelector,
   useAppTable,
   useCallback,
+  useEffect,
   useQueryParameters,
   useState,
 } from '~/libs/hooks/hooks.js';
@@ -31,6 +35,9 @@ const TrucksTable: React.FC = () => {
   const initialSize = getQueryParameters('size') as string | null;
   const initialPage = getQueryParameters('page') as string | null;
 
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'Year', desc: true },
+  ]);
   const dispatch = useAppDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -42,6 +49,7 @@ const TrucksTable: React.FC = () => {
     tableFetchCall: findAllTrucksForBusiness,
     initialPageIndex: initialPage ? +initialPage : undefined,
     initialPageSize: initialSize ? +initialSize : undefined,
+    sorting: sorting[0].desc,
   });
 
   const handleAddTruckModalVisibility = useCallback(() => {
@@ -51,18 +59,25 @@ const TrucksTable: React.FC = () => {
   const handleSubmit = useCallback(
     (payload: TruckAddRequestDto) => {
       void dispatch(
-        truckActions.addTruck({ ...payload, page: pageIndex, size: pageSize }),
+        truckActions.addTruck({
+          ...payload,
+          page: pageIndex,
+          size: pageSize,
+          sorting: sorting[0].desc,
+        }),
       );
 
       handleAddTruckModalVisibility();
     },
-    [dispatch, handleAddTruckModalVisibility, pageIndex, pageSize],
+    [dispatch, handleAddTruckModalVisibility, pageIndex, pageSize, sorting],
   );
 
   return (
     <>
       <div className={styles.container}>
-        <h2 className={styles.title}>Trucks</h2>
+        <h2 className={getValidClassNames('uppercase', styles.title)}>
+          Company Trucks
+        </h2>
         <Button
           label="Add a truck"
           frontIcon={IconName.PLUS}
@@ -75,13 +90,14 @@ const TrucksTable: React.FC = () => {
           totalRow={total}
           pageIndex={pageIndex}
           pageSize={pageSize}
+          setSorting={setSorting}
+          sorting={sorting}
           isLoading={dataStatus === DataStatus.PENDING}
           changePageSize={changePageSize}
           changePageIndex={changePageIndex}
           emptyTableMessage="add new truck"
         />
       </div>
-
       <Modal
         isOpen={isModalOpen}
         isCentered

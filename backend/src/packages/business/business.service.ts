@@ -179,7 +179,7 @@ class BusinessService implements IService {
 
   public async findAllTrucksByBusinessId(
     userId: number,
-    query: PaginationParameters,
+    query: PaginationParameters & { sorting: string },
   ): Promise<TruckGetAllResponseDto> {
     const business = await this.findByOwnerId(userId);
 

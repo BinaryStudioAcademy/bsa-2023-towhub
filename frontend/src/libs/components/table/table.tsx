@@ -1,28 +1,37 @@
+import { type OnChangeFn, type SortingState } from '@tanstack/react-table';
+
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
-  flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useCallback,
+  useMemo,
   useReactTable,
 } from '~/libs/hooks/hooks.js';
 import { type ColumnDef } from '~/libs/types/types.js';
 
 import { Spinner } from '../components.js';
 import { Pagination } from '../pagination/pagination.jsx';
+import { Tbody, Thead } from './libs/components/components.js';
 import { DEFAULT_COLUMN } from './libs/constant.js';
+import { addIconsToData } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties<T> = {
   data: T[];
+  isLoading?: boolean;
+  isTableEditable?: boolean;
   columns: ColumnDef<T>[];
+  emptyTableMessage?: string;
   pageSize: number;
   totalRow: number;
   pageIndex: number;
-  emptyTableMessage?: string;
-  isLoading?: boolean;
+  sorting?: SortingState;
+  setSorting?: OnChangeFn<SortingState>;
   changePageIndex: React.Dispatch<React.SetStateAction<number>>;
   changePageSize: React.Dispatch<React.SetStateAction<number>>;
+  onEditClick?: (rowId: string) => void;
+  onDeleteClick?: (rowId: string) => void;
 };
 
 const Table = <T,>({
@@ -31,19 +40,31 @@ const Table = <T,>({
   totalRow,
   pageSize,
   pageIndex,
-  isLoading,
+  isLoading = false,
   emptyTableMessage,
+  isTableEditable = false,
+  sorting,
+  setSorting,
   changePageIndex,
   changePageSize,
+  ...properties
 }: Properties<T>): JSX.Element => {
   const pagesRange = Math.ceil(totalRow / pageSize);
+  const dataAndColumns = useMemo(() => {
+    return isTableEditable ? addIconsToData(data, columns) : { data, columns };
+  }, [columns, data, isTableEditable]);
   const table = useReactTable({
-    data,
-    columns,
+    ...dataAndColumns,
     columnResizeMode: 'onChange',
     defaultColumn: DEFAULT_COLUMN,
+    state: {
+      sorting,
+    },
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    enableSortingRemoval: false,
     initialState: {
       pagination: {
         pageSize,
@@ -60,88 +81,39 @@ const Table = <T,>({
     [changePageSize, table, changePageIndex],
   );
 
-  if (data.length === 0) {
+  if (data.length === 0 && !isLoading) {
     return emptyTableMessage ? (
-      <div className={getValidClassNames('h3', styles.message)}>
+      <div className={getValidClassNames('h4', styles.message)}>
         There are no data here yet. Please,{' '}
         <span className={styles.red}>{emptyTableMessage}</span>
       </div>
     ) : (
-      <div className={getValidClassNames('h3', styles.message)}>
+      <div className={getValidClassNames('h4', styles.message)}>
         There are no data here yet.
       </div>
     );
   }
-
-  const createThead = (): JSX.Element => (
-    <thead className={styles.thead}>
-      {table.getHeaderGroups().map((headerGroup) => (
-        <tr key={headerGroup.id} className={styles.tr}>
-          {headerGroup.headers.map((header) => (
-            <th
-              key={header.id}
-              className={styles.th}
-              style={{
-                width: header.getSize(),
-              }}
-            >
-              {header.isPlaceholder
-                ? null
-                : flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-              <div
-                {...{
-                  onMouseDown: header.getResizeHandler(),
-                  onTouchStart: header.getResizeHandler(),
-                  className: getValidClassNames(
-                    styles.resizer,
-                    header.column.getIsResizing() && styles.isResizing,
-                  ),
-                }}
-              />
-            </th>
-          ))}
-        </tr>
-      ))}
-    </thead>
-  );
-
-  const createTbody = (): JSX.Element => (
-    <tbody>
-      {table.getRowModel().rows.map((row) => (
-        <tr key={row.id} className={styles.tr}>
-          {row.getVisibleCells().map((cell) => (
-            <td
-              key={cell.id}
-              className={styles.td}
-              style={{
-                width: cell.column.getSize(),
-              }}
-            >
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </td>
-          ))}
-        </tr>
-      ))}
-    </tbody>
-  );
 
   return (
     <div className={styles.container}>
       {isLoading ? (
         <Spinner />
       ) : (
-        <table
-          className={styles.table}
-          style={{
-            width: table.getCenterTotalSize(),
-          }}
-        >
-          {createThead()}
-          {createTbody()}
-        </table>
+        <div className={styles.wrapper}>
+          <table
+            className={styles.table}
+            style={{
+              width: table.getCenterTotalSize(),
+            }}
+          >
+            <Thead table={table} />
+            <Tbody
+              table={table}
+              isTableEditable={isTableEditable}
+              {...properties}
+            />
+          </table>
+        </div>
       )}
       <Pagination
         pageCount={pagesRange}

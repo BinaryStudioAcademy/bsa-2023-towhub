@@ -16,17 +16,20 @@ import { name as sliceName } from './trucks.slice.js';
 
 const addTruck = createAsyncThunk<
   TruckEntity,
-  TruckAddRequestDto & PaginationParameters,
+  TruckAddRequestDto & PaginationParameters & { sorting: boolean },
   AsyncThunkConfig
 >(
   `${sliceName}/add-truck`,
-  async ({ page, size, ...payload }, { rejectWithValue, extra, dispatch }) => {
+  async (
+    { page, size, sorting, ...payload },
+    { rejectWithValue, extra, dispatch },
+  ) => {
     const { businessApi, notification } = extra;
 
     try {
       const truck = await businessApi.addTruck(payload);
 
-      await dispatch(findAllTrucksForBusiness({ page, size }));
+      await dispatch(findAllTrucksForBusiness({ page, size, sorting }));
 
       notification.success(TruckNotificationMessage.SUCCESS_ADD_NEW_TRUCK);
 
@@ -43,18 +46,19 @@ const addTruck = createAsyncThunk<
 
 const findAllTrucksForBusiness = createAsyncThunk<
   { items: TruckEntity[]; total: number },
-  PaginationParameters,
+  PaginationParameters & { sorting: boolean },
   AsyncThunkConfig
 >(
   `${sliceName}/find-all-trucks-for-business`,
   async (payload, { rejectWithValue, extra }) => {
-    const { page, size } = payload;
+    const { page, size, sorting } = payload;
     const { businessApi, notification } = extra;
 
     try {
       return await businessApi.findAllTrucksByBusinessId({
         page,
         size,
+        sorting,
       });
     } catch (error_: unknown) {
       const error = error_ as HttpError;

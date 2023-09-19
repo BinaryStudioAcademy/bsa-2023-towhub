@@ -24,7 +24,7 @@ class TruckService implements IService {
 
   public async findAllByBusinessId(
     businessId: number,
-    query: PaginationParameters,
+    query: PaginationParameters & { sorting: string },
   ): Promise<TruckGetAllResponseDto> {
     const data = await this.repository.findAllByBusinessId(businessId, query);
 

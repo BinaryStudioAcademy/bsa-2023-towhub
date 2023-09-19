@@ -1,4 +1,4 @@
-import { desc, eq, ilike, placeholder, sql } from 'drizzle-orm';
+import { asc, desc, eq, ilike, placeholder, sql } from 'drizzle-orm';
 
 import { countOffsetByQuery } from '~/libs/helpers/helpers.js';
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
@@ -38,16 +38,21 @@ class TruckRepository implements IRepository {
 
   public async findAllByBusinessId(
     businessId: number,
-    query: PaginationParameters,
+    query: PaginationParameters & { sorting: string },
   ): Promise<TruckDatabaseModel[]> {
-    const offset = countOffsetByQuery(query);
+    const offset = countOffsetByQuery({ size: query.size, page: query.page });
+
+    const orderBy = query.sorting === 'true' ? desc : asc;
 
     return await this.db
       .driver()
       .select()
       .from(this.trucksSchema)
       .where(eq(this.trucksSchema.businessId, businessId))
-      .orderBy(desc(this.trucksSchema.createdAt))
+      .orderBy(
+        orderBy(this.trucksSchema.year),
+        desc(this.trucksSchema.createdAt),
+      )
       .offset(offset)
       .limit(query.size);
   }

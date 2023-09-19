@@ -19,6 +19,7 @@ type Properties<T, K> = {
   payload?: K;
   initialPageSize?: number;
   initialPageIndex?: number;
+  sorting: boolean;
 };
 
 type ReturnValue = {
@@ -34,6 +35,7 @@ const useAppTable = <T, K>({
   payload,
   initialPageSize = DEFAULT_PAGE_SIZE,
   initialPageIndex = DEFAULT_PAGE_INDEX,
+  sorting,
 }: Properties<T, K>): ReturnValue => {
   const [pageSize, changePageSize] = useState(initialPageSize);
   const [pageIndex, changePageIndex] = useState(initialPageIndex);
@@ -41,7 +43,12 @@ const useAppTable = <T, K>({
   const dispatch = useAppDispatch();
 
   const updatePage = useCallback(() => {
-    const actionPayload = { ...payload, page: pageIndex, size: pageSize };
+    const actionPayload = {
+      ...payload,
+      page: pageIndex,
+      size: pageSize,
+      sorting,
+    };
     setQueryParameters({ ...actionPayload, page: pageIndex });
     void dispatch(tableFetchCall(actionPayload));
   }, [
@@ -50,6 +57,7 @@ const useAppTable = <T, K>({
     pageSize,
     payload,
     setQueryParameters,
+    sorting,
     tableFetchCall,
   ]);
 
