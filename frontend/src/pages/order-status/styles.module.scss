@@ -19,7 +19,7 @@ $section-max-width: 416px;
   justify-content: center;
   align-items: center;
   max-width: 593px;
-  margin: 10px 25px 0;
+  min-height: 729px;
   margin: 0 10px;
   background-color: $white;
   border-radius: 10px;
@@ -37,7 +37,7 @@ $section-max-width: 416px;
 
 .card {
   max-width: $section-max-width;
-  margin-top: 44px;
+  background-color: $white;
 }
 
 .map {
@@ -48,7 +48,7 @@ $section-max-width: 416px;
 .status {
   max-width: $section-max-width;
   height: 175px;
-  margin: 30px 0 0;
+  margin: 30px 0 44px;
   font-size: 23px;
 }
 
@@ -75,19 +75,35 @@ $section-max-width: 416px;
 
 .buttonHomepage {
   font-weight: $font-weight-normal;
-  background-color: $black-light;
+  background-color: $blue-extra-dark;
 }
 
 @media screen and (width <= 600px) {
-  $section-max-width-sm: calc(100vw - 50px);
+  $section-max-width-sm: calc(100vw - 2px);
+
+  .status.statusBig {
+    margin-top: 50px;
+    padding: 75px;
+  }
 
   .cardSection {
+    width: 100%;
     max-width: $section-max-width-sm;
+    min-height: auto;
+    margin: 0;
+    background-color: inherit;
+    box-shadow: none;
+  }
+
+  .mapSection {
+    width: 100%;
+    margin: 0;
   }
 
   .card {
-    max-width: 100%;
+    width: 100%;
     margin-top: 10px;
+    box-shadow: $shadow-light;
   }
 
   .map {
@@ -96,10 +112,11 @@ $section-max-width: 416px;
   }
 
   .status {
+    width: $section-max-width-sm;
     min-width: 300px;
-    max-width: $section-max-width-sm;
     height: 72px;
-    margin: 0;
+    margin: 0 0 10px;
+    padding: 0;
     font-size: 17px;
   }
 
@@ -112,6 +129,7 @@ $section-max-width: 416px;
   }
 
   .container {
+    gap: 10px;
     padding: 10px 5px 0;
   }
 }

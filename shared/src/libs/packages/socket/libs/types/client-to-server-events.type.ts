@@ -1,12 +1,11 @@
+import { type GeolocationLatLng } from '~/libs/packages/geolocation/geolocation.js';
+
 import { type ClientSocketEvent } from '../enums/client-socket-event.enum.js';
 
 type ClientToServerEvents = {
   [ClientSocketEvent.TRUCK_LOCATION_UPDATE]: (payload: {
     truckId: number;
-    latLng: {
-      latitude: number;
-      longitude: number;
-    };
+    latLng: GeolocationLatLng;
   }) => void;
   [ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES]: (payload: {
     orderId: string;

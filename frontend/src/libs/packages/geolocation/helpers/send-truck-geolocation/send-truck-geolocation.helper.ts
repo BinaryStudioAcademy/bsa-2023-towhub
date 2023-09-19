@@ -10,7 +10,7 @@ const sendTruckGeolocation = (
     [
       {
         truckId,
-        latLng: { latitude: coords.latitude, longitude: coords.longitude },
+        latLng: { lat: coords.latitude, lng: coords.longitude },
       },
     ],
   );

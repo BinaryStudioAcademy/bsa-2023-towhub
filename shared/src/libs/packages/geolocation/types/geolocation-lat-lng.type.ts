@@ -1,3 +1,3 @@
-type GeolocationLatLng = Pick<GeolocationCoordinates, 'latitude' | 'longitude'>;
+type GeolocationLatLng = { lat: number; lng: number };
 
 export { type GeolocationLatLng };

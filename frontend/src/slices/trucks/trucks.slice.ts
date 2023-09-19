@@ -51,8 +51,7 @@ const { reducer, actions, name } = createSlice({
         state.dataStatus = DataStatus.REJECTED;
       })
       .addCase(updateTruckLocationFromSocket.fulfilled, (state, action) => {
-        const { latitude, longitude } = action.payload.latLng;
-        state.truckLocation = { lat: latitude, lng: longitude };
+        state.truckLocation = action.payload.latLng;
       })
       .addCase(calculateArrivalTime.fulfilled, (state, action) => {
         state.truckArrivalTime = action.payload;

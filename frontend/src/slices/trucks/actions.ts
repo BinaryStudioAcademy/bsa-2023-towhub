@@ -50,7 +50,7 @@ const calculateArrivalTime = createAsyncThunk<
   async ({ origin, destination }, { extra }) => {
     const { mapServiceFactory } = extra;
     const routeData = {
-      origin: { lat: origin.latLng.latitude, lng: origin.latLng.longitude },
+      origin: origin.latLng,
       destination: jsonToLatLngLiteral(destination),
     };
 

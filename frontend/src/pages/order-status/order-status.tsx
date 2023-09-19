@@ -125,7 +125,11 @@ const OrderStatusPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <OrderStatus
-        className={getValidClassNames(styles.status, styles.statusTop)}
+        className={getValidClassNames(
+          styles.status,
+          styles.statusTop,
+          (cancelScreen || doneScreen) && styles.statusBig,
+        )}
       />
       {!cancelScreen && !doneScreen && (
         <section className={styles.mapSection}>

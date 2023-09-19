@@ -225,6 +225,10 @@ $routes-margin-bottom: 3.5vmin;
     width: 100%;
     margin-top: 20px;
   }
+
+  .container {
+    border: 0;
+  }
 }
 
 @keyframes marquee {
