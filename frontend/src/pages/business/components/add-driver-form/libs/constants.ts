@@ -2,7 +2,7 @@ import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js
 
 const DEFAULT_ADD_DRIVER_PAYLOAD: Omit<
   DriverCreateUpdateRequestDto,
-  'driverTrucks'
+  'truckIds'
 > = {
   email: '',
   phone: '+380',

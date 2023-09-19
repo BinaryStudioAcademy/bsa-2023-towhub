@@ -143,7 +143,6 @@ erDiagram
     shifts one -- zero or many orders: "shifts(id) has orders(shift_id)"
     users zero or one -- one or many shifts: "users(id) has shifts(driver_id)"
     trucks one -- zero or many shifts: "shifts(truck_id) has trucks(id)"
-    trucks one or many -- one business_details: "trucks(business_id) belongs to business_details(id)"
 ```
 
 ### 🌑 Backend

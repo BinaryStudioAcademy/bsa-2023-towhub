@@ -4,7 +4,7 @@ import { type GroupEntityT } from '~/packages/groups/groups.js';
 
 type DriverAddResponseWithGroup = DriverCreateUpdateResponseDto & {
   group: GroupEntityT;
-  trucksId: number[];
+  possibleTruckIds: number[];
 };
 
 export { type DriverAddResponseWithGroup };

@@ -220,7 +220,7 @@ class BusinessService implements IService {
     );
   }
 
-  public async findAllTrucksByBusinessId(
+  public async findAllTrucksByOwnerId(
     userId: number,
     query: PaginationPayload,
   ): Promise<EntityPagination<TruckEntity>> {

@@ -11,7 +11,7 @@ import { name as sliceName } from './trucks.slice.js';
 
 const addTruck = createAsyncThunk<
   TruckEntity,
-  Omit<TruckEntity, 'id'>,
+  Omit<TruckEntity, 'id' | 'businessId'>,
   AsyncThunkConfig
 >(`${sliceName}/add-truck`, (payload, { extra }) => {
   const { truckApi } = extra;
@@ -19,7 +19,7 @@ const addTruck = createAsyncThunk<
   return truckApi.addTruck(payload);
 });
 
-const getTruckForBusiness = createAsyncThunk<
+const getTrucksForBusiness = createAsyncThunk<
   EntityPagination<TruckEntity>,
   undefined,
   AsyncThunkConfig
@@ -34,4 +34,4 @@ const getTruckForBusiness = createAsyncThunk<
   }
 });
 
-export { addTruck, getTruckForBusiness };
+export { addTruck, getTrucksForBusiness };

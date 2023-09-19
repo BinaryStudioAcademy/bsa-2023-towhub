@@ -142,7 +142,6 @@ export {
   truckUpdateRequestBody,
   TruckValidationMessage,
   TruckYear,
-  userTrucksRequestBody,
 } from './packages/trucks/trucks.js';
 export {
   type BusinessSignUpRequestDto,

@@ -1,10 +1,10 @@
-import { addTruck, getTruckForBusiness } from './actions.js';
+import { addTruck, getTrucksForBusiness } from './actions.js';
 import { actions } from './trucks.slice.js';
 
 const allActions = {
   ...actions,
   addTruck,
-  getTruckForBusiness,
+  getTrucksForBusiness,
 };
 
 export { allActions as actions };

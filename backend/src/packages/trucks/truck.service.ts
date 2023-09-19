@@ -3,7 +3,10 @@ import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type EntityPagination } from '~/libs/types/types.js';
 
 import { type PaginationPayload } from '../business/libs/types/types.js';
-import { type TruckEntity as TruckEntityT } from './libs/types/types.js';
+import {
+  type DriverHaveAccessToTruck,
+  type TruckEntity as TruckEntityT,
+} from './libs/types/types.js';
 import { TruckEntity } from './truck.entity.js';
 import { type TruckRepository } from './truck.repository.js';
 
@@ -69,17 +72,19 @@ class TruckService implements IService {
     return result.map((element) => TruckEntity.initialize(element).toObject());
   }
 
-  public async addTrucksToUser(
+  public async addTrucksToDriver(
     userId: number,
-    trucksId: number[],
-  ): Promise<number[]> {
-    return await Promise.all(
-      trucksId.map(async (truckId) => {
-        const [result] = await this.repository.addUser(userId, truckId);
-
-        return result.truckId;
+    truckIds: number[],
+  ): Promise<void> {
+    const uniqueItems = [...new Set(truckIds)];
+    const driverTrucks: DriverHaveAccessToTruck[] = uniqueItems.map(
+      (truckId) => ({
+        userId,
+        truckId,
       }),
     );
+
+    await this.repository.addTruckToDriver(driverTrucks);
   }
 
   public async findAllByBusinessId(

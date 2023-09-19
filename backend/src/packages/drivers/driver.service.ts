@@ -106,7 +106,7 @@ class DriverService implements IService {
       firstName,
       phone,
       driverLicenseNumber,
-      driverTrucks,
+      truckIds,
     } = payload;
 
     const { result: doesDriverExist } = await this.driverRepository.checkExists(
@@ -146,14 +146,11 @@ class DriverService implements IService {
         userId: user.id,
       }),
     );
-    const trucksId = await this.truckService.addTrucksToUser(
-      user.id,
-      driverTrucks,
-    );
+    await this.truckService.addTrucksToDriver(user.id, truckIds);
 
     const driverObject = driver.toObject();
 
-    return { ...user, ...driverObject, group, trucksId };
+    return { ...user, ...driverObject, group, possibleTruckIds: truckIds };
   }
 
   public async update({

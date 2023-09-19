@@ -2,7 +2,7 @@ import { type DriverDto } from '../types.js';
 
 type DriverCreateUpdateRequestDto = DriverDto & {
   password: string;
-  driverTrucks: number[];
+  truckIds: number[];
 };
 
 export { type DriverCreateUpdateRequestDto };

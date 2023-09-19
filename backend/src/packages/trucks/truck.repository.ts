@@ -6,6 +6,7 @@ import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
 import { type PaginationPayload } from '../business/libs/types/types.js';
 import {
+  type DriverHaveAccessToTruck,
   type TruckDatabaseModel,
   type TruckEntity,
 } from './libs/types/types.js';
@@ -99,30 +100,23 @@ class TruckRepository implements IRepository {
       .where(eq(this.trucksSchema.businessId, id));
   }
 
-  public async addUser(
-    userId: number,
-    truckId: number,
-  ): Promise<
-    {
-      userId: number;
-      truckId: number;
-    }[]
-  > {
+  public async addTruckToDriver(
+    driverTruckIds: DriverHaveAccessToTruck[],
+  ): Promise<void> {
     const preparedQuery = this.db
       .driver()
       .insert(this.usersTrucksSchema)
-      .values({ userId, truckId })
-      .returning()
-      .prepare('addUser');
+      .values(driverTruckIds)
+      .prepare('addTruckToDriver');
 
-    return await preparedQuery.execute();
+    await preparedQuery.execute();
   }
 
   public async findAllByBusinessId(
     businessId: number,
     query: PaginationPayload,
   ): Promise<TruckDatabaseModel[]> {
-    const index = query.page * query.perPage;
+    const index = query.page * query.size;
 
     return await this.db
       .driver()
@@ -131,7 +125,7 @@ class TruckRepository implements IRepository {
       .where(eq(this.trucksSchema.businessId, businessId))
       .orderBy(desc(this.trucksSchema.createdAt))
       .offset(index)
-      .limit(query.perPage);
+      .limit(query.size);
   }
 
   public async getTotal(businessId: number): Promise<number> {

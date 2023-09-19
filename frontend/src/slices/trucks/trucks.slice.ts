@@ -4,7 +4,7 @@ import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 
-import { addTruck, getTruckForBusiness } from './actions.js';
+import { addTruck, getTrucksForBusiness } from './actions.js';
 
 type State = {
   trucks: TruckEntity[];
@@ -35,18 +35,18 @@ const { reducer, actions, name } = createSlice({
         state.trucks.push(action.payload);
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(getTruckForBusiness.fulfilled, (state, action) => {
+      .addCase(getTrucksForBusiness.fulfilled, (state, action) => {
         state.trucks = action.payload.items;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addMatcher(
-        isAnyOf(getTruckForBusiness.pending, addTruck.pending),
+        isAnyOf(getTrucksForBusiness.pending, addTruck.pending),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
         },
       )
       .addMatcher(
-        isAnyOf(getTruckForBusiness.rejected, addTruck.rejected),
+        isAnyOf(getTrucksForBusiness.rejected, addTruck.rejected),
         (state) => {
           state.dataStatus = DataStatus.REJECTED;
         },

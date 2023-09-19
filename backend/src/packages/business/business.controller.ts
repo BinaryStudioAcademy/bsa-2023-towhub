@@ -863,7 +863,7 @@ class BusinessController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const trucks = await this.businessService.findAllTrucksByBusinessId(
+    const trucks = await this.businessService.findAllTrucksByOwnerId(
       options.user.id,
       options.query,
     );
