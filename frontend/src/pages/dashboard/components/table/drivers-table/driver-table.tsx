@@ -59,6 +59,13 @@ const DriverTable: React.FC = () => {
     [dispatch, getQueryParameters],
   );
 
+  const message = (
+    <div>
+      There are no data here yet. Please,{' '}
+      <span className={styles.red}>add new driver</span>
+    </div>
+  );
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -78,7 +85,7 @@ const DriverTable: React.FC = () => {
         isTableEditable
         columns={columns}
         isLoading={dataStatus === DataStatus.PENDING}
-        emptyTableMessage="add new driver"
+        emptyTableMessage={message}
       />
       <Modal isOpen={isActiveModal} isCentered onClose={handleModal}>
         <div className={styles.formWrapper}>
