@@ -6,7 +6,10 @@ import {
 
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import { type AsyncThunkConfig } from '~/libs/types/async-thunk-config.type';
-import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
+import {
+  type DriverGetAllResponseDto,
+  type PaginationParameters,
+} from '~/libs/types/types.js';
 import { DriverCreationMessage } from '~/packages/drivers/libs/enums/enums.js';
 import {
   type DriverAddPayload,
@@ -25,31 +28,37 @@ const getDriversPage = createAsyncThunk<
 
 const addDriver = createAsyncThunk<
   DriverAddResponseWithGroup,
-  Omit<DriverAddPayload, 'businessId'>,
+  DriverAddPayload & PaginationParameters,
   AsyncThunkConfig
->(ACTIONS_TYPES.ADD_DRIVER, async (payload, { rejectWithValue, extra }) => {
-  try {
-    const result = await extra.driverApi.addDriver(payload);
-    extra.notification.success(DriverCreationMessage.SUCCESS);
+>(
+  ACTIONS_TYPES.ADD_DRIVER,
+  async ({ size, page, ...payload }, { rejectWithValue, extra, dispatch }) => {
+    try {
+      const result = await extra.driverApi.addDriver(payload);
 
-    return result;
-  } catch (error: unknown) {
-    let message = DriverCreationMessage.ERROR;
+      await dispatch(getDriversPage({ size, page }));
 
-    if (error instanceof HttpError) {
-      message = error.message;
+      extra.notification.success(DriverCreationMessage.SUCCESS);
+
+      return result;
+    } catch (error: unknown) {
+      let message = DriverCreationMessage.ERROR;
+
+      if (error instanceof HttpError) {
+        message = error.message;
+      }
+      extra.notification.error(message);
+
+      return rejectWithValue(
+        new HttpError({
+          message,
+          status: HttpCode.BAD_REQUEST,
+          errorType: ServerErrorType.COMMON,
+          details: [],
+        }),
+      );
     }
-    extra.notification.error(message);
-
-    return rejectWithValue(
-      new HttpError({
-        message,
-        status: HttpCode.BAD_REQUEST,
-        errorType: ServerErrorType.COMMON,
-        details: [],
-      }),
-    );
-  }
-});
+  },
+);
 
 export { addDriver, getDriversPage };

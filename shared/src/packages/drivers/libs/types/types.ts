@@ -14,7 +14,9 @@ export {
 } from './response/response.js';
 export {
   type DriverAddPayload,
+  type DriverAddPayloadWithBusinessId,
   type DriverBusinessIdPayload,
   type DriverGetDriversPagePayload,
+  type DriverGetDriversPayloadWithBusinessId,
   type DriverUpdatePayload,
 } from './service/service.js';

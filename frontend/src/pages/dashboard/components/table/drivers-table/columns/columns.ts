@@ -20,10 +20,6 @@ const columns: ColumnDef<DriverWithUserData>[] = [
   {
     header: 'Created At',
     accessorFn: (driver: DriverWithUserData): string | undefined => {
-      if (!driver.driver.createdAt) {
-        return;
-      }
-
       return new Date(driver.driver.createdAt).toDateString();
     },
     footer: 'Created At',

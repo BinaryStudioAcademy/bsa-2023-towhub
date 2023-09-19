@@ -9,13 +9,12 @@ import { UserGroupKey } from '../auth/libs/enums/enums.js';
 import { DriverEntity } from '../drivers/driver.entity.js';
 import { type DriverRepository } from '../drivers/driver.repository.js';
 import {
-  type DriverAddPayload,
+  type DriverAddPayloadWithBusinessId,
   type DriverAddResponseWithGroup,
-  type DriverBusinessIdPayload,
   type DriverCreateUpdateResponseDto,
   type DriverEntity as DriverEntityT,
   type DriverGetAllResponseDto,
-  type DriverGetDriversPagePayload,
+  type DriverGetDriversPayloadWithBusinessId,
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
@@ -85,8 +84,7 @@ class DriverService implements IService {
   public async findAllByBusinessId({
     businessId,
     query,
-  }: DriverGetDriversPagePayload &
-    DriverBusinessIdPayload): Promise<DriverGetAllResponseDto> {
+  }: DriverGetDriversPayloadWithBusinessId): Promise<DriverGetAllResponseDto> {
     const items = await this.driverRepository.findAllByBusinessId(
       businessId,
       query,
@@ -102,8 +100,7 @@ class DriverService implements IService {
   public async create({
     payload,
     businessId,
-  }: DriverAddPayload &
-    DriverBusinessIdPayload): Promise<DriverAddResponseWithGroup> {
+  }: DriverAddPayloadWithBusinessId): Promise<DriverAddResponseWithGroup> {
     const { password, email, lastName, firstName, phone, driverLicenseNumber } =
       payload;
 

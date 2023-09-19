@@ -34,29 +34,25 @@ const DriverTable: React.FC = () => {
 
   const [isActiveModal, setIsActiveModal] = useState(false);
 
-  const tableHook = useAppTable<DriverGetAllResponseDto>({
-    tableFetchCall: getDriversPage,
-    initialPageIndex: initialPage ? +initialPage : undefined,
-    initialPageSize: initialSize ? +initialSize : undefined,
-  });
+  const { pageSize, pageIndex, changePageSize, changePageIndex } =
+    useAppTable<DriverGetAllResponseDto>({
+      tableFetchCall: getDriversPage,
+      initialPageIndex: initialPage ? +initialPage : undefined,
+      initialPageSize: initialSize ? +initialSize : undefined,
+    });
 
   const handleModal = useCallback(() => {
-    setIsActiveModal(!isActiveModal);
-  }, [isActiveModal]);
+    setIsActiveModal((isActiveModal) => !isActiveModal);
+  }, []);
 
   const handleSubmit = useCallback(
     (payload: DriverCreateUpdateRequestDto) => {
-      void (async (): Promise<void> => {
-        const { size, page } = getQueryParameters('size', 'page') as Record<
-          string,
-          string
-        >;
-        await dispatch(actions.addDriver({ payload }));
-        await dispatch(actions.getDriversPage({ page: +page, size: +size }));
-      })();
-      setIsActiveModal(false);
+      void dispatch(
+        actions.addDriver({ payload, size: pageSize, page: pageIndex }),
+      );
+      handleModal();
     },
-    [dispatch, getQueryParameters],
+    [dispatch, pageSize, pageIndex, handleModal],
   );
 
   const message = (
@@ -79,12 +75,15 @@ const DriverTable: React.FC = () => {
         />
       </div>
       <Table
-        {...tableHook}
         data={drivers}
         totalRow={total}
         isTableEditable
         columns={columns}
         isLoading={dataStatus === DataStatus.PENDING}
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        changePageIndex={changePageIndex}
+        changePageSize={changePageSize}
         emptyTableMessage={message}
       />
       <Modal isOpen={isActiveModal} isCentered onClose={handleModal}>
