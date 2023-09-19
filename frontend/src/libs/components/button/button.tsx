@@ -7,7 +7,7 @@ import styles from './styles.module.scss';
 
 type Properties = {
   className?: Parameters<typeof getValidClassNames>[0];
-  label: string;
+  label: string | number;
   type?: 'button' | 'submit';
   size?: 'sm' | 'md';
   variant?: 'contained' | 'outlined' | 'text';
