@@ -3,6 +3,7 @@ import { AppRoute, AuthMode } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   type CustomerSignUpRequestDto,
+  type ServerErrorHandling,
   type ValueOf,
 } from '~/libs/types/types.js';
 import {
@@ -20,9 +21,14 @@ import styles from './styles.module.scss';
 type Properties = {
   onSubmit: (payload: CustomerSignUpRequestDto) => void;
   mode: ValueOf<typeof AuthMode>;
+  serverError: ServerErrorHandling;
 };
 
-const SignUpForm: React.FC<Properties> = ({ onSubmit, mode }: Properties) => {
+const SignUpForm: React.FC<Properties> = ({
+  onSubmit,
+  mode,
+  serverError,
+}: Properties) => {
   return (
     <div className={styles.formWrapper}>
       <h3 className={getValidClassNames('h4', 'uppercase', styles.title)}>
@@ -35,6 +41,7 @@ const SignUpForm: React.FC<Properties> = ({ onSubmit, mode }: Properties) => {
           onSubmit={onSubmit}
           btnLabel="Create Account"
           fields={signUpCustomerFields}
+          serverError={serverError}
         />
       ) : (
         <Form
@@ -43,13 +50,14 @@ const SignUpForm: React.FC<Properties> = ({ onSubmit, mode }: Properties) => {
           onSubmit={onSubmit}
           btnLabel="Create Account"
           fields={signUpBusinessFields}
+          serverError={serverError}
         />
       )}
 
       <p className={getValidClassNames('textSm', styles.text)}>
-        Already have an account? Go to
+        Already have an account? Go to{' '}
         <Link to={AppRoute.SIGN_IN} className={styles.link}>
-          Log in
+          Sign in
         </Link>
       </p>
     </div>
