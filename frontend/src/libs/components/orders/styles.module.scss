@@ -1,16 +1,27 @@
+@import "src/assets/css/vars.scss";
+
 .orders {
   display: flex;
+  flex-direction: column;
   height: 100%;
+
+  @media screen and (min-width: $screen-size-lg) {
+    flex-direction: row;
+  }
 }
 
 .orderlistArea {
-  width: 50%;
+  min-width: 400px;
 }
 
 .mapArea {
   position: relative;
-  width: 50%;
-  margin-left: 20px;
+  width: 100%;
+  margin-left: 0;
+
+  @media screen and (min-width: $screen-size-lg) {
+    margin-left: 20px;
+  }
 }
 
 .mapWrapper {

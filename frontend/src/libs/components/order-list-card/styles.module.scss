@@ -7,6 +7,11 @@
   background-color: $white;
   border-radius: 10px;
   box-shadow: $shadow-light;
+
+  &:hover {
+    background-color: $grey-extra-light;
+    box-shadow: none;
+  }
 }
 
 .header {

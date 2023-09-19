@@ -15,6 +15,7 @@ type Constructor = {
   mapElement: HTMLDivElement;
   center?: google.maps.LatLngLiteral;
   zoom: number;
+  bounds?: google.maps.LatLngBounds;
 };
 
 class MapService implements IMapService {
@@ -24,20 +25,42 @@ class MapService implements IMapService {
 
   private directionsRenderer: google.maps.DirectionsRenderer;
 
-  public constructor({ mapElement, center, zoom }: Constructor) {
+  private infoWindow: google.maps.InfoWindow;
+
+  public constructor({ mapElement, center, zoom, bounds }: Constructor) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
     });
+    this.infoWindow = new google.maps.InfoWindow();
 
-    this.initMap(mapElement, center, zoom);
+    this.initMap({ mapElement, center, zoom, bounds });
   }
 
-  private initMap(
-    mapElement: HTMLDivElement,
-    center?: google.maps.LatLngLiteral,
-    zoom?: number,
-  ): void {
+  private initMap({
+    mapElement,
+    center,
+    zoom,
+    bounds,
+  }: {
+    mapElement: HTMLDivElement;
+    center?: google.maps.LatLngLiteral;
+    zoom?: number;
+    bounds?: google.maps.LatLngBounds;
+  }): void {
+    if (!center && bounds) {
+      this.map = new google.maps.Map(mapElement, {
+        zoom,
+        styles: mapStyle as google.maps.MapTypeStyle[],
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+      });
+      this.map.fitBounds(bounds);
+
+      return;
+    }
+
     this.map = new google.maps.Map(mapElement, {
       center,
       zoom,
@@ -172,7 +195,8 @@ class MapService implements IMapService {
             size: new google.maps.Size(TRUCK_IMG_WIDTH, TRUCK_IMG_HEIGHT),
             scale: 1,
           }
-        : undefined,
+        : truckImg,
+      title: `${position.lat}, ${position.lng}`,
     });
   }
 
@@ -191,9 +215,11 @@ class MapService implements IMapService {
       travelMode: google.maps.TravelMode.DRIVING,
     });
 
+    // const info = this.infoWindow.setContent(`${startPoint}, ${endPoint}`);
     this.directionsRenderer.setOptions({
       directions: path,
       map: this.map,
+      // infoWindow: info,
       preserveViewport: true,
     });
   }

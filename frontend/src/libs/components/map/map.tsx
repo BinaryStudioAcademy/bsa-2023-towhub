@@ -31,6 +31,8 @@ const Map: React.FC<Properties> = ({
   pricePerKm,
   startAddress,
   endAddress,
+  markers,
+  shownRoute,
 }: Properties) => {
   const mapReference = useRef<HTMLDivElement>(null);
   const mapService = useRef<MapService | null>(null);
@@ -39,20 +41,38 @@ const Map: React.FC<Properties> = ({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (mapReference.current) {
+    if (!mapReference.current) {
+      return;
+    }
+
+    if (!center && markers) {
+      const bounds = new google.maps.LatLngBounds();
+
+      for (const marker of markers) {
+        bounds.extend(marker);
+      }
+
       mapService.current = new MapService({
         mapElement: mapReference.current,
-        center,
         zoom,
+        bounds,
       });
 
-      if (center && destination) {
-        mapService.current.addMarker(destination);
-
-        void mapService.current.calculateRouteAndTime(center, destination);
-      }
+      return;
     }
-  }, [center, zoom, destination]);
+
+    mapService.current = new MapService({
+      mapElement: mapReference.current,
+      center,
+      zoom,
+    });
+
+    if (center && destination) {
+      mapService.current.addMarker(destination);
+
+      void mapService.current.calculateRouteAndTime(center, destination);
+    }
+  }, [center, zoom, destination, markers]);
 
   useEffect(() => {
     if (pricePerKm && startAddress && endAddress) {
@@ -65,6 +85,26 @@ const Map: React.FC<Properties> = ({
       );
     }
   }, [dispatch, endAddress, startAddress, pricePerKm]);
+
+  useEffect(() => {
+    if (markers && markers.length > 0) {
+      for (const marker of markers) {
+        mapService.current?.addMarker(marker, false);
+      }
+    }
+  }, [markers]);
+
+  useEffect(() => {
+    if (markers && markers.length > 0) {
+      for (const marker of markers) {
+        mapService.current?.addMarker(marker, false);
+      }
+
+      if (shownRoute) {
+        void mapService.current?.addRoute(shownRoute);
+      }
+    }
+  }, [markers, shownRoute]);
 
   return <div ref={mapReference} id="map" className={mapClasses} />;
 };

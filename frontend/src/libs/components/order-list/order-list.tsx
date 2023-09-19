@@ -1,44 +1,31 @@
-// import { useCallback } from 'react';
 import { type OrderResponseDto } from 'shared/build';
 
 import { OrderListCardBusiness } from '../components.js';
-// import { OrderListCard } from '../order-list-card/order-list-card.js';
-// import { makeLatLngLiteral } from '../orders/libs/helpers/make-lat-lng-literal.helper.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   orders: OrderResponseDto[];
-  //   select: ({
-  //     startPoint,
-  //     endPoint,
-  //   }: {
-  //     startPoint: google.maps.LatLngLiteral;
-  //     endPoint: google.maps.LatLngLiteral;
-  //   }) => void;
+  select: ({
+    startPoint,
+    endPoint,
+  }: {
+    startPoint: google.maps.LatLngLiteral;
+    endPoint: google.maps.LatLngLiteral;
+  }) => void;
 };
 
-const OrderList: React.FC<Properties> = ({ orders }: Properties) => {
-  //   const selectCard = useCallback(
-  //     (startLocation: string, endLocation: string) => () =>
-  //       select({
-  //         startPoint: makeLatLngLiteral(startLocation),
-  //         endPoint: makeLatLngLiteral(endLocation),
-  //       }),
-  //     [select],
-  //   );
-
+const OrderList: React.FC<Properties> = ({ orders, select }: Properties) => {
   return (
     <ul className={styles.orderList}>
       {orders.map((order) => {
         const { id } = order;
 
         return (
-          <li
-            key={id}
-            className={styles.orderItem}
-            // onMouseEnter={selectCard(startLocation, endLocation)}
-          >
-            <OrderListCardBusiness order={order}></OrderListCardBusiness>
+          <li key={id} className={styles.orderItem}>
+            <OrderListCardBusiness
+              order={order}
+              select={select}
+            ></OrderListCardBusiness>
           </li>
         );
       })}
