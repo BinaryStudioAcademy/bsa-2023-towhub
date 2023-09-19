@@ -3,10 +3,8 @@ export { type DriverCommonDetails } from './driver-common-details.type.js';
 export { type DriverDto } from './driver-dto.type.js';
 export { type DriverEntity } from './driver-entity.type.js';
 export {
-  type BusinessGetAllDriversRequestParameters,
   type DriverCreateUpdateRequestDto,
-  type DriverGetRequestParameters,
-  type DriverUpdateDeleteRequestParameters,
+  type DriverRequestParameters,
 } from './request/request.js';
 export {
   type DriverCreateUpdateResponseDto,
