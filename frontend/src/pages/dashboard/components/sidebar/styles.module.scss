@@ -2,7 +2,8 @@
 
 .container {
   width: 210px;
-  height: 100%;
+  height: calc(100% - 30px);
+  margin: 15px 0 10px 20px;
   padding: 19px 18px;
   overflow-y: auto;
   background-color: $white;
@@ -31,15 +32,6 @@
   box-shadow: none;
 }
 
-.item:first-child::after {
-  display: block;
-  width: 100%;
-  height: 2px;
-  margin: 12.5px 0;
-  background-color: #c3d4e9;
-  content: "";
-}
-
 .btn:hover,
 .btn:focus {
   background-color: $black-light-transparent;
@@ -48,4 +40,13 @@
 .btn.active {
   color: $blue-dark;
   background-color: rgba($blue-light, 0.2);
+}
+
+.item::after {
+  display: block;
+  width: 100%;
+  height: 2px;
+  margin: 3px 0 12px;
+  background-color: #c3d4e9;
+  content: "";
 }
