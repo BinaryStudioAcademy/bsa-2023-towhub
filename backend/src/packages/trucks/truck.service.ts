@@ -72,15 +72,14 @@ class TruckService implements IService {
   public async addTrucksToUser(
     userId: number,
     trucksId: number[],
-  ): Promise<{ userId: number; trucksId: number[] }> {
-    const userTrucks: number[] = [];
+  ): Promise<number[]> {
+    return await Promise.all(
+      trucksId.map(async (truckId) => {
+        const [result] = await this.repository.addUser(userId, truckId);
 
-    for (const truckId of trucksId) {
-      const [result] = await this.repository.addUser(userId, truckId);
-      userTrucks.push(result.truckId);
-    }
-
-    return { userId, trucksId: userTrucks };
+        return result.truckId;
+      }),
+    );
   }
 
   public async findAllByBusinessId(

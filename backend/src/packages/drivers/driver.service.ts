@@ -17,6 +17,7 @@ import {
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
+import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 
 class DriverService implements IService {
@@ -28,21 +29,26 @@ class DriverService implements IService {
 
   private geolocationCacheService: GeolocationCacheService;
 
+  private truckService: TruckService;
+
   public constructor({
     driverRepository,
     userService,
     groupService,
     geolocationCacheService,
+    truckService,
   }: {
     driverRepository: DriverRepository;
     userService: UserService;
     groupService: GroupService;
     geolocationCacheService: GeolocationCacheService;
+    truckService: TruckService;
   }) {
     this.driverRepository = driverRepository;
     this.userService = userService;
     this.groupService = groupService;
     this.geolocationCacheService = geolocationCacheService;
+    this.truckService = truckService;
   }
 
   public async getGeolocationById(id: number): Promise<GeolocationLatLng> {
@@ -93,8 +99,15 @@ class DriverService implements IService {
     payload,
     businessId,
   }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
-    const { password, email, lastName, firstName, phone, driverLicenseNumber } =
-      payload;
+    const {
+      password,
+      email,
+      lastName,
+      firstName,
+      phone,
+      driverLicenseNumber,
+      driverTrucks,
+    } = payload;
 
     const { result: doesDriverExist } = await this.driverRepository.checkExists(
       {
@@ -133,10 +146,14 @@ class DriverService implements IService {
         userId: user.id,
       }),
     );
+    const trucksId = await this.truckService.addTrucksToUser(
+      user.id,
+      driverTrucks,
+    );
 
     const driverObject = driver.toObject();
 
-    return { ...user, ...driverObject, group };
+    return { ...user, ...driverObject, group, trucksId };
   }
 
   public async update({
