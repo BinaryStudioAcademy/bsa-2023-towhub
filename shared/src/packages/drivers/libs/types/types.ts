@@ -5,8 +5,7 @@ export { type DriverEntity } from './driver-entity.type.js';
 export { type DriverWithUserData } from './driver-with-user-data.type.js';
 export {
   type DriverCreateUpdateRequestDto,
-  type DriverGetRequestParameters,
-  type DriverUpdateDeleteRequestParameters,
+  type DriverRequestParameters,
 } from './request/request.js';
 export {
   type DriverAddResponseWithGroup,

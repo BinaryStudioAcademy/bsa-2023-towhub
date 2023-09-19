@@ -23,7 +23,6 @@ export {
   type DriverEntity,
   type DriverGetAllResponseDto,
   type DriverGetDriversPagePayload,
-  type DriverGetRequestParameters,
-  type DriverUpdateDeleteRequestParameters,
+  type DriverRequestParameters,
   type DriverUpdatePayload,
 } from './libs/types/types.js';
