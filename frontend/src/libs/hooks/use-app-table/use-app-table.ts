@@ -17,8 +17,8 @@ type Properties<T, K> = {
     AsyncThunkConfig
   >;
   payload?: K;
-  initialPageSize?: number;
-  initialPageIndex?: number;
+  initialPageSize?: number | null;
+  initialPageIndex?: number | null;
 };
 
 type ReturnValue = {
@@ -32,11 +32,15 @@ type ReturnValue = {
 const useAppTable = <T, K = PaginationParameters>({
   tableFetchCall,
   payload,
-  initialPageSize = DEFAULT_PAGE_SIZE,
-  initialPageIndex = DEFAULT_PAGE_INDEX,
+  initialPageSize,
+  initialPageIndex,
 }: Properties<T, K>): ReturnValue => {
-  const [pageSize, changePageSize] = useState(initialPageSize);
-  const [pageIndex, changePageIndex] = useState(initialPageIndex);
+  const [pageSize, changePageSize] = useState(
+    initialPageSize ?? DEFAULT_PAGE_SIZE,
+  );
+  const [pageIndex, changePageIndex] = useState(
+    initialPageIndex ?? DEFAULT_PAGE_INDEX,
+  );
   const { setQueryParameters } = useQueryParameters();
   const dispatch = useAppDispatch();
 

@@ -9,7 +9,6 @@ import {
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
-  type DriverGetDriversPagePayload,
 } from '../drivers/drivers.js';
 import { type ShiftEntity } from '../shifts/shift.js';
 import { type UserEntityT } from '../users/users.js';
@@ -20,6 +19,7 @@ import {
   type BusinessCreatePayload,
   type BusinessEntityT,
   type BusinessUpdateResponseDto,
+  type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 
 class BusinessService implements IService {
@@ -169,12 +169,10 @@ class BusinessService implements IService {
     });
   }
 
-  public async findAllDriversByBusinessId({
-    ownerId,
-    query,
-  }: DriverGetDriversPagePayload & {
-    ownerId: number;
-  }): Promise<DriverGetAllResponseDto> {
+  public async findAllDriversByBusinessId(
+    ownerId: number,
+    query: GetPaginatedPageQuery,
+  ): Promise<DriverGetAllResponseDto> {
     const business = await this.findByOwnerId(ownerId);
 
     if (!business) {

@@ -37,8 +37,8 @@ const DriverTable: React.FC = () => {
   const { pageSize, pageIndex, changePageSize, changePageIndex } =
     useAppTable<DriverGetAllResponseDto>({
       tableFetchCall: getDriversPage,
-      initialPageIndex: initialPage ? +initialPage : undefined,
-      initialPageSize: initialSize ? +initialSize : undefined,
+      initialPageIndex: initialPage ? Number(initialPage) : null,
+      initialPageSize: initialSize ? Number(initialSize) : null,
     });
 
   const handleModal = useCallback(() => {

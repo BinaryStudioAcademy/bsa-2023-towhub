@@ -768,10 +768,10 @@ class BusinessController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const drivers = await this.businessService.findAllDriversByBusinessId({
-      ownerId: options.user.id,
-      query: options.query,
-    });
+    const drivers = await this.businessService.findAllDriversByBusinessId(
+      options.user.id,
+      options.query,
+    );
 
     return {
       status: HttpCode.OK,
