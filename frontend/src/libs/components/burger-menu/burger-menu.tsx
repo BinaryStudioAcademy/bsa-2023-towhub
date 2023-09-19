@@ -68,8 +68,6 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
     };
   }, []);
 
-  const isMobile = window.innerWidth <= Breakpoint.MOBILE;
-
   return (
     <div
       ref={menuReference}
