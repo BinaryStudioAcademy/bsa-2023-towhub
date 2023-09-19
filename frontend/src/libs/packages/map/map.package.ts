@@ -20,6 +20,9 @@ type Constructor = MapServiceParameters & {
     directionsRenderer: google.maps.DirectionsRenderer;
   };
 };
+let map: google.maps.Map | null = null;
+
+const markers: google.maps.Marker[] = [];
 
 class MapService implements IMapService {
   private map: google.maps.Map | null = null;
@@ -38,6 +41,10 @@ class MapService implements IMapService {
     zoom,
     extraLibraries,
   }: Constructor) {
+    if (map) {
+      this.map = map;
+    }
+
     if (extraLibraries) {
       this.geocoder = extraLibraries.geocoding;
       this.routes = extraLibraries.routes;
@@ -45,8 +52,8 @@ class MapService implements IMapService {
       this.directionsService = extraLibraries.directionsService;
 
       if (mapElement && center && zoom) {
-        if (this.map) {
-          this.map.panTo(center);
+        if (map) {
+          map.panTo(center);
 
           return;
         }
@@ -71,7 +78,7 @@ class MapService implements IMapService {
     center?: google.maps.LatLngLiteral,
     zoom?: number,
   ): void {
-    this.map = new google.maps.Map(mapElement, {
+    map = this.map = new google.maps.Map(mapElement, {
       center,
       zoom,
       styles: mapStyle as google.maps.MapTypeStyle[],
@@ -108,7 +115,7 @@ class MapService implements IMapService {
       this.directionsRenderer.setDirections(response);
 
       const angle = this.findAngle(response, origin);
-
+      this.removeMarkers();
       this.addMarker(origin, true, angle);
       this.addMarker(destination);
 
@@ -225,6 +232,12 @@ class MapService implements IMapService {
     return google.maps.geometry.spherical.computeHeading(origin, nextPoint);
   }
 
+  public removeMarkers(): void {
+    for (const marker of markers) {
+      marker.setMap(null);
+    }
+  }
+
   public addMarker(
     position: google.maps.LatLngLiteral,
     isOrigin = false,
@@ -234,7 +247,7 @@ class MapService implements IMapService {
 
     const rotatedIconUrl = rotateImg(truckImg, angle);
 
-    new google.maps.Marker({
+    const marker = new google.maps.Marker({
       position,
       map: this.map,
       icon: isOrigin
@@ -249,6 +262,7 @@ class MapService implements IMapService {
           }
         : undefined,
     });
+    markers.push(marker);
   }
 }
 

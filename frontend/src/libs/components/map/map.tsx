@@ -42,6 +42,7 @@ const Map: React.FC<Properties> = ({
       });
 
       if (center && destination) {
+        mapService.current.removeMarkers();
         mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);
