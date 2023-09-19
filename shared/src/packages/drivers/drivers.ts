@@ -9,8 +9,7 @@ export {
   type DriverEntity,
   type DriverGetAllResponseDto,
   type DriverGetDriversPagePayload,
-  type DriverGetRequestParameters,
-  type DriverUpdateDeleteRequestParameters,
+  type DriverRequestParameters,
   type DriverUpdatePayload,
   type DriverWithUserData,
   DriverApiPath,
@@ -18,5 +17,5 @@ export {
 } from './libs/types/types.js';
 export {
   driverCreateUpdateRequestBody,
-  driverUpdateDeleteParameters,
+  driverParameters,
 } from './libs/validation-schemas/validation-schemas.js';

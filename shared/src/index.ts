@@ -83,13 +83,12 @@ export {
   type DriverEntity,
   type DriverGetAllResponseDto,
   type DriverGetDriversPagePayload,
-  type DriverGetRequestParameters,
-  type DriverUpdateDeleteRequestParameters,
+  type DriverRequestParameters,
   type DriverUpdatePayload,
   type DriverWithUserData,
   DriverApiPath,
   driverCreateUpdateRequestBody,
-  driverUpdateDeleteParameters,
+  driverParameters,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
