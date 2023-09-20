@@ -1,5 +1,7 @@
 const DriverValidationMessage = {
-  DRIVER_LICENSE_NUMBER_REQUIRED: 'Driver license number is required',
+  DRIVER_LICENSE_NUMBER_REQUIRED: 'This field is mandatory',
+  DRIVER_LICENSE_NUMBER_INVALID:
+    'This driver license number does not seem valid',
   ID_MUST_BE_NUMBER: 'Driver id must be number',
   USER_ID_MUST_BE_NUMBER: 'Driver user id must be number',
   BUSINESS_ID_MUST_BE_NUMBER: 'Driver user id must be number',

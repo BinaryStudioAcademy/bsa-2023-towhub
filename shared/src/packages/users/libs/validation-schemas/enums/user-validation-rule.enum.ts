@@ -6,7 +6,6 @@ const UserValidationRule = {
   COMPANY_NAME: /^[\s\w!#&'*+,.;?@~-]{1,40}$/,
   EMAIL_MIN_LENGTH: 5,
   EMAIL_MAX_LENGTH: 254,
-  DRIVER_LICENSE_NUMBER: /^[A-Z]{3} \d{6}$/,
 } as const;
 
 export { UserValidationRule };
