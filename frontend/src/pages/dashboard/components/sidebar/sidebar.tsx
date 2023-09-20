@@ -39,7 +39,7 @@ const Sidebar: React.FC<Properties> = ({
             key={tab.name}
           >
             <Button
-              label={isCollapsed ? '' : tab.name}
+              {...(isCollapsed && { label: tab.name })}
               className={[
                 'h5',
                 styles.btn,
