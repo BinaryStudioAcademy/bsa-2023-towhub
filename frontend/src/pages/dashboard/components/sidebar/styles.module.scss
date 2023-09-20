@@ -41,12 +41,3 @@
   color: $blue-dark;
   background-color: rgba($blue-light, 0.2);
 }
-
-.item.active::after {
-  display: block;
-  width: 100%;
-  height: 2px;
-  margin: 3px 0 12px;
-  background-color: $white-blue;
-  content: "";
-}
