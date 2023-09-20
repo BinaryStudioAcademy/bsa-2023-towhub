@@ -8,4 +8,5 @@ export {
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,
   type BusinessUpdateResponseDto,
+  type GetPaginatedPageQuery,
 } from 'shared/build/index.js';
