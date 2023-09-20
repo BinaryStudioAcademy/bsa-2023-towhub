@@ -87,7 +87,6 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
                 <li key={index}>
                   <Button
                     frontIcon={item.icon}
-                    label=""
                     onClick={clickHandler}
                     className={styles.menuIcon}
                   />
