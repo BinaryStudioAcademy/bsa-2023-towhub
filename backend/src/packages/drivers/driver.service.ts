@@ -153,7 +153,6 @@ class DriverService implements IService {
         userId: user.id,
       }),
     );
-    await this.truckService.addTrucksToDriver(user.id, truckIds);
 
     const driverObject = driver.toObject();
 
@@ -169,6 +168,8 @@ class DriverService implements IService {
       TemplateName.DRIVER_CREDENTIALS,
       emailData,
     );
+
+    await this.truckService.addTrucksToDriver(user.id, truckIds);
 
     return { ...user, ...driverObject, group, possibleTruckIds: truckIds };
   }

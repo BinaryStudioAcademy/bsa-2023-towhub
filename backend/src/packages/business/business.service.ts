@@ -224,6 +224,25 @@ class BusinessService implements IService {
     );
   }
 
+  public async createTruck(
+    payload: Omit<TruckEntity, 'id' | 'businessId'>,
+    userId: number,
+  ): Promise<TruckEntity> {
+    const business = await this.findByOwnerId(userId);
+
+    if (!business) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.truckService.create({
+      ...payload,
+      businessId: business.id,
+    });
+  }
+
   public async findAllTrucksByOwnerId(
     userId: number,
     query: GetPaginatedPageQuery,

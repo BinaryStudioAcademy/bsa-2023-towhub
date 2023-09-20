@@ -81,7 +81,6 @@ export {
   type DriverBusinessIdPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
-  type DriverDto,
   type DriverEntity,
   type DriverGetAllResponseDto,
   type DriverGetDriversPagePayload,

@@ -15,3 +15,5 @@ const truckService = new TruckService(truckRepository);
 const truckController = new TruckController(logger, truckService);
 
 export { truckController, truckService };
+export { type TruckEntity } from './libs/types/types.js';
+export { truckCreateRequestBody } from './libs/validation-schema/validation-schemas.js';

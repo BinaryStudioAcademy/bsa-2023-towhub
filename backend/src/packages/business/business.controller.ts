@@ -15,6 +15,7 @@ import {
   driverParameters,
   driverUpdateRequestBody,
 } from '../drivers/drivers.js';
+import { type TruckEntity, truckCreateRequestBody } from '../trucks/trucks.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
@@ -378,6 +379,22 @@ class BusinessController extends Controller {
         this.deleteDriver(
           options as ApiHandlerOptions<{
             params: DriverRequestParameters;
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.TRUCKS,
+      authStrategy: defaultStrategies,
+      method: 'POST',
+      validation: {
+        body: truckCreateRequestBody,
+      },
+      handler: (request) =>
+        this.createTruck(
+          request as ApiHandlerOptions<{
+            body: Omit<TruckEntity, 'id'>;
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -846,6 +863,50 @@ class BusinessController extends Controller {
     return {
       status: HttpCode.OK,
       payload: deletionResult,
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/trucks:
+   *   post:
+   *     summary: Create a new truck
+   *     tags:
+   *       - business/trucks
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       description: Truck data to be added
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Truck'
+   *     responses:
+   *       '201':
+   *         description: Truck created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/TruckResponse'
+   *       '400':
+   *         description: Bad request
+   */
+
+  private async createTruck(
+    options: ApiHandlerOptions<{
+      body: Omit<TruckEntity, 'id'>;
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const createdTruck = await this.businessService.createTruck(
+      options.body,
+      options.user.id,
+    );
+
+    return {
+      status: HttpCode.CREATED,
+      payload: createdTruck,
     };
   }
 
