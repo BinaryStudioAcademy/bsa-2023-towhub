@@ -1,5 +1,6 @@
 import { type Libraries, LoadScript } from '@react-google-maps/api';
 
+import { jsonToLatLngLiteral } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppSelector,
@@ -12,7 +13,6 @@ import { selectOrders } from '~/slices/orders/selectors.js';
 
 import { OrderList } from '../components.js';
 import { Map } from '../map/map.js';
-import { makeLatLngLiteral } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 const libraries: Libraries = ['places'];
@@ -22,12 +22,8 @@ const Orders: React.FC = () => {
 
   const orders = useAppSelector(selectOrders);
 
-  const [endPointMarkers, setEndPointMarkers] = useState<
-    {
-      lat: number;
-      lng: number;
-    }[]
-  >();
+  const [endPointMarkers, setEndPointMarkers] =
+    useState<google.maps.LatLngLiteral[]>();
 
   const [shownRoute, setShownRoute] = useState<{
     startPoint: google.maps.LatLngLiteral;
@@ -40,7 +36,7 @@ const Orders: React.FC = () => {
 
   useEffect(() => {
     setEndPointMarkers(
-      orders.map((order) => makeLatLngLiteral(order.endPoint)),
+      orders.map((order) => jsonToLatLngLiteral(order.endPoint)),
     );
   }, [orders]);
 

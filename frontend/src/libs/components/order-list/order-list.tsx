@@ -17,18 +17,14 @@ type Properties = {
 const OrderList: React.FC<Properties> = ({ orders, select }: Properties) => {
   return (
     <ul className={styles.orderList}>
-      {orders.map((order) => {
-        const { id } = order;
-
-        return (
-          <li key={id} className={styles.orderItem}>
-            <OrderListCardBusiness
-              order={order}
-              select={select}
-            ></OrderListCardBusiness>
-          </li>
-        );
-      })}
+      {orders.map((order) => (
+        <li key={order.id} className={styles.orderItem}>
+          <OrderListCardBusiness
+            order={order}
+            select={select}
+          ></OrderListCardBusiness>
+        </li>
+      ))}
     </ul>
   );
 };

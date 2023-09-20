@@ -18,6 +18,7 @@ type Constructor = {
   bounds?: google.maps.LatLngBounds;
 };
 
+// NOTE: The map is supposed to accept either the center or the bounds (if the center is unknown)
 class MapService implements IMapService {
   private map: google.maps.Map | null = null;
 

@@ -1,11 +1,13 @@
 import { type OrderResponseDto } from 'shared/build/index.js';
 
 import { IconName } from '~/libs/enums/icon-name.enum';
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import {
+  getValidClassNames,
+  jsonToLatLngLiteral,
+} from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
 
 import { Badge, Icon } from '../components.js';
-import { makeLatLngLiteral } from '../orders/libs/helpers/make-lat-lng-literal.helper.js';
 import { statusConverter } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
@@ -37,8 +39,8 @@ const OrderListCardBusiness: React.FC<Properties> = ({
   const selectCard = useCallback(
     (startPoint: string, endPoint: string) => () => {
       select({
-        startPoint: makeLatLngLiteral(startPoint),
-        endPoint: makeLatLngLiteral(endPoint),
+        startPoint: jsonToLatLngLiteral(startPoint),
+        endPoint: jsonToLatLngLiteral(endPoint),
       });
     },
     [select],
