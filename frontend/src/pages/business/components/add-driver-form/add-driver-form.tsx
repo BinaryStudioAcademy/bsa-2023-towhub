@@ -1,19 +1,36 @@
 import { Form } from '~/libs/components/components.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
-  type DriverDto,
-  driverUpdateRequestBody,
+  useAppDispatch,
+  useAppSelector,
+  useEffect,
+} from '~/libs/hooks/hooks.js';
+import {
+  type DriverCreateUpdateRequestDto,
+  driverCreateRequestBody,
 } from '~/packages/drivers/drivers.js';
+import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { DEFAULT_ADD_DRIVER_PAYLOAD } from './libs/constants.js';
-import { addDriverFields } from './libs/fields.js';
+import { getInitialFields } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onSubmit: (payload: DriverDto) => void;
+  onSubmit: (payload: Omit<DriverCreateUpdateRequestDto, 'password'>) => void;
 };
 
 const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
+  const dispatch = useAppDispatch();
+
+  const trucks = useAppSelector((state) => state.trucks.trucks);
+
+  useEffect(
+    () => void dispatch(truckActions.getTrucksForBusiness()),
+    [dispatch],
+  );
+
+  const addDriverFields = getInitialFields(trucks);
+
   return (
     <div className={styles.wrapper}>
       <h3 className={getValidClassNames('h4', 'uppercase', styles.title)}>
@@ -21,7 +38,7 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
       </h3>
       <Form
         defaultValues={DEFAULT_ADD_DRIVER_PAYLOAD}
-        validationSchema={driverUpdateRequestBody}
+        validationSchema={driverCreateRequestBody}
         onSubmit={onSubmit}
         btnLabel="Add driver"
         fields={addDriverFields}

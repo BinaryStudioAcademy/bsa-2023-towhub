@@ -1,5 +1,6 @@
 import { type OnChangeFn, type SortingState } from '@tanstack/react-table';
 
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   getCoreRowModel,
   getPaginationRowModel,
@@ -9,6 +10,7 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { type ColumnDef } from '~/libs/types/types.js';
 
+import { Spinner } from '../components.js';
 import { Pagination } from '../pagination/pagination.jsx';
 import { Tbody, Thead } from './libs/components/components.js';
 import { DEFAULT_COLUMN } from './libs/constant.js';
@@ -17,8 +19,10 @@ import styles from './styles.module.scss';
 
 type Properties<T> = {
   data: T[];
+  isLoading?: boolean;
   isTableEditable?: boolean;
   columns: ColumnDef<T>[];
+  emptyTableMessage?: JSX.Element;
   pageSize: number;
   totalRow: number;
   pageIndex: number;
@@ -36,6 +40,8 @@ const Table = <T,>({
   totalRow,
   pageSize,
   pageIndex,
+  isLoading = false,
+  emptyTableMessage,
   isTableEditable = false,
   sorting,
   setSorting,
@@ -74,23 +80,35 @@ const Table = <T,>({
     [changePageSize, table, changePageIndex],
   );
 
+  if (data.length === 0 && !isLoading) {
+    return (
+      <div className={getValidClassNames('h4', styles.message)}>
+        {emptyTableMessage ?? 'There are no data here yet.'}
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
-      <div className={styles.wrapper}>
-        <table
-          className={styles.table}
-          style={{
-            width: table.getCenterTotalSize(),
-          }}
-        >
-          <Thead table={table} />
-          <Tbody
-            table={table}
-            isTableEditable={isTableEditable}
-            {...properties}
-          />
-        </table>
-      </div>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className={styles.wrapper}>
+          <table
+            className={styles.table}
+            style={{
+              width: table.getCenterTotalSize(),
+            }}
+          >
+            <Thead table={table} />
+            <Tbody
+              table={table}
+              isTableEditable={isTableEditable}
+              {...properties}
+            />
+          </table>
+        </div>
+      )}
       <Pagination
         pageCount={pagesRange}
         onClick={changePageIndex}

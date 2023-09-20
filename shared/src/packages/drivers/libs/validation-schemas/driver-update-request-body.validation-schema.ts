@@ -4,7 +4,7 @@ import { commonSignUpRules } from '~/packages/users/libs/validation-schemas/comm
 import { UserValidationRule } from '~/packages/users/libs/validation-schemas/enums/enums.js';
 
 import { DriverValidationMessage } from '../enums/enums.js';
-import { type DriverUpdateRequestDto } from '../types/types.js';
+import { type DriverCreateUpdateRequestDto } from '../types/types.js';
 
 const driverLicenseNumber = joi
   .string()
@@ -15,9 +15,10 @@ const driverLicenseNumber = joi
     'string.empty': DriverValidationMessage.DRIVER_LICENSE_NUMBER_REQUIRED,
   });
 
-const driverUpdateRequestBody = joi.object<DriverUpdateRequestDto, true>({
+const driverUpdateRequestBody = joi.object<DriverCreateUpdateRequestDto, true>({
   ...commonSignUpRules,
   driverLicenseNumber,
+  truckIds: joi.array().items(joi.number()),
 });
 
 export { driverLicenseNumber, driverUpdateRequestBody };

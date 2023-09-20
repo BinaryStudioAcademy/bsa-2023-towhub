@@ -1,4 +1,5 @@
 export {
+  type EntityPagination,
   type ErrorConstructor,
   type FileInputConfig,
   type Id,
