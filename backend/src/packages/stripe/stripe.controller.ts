@@ -1,5 +1,3 @@
-import { type GetPaymentsResponse } from 'shared/build/index.js';
-
 import { ApiPath } from '~/libs/enums/enums.js';
 import {
   type ApiHandlerOptions,
@@ -15,8 +13,10 @@ import { StripeApiPath } from './libs/enums/enums.js';
 import {
   type GenerateCheckoutLinkRequest,
   type GetPaymentsRequest,
+  type GetPaymentsResponse,
 } from './libs/types/types.js';
 import { type WebhookBody } from './libs/types/webhook-body.type.js';
+import { getPaymentsBusinessValidationSchema } from './libs/validation-schemas/validation-schemas.js';
 import { type StripeService } from './stripe.service.js';
 
 class StripeController extends Controller {
@@ -67,6 +67,25 @@ class StripeController extends Controller {
         AuthStrategy.VERIFY_JWT,
         AuthStrategy.VERIFY_BUSINESS_GROUP,
       ],
+      validation: {
+        body: getPaymentsBusinessValidationSchema,
+      },
+      handler: (options) =>
+        this.getPayments(
+          options as ApiHandlerOptions<{
+            body: GetPaymentsRequest;
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: StripeApiPath.REQUEST_CUSTOMER_PAYMENTS,
+      method: 'POST',
+      authStrategy: [AuthStrategy.VERIFY_JWT],
+      validation: {
+        body: getPaymentsBusinessValidationSchema,
+      },
       handler: (options) =>
         this.getPayments(
           options as ApiHandlerOptions<{

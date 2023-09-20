@@ -139,7 +139,10 @@ export {
   type PaymentDto,
   type SetupPaymentFormData,
   connectStripeValidationSchema,
+  getPaymentsBusinessValidationSchema,
+  getPaymentsCustomerValidationSchema,
   StripeApiPath,
+  StripeOperationStatus,
 } from './packages/stripe/stripe.js';
 export {
   type TruckEntity,

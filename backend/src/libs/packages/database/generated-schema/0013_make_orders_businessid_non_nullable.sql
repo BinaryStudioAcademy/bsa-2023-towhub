@@ -1,1 +1,3 @@
-ALTER TABLE "orders" ALTER COLUMN "business_id" SET NOT NULL;
+ALTER TABLE "orders"
+ALTER COLUMN "business_id"
+SET NOT NULL;

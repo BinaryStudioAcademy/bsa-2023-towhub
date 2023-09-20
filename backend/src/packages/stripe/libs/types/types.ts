@@ -5,4 +5,6 @@ export {
   type CheckoutMetadata,
   type GenerateCheckoutLinkRequest,
   type GetPaymentsRequest,
+  type GetPaymentsResponse,
+  type OrderResponseDto,
 } from 'shared/build/index.js';

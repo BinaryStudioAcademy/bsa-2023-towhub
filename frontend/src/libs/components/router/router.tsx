@@ -4,7 +4,6 @@ import { AppRoute } from '~/libs/enums/enums.js';
 import { useEffect, useGetCurrentUser } from '~/libs/hooks/hooks.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { Auth } from '~/pages/auth/auth.js';
-import { CheckoutPage } from '~/pages/checkout/checkout.js';
 import { Dashboard } from '~/pages/dashboard/dashboard.js';
 import { NotFound } from '~/pages/not-found/not-found.js';
 import { Order } from '~/pages/order/order.js';
@@ -29,7 +28,6 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.SIGN_UP_BUSINESS} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP_CUSTOMER} element={<Auth />} />
         <Route path={AppRoute.ORDER} element={<Order />} />
-        <Route path={AppRoute.CHECKOUT} element={<CheckoutPage />} />
       </Route>
       <Route
         path={AppRoute.ROOT}

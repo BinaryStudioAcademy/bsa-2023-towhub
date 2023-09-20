@@ -4,7 +4,7 @@ const BusinessValidationMessage = {
   ID_MUST_BE_NUMBER: 'Business id must be number',
   OWNER_ID_MUST_BE_NUMBER: 'Business owner id must be number',
   UPDATE_AT_LEAST_ONE_FIELD: 'Update DTO is empty, nothing to update',
-  stripe_id_REQUIRED: 'Stripe key is required',
+  STRIPE_ID_REQUIRED: 'Stripe key is required',
 } as const;
 
 export { BusinessValidationMessage };

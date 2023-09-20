@@ -27,6 +27,8 @@ const HttpMessage = {
   ORDER_DOES_NOT_EXIST: 'Order does not exist!',
   SHIFT_NOT_OPEN: 'This truck is not inactive, please choose another one',
   TRUCK_DOES_NOT_EXISTS: 'Truck does not exist',
+  BUSINESS_STRIPE_NOT_ACTIVATED:
+    'Business without activated stripe account is not supported',
 } as const;
 
 export { HttpMessage };

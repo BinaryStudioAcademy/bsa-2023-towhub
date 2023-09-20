@@ -3,7 +3,6 @@ import Stripe from 'stripe';
 import { type config as baseConfig } from '~/libs/packages/config/config.js';
 import { type UserEntityObjectWithGroupAndBusinessT } from '~/packages/users/users.js';
 
-import { type BusinessEntityT } from '../business/business.js';
 import {
   CHECKOUT_MODE,
   CONNECT_ACCOUNT_BUSINESS_TYPE,
@@ -14,8 +13,12 @@ import {
   STRIPE_TOWING_SERVICES_MCC,
   SUPPORTED_PAYMENT_METHOD,
 } from './libs/consts/const.js';
-import { FrontendPath } from './libs/enums/enums.js';
-import { buildPaymetnsRequestQuery, inCents } from './libs/helpers/helpers.js';
+import { FrontendPath, StripeOperationStatus } from './libs/enums/enums.js';
+import {
+  buildPaymetnsRequestQuery,
+  constructUrl,
+  inCents,
+} from './libs/helpers/helpers.js';
 import {
   type CheckoutProperties,
   type GetPaymentsRequest,
@@ -51,18 +54,13 @@ class StripeRepository {
     pricePerUnit,
     metadata,
   }: CheckoutProperties): Promise<string | null> {
-    // const { default_currency } = await this.retrieveExpressAccount(
-    //   business.stripeId,
-    // );
-
     const total = this.calculateTotal({
       price: pricePerUnit,
       quantity: distance,
     });
 
     const applicationFeeAmount = this.calculateApplicationFee(total);
-    // console.log('total', total);
-    // console.log('applicationFeeAmount', applicationFeeAmount);
+
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: SUPPORTED_PAYMENT_METHOD,
       line_items: [
@@ -86,8 +84,16 @@ class StripeRepository {
         metadata,
       },
       mode: CHECKOUT_MODE,
-      success_url: `${this.config.APP.FRONTEND_BASE_URL}${FrontendPath.CHECKOUT}?success=true`,
-      cancel_url: `${this.config.APP.FRONTEND_BASE_URL}${FrontendPath.CHECKOUT}?cancel=true`,
+      success_url: constructUrl(
+        this.config.APP.FRONTEND_BASE_URL,
+        FrontendPath.PAYMENTS,
+        { [StripeOperationStatus.SUCCESS]: true },
+      ),
+      cancel_url: constructUrl(
+        this.config.APP.FRONTEND_BASE_URL,
+        FrontendPath.PAYMENTS,
+        { [StripeOperationStatus.CANCEL]: true },
+      ),
     });
 
     return session.url;
@@ -96,33 +102,27 @@ class StripeRepository {
   public createExpressAccount(
     user: UserEntityObjectWithGroupAndBusinessT,
   ): Promise<Stripe.Account> {
-    // console.log(JSON.stringify(process.env, null, 2));
     const accountParameters: Stripe.AccountCreateParams = {
       type: CONNECT_ACCOUNT_TYPE,
       email: user.email,
       default_currency: DEFAULT_CURRENCTY,
       business_profile: {
-        // TODO: this is temporary
+        // TODO: this is temporary, I guess, we would eventually have a personal business page in our app
+        // Anyway, this field will be shown to the enduser during registration unless we prefill it prematurely
         url:
           process.env.NODE_ENV === 'production'
             ? this.config.APP.FRONTEND_BASE_URL
-            : `http://towhub.com/business/${user.business.id}`,
+            : constructUrl(
+                this.config.APP.FRONTEND_BASE_URL,
+                `/business/${user.business.id}`,
+              ),
         mcc: STRIPE_TOWING_SERVICES_MCC,
         name: user.business.companyName,
       },
-      // settings: {
-      //   branding: STRIPE_TOWHUB_BRANDING,
-      // },
       business_type: CONNECT_ACCOUNT_BUSINESS_TYPE,
-      // company: {
-      //   // phone: user.phone,
-      //   name: user.business.companyName,
-      //   tax_id: user.business.taxNumber,
-      // },
       individual: {
         first_name: user.firstName,
         last_name: user.lastName,
-        // phone: user.phone,
         email: user.email,
       },
       metadata: {
@@ -150,11 +150,10 @@ class StripeRepository {
   }
 
   public collectPaymentIntents(
-    businessId: BusinessEntityT['id'],
     options: GetPaymentsRequest,
   ): Promise<PaymentIntentWithMetadata[]> {
     return this.stripe.paymentIntents
-      .search(buildPaymetnsRequestQuery(businessId, options))
+      .search(buildPaymetnsRequestQuery(options))
       .autoPagingToArray({ limit: 1000 }) as Promise<
       PaymentIntentWithMetadata[]
     >;

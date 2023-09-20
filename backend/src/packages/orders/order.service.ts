@@ -4,7 +4,9 @@ import { type IService } from '~/libs/interfaces/interfaces.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
+import { type MapService } from '../map/map.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
+import { inCents } from '../stripe/libs/helpers/helpers.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
@@ -31,6 +33,8 @@ class OrderService implements Omit<IService, 'find'> {
 
   private userService: UserService;
 
+  private mapService: MapService;
+
   public constructor({
     businessService,
     orderRepository,
@@ -38,6 +42,7 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService,
     truckService,
     userService,
+    mapService,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
@@ -45,6 +50,7 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService: ShiftService;
     truckService: TruckService;
     userService: UserService;
+    mapService: MapService;
   }) {
     this.orderRepository = orderRepository;
 
@@ -57,6 +63,8 @@ class OrderService implements Omit<IService, 'find'> {
     this.truckService = truckService;
 
     this.userService = userService;
+
+    this.mapService = mapService;
   }
 
   public async create(
@@ -97,8 +105,14 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
+    const price = await this.mapService.getPriceByDistance({
+      startAddress: startPoint,
+      endAddress: endPoint,
+      pricePerKm: truck.pricePerKm,
+    });
+
     const order = await this.orderRepository.create({
-      price: 100, //Mock, get price from truck and calculated distance
+      price: inCents(price.price),
       scheduledTime,
       carsQty,
       startPoint,

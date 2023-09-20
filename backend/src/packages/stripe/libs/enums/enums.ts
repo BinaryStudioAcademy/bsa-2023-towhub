@@ -1,2 +1,7 @@
 export { StripeEvent } from './stripe-event.enum.js';
-export { FrontendPath, StripeApiPath } from 'shared/build/index.js';
+export {
+  FrontendPath,
+  StripeApiPath,
+  StripeOperationStatus,
+  UserGroupKey,
+} from 'shared/build/index.js';

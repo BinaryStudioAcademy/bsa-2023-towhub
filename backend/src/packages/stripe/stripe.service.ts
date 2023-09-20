@@ -4,17 +4,19 @@ import { type Stripe } from 'stripe';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 
 import { type BusinessService } from '../business/business.service.js';
+import { type BusinessEntityT } from '../business/libs/types/types.js';
 import { convertMetersToKm } from '../map/map.js';
 import { type MapService } from '../map/map.service.js';
-import { type OrderEntity } from '../orders/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { DEFAULT_PAGE_SIZE } from './libs/consts/const.js';
+import { UserGroupKey } from './libs/enums/enums.js';
 import { StripeEvent } from './libs/enums/stripe-event.enum.js';
 import { paginateArray } from './libs/helpers/paginate-array.helper.js';
 import {
   type CheckoutMetadata,
   type GetPaymentsRequest,
+  type OrderResponseDto,
 } from './libs/types/types.js';
 import { PaymentEntity } from './payment.entity.js';
 import { type StripeRepository } from './stripe.repository.js';
@@ -59,23 +61,9 @@ class StripeService {
       });
     }
 
-    const userWithBusiness = {
-      ...user,
-      business,
-    };
+    const account = await this.createNewOrRetrieveFromStripe(user, business);
 
-    // If there is no account yet, creating new, othewise retrieving from stripe
-    const account = business.stripeId
-      ? await this.stripeRepository.retrieveExpressAccount(business.stripeId)
-      : await this.stripeRepository.createExpressAccount(userWithBusiness);
-
-    // If business has no account attached, attach it
-    if (!business.stripeId) {
-      await this.businessService.update({
-        id: business.id,
-        payload: { stripeId: account.id },
-      });
-    }
+    await this.attachAccountIfNone(business, account);
 
     const link =
       await this.stripeRepository.generateExpressAccountOnboardingLink(account);
@@ -83,10 +71,33 @@ class StripeService {
     return link.url;
   }
 
-  public async processWebhook(event: Stripe.DiscriminatedEvent): Promise<void> {
-    // console.log('-----Webhooks');
-    // console.log(event);
+  private async createNewOrRetrieveFromStripe(
+    user: UserEntityObjectWithGroupT,
+    business: BusinessEntityT,
+  ): Promise<Stripe.Account> {
+    const userWithBusiness = {
+      ...user,
+      business,
+    };
 
+    return business.stripeId
+      ? await this.stripeRepository.retrieveExpressAccount(business.stripeId)
+      : await this.stripeRepository.createExpressAccount(userWithBusiness);
+  }
+
+  private async attachAccountIfNone(
+    business: BusinessEntityT,
+    account: Stripe.Account,
+  ): Promise<void> {
+    if (!business.stripeId) {
+      await this.businessService.update({
+        id: business.id,
+        payload: { stripeId: account.id },
+      });
+    }
+  }
+
+  public async processWebhook(event: Stripe.DiscriminatedEvent): Promise<void> {
     switch (event.type) {
       case StripeEvent.CAPABILITY_UPDATED: {
         {
@@ -108,8 +119,7 @@ class StripeService {
       }
       case StripeEvent.PAYMENT_INTENT_SUCCEEDED: {
         // Handle successfull payment
-        event.data.object.status;
-
+        // TODO: Currently there is no logic here, but we can add a webhook on successful payment later
         return;
       }
       default:
@@ -117,7 +127,7 @@ class StripeService {
   }
 
   public async generateCheckoutLink(
-    order: OrderEntity,
+    order: OrderResponseDto,
   ): Promise<string | null> {
     const business = await this.businessService.findById(order.businessId);
 
@@ -128,18 +138,13 @@ class StripeService {
       });
     }
 
-    if (!order.truck) {
+    if (!order.shift.truck) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpMessage.TRUCK_DOES_NOT_EXIST,
       });
     }
-    const truck = await this.truckService.findById(order.truck.id);
-
-    const distanceInMeters = await this.mapService.getDistance(
-      order.startPoint,
-      order.endPoint,
-    );
+    const truck = await this.truckService.findById(order.shift.truck.id);
 
     if (!truck) {
       throw new HttpError({
@@ -149,9 +154,10 @@ class StripeService {
     }
 
     if (!business.stripeActivated || !business.stripeId) {
-      throw new Error(
-        'Business without activated stripe account is not supported',
-      );
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_STRIPE_NOT_ACTIVATED,
+      });
     }
 
     const metadata: CheckoutMetadata = {
@@ -161,6 +167,11 @@ class StripeService {
       customerPhone: order.customerPhone,
       userId: order.userId,
     };
+
+    const distanceInMeters = await this.mapService.getDistance(
+      order.startPoint,
+      order.endPoint,
+    );
 
     return await this.stripeRepository.createCheckoutSession({
       businessStripeId: business.stripeId,
@@ -174,19 +185,15 @@ class StripeService {
     user: UserEntityObjectWithGroupT,
     options: GetPaymentsRequest,
   ): Promise<GetPaymentsResponse> {
-    const business = await this.businessService.findByOwnerId(user.id);
+    const userBusinessId = await this.checkUserBusinessAndGetId(user);
 
-    if (!business) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
-      });
+    if (userBusinessId) {
+      options.businessId = userBusinessId;
+    } else {
+      options.userId = user.id;
     }
 
-    const items = await this.stripeRepository.collectPaymentIntents(
-      business.id,
-      options,
-    );
+    const items = await this.stripeRepository.collectPaymentIntents(options);
 
     const page = options.page ?? 1;
     const limit = options.limit ?? DEFAULT_PAGE_SIZE;
@@ -199,6 +206,25 @@ class StripeService {
       items: itemsAsDto,
       totalCount: items.length,
     };
+  }
+
+  private async checkUserBusinessAndGetId(
+    user: UserEntityObjectWithGroupT,
+  ): Promise<BusinessEntityT['id'] | null> {
+    if (user.group.name !== UserGroupKey.BUSINESS) {
+      return null;
+    }
+
+    const business = await this.businessService.findByOwnerId(user.id);
+
+    if (!business) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return business.id;
   }
 }
 

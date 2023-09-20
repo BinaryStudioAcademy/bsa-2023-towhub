@@ -1,7 +1,7 @@
-import { type OrderEntity } from '~/packages/orders/orders.js';
+import { type OrderResponseDto } from '~/packages/orders/orders.js';
 
 type GenerateCheckoutLinkRequest = {
-  order: OrderEntity;
+  order: OrderResponseDto;
 };
 
 export { type GenerateCheckoutLinkRequest };

@@ -12,6 +12,7 @@ const FrontendPath = {
   ORDER: '/order',
   SETUP_PAYMENT: '/setup-payment',
   CHECKOUT: '/checkout',
+  PAYMENTS: '/payments',
 } as const;
 
 export { FrontendPath };
