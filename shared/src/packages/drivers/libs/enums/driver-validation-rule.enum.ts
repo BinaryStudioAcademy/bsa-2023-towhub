@@ -1,7 +1,8 @@
 const DriverValidationRule = {
-  DRIVER_LICENSE_MIN_LENGTH: 5,
-  DRIVER_LICENSE_MAX_LENGTH: 30,
-  DRIVER_LICENSE_NUMBER: /^[\dA-Z]+(?:[ -][\dA-Z]+)*$/,
+  LICENSE_MIN_LENGTH: 5,
+  LICENSE_MAX_LENGTH: 30,
+  LICENSE_NUMBER: /^[\dA-Z]+(?:[ -][\dA-Z]+)*$/,
+  LICENSE_SPACERS: /[\s-]/g,
 } as const;
 
 export { DriverValidationRule };

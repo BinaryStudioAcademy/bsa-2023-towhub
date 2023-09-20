@@ -7,6 +7,7 @@ import {
   DriverValidationRule as Rule,
 } from '../enums/enums.js';
 import { type DriverCreateUpdateRequestDto } from '../types/types.js';
+import { checkMinMaxValidator } from './libs/helpers/heplers.js';
 
 const driverCreateUpdateRequestBody = joi.object<
   DriverCreateUpdateRequestDto,
@@ -16,14 +17,21 @@ const driverCreateUpdateRequestBody = joi.object<
   driverLicenseNumber: joi
     .string()
     .trim()
-    .min(Rule.DRIVER_LICENSE_MIN_LENGTH)
-    .max(Rule.DRIVER_LICENSE_MAX_LENGTH)
-    .regex(Rule.DRIVER_LICENSE_NUMBER)
+    // To check min/max length we must consider only significant characters,
+    // thus we cannot use joi's min/max here
+    .custom(
+      checkMinMaxValidator(
+        Rule.LICENSE_MIN_LENGTH,
+        Rule.LICENSE_MAX_LENGTH,
+        Rule.LICENSE_SPACERS,
+      ),
+    )
+    .regex(Rule.LICENSE_NUMBER)
     .required()
     .messages({
       'string.empty': Message.DRIVER_LICENSE_NUMBER_REQUIRED,
       'string.pattern.base': Message.DRIVER_LICENSE_NUMBER_INVALID,
-      'string.min': Message.DRIVER_LICENSE_NUMBER_INVALID,
+      'string.custom': Message.DRIVER_LICENSE_NUMBER_INVALID,
       'string.max': Message.DRIVER_LICENSE_NUMBER_INVALID,
     }),
 
