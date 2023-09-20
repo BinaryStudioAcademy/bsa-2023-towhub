@@ -53,7 +53,7 @@ class SocketService {
       }
 
       if (user) {
-        this.shiftSocketService.initialize({
+        await this.shiftSocketService.initializeListeners({
           user,
           socket,
           io: this.io as Server,

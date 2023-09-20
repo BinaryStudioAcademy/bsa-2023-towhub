@@ -9,20 +9,20 @@ import { actions as driverActions } from '~/slices/driver/driver.js';
 import { ShiftStatus } from '~/slices/driver/libs/enums/enums.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
-const socketAddDefaultListeners = (
+const socketAddDriverListeners = (
   dispatch: ReturnType<typeof useAppDispatch>,
 ): void => {
-  socketClient.addListener(ClientSocketEvent.TRUCK_CHOSEN, (payload) => {
-    if (!payload) {
-      return;
-    }
-    dispatch(truckActions.truckChosen(payload));
-  });
   socketClient.addListener(ClientSocketEvent.ERROR, (payload) => {
     if (!payload) {
       return;
     }
     notification.error(payload.message);
+  });
+  socketClient.addListener(ClientSocketEvent.TRUCK_CHOSEN, (payload) => {
+    if (!payload) {
+      return;
+    }
+    dispatch(truckActions.truckChosen(payload));
   });
   socketClient.addListener(ClientSocketEvent.DRIVER_TIMED_OUT, () => {
     notification.info('Your activity session has been timed out');
@@ -40,8 +40,9 @@ const socketAddDefaultListeners = (
     if (!payload) {
       return;
     }
-    dispatch(setStartShiftSuccess(payload.truckId));
+
+    void dispatch(setStartShiftSuccess(payload.truck));
   });
 };
 
-export { socketAddDefaultListeners };
+export { socketAddDriverListeners };

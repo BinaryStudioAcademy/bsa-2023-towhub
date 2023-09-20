@@ -1,3 +1,5 @@
+import { type TruckEntityT } from '~/packages/trucks/libs/types/truck-entity.type.js';
+
 import { type ClientSocketEvent } from '../enums/enums.js';
 
 type ClientSocketEventParameter = {
@@ -8,7 +10,7 @@ type ClientSocketEventParameter = {
     truckId: number;
   };
   [ClientSocketEvent.SHIFT_SYNC]: {
-    truckId: number;
+    truck: TruckEntityT;
   };
   [ClientSocketEvent.ERROR]: {
     message: string;

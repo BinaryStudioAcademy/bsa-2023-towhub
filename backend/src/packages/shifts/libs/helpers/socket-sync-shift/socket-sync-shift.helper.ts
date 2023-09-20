@@ -1,28 +1,33 @@
 import { type Socket } from 'socket.io';
 
 import { ClientSocketEvent } from '~/libs/packages/socket/libs/types/types.js';
+import { type TruckService } from '~/packages/trucks/trucks.js';
 
 import {
   type StartedShift,
   type StartedShiftsStore,
 } from '../../types/types.js';
 
-const socketSyncShift = ({
+const socketSyncShift = async ({
   startedShiftsStore,
+  truckService,
   userId,
   socket,
 }: {
   startedShiftsStore: StartedShiftsStore;
+  truckService: TruckService;
   userId: number;
   socket: Socket;
-}): void => {
+}): Promise<void> => {
   const shift = startedShiftsStore.get(userId) as StartedShift;
 
   startedShiftsStore.set(userId, { ...shift, socket });
 
   const { truckId } = shift.data;
+
+  const truck = await truckService.findById(truckId);
   socket.emit(ClientSocketEvent.SHIFT_SYNC, {
-    truckId,
+    truck,
   });
 };
 

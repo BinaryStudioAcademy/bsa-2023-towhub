@@ -10,15 +10,13 @@ import { useAppSelector } from '~/libs/hooks/use-app-selector/use-app-selector.h
 import { actions as driverActions } from '~/slices/driver/driver.js';
 import { ShiftStatus } from '~/slices/driver/libs/enums/enums.js';
 import {
-  selectActiveTruckId,
+  selectActiveTruck,
   selectShiftStatus,
 } from '~/slices/driver/selectors.js';
-import { selectTruck } from '~/slices/trucks/selectors.js';
 
 const Orders: React.FC = () => {
   const dispatch = useAppDispatch();
-  const truckId = useAppSelector(selectActiveTruckId);
-  const truck = useAppSelector(selectTruck(truckId));
+  const truck = useAppSelector(selectActiveTruck);
   const shiftStatus = useAppSelector(selectShiftStatus);
   const navigate = useNavigate();
   useEffect(() => {

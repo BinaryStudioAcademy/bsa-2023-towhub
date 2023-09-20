@@ -20,4 +20,8 @@ const selectTruck =
       ? state.trucks.trucks.items.find((truck) => truck.id === truckId)
       : undefined;
 
-export { selectDataStatus, selectTruck, selectTrucks };
+const selectChosenTruck = (
+  state: RootState,
+): (TruckEntityT & { driverId: number }) | null => state.trucks.chosenTruck;
+
+export { selectChosenTruck, selectDataStatus, selectTruck, selectTrucks };

@@ -1,4 +1,5 @@
-import { type RootState } from '~/libs/types/store.type';
+import { type RootState } from '~/libs/packages/store/store.js';
+import { type TruckEntityT } from '~/slices/trucks/libs/types/types.js';
 
 import {
   type ShiftStatusValue,
@@ -9,12 +10,12 @@ const selectTruckChoiceStatus = (state: RootState): TruckChoiceStatus => {
   return state.driver.truckChoiceStatus;
 };
 
-const selectActiveTruckId = (state: RootState): number | null => {
-  return state.driver.activeTruckId;
+const selectActiveTruck = (state: RootState): TruckEntityT | null => {
+  return state.driver.activeTruck;
 };
 
 const selectShiftStatus = (state: RootState): ShiftStatusValue => {
   return state.driver.shiftStatus;
 };
 
-export { selectActiveTruckId, selectShiftStatus, selectTruckChoiceStatus };
+export { selectActiveTruck, selectShiftStatus, selectTruckChoiceStatus };

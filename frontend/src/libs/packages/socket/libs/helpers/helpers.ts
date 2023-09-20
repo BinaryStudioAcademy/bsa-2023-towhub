@@ -1,1 +1,1 @@
-export { socketAddDefaultListeners } from './socket-add-listeners/socket-add-default-listeners.helper.js';
+export { socketAddDriverListeners } from './socket-add-listeners/socket-add-driver-listeners.helper.js';

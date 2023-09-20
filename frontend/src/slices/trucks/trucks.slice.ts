@@ -7,7 +7,7 @@ import {
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ClientSocketEventParameter } from '~/libs/packages/socket/libs/types/types.js';
 import { type ClientSocketEvent } from '~/libs/packages/socket/socket.js';
-import { type ValueOf } from '~/libs/types/types.js';
+import { type TruckEntityT, type ValueOf } from '~/libs/types/types.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
 import { type GetAllTrucksByUserIdResponseDto } from '~/packages/trucks/libs/types/types.js';
 
@@ -15,11 +15,13 @@ import { addTruck, getAllTrucksByUserId } from './actions.js';
 
 type State = {
   trucks: GetAllTrucksByUserIdResponseDto;
+  chosenTruck: (TruckEntityT & { driverId: number }) | null;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
 const initialState: State = {
   trucks: { items: [], count: 0 },
+  chosenTruck: null,
   dataStatus: DataStatus.IDLE,
 };
 
@@ -61,6 +63,12 @@ const { reducer, actions, name } = createSlice({
   reducers: {
     truckChosen,
     truckAvailable,
+    setChosenTruck: (
+      state,
+      action: PayloadAction<TruckEntityT & { driverId: number }>,
+    ) => {
+      state.chosenTruck = action.payload;
+    },
   },
   extraReducers(builder) {
     builder

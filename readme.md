@@ -116,6 +116,7 @@ erDiagram
     files {
       id serial PK "not null"
       key varchar "not null, unique"
+      name varchar "not null"
       content_type varchar "not null"
       created_at timestamp "not null"
       updated_at timestamp "not null"

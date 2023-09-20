@@ -1,4 +1,4 @@
-import { GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.package';
+import { GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.package.js';
 
 import { GeolocationCacheSocketService } from './geolocation-cache.socket-service.js';
 

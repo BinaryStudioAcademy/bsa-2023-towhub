@@ -7,6 +7,8 @@ type OrderDatabaseModel = InferModel<DatabaseSchema['orders']>;
 export {
   type DriverInfo,
   type Id,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntityT,
   type OrderFindByIdResponseDto,

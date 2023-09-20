@@ -27,17 +27,11 @@ import {
 import { type ShiftService } from './shift.service.js';
 
 class ShiftSocketService {
-  private socket!: Socket;
-
-  private io!: Server;
-
   private startedShiftsStore: StartedShiftsStore;
 
   private shiftService: ShiftService;
 
   private truckService: TruckService;
-
-  private currentUser!: UserEntityObjectWithGroupT;
 
   public constructor({
     shiftService,
@@ -59,7 +53,7 @@ class ShiftSocketService {
     });
   }
 
-  public initialize({
+  public async initializeListeners({
     user,
     socket,
     io,
@@ -67,23 +61,17 @@ class ShiftSocketService {
     user: UserEntityObjectWithGroupT;
     socket: Socket;
     io: Server;
-  }): void {
-    this.socket = socket;
-    this.io = io;
-    this.currentUser = user;
-    this.initializeListeners();
-  }
-
-  private initializeListeners(): void {
-    if (this.startedShiftsStore.has(this.currentUser.id)) {
-      socketSyncShift({
+  }): Promise<void> {
+    if (this.startedShiftsStore.has(user.id)) {
+      await socketSyncShift({
         startedShiftsStore: this.startedShiftsStore,
-        userId: this.currentUser.id,
-        socket: this.socket,
+        userId: user.id,
+        socket,
+        truckService: this.truckService,
       });
     }
 
-    this.socket.on(
+    socket.on(
       ServerSocketEvent.START_SHIFT,
       async (
         payload: ServerSocketEventParameter[typeof ServerSocketEvent.START_SHIFT],
@@ -92,12 +80,12 @@ class ShiftSocketService {
           message?: string,
         ) => void,
       ): Promise<void> => {
-        await this.startShift(payload, callback);
+        await this.startShift(payload, callback, { socket, io, user });
       },
     );
 
-    this.socket.on(ServerSocketEvent.END_SHIFT, async () => {
-      await this.endShift();
+    socket.on(ServerSocketEvent.END_SHIFT, async () => {
+      await this.endShift({ io, user });
     });
   }
 
@@ -107,6 +95,15 @@ class ShiftSocketService {
       status: ValueOf<typeof SocketResponseStatus>,
       message?: string,
     ) => void,
+    {
+      user,
+      socket,
+      io,
+    }: {
+      user: UserEntityObjectWithGroupT;
+      socket: Socket;
+      io: Server;
+    },
   ): Promise<void> {
     const { truckId } = payload;
     const isTruckNotAvailable =
@@ -119,44 +116,46 @@ class ShiftSocketService {
       );
     }
 
-    const timer = setTimeout(
-      (user: UserEntityObjectWithGroupT) => {
-        this.socket.emit(ClientSocketEvent.DRIVER_TIMED_OUT);
-        void socketEndShift({
-          io: this.io,
-          startedShiftsStore: this.startedShiftsStore,
-          shiftService: this.shiftService,
-          truckService: this.truckService,
-          user,
-        });
-      },
-      HOUR_IN_MS,
-      this.currentUser,
-    );
+    const timer = setTimeout(() => {
+      socket.emit(ClientSocketEvent.DRIVER_TIMED_OUT);
+      void socketEndShift({
+        io,
+        startedShiftsStore: this.startedShiftsStore,
+        shiftService: this.shiftService,
+        truckService: this.truckService,
+        user,
+      });
+    }, HOUR_IN_MS);
 
-    await socketChooseTruck(truckId, this.truckService, this.io);
+    await socketChooseTruck(truckId, this.truckService, io);
 
     await createShift({
-      user: this.currentUser,
+      user,
       shiftService: this.shiftService,
       startedShiftsStore: this.startedShiftsStore,
       truckId,
-      startedShift: { socket: this.socket, timer },
+      startedShift: { socket, timer },
     });
 
     callback(SocketResponseStatus.OK);
   }
 
-  private async endShift(): Promise<void> {
-    if (!this.startedShiftsStore.has(this.currentUser.id)) {
+  private async endShift({
+    user,
+    io,
+  }: {
+    user: UserEntityObjectWithGroupT;
+    io: Server;
+  }): Promise<void> {
+    if (!this.startedShiftsStore.has(user.id)) {
       return;
     }
     await socketEndShift({
-      io: this.io,
+      io,
       startedShiftsStore: this.startedShiftsStore,
       truckService: this.truckService,
       shiftService: this.shiftService,
-      user: this.currentUser,
+      user,
     });
   }
 }

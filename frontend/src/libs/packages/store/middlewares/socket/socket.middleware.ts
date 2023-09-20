@@ -11,19 +11,29 @@ import {
   ServerSocketEvent,
   socket as socketClient,
 } from '~/libs/packages/socket/socket.js';
-import { type RootState } from '~/libs/types/store.type';
-import { type ValueOf } from '~/libs/types/types.js';
+import { type AppDispatch } from '~/libs/packages/store/store.js';
+import { type RootState, type ValueOf } from '~/libs/types/types.js';
 import { actions as driverActions } from '~/slices/driver/driver.js';
 
 const socket: Middleware<
   ReturnType<ReturnType<typeof useAppDispatch>>,
   RootState,
   ReturnType<typeof useAppDispatch>
-> = ({ dispatch }) => {
+> = ({
+  dispatch,
+  getState,
+}: {
+  dispatch: AppDispatch;
+  getState: () => RootState;
+}) => {
   return (next) => (action: ReturnType<ActionCreatorWithPayload<unknown>>) => {
     if (action.type === driverActions.endShift.type) {
       socketClient.emit({ event: ServerSocketEvent.END_SHIFT });
-    } else if (action.type === driverActions.startShift.type) {
+
+      return next(action);
+    }
+
+    if (action.type === driverActions.startShift.type) {
       const { truckId } =
         action.payload as ServerSocketEventParameter[typeof ServerSocketEvent.START_SHIFT];
 
@@ -36,16 +46,18 @@ const socket: Middleware<
           status: ValueOf<typeof SocketResponseStatus>,
           message?: string,
         ): void => {
-          if (status === SocketResponseStatus.OK) {
-            dispatch(driverActions.setStartShiftSuccess(truckId));
+          if (status !== SocketResponseStatus.OK && message) {
+            return notification.error(message);
+          }
+          const truck = getState().trucks.trucks.items.find(
+            (truck) => truck.id === truckId,
+          );
 
+          if (!truck) {
             return;
           }
 
-          if (!message) {
-            return;
-          }
-          notification.error(message);
+          dispatch(driverActions.setStartShiftSuccess(truck));
         },
       });
     }
