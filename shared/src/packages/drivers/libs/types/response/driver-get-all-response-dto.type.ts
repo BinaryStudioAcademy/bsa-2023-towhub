@@ -1,7 +1,7 @@
-import { type DriverEntity } from '../driver-entity.type.js';
+import { type EntityPagination } from '~/libs/types/entity-pagination.type.js';
 
-type DriverGetAllResponseDto = {
-  items: Pick<DriverEntity, 'id' | 'driverLicenseNumber'>[];
-};
+import { type DriverWithUserData } from '../driver-with-user-data.type.js';
+
+type DriverGetAllResponseDto = EntityPagination<DriverWithUserData>;
 
 export { type DriverGetAllResponseDto };

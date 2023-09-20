@@ -69,7 +69,7 @@ const useAppTable = <T, K>({
 
   useEffect(() => {
     updatePage();
-  }, [tableFetchCall, pageSize, pageIndex, dispatch, updatePage]);
+  }, [tableFetchCall, pageSize, pageIndex, dispatch, payload, updatePage]);
 
   return { pageSize, pageIndex, changePageSize, changePageIndex, updatePage };
 };

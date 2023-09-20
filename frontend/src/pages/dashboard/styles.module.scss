@@ -1,8 +1,8 @@
-@import "src/assets/css/styles.scss";
+@import "src/assets/css/vars.scss";
 
 .container {
   height: calc(100% - 20px);
-  margin: 10px 30px;
+  margin: 10px 30px 10px 20px;
   overflow: auto;
   background-color: $white;
   border-radius: 10px;

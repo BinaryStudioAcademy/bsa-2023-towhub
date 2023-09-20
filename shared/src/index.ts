@@ -2,6 +2,7 @@ export {
   ApiPath,
   AppEnvironment,
   AppErrorMessage,
+  CommonValidationMessage,
   ContentType,
   ServerErrorType,
   SortMethod,
@@ -35,7 +36,9 @@ export {
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
+  type EntityPagination,
   type ErrorConstructor,
+  type GetPaginatedPageQuery,
   type Id,
   type NullableProperties,
   type OperationResult,
@@ -50,6 +53,7 @@ export {
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
+export { commonGetPageQuery } from './libs/validation-schemas/validation-schemas.js';
 export {
   type JwtPayload,
   AuthApiPath,
@@ -75,12 +79,18 @@ export {
 } from './packages/business/business.js';
 export {
   type DriverAddPayload,
+  type DriverAddPayloadWithBusinessId,
+  type DriverAddResponseWithGroup,
+  type DriverBusinessIdPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverEntity,
   type DriverGetAllResponseDto,
+  type DriverGetDriversPagePayload,
+  type DriverGetDriversPayloadWithBusinessId,
   type DriverRequestParameters,
   type DriverUpdatePayload,
+  type DriverWithUserData,
   DriverApiPath,
   driverCreateUpdateRequestBody,
   driverParameters,

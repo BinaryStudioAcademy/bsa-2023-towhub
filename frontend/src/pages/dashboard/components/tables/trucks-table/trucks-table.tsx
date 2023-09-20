@@ -24,7 +24,7 @@ import { AddTruckForm } from '../../form/form.js';
 import { columns } from './columns/columns.js';
 import styles from './styles.module.scss';
 
-const TrucksTable: React.FC = () => {
+const TruckTable: React.FC = () => {
   const { trucks, total, dataStatus } = useAppSelector(({ trucks }) => ({
     trucks: trucks.trucks,
     total: trucks.total,
@@ -124,4 +124,4 @@ const TrucksTable: React.FC = () => {
   );
 };
 
-export { TrucksTable };
+export { TruckTable };

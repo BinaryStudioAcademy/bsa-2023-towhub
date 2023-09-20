@@ -4,3 +4,4 @@ export { AppErrorMessage } from './app-error-message.enum.js';
 export { ContentType } from './content-type.enum.js';
 export { ServerErrorType } from './server-error-type.enum.js';
 export { SortMethod } from './sort-method.enum.js';
+export { CommonValidationMessage } from './validation-message.enum.js';
