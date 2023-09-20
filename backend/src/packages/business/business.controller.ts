@@ -383,6 +383,20 @@ class BusinessController extends Controller {
           }>,
         ),
     });
+
+    this.addRoute({
+      path: BusinessApiPath.TRUCKS,
+      method: 'GET',
+      authStrategy: defaultStrategies,
+
+      handler: (options) =>
+        this.findAllTrucks(
+          options as ApiHandlerOptions<{
+            query: GetPaginatedPageQuery;
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
   }
 
   /**
@@ -608,6 +622,7 @@ class BusinessController extends Controller {
    *               - lastName
    *               - driverLicenseNumber
    *               - password
+   *               - driverTrucks
    *              properties:
    *                phone:
    *                  $ref: '#/components/schemas/Driver/properties/phone'
@@ -624,6 +639,10 @@ class BusinessController extends Controller {
    *                  minimum: 6
    *                  maximum: 20
    *                  pattern: ^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$
+   *                driverTrucks:
+   *                  type: array
+   *                  items:
+   *                    type: number
    *      security:
    *        - bearerAuth: []
    *      responses:
@@ -828,6 +847,44 @@ class BusinessController extends Controller {
     return {
       status: HttpCode.OK,
       payload: deletionResult,
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/trucks:
+   *    get:
+   *      tags:
+   *       - business/trucks
+   *      summary: Find all trucks
+   *      description: Find all trucks
+   *      security:
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Successful find all trucks
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: array
+   *                items:
+   *                  $ref: '#/components/schemas/TruckResponse'
+   */
+
+  private async findAllTrucks(
+    options: ApiHandlerOptions<{
+      query: GetPaginatedPageQuery;
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const trucks = await this.businessService.findAllTrucksByOwnerId(
+      options.user.id,
+      options.query,
+    );
+
+    return {
+      status: HttpCode.OK,
+      payload: trucks,
     };
   }
 }

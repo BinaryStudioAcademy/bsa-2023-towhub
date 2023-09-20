@@ -18,7 +18,7 @@ class TruckApi extends HttpApi {
   }
 
   public async addTruck(
-    payload: Omit<TruckEntity, 'id'>,
+    payload: Omit<TruckEntity, 'id' | 'businessId'>,
   ): Promise<TruckEntity> {
     const response = await this.load(
       this.getFullEndpoint(TruckApiPath.ROOT, {}),
