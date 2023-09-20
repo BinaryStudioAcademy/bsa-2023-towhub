@@ -1,4 +1,5 @@
 import { type reducer as authReducer } from '~/slices/auth/auth.js';
+import { type reducer as driversReducer } from '~/slices/drivers/drivers.js';
 import { type reducer as filesReducer } from '~/slices/files/files.js';
 import { type reducer as ordersReducer } from '~/slices/orders/order.js';
 import { type reducer as truckReducer } from '~/slices/trucks/trucks.js';
@@ -8,6 +9,7 @@ type RootReducer = {
   trucks: ReturnType<typeof truckReducer>;
   files: ReturnType<typeof filesReducer>;
   orders: ReturnType<typeof ordersReducer>;
+  drivers: ReturnType<typeof driversReducer>;
 };
 
 export { type RootReducer };

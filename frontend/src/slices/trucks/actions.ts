@@ -1,8 +1,12 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
+import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { type ServerSocketEvent } from '~/libs/packages/socket/libs/enums/enums.js';
 import { type ServerToClientEvents } from '~/libs/packages/socket/libs/types/types.js';
-import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import {
+  type AsyncThunkConfig,
+  type EntityPagination,
+} from '~/libs/types/types.js';
 import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 
 import { jsonToLatLngLiteral } from '../orders/libs/helpers/json-to-lat-lng-literal.helper.js';
@@ -16,7 +20,7 @@ type truckLocationPayload = Parameters<
 
 const addTruck = createAsyncThunk<
   TruckEntity,
-  Omit<TruckEntity, 'id'>,
+  Omit<TruckEntity, 'id' | 'businessId'>,
   AsyncThunkConfig
 >(`${sliceName}/add-truck`, (payload, { extra }) => {
   const { truckApi } = extra;
@@ -73,9 +77,25 @@ const stopListenTruckUpdates = createAction(
   },
 );
 
+const getTrucksForBusiness = createAsyncThunk<
+  EntityPagination<TruckEntity>,
+  undefined,
+  AsyncThunkConfig
+>(`${sliceName}/find-all-trucks-for-business`, async (_, { extra }) => {
+  const { businessApi, notification } = extra;
+
+  try {
+    return await businessApi.getTrucksByBusinessId();
+  } catch (error) {
+    notification.error(getErrorMessage(error));
+    throw error;
+  }
+});
+
 export {
   addTruck,
   calculateArrivalTime,
+  getTrucksForBusiness,
   listenTruckUpdates,
   stopListenTruckUpdates,
   updateTruckLocationFromSocket,

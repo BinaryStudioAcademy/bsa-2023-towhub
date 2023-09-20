@@ -16,6 +16,7 @@ import {
 
 import { Button } from '../button/button.jsx';
 import { DropdownInput } from '../dropdown-input/dropdown-input.js';
+import { DropdownMultiSelect } from '../dropdown-multi-select/dropdown-multi-select.js';
 import { FileInput } from '../file-input/file-input.js';
 import { fileInputDefaultsConfig } from '../file-input/libs/config/config.js';
 import { type FileFormType } from '../file-input/libs/types/types.js';
@@ -54,15 +55,22 @@ const renderField = <T extends FieldValues = FieldValues>({
 }: RenderFieldProperties<T>): JSX.Element => {
   switch (field.type) {
     case 'dropdown': {
-      const { options, name, label } = field;
-
       return (
         <DropdownInput
-          options={options ?? []}
-          name={name}
+          {...field}
+          options={field.options ?? []}
           control={control}
           errors={errors}
-          label={label}
+        />
+      );
+    }
+    case 'multi-select': {
+      return (
+        <DropdownMultiSelect
+          {...field}
+          options={field.options ?? []}
+          control={control}
+          errors={errors}
         />
       );
     }
@@ -148,7 +156,7 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
-      <div key={(field.id = index)}>
+      <div key={field.id ?? index}>
         {renderField({
           field,
           control,

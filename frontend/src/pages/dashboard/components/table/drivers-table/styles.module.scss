@@ -1,0 +1,33 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  height: 100%;
+  padding: 60px 100px 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 50px;
+}
+
+.btn {
+  padding: 13px;
+  font-size: 16px;
+  text-transform: none;
+  border-radius: 8px;
+}
+
+.title {
+  color: $blue-extra-dark;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.formWrapper {
+  width: 448px;
+}
+
+.red {
+  color: $red;
+}
