@@ -24,7 +24,12 @@ import { type DriverCredentialsViewRenderParameter } from '../mail/libs/views/dr
 import { mailService } from '../mail/mail.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
-import { convertToDriverUser } from './libs/helpers/helpers.js';
+import {
+  convertToDriverUser,
+  getFullName,
+  getPasswordLength,
+  getRandomCharacter,
+} from './libs/helpers/helpers.js';
 
 class DriverService implements IService {
   private driverRepository: DriverRepository;
@@ -157,7 +162,7 @@ class DriverService implements IService {
     const driverObject = driver.toObject();
 
     const emailData: DriverCredentialsViewRenderParameter = {
-      name: `${firstName} ${lastName}`,
+      name: getFullName(firstName, lastName),
       email: email,
       password: password,
       signInLink: MailContent.LINK,
@@ -175,39 +180,34 @@ class DriverService implements IService {
   }
 
   private async generatePassword(): Promise<string> {
-    const minLength = 6;
-    const maxLength = 20;
-    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
-    const numberChars = '0123456789';
+    const MIN_LENGTH = 6;
+    const MAX_LENGTH = 20;
+    const UPPER_CASE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const LOWER_CASE_CHARS = 'abcdefghijklmnopqrstuvwxyz';
+    const NUMBER_CHARS = '0123456789';
 
-    const passwordLength =
-      Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+    const passwordLength = getPasswordLength(MIN_LENGTH, MAX_LENGTH);
 
+    const charSets = [LOWER_CASE_CHARS, UPPER_CASE_CHARS, NUMBER_CHARS].sort(
+      () => Math.random() - 0.5,
+    );
     let password = '';
 
-    password += uppercaseChars.charAt(
-      Math.floor(Math.random() * uppercaseChars.length),
-    );
-    password += lowercaseChars.charAt(
-      Math.floor(Math.random() * lowercaseChars.length),
-    );
-    password += numberChars.charAt(
-      Math.floor(Math.random() * numberChars.length),
-    );
+    for (const charSet of charSets) {
+      password += getRandomCharacter(charSet);
+    }
 
-    for (let index = 3; index < passwordLength; index++) {
-      const characterSet = uppercaseChars + lowercaseChars + numberChars;
-      const randomCharacter = characterSet.charAt(
-        Math.floor(Math.random() * characterSet.length),
-      );
-      password += randomCharacter;
+    for (let index = charSets.length; index < passwordLength; index++) {
+      const characterSet = UPPER_CASE_CHARS + LOWER_CASE_CHARS + NUMBER_CHARS;
+
+      password += getRandomCharacter(characterSet);
     }
 
     const hasDigit = /\d/.test(password);
-    const hasLetter = /[A-Za-z]/.test(password);
+    const hasUpperCaseLetter = /[A-Z]/.test(password);
+    const hasLowerCaseLetter = /[a-z]/.test(password);
 
-    if (!hasDigit || !hasLetter) {
+    if (!hasDigit || !hasUpperCaseLetter || !hasLowerCaseLetter) {
       return await this.generatePassword();
     }
 
