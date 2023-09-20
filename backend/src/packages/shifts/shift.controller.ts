@@ -39,7 +39,7 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.ROOT,
       method: 'POST',
-      authStrategy: AuthStrategy.INJECT_USER,
+      authStrategy: [AuthStrategy.VERIFY_JWT, AuthStrategy.INJECT_USER],
       validation: {
         body: shiftCreateValidationSchema,
       },
@@ -55,7 +55,7 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.$ID,
       method: 'PUT',
-      authStrategy: AuthStrategy.INJECT_USER,
+      authStrategy: [AuthStrategy.VERIFY_JWT, AuthStrategy.INJECT_USER],
       validation: {
         body: shiftCloseValidationSchema,
       },
@@ -345,7 +345,7 @@ export { ShiftController };
 
 /**
  * @swagger
- * /shifts/drive/{id}:
+ * /shifts/driver/{id}:
  *    get:
  *      tags:
  *      - shifts
