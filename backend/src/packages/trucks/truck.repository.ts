@@ -43,12 +43,12 @@ class TruckRepository implements IRepository {
 
   public async findAllByBusinessId(
     businessId: number,
-    query: PaginationWithSortingParameters,
+    { size, sort, page }: PaginationWithSortingParameters,
   ): Promise<TruckDatabaseModel[]> {
-    const offset = countOffsetByQuery({ size: query.size, page: query.page });
+    const offset = countOffsetByQuery({ size, page });
 
     const sortedBy = getSortedBy(
-      query.sort,
+      sort,
       this.trucksSchema.createdAt,
       this.trucksSchema.year,
     );
@@ -60,7 +60,7 @@ class TruckRepository implements IRepository {
       .where(eq(this.trucksSchema.businessId, businessId))
       .orderBy(...sortedBy)
       .offset(offset)
-      .limit(query.size);
+      .limit(size);
   }
 
   public async getTotal(businessId: number): Promise<number> {
