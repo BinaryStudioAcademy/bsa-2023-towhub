@@ -97,9 +97,7 @@ class SocketService {
           ClientToServerEvents[typeof ClientSocketEvent.UNSUBSCRIBE_TRUCK_UPDATES]
         >[0]) => {
           await socket.leave(`${RoomPrefixes.TRUCK}${truckId}`);
-          logger.info(
-            `${socket.id} connected to ${RoomPrefixes.TRUCK}${truckId}`,
-          );
+          logger.info(`${socket.id} left ${RoomPrefixes.TRUCK}${truckId}`);
         },
       );
     });
