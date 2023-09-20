@@ -32,11 +32,10 @@ const Sidebar: React.FC<Properties> = ({
       <ul className={styles.list}>
         {TABS.map((tab) => (
           <li
-            className={
-              selectedTab === tab.name
-                ? getValidClassNames(styles.item, styles.active)
-                : getValidClassNames(styles.item)
-            }
+            className={getValidClassNames(
+              styles.item,
+              selectedTab === tab.name && styles.active,
+            )}
             key={tab.name}
           >
             <Button
