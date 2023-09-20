@@ -36,8 +36,17 @@ const updateTruckLocationFromSocket = createAsyncThunk<
   return location;
 });
 
-const listenTruckUpdates = createAction(
-  ActionNames.SOCKET.LISTEN_TRUCK_UPDATES,
+const subscribeTruckUpdates = createAction(
+  ActionNames.SOCKET.SUBSCRIBE_TRUCK_UPDATES,
+  (truckId: number) => {
+    return {
+      payload: `${truckId}`,
+    };
+  },
+);
+
+const unsubscribeTruckUpdates = createAction(
+  ActionNames.SOCKET.UNSUBSCRIBE_TRUCK_UPDATES,
   (truckId: number) => {
     return {
       payload: `${truckId}`,
@@ -68,15 +77,6 @@ const calculateArrivalTime = createAsyncThunk<
   },
 );
 
-const stopListenTruckUpdates = createAction(
-  ActionNames.SOCKET.STOP_LISTEN_TRUCK_UPDATES,
-  (truckId: string) => {
-    return {
-      payload: `${truckId}`,
-    };
-  },
-);
-
 const getTrucksForBusiness = createAsyncThunk<
   EntityPagination<TruckEntity>,
   undefined,
@@ -96,7 +96,7 @@ export {
   addTruck,
   calculateArrivalTime,
   getTrucksForBusiness,
-  listenTruckUpdates,
-  stopListenTruckUpdates,
+  subscribeTruckUpdates,
+  unsubscribeTruckUpdates,
   updateTruckLocationFromSocket,
 };

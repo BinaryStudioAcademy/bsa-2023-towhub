@@ -20,6 +20,7 @@ export { useAuthNavigate } from '~/pages/auth/libs/hooks/hooks.js';
 export { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 export { useController as useFormController } from 'react-hook-form';
 export {
+  unstable_useBlocker as useBlocker,
   useLocation,
   useNavigate,
   useParams,

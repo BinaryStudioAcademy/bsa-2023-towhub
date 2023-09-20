@@ -6,6 +6,7 @@ import {
   useAppDispatch,
   useAppMap,
   useAppSelector,
+  useBlocker,
   useCallback,
   useEffect,
   useNavigate,
@@ -36,19 +37,32 @@ const OrderStatusPage: React.FC = () => {
   const onPointScreen = status === OrderStatusEnum.PICKING_UP;
   const doneScreen = status === OrderStatusEnum.DONE;
   const truckId = useAppSelector(selectChosenTruck)?.id;
+  useBlocker(
+    useCallback(() => {
+      if (truckId) {
+        void dispatch(truckActions.unsubscribeTruckUpdates(truckId));
+      }
+
+      if (orderId) {
+        void dispatch(orderActions.unsubscribeOrderUpdates(orderId));
+      }
+
+      return false;
+    }, [dispatch, orderId, truckId]),
+  );
 
   const truckLocation = useAppSelector(selectTruckLocation);
 
   useEffect(() => {
     if (orderId) {
       void dispatch(orderActions.getOrder(orderId));
-      void dispatch(orderActions.listenOrderUpdates(orderId));
+      void dispatch(orderActions.subscribeOrderUpdates(orderId));
     }
   }, [orderId, dispatch]);
 
   useEffect(() => {
     if (truckId) {
-      void dispatch(truckActions.listenTruckUpdates(truckId));
+      void dispatch(truckActions.subscribeTruckUpdates(truckId));
     }
   }, [truckId, dispatch]);
 
@@ -112,7 +126,6 @@ const OrderStatusPage: React.FC = () => {
   useAppMap({
     center: truckLocation,
     destination: order ? jsonToLatLngLiteral(order.startPoint) : null,
-    zoom: 15,
     className: styles.map,
     mapReference: mapReference,
   });

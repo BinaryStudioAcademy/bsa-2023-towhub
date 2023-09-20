@@ -2,8 +2,8 @@ import {
   addTruck,
   calculateArrivalTime,
   getTrucksForBusiness,
-  listenTruckUpdates,
-  stopListenTruckUpdates,
+  subscribeTruckUpdates,
+  unsubscribeTruckUpdates,
   updateTruckLocationFromSocket,
 } from './actions.js';
 import { actions } from './trucks.slice.js';
@@ -11,8 +11,8 @@ import { actions } from './trucks.slice.js';
 const allActions = {
   ...actions,
   addTruck,
-  listenTruckUpdates,
-  stopListenTruckUpdates,
+  subscribeTruckUpdates,
+  unsubscribeTruckUpdates,
   updateTruckLocationFromSocket,
   calculateArrivalTime,
   getTrucksForBusiness,

@@ -7,12 +7,14 @@ import {
 
 import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
 import {
-  listenOrderUpdates,
+  subscribeOrderUpdates,
+  unsubscribeOrderUpdates,
   updateOrderFromSocket,
 } from '~/slices/orders/actions.js';
 import {
   calculateArrivalTime,
-  listenTruckUpdates,
+  subscribeTruckUpdates,
+  unsubscribeTruckUpdates,
   updateTruckLocationFromSocket,
 } from '~/slices/trucks/actions.js';
 
@@ -69,18 +71,44 @@ const socketMiddleware: ThunkMiddleware<
 
   return (next: Dispatch) => (action: AnyAction) => {
     if (socketInstance) {
-      if (listenOrderUpdates.type === action.type) {
-        socketInstance.emit<typeof ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES>(
-          ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES,
-          { orderId: `${action.payload as string}` },
-        );
-      }
+      switch (action.type) {
+        case subscribeOrderUpdates.type: {
+          socketInstance.emit<typeof ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES>(
+            ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES,
+            { orderId: `${action.payload as string}` },
+          );
+          break;
+        }
 
-      if (listenTruckUpdates.type === action.type) {
-        socketInstance.emit<typeof ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES>(
-          ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES,
-          { truckId: `${action.payload as string}` },
-        );
+        case unsubscribeOrderUpdates.type: {
+          socketInstance.emit<
+            typeof ClientSocketEvent.UNSUBSCRIBE_ORDER_UPDATES
+          >(ClientSocketEvent.UNSUBSCRIBE_ORDER_UPDATES, {
+            orderId: `${action.payload as string}`,
+          });
+          break;
+        }
+
+        case subscribeTruckUpdates.type: {
+          socketInstance.emit<typeof ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES>(
+            ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES,
+            { truckId: `${action.payload as string}` },
+          );
+          break;
+        }
+
+        case unsubscribeTruckUpdates.type: {
+          socketInstance.emit<
+            typeof ClientSocketEvent.UNSUBSCRIBE_TRUCK_UPDATES
+          >(ClientSocketEvent.UNSUBSCRIBE_TRUCK_UPDATES, {
+            truckId: `${action.payload as string}`,
+          });
+          break;
+        }
+
+        default: {
+          break;
+        }
       }
     }
 

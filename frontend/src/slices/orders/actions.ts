@@ -89,8 +89,8 @@ const updateOrderFromSocket = createAsyncThunk<
   return order;
 });
 
-const listenOrderUpdates = createAction(
-  ActionNames.SOCKET.LISTEN_ORDER_UPDATES,
+const subscribeOrderUpdates = createAction(
+  ActionNames.SOCKET.SUBSCRIBE_ORDER_UPDATES,
   (orderId: string) => {
     return {
       payload: `${orderId}`,
@@ -98,8 +98,8 @@ const listenOrderUpdates = createAction(
   },
 );
 
-const stopListenOrderUpdates = createAction(
-  ActionNames.SOCKET.STOP_LISTEN_ORDER_UPDATES,
+const unsubscribeOrderUpdates = createAction(
+  ActionNames.SOCKET.UNSUBSCRIBE_ORDER_UPDATES,
   (orderId: string) => {
     return {
       payload: `${orderId}`,
@@ -112,7 +112,7 @@ export {
   createOrder,
   getOrder,
   getRouteData,
-  listenOrderUpdates,
-  stopListenOrderUpdates,
+  subscribeOrderUpdates,
+  unsubscribeOrderUpdates,
   updateOrderFromSocket,
 };

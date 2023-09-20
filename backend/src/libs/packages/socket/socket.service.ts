@@ -66,6 +66,17 @@ class SocketService {
         },
       );
       socket.on(
+        ClientSocketEvent.UNSUBSCRIBE_ORDER_UPDATES,
+        async ({
+          orderId,
+        }: Parameters<
+          ClientToServerEvents[typeof ClientSocketEvent.UNSUBSCRIBE_ORDER_UPDATES]
+        >[0]) => {
+          await socket.leave(`${RoomPrefixes.ORDER}${orderId}`);
+          logger.info(`${socket.id} left ${RoomPrefixes.ORDER}${orderId}`);
+        },
+      );
+      socket.on(
         ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES,
         async ({
           truckId,
@@ -73,6 +84,19 @@ class SocketService {
           ClientToServerEvents[typeof ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES]
         >[0]) => {
           await socket.join(`${RoomPrefixes.TRUCK}${truckId}`);
+          logger.info(
+            `${socket.id} connected to ${RoomPrefixes.TRUCK}${truckId}`,
+          );
+        },
+      );
+      socket.on(
+        ClientSocketEvent.UNSUBSCRIBE_TRUCK_UPDATES,
+        async ({
+          truckId,
+        }: Parameters<
+          ClientToServerEvents[typeof ClientSocketEvent.UNSUBSCRIBE_TRUCK_UPDATES]
+        >[0]) => {
+          await socket.leave(`${RoomPrefixes.TRUCK}${truckId}`);
           logger.info(
             `${socket.id} connected to ${RoomPrefixes.TRUCK}${truckId}`,
           );

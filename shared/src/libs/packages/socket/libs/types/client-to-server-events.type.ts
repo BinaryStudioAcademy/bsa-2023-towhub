@@ -10,7 +10,13 @@ type ClientToServerEvents = {
   [ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES]: (payload: {
     orderId: string;
   }) => void;
+  [ClientSocketEvent.UNSUBSCRIBE_ORDER_UPDATES]: (payload: {
+    orderId: string;
+  }) => void;
   [ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES]: (payload: {
+    truckId: string;
+  }) => void;
+  [ClientSocketEvent.UNSUBSCRIBE_TRUCK_UPDATES]: (payload: {
     truckId: string;
   }) => void;
 };

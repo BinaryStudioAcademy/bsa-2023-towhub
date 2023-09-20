@@ -3,8 +3,8 @@ import {
   createOrder,
   getOrder,
   getRouteData,
-  listenOrderUpdates,
-  stopListenOrderUpdates,
+  subscribeOrderUpdates,
+  unsubscribeOrderUpdates,
   updateOrderFromSocket,
 } from './actions.js';
 import { actions } from './order.slice.js';
@@ -14,8 +14,8 @@ const allActions = {
   createOrder,
   calculateOrderPrice,
   getOrder,
-  listenOrderUpdates,
-  stopListenOrderUpdates,
+  subscribeOrderUpdates,
+  unsubscribeOrderUpdates,
   updateOrderFromSocket,
   getRouteData,
 };
