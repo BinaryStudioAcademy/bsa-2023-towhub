@@ -17,7 +17,7 @@ const driverCreateUpdateRequestBody = joi.object<
   driverLicenseNumber: joi
     .string()
     .trim()
-    // To check min/max length we must consider only significant characters,
+    // To check min/max length we must consider only meaningful characters,
     // thus we cannot use joi's min/max here
     .custom(
       checkMinMaxValidator(
@@ -32,7 +32,6 @@ const driverCreateUpdateRequestBody = joi.object<
       'string.empty': Message.DRIVER_LICENSE_NUMBER_REQUIRED,
       'string.pattern.base': Message.DRIVER_LICENSE_NUMBER_INVALID,
       'string.custom': Message.DRIVER_LICENSE_NUMBER_INVALID,
-      'string.max': Message.DRIVER_LICENSE_NUMBER_INVALID,
     }),
 
   truckIds: joi.array().items(joi.number()),
