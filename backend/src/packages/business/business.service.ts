@@ -22,7 +22,7 @@ import {
   type BusinessCreatePayload,
   type BusinessEntityT,
   type BusinessUpdateResponseDto,
-  type PaginationPayload,
+  type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 
 class BusinessService implements IService {
@@ -178,6 +178,7 @@ class BusinessService implements IService {
 
   public async findAllDriversByBusinessId(
     ownerId: number,
+    query: GetPaginatedPageQuery,
   ): Promise<DriverGetAllResponseDto> {
     const business = await this.findByOwnerId(ownerId);
 
@@ -188,7 +189,10 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.findAllByBusinessId(business.id);
+    return await this.driverService.findAllByBusinessId({
+      businessId: business.id,
+      query,
+    });
   }
 
   public async deleteDriver(
@@ -222,7 +226,7 @@ class BusinessService implements IService {
 
   public async findAllTrucksByOwnerId(
     userId: number,
-    query: PaginationPayload,
+    query: GetPaginatedPageQuery,
   ): Promise<EntityPagination<TruckEntity>> {
     const business = await this.findByOwnerId(userId);
 

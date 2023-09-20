@@ -25,7 +25,7 @@ import {
   type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,
-  type PaginationPayload,
+  type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 import {
   businessAddRequestBody,
@@ -33,6 +33,7 @@ import {
   businessGetParameters,
   businessUpdateParameters,
   businessUpdateRequestBody,
+  commonGetPageQuery,
 } from './libs/validation-schemas/validation-schemas.js';
 
 /**
@@ -355,9 +356,13 @@ class BusinessController extends Controller {
       path: BusinessApiPath.DRIVERS,
       method: 'GET',
       authStrategy: defaultStrategies,
+      validation: {
+        query: commonGetPageQuery,
+      },
       handler: (options) =>
         this.findAllDrivers(
           options as ApiHandlerOptions<{
+            query: GetPaginatedPageQuery;
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -387,7 +392,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.findAllTrucks(
           options as ApiHandlerOptions<{
-            query: PaginationPayload;
+            query: GetPaginatedPageQuery;
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -764,18 +769,27 @@ class BusinessController extends Controller {
    *          content:
    *            application/json:
    *              schema:
-   *                type: array
-   *                items:
-   *                  $ref: '#/components/schemas/Driver'
+   *                type: object
+   *                properties:
+   *                    items:
+   *                      type: array
+   *                      items:
+   *                        $ref: '#/components/schemas/Driver'
+   *                    total:
+   *                      type: string
+   *                      example: 1
+   *
    */
 
   private async findAllDrivers(
     options: ApiHandlerOptions<{
+      query: GetPaginatedPageQuery;
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
     const drivers = await this.businessService.findAllDriversByBusinessId(
       options.user.id,
+      options.query,
     );
 
     return {
@@ -859,7 +873,7 @@ class BusinessController extends Controller {
 
   private async findAllTrucks(
     options: ApiHandlerOptions<{
-      query: PaginationPayload;
+      query: GetPaginatedPageQuery;
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {

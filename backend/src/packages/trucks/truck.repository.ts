@@ -4,7 +4,7 @@ import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
-import { type PaginationPayload } from '../business/libs/types/types.js';
+import { type GetPaginatedPageQuery } from '../business/libs/types/types.js';
 import {
   type DriverHaveAccessToTruck,
   type TruckDatabaseModel,
@@ -114,7 +114,7 @@ class TruckRepository implements IRepository {
 
   public async findAllByBusinessId(
     businessId: number,
-    query: PaginationPayload,
+    query: GetPaginatedPageQuery,
   ): Promise<TruckDatabaseModel[]> {
     const index = query.page * query.size;
 

@@ -2,7 +2,7 @@ import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type EntityPagination } from '~/libs/types/types.js';
 
-import { type PaginationPayload } from '../business/libs/types/types.js';
+import { type GetPaginatedPageQuery } from '../business/libs/types/types.js';
 import {
   type DriverHaveAccessToTruck,
   type TruckEntity as TruckEntityT,
@@ -89,7 +89,7 @@ class TruckService implements IService {
 
   public async findAllByBusinessId(
     businessId: number,
-    query: PaginationPayload,
+    query: GetPaginatedPageQuery,
   ): Promise<EntityPagination<TruckEntityT>> {
     const data = await this.repository.findAllByBusinessId(businessId, query);
 
