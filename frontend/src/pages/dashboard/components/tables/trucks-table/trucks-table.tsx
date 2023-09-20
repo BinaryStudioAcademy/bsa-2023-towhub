@@ -1,7 +1,7 @@
 import { type SortingState } from '@tanstack/react-table';
 
 import { Button, Modal, Table } from '~/libs/components/components.js';
-import { DataStatus, IconName } from '~/libs/enums/enums.js';
+import { DataStatus } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
@@ -89,7 +89,6 @@ const TruckTable: React.FC = () => {
           </h2>
           <Button
             label="Add a truck"
-            frontIcon={IconName.PLUS}
             className={styles.btn}
             onClick={handleAddTruckModalVisibility}
           />
