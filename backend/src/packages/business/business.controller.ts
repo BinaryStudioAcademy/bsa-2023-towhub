@@ -641,6 +641,7 @@ class BusinessController extends Controller {
    *               - lastName
    *               - driverLicenseNumber
    *               - password
+   *               - driverTrucks
    *              properties:
    *                phone:
    *                  $ref: '#/components/schemas/Driver/properties/phone'
@@ -657,6 +658,10 @@ class BusinessController extends Controller {
    *                  minimum: 6
    *                  maximum: 20
    *                  pattern: ^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$
+   *                driverTrucks:
+   *                  type: array
+   *                  items:
+   *                    type: number
    *      security:
    *        - bearerAuth: []
    *      responses:

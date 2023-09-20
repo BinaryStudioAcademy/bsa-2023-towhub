@@ -12,7 +12,7 @@ import { type SortMethodValue } from '../types/types.js';
 type ColumnToSorted = SQLWrapper | AnyColumn;
 
 const getSortedBy = (
-  sortedMethod: SortMethodValue,
+  sortedMethod: SortMethodValue | null,
   requiredColumnToSorted: ColumnToSorted,
   optionalColumnToSorted: ColumnToSorted,
 ): SQL[] => {

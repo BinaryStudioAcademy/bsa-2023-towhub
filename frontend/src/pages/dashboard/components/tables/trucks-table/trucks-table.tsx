@@ -1,4 +1,4 @@
-import { type SortingState } from '@tanstack/react-table';
+import { type ColumnSort } from '@tanstack/react-table';
 
 import { Button, Modal, Table } from '~/libs/components/components.js';
 import { DataStatus } from '~/libs/enums/enums.js';
@@ -10,6 +10,7 @@ import {
   useCallback,
   useQueryParameters,
   useState,
+  useToggle,
 } from '~/libs/hooks/hooks.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
 import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
@@ -30,18 +31,18 @@ const TruckTable: React.FC = () => {
     total: trucks.total,
     dataStatus: trucks.dataStatus,
   }));
-  const { getQueryParameters } = useQueryParameters();
+  const { getQueryParameters, searchParameters } = useQueryParameters();
 
   const { size: initialSize, page: initialPage } = getQueryParameters(
     'size',
     'page',
   ) as Queries;
 
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<ColumnSort | null>(null);
   const dispatch = useAppDispatch();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isToggled, toggle] = useToggle();
 
-  const sortMethod = sorting.map((sort) => (sort.desc ? 'desc' : 'asc'))[0];
+  const sortMethod = sorting?.desc ? 'desc' : 'asc';
 
   const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
     TruckGetAllResponseDto,
@@ -53,24 +54,18 @@ const TruckTable: React.FC = () => {
     sort: sortMethod,
   });
 
-  const handleAddTruckModalVisibility = useCallback(() => {
-    setIsModalOpen((previous) => !previous);
-  }, []);
-
   const handleSubmit = useCallback(
     (payload: TruckAddRequestDto) => {
       void dispatch(
         truckActions.addTruck({
           ...payload,
-          page: pageIndex,
-          size: pageSize,
-          sort: sortMethod,
+          queryString: searchParameters.toString(),
         }),
       );
 
-      handleAddTruckModalVisibility();
+      toggle();
     },
-    [dispatch, handleAddTruckModalVisibility, pageIndex, pageSize, sortMethod],
+    [dispatch, searchParameters, toggle],
   );
 
   const message = (
@@ -87,11 +82,7 @@ const TruckTable: React.FC = () => {
           <h2 className={getValidClassNames('uppercase', styles.title)}>
             Company Trucks
           </h2>
-          <Button
-            label="Add a truck"
-            className={styles.btn}
-            onClick={handleAddTruckModalVisibility}
-          />
+          <Button label="Add a truck" className={styles.btn} onClick={toggle} />
         </div>
         <Table
           data={trucks}
@@ -107,16 +98,9 @@ const TruckTable: React.FC = () => {
           emptyTableMessage={message}
         />
       </div>
-      <Modal
-        isOpen={isModalOpen}
-        isCentered
-        onClose={handleAddTruckModalVisibility}
-      >
+      <Modal isOpen={isToggled} isCentered onClose={toggle}>
         <div className={styles.formWrapper}>
-          <AddTruckForm
-            onSubmit={handleSubmit}
-            onClose={handleAddTruckModalVisibility}
-          />
+          <AddTruckForm onSubmit={handleSubmit} onClose={toggle} />
         </div>
       </Modal>
     </>

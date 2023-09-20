@@ -1,4 +1,3 @@
-export { buildQueryString } from './build-query-string/build-query-string.helper.js';
 export { capitalizeFirstLetter } from './capitalize-first-letter/capitalize-first-letter.helper.js';
 export { getErrorMessage } from './get-error-message/get-error-message.helper.js';
 export { getValidClassNames } from './get-valid-class-names/get-valid-class-names.helper.js';

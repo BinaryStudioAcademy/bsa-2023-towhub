@@ -1,4 +1,9 @@
-import { type OnChangeFn, type SortingState } from '@tanstack/react-table';
+import {
+  type ColumnSort,
+  type OnChangeFn,
+  type SortingState,
+  type Updater,
+} from '@tanstack/react-table';
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
@@ -26,8 +31,8 @@ type Properties<T> = {
   pageSize: number;
   totalRow: number;
   pageIndex: number;
-  sorting?: SortingState;
-  setSorting?: OnChangeFn<SortingState>;
+  sorting?: ColumnSort | null;
+  setSorting?: OnChangeFn<ColumnSort | null>;
   changePageIndex: React.Dispatch<React.SetStateAction<number>>;
   changePageSize: React.Dispatch<React.SetStateAction<number>>;
   onEditClick?: (rowId: string) => void;
@@ -50,6 +55,17 @@ const Table = <T,>({
   ...properties
 }: Properties<T>): JSX.Element => {
   const pagesRange = Math.ceil(totalRow / pageSize);
+
+  const sortState = sorting ? [sorting] : [];
+
+  const handleSortingChange = (sortingUpdater: Updater<SortingState>): void => {
+    if (typeof sortingUpdater === 'function' && setSorting) {
+      const sortingArray = sortingUpdater(sortState);
+      const [firstItem] = sortingArray;
+      setSorting(firstItem);
+    }
+  };
+
   const dataAndColumns = useMemo(() => {
     return isTableEditable ? addIconsToData(data, columns) : { data, columns };
   }, [columns, data, isTableEditable]);
@@ -58,13 +74,15 @@ const Table = <T,>({
     columnResizeMode: 'onChange',
     defaultColumn: DEFAULT_COLUMN,
     state: {
-      sorting,
+      sorting: sortState,
     },
     manualSorting: true,
+    onSortingChange: (sortingUpdater) => {
+      handleSortingChange(sortingUpdater);
+    },
+    enableSortingRemoval: false,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    enableSortingRemoval: false,
     initialState: {
       pagination: {
         pageSize,

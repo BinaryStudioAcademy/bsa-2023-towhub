@@ -3,8 +3,6 @@ import { useCallback, useEffect, useState } from 'react';
 
 import {
   type AsyncThunkConfig,
-  type PaginationParameters,
-  type PaginationWithSortingParameters,
   type SortMethodValue,
 } from '~/libs/types/types.js';
 
@@ -13,15 +11,11 @@ import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
 
 type Properties<T, K> = {
-  tableFetchCall: AsyncThunk<
-    T,
-    PaginationWithSortingParameters | (K & PaginationParameters),
-    AsyncThunkConfig
-  >;
+  tableFetchCall: AsyncThunk<T, string | undefined, AsyncThunkConfig>;
   payload?: K;
   initialPageSize?: number | null;
   initialPageIndex?: number | null;
-  sort?: SortMethodValue;
+  sort?: SortMethodValue | null;
 };
 
 type ReturnValue = {
@@ -37,7 +31,7 @@ const useAppTable = <T, K>({
   payload,
   initialPageSize,
   initialPageIndex,
-  sort = '',
+  sort,
 }: Properties<T, K>): ReturnValue => {
   const [pageSize, changePageSize] = useState(
     initialPageSize ?? DEFAULT_PAGE_SIZE,
@@ -45,7 +39,8 @@ const useAppTable = <T, K>({
   const [pageIndex, changePageIndex] = useState(
     initialPageIndex ?? DEFAULT_PAGE_INDEX,
   );
-  const { setQueryParameters } = useQueryParameters();
+
+  const { setQueryParameters, searchParameters } = useQueryParameters();
   const dispatch = useAppDispatch();
 
   const updatePage = useCallback(() => {
@@ -53,15 +48,21 @@ const useAppTable = <T, K>({
       ...payload,
       page: pageIndex,
       size: pageSize,
-      sort,
     };
-    setQueryParameters(actionPayload);
-    void dispatch(tableFetchCall(actionPayload));
+
+    if (sort) {
+      setQueryParameters({ ...actionPayload, sort });
+    } else {
+      setQueryParameters(actionPayload);
+    }
+
+    void dispatch(tableFetchCall(searchParameters.toString()));
   }, [
     dispatch,
     pageIndex,
     pageSize,
     payload,
+    searchParameters,
     setQueryParameters,
     sort,
     tableFetchCall,

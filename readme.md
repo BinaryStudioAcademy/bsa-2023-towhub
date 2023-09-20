@@ -88,6 +88,7 @@ erDiagram
         business_id integer FK "not null"
         created_at timestamp "not null"
         updated_at timestamp "not null"
+        business_id integer FK "not null"
     }
     business_details {
         id serial PK "not null"

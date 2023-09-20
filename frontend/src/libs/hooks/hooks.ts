@@ -8,6 +8,7 @@ export { useGeolocation } from './use-geolocation/use-geolocation.hook.js';
 export { useGetCurrentUser } from './use-get-current-user/use-get-current-user.hook.js';
 export { useQueryParameters } from './use-query-parameters/use-query-parameters.hook.js';
 export { useServerErrorFromThunk } from './use-server-error-from-thunk/use-server-error-from-thunk.hook.js';
+export { useToggle } from './use-toggle/use-toggle.hook.js';
 export {
   createColumnHelper,
   flexRender,

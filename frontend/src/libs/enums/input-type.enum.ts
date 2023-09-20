@@ -8,6 +8,7 @@ const InputType = {
   LOCATION: 'location',
   FORM: 'form',
   FILE: 'file',
+  MULTI_SELECT: 'multi-select',
 } as const;
 
 export { InputType };

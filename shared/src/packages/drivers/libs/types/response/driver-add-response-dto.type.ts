@@ -4,6 +4,7 @@ import { type DriverCreateUpdateResponseDto } from './driver-create-update-respo
 
 type DriverAddResponseWithGroup = DriverCreateUpdateResponseDto & {
   group: UserGroupEntityT;
+  possibleTruckIds: number[];
 };
 
 export { type DriverAddResponseWithGroup };

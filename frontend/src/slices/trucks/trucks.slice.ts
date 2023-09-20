@@ -46,7 +46,7 @@ const { reducer, actions, name } = createSlice({
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addMatcher(
-        isAnyOf(addTruck.pending, findAllTrucksForBusiness.pending),
+        isAnyOf(findAllTrucksForBusiness.pending, addTruck.pending),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
         },

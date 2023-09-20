@@ -29,6 +29,7 @@ type ExtraArguments = {
   truckApi: typeof truckApi;
   businessApi: typeof businessApi;
   localStorage: typeof LocalStorage;
+  businessApi: typeof businessApi;
   ordersApi: typeof ordersApi;
   driverApi: typeof driverApi;
 };

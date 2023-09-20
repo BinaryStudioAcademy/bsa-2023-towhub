@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "bca00686-f39f-45e2-af66-27f3aa7b6195",
+  "id": "08a6962e-9e03-4d5e-8308-e66c756c7125",
   "prevId": "1344a105-d723-4f2d-981d-75699929a282",
   "tables": {
     "business_details": {
@@ -465,12 +465,6 @@
           "notNull": true,
           "default": "now()"
         },
-        "business_id": {
-          "name": "business_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
         "manufacturer": {
           "name": "manufacturer",
           "type": "varchar",
@@ -504,6 +498,12 @@
         "tow_type": {
           "name": "tow_type",
           "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "business_id": {
+          "name": "business_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         }
@@ -682,7 +682,8 @@
         "pending": "pending",
         "confirmed": "confirmed",
         "canceled": "canceled",
-        "done": "done"
+        "done": "done",
+        "picking_up": "picking_up"
       }
     }
   },

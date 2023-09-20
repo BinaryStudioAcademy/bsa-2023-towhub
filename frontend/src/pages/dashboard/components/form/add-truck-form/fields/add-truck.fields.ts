@@ -1,3 +1,4 @@
+import { FormLabel, FormName } from '~/libs/enums/enums.js';
 import { type FormField } from '~/libs/types/form.type.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 import {
@@ -6,8 +7,6 @@ import {
 } from '~/packages/trucks/libs/enums/enums.js';
 import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 import {
-  FormLabel,
-  FormName,
   TruckManufacturer,
   TruckTowType,
   TruckYear,
@@ -28,21 +27,21 @@ const ADD_TRUCK_FIELDS: FormField<
   Omit<TruckEntity, 'id' | 'businessId' | 'createdAt'>
 >[] = [
   {
-    id: 1,
+    id: FormLabel.MANUFACTURER,
     type: 'dropdown',
     label: FormLabel.MANUFACTURER,
     name: FormName.MANUFACTURER,
     options: convertToSelectOptions(TruckManufacturer),
   },
   {
-    id: 2,
+    id: FormLabel.TOW_TYPE,
     type: 'dropdown',
     label: FormLabel.TOW_TYPE,
     name: FormName.TOW_TYPE,
     options: convertToSelectOptions(TruckTowType),
   },
   {
-    id: 3,
+    id: FormLabel.YEAR,
     type: 'number',
     label: FormLabel.YEAR,
     name: FormName.YEAR,
@@ -50,21 +49,21 @@ const ADD_TRUCK_FIELDS: FormField<
     max: TruckYear.MAX,
   },
   {
-    id: 4,
+    id: FormLabel.LICENSE_PLATE,
     type: 'text',
     label: FormLabel.LICENSE_PLATE,
     placeholder: PLACEHOLDER_LICENSE_PLATE,
     name: FormName.LICENSE_PLATE,
   },
   {
-    id: 5,
+    id: FormLabel.CAPACITY,
     type: 'number',
     label: FormLabel.CAPACITY,
     name: FormName.CAPACITY,
     min: TruckCapacity.MIN,
   },
   {
-    id: 6,
+    id: FormLabel.PRICE_PER_KM,
     type: 'number',
     label: FormLabel.PRICE_PER_KM,
     name: FormName.PRICE_PER_KM,

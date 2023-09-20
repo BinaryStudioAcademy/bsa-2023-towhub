@@ -2,10 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
-import {
-  type AsyncThunkConfig,
-  type PaginationWithSortingParameters,
-} from '~/libs/types/types.js';
+import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import { TruckNotificationMessage } from '~/packages/trucks/libs/enums/enums.js';
 import {
   type TruckAddRequestDto,
@@ -17,20 +14,17 @@ import { name as sliceName } from './trucks.slice.js';
 
 const addTruck = createAsyncThunk<
   TruckEntity,
-  TruckAddRequestDto & PaginationWithSortingParameters,
+  TruckAddRequestDto & { queryString?: string },
   AsyncThunkConfig
 >(
   `${sliceName}/add-truck`,
-  async (
-    { page, size, sort, ...payload },
-    { rejectWithValue, extra, dispatch },
-  ) => {
+  async ({ queryString, ...payload }, { rejectWithValue, extra, dispatch }) => {
     const { businessApi, notification } = extra;
 
     try {
       const truck = await businessApi.addTruck(payload);
 
-      await dispatch(findAllTrucksForBusiness({ page, size, sort }));
+      await dispatch(findAllTrucksForBusiness(queryString));
 
       notification.success(TruckNotificationMessage.SUCCESS_ADD_NEW_TRUCK);
 
@@ -47,20 +41,15 @@ const addTruck = createAsyncThunk<
 
 const findAllTrucksForBusiness = createAsyncThunk<
   TruckGetAllResponseDto,
-  PaginationWithSortingParameters,
+  string | undefined,
   AsyncThunkConfig
 >(
   `${sliceName}/find-all-trucks-for-business`,
   async (payload, { rejectWithValue, extra }) => {
-    const { page, size, sort } = payload;
     const { businessApi, notification } = extra;
 
     try {
-      return await businessApi.findAllTrucksByBusinessId({
-        page,
-        size,
-        sort,
-      });
+      return await businessApi.findAllTrucksByBusinessId(payload);
     } catch (error_: unknown) {
       const error = error_ as HttpError;
 

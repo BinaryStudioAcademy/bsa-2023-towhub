@@ -3,6 +3,7 @@ import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 
 import {
+  type DriverHaveAccessToTruck,
   type TruckEntity as TruckEntityT,
   type TruckGetAllResponseDto,
 } from './libs/types/types.js';
@@ -82,6 +83,21 @@ class TruckService implements IService {
     const result = await this.repository.findAll();
 
     return result.map((element) => TruckEntity.initialize(element).toObject());
+  }
+
+  public async addTrucksToDriver(
+    userId: number,
+    truckIds: number[],
+  ): Promise<void> {
+    const uniqueItems = [...new Set(truckIds)];
+    const driverTrucks: DriverHaveAccessToTruck[] = uniqueItems.map(
+      (truckId) => ({
+        userId,
+        truckId,
+      }),
+    );
+
+    await this.repository.addTruckToDriver(driverTrucks);
   }
 }
 

@@ -7,7 +7,7 @@ import {
   useAppTable,
   useCallback,
   useQueryParameters,
-  useState,
+  useToggle,
 } from '~/libs/hooks/hooks.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
 import {
@@ -15,16 +15,18 @@ import {
   type PaginationParameters,
 } from '~/libs/types/types.js';
 import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
-import { AddDriverForm } from '~/pages/business/components/add-driver-form/add-driver-form.js';
 import { getDriversPage } from '~/slices/drivers/actions.js';
 import { actions } from '~/slices/drivers/drivers.js';
 
+import { AddDriverForm } from '../../form/form.js';
 import { columns } from './columns/columns.js';
 import styles from './styles.module.scss';
 
 const DriverTable: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { getQueryParameters } = useQueryParameters();
+  const { getQueryParameters, searchParameters } = useQueryParameters();
+  const [isToggled, toggle] = useToggle();
+
   const { drivers, total, dataStatus } = useAppSelector(({ drivers }) => ({
     drivers: drivers.drivers,
     total: drivers.total,
@@ -35,8 +37,6 @@ const DriverTable: React.FC = () => {
     'page',
   ) as Queries;
 
-  const [isActiveModal, setIsActiveModal] = useState(false);
-
   const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
     DriverGetAllResponseDto,
     PaginationParameters
@@ -46,18 +46,17 @@ const DriverTable: React.FC = () => {
     initialPageSize: initialSize ? Number(initialSize) : null,
   });
 
-  const handleModal = useCallback(() => {
-    setIsActiveModal((isActiveModal) => !isActiveModal);
-  }, []);
-
   const handleSubmit = useCallback(
     (payload: DriverCreateUpdateRequestDto) => {
       void dispatch(
-        actions.addDriver({ payload, size: pageSize, page: pageIndex }),
+        actions.addDriver({
+          payload,
+          queryString: searchParameters.toString(),
+        }),
       );
-      handleModal();
+      toggle();
     },
-    [dispatch, pageSize, pageIndex, handleModal],
+    [dispatch, searchParameters, toggle],
   );
 
   const message = (
@@ -73,11 +72,7 @@ const DriverTable: React.FC = () => {
         <h2 className={getValidClassNames('h3', styles.title)}>
           Company Drivers
         </h2>
-        <Button
-          label="Add a Driver"
-          className={styles.btn}
-          onClick={handleModal}
-        />
+        <Button label="Add a Driver" className={styles.btn} onClick={toggle} />
       </div>
       <Table
         data={drivers}
@@ -91,7 +86,7 @@ const DriverTable: React.FC = () => {
         changePageSize={changePageSize}
         emptyTableMessage={message}
       />
-      <Modal isOpen={isActiveModal} isCentered onClose={handleModal}>
+      <Modal isOpen={isToggled} isCentered onClose={toggle}>
         <div className={styles.formWrapper}>
           <AddDriverForm onSubmit={handleSubmit} />
         </div>
