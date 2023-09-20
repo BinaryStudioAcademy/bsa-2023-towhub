@@ -1,25 +1,26 @@
 import { Button } from '~/libs/components/components.js';
+import { AppRoute } from '~/libs/enums/app-route.enum';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useCallback } from '~/libs/hooks/hooks.js';
+import { useCallback, useLocation, useNavigate } from '~/libs/hooks/hooks.js';
 import { type TabName } from '~/libs/types/types.js';
 
+import { checkActiveTab } from './libs/helpers.js';
 import styles from './styles.module.scss';
 import { TABS } from './tabs.js';
 
 type Properties = {
   isCollapsed?: boolean;
-  selectedTab: TabName | null;
-  onTabClick: (tabName: TabName) => void;
 };
 
-const Sidebar: React.FC<Properties> = ({
-  isCollapsed = false,
-  selectedTab,
-  onTabClick,
-}: Properties) => {
+const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleTabClick = useCallback(
-    (tabName: TabName) => () => onTabClick(tabName),
-    [onTabClick],
+    (tabName: TabName) => () => {
+      navigate(`${AppRoute.DASHBOARD}/${tabName}`);
+    },
+    [navigate],
   );
 
   return (
@@ -43,7 +44,9 @@ const Sidebar: React.FC<Properties> = ({
               className={[
                 'h5',
                 styles.btn,
-                { [styles.active]: selectedTab === tab.name },
+                {
+                  [styles.active]: checkActiveTab(location.pathname, tab.name),
+                },
               ]}
               variant="text"
               onClick={handleTabClick(tab.name)}
