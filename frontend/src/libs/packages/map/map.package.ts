@@ -27,12 +27,15 @@ class MapService implements IMapService {
 
   private infoWindow: google.maps.InfoWindow;
 
+  private geoCoder: google.maps.Geocoder;
+
   public constructor({ mapElement, center, zoom, bounds }: Constructor) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
     });
-    this.infoWindow = new google.maps.InfoWindow();
+    this.infoWindow = new google.maps.InfoWindow({ maxWidth: 250 });
+    this.geoCoder = new google.maps.Geocoder();
 
     this.initMap({ mapElement, center, zoom, bounds });
   }
@@ -177,12 +180,12 @@ class MapService implements IMapService {
     position: google.maps.LatLngLiteral,
     isOrigin = false,
     angle = 0,
-  ): void {
+  ): google.maps.Marker {
     this.throwIfMapNotInitialized();
 
     const rotatedIconUrl = rotateImg(truckImg, angle);
 
-    new google.maps.Marker({
+    return new google.maps.Marker({
       position,
       map: this.map,
       icon: isOrigin
@@ -196,7 +199,6 @@ class MapService implements IMapService {
             scale: 1,
           }
         : truckImg,
-      title: `${position.lat}, ${position.lng}`,
     });
   }
 
@@ -215,13 +217,35 @@ class MapService implements IMapService {
       travelMode: google.maps.TravelMode.DRIVING,
     });
 
-    // const info = this.infoWindow.setContent(`${startPoint}, ${endPoint}`);
     this.directionsRenderer.setOptions({
       directions: path,
       map: this.map,
-      // infoWindow: info,
       preserveViewport: true,
     });
+    await this.showInfoWindow(startPoint, endPoint);
+  }
+
+  public async showInfoWindow(
+    startpoit: google.maps.LatLngLiteral,
+    endPoint: google.maps.LatLngLiteral,
+  ): Promise<void> {
+    const anchor = this.addMarker(endPoint, false);
+
+    const startAddress = await this.getAddress(startpoit);
+    const endAddress = await this.getAddress(endPoint);
+
+    this.infoWindow.setContent(`${startAddress} → ${endAddress}`);
+    this.infoWindow.open({ map: this.map, anchor });
+  }
+
+  public async getAddress(place: google.maps.LatLngLiteral): Promise<string> {
+    this.throwIfMapNotInitialized();
+
+    const result: google.maps.GeocoderResponse = await this.geoCoder.geocode({
+      location: place,
+    });
+
+    return result.results[2].formatted_address;
   }
 }
 

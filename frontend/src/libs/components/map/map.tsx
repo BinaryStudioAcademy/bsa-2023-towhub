@@ -91,14 +91,6 @@ const Map: React.FC<Properties> = ({
       for (const marker of markers) {
         mapService.current?.addMarker(marker, false);
       }
-    }
-  }, [markers]);
-
-  useEffect(() => {
-    if (markers && markers.length > 0) {
-      for (const marker of markers) {
-        mapService.current?.addMarker(marker, false);
-      }
 
       if (shownRoute) {
         void mapService.current?.addRoute(shownRoute);
