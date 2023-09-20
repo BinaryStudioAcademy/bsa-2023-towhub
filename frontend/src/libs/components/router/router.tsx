@@ -42,7 +42,31 @@ const Router = (): JSX.Element => {
           }
         />
         <Route
-          path={AppRoute.DASHBOARD}
+          path={AppRoute.SETUP_PAYMENT}
+          element={
+            <PageLayout isSidebarHidden>
+              <SetupPayment />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_ORDERS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_TRUCKS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_DRIVERS}
           element={
             <PageLayout>
               <Dashboard />

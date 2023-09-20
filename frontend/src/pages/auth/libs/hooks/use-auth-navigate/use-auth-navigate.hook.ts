@@ -34,7 +34,7 @@ const useAuthNavigate = (): AuthNavigateHook => {
             break;
           }
         }
-        navigate(AppRoute.DASHBOARD);
+        navigate(AppRoute.DASHBOARD_ORDERS);
         break;
       }
       case UserGroupKey.CUSTOMER: {

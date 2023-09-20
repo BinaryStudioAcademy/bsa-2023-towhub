@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "30b11b25-942d-4ed6-b5a6-fea67b4ec6a2",
-  "prevId": "f297632e-1145-4133-a921-2644922dc982",
+  "id": "3867c3b9-8536-426e-9715-b216a5239b8a",
+  "prevId": "08a6962e-9e03-4d5e-8308-e66c756c7125",
   "tables": {
     "business_details": {
       "name": "business_details",
@@ -305,7 +305,7 @@
           "name": "business_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "shift_id": {
           "name": "shift_id",
@@ -518,6 +518,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "business_id": {
+          "name": "business_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
@@ -527,7 +533,17 @@
           "isUnique": true
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "trucks_business_id_business_details_id_fk": {
+          "name": "trucks_business_id_business_details_id_fk",
+          "tableFrom": "trucks",
+          "tableTo": "business_details",
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

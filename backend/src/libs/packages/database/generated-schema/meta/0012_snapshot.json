@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "f297632e-1145-4133-a921-2644922dc982",
+  "id": "08a6962e-9e03-4d5e-8308-e66c756c7125",
   "prevId": "1344a105-d723-4f2d-981d-75699929a282",
   "tables": {
     "business_details": {
@@ -25,19 +25,6 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
-        },
-        "stripe_id": {
-          "name": "stripe_id",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "stripe_activated": {
-          "name": "stripe_activated",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         },
         "owner_id": {
           "name": "owner_id",
@@ -78,11 +65,6 @@
           "name": "business_details_tax_number_unique",
           "nullsNotDistinct": false,
           "columns": ["tax_number"]
-        },
-        "business_details_stripe_id_unique": {
-          "name": "business_details_stripe_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["stripe_id"]
         }
       }
     },
@@ -518,6 +500,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "business_id": {
+          "name": "business_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
@@ -527,7 +515,17 @@
           "isUnique": true
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "trucks_business_id_business_details_id_fk": {
+          "name": "trucks_business_id_business_details_id_fk",
+          "tableFrom": "trucks",
+          "tableTo": "business_details",
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

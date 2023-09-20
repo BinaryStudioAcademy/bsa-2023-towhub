@@ -89,15 +89,22 @@
     {
       "idx": 12,
       "version": "5",
-      "when": 1695059484421,
-      "tag": "0012_add_stripe_fields_to_business",
+      "when": 1694887649378,
+      "tag": "0012_add_businessId_in_trucks",
       "breakpoints": true
     },
     {
       "idx": 13,
       "version": "5",
-      "when": 1695069461146,
-      "tag": "0013_make_orders_businessid_non_nullable",
+      "when": 1695216648350,
+      "tag": "0013_add_stripe_fields_to_business",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1695216666779,
+      "tag": "0014_make_orders_businessid_non_nullable",
       "breakpoints": true
     }
   ]

@@ -139,6 +139,9 @@ const trucks = pgTable(
     licensePlateNumber: varchar('license_plate_number').notNull(),
     year: integer('year').notNull(),
     towType: varchar('tow_type').notNull(),
+    businessId: integer('business_id')
+      .notNull()
+      .references(() => business.id),
   },
   (trucks) => {
     return {
