@@ -85,13 +85,6 @@
       "when": 1694869716680,
       "tag": "0011_create_files_table",
       "breakpoints": true
-    },
-    {
-      "idx": 12,
-      "version": "5",
-      "when": 1695120026754,
-      "tag": "0012_add_status_to_trucks_add_pk_id_to_users_trucks",
-      "breakpoints": true
     }
   ]
 }
