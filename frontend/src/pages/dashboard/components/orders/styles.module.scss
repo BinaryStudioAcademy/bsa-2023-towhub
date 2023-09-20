@@ -3,7 +3,10 @@
 .orders {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: max-content;
+  min-height: 100%;
+  padding: 20px;
+  background-color: #ffffff;
 
   @media screen and (min-width: $screen-size-lg) {
     flex-direction: row;
@@ -27,7 +30,7 @@
 .mapWrapper {
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: calc(100vh - 160px);
   overflow: hidden;
   border-radius: 20px;
   box-shadow: 0 4px 4px #00000021;

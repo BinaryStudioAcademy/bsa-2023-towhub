@@ -1,8 +1,8 @@
 import { useLocation } from 'react-router-dom';
 
-import { Orders } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/app-route.enum.js';
 
+import { Orders } from './components/orders/orders.js';
 import { DriverTable } from './components/table/drivers-table/driver-table.js';
 import styles from './styles.module.scss';
 

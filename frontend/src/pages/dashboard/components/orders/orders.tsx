@@ -1,5 +1,6 @@
 import { type Libraries, LoadScript } from '@react-google-maps/api';
 
+import { Map, OrderList } from '~/libs/components/components.js';
 import { jsonToLatLngLiteral } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
@@ -11,8 +12,6 @@ import { config } from '~/libs/packages/config/config.js';
 import { actions as ordersActions } from '~/slices/orders/orders.js';
 import { selectOrders } from '~/slices/orders/selectors.js';
 
-import { OrderList } from '../components.js';
-import { Map } from '../map/map.js';
 import styles from './styles.module.scss';
 
 const libraries: Libraries = ['places'];
