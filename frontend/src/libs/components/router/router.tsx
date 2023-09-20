@@ -9,7 +9,7 @@ import { NotFound } from '~/pages/not-found/not-found.js';
 import { Order } from '~/pages/order/order.js';
 import { WelcomePage } from '~/pages/welcome/welcome.js';
 
-import { Orders, PageLayout, ProtectedRoute } from '../components.js';
+import { PageLayout, ProtectedRoute } from '../components.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => {
@@ -32,13 +32,30 @@ const Router = (): JSX.Element => {
         path={AppRoute.ROOT}
         element={<ProtectedRoute allowedUserGroup={UserGroupKey.BUSINESS} />}
       >
-        <Route element={<PageLayout />}>
-          <Route path={AppRoute.DASHBOARD} element={<Dashboard />}>
-            <Route index element={<Orders />} />
-            <Route path="trucks" element={<div>Trucks page</div>} />
-            <Route path="drivers" element={<div>Drivers</div>} />
-          </Route>
-        </Route>
+        <Route
+          path={AppRoute.DASHBOARD_ORDERS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_TRUCKS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_DRIVERS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
       </Route>
       <Route path={AppRoute.ANY} element={<NotFound />} />
     </RouterProvider>
