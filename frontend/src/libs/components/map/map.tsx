@@ -12,6 +12,7 @@ type Properties = {
   zoom?: number;
   destination?: google.maps.LatLngLiteral;
   className?: string;
+  markers?: google.maps.LatLngLiteral[];
   pricePerKm?: number;
   startAddress?: string;
   endAddress?: string;
@@ -22,6 +23,7 @@ const Map: React.FC<Properties> = ({
   center,
   zoom = DEFAULT_ZOOM,
   className,
+  markers = [],
   destination,
   pricePerKm,
   startAddress,
@@ -46,8 +48,14 @@ const Map: React.FC<Properties> = ({
 
         void mapService.current.calculateRouteAndTime(center, destination);
       }
+
+      if (markers.length > 0) {
+        for (const marker of markers) {
+          mapService.current.addMarker(marker, true);
+        }
+      }
     }
-  }, [center, zoom, destination]);
+  }, [center, zoom, destination, markers]);
 
   useEffect(() => {
     if (pricePerKm && startAddress && endAddress) {

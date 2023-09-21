@@ -2,13 +2,13 @@ import { type PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
-import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
+import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
 
-import { addTruck, getTrucksForBusiness } from './actions.js';
+import { addTruck, getTrucksForBusiness, setTrucks } from './actions.js';
 
 type State = {
-  trucks: TruckEntity[];
-  chosenTruck: (TruckEntity & { driverId: number }) | null;
+  trucks: TruckGetItemResponseDto[];
+  chosenTruck: TruckGetItemResponseDto | null;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
@@ -22,10 +22,7 @@ const { reducer, actions, name } = createSlice({
   initialState,
   name: 'trucks',
   reducers: {
-    setChosenTruck: (
-      state,
-      action: PayloadAction<TruckEntity & { driverId: number }>,
-    ) => {
+    setChosenTruck: (state, action: PayloadAction<TruckGetItemResponseDto>) => {
       state.chosenTruck = action.payload;
     },
   },
@@ -34,6 +31,12 @@ const { reducer, actions, name } = createSlice({
       .addCase(addTruck.fulfilled, (state, action) => {
         state.trucks.push(action.payload);
         state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(setTrucks.fulfilled, (state, action) => {
+        state.trucks = action.payload;
+      })
+      .addCase(addTruck.rejected, (state) => {
+        state.dataStatus = DataStatus.REJECTED;
       })
       .addCase(getTrucksForBusiness.fulfilled, (state, action) => {
         state.trucks = action.payload.items;
