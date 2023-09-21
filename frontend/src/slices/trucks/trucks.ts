@@ -1,7 +1,7 @@
 import {
   addTruck,
   calculateArrivalTime,
-  getTrucksForBusiness,
+  findAllTrucksForBusiness,
   setTrucks,
   subscribeTruckUpdates,
   unsubscribeTruckUpdates,
@@ -16,7 +16,7 @@ const allActions = {
   unsubscribeTruckUpdates,
   updateTruckLocationFromSocket,
   calculateArrivalTime,
-  getTrucksForBusiness,
+  findAllTrucksForBusiness,
   setTrucks,
 };
 

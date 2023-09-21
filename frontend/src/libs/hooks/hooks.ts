@@ -10,6 +10,7 @@ export { useGetCurrentUser } from './use-get-current-user/use-get-current-user.h
 export { useHomePageSocketService } from './use-homepage-socket-service/use-homepage-socket-service.js';
 export { useQueryParameters } from './use-query-parameters/use-query-parameters.hook.js';
 export { useServerErrorFromThunk } from './use-server-error-from-thunk/use-server-error-from-thunk.hook.js';
+export { useToggle } from './use-toggle/use-toggle.hook.js';
 export {
   createColumnHelper,
   flexRender,
