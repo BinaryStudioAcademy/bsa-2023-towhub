@@ -177,9 +177,14 @@ class DriverService implements IService {
       emailData,
     );
 
-    await this.truckService.addTrucksToDriver(user.id, truckIds);
+    await this.truckService.addTrucksToDriver(user.id, truckIds ?? []);
 
-    return { ...user, ...driverObject, group, possibleTruckIds: truckIds };
+    return {
+      ...user,
+      ...driverObject,
+      group,
+      possibleTruckIds: truckIds ?? [],
+    };
   }
 
   private async generatePassword(): Promise<string> {
