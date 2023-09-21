@@ -14,6 +14,7 @@ export {
   type TruckAddRequestDto,
   type TruckEntity,
   type TruckGetAllResponseDto,
+  type TruckGetItemResponseDto,
 } from './libs/types/types.js';
 export {
   truckCreateRequestBody,

@@ -143,6 +143,7 @@ export {
   type TruckAddRequestDto,
   type TruckEntity,
   type TruckGetAllResponseDto,
+  type TruckGetItemResponseDto,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,

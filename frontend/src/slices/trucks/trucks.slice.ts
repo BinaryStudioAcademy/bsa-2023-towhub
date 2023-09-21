@@ -3,16 +3,16 @@ import { type PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
 import { type ValueOf } from '~/libs/types/types.js';
-import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
+import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
 
-import { addTruck, findAllTrucksForBusiness } from './actions.js';
+import { addTruck, findAllTrucksForBusiness, setTrucks } from './actions.js';
 
 type State = {
-  trucks: TruckEntity[];
+  trucks: TruckGetItemResponseDto[];
+  chosenTruck: TruckGetItemResponseDto | null;
+  dataStatus: ValueOf<typeof DataStatus>;
   total: number;
   error: HttpError | null;
-  chosenTruck: (TruckEntity & { driverId: number }) | null;
-  dataStatus: ValueOf<typeof DataStatus>;
 };
 
 const initialState: State = {
@@ -27,10 +27,7 @@ const { reducer, actions, name } = createSlice({
   initialState,
   name: 'trucks',
   reducers: {
-    setChosenTruck: (
-      state,
-      action: PayloadAction<TruckEntity & { driverId: number }>,
-    ) => {
+    setChosenTruck: (state, action: PayloadAction<TruckGetItemResponseDto>) => {
       state.chosenTruck = action.payload;
     },
   },
@@ -39,6 +36,9 @@ const { reducer, actions, name } = createSlice({
       .addCase(addTruck.fulfilled, (state, action) => {
         state.trucks.unshift(action.payload);
         state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(setTrucks.fulfilled, (state, action) => {
+        state.trucks = action.payload;
       })
       .addCase(findAllTrucksForBusiness.fulfilled, (state, action) => {
         state.trucks = action.payload.items;

@@ -5,7 +5,7 @@ import { authController } from '~/packages/auth/auth.js';
 import { businessController } from '~/packages/business/business.js';
 import { filesController } from '~/packages/files/files.js';
 import { orderController } from '~/packages/orders/orders.js';
-import { shiftController } from '~/packages/shifts/shift.js';
+import { shiftController, shiftService } from '~/packages/shifts/shift.js';
 import { truckController } from '~/packages/trucks/trucks.js';
 import { userController } from '~/packages/users/users.js';
 
@@ -29,6 +29,7 @@ const serverApp = new ServerApp({
   logger,
   database,
   apis: [apiV1],
+  shiftService,
 });
 
 export { type ServerAppRouteParameters } from './libs/types/types.js';
