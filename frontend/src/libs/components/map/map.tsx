@@ -49,10 +49,8 @@ const Map: React.FC<Properties> = ({
         void mapService.current.calculateRouteAndTime(center, destination);
       }
 
-      if (markers) {
-        for (const marker of markers) {
-          mapService.current.addMarker(marker, true);
-        }
+      for (const marker of markers ?? []) {
+        mapService.current.addMarker(marker, true);
       }
     }
   }, [center, zoom, destination, markers]);

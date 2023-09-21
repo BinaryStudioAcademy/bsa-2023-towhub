@@ -42,11 +42,7 @@ const HomePage: React.FC = () => {
           <TruckList trucks={trucks} />
         </section>
         <section className={styles.map}>
-          <Map
-            className={styles['map-component']}
-            center={{ lat: 40.711_283, lng: -73.994_329 }}
-            markers={truckMarkers}
-          />
+          <Map className={styles['map-component']} markers={truckMarkers} />
         </section>
       </div>
     </LoadScript>
