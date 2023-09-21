@@ -5,6 +5,7 @@ import {
 } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { MailContent } from '~/libs/packages/mailer/libs/enums/enums.js';
+import { AuthApiPath } from '~/packages/auth/auth.js';
 
 import { UserGroupKey } from '../auth/libs/enums/enums.js';
 import { DriverEntity } from '../drivers/driver.entity.js';
@@ -27,6 +28,7 @@ import { type UserService } from '../users/user.service.js';
 import {
   convertToDriverUser,
   getFullName,
+  getFullPath,
   getPasswordLength,
   getRandomCharacter,
 } from './libs/helpers/helpers.js';
@@ -115,6 +117,7 @@ class DriverService implements IService {
   public async create({
     payload,
     businessId,
+    reference,
   }: DriverAddPayloadWithBusinessId): Promise<DriverAddResponseWithGroup> {
     const { email, lastName, firstName, phone, driverLicenseNumber, truckIds } =
       payload;
@@ -165,7 +168,7 @@ class DriverService implements IService {
       name: getFullName(firstName, lastName),
       email: email,
       password: password,
-      signInLink: MailContent.LINK,
+      signInLink: getFullPath(reference, AuthApiPath.SIGN_IN),
     };
 
     await mailService.sendPage(

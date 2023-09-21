@@ -10,6 +10,7 @@ type ApiHandlerOptions<
   params: T['params'];
   user: undefined extends T['user'] ? UserEntityObjectWithGroupT : T['user'];
   parsedFiles: T['parsedFiles'];
+  ref: T['ref'];
 };
 
 export { type ApiHandlerOptions };

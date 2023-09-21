@@ -140,6 +140,7 @@ class BusinessService implements IService {
   public async createDriver(
     payload: Omit<DriverCreateUpdateRequestDto, 'password'>,
     ownerId: number,
+    reference: string,
   ): Promise<DriverAddResponseWithGroup> {
     const business = await this.findByOwnerId(ownerId);
 
@@ -153,6 +154,7 @@ class BusinessService implements IService {
     return await this.driverService.create({
       payload,
       businessId: business.id,
+      reference,
     });
   }
 
