@@ -228,8 +228,24 @@ class OrderService implements Omit<IService, 'find'> {
       throw new NotFoundError({});
     }
 
-    const usersOrders = await this.orderRepository.findAllBusinessOrders({
+    const usersOrders = await this.orderRepository.findAllOrders({
       businessId: business.id,
+    });
+
+    return usersOrders.map((it) => OrderEntity.initialize(it).toObject());
+  }
+
+  public async findAllDriverOrders(
+    user: UserEntityObjectWithGroupT,
+  ): Promise<OrderResponseDto[]> {
+    const driver = await this.driverService.findByUserId(user.id);
+
+    if (!driver) {
+      throw new NotFoundError({});
+    }
+
+    const usersOrders = await this.orderRepository.findAllOrders({
+      driverId: driver.id,
     });
 
     return usersOrders.map((it) => OrderEntity.initialize(it).toObject());

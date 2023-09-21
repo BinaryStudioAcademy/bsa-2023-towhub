@@ -234,6 +234,21 @@ class OrderController extends Controller {
     });
 
     this.addRoute({
+      path: OrdersApiPath.DRIVER,
+      method: 'GET',
+      authStrategy: [
+        AuthStrategy.VERIFY_JWT,
+        AuthStrategy.VERIFY_DRIVER_GROUP,
+      ],
+      handler: (options) =>
+        this.findAllDriverOrders(
+          options as ApiHandlerOptions<{
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+
+    this.addRoute({
       path: OrdersApiPath.$ID,
       method: 'GET',
       authStrategy: AuthStrategy.INJECT_USER,
@@ -535,6 +550,57 @@ class OrderController extends Controller {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.findAllBusinessOrders(options.user),
+    };
+  }
+
+   /**
+   * @swagger
+   * /orders:
+   *    get:
+   *      tags:
+   *       - orders
+   *      summary: Get all driver orders
+   *      description: Get all driver orders
+   *      security:
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Orders found
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: array
+   *                items:
+   *                  type: object
+   *                  properties:
+   *                    items:
+   *                      $ref: '#/components/schemas/Order'
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *        400:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/BusinessNotExistError'
+   */
+
+  private async findAllDriverOrders(
+    options: ApiHandlerOptions<{
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse<OrderResponseDto[]>> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.orderService.findAllDriverOrders(options.user),
     };
   }
 

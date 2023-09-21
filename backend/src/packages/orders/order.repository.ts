@@ -96,7 +96,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     return order;
   }
 
-  public async findAllBusinessOrders(
+  public async findAllOrders(
     search: Partial<{
       userId: OrderEntityT['userId'];
       driverId: UserEntityT['id'];
