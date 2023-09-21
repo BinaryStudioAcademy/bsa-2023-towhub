@@ -22,13 +22,10 @@ class BusinessApi extends HttpApi {
   }
 
   public async findAllTrucksByBusinessId(
-    queryString?: string,
+    queryString = '',
   ): Promise<TruckGetAllResponseDto> {
     const response = await this.load(
-      this.getFullEndpoint(
-        `${BusinessApiPath.TRUCKS}?${queryString ?? ''}`,
-        {},
-      ),
+      this.getFullEndpoint(`${BusinessApiPath.TRUCKS}?${queryString}`, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,

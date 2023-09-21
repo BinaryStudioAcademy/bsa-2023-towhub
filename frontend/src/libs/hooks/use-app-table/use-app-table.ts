@@ -50,11 +50,9 @@ const useAppTable = <T, K>({
       size: pageSize,
     };
 
-    if (sort) {
-      setQueryParameters({ ...actionPayload, sort });
-    } else {
-      setQueryParameters(actionPayload);
-    }
+    const queryParameters = sort ? { ...actionPayload, sort } : actionPayload;
+
+    setQueryParameters(queryParameters);
 
     void dispatch(tableFetchCall(searchParameters.toString()));
   }, [

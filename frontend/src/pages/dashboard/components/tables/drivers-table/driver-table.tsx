@@ -25,7 +25,7 @@ import styles from './styles.module.scss';
 const DriverTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const { getQueryParameters, searchParameters } = useQueryParameters();
-  const [isToggled, toggle] = useToggle();
+  const [isToggled, handleToggle] = useToggle();
 
   const { drivers, total, dataStatus } = useAppSelector(({ drivers }) => ({
     drivers: drivers.drivers,
@@ -54,9 +54,9 @@ const DriverTable: React.FC = () => {
           queryString: searchParameters.toString(),
         }),
       );
-      toggle();
+      handleToggle();
     },
-    [dispatch, searchParameters, toggle],
+    [dispatch, searchParameters, handleToggle],
   );
 
   const message = (
@@ -72,7 +72,11 @@ const DriverTable: React.FC = () => {
         <h2 className={getValidClassNames('h3', styles.title)}>
           Company Drivers
         </h2>
-        <Button label="Add a Driver" className={styles.btn} onClick={toggle} />
+        <Button
+          label="Add a Driver"
+          className={styles.btn}
+          onClick={handleToggle}
+        />
       </div>
       <Table
         data={drivers}
@@ -86,7 +90,7 @@ const DriverTable: React.FC = () => {
         changePageSize={changePageSize}
         emptyTableMessage={message}
       />
-      <Modal isOpen={isToggled} isCentered onClose={toggle}>
+      <Modal isOpen={isToggled} isCentered onClose={handleToggle}>
         <div className={styles.formWrapper}>
           <AddDriverForm onSubmit={handleSubmit} />
         </div>

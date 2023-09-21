@@ -21,10 +21,10 @@ class DriverApi extends HttpApi {
   }
 
   public async getPageOfDrivers(
-    queryString?: string,
+    queryString = '',
   ): Promise<DriverGetAllResponseDto> {
     const data = await this.load(
-      this.getFullEndpoint(`${ApiPath.DRIVERS}?${queryString ?? ''}`, {}),
+      this.getFullEndpoint(`${ApiPath.DRIVERS}?${queryString}`, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,

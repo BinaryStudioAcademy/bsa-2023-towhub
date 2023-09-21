@@ -2,7 +2,10 @@ import { type ColumnSort } from '@tanstack/react-table';
 
 import { Button, Modal, Table } from '~/libs/components/components.js';
 import { DataStatus } from '~/libs/enums/enums.js';
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import {
+  getSortingMethodValue,
+  getValidClassNames,
+} from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppSelector,
@@ -40,9 +43,9 @@ const TruckTable: React.FC = () => {
 
   const [sorting, setSorting] = useState<ColumnSort | null>(null);
   const dispatch = useAppDispatch();
-  const [isToggled, toggle] = useToggle();
+  const [isToggled, handleToggle] = useToggle();
 
-  const sortMethod = sorting?.desc ? 'desc' : 'asc';
+  const sortMethod = getSortingMethodValue(sorting);
 
   const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
     TruckGetAllResponseDto,
@@ -63,9 +66,9 @@ const TruckTable: React.FC = () => {
         }),
       );
 
-      toggle();
+      handleToggle();
     },
-    [dispatch, searchParameters, toggle],
+    [dispatch, searchParameters, handleToggle],
   );
 
   const message = (
@@ -82,7 +85,11 @@ const TruckTable: React.FC = () => {
           <h2 className={getValidClassNames('uppercase', styles.title)}>
             Company Trucks
           </h2>
-          <Button label="Add a truck" className={styles.btn} onClick={toggle} />
+          <Button
+            label="Add a truck"
+            className={styles.btn}
+            onClick={handleToggle}
+          />
         </div>
         <Table
           data={trucks}
@@ -98,9 +105,9 @@ const TruckTable: React.FC = () => {
           emptyTableMessage={message}
         />
       </div>
-      <Modal isOpen={isToggled} isCentered onClose={toggle}>
+      <Modal isOpen={isToggled} isCentered onClose={handleToggle}>
         <div className={styles.formWrapper}>
-          <AddTruckForm onSubmit={handleSubmit} onClose={toggle} />
+          <AddTruckForm onSubmit={handleSubmit} onClose={handleToggle} />
         </div>
       </Modal>
     </>
