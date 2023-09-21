@@ -190,6 +190,13 @@ const businessRelations = relations(users, ({ many }) => ({
   orders: many(orders),
 }));
 
+const shiftsRelations = relations(shifts, ({ one }) => ({
+  truck: one(trucks, {
+    fields: [shifts.truckId],
+    references: [trucks.id],
+  }),
+}));
+
 const usersTrucksRelations = relations(usersTrucks, ({ one }) => ({
   truck: one(trucks, {
     fields: [usersTrucks.truckId],
@@ -224,6 +231,7 @@ export {
   ordersRelations,
   orderStatus,
   shifts,
+  shiftsRelations,
   trucks,
   trucksRelations,
   users,

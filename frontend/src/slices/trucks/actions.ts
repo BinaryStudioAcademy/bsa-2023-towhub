@@ -34,4 +34,9 @@ const getTrucksForBusiness = createAsyncThunk<
   }
 });
 
-export { addTruck, getTrucksForBusiness };
+const setTrucks = createAsyncThunk<TruckEntity[], TruckEntity[]>(
+  `${sliceName}/set-trucks`,
+  (payload) => payload,
+);
+
+export { addTruck, getTrucksForBusiness, setTrucks };
