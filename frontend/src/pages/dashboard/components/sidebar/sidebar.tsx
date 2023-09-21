@@ -2,11 +2,12 @@ import { Button } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/app-route.enum';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useLocation, useNavigate } from '~/libs/hooks/hooks.js';
-import { type TabName } from '~/libs/types/types.js';
+import { type TabName, type TabsType } from '~/libs/types/types.js';
+import { useAuthUser } from '~/slices/auth/auth.js';
 
 import { checkActiveTab } from './libs/helpers.js';
+import { BUSINESS_TABS, DRIVER_TABS } from './libs/tabs.js';
 import styles from './styles.module.scss';
-import { TABS } from './tabs.js';
 
 type Properties = {
   isCollapsed?: boolean;
@@ -15,6 +16,11 @@ type Properties = {
 const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const user = useAuthUser();
+
+  const getTabs = useCallback((): TabsType[] => {
+    return user?.group.key === 'business' ? BUSINESS_TABS : DRIVER_TABS;
+  }, [user?.group.key]);
 
   const handleTabClick = useCallback(
     (tabName: TabName) => () => {
@@ -23,6 +29,36 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
     [navigate],
   );
 
+  const renderTabs = useCallback(() => {
+    const tabs = getTabs();
+
+    return tabs.map((tab) => (
+      <li
+        className={getValidClassNames(
+          styles.item,
+          checkActiveTab(location.pathname, tab.path) && styles.active,
+        )}
+        key={tab.name}
+      >
+        <Button
+          {...(!isCollapsed && { label: tab.name })}
+          className={[
+            'h5',
+            styles.btn,
+            {
+              [styles.active]: checkActiveTab(location.pathname, tab.name),
+            },
+          ]}
+          frontIcon={tab.icon}
+          variant="text"
+          onClick={handleTabClick(tab.name)}
+        >
+          <span className={'visually-hidden'}>{tab.name}</span>
+        </Button>
+      </li>
+    ));
+  }, [getTabs, handleTabClick, isCollapsed, location.pathname]);
+
   return (
     <div
       className={getValidClassNames(
@@ -30,33 +66,7 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
         isCollapsed && styles.collapsed,
       )}
     >
-      <ul className={styles.list}>
-        {TABS.map((tab) => (
-          <li
-            className={getValidClassNames(
-              styles.item,
-              checkActiveTab(location.pathname, tab.name) && styles.active,
-            )}
-            key={tab.name}
-          >
-            <Button
-              {...(!isCollapsed && { label: tab.name })}
-              className={[
-                'h5',
-                styles.btn,
-                {
-                  [styles.active]: checkActiveTab(location.pathname, tab.name),
-                },
-              ]}
-              frontIcon={tab.icon}
-              variant="text"
-              onClick={handleTabClick(tab.name)}
-            >
-              <span className={'visually-hidden'}>{tab.name}</span>
-            </Button>
-          </li>
-        ))}
-      </ul>
+      <ul className={styles.list}>{renderTabs()}</ul>
     </div>
   );
 };
