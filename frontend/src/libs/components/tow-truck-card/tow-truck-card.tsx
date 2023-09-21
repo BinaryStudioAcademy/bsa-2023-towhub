@@ -1,4 +1,5 @@
 import { IconName } from '~/libs/enums/icon-name.enum.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { type TruckEntity } from '~/libs/types/types.js';
 
 import { Badge } from '../badge/badge.js';
@@ -10,13 +11,15 @@ import styles from './styles.module.scss';
 type Properties = {
   truck: TruckEntity;
   distance?: number;
-  hasFooter?: boolean;
+  hasButton?: boolean;
+  onOrderButtonClick?: () => void;
 };
 
 const TowTruckCard: React.FC<Properties> = ({
   truck,
   distance,
-  hasFooter = true,
+  hasButton = true,
+  onOrderButtonClick,
 }: Properties) => {
   const {
     manufacturer: manufacturerRaw,
@@ -28,7 +31,7 @@ const TowTruckCard: React.FC<Properties> = ({
   const manufacturer = manufacturerRaw.replaceAll('_', ' ');
 
   return (
-    <div className={styles.container}>
+    <div className={getValidClassNames(styles.container)}>
       <div className={styles.body}>
         <div className={styles.description}>
           <div className={styles.name}>{manufacturer}</div>
@@ -43,20 +46,18 @@ const TowTruckCard: React.FC<Properties> = ({
           <Badge className={styles.badge}>free</Badge>
         </div>
       </div>
-      {hasFooter && (
-        <div className={styles.footer}>
-          <div className={styles.info}>
-            <div className={styles.price}>
-              ${pricePerKm}/ <span className={styles.gray}>km</span>
-            </div>
-            <Badge color="grey">
-              <Icon iconName={IconName.LOCATION_DOT} />
-              <span className={styles.km}>{distance} km</span>
-            </Badge>
+      <div className={styles.footer}>
+        <div className={hasButton ? styles.info : styles['info-wide']}>
+          <div className={styles.price}>
+            ${pricePerKm}/ <span className={styles.gray}>km</span>
           </div>
-          <Button label="order now" />
+          <Badge color="grey">
+            <Icon iconName={IconName.LOCATION_DOT} />
+            <span className={styles.km}>{distance} km</span>
+          </Badge>
         </div>
-      )}
+        {hasButton && <Button label="order now" onClick={onOrderButtonClick} />}
+      </div>
     </div>
   );
 };
