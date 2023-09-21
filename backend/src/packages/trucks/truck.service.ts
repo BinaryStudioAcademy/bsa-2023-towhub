@@ -1,11 +1,11 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
-import { type EntityPagination } from '~/libs/types/types.js';
+import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 
-import { type GetPaginatedPageQuery } from '../business/libs/types/types.js';
 import {
   type DriverHaveAccessToTruck,
   type TruckEntity as TruckEntityT,
+  type TruckGetAllResponseDto,
 } from './libs/types/types.js';
 import { TruckEntity } from './truck.entity.js';
 import { type TruckRepository } from './truck.repository.js';
@@ -23,8 +23,21 @@ class TruckService implements IService {
     return truck ? TruckEntity.initialize(truck).toObject() : null;
   }
 
+  public async findAllByBusinessId(
+    businessId: number,
+    query: PaginationWithSortingParameters,
+  ): Promise<TruckGetAllResponseDto> {
+    const data = await this.repository.findAllByBusinessId(businessId, query);
+
+    const items = data.map((it) => TruckEntity.initialize(it).toObject());
+
+    const total = await this.repository.getTotal(businessId);
+
+    return { items, total };
+  }
+
   public async create(
-    payload: Omit<TruckEntityT, 'id'>,
+    payload: Omit<TruckEntityT, 'id' | 'createdAt'>,
   ): Promise<TruckEntityT> {
     const existingTruck = await this.repository.find(
       payload.licensePlateNumber,
@@ -44,7 +57,7 @@ class TruckService implements IService {
 
   public async update(
     id: number,
-    payload: Partial<TruckEntityT>,
+    payload: Partial<Omit<TruckEntityT, 'createdAt'>>,
   ): Promise<TruckEntityT> {
     const truck = await this.findById(id);
 
@@ -96,19 +109,6 @@ class TruckService implements IService {
     );
 
     await this.repository.addTruckToDriver(driverTrucks);
-  }
-
-  public async findAllByBusinessId(
-    businessId: number,
-    query: GetPaginatedPageQuery,
-  ): Promise<EntityPagination<TruckEntityT>> {
-    const data = await this.repository.findAllByBusinessId(businessId, query);
-
-    const items = data.map((it) => TruckEntity.initialize(it).toObject());
-
-    const total = await this.repository.getTotal(businessId);
-
-    return { items, total };
   }
 }
 

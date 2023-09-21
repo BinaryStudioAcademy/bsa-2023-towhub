@@ -6,6 +6,7 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
@@ -15,7 +16,8 @@ import {
   driverParameters,
   driverUpdateRequestBody,
 } from '../drivers/drivers.js';
-import { type TruckEntity, truckCreateRequestBody } from '../trucks/trucks.js';
+import { type TruckAddRequestDto } from '../trucks/libs/types/types.js';
+import { truckCreateRequestBody } from '../trucks/trucks.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
@@ -387,15 +389,13 @@ class BusinessController extends Controller {
 
     this.addRoute({
       path: BusinessApiPath.TRUCKS,
+      method: 'GET',
       authStrategy: defaultStrategies,
-      method: 'POST',
-      validation: {
-        body: truckCreateRequestBody,
-      },
-      handler: (request) =>
-        this.createTruck(
-          request as ApiHandlerOptions<{
-            body: Omit<TruckEntity, 'id'>;
+
+      handler: (options) =>
+        this.findAllTrucks(
+          options as ApiHandlerOptions<{
+            query: PaginationWithSortingParameters;
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -403,13 +403,15 @@ class BusinessController extends Controller {
 
     this.addRoute({
       path: BusinessApiPath.TRUCKS,
-      method: 'GET',
+      method: 'POST',
       authStrategy: defaultStrategies,
-
-      handler: (options) =>
-        this.findAllTrucks(
-          options as ApiHandlerOptions<{
-            query: GetPaginatedPageQuery;
+      validation: {
+        body: truckCreateRequestBody,
+      },
+      handler: (request) =>
+        this.createTruck(
+          request as ApiHandlerOptions<{
+            body: TruckAddRequestDto;
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -872,50 +874,6 @@ class BusinessController extends Controller {
   /**
    * @swagger
    * /business/trucks:
-   *   post:
-   *     summary: Create a new truck
-   *     tags:
-   *       - business/trucks
-   *     security:
-   *       - bearerAuth: []
-   *     requestBody:
-   *       description: Truck data to be added
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             $ref: '#/components/schemas/Truck'
-   *     responses:
-   *       '201':
-   *         description: Truck created successfully
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/TruckResponse'
-   *       '400':
-   *         description: Bad request
-   */
-
-  private async createTruck(
-    options: ApiHandlerOptions<{
-      body: Omit<TruckEntity, 'id'>;
-      user: UserEntityObjectWithGroupT;
-    }>,
-  ): Promise<ApiHandlerResponse> {
-    const createdTruck = await this.businessService.createTruck(
-      options.body,
-      options.user.id,
-    );
-
-    return {
-      status: HttpCode.CREATED,
-      payload: createdTruck,
-    };
-  }
-
-  /**
-   * @swagger
-   * /business/trucks:
    *    get:
    *      tags:
    *       - business/trucks
@@ -936,11 +894,11 @@ class BusinessController extends Controller {
 
   private async findAllTrucks(
     options: ApiHandlerOptions<{
-      query: GetPaginatedPageQuery;
+      query: PaginationWithSortingParameters;
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const trucks = await this.businessService.findAllTrucksByOwnerId(
+    const trucks = await this.businessService.findAllTrucksByBusinessId(
       options.user.id,
       options.query,
     );
@@ -948,6 +906,49 @@ class BusinessController extends Controller {
     return {
       status: HttpCode.OK,
       payload: trucks,
+    };
+  }
+
+  /**
+   * @swagger
+   * /trucks:
+   *   post:
+   *     summary: Create a new truck
+   *     tags:
+   *       - business/trucks
+   *     requestBody:
+   *       description: Truck data to be added
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Truck'
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       '201':
+   *         description: Truck created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/TruckResponse'
+   *       '400':
+   *         description: Bad request
+   *
+   */
+
+  private async createTruck(
+    options: ApiHandlerOptions<{
+      body: TruckAddRequestDto;
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.CREATED,
+      payload: await this.businessService.createTruck(
+        options.body,
+        options.user.id,
+      ),
     };
   }
 }

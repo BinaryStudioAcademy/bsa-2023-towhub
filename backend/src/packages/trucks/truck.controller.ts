@@ -12,7 +12,7 @@ import { type TruckEntity } from './libs/types/types.js';
 import {
   truckGetParameters,
   truckUpdateRequestBody,
-} from './libs/validation-schema/validation-schemas.js';
+} from './libs/validation-schemas/validation-schemas.js';
 import { type TruckService } from './truck.service.js';
 
 /**
@@ -101,6 +101,9 @@ import { type TruckService } from './truck.service.js';
  *         pricePerKm:
  *           type: number
  *           example: 5
+ *         businessId:
+ *           type: number
+ *           example: 1
  *
  *     ErrorType:
  *       type: object
@@ -145,7 +148,7 @@ class TruckController extends Controller {
       handler: (request) =>
         this.update(
           request as ApiHandlerOptions<{
-            body: Partial<TruckEntity>;
+            body: Partial<Omit<TruckEntity, 'createdAt'>>;
             params: { id: number };
           }>,
         ),
@@ -223,7 +226,7 @@ class TruckController extends Controller {
 
   private async update(
     options: ApiHandlerOptions<{
-      body: Partial<TruckEntity>;
+      body: Partial<Omit<TruckEntity, 'createdAt'>>;
       params: { id: number };
     }>,
   ): Promise<ApiHandlerResponse> {
