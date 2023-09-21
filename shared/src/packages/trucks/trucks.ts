@@ -11,7 +11,9 @@ export {
 } from './libs/enums/enums.js';
 export { LICENSE_PLATE_NUMBER } from './libs/regex-patterns/regex-patterns.js';
 export {
+  type TruckAddRequestDto,
   type TruckEntity,
+  type TruckGetAllResponseDto,
   type TruckGetItemResponseDto,
 } from './libs/types/types.js';
 export {

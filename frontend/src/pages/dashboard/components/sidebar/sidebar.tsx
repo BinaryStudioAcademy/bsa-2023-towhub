@@ -1,5 +1,5 @@
 import { Button } from '~/libs/components/components.js';
-import { AppRoute } from '~/libs/enums/app-route.enum';
+import { AppRoute } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useLocation, useNavigate } from '~/libs/hooks/hooks.js';
 import { type TabName, type TabsType } from '~/libs/types/types.js';

@@ -1,3 +1,4 @@
+export { TruckNotificationMessage } from './truck-successful-message.enum.js';
 export {
   TruckApiPath,
   TruckCapacity,

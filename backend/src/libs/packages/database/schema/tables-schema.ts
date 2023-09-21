@@ -128,15 +128,15 @@ const trucks = pgTable(
     id: serial('id').primaryKey(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    businessId: integer('business_id')
+      .notNull()
+      .references(() => business.id),
     manufacturer: varchar('manufacturer').notNull(),
     capacity: integer('capacity').notNull(),
     pricePerKm: real('price_per_km').notNull(),
     licensePlateNumber: varchar('license_plate_number').notNull(),
     year: integer('year').notNull(),
     towType: varchar('tow_type').notNull(),
-    businessId: integer('business_id')
-      .notNull()
-      .references(() => business.id),
   },
   (trucks) => {
     return {
