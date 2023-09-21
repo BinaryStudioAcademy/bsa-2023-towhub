@@ -10,6 +10,7 @@ type TruckEntity = {
   licensePlateNumber: string;
   capacity: number;
   pricePerKm: number;
+  businessId: number;
 };
 
 export { type TruckEntity };
