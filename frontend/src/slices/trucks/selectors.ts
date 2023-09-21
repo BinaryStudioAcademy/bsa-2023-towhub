@@ -6,8 +6,7 @@ const selectTrucks = (
   state: RootState,
 ): RootState[typeof TruckSliceName]['trucks'] => state[TruckSliceName].trucks;
 
-const selectChosenTruck = (
-  state: RootState,
-): (TruckEntity & { driverId: number }) | null => state.trucks.chosenTruck;
+const selectChosenTruck = (state: RootState): TruckEntity | null =>
+  state[TruckSliceName].chosenTruck;
 
 export { selectChosenTruck, selectTrucks };
