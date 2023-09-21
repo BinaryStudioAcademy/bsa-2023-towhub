@@ -28,7 +28,7 @@ const getDriversPage = createAsyncThunk<
 
 const addDriver = createAsyncThunk<
   DriverAddResponseWithGroup,
-  DriverAddPayload & PaginationParameters,
+  Omit<DriverAddPayload, 'reference'> & PaginationParameters,
   AsyncThunkConfig
 >(
   ACTIONS_TYPES.ADD_DRIVER,

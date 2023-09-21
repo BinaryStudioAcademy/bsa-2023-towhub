@@ -330,7 +330,7 @@ class BusinessController extends Controller {
           options as ApiHandlerOptions<{
             body: Omit<DriverCreateUpdateRequestDto, 'password'>;
             user: UserEntityObjectWithGroupT;
-            ref: string;
+            hostname: string;
           }>,
         ),
     });
@@ -683,13 +683,13 @@ class BusinessController extends Controller {
     options: ApiHandlerOptions<{
       body: Omit<DriverCreateUpdateRequestDto, 'password'>;
       user: UserEntityObjectWithGroupT;
-      ref: string;
+      hostname: string;
     }>,
   ): Promise<ApiHandlerResponse> {
     const createdDriver = await this.businessService.createDriver(
       options.body,
       options.user.id,
-      options.ref,
+      options.hostname,
     );
 
     return {

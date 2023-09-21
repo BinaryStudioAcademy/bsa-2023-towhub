@@ -3,6 +3,7 @@ import { type ServerAppRouteParameters } from '~/libs/packages/server-applicatio
 import { type ValueOf } from '~/libs/types/types.js';
 import { type AuthStrategy } from '~/packages/auth/auth.js';
 
+import { buildUrl } from './libs/helpers/build-url.helper.js';
 import { type IController } from './libs/interfaces/interface.js';
 import {
   type ApiHandler,
@@ -63,7 +64,8 @@ class Controller implements IController {
   private mapRequest(
     request: Parameters<ServerAppRouteParameters['handler']>[0],
   ): ApiHandlerOptions {
-    const { body, query, params, user, parsedFiles, headers } = request;
+    const { body, query, params, user, parsedFiles, hostname, protocol } =
+      request;
 
     return {
       body,
@@ -71,7 +73,7 @@ class Controller implements IController {
       params,
       user,
       parsedFiles,
-      ref: headers.referer,
+      hostname: buildUrl(protocol, hostname),
     };
   }
 }
