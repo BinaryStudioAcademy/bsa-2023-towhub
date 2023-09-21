@@ -1,15 +1,26 @@
 import { type Libraries, LoadScript } from '@react-google-maps/api';
 
 import { Map } from '~/libs/components/map/map.js';
-import { useEffect, useHomePageSocketService } from '~/libs/hooks/hooks.js';
+import {
+  useAppSelector,
+  useEffect,
+  useHomePageSocketService,
+  useMemo,
+} from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
+import { selectTrucks } from '~/slices/trucks/selectors.js';
 
 import { TruckList } from './components/truck-list/truck-list.js';
+import { getTruckLocations } from './libs/helpers/get-truck-locations.helper.js';
 import styles from './styles.module.scss';
 
 const libraries: Libraries = ['places'];
 
 const HomePage: React.FC = () => {
+  const trucks = useAppSelector(selectTrucks);
+
+  const truckMarkers = useMemo(() => getTruckLocations(trucks), [trucks]);
+
   const { connectToHomeRoom, disconnectFromHomeRoom } =
     useHomePageSocketService();
 
@@ -28,10 +39,14 @@ const HomePage: React.FC = () => {
     >
       <div className={styles.container}>
         <section className={styles.trucks}>
-          <TruckList />
+          <TruckList trucks={trucks} />
         </section>
         <section className={styles.map}>
-          <Map className={styles['map-component']} zoom={16} />
+          <Map
+            className={styles['map-component']}
+            center={{ lat: 40.711_283, lng: -73.994_329 }}
+            markers={truckMarkers}
+          />
         </section>
       </div>
     </LoadScript>

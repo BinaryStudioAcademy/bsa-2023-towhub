@@ -76,7 +76,7 @@ const Order = (): JSX.Element => {
         libraries={libraries}
       >
         <div className={styles.left}>
-          <TowTruckCard truck={chosenTruck} hasFooter={false} />
+          <TowTruckCard truck={chosenTruck} hasButton={false} />
           <OrderForm
             onSubmit={handleSubmit}
             onStartLocationChange={handleLocationChange}
