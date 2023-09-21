@@ -363,7 +363,9 @@ class TruckController extends Controller {
       params: { userId: number };
     }>,
   ): Promise<ApiHandlerResponse> {
-    const trucks = await this.truckService.findByUserId(options.params.userId);
+    const trucks = await this.truckService.findTrucksByUserId(
+      options.params.userId,
+    );
 
     return {
       status: HttpCode.OK,

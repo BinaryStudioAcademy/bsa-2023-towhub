@@ -37,30 +37,8 @@ class TruckService implements IService {
     return truck ? TruckEntity.initialize(truck).toObject() : null;
   }
 
-  public async findByUserId(userId: number): Promise<TruckEntityT[]> {
-    const usersTruckRecords =
-      await this.usersTrucksService.findByUserId(userId);
-
-    if (!usersTruckRecords) {
-      return [];
-    }
-
-    return await Promise.all(
-      usersTruckRecords.map(async (userTruckRecord) => {
-        const [truck = null] = await this.repository.findById(
-          userTruckRecord.truckId,
-        );
-
-        if (!truck) {
-          throw new HttpError({
-            status: HttpCode.BAD_REQUEST,
-            message: HttpMessage.TRUCK_DOES_NOT_EXIST,
-          });
-        }
-
-        return TruckEntity.initialize(truck).toObject();
-      }),
-    );
+  public async findTrucksByUserId(userId: number): Promise<TruckEntityT[]> {
+    return await this.usersTrucksService.findTrucksByUserId(userId);
   }
 
   public async create(

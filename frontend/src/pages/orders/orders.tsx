@@ -5,7 +5,7 @@ import {
   useAppSelector,
   useCallback,
   useEffect,
-  useNavigate
+  useNavigate,
 } from '~/libs/hooks/hooks.js';
 import { actions as driverActions } from '~/slices/driver/driver.js';
 import { ShiftStatus } from '~/slices/driver/libs/enums/enums.js';

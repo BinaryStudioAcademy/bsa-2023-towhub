@@ -4,6 +4,7 @@ import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
+import { type TruckDatabaseModel } from '../trucks/libs/types/types.js';
 import {
   type UsersTrucksEntityT,
   type UsersTrucksModel,
@@ -49,8 +50,22 @@ class UsersTrucksRepository implements IRepository {
     return result;
   }
 
+  public async findTrucksByUserId(
+    userId: number,
+  ): Promise<TruckDatabaseModel[]> {
+    const result = await this.db.driver().query.usersTrucks.findMany({
+      columns: {},
+      with: {
+        truck: true,
+      },
+      where: (usersTrucks, { eq }) => eq(usersTrucks.userId, userId),
+    });
+
+    return result.map((rawTruck) => rawTruck.truck as TruckDatabaseModel);
+  }
+
   public async create(
-    entity: Omit<UsersTrucksEntityT, 'id'>,
+    entity: Pick<UsersTrucksEntityT, 'userId' | 'truckId'>,
   ): Promise<UsersTrucksModel> {
     const [result] = await this.db
       .driver()

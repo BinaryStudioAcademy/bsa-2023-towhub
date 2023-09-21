@@ -1,5 +1,7 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
+import { TruckEntity } from '~/packages/trucks/truck.entity.js';
 
+import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import {
   type UsersTrucksCreateUpdate,
   type UsersTrucksEntityObjectT,
@@ -31,20 +33,12 @@ class UsersTrucksService implements IService<UsersTrucksEntityObjectT> {
     };
   }
 
-  public async findByUserId(
+  public async findTrucksByUserId(
     userId: UsersTrucksEntityT['userId'],
-  ): Promise<UsersTrucksEntityT[] | null> {
-    const usersTrucksRecords = await this.usersTrucksRepository.find({
-      userId,
-    });
+  ): Promise<TruckEntityT[]> {
+    const trucks = await this.usersTrucksRepository.findTrucksByUserId(userId);
 
-    if (usersTrucksRecords.length === 0) {
-      return [];
-    }
-
-    return usersTrucksRecords.map((usersTrucksRecord) =>
-      UsersTrucksEntity.initialize(usersTrucksRecord).toObject(),
-    );
+    return trucks.map((truck) => TruckEntity.initialize(truck).toObject());
   }
 
   public async create(
