@@ -2,7 +2,7 @@ import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
 import { type ShiftEntity } from '../shifts/shift.js';
-import { type TruckEntity } from '../trucks/libs/types/types.js';
+import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import {
   type DriverInfo,
   type OrderEntity as OrderEntityT,
@@ -36,7 +36,7 @@ class OrderEntity implements IEntity {
 
   private driver: DriverInfo | null;
 
-  private truck: Pick<TruckEntity, 'id' | 'licensePlateNumber'> | null;
+  private truck: Pick<TruckEntityT, 'id' | 'licensePlateNumber'> | null;
 
   private constructor({
     id,

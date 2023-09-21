@@ -1,4 +1,4 @@
-import { type TruckEntity } from '~/packages/trucks/trucks.js';
+import { type TruckEntityT } from '~/packages/trucks/trucks.js';
 import { type UserEntityT } from '~/packages/users/users.js';
 
 type ShiftEntity = {
@@ -6,7 +6,7 @@ type ShiftEntity = {
   startDate: Date;
   endDate: Date | null;
   driverId: UserEntityT['id'];
-  truckId: TruckEntity['id'];
+  truckId: TruckEntityT['id'];
 };
 
 export { type ShiftEntity };

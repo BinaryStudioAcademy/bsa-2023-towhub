@@ -5,4 +5,5 @@ export {
   type BusinessEntityT,
   type BusinessUpdateRequestDto,
   type BusinessUpdateResponseDto,
+  type GetPaginatedPageQuery,
 } from 'shared/build/index.js';

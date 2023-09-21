@@ -1,7 +1,7 @@
-import { type RootState, type TruckEntity } from '~/libs/types/types.js';
+import { type RootState, type TruckEntityT } from '~/libs/types/types.js';
 
 const selectChosenTruck = (
   state: RootState,
-): (TruckEntity & { driverId: number }) | null => state.trucks.chosenTruck;
+): (TruckEntityT & { driverId: number }) | null => state.trucks.chosenTruck;
 
 export { selectChosenTruck };

@@ -43,7 +43,7 @@ const Pagination: React.FC<Properties> = ({
     pageIndex > 0;
 
   const isHiddenLastPage =
-    pageIndex + middleValue < convertToIndex(pageCount) &&
+    pageIndex + middleValue <= convertToIndex(pageCount) &&
     paginationSize < pageCount;
 
   const handlePageClick = useCallback(
@@ -162,6 +162,7 @@ const Pagination: React.FC<Properties> = ({
         <div className={styles.size}>
           <label htmlFor="pageSize">Page size:</label>
           <Dropdown
+            className={styles.dropdown}
             options={createOptions([5, 10, 20, 50, 100])}
             defaultValue={createOption(pageSize)}
             isCustomValueContainer

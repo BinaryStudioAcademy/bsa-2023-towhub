@@ -1,7 +1,7 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import { type TruckEntity } from '../trucks/libs/types/types.js';
+import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import { type UserEntityT } from '../users/users.js';
 import {
   type ShiftDatabaseModel,
@@ -17,7 +17,7 @@ class ShiftEntity implements IEntity {
 
   private 'driverId': UserEntityT['id'];
 
-  private 'truckId': TruckEntity['id'];
+  private 'truckId': TruckEntityT['id'];
 
   private constructor({
     id,

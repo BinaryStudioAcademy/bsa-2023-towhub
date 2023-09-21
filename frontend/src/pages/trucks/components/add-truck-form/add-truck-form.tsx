@@ -1,7 +1,7 @@
 import { Form } from '~/libs/components/components.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useAppDispatch, useCallback } from '~/libs/hooks/hooks.js';
-import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
+import { type TruckEntityT } from '~/packages/trucks/libs/types/types.js';
 import { truckCreateRequestBody } from '~/packages/trucks/libs/validation-schemas/validation-schemas.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
@@ -13,7 +13,7 @@ const AddTruckForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleFormSubmit = useCallback(
-    (payload: TruckEntity): void => {
+    (payload: Omit<TruckEntityT, 'id' | 'businessId'>): void => {
       void dispatch(truckActions.addTruck(payload));
     },
     [dispatch],

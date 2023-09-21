@@ -1,5 +1,5 @@
 import { type DriverCommonDetails } from '~/packages/drivers/drivers.js';
-import { type TruckEntity } from '~/packages/trucks/trucks.js';
+import { type TruckEntityT } from '~/packages/trucks/trucks.js';
 import {
   type UserCommonDetails,
   type UserEntityT,
@@ -21,7 +21,7 @@ type OrderEntity = {
   customerPhone: string | null;
   shiftId: number;
   driver: DriverInfo | null;
-  truck: Pick<TruckEntity, 'id' | 'licensePlateNumber'> | null;
+  truck: Pick<TruckEntityT, 'id' | 'licensePlateNumber'> | null;
 };
 
 type DriverInfo = DriverCommonDetails &
