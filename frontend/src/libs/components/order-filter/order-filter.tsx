@@ -43,6 +43,7 @@ const OrderFilter = ({ onChange }: Properties): JSX.Element => {
             defaultValue={{ label: 'All', value: 'all' }}
             placeholder="Select order status"
             onChange={handleStatusChange}
+            className={styles.input}
           />
         </div>
       </div>
