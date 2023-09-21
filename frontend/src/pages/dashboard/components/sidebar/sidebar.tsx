@@ -32,7 +32,13 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
     >
       <ul className={styles.list}>
         {TABS.map((tab) => (
-          <li key={tab.name}>
+          <li
+            className={getValidClassNames(
+              styles.item,
+              checkActiveTab(location.pathname, tab.name) && styles.active,
+            )}
+            key={tab.name}
+          >
             <Button
               {...(!isCollapsed && { label: tab.name })}
               className={[
