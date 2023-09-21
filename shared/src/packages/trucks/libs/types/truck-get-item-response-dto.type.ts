@@ -2,8 +2,8 @@ import { type GeolocationLatLng } from '~/libs/packages/geolocation/geolocation.
 
 import { type TruckEntity } from './truck-entity.type.js';
 
-type TruckGetAllResponseDto = TruckEntity & {
+type TruckGetItemResponseDto = TruckEntity & {
   location?: GeolocationLatLng;
 };
 
-export { type TruckGetAllResponseDto };
+export { type TruckGetItemResponseDto };

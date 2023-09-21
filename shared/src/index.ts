@@ -138,7 +138,7 @@ export {
 } from './packages/shifts/shifts.js';
 export {
   type TruckEntity,
-  type TruckGetAllResponseDto,
+  type TruckGetItemResponseDto,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
