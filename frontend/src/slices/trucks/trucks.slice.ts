@@ -2,13 +2,13 @@ import { type PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
-import { type TruckGetAllResponseDto } from '~/packages/trucks/libs/types/types.js';
+import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
 
 import { addTruck, getTrucksForBusiness, setTrucks } from './actions.js';
 
 type State = {
-  trucks: TruckGetAllResponseDto[];
-  chosenTruck: TruckGetAllResponseDto | null;
+  trucks: TruckGetItemResponseDto[];
+  chosenTruck: TruckGetItemResponseDto | null;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
@@ -22,7 +22,7 @@ const { reducer, actions, name } = createSlice({
   initialState,
   name: 'trucks',
   reducers: {
-    setChosenTruck: (state, action: PayloadAction<TruckGetAllResponseDto>) => {
+    setChosenTruck: (state, action: PayloadAction<TruckGetItemResponseDto>) => {
       state.chosenTruck = action.payload;
     },
   },

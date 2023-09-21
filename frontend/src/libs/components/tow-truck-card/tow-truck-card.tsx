@@ -1,6 +1,7 @@
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { type TruckEntity } from '~/libs/types/types.js';
+import { manufacturerKeyToReadableName } from '~/packages/trucks/libs/maps/maps.js';
 
 import { Badge } from '../badge/badge.js';
 import { Button } from '../button/button.js';
@@ -28,7 +29,7 @@ const TowTruckCard: React.FC<Properties> = ({
     towType,
   } = truck;
   const img = getTowTruckImage(towType);
-  const manufacturer = manufacturerRaw.replaceAll('_', ' ');
+  const manufacturer = manufacturerKeyToReadableName[manufacturerRaw];
 
   return (
     <div className={getValidClassNames(styles.container)}>

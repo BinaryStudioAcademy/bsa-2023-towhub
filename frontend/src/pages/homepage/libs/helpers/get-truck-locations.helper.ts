@@ -1,4 +1,4 @@
-import { type TruckGetAllResponseDto } from '~/packages/trucks/libs/types/types.js';
+import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
 
 type GetTruckLocations = {
   lat: number;
@@ -6,7 +6,7 @@ type GetTruckLocations = {
 };
 
 const getTruckLocations = (
-  trucks: TruckGetAllResponseDto[],
+  trucks: TruckGetItemResponseDto[],
 ): GetTruckLocations[] => {
   const locations: GetTruckLocations[] = [];
   for (const truck of trucks) {

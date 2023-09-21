@@ -23,7 +23,7 @@ const Map: React.FC<Properties> = ({
   center,
   zoom = DEFAULT_ZOOM,
   className,
-  markers,
+  markers = [],
   destination,
   pricePerKm,
   startAddress,
@@ -49,8 +49,10 @@ const Map: React.FC<Properties> = ({
         void mapService.current.calculateRouteAndTime(center, destination);
       }
 
-      for (const marker of markers ?? []) {
-        mapService.current.addMarker(marker, true);
+      if (markers.length > 0) {
+        for (const marker of markers) {
+          mapService.current.addMarker(marker, true);
+        }
       }
     }
   }, [center, zoom, destination, markers]);
