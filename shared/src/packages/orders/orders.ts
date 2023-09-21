@@ -11,7 +11,9 @@ export {
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
+  type OrderQueryParameters,
   type OrderResponseDto,
+  type OrderStatusValues,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 export {

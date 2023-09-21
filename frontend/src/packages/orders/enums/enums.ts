@@ -1,1 +1,1 @@
-export { OrdersApiPath } from 'shared/build/index.js';
+export { ORDER_STATUSES, OrdersApiPath } from 'shared/build/index.js';

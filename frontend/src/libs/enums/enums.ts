@@ -14,5 +14,6 @@ export {
   AuthMode,
   ContentType,
   HttpMessage,
+  ORDER_STATUSES,
   ServerErrorType,
 } from 'shared/build/index.js';

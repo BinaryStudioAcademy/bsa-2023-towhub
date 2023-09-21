@@ -12,6 +12,7 @@ export {
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
+  type OrderQueryParameters,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from 'shared/build/index.js';

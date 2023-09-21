@@ -19,6 +19,7 @@ export {
   type DriverGetAllResponseDto,
   type DriverWithUserData,
   type EntityPagination,
+  type OrderQueryParameters,
   type PaginationParameters,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,

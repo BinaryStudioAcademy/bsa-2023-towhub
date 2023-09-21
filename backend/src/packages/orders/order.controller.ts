@@ -16,6 +16,7 @@ import {
   type Id,
   type OrderCalculatePriceRequestDto,
   type OrderCreateRequestDto,
+  type OrderQueryParameters,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
@@ -219,7 +220,7 @@ class OrderController extends Controller {
     this.mapService = mapService;
 
     this.addRoute({
-      path: OrdersApiPath.ROOT,
+      path: OrdersApiPath.BUSINESS,
       method: 'GET',
       authStrategy: [
         AuthStrategy.VERIFY_JWT,
@@ -229,6 +230,7 @@ class OrderController extends Controller {
         this.findAllBusinessOrders(
           options as ApiHandlerOptions<{
             user: UserEntityObjectWithGroupT;
+            query: Pick<OrderQueryParameters, 'status'>;
           }>,
         ),
     });
@@ -530,6 +532,7 @@ class OrderController extends Controller {
   private async findAllBusinessOrders(
     options: ApiHandlerOptions<{
       user: UserEntityObjectWithGroupT;
+      query: Pick<OrderQueryParameters, 'status'>;
     }>,
   ): Promise<ApiHandlerResponse<OrderResponseDto[]>> {
     return {

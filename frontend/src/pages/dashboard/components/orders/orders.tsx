@@ -1,6 +1,6 @@
 import { type Libraries, LoadScript } from '@react-google-maps/api';
 
-import { Map, OrderList } from '~/libs/components/components.js';
+import { Map, OrderFilter, OrderList } from '~/libs/components/components.js';
 import { jsonToLatLngLiteral } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
@@ -9,6 +9,7 @@ import {
   useState,
 } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
+import { type OrderQueryParameters } from '~/libs/types/types.js';
 import { actions as ordersActions } from '~/slices/orders/orders.js';
 import { selectOrders } from '~/slices/orders/selectors.js';
 
@@ -29,9 +30,15 @@ const Orders: React.FC = () => {
     endPoint: google.maps.LatLngLiteral;
   }>();
 
+  const [filter, setFilter] = useState<{
+    status: OrderQueryParameters['status'];
+  }>({
+    status: 'all',
+  });
+
   useEffect(() => {
-    void dispatch(ordersActions.getOrders());
-  }, [dispatch]);
+    void dispatch(ordersActions.getOrders(filter));
+  }, [dispatch, filter]);
 
   useEffect(() => {
     setEndPointMarkers(
@@ -46,7 +53,7 @@ const Orders: React.FC = () => {
         libraries={libraries}
       >
         <div className={styles.orderlistArea}>
-          <div>Filter</div>
+          <OrderFilter onChange={setFilter} />
           <OrderList orders={orders} select={setShownRoute} />
         </div>
         <div className={styles.mapArea}>
