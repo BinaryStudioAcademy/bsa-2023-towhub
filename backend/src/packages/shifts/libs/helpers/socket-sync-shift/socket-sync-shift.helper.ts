@@ -3,10 +3,7 @@ import { type Socket } from 'socket.io';
 import { ClientSocketEvent } from '~/libs/packages/socket/libs/types/types.js';
 import { type TruckService } from '~/packages/trucks/trucks.js';
 
-import {
-  type StartedShift,
-  type StartedShiftsStore,
-} from '../../types/types.js';
+import { type StartedShiftsStore } from '../../types/types.js';
 
 const socketSyncShift = async ({
   startedShiftsStore,
@@ -19,7 +16,13 @@ const socketSyncShift = async ({
   userId: number;
   socket: Socket;
 }): Promise<void> => {
-  const shift = startedShiftsStore.get(userId) as StartedShift;
+  const shift = startedShiftsStore.get(userId);
+
+  if (!shift) {
+    socket.emit(ClientSocketEvent.SHIFT_SYNC, null);
+
+    return;
+  }
 
   startedShiftsStore.set(userId, { ...shift, socket });
 

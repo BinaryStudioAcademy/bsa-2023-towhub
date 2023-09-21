@@ -10,7 +10,7 @@ type ServerSocketEventParameter = {
   [ServerSocketEvent.START_SHIFT]: {
     truckId: number;
   };
-  [ServerSocketEvent.END_SHIFT]: undefined;
+  [ServerSocketEvent.END_SHIFT]: null;
 };
 
 export { type ServerSocketEventParameter };

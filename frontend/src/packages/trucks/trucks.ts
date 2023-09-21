@@ -5,13 +5,10 @@ import { LocalStorage } from '~/libs/packages/storage/storage.js';
 import { TruckApi } from './trucks-api.js';
 
 export {
-  FormLabel,
-  FormName,
   TruckManufacturer,
   TruckTowType,
   TruckYear,
 } from './libs/enums/enums.js';
-export { type GetAllTrucksByUserIdResponseDto } from './libs/types/types.js';
 export { TruckApi } from './trucks-api.js';
 
 const truckApi = new TruckApi({

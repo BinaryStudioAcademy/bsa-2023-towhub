@@ -27,7 +27,7 @@ const useAuthNavigate = (): AuthNavigateHook => {
   ): void => {
     switch (user.group.key) {
       case UserGroupKey.BUSINESS: {
-        navigate(AppRoute.DASHBOARD);
+        navigate(AppRoute.DASHBOARD_ORDERS);
         break;
       }
       case UserGroupKey.CUSTOMER: {

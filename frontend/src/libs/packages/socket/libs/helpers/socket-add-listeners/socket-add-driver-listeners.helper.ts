@@ -4,9 +4,7 @@ import {
   ClientSocketEvent,
   socket as socketClient,
 } from '~/libs/packages/socket/socket.js';
-import { setStartShiftSuccess } from '~/slices/driver/actions.js';
 import { actions as driverActions } from '~/slices/driver/driver.js';
-import { ShiftStatus } from '~/slices/driver/libs/enums/enums.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 const socketAddDriverListeners = (
@@ -28,7 +26,7 @@ const socketAddDriverListeners = (
     notification.info('Your activity session has been timed out');
   });
   socketClient.addListener(ClientSocketEvent.SHIFT_ENDED, () => {
-    dispatch(driverActions.setShiftStatus(ShiftStatus.DISABLED));
+    dispatch(driverActions.shiftEnded());
   });
   socketClient.addListener(ClientSocketEvent.TRUCK_AVAILABLE, (payload) => {
     if (!payload) {
@@ -37,11 +35,11 @@ const socketAddDriverListeners = (
     dispatch(truckActions.truckAvailable(payload));
   });
   socketClient.addListener(ClientSocketEvent.SHIFT_SYNC, (payload) => {
-    if (!payload) {
-      return;
-    }
-
-    void dispatch(setStartShiftSuccess(payload.truck));
+    void dispatch(
+      payload
+        ? driverActions.setStartShiftSuccess(payload.truck)
+        : driverActions.shiftEnded(),
+    );
   });
 };
 

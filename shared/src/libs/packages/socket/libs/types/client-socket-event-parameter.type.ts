@@ -11,7 +11,7 @@ type ClientSocketEventParameter = {
   };
   [ClientSocketEvent.SHIFT_SYNC]: {
     truck: TruckEntityT;
-  };
+  } | null;
   [ClientSocketEvent.ERROR]: {
     message: string;
   };

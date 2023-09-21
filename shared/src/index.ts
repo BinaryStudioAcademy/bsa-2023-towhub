@@ -2,6 +2,7 @@ export {
   ApiPath,
   AppEnvironment,
   AppErrorMessage,
+  CommonValidationMessage,
   ContentType,
   ServerErrorType,
 } from './libs/enums/enums.js';
@@ -39,9 +40,11 @@ export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type EntityPagination,
   type ErrorConstructor,
+  type GetPaginatedPageQuery,
   type Id,
   type NullableProperties,
   type OperationResult,
+  type PaginationParameters,
   type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
@@ -50,6 +53,7 @@ export {
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
+export { commonGetPageQuery } from './libs/validation-schemas/validation-schemas.js';
 export {
   type JwtPayload,
   AuthApiPath,
@@ -74,19 +78,22 @@ export {
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
-  type BusinessGetAllDriversRequestParameters,
   type DriverAddPayload,
+  type DriverAddPayloadWithBusinessId,
+  type DriverAddResponseWithGroup,
+  type DriverBusinessIdPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverEntityT,
   type DriverGetAllResponseDto,
-  type DriverGetRequestParameters,
-  type DriverUpdateDeleteRequestParameters,
+  type DriverGetDriversPagePayload,
+  type DriverGetDriversPayloadWithBusinessId,
+  type DriverRequestParameters,
   type DriverUpdatePayload,
+  type DriverWithUserData,
   DriverApiPath,
   driverCreateUpdateRequestBody,
-  driverGetParameters,
-  driverUpdateDeleteParameters,
+  driverParameters,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
@@ -133,7 +140,6 @@ export {
   ShiftValidationMessage,
 } from './packages/shifts/shifts.js';
 export {
-  type GetAllTrucksByUserIdResponseDto,
   type TruckEntityT,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,

@@ -9,12 +9,15 @@ import { AppEnvironment } from '~/libs/enums/enums.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { socket } from '~/libs/packages/store/middlewares/middlewares.js';
 import { authApi } from '~/packages/auth/auth.js';
+import { businessApi } from '~/packages/business/business.js';
+import { driversApi } from '~/packages/drivers/drivers.js';
 import { filesApi } from '~/packages/files/files.js';
 import { ordersApi } from '~/packages/orders/orders.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
 import { reducer as driverReducer } from '~/slices/driver/driver.js';
+import { reducer as driversReducer } from '~/slices/drivers/drivers.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as orderReducer } from '~/slices/orders/order.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
@@ -38,6 +41,7 @@ class Store {
       reducer: {
         auth: authReducer,
         trucks: truckReducer,
+        drivers: driversReducer,
         driver: driverReducer,
         files: filesReducer,
         orders: orderReducer,
@@ -60,8 +64,10 @@ class Store {
       filesApi,
       notification,
       truckApi,
+      driversApi,
       ordersApi,
       localStorage: LocalStorage,
+      businessApi,
     };
   }
 }

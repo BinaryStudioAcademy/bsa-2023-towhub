@@ -2,16 +2,18 @@ import {
   endShift,
   setShiftStatus,
   setStartShiftSuccess,
+  shiftEnded,
   startShift,
 } from './actions.js';
 import { actions } from './driver.slice.js';
 
 const allActions = {
   ...actions,
-  startShift,
-  setStartShiftSuccess,
-  setShiftStatus,
   endShift,
+  setShiftStatus,
+  setStartShiftSuccess,
+  shiftEnded,
+  startShift,
 };
 
 export { allActions as actions };

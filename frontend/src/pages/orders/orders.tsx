@@ -2,11 +2,11 @@ import { Button } from '~/libs/components/components.js';
 import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
+  useAppSelector,
   useCallback,
   useEffect,
-  useNavigate,
+  useNavigate
 } from '~/libs/hooks/hooks.js';
-import { useAppSelector } from '~/libs/hooks/use-app-selector/use-app-selector.hook';
 import { actions as driverActions } from '~/slices/driver/driver.js';
 import { ShiftStatus } from '~/slices/driver/libs/enums/enums.js';
 import {

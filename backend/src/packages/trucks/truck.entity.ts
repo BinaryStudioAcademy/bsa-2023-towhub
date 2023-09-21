@@ -8,7 +8,7 @@ import {
 } from './libs/enums/enums.js';
 import {
   type TruckDatabaseModel,
-  type TruckEntityT as TruckEntityT,
+  type TruckEntityT,
 } from './libs/types/types.js';
 
 class TruckEntity implements IEntity {
@@ -26,6 +26,8 @@ class TruckEntity implements IEntity {
 
   private pricePerKm: number;
 
+  private businessId: number;
+
   private status: ValueOf<typeof TruckStatus>;
 
   private constructor({
@@ -37,6 +39,7 @@ class TruckEntity implements IEntity {
     year,
     towType,
     status,
+    businessId,
   }: NullableProperties<TruckEntityT, 'id'>) {
     this.id = id;
     this.manufacturer = manufacturer;
@@ -45,6 +48,7 @@ class TruckEntity implements IEntity {
     this.licensePlateNumber = licensePlateNumber;
     this.year = year;
     this.towType = towType;
+    this.businessId = businessId;
     this.status = status;
   }
 
@@ -57,6 +61,7 @@ class TruckEntity implements IEntity {
     year,
     towType,
     status,
+    businessId,
   }: TruckDatabaseModel): TruckEntity {
     return new TruckEntity({
       id,
@@ -67,6 +72,7 @@ class TruckEntity implements IEntity {
       licensePlateNumber,
       year,
       status,
+      businessId,
     });
   }
 
@@ -77,6 +83,7 @@ class TruckEntity implements IEntity {
     licensePlateNumber,
     year,
     towType,
+    businessId,
   }: Omit<TruckDatabaseModel, 'id'>): TruckEntity {
     return new TruckEntity({
       id: null,
@@ -87,6 +94,7 @@ class TruckEntity implements IEntity {
       licensePlateNumber,
       year,
       status: TruckStatus.AVAILABLE,
+      businessId,
     });
   }
 
@@ -100,6 +108,7 @@ class TruckEntity implements IEntity {
       pricePerKm: this.pricePerKm,
       licensePlateNumber: this.licensePlateNumber,
       status: this.status,
+      businessId: this.businessId,
     };
   }
 
@@ -112,6 +121,7 @@ class TruckEntity implements IEntity {
       pricePerKm: this.pricePerKm,
       licensePlateNumber: this.licensePlateNumber,
       status: this.status,
+      businessId: this.businessId,
     };
   }
 }

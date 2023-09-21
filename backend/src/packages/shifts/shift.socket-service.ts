@@ -62,14 +62,12 @@ class ShiftSocketService {
     socket: Socket;
     io: Server;
   }): Promise<void> {
-    if (this.startedShiftsStore.has(user.id)) {
-      await socketSyncShift({
-        startedShiftsStore: this.startedShiftsStore,
-        userId: user.id,
-        socket,
-        truckService: this.truckService,
-      });
-    }
+    await socketSyncShift({
+      startedShiftsStore: this.startedShiftsStore,
+      userId: user.id,
+      socket,
+      truckService: this.truckService,
+    });
 
     socket.on(
       ServerSocketEvent.START_SHIFT,

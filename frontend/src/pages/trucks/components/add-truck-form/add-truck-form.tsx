@@ -13,7 +13,7 @@ const AddTruckForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleFormSubmit = useCallback(
-    (payload: TruckEntityT): void => {
+    (payload: Omit<TruckEntityT, 'id' | 'businessId'>): void => {
       void dispatch(truckActions.addTruck(payload));
     },
     [dispatch],

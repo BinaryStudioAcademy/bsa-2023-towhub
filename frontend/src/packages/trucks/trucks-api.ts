@@ -5,7 +5,6 @@ import { type IStorage } from '~/libs/packages/storage/storage.js';
 
 import { TruckApiPath } from './libs/enums/enums.js';
 import {
-  type GetAllTrucksByUserIdResponseDto,
   type TruckEntityT,
   type UsersTrucksEntityT,
 } from './libs/types/types.js';
@@ -22,7 +21,7 @@ class TruckApi extends HttpApi {
   }
 
   public async addTruck(
-    payload: Omit<TruckEntityT, 'id' | 'status'>,
+    payload: Omit<TruckEntityT, 'id' | 'status' | 'businessId'>,
   ): Promise<TruckEntityT> {
     const response = await this.load(
       this.getFullEndpoint(TruckApiPath.ROOT, {}),
@@ -39,10 +38,7 @@ class TruckApi extends HttpApi {
 
   public async getAllTrucksByUserId({
     userId,
-  }: Pick<
-    UsersTrucksEntityT,
-    'userId'
-  >): Promise<GetAllTrucksByUserIdResponseDto> {
+  }: Pick<UsersTrucksEntityT, 'userId'>): Promise<TruckEntityT[]> {
     const response = await this.load(
       this.getFullEndpoint(TruckApiPath.$USER_ID, {
         userId: userId.toString(),
@@ -54,7 +50,7 @@ class TruckApi extends HttpApi {
       },
     );
 
-    return await response.json<GetAllTrucksByUserIdResponseDto>();
+    return await response.json<TruckEntityT[]>();
   }
 }
 

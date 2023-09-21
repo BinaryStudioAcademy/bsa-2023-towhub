@@ -39,7 +39,7 @@ class SocketService {
     eventPayload,
   }: {
     event: T;
-    eventPayload?: ServerSocketEventParameter[T];
+    eventPayload: ServerSocketEventParameter[T];
   }): void {
     this.io?.emit(event, eventPayload);
   }

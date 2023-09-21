@@ -5,7 +5,7 @@ import {
 
 function getTruckEntity(
   payload: TruckFormModel,
-): Omit<TruckEntityT, 'id' | 'status'> {
+): Omit<TruckEntityT, 'id' | 'status' | 'businessId'> {
   return {
     ...payload,
     manufacturer: payload.manufacturer.value,

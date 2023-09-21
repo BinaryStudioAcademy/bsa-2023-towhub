@@ -27,39 +27,45 @@ const socket: Middleware<
   getState: () => RootState;
 }) => {
   return (next) => (action: ReturnType<ActionCreatorWithPayload<unknown>>) => {
-    if (action.type === driverActions.endShift.type) {
-      socketClient.emit({ event: ServerSocketEvent.END_SHIFT });
+    switch (action.type) {
+      case driverActions.endShift.type: {
+        socketClient.emit({
+          event: ServerSocketEvent.END_SHIFT,
+          eventPayload: null,
+        });
 
-      return next(action);
-    }
+        break;
+      }
+      case driverActions.startShift.type: {
+        const { truckId } =
+          action.payload as ServerSocketEventParameter[typeof ServerSocketEvent.START_SHIFT];
 
-    if (action.type === driverActions.startShift.type) {
-      const { truckId } =
-        action.payload as ServerSocketEventParameter[typeof ServerSocketEvent.START_SHIFT];
+        socketClient.emitWithAck({
+          event: ServerSocketEvent.START_SHIFT,
+          eventPayload: {
+            truckId,
+          },
+          callback: (
+            status: ValueOf<typeof SocketResponseStatus>,
+            message?: string,
+          ): void => {
+            if (status !== SocketResponseStatus.OK && message) {
+              return notification.error(message);
+            }
+            const truck = getState().trucks.trucks.find(
+              (truck) => truck.id === truckId,
+            );
 
-      socketClient.emitWithAck({
-        event: ServerSocketEvent.START_SHIFT,
-        eventPayload: {
-          truckId,
-        },
-        callback: (
-          status: ValueOf<typeof SocketResponseStatus>,
-          message?: string,
-        ): void => {
-          if (status !== SocketResponseStatus.OK && message) {
-            return notification.error(message);
-          }
-          const truck = getState().trucks.trucks.items.find(
-            (truck) => truck.id === truckId,
-          );
+            if (!truck) {
+              return;
+            }
 
-          if (!truck) {
-            return;
-          }
+            dispatch(driverActions.setStartShiftSuccess(truck));
+          },
+        });
 
-          dispatch(driverActions.setStartShiftSuccess(truck));
-        },
-      });
+        break;
+      }
     }
 
     return next(action);

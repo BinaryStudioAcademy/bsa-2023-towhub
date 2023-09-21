@@ -1,4 +1,3 @@
-export { FormLabel, FormName } from './form.enum.js';
 export {
   TruckApiPath,
   TruckCapacity,

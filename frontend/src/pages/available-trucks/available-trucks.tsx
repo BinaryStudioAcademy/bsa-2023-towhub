@@ -58,7 +58,7 @@ const AvailableTrucks: React.FC = () => {
         <Spinner isFullScreen />
       ) : (
         <div className={styles.cardsContainer}>
-          {trucks.items
+          {trucks
             .filter((truck) => truck.status === TruckStatus.AVAILABLE)
             .map((truck) => (
               <AvailableTruckCard

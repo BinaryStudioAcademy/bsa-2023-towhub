@@ -2,6 +2,7 @@ import {
   type CaseReducer,
   type PayloadAction,
   createSlice,
+  isAnyOf,
 } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
@@ -9,18 +10,21 @@ import { type ClientSocketEventParameter } from '~/libs/packages/socket/libs/typ
 import { type ClientSocketEvent } from '~/libs/packages/socket/socket.js';
 import { type TruckEntityT, type ValueOf } from '~/libs/types/types.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
-import { type GetAllTrucksByUserIdResponseDto } from '~/packages/trucks/libs/types/types.js';
 
-import { addTruck, getAllTrucksByUserId } from './actions.js';
+import {
+  addTruck,
+  getAllTrucksByUserId,
+  getTrucksForBusiness,
+} from './actions.js';
 
 type State = {
-  trucks: GetAllTrucksByUserIdResponseDto;
+  trucks: TruckEntityT[];
   chosenTruck: (TruckEntityT & { driverId: number }) | null;
   dataStatus: ValueOf<typeof DataStatus>;
 };
 
 const initialState: State = {
-  trucks: { items: [], count: 0 },
+  trucks: [],
   chosenTruck: null,
   dataStatus: DataStatus.IDLE,
 };
@@ -33,7 +37,7 @@ const truckChosen: CaseReducer<State, PayloadAction<TruckChosenPayload>> = (
   action,
 ) => {
   const { truckId } = action.payload;
-  const chosenTruck = state.trucks.items.find((truck) => truck.id === truckId);
+  const chosenTruck = state.trucks.find((truck) => truck.id === truckId);
 
   if (!chosenTruck) {
     return;
@@ -49,7 +53,7 @@ const truckAvailable: CaseReducer<
   PayloadAction<TruckAvailablePayload>
 > = (state, action) => {
   const { truckId } = action.payload;
-  const chosenTruck = state.trucks.items.find((truck) => truck.id === truckId);
+  const chosenTruck = state.trucks.find((truck) => truck.id === truckId);
 
   if (!chosenTruck) {
     return;
@@ -72,12 +76,12 @@ const { reducer, actions, name } = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(addTruck.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
       .addCase(addTruck.fulfilled, (state, action) => {
-        state.trucks.items.push(action.payload);
-        state.trucks.count++;
+        state.trucks.push(action.payload);
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(getTrucksForBusiness.fulfilled, (state, action) => {
+        state.trucks = action.payload.items;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(addTruck.rejected, (state) => {
@@ -92,7 +96,19 @@ const { reducer, actions, name } = createSlice({
       })
       .addCase(getAllTrucksByUserId.rejected, (state) => {
         state.dataStatus = DataStatus.REJECTED;
-      });
+      })
+      .addMatcher(
+        isAnyOf(getTrucksForBusiness.pending, addTruck.pending),
+        (state) => {
+          state.dataStatus = DataStatus.PENDING;
+        },
+      )
+      .addMatcher(
+        isAnyOf(getTrucksForBusiness.rejected, addTruck.rejected),
+        (state) => {
+          state.dataStatus = DataStatus.REJECTED;
+        },
+      );
   },
 });
 

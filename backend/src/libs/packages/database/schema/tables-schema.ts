@@ -143,6 +143,9 @@ const trucks = pgTable(
     year: integer('year').notNull(),
     towType: varchar('tow_type').notNull(),
     status: truckStatusEnum('status').notNull().default(TruckStatus.AVAILABLE),
+    businessId: integer('business_id')
+      .notNull()
+      .references(() => business.id),
   },
   (trucks) => {
     return {

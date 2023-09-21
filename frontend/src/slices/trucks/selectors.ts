@@ -4,20 +4,18 @@ import {
   type TruckEntityT,
   type ValueOf,
 } from '~/libs/types/types.js';
-import { type GetAllTrucksByUserIdResponseDto } from '~/packages/trucks/trucks.js';
 
 const selectDataStatus = (state: RootState): ValueOf<typeof DataStatus> => {
   return state.trucks.dataStatus;
 };
 
-const selectTrucks = (state: RootState): GetAllTrucksByUserIdResponseDto =>
-  state.trucks.trucks;
+const selectTrucks = (state: RootState): TruckEntityT[] => state.trucks.trucks;
 
 const selectTruck =
   (truckId: number | null) =>
   (state: RootState): TruckEntityT | undefined =>
     truckId
-      ? state.trucks.trucks.items.find((truck) => truck.id === truckId)
+      ? state.trucks.trucks.find((truck) => truck.id === truckId)
       : undefined;
 
 const selectChosenTruck = (

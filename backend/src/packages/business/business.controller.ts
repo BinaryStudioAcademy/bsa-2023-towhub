@@ -9,15 +9,14 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
-  type BusinessGetAllDriversRequestParameters,
   type DriverCreateUpdateRequestDto,
-  type DriverUpdateDeleteRequestParameters,
+  type DriverRequestParameters,
 } from '../drivers/drivers.js';
 import {
   driverCreateUpdateRequestBody,
-  driverGetParameters,
-  driverUpdateDeleteParameters,
+  driverParameters,
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
+import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 import {
@@ -26,6 +25,7 @@ import {
   type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,
+  type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 import {
   businessAddRequestBody,
@@ -33,6 +33,7 @@ import {
   businessGetParameters,
   businessUpdateParameters,
   businessUpdateRequestBody,
+  commonGetPageQuery,
 } from './libs/validation-schemas/validation-schemas.js';
 
 /**
@@ -182,6 +183,10 @@ import {
  *           minimum: 1
  *           description: User id to which the business belongs
  *           example: 1
+ *     BusinessFindResult:
+ *       allOf:
+ *         - $ref: '#/components/schemas/Business'
+ *       nullable: true
  *     Driver:
  *       type: object
  *       properties:
@@ -324,7 +329,7 @@ class BusinessController extends Controller {
         this.createDriver(
           options as ApiHandlerOptions<{
             body: DriverCreateUpdateRequestDto;
-            params: { businessId: number };
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -335,13 +340,14 @@ class BusinessController extends Controller {
       authStrategy: defaultStrategies,
       validation: {
         body: driverCreateUpdateRequestBody,
-        params: driverUpdateDeleteParameters,
+        params: driverParameters,
       },
       handler: (options) =>
         this.updateDriver(
           options as ApiHandlerOptions<{
             body: DriverCreateUpdateRequestDto;
-            params: DriverUpdateDeleteRequestParameters;
+            params: DriverRequestParameters;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -351,12 +357,13 @@ class BusinessController extends Controller {
       method: 'GET',
       authStrategy: defaultStrategies,
       validation: {
-        params: driverGetParameters,
+        query: commonGetPageQuery,
       },
       handler: (options) =>
         this.findAllDrivers(
           options as ApiHandlerOptions<{
-            params: BusinessGetAllDriversRequestParameters;
+            query: GetPaginatedPageQuery;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -366,12 +373,27 @@ class BusinessController extends Controller {
       method: 'DELETE',
       authStrategy: defaultStrategies,
       validation: {
-        params: driverUpdateDeleteParameters,
+        params: driverParameters,
       },
       handler: (options) =>
         this.deleteDriver(
           options as ApiHandlerOptions<{
-            params: DriverUpdateDeleteRequestParameters;
+            params: DriverRequestParameters;
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.TRUCKS,
+      method: 'GET',
+      authStrategy: defaultStrategies,
+
+      handler: (options) =>
+        this.findAllTrucks(
+          options as ApiHandlerOptions<{
+            query: GetPaginatedPageQuery;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -381,6 +403,8 @@ class BusinessController extends Controller {
    * @swagger
    * /business/:
    *    post:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - business
    *      summary: Create business
@@ -434,6 +458,8 @@ class BusinessController extends Controller {
    * @swagger
    * /business/{id}:
    *    put:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - business
    *      summary: Update business
@@ -492,6 +518,8 @@ class BusinessController extends Controller {
    * @swagger
    * /business/{id}:
    *    delete:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - business
    *      summary: Delete business
@@ -537,6 +565,8 @@ class BusinessController extends Controller {
    * @swagger
    * /business/{id}:
    *    get:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - business
    *      summary: Find business
@@ -574,20 +604,12 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{businessId}/drivers:
+   * /business/drivers:
    *    post:
    *      tags:
    *       - business/driver
    *      summary: Create driver
    *      description: Create driver
-   *      parameters:
-   *       - in: path
-   *         name: businessId
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to create driver
-   *         example: 1
    *      requestBody:
    *        content:
    *          application/json:
@@ -600,6 +622,7 @@ class BusinessController extends Controller {
    *               - lastName
    *               - driverLicenseNumber
    *               - password
+   *               - driverTrucks
    *              properties:
    *                phone:
    *                  $ref: '#/components/schemas/Driver/properties/phone'
@@ -616,6 +639,10 @@ class BusinessController extends Controller {
    *                  minimum: 6
    *                  maximum: 20
    *                  pattern: ^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$
+   *                driverTrucks:
+   *                  type: array
+   *                  items:
+   *                    type: number
    *      security:
    *        - bearerAuth: []
    *      responses:
@@ -638,13 +665,13 @@ class BusinessController extends Controller {
   private async createDriver(
     options: ApiHandlerOptions<{
       body: DriverCreateUpdateRequestDto;
-      params: { businessId: number };
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const createdDriver = await this.businessService.createDriver({
-      payload: options.body,
-      businessId: options.params.businessId,
-    });
+    const createdDriver = await this.businessService.createDriver(
+      options.body,
+      options.user.id,
+    );
 
     return {
       status: HttpCode.CREATED,
@@ -654,20 +681,13 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{businessId}/driver/{driverId}:
+   * /business/driver/{driverId}:
    *    put:
    *      tags:
    *       - business/driver
    *      summary: Update driver
    *      description: Update driver
    *      parameters:
-   *       - in: path
-   *         name: businessId
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to update drivers
-   *         example: 1
    *       - in: path
    *         name: driverId
    *         schema:
@@ -717,13 +737,15 @@ class BusinessController extends Controller {
   private async updateDriver(
     options: ApiHandlerOptions<{
       body: DriverCreateUpdateRequestDto;
-      params: DriverUpdateDeleteRequestParameters;
+      params: DriverRequestParameters;
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const updatedDriver = await this.businessService.updateDriver({
-      driverId: options.params.driverId,
-      payload: options.body,
-    });
+    const updatedDriver = await this.businessService.updateDriver(
+      options.body,
+      options.params.driverId,
+      options.user.id,
+    );
 
     return {
       status: HttpCode.OK,
@@ -733,20 +755,12 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{businessId}/drivers:
+   * /business/drivers:
    *    get:
    *      tags:
    *       - business/driver
    *      summary: Find all drivers
    *      description: Find all drivers
-   *      parameters:
-   *       - in: path
-   *         name: businessId
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to find drivers
-   *         example: 1
    *      security:
    *        - bearerAuth: []
    *      responses:
@@ -755,18 +769,27 @@ class BusinessController extends Controller {
    *          content:
    *            application/json:
    *              schema:
-   *                type: array
-   *                items:
-   *                  $ref: '#/components/schemas/Driver'
+   *                type: object
+   *                properties:
+   *                    items:
+   *                      type: array
+   *                      items:
+   *                        $ref: '#/components/schemas/Driver'
+   *                    total:
+   *                      type: string
+   *                      example: 1
+   *
    */
 
   private async findAllDrivers(
     options: ApiHandlerOptions<{
-      params: BusinessGetAllDriversRequestParameters;
+      query: GetPaginatedPageQuery;
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
     const drivers = await this.businessService.findAllDriversByBusinessId(
-      options.params.businessId,
+      options.user.id,
+      options.query,
     );
 
     return {
@@ -777,20 +800,13 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business/{businessId}/driver/{driverId}:
+   * /business/driver/{driverId}:
    *    delete:
    *      tags:
    *       - business/driver
    *      summary: Delete driver
    *      description: Delete driver
    *      parameters:
-   *       - in: path
-   *         name: businessId
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Numeric ID of the business to delete drivers
-   *         example: 1
    *       - in: path
    *         name: driverId
    *         schema:
@@ -819,16 +835,56 @@ class BusinessController extends Controller {
 
   private async deleteDriver(
     options: ApiHandlerOptions<{
-      params: DriverUpdateDeleteRequestParameters;
+      params: DriverRequestParameters;
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
     const deletionResult = await this.businessService.deleteDriver(
       options.params.driverId,
+      options.user.id,
     );
 
     return {
       status: HttpCode.OK,
       payload: deletionResult,
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/trucks:
+   *    get:
+   *      tags:
+   *       - business/trucks
+   *      summary: Find all trucks
+   *      description: Find all trucks
+   *      security:
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Successful find all trucks
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: array
+   *                items:
+   *                  $ref: '#/components/schemas/TruckResponse'
+   */
+
+  private async findAllTrucks(
+    options: ApiHandlerOptions<{
+      query: GetPaginatedPageQuery;
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const trucks = await this.businessService.findAllTrucksByOwnerId(
+      options.user.id,
+      options.query,
+    );
+
+    return {
+      status: HttpCode.OK,
+      payload: trucks,
     };
   }
 }

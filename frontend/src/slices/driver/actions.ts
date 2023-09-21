@@ -6,6 +6,9 @@ import { name as sliceName } from './driver.slice.js';
 import { type ShiftStatusValue } from './libs/types/types.js';
 
 const endShift = createAction(`${sliceName}/end-shift`);
+
+const shiftEnded = createAction(`${sliceName}/shift-ended`);
+
 const setStartShiftSuccess = createAction(
   `${sliceName}/set-start-shift-success`,
   (truck: TruckEntityT) => {
@@ -29,4 +32,10 @@ const setShiftStatus = createAction(
   },
 );
 
-export { endShift, setShiftStatus, setStartShiftSuccess, startShift };
+export {
+  endShift,
+  setShiftStatus,
+  setStartShiftSuccess,
+  shiftEnded,
+  startShift,
+};

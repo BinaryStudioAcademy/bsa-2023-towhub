@@ -145,7 +145,7 @@ class TruckController extends Controller {
       handler: (request) =>
         this.create(
           request as ApiHandlerOptions<{
-            body: Omit<TruckEntityT, 'id'>;
+            body: Omit<TruckEntityT, 'id' | 'status'>;
           }>,
         ),
     });
@@ -239,7 +239,7 @@ class TruckController extends Controller {
    */
   private async create(
     options: ApiHandlerOptions<{
-      body: Omit<TruckEntityT, 'id'>;
+      body: Omit<TruckEntityT, 'id' | 'status'>;
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
@@ -367,10 +367,7 @@ class TruckController extends Controller {
 
     return {
       status: HttpCode.OK,
-      payload: {
-        items: trucks,
-        count: trucks.length,
-      },
+      payload: trucks,
     };
   }
 
