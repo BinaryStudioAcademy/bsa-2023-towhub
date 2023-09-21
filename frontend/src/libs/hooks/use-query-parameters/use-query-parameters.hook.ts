@@ -9,6 +9,7 @@ type ReturnType = {
   getQueryParameters: (...keys: string[]) => string | Queries | null;
   setQueryParameters: (parameters: ParametersT) => void;
   removeQueryParameters: (...keys: string[]) => void;
+  searchParameters: URLSearchParams;
 };
 
 const useQueryParameters = (): ReturnType => {
@@ -58,7 +59,12 @@ const useQueryParameters = (): ReturnType => {
     [searchParameters, setSearchParameters],
   );
 
-  return { getQueryParameters, setQueryParameters, removeQueryParameters };
+  return {
+    getQueryParameters,
+    setQueryParameters,
+    removeQueryParameters,
+    searchParameters,
+  };
 };
 
 export { type Queries, useQueryParameters };

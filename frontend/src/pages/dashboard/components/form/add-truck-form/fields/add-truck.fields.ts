@@ -23,7 +23,9 @@ const convertToSelectOptions = (
   }));
 };
 
-const ADD_TRUCK_FIELDS: FormField<Omit<TruckEntity, 'id' | 'businessId'>>[] = [
+const ADD_TRUCK_FIELDS: FormField<
+  Omit<TruckEntity, 'id' | 'businessId' | 'createdAt'>
+>[] = [
   {
     id: FormLabel.MANUFACTURER,
     type: 'dropdown',
