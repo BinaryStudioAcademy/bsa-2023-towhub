@@ -12,6 +12,7 @@ import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
+  type OrderQueryParameters,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
@@ -219,18 +220,25 @@ class OrderService implements Omit<IService, 'find'> {
     return OrderEntity.initialize(orderExtended).toObject();
   }
 
-  public async findAllBusinessOrders(
-    user: UserEntityObjectWithGroupT,
-  ): Promise<OrderResponseDto[]> {
+  public async findAllBusinessOrders({
+    user,
+    query,
+  }: {
+    user: UserEntityObjectWithGroupT;
+    query: Pick<OrderQueryParameters, 'status'>;
+  }): Promise<OrderResponseDto[]> {
     const business = await this.businessService.findByOwnerId(user.id);
 
     if (!business) {
       throw new NotFoundError({});
     }
 
-    const usersOrders = await this.orderRepository.findAllBusinessOrders({
-      businessId: business.id,
-    });
+    const usersOrders = await this.orderRepository.findAllBusinessOrders(
+      {
+        businessId: business.id,
+      },
+      query,
+    );
 
     return usersOrders.map((it) => OrderEntity.initialize(it).toObject());
   }

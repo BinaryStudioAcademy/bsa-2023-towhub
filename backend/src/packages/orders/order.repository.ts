@@ -9,6 +9,7 @@ import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
   type OrderDatabaseModel,
   type OrderEntity as OrderEntityT,
+  type OrderQueryParameters,
 } from './libs/types/types.js';
 
 class OrderRepository implements Omit<IRepository, 'find'> {
@@ -102,7 +103,16 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       driverId: UserEntityT['id'];
       businessId: OrderEntityT['businessId'];
     }>,
+    query: Pick<OrderQueryParameters, 'status'>,
   ): Promise<OrderEntityT[]> {
+    const whereClause =
+      query.status === 'all'
+        ? combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search)
+        : combineFilters<DatabaseSchema['orders']>(this.ordersSchema, {
+            ...search,
+            ...query,
+          });
+
     return await this.db
       .driver()
       .select({
@@ -148,9 +158,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         this.trucksSchema,
         eq(this.trucksSchema.id, this.shiftsSchema.truckId),
       )
-      .where(
-        combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
-      );
+      .where(whereClause);
   }
 
   public async create(
