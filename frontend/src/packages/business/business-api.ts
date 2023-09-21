@@ -2,8 +2,12 @@ import { ApiPath, ContentType } from '~/libs/enums/enums.js';
 import { HttpApi } from '~/libs/packages/api/http-api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
-import { type EntityPagination, type TruckEntity } from '~/libs/types/types.js';
+import { type TruckEntity } from '~/libs/types/types.js';
 
+import {
+  type TruckAddRequestDto,
+  type TruckGetAllResponseDto,
+} from '../trucks/libs/types/types.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 
 type Constructor = {
@@ -17,9 +21,11 @@ class BusinessApi extends HttpApi {
     super({ path: ApiPath.BUSINESS, baseUrl, http, storage });
   }
 
-  public async getTrucksByBusinessId(): Promise<EntityPagination<TruckEntity>> {
+  public async findAllTrucksByBusinessId(
+    queryString = '',
+  ): Promise<TruckGetAllResponseDto> {
     const response = await this.load(
-      this.getFullEndpoint(BusinessApiPath.TRUCKS, {}),
+      this.getFullEndpoint(`${BusinessApiPath.TRUCKS}?${queryString}`, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,
@@ -27,7 +33,21 @@ class BusinessApi extends HttpApi {
       },
     );
 
-    return await response.json<EntityPagination<TruckEntity>>();
+    return await response.json<TruckGetAllResponseDto>();
+  }
+
+  public async addTruck(payload: TruckAddRequestDto): Promise<TruckEntity> {
+    const response = await this.load(
+      this.getFullEndpoint(BusinessApiPath.TRUCKS, {}),
+      {
+        method: 'POST',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<TruckEntity>();
   }
 }
 
