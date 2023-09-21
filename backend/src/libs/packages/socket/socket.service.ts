@@ -8,7 +8,7 @@ import { type ShiftService } from '~/packages/shifts/shift.service.js';
 import { type IConfig } from '../config/config.js';
 import {
   ClientSocketEvent,
-  RoomPrefixes,
+  RoomPrefix,
   ServerSocketEvent,
   SocketRoom,
 } from './libs/enums/enums.js';
@@ -80,9 +80,9 @@ class SocketService {
         }: Parameters<
           ClientToServerEvents[typeof ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES]
         >[0]) => {
-          await socket.join(`${RoomPrefixes.ORDER}${orderId}`);
+          await socket.join(`${RoomPrefix.ORDER}${orderId}`);
           logger.info(
-            `${socket.id} connected to ${RoomPrefixes.ORDER}${orderId}`,
+            `${socket.id} connected to ${RoomPrefix.ORDER}${orderId}`,
           );
         },
       );
@@ -93,8 +93,8 @@ class SocketService {
         }: Parameters<
           ClientToServerEvents[typeof ClientSocketEvent.UNSUBSCRIBE_ORDER_UPDATES]
         >[0]) => {
-          await socket.leave(`${RoomPrefixes.ORDER}${orderId}`);
-          logger.info(`${socket.id} left ${RoomPrefixes.ORDER}${orderId}`);
+          await socket.leave(`${RoomPrefix.ORDER}${orderId}`);
+          logger.info(`${socket.id} left ${RoomPrefix.ORDER}${orderId}`);
         },
       );
       socket.on(
@@ -104,9 +104,9 @@ class SocketService {
         }: Parameters<
           ClientToServerEvents[typeof ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES]
         >[0]) => {
-          await socket.join(`${RoomPrefixes.TRUCK}${truckId}`);
+          await socket.join(`${RoomPrefix.TRUCK}${truckId}`);
           logger.info(
-            `${socket.id} connected to ${RoomPrefixes.TRUCK}${truckId}`,
+            `${socket.id} connected to ${RoomPrefix.TRUCK}${truckId}`,
           );
         },
       );
@@ -117,8 +117,8 @@ class SocketService {
         }: Parameters<
           ClientToServerEvents[typeof ClientSocketEvent.UNSUBSCRIBE_TRUCK_UPDATES]
         >[0]) => {
-          await socket.leave(`${RoomPrefixes.TRUCK}${truckId}`);
-          logger.info(`${socket.id} left ${RoomPrefixes.TRUCK}${truckId}`);
+          await socket.leave(`${RoomPrefix.TRUCK}${truckId}`);
+          logger.info(`${socket.id} left ${RoomPrefix.TRUCK}${truckId}`);
         },
       );
     });
@@ -138,7 +138,7 @@ class SocketService {
     order: OrderResponseDto,
   ): void {
     this.io
-      ?.to(`${RoomPrefixes.ORDER}${id}`)
+      ?.to(`${RoomPrefix.ORDER}${id}`)
       .emit(ServerSocketEvent.ORDER_UPDATED, order);
   }
 
@@ -149,7 +149,7 @@ class SocketService {
     >[0],
   ): void {
     this.io
-      ?.to(`${RoomPrefixes.TRUCK}${truckId}`)
+      ?.to(`${RoomPrefix.TRUCK}${truckId}`)
       .emit(ServerSocketEvent.TRUCK_LOCATION_UPDATED, truckLocation);
   }
 }

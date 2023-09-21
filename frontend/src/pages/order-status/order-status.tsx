@@ -1,6 +1,7 @@
-import { Button, OrderCard } from '~/libs/components/components.js';
+import { Button, OrderCard, Spinner } from '~/libs/components/components.js';
 import { OrderStatus } from '~/libs/components/orders-status/order-status.js';
 import { AppRoute } from '~/libs/enums/app-route.enum.js';
+import { DataStatus } from '~/libs/enums/data-status.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
@@ -15,13 +16,14 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { jsonToLatLngLiteral } from '~/slices/orders/libs/helpers/json-to-lat-lng-literal.helper.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
-import { selectOrder } from '~/slices/orders/selectors.js';
+import { selectDataStatus, selectOrder } from '~/slices/orders/selectors.js';
 import {
   selectChosenTruck,
   selectTruckLocation,
 } from '~/slices/trucks/selectors.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
+import { NotFound } from '../pages.js';
 import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
 import styles from './styles.module.scss';
 
@@ -30,13 +32,17 @@ const OrderStatusPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [order] = useAppSelector(selectOrder);
+  const dataStatus = useAppSelector(selectDataStatus);
+
   const status = order?.status;
   const pendingScreen = status === OrderStatusEnum.PENDING;
   const cancelScreen = status === OrderStatusEnum.CANCELED;
   const confirmScreen = status === OrderStatusEnum.CONFIRMED;
   const onPointScreen = status === OrderStatusEnum.PICKING_UP;
   const doneScreen = status === OrderStatusEnum.DONE;
+
   const truckId = useAppSelector(selectChosenTruck)?.id;
+
   useBlocker(
     useCallback(() => {
       if (truckId) {
@@ -76,6 +82,20 @@ const OrderStatusPage: React.FC = () => {
   const handlePayClick = useCallback(() => {
     //TODO
   }, []);
+
+  const mapReference = useRef<HTMLDivElement>(null);
+
+  useAppMap({
+    center: truckLocation,
+    destination: order ? jsonToLatLngLiteral(order.startPoint) : null,
+    className: styles.map,
+    mapReference: mapReference,
+  });
+
+  const MapElement = useCallback(
+    () => <div ref={mapReference} id="map" className={styles.map} />,
+    [],
+  );
 
   const Card = (): JSX.Element | null => {
     if (!cancelScreen && !doneScreen) {
@@ -121,19 +141,14 @@ const OrderStatusPage: React.FC = () => {
       )}
     </section>
   );
-  const mapReference = useRef<HTMLDivElement>(null);
 
-  useAppMap({
-    center: truckLocation,
-    destination: order ? jsonToLatLngLiteral(order.startPoint) : null,
-    className: styles.map,
-    mapReference: mapReference,
-  });
+  if (dataStatus === DataStatus.PENDING || dataStatus === DataStatus.IDLE) {
+    return <Spinner />;
+  }
 
-  const MapElement = useCallback(
-    () => <div ref={mapReference} id="map" className={styles.map} />,
-    [],
-  );
+  if (dataStatus === DataStatus.REJECTED) {
+    return <NotFound />;
+  }
 
   return (
     <div className={styles.container}>

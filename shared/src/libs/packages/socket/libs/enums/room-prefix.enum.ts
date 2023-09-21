@@ -1,6 +1,6 @@
-const RoomPrefixes = {
+const RoomPrefix = {
   ORDER: 'order-',
   TRUCK: 'truck-',
 } as const;
 
-export { RoomPrefixes };
+export { RoomPrefix };

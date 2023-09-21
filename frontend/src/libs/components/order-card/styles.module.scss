@@ -57,6 +57,15 @@ $blue-shallow: #becee8;
   border-radius: 55px;
 }
 
+.noAvatar {
+  $size: 11vmin;
+
+  width: $size;
+  aspect-ratio: 1 / 1;
+  background-color: $body-background;
+  border-radius: 55px;
+}
+
 .headerInfoContainer {
   display: grid;
   grid-template-rows: 1fr 1fr;

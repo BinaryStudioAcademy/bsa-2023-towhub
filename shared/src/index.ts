@@ -33,7 +33,7 @@ export {
   type ClientToServerEvents,
   type ServerToClientEvents,
   ClientSocketEvent,
-  RoomPrefixes,
+  RoomPrefix,
   ServerSocketEvent,
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';

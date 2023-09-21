@@ -1,6 +1,6 @@
 export {
   ClientSocketEvent,
-  RoomPrefixes,
+  RoomPrefix,
   ServerSocketEvent,
 } from './libs/enums/enums.js';
 export {

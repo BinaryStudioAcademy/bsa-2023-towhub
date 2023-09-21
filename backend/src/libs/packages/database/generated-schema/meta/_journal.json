@@ -92,13 +92,6 @@
       "when": 1694887649378,
       "tag": "0012_add_businessId_in_trucks",
       "breakpoints": true
-    },
-    {
-      "idx": 13,
-      "version": "5",
-      "when": 1695026135362,
-      "tag": "0013_add_order_status_picking_up",
-      "breakpoints": true
     }
   ]
 }

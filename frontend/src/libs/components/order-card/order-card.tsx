@@ -21,17 +21,21 @@ const OrderCard: React.FC<Properties> = ({
   isDriverShown = true,
 }: Properties) => {
   const [order] = useAppSelector(selectOrder);
-  const routeData = useAppSelector(selectOrderData);
-  const startLocation = routeData.origin ?? '';
-  const endLocation = routeData.destination ?? '';
-  const distanceLeft = routeData.distanceAndDuration?.distance.text ?? '';
-  const timespanLeft = routeData.distanceAndDuration?.duration.text ?? '';
-  const licensePlate = order?.shift.truck?.licensePlateNumber ?? '';
-  const price = order?.price;
-  const firstName = order?.shift.driver?.firstName ?? '';
-  const lastName = order?.shift.driver?.lastName ?? '';
-  const profileURL =
-    'https://images.freeimages.com/images/large-previews/962/avatar-man-with-mustages-1632966.jpg?fmt=webp&w=350';
+  const {
+    origin: startLocation = '',
+    destination: endLocation = '',
+    distanceAndDuration,
+  } = useAppSelector(selectOrderData);
+
+  const { distance, duration } = distanceAndDuration ?? {};
+  const { text: distanceLeft = '' } = distance ?? {};
+  const { text: timespanLeft = '' } = duration ?? {};
+  const { shift, price } = order ?? {};
+  const { truck, driver } = shift ?? {};
+  const { licensePlateNumber: licensePlate = '' } = truck ?? {};
+  const { firstName: firstName = '', lastName: lastName = '' } = driver ?? {};
+
+  const profileURL = null;
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -47,7 +51,18 @@ const OrderCard: React.FC<Properties> = ({
   const CardHeader = (): JSX.Element => (
     <div className={styles.header}>
       <div className={styles.headerImageContainer}>
-        <img className={styles.profileImage} src={profileURL} alt="header" />
+        {
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          profileURL ? (
+            <img
+              className={styles.profileImage}
+              src={profileURL}
+              alt="header"
+            />
+          ) : (
+            <div className={styles.noAvatar}></div>
+          )
+        }
       </div>
       <div className={styles.headerInfoContainer}>
         <div className={styles.headerTitleContainer}>

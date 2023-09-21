@@ -3,6 +3,7 @@ import { useAppSelector } from '~/libs/hooks/hooks.js';
 import { selectOrder } from '~/slices/orders/selectors.js';
 import { selectTruckArrivalTime } from '~/slices/trucks/selectors.js';
 
+import { Spinner } from '../components.js';
 import {
   OrderStatus as OrderStatusEnum,
   STATUS_MESSAGES,
@@ -15,11 +16,13 @@ type Properties = {
 };
 
 const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
-  const time = useAppSelector(selectTruckArrivalTime);
+  const arrivalTime = useAppSelector(selectTruckArrivalTime);
   const [order] = useAppSelector(selectOrder);
-  const statusMessageMapper = (status: OrderStatusValues): string => {
+  const getStatusMessageMapper = (status: OrderStatusValues): string => {
     if (status === OrderStatusEnum.CONFIRMED) {
-      return `${STATUS_MESSAGES[status]} ${time ? time.text : '...'}`;
+      return `${STATUS_MESSAGES[status]} ${
+        arrivalTime ? arrivalTime.text : '...'
+      }`;
     }
 
     return STATUS_MESSAGES[status];
@@ -36,10 +39,10 @@ const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
       )}
     >
       <div className={styles.square}></div>
-      <span className={styles.text}>{statusMessageMapper(status)}</span>
+      <span className={styles.text}>{getStatusMessageMapper(status)}</span>
     </div>
   ) : (
-    <div></div>
+    <Spinner />
   );
 };
 
