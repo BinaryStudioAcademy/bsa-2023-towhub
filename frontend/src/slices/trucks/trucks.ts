@@ -2,6 +2,7 @@ import {
   addTruck,
   calculateArrivalTime,
   getTrucksForBusiness,
+  setTrucks,
   subscribeTruckUpdates,
   unsubscribeTruckUpdates,
   updateTruckLocationFromSocket,
@@ -16,6 +17,7 @@ const allActions = {
   updateTruckLocationFromSocket,
   calculateArrivalTime,
   getTrucksForBusiness,
+  setTrucks,
 };
 
 export { allActions as actions };

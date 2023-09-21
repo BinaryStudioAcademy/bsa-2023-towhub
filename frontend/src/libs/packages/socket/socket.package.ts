@@ -10,10 +10,6 @@ import {
 class SocketService {
   private io!: Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
 
-  private connectionEstablished!: (
-    value: boolean | PromiseLike<boolean>,
-  ) => void;
-
   public connect(): void {
     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
       config.ENV.API.SERVER_URL,

@@ -19,6 +19,8 @@ type ClientToServerEvents = {
   [ClientSocketEvent.UNSUBSCRIBE_TRUCK_UPDATES]: (payload: {
     truckId: string;
   }) => void;
+  [ClientSocketEvent.JOIN_HOME_ROOM]: () => void;
+  [ClientSocketEvent.LEAVE_HOME_ROOM]: () => void;
 };
 
 export { type ClientToServerEvents };

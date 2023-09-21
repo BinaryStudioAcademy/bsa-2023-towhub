@@ -4,4 +4,4 @@ const socket = new SocketService();
 socket.connect();
 
 export { socket };
-export { ClientSocketEvent } from './libs/enums/enums.js';
+export { ClientSocketEvent, ServerSocketEvent } from './libs/enums/enums.js';

@@ -1,3 +1,4 @@
+export { SocketRoom } from './socket-room.js';
 export {
   ClientSocketEvent,
   RoomPrefixes,

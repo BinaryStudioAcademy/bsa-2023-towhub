@@ -1,12 +1,17 @@
-import { type RootState, type TruckEntity } from '~/libs/types/types.js';
+import { type RootState } from '~/libs/types/types.js';
 
+import { name as TruckSliceName } from './trucks.slice.js';
 import { type TruckArrivalTime, type TruckLocation } from './types/types.js';
+
+const selectTrucks = (
+  state: RootState,
+): RootState[typeof TruckSliceName]['trucks'] => state[TruckSliceName].trucks;
 
 const selectChosenTruck = (
   state: RootState,
-): (TruckEntity & { driverId: number }) | null => state.trucks.chosenTruck;
-
-export { selectChosenTruck };
+): RootState[typeof TruckSliceName]['chosenTruck'] => {
+  return state[TruckSliceName].chosenTruck;
+};
 
 const selectTruckLocation = (state: RootState): TruckLocation | null =>
   state.trucks.truckLocation;
@@ -14,4 +19,9 @@ const selectTruckLocation = (state: RootState): TruckLocation | null =>
 const selectTruckArrivalTime = (state: RootState): TruckArrivalTime | null =>
   state.trucks.truckArrivalTime;
 
-export { selectTruckArrivalTime, selectTruckLocation };
+export {
+  selectChosenTruck,
+  selectTruckArrivalTime,
+  selectTruckLocation,
+  selectTrucks,
+};

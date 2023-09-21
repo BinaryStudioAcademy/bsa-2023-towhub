@@ -92,10 +92,16 @@ const getTrucksForBusiness = createAsyncThunk<
   }
 });
 
+const setTrucks = createAsyncThunk<TruckEntity[], TruckEntity[]>(
+  `${sliceName}/set-trucks`,
+  (payload) => payload,
+);
+
 export {
   addTruck,
   calculateArrivalTime,
   getTrucksForBusiness,
+  setTrucks,
   subscribeTruckUpdates,
   unsubscribeTruckUpdates,
   updateTruckLocationFromSocket,
