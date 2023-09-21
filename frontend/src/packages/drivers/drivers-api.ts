@@ -37,7 +37,7 @@ class DriverApi extends HttpApi {
 
   public async addDriver({
     payload,
-  }: Omit<DriverAddPayload, 'reference'>): Promise<DriverAddResponseWithGroup> {
+  }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
     const data = await this.load(
       this.getFullEndpoint(`${ApiPath.DRIVERS}`, {}),
       {

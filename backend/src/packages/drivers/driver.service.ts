@@ -118,7 +118,9 @@ class DriverService implements IService {
     payload,
     businessId,
     reference,
-  }: DriverAddPayloadWithBusinessId): Promise<DriverAddResponseWithGroup> {
+  }: DriverAddPayloadWithBusinessId & {
+    reference: string;
+  }): Promise<DriverAddResponseWithGroup> {
     const { email, lastName, firstName, phone, driverLicenseNumber, truckIds } =
       payload;
 
@@ -193,11 +195,12 @@ class DriverService implements IService {
     const UPPER_CASE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const LOWER_CASE_CHARS = 'abcdefghijklmnopqrstuvwxyz';
     const NUMBER_CHARS = '0123456789';
+    const HALF = 0.5;
 
     const passwordLength = getPasswordLength(MIN_LENGTH, MAX_LENGTH);
 
     const charSets = [LOWER_CASE_CHARS, UPPER_CASE_CHARS, NUMBER_CHARS].sort(
-      () => Math.random() - 0.5,
+      () => Math.random() - HALF,
     );
     let password = '';
 
