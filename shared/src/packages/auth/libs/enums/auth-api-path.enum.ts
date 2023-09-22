@@ -4,6 +4,7 @@ const AuthApiPath = {
   SIGN_UP_BUSINESS: '/sign-up/business',
   SIGN_IN: '/sign-in',
   CURRENT: '/current',
+  LOGOUT: '/logout',
 } as const;
 
 export { AuthApiPath };
