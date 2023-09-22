@@ -10,8 +10,9 @@ import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
-  type DriverCreateUpdateRequestDto,
+  type DriverCreateRequestDto,
   type DriverRequestParameters,
+  type DriverUpdateRequestDto,
   driverCreateRequestBody,
   driverParameters,
   driverUpdateRequestBody,
@@ -330,7 +331,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.createDriver(
           options as ApiHandlerOptions<{
-            body: Omit<DriverCreateUpdateRequestDto, 'password'>;
+            body: DriverCreateRequestDto;
             user: UserEntityObjectWithGroupT;
             hostname: string;
           }>,
@@ -348,7 +349,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.updateDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateUpdateRequestDto;
+            body: DriverUpdateRequestDto;
             params: DriverRequestParameters;
             user: UserEntityObjectWithGroupT;
           }>,
@@ -683,7 +684,7 @@ class BusinessController extends Controller {
 
   private async createDriver(
     options: ApiHandlerOptions<{
-      body: Omit<DriverCreateUpdateRequestDto, 'password'>;
+      body: DriverCreateRequestDto;
       user: UserEntityObjectWithGroupT;
       hostname: string;
     }>,
@@ -757,7 +758,7 @@ class BusinessController extends Controller {
 
   private async updateDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateUpdateRequestDto;
+      body: DriverUpdateRequestDto;
       params: DriverRequestParameters;
       user: UserEntityObjectWithGroupT;
     }>,

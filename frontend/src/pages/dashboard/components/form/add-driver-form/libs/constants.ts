@@ -1,9 +1,6 @@
-import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
+import { type DriverCreateRequestDto } from '~/packages/drivers/drivers.js';
 
-const DEFAULT_ADD_DRIVER_PAYLOAD: Omit<
-  DriverCreateUpdateRequestDto,
-  'truckIds' | 'password'
-> = {
+const DEFAULT_ADD_DRIVER_PAYLOAD: Omit<DriverCreateRequestDto, 'truckIds'> = {
   email: '',
   phone: '+380',
   firstName: '',

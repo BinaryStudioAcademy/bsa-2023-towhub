@@ -22,7 +22,7 @@ const getDriversPage = createAsyncThunk<
 
 const addDriver = createAsyncThunk<
   DriverAddResponseWithGroup,
-  Omit<DriverAddPayload, 'reference'> & { queryString?: string },
+  DriverAddPayload & { queryString?: string },
   AsyncThunkConfig
 >(
   ACTIONS_TYPES.ADD_DRIVER,

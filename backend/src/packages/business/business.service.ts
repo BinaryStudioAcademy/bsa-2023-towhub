@@ -7,9 +7,10 @@ import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import {
   type DriverAddResponseWithGroup,
-  type DriverCreateUpdateRequestDto,
+  type DriverCreateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
+  type DriverUpdateRequestDto,
 } from '../drivers/drivers.js';
 import { type ShiftEntity } from '../shifts/shift.js';
 import {
@@ -142,7 +143,7 @@ class BusinessService implements IService {
   }
 
   public async createDriver(
-    payload: Omit<DriverCreateUpdateRequestDto, 'password'>,
+    payload: DriverCreateRequestDto,
     ownerId: number,
     reference: string,
   ): Promise<DriverAddResponseWithGroup> {
@@ -163,7 +164,7 @@ class BusinessService implements IService {
   }
 
   public async updateDriver(
-    payload: DriverCreateUpdateRequestDto,
+    payload: DriverUpdateRequestDto,
     driverId: number,
     ownerId: number,
   ): Promise<DriverCreateUpdateResponseDto> {

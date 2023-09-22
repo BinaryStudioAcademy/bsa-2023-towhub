@@ -1,10 +1,8 @@
 import { FormLabel, FormName } from '~/libs/enums/enums.js';
 import { type FormField } from '~/libs/types/types.js';
-import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
+import { type DriverCreateRequestDto } from '~/packages/drivers/drivers.js';
 
-const addDriverFields: FormField<
-  Omit<DriverCreateUpdateRequestDto, 'password'>
->[] = [
+const addDriverFields: FormField<DriverCreateRequestDto>[] = [
   {
     id: FormLabel.FIRST_NAME,
     label: FormLabel.FIRST_NAME,
