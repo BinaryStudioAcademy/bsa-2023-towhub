@@ -60,10 +60,10 @@ class Store {
       filesApi,
       notification,
       truckApi,
+      businessApi,
       driverApi,
       ordersApi,
       localStorage: LocalStorage,
-      businessApi,
     };
   }
 }

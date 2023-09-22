@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import {
   type AsyncThunkConfig,
-  type PaginationParameters,
+  type SortMethodValue,
 } from '~/libs/types/types.js';
 
 import { useQueryParameters } from '../hooks.js';
@@ -11,14 +11,11 @@ import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
 
 type Properties<T, K> = {
-  tableFetchCall: AsyncThunk<
-    T,
-    (K & PaginationParameters) | PaginationParameters,
-    AsyncThunkConfig
-  >;
+  tableFetchCall: AsyncThunk<T, string | undefined, AsyncThunkConfig>;
   payload?: K;
   initialPageSize?: number | null;
   initialPageIndex?: number | null;
+  sort?: SortMethodValue | null;
 };
 
 type ReturnValue = {
@@ -29,11 +26,12 @@ type ReturnValue = {
   updatePage: () => void;
 };
 
-const useAppTable = <T, K = PaginationParameters>({
+const useAppTable = <T, K>({
   tableFetchCall,
   payload,
   initialPageSize,
   initialPageIndex,
+  sort,
 }: Properties<T, K>): ReturnValue => {
   const [pageSize, changePageSize] = useState(
     initialPageSize ?? DEFAULT_PAGE_SIZE,
@@ -41,20 +39,31 @@ const useAppTable = <T, K = PaginationParameters>({
   const [pageIndex, changePageIndex] = useState(
     initialPageIndex ?? DEFAULT_PAGE_INDEX,
   );
-  const { setQueryParameters } = useQueryParameters();
+
+  const { setQueryParameters, searchParameters } = useQueryParameters();
   const dispatch = useAppDispatch();
 
   const updatePage = useCallback(() => {
-    const actionPayload = { ...payload, page: pageIndex, size: pageSize };
-    setQueryParameters(actionPayload);
-    void dispatch(tableFetchCall(actionPayload));
+    const actionPayload = {
+      ...payload,
+      page: pageIndex,
+      size: pageSize,
+    };
+
+    const queryParameters = sort ? { ...actionPayload, sort } : actionPayload;
+
+    setQueryParameters(queryParameters);
+
+    void dispatch(tableFetchCall(searchParameters.toString()));
   }, [
     dispatch,
     pageIndex,
     pageSize,
     payload,
-    tableFetchCall,
+    searchParameters,
     setQueryParameters,
+    sort,
+    tableFetchCall,
   ]);
 
   useEffect(() => {

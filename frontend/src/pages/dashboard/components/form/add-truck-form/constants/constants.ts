@@ -2,7 +2,7 @@ import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 
 const DEFAULT_TRUCK_PAYLOAD: Omit<
   TruckEntity,
-  'id' | 'manufacturer' | 'towType' | 'businessId'
+  'id' | 'manufacturer' | 'towType' | 'businessId' | 'createdAt'
 > = {
   licensePlateNumber: '',
   capacity: 0,
