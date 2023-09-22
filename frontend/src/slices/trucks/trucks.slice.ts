@@ -1,19 +1,24 @@
 import { type PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
 import { type ValueOf } from '~/libs/types/types.js';
-import { type TruckEntityT } from '~/packages/trucks/libs/types/types.js';
+import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
 
-import { addTruck, getTrucksForBusiness } from './actions.js';
+import { addTruck, findAllTrucksForBusiness, setTrucks } from './actions.js';
 
 type State = {
-  trucks: TruckEntityT[];
-  chosenTruck: (TruckEntityT & { driverId: number }) | null;
+  trucks: TruckGetItemResponseDto[];
+  chosenTruck: TruckGetItemResponseDto | null;
   dataStatus: ValueOf<typeof DataStatus>;
+  total: number;
+  error: HttpError | null;
 };
 
 const initialState: State = {
   trucks: [],
+  total: 0,
+  error: null,
   chosenTruck: null,
   dataStatus: DataStatus.IDLE,
 };
@@ -22,33 +27,35 @@ const { reducer, actions, name } = createSlice({
   initialState,
   name: 'trucks',
   reducers: {
-    setChosenTruck: (
-      state,
-      action: PayloadAction<TruckEntityT & { driverId: number }>,
-    ) => {
+    setChosenTruck: (state, action: PayloadAction<TruckGetItemResponseDto>) => {
       state.chosenTruck = action.payload;
     },
   },
   extraReducers(builder) {
     builder
       .addCase(addTruck.fulfilled, (state, action) => {
-        state.trucks.push(action.payload);
+        state.trucks.unshift(action.payload);
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(getTrucksForBusiness.fulfilled, (state, action) => {
+      .addCase(setTrucks.fulfilled, (state, action) => {
+        state.trucks = action.payload;
+      })
+      .addCase(findAllTrucksForBusiness.fulfilled, (state, action) => {
         state.trucks = action.payload.items;
+        state.total = action.payload.total;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addMatcher(
-        isAnyOf(getTrucksForBusiness.pending, addTruck.pending),
+        isAnyOf(findAllTrucksForBusiness.pending, addTruck.pending),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
         },
       )
       .addMatcher(
-        isAnyOf(getTrucksForBusiness.rejected, addTruck.rejected),
-        (state) => {
+        isAnyOf(addTruck.rejected, findAllTrucksForBusiness.rejected),
+        (state, action) => {
           state.dataStatus = DataStatus.REJECTED;
+          state.error = action.payload as HttpError | null;
         },
       );
   },

@@ -15,3 +15,12 @@ const truckService = new TruckService(truckRepository);
 const truckController = new TruckController(logger, truckService);
 
 export { truckController, truckService };
+export {
+  type TruckDatabaseModel,
+  type TruckEntityT,
+} from './libs/types/types.js';
+export {
+  truckCreateRequestBody,
+  truckGetParameters,
+  truckUpdateRequestBody,
+} from './libs/validation-schemas/validation-schemas.js';

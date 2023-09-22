@@ -4,7 +4,7 @@ import {
 } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
-import { type EntityPagination } from '~/libs/types/types.js';
+import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { type DriverService } from '../drivers/driver.service.js';
@@ -15,7 +15,11 @@ import {
   type DriverGetAllResponseDto,
 } from '../drivers/drivers.js';
 import { type ShiftEntity } from '../shifts/shift.js';
-import { type TruckEntityT } from '../trucks/libs/types/types.js';
+import {
+  type TruckAddRequestDto,
+  type TruckEntityT,
+  type TruckGetAllResponseDto,
+} from '../trucks/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import {
   type UserEntityObjectWithGroupT,
@@ -244,6 +248,41 @@ class BusinessService implements IService {
     return await this.driverService.delete(driverId);
   }
 
+  public async findAllTrucksByBusinessId(
+    userId: number,
+    query: PaginationWithSortingParameters,
+  ): Promise<TruckGetAllResponseDto> {
+    const business = await this.findByOwnerId(userId);
+
+    if (!business) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.truckService.findAllByBusinessId(business.id, query);
+  }
+
+  public async createTruck(
+    payload: TruckAddRequestDto,
+    userId: number,
+  ): Promise<TruckEntityT> {
+    const business = await this.findByOwnerId(userId);
+
+    if (!business) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.truckService.create({
+      ...payload,
+      businessId: business.id,
+    });
+  }
+
   public checkisDriverBelongedToBusiness({
     userId,
     driverId,
@@ -255,22 +294,6 @@ class BusinessService implements IService {
       userId,
       driverId,
     );
-  }
-
-  public async findAllTrucksByOwnerId(
-    userId: number,
-    query: GetPaginatedPageQuery,
-  ): Promise<EntityPagination<TruckEntityT>> {
-    const business = await this.findByOwnerId(userId);
-
-    if (!business) {
-      throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
-      });
-    }
-
-    return await this.truckService.findAllByBusinessId(business.id, query);
   }
 }
 
