@@ -5,4 +5,5 @@ export {
   HttpCode,
   HttpMessage,
   ServerErrorType,
+  SortMethod,
 } from 'shared/build/index.js';

@@ -6,6 +6,7 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
@@ -16,6 +17,8 @@ import {
   driverCreateUpdateRequestBody,
   driverParameters,
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
+import { type TruckAddRequestDto } from '../trucks/libs/types/types.js';
+import { truckCreateRequestBody } from '../trucks/trucks.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
@@ -25,6 +28,7 @@ import {
   type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
   type BusinessUpdateRequestParameters,
+  type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 import {
   businessAddRequestBody,
@@ -32,6 +36,7 @@ import {
   businessGetParameters,
   businessUpdateParameters,
   businessUpdateRequestBody,
+  commonGetPageQuery,
 } from './libs/validation-schemas/validation-schemas.js';
 
 /**
@@ -354,9 +359,13 @@ class BusinessController extends Controller {
       path: BusinessApiPath.DRIVERS,
       method: 'GET',
       authStrategy: defaultStrategies,
+      validation: {
+        query: commonGetPageQuery,
+      },
       handler: (options) =>
         this.findAllDrivers(
           options as ApiHandlerOptions<{
+            query: GetPaginatedPageQuery;
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -373,6 +382,36 @@ class BusinessController extends Controller {
         this.deleteDriver(
           options as ApiHandlerOptions<{
             params: DriverRequestParameters;
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.TRUCKS,
+      method: 'GET',
+      authStrategy: defaultStrategies,
+
+      handler: (options) =>
+        this.findAllTrucks(
+          options as ApiHandlerOptions<{
+            query: PaginationWithSortingParameters;
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: BusinessApiPath.TRUCKS,
+      method: 'POST',
+      authStrategy: defaultStrategies,
+      validation: {
+        body: truckCreateRequestBody,
+      },
+      handler: (request) =>
+        this.createTruck(
+          request as ApiHandlerOptions<{
+            body: TruckAddRequestDto;
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -602,6 +641,7 @@ class BusinessController extends Controller {
    *               - lastName
    *               - driverLicenseNumber
    *               - password
+   *               - driverTrucks
    *              properties:
    *                phone:
    *                  $ref: '#/components/schemas/Driver/properties/phone'
@@ -618,6 +658,10 @@ class BusinessController extends Controller {
    *                  minimum: 6
    *                  maximum: 20
    *                  pattern: ^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$
+   *                driverTrucks:
+   *                  type: array
+   *                  items:
+   *                    type: number
    *      security:
    *        - bearerAuth: []
    *      responses:
@@ -744,18 +788,27 @@ class BusinessController extends Controller {
    *          content:
    *            application/json:
    *              schema:
-   *                type: array
-   *                items:
-   *                  $ref: '#/components/schemas/Driver'
+   *                type: object
+   *                properties:
+   *                    items:
+   *                      type: array
+   *                      items:
+   *                        $ref: '#/components/schemas/Driver'
+   *                    total:
+   *                      type: string
+   *                      example: 1
+   *
    */
 
   private async findAllDrivers(
     options: ApiHandlerOptions<{
+      query: GetPaginatedPageQuery;
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
     const drivers = await this.businessService.findAllDriversByBusinessId(
       options.user.id,
+      options.query,
     );
 
     return {
@@ -813,6 +866,87 @@ class BusinessController extends Controller {
     return {
       status: HttpCode.OK,
       payload: deletionResult,
+    };
+  }
+
+  /**
+   * @swagger
+   * /business/trucks:
+   *    get:
+   *      tags:
+   *       - business/trucks
+   *      summary: Find all trucks
+   *      description: Find all trucks
+   *      security:
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Successful find all trucks
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: array
+   *                items:
+   *                  $ref: '#/components/schemas/TruckResponse'
+   */
+
+  private async findAllTrucks(
+    options: ApiHandlerOptions<{
+      query: PaginationWithSortingParameters;
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const trucks = await this.businessService.findAllTrucksByBusinessId(
+      options.user.id,
+      options.query,
+    );
+
+    return {
+      status: HttpCode.OK,
+      payload: trucks,
+    };
+  }
+
+  /**
+   * @swagger
+   * /trucks:
+   *   post:
+   *     summary: Create a new truck
+   *     tags:
+   *       - business/trucks
+   *     requestBody:
+   *       description: Truck data to be added
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Truck'
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       '201':
+   *         description: Truck created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/TruckResponse'
+   *       '400':
+   *         description: Bad request
+   *
+   */
+
+  private async createTruck(
+    options: ApiHandlerOptions<{
+      body: TruckAddRequestDto;
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.CREATED,
+      payload: await this.businessService.createTruck(
+        options.body,
+        options.user.id,
+      ),
     };
   }
 }

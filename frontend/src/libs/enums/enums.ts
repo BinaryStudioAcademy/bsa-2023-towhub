@@ -14,4 +14,5 @@ export {
   ContentType,
   HttpMessage,
   ServerErrorType,
+  SortMethod,
 } from 'shared/build/index.js';

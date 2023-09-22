@@ -1,0 +1,19 @@
+@import "src/assets/css/vars.scss";
+
+.title {
+  margin-top: 50px;
+  color: $grey;
+}
+
+.list {
+  flex-grow: 1;
+  margin-top: 6px;
+  padding-right: 10px;
+  overflow-y: auto;
+}
+
+.card {
+  &:not(:last-child) {
+    margin-bottom: 16px;
+  }
+}
