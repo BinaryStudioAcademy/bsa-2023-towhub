@@ -29,18 +29,29 @@ $menu-offset: 8px;
 
   .btn {
     justify-content: start;
+    width: 100%;
     background-color: $blue-dark;
     border-radius: 0;
 
-    &:hover {
+    &:hover,
+    &:active,
+    &:focus {
       background-color: $blue;
     }
   }
 
   .menuIcon {
     width: 100%;
+    padding: 10px 20px;
     color: $white;
     font-size: 24px;
+    background-color: $blue-dark;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: $blue;
+    }
   }
 }
 
@@ -52,23 +63,17 @@ $menu-offset: 8px;
     .btn {
       display: none;
     }
-
-    li {
-      padding: 10px 20px;
-
-      &:hover {
-        background-color: $blue;
-      }
-    }
   }
 }
 
 @media (width > $screen-size-lg) {
-  .btn {
-    display: inline-flex;
-  }
+  .menu {
+    .btn {
+      display: inline-flex;
+    }
 
-  .menuIcon {
-    display: none;
+    .menuIcon {
+      display: none;
+    }
   }
 }
