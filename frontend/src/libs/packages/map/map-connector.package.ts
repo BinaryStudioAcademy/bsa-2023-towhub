@@ -11,15 +11,19 @@ type Libraries = {
   directionsRenderer: google.maps.DirectionsRenderer;
 };
 
-interface IMapLibraries {
+interface IMapConnector {
   getMapService: (parameters: MapServiceParameters) => MapService;
 }
 
-class MapLibraries implements IMapLibraries {
+class MapConnector implements IMapConnector {
   private static libraries: Libraries | undefined;
 
+  private static map: google.maps.Map | null = null;
+
+  private static markers: google.maps.Marker[] = [];
+
   public static async getInstance(): Promise<Libraries> {
-    if (!MapLibraries.libraries) {
+    if (!MapConnector.libraries) {
       const apiKey = config.ENV.API.GOOGLE_MAPS_API_KEY;
       const loader = new Loader({
         apiKey,
@@ -28,7 +32,7 @@ class MapLibraries implements IMapLibraries {
         loader.importLibrary('geocoding'),
         loader.importLibrary('routes'),
       ]);
-      MapLibraries.libraries = {
+      MapConnector.libraries = {
         geocoding: new GeocodingLibrary.Geocoder(),
         routes: new RoutesLibrary.DistanceMatrixService(),
         directionsService: new RoutesLibrary.DirectionsService(),
@@ -38,15 +42,22 @@ class MapLibraries implements IMapLibraries {
       };
     }
 
-    return MapLibraries.libraries;
+    return MapConnector.libraries;
   }
 
   public getMapService(parameters: MapServiceParameters): MapService {
+    const setMap = (map: google.maps.Map): void => {
+      MapConnector.map = map;
+    };
+
     return new MapService({
       ...parameters,
-      extraLibraries: MapLibraries.libraries,
+      map: MapConnector.map,
+      markers: MapConnector.markers,
+      extraLibraries: MapConnector.libraries,
+      setMap,
     });
   }
 }
 
-export { MapLibraries };
+export { MapConnector };

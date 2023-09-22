@@ -19,13 +19,15 @@ type Constructor = MapServiceParameters & {
     directionsService: google.maps.DirectionsService;
     directionsRenderer: google.maps.DirectionsRenderer;
   };
+  map: google.maps.Map | null;
+  markers: google.maps.Marker[];
+  setMap: (map: google.maps.Map) => void;
 };
-let map: google.maps.Map | null = null;
-
-const markers: google.maps.Marker[] = [];
 
 class MapService implements IMapService {
-  private map: google.maps.Map | null = null;
+  private map: google.maps.Map | null;
+
+  private markers: google.maps.Marker[];
 
   private directionsService!: google.maps.DirectionsService;
 
@@ -35,15 +37,20 @@ class MapService implements IMapService {
 
   private routes!: google.maps.DistanceMatrixService;
 
+  private setMap: (map: google.maps.Map) => void;
+
   public constructor({
     mapElement,
     center,
     zoom,
     extraLibraries,
+    map,
+    markers,
+    setMap,
   }: Constructor) {
-    if (map) {
-      this.map = map;
-    }
+    this.map = map;
+    this.setMap = setMap;
+    this.markers = markers;
 
     if (extraLibraries) {
       this.geocoder = extraLibraries.geocoding;
@@ -52,8 +59,8 @@ class MapService implements IMapService {
       this.directionsService = extraLibraries.directionsService;
 
       if (mapElement && center && zoom) {
-        if (map) {
-          map.panTo(center);
+        if (this.map) {
+          this.map.panTo(center);
 
           return;
         }
@@ -78,7 +85,7 @@ class MapService implements IMapService {
     center?: google.maps.LatLngLiteral,
     zoom?: number,
   ): void {
-    map = this.map = new google.maps.Map(mapElement, {
+    this.map = new google.maps.Map(mapElement, {
       center,
       zoom,
       styles: mapStyle as google.maps.MapTypeStyle[],
@@ -87,6 +94,7 @@ class MapService implements IMapService {
       mapTypeControl: false,
       streetViewControl: false,
     });
+    this.setMap(this.map);
   }
 
   private throwIfMapNotInitialized(): void {
@@ -234,7 +242,7 @@ class MapService implements IMapService {
   }
 
   public removeMarkers(): void {
-    for (const marker of markers) {
+    for (const marker of this.markers) {
       marker.setMap(null);
     }
   }
@@ -263,7 +271,7 @@ class MapService implements IMapService {
           }
         : undefined,
     });
-    markers.push(marker);
+    this.markers.push(marker);
   }
 }
 
