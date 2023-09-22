@@ -912,7 +912,7 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /trucks:
+   * /business/trucks:
    *   post:
    *     summary: Create a new truck
    *     tags:

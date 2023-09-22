@@ -6,7 +6,7 @@ type DefaultApiHandlerOptions = {
   params?: unknown;
   user?: unknown;
   parsedFiles?: MultipartParsedFile[];
-  hostname?: unknown;
+  hostname?: string;
 };
 
 export { type DefaultApiHandlerOptions };

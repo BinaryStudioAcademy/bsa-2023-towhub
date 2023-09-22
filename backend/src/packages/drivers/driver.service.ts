@@ -179,13 +179,13 @@ class DriverService implements IService {
       emailData,
     );
 
-    await this.truckService.addTrucksToDriver(user.id, truckIds ?? []);
+    await this.truckService.addTrucksToDriver(user.id, truckIds);
 
     return {
       ...user,
       ...driverObject,
       group,
-      possibleTruckIds: truckIds ?? [],
+      possibleTruckIds: truckIds,
     };
   }
 
