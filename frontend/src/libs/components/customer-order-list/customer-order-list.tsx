@@ -47,7 +47,15 @@ const CustomerOrderList: React.FC<Properties> = ({
     [changePageSize, changePageIndex],
   );
 
-  if (orders.length === 0 && !isLoading) {
+  if (isLoading) {
+    return (
+      <div className={styles.spinnerWrapper}>
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (orders.length === 0) {
     return (
       <div className={getValidClassNames('h4', styles.message)}>
         {emptyListMessage ?? 'There are no data here yet.'}
@@ -57,13 +65,7 @@ const CustomerOrderList: React.FC<Properties> = ({
 
   return (
     <div>
-      {isLoading ? (
-        <div className={styles.spinnerWrapper}>
-          <Spinner />
-        </div>
-      ) : (
-        <ul>{createCustomerOrderCards()}</ul>
-      )}
+      <ul>{createCustomerOrderCards()}</ul>
       <Pagination
         pageCount={pagesRange}
         onClick={changePageIndex}
