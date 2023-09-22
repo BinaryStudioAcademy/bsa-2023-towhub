@@ -3,6 +3,7 @@ import { AppRoute } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useLocation, useNavigate } from '~/libs/hooks/hooks.js';
 import { type TabName, type TabsType } from '~/libs/types/types.js';
+import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { useAuthUser } from '~/slices/auth/auth.js';
 
 import { checkActiveTab } from './libs/helpers.js';
@@ -19,7 +20,9 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
   const user = useAuthUser();
 
   const getTabs = useCallback((): TabsType[] => {
-    return user?.group.key === 'business' ? BUSINESS_TABS : DRIVER_TABS;
+    return user?.group.key === UserGroupKey.BUSINESS
+      ? BUSINESS_TABS
+      : DRIVER_TABS;
   }, [user?.group.key]);
 
   const handleTabClick = useCallback(
