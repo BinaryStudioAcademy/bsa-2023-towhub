@@ -59,12 +59,7 @@ const DriverTable: React.FC = () => {
     [dispatch, searchParameters, handleToggle],
   );
 
-  const message = (
-    <div>
-      There are no data here yet. Please,{' '}
-      <span className={styles.red}>add new driver</span>
-    </div>
-  );
+  const message = 'There are no data here yet. Please, add a driver';
 
   return (
     <div className={styles.container}>
@@ -73,7 +68,7 @@ const DriverTable: React.FC = () => {
           Company Drivers
         </h2>
         <Button
-          label="Add a Driver"
+          label="Add Driver"
           className={styles.btn}
           onClick={handleToggle}
         />
