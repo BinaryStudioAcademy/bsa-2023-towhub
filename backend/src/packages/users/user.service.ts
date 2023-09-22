@@ -146,6 +146,10 @@ class UserService implements IService<UserEntityObjectT> {
 
     return UserEntity.initialize(result).toObject();
   }
+
+  public async removeAccessToken(id: UserEntityT['id']): Promise<void> {
+    await this.userRepository.update(id, { accessToken: null });
+  }
 }
 
 export { UserService };

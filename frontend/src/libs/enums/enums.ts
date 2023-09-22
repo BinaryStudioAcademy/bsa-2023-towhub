@@ -1,5 +1,4 @@
 export { AppRoute } from './app-route.enum.js';
-export { Breakpoint } from './breakpoint.js';
 export { BurgerMenuItemsName } from './burger-menu-items-name.enum.js';
 export { DataStatus } from './data-status.enum.js';
 export { FormLabel, FormName } from './form.enum.js';
@@ -15,4 +14,5 @@ export {
   ContentType,
   HttpMessage,
   ServerErrorType,
+  SortMethod,
 } from 'shared/build/index.js';
