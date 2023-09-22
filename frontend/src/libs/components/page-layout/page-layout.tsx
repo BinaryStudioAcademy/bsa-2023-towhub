@@ -1,7 +1,5 @@
 import { type FC } from 'react';
 
-import { useCallback, useState } from '~/libs/hooks/hooks.js';
-import { type TabName } from '~/libs/types/types.js';
 import { Sidebar } from '~/pages/dashboard/components/sidebar/sidebar.js';
 
 import { Header } from '../header/header.js';
@@ -19,13 +17,6 @@ const PageLayout: FC<Properties> = ({
   isSidebarHidden = false,
   children,
 }: Properties) => {
-  const [selectedTab, setSelectedTab] = useState<TabName>('orders');
-
-  const handleTabSelect = useCallback(
-    (tabName: TabName) => setSelectedTab(tabName),
-    [],
-  );
-
   return (
     <div className={styles.container}>
       {!isHeaderHidden && (
@@ -35,7 +26,7 @@ const PageLayout: FC<Properties> = ({
       )}
       {!isSidebarHidden && (
         <div className={styles.sidebar}>
-          <Sidebar selectedTab={selectedTab} onTabClick={handleTabSelect} />
+          <Sidebar />
         </div>
       )}
       <main className={styles.content}>

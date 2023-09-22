@@ -8,6 +8,7 @@ export {
 export {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
+  type UserCommonDetails as CustomerEditDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserEntityObjectWithGroupAndBusinessT,
@@ -16,5 +17,4 @@ export {
   type UserGetAllResponseDto,
   type UserGroupEntityT,
   type UserGroupKeyT,
-  type UserGroupNameT,
 } from 'shared/build/index.js';

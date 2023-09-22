@@ -1,14 +1,13 @@
-import { type AuthMode } from '~/libs/enums/enums.js';
-import {
-  useAppDispatch,
-  useAuthNavigate,
-  useCallback,
-} from '~/libs/hooks/hooks.js';
+import { AuthMode } from '~/libs/enums/enums.js';
+import { useAppDispatch, useCallback } from '~/libs/hooks/hooks.js';
 import { type ValueOf } from '~/libs/types/types.js';
-import { type CustomerSignUpRequestDto } from '~/packages/users/users.js';
+import {
+  type BusinessEditDto,
+  type CustomerEditDto,
+} from '~/packages/users/users.js';
 import { actions as authActions } from '~/slices/auth/auth.js';
 
-import { EditForm } from './edit-form/edit-form.js';
+import { EditForm } from './components/edit-form/edit-form.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -17,17 +16,18 @@ type Properties = {
 
 const Profile: React.FC<Properties> = ({ mode }: Properties) => {
   const dispatch = useAppDispatch();
-  const { navigateAuthUser } = useAuthNavigate();
 
   const handleSubmit = useCallback(
-    (payload: CustomerSignUpRequestDto): void => {
-      void dispatch(authActions.signUp({ payload, mode }))
-        .unwrap()
-        .then((user) => {
-          navigateAuthUser(user);
-        });
+    (payload: CustomerEditDto | BusinessEditDto): void => {
+      if (mode === AuthMode.CUSTOMER) {
+        void dispatch(authActions.editCustomer(payload));
+      }
+
+      if (mode === AuthMode.BUSINESS) {
+        void dispatch(authActions.editBusiness(payload as BusinessEditDto));
+      }
     },
-    [dispatch, mode, navigateAuthUser],
+    [dispatch, mode],
   );
 
   return (

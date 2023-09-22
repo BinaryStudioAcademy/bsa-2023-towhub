@@ -7,7 +7,6 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
 .inputComponentWrapper {
   display: flex;
   flex-direction: column;
-  max-width: 327px;
   color: $grey-dark;
   font-weight: $font-weight-semibold;
   font-size: 16px;

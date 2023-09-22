@@ -1,8 +1,16 @@
-import { getCurrent, signIn, signUp } from './actions.js';
+import {
+  editBusiness,
+  editCustomer,
+  getCurrent,
+  signIn,
+  signUp,
+} from './actions.js';
 import { actions } from './auth.slice.js';
 
 const allActions = {
   ...actions,
+  editBusiness,
+  editCustomer,
   signIn,
   signUp,
   getCurrent,
@@ -10,3 +18,4 @@ const allActions = {
 
 export { allActions as actions };
 export { reducer } from './auth.slice.js';
+export { useAuthServerError, useAuthUser } from './libs/hooks/hooks.js';

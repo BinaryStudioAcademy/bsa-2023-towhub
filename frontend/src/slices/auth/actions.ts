@@ -2,11 +2,16 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
 import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
+import { UserNotificationMessage } from '~/packages/users/libs/enums/enums.js';
 import {
+  type BusinessEditDto,
+  type BusinessEditResponseDto,
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
+  type CustomerEditDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserSignInRequestDto,
@@ -22,18 +27,65 @@ const signUp = createAsyncThunk<
     mode: ValueOf<typeof AuthMode>;
   },
   AsyncThunkConfig
->(`${sliceName}/sign-up`, async ({ payload, mode }, { extra }) => {
-  const { authApi, notification, localStorage } = extra;
+>(
+  `${sliceName}/sign-up`,
+  async ({ payload, mode }, { extra, rejectWithValue }) => {
+    const { authApi, localStorage } = extra;
+
+    try {
+      const result = await authApi.signUp(payload, mode);
+      await localStorage.set(StorageKey.TOKEN, result.accessToken);
+
+      return result;
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
+
+      return rejectWithValue({ ...error, message: error.message });
+    }
+  },
+);
+
+const editCustomer = createAsyncThunk<
+  CustomerEditDto,
+  CustomerEditDto,
+  AsyncThunkConfig
+>(`${sliceName}/edit-customer`, async (payload, { extra, rejectWithValue }) => {
+  const { userApi, notification } = extra;
 
   try {
-    const result = await authApi.signUp(payload, mode);
+    const editCustomer = await userApi.editCustomer(payload);
 
-    await localStorage.set(StorageKey.TOKEN, result.accessToken);
+    notification.success(UserNotificationMessage.SUCCESS_EDIT_USER);
 
-    return result;
-  } catch (error) {
-    notification.warning(getErrorMessage(error));
-    throw error;
+    return editCustomer;
+  } catch (error_: unknown) {
+    const error = error_ as HttpError;
+
+    notification.error(getErrorMessage(error.message));
+
+    return rejectWithValue({ ...error, message: error.message });
+  }
+});
+
+const editBusiness = createAsyncThunk<
+  BusinessEditResponseDto,
+  BusinessEditDto,
+  AsyncThunkConfig
+>(`${sliceName}/edit-business`, async (payload, { extra, rejectWithValue }) => {
+  const { businessApi, notification } = extra;
+
+  try {
+    const editBusiness = await businessApi.editBusiness(payload);
+
+    notification.success(UserNotificationMessage.SUCCESS_EDIT_USER);
+
+    return editBusiness;
+  } catch (error_: unknown) {
+    const error = error_ as HttpError;
+
+    notification.error(getErrorMessage(error.message));
+
+    return rejectWithValue({ ...error, message: error.message });
   }
 });
 
@@ -41,14 +93,19 @@ const signIn = createAsyncThunk<
   UserSignInResponseDto,
   UserSignInRequestDto,
   AsyncThunkConfig
->(`${sliceName}/sign-in`, async (signInPayload, { extra }) => {
+>(`${sliceName}/sign-in`, async (signInPayload, { extra, rejectWithValue }) => {
   const { authApi, localStorage } = extra;
 
-  const result = await authApi.signIn(signInPayload);
+  try {
+    const result = await authApi.signIn(signInPayload);
+    await localStorage.set(StorageKey.TOKEN, result.accessToken);
 
-  await localStorage.set(StorageKey.TOKEN, result.accessToken);
+    return result;
+  } catch (error_: unknown) {
+    const error = error_ as HttpError;
 
-  return result;
+    return rejectWithValue({ ...error, message: error.message });
+  }
 });
 
 const getCurrent = createAsyncThunk<
@@ -67,4 +124,4 @@ const getCurrent = createAsyncThunk<
   }
 });
 
-export { getCurrent, signIn, signUp };
+export { editBusiness, editCustomer, getCurrent, signIn, signUp };

@@ -1,7 +1,7 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
 
-import { HttpMessage } from '~/libs/packages/http/http.js';
+import { HttpHeader, HttpMessage } from '~/libs/packages/http/http.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
 import { AuthStrategy } from './auth.js';
@@ -23,7 +23,10 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
       done: (error?: Error) => void,
     ): Promise<void> => {
       try {
-        const token = request.headers.authorization?.replace('Bearer ', '');
+        const token = request.headers[HttpHeader.AUTHORIZATION]?.replace(
+          'Bearer ',
+          '',
+        );
 
         if (!token && isJwtRequired) {
           return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED));
@@ -78,6 +81,11 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
   fastify.decorate(
     AuthStrategy.VERIFY_DRIVER_GROUP,
     verifyGroup(UserGroupKey.DRIVER),
+  );
+
+  fastify.decorate(
+    AuthStrategy.VERIFY_CUSTOMER_GROUP,
+    verifyGroup(UserGroupKey.CUSTOMER),
   );
 
   done();

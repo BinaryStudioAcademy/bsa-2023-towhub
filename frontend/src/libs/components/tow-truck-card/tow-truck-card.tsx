@@ -1,40 +1,42 @@
 import { IconName } from '~/libs/enums/icon-name.enum.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { type TruckEntity } from '~/libs/types/types.js';
+import { manufacturerKeyToReadableName } from '~/packages/trucks/libs/maps/maps.js';
 
-import { Badge, Button, Icon } from '../components.js';
-import { StarRating } from '../star-rating/star-rating.jsx';
+import { Badge } from '../badge/badge.js';
+import { Button } from '../button/button.js';
+import { Icon } from '../icon/icon.js';
 import { getTowTruckImage } from './lib/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   truck: TruckEntity;
-  rating: {
-    averageRating: number;
-    reviewCount: number;
-  };
-  distance: number;
+  distance?: number;
+  hasButton?: boolean;
+  onOrderButtonClick?: () => void;
 };
 
 const TowTruckCard: React.FC<Properties> = ({
   truck,
-  rating,
   distance,
+  hasButton = true,
+  onOrderButtonClick,
 }: Properties) => {
-  const { manufacturer, capacity, pricePerKm, towType } = truck;
+  const {
+    manufacturer: manufacturerRaw,
+    capacity,
+    pricePerKm,
+    towType,
+  } = truck;
   const img = getTowTruckImage(towType);
+  const manufacturer = manufacturerKeyToReadableName[manufacturerRaw];
 
   return (
-    <div className={styles.container}>
+    <div className={getValidClassNames(styles.container)}>
       <div className={styles.body}>
         <div className={styles.description}>
           <div className={styles.name}>{manufacturer}</div>
-          <div className={styles.rating}>
-            <StarRating rating={rating.averageRating} />
-            <div className={styles.reviews}>
-              <span className={styles.bold}>{rating.averageRating}</span> (
-              {rating.reviewCount} Reviews)
-            </div>
-          </div>
+          <div className={styles.rating}></div>
           <div className={styles.capacity}>
             <Icon iconName={IconName.GEAR} />
             {capacity} ton
@@ -46,7 +48,7 @@ const TowTruckCard: React.FC<Properties> = ({
         </div>
       </div>
       <div className={styles.footer}>
-        <div className={styles.info}>
+        <div className={hasButton ? styles.info : styles['info-wide']}>
           <div className={styles.price}>
             ${pricePerKm}/ <span className={styles.gray}>km</span>
           </div>
@@ -55,7 +57,7 @@ const TowTruckCard: React.FC<Properties> = ({
             <span className={styles.km}>{distance} km</span>
           </Badge>
         </div>
-        <Button label="order now" />
+        {hasButton && <Button label="order now" onClick={onOrderButtonClick} />}
       </div>
     </div>
   );
