@@ -60,7 +60,7 @@ class SocketService {
     event: T;
     eventPayload?: FirstParameter<ClientToServerEventParameter[T]>;
   }): void {
-    this.io?.emit(event as 'end_shift', eventPayload);
+    this.io?.emit(event as typeof ClientToServerEvent.BASE_EVENT, eventPayload);
   }
 
   public emitWithAck<
@@ -75,10 +75,10 @@ class SocketService {
     eventPayload,
   }: {
     event: T;
-    eventPayload: FirstParameter<ClientToServerEventParameter[T]>;
+    eventPayload?: FirstParameter<ClientToServerEventParameter[T]>;
   }): Promise<ServerToClientEventResponse[R]> | undefined {
     return this.io?.emitWithAck(
-      event as typeof ClientToServerEvent.EVENT_WITH_ACK,
+      event as typeof ClientToServerEvent.BASE_EVENT,
       eventPayload,
     );
   }

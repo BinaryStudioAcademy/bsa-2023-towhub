@@ -32,9 +32,9 @@ type ClientToServerEventParameter = {
     payload: unknown,
     callback?: EventAckCollback,
   ) => void;
-  [ClientToServerEvent.EVENT_WITH_ACK]: (
+  [ClientToServerEvent.BASE_EVENT]: (
     payload: unknown,
-    callback?: (response?: unknown) => void,
+    callback?: EventAckCollback,
   ) => void;
 };
 

@@ -37,4 +37,5 @@ export {
   type UserSignInResponseDto,
   type ValidationSchema,
   type ValueOf,
+  ServerErrorType,
 } from 'shared/build/index.js';
