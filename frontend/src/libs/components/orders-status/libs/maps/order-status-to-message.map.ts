@@ -1,6 +1,6 @@
-import { OrderStatus } from './order-status.enum.js';
+import { OrderStatus } from '../enums/order-status.enum.js';
 
-const STATUS_MESSAGES = {
+const orderStatusToMessage = {
   [OrderStatus.PENDING]: 'Please wait for your order to be confirmed',
   [OrderStatus.CANCELED]:
     'The order has been canceled, please select another vehicle',
@@ -9,4 +9,4 @@ const STATUS_MESSAGES = {
   [OrderStatus.DONE]: 'Thank you for your order!',
 };
 
-export { STATUS_MESSAGES };
+export { orderStatusToMessage };

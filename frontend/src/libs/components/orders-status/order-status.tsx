@@ -4,10 +4,8 @@ import { selectOrder } from '~/slices/orders/selectors.js';
 import { selectTruckArrivalTime } from '~/slices/trucks/selectors.js';
 
 import { Spinner } from '../components.js';
-import {
-  OrderStatus as OrderStatusEnum,
-  STATUS_MESSAGES,
-} from './libs/enums/enums.js';
+import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
+import { orderStatusToMessage } from './libs/maps/order-status-to-message.map.js';
 import { type OrderStatusValues } from './libs/types/types.js';
 import styles from './styles.module.scss';
 
@@ -20,12 +18,12 @@ const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
   const [order] = useAppSelector(selectOrder);
   const getStatusMessageMapper = (status: OrderStatusValues): string => {
     if (status === OrderStatusEnum.CONFIRMED) {
-      return `${STATUS_MESSAGES[status]} ${
+      return `${orderStatusToMessage[status]} ${
         arrivalTime ? arrivalTime.text : '...'
       }`;
     }
 
-    return STATUS_MESSAGES[status];
+    return orderStatusToMessage[status];
   };
 
   const status = order?.status;
