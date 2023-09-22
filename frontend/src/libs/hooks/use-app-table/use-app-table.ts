@@ -53,22 +53,15 @@ const useAppTable = <T, K>({
     const queryParameters = sort ? { ...actionPayload, sort } : actionPayload;
 
     setQueryParameters(queryParameters);
-
-    void dispatch(tableFetchCall(searchParameters.toString()));
-  }, [
-    dispatch,
-    pageIndex,
-    pageSize,
-    payload,
-    searchParameters,
-    setQueryParameters,
-    sort,
-    tableFetchCall,
-  ]);
+  }, [pageIndex, pageSize, payload, setQueryParameters, sort]);
 
   useEffect(() => {
     updatePage();
-  }, [tableFetchCall, pageSize, pageIndex, dispatch, payload, updatePage]);
+  }, [pageSize, pageIndex, dispatch, payload, updatePage]);
+
+  useEffect(() => {
+    void dispatch(tableFetchCall(searchParameters.toString()));
+  }, [dispatch, searchParameters, tableFetchCall]);
 
   return { pageSize, pageIndex, changePageSize, changePageIndex, updatePage };
 };

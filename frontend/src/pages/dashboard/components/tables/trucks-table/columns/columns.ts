@@ -26,7 +26,7 @@ const columns: ColumnDef<TruckEntity>[] = [
     header: 'Plate Number',
     accessorFn: (trucks): string => trucks.licensePlateNumber,
     footer: 'Plate Number',
-    size: 250,
+    size: 200,
     enableSorting: false,
   },
   {
