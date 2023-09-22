@@ -121,6 +121,22 @@ class SocketService {
           logger.info(`${socket.id} left ${RoomPrefix.TRUCK}${truckId}`);
         },
       );
+      //Mock start, for demo purposes
+      // let lat = 48.8325;
+      // let lng = 24.5701;
+      // setInterval(() => {
+      //   lat = +(lat + 0.1106).toFixed(4);
+      //   lng = +(lng + 0.0185).toFixed(4);
+      //   console.log({ lat, lng });
+      //   this.notifyCustomerForTruckLocationUpdate(1, {
+      //     truckId: 1,
+      //     latLng: {
+      //       lat: lat,
+      //       lng: lng,
+      //     },
+      //   });
+      // }, 10_000);
+      // //Mock end
     });
     setInterval(() => {
       void getTrucksList(this.shiftService, this.geolocationCacheService).then(

@@ -147,7 +147,9 @@ class MapService implements IMapService {
     }
   }
 
-  public async getPointName(point: google.maps.LatLngLiteral): Promise<string> {
+  public async getPointAddress(
+    point: google.maps.LatLngLiteral,
+  ): Promise<string> {
     try {
       const {
         results: [result],

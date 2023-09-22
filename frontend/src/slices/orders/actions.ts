@@ -66,8 +66,8 @@ const getRouteData = createAsyncThunk<
 
   const mapService = await mapServiceFactory({ mapElement: null });
   const [originName, destinationName, distanceAndDuration] = await Promise.all([
-    mapService.getPointName(routeData.origin),
-    mapService.getPointName(routeData.destination),
+    mapService.getPointAddress(routeData.origin),
+    mapService.getPointAddress(routeData.destination),
     mapService.calculateDistanceAndDuration(
       routeData.origin,
       routeData.destination,
