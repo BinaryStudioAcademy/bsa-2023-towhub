@@ -77,6 +77,14 @@ class AuthApi extends HttpApi {
       CustomerSignUpResponseDto | BusinessSignUpResponseDto
     >();
   }
+
+  public async logOut(): Promise<unknown> {
+    return await this.load(this.getFullEndpoint(AuthApiPath.LOGOUT, {}), {
+      method: 'GET',
+      contentType: ContentType.JSON,
+      hasAuth: true,
+    });
+  }
 }
 
 export { AuthApi };
