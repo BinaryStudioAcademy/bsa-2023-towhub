@@ -21,7 +21,9 @@ import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as orderReducer } from '~/slices/orders/order.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
-import { mapServiceFactory } from '../map/map-service-factory.js';
+import { type MapServiceParameters } from '../map/libs/types/map-service-parameters.type.js';
+import { type MapService } from '../map/map.package.js';
+import { MapLibraries } from '../map/map-libraries.js';
 import { socketMiddleware } from '../middleware/socket.middleware.js';
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
@@ -69,7 +71,13 @@ class Store {
       driverApi,
       ordersApi,
       localStorage: LocalStorage,
-      mapServiceFactory,
+      mapServiceFactory: async (
+        parameters: MapServiceParameters,
+      ): Promise<MapService> => {
+        await MapLibraries.getInstance();
+
+        return new MapLibraries().getMapService(parameters);
+      },
     };
   }
 }

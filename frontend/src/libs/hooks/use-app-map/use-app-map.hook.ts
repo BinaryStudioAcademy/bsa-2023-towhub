@@ -1,6 +1,6 @@
 import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
 import { type MapService } from '~/libs/packages/map/map.js';
-import { mapServiceFactory } from '~/libs/packages/map/map-service-factory.js';
+import { MapLibraries } from '~/libs/packages/map/map-libraries.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
 const DEFAULT_ZOOM = 16;
@@ -32,7 +32,9 @@ const useAppMap = ({
 
   useEffect(() => {
     const configMap = async (): Promise<void> => {
-      mapService.current = await mapServiceFactory({
+      await MapLibraries.getInstance();
+
+      mapService.current = new MapLibraries().getMapService({
         mapElement: mapReference.current,
         center: center ?? { lat: 0, lng: 0 },
         zoom,
