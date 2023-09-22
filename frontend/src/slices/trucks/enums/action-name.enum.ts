@@ -1,6 +1,6 @@
 import { name as sliceName } from '~/slices/trucks/trucks.slice.js';
 
-const ActionNames = {
+const ActionName = {
   SOCKET: {
     UPDATE_TRUCK_LOCATION: `${sliceName}/socket/update-truck-location`,
     SUBSCRIBE_TRUCK_UPDATES: `${sliceName}/subscribe-truck-updates`,
@@ -9,4 +9,4 @@ const ActionNames = {
   CALCULATE_ARRIVAL_TIME: `${sliceName}/calculate-arrival-time`,
 };
 
-export { ActionNames };
+export { ActionName };

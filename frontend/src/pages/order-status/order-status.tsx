@@ -1,4 +1,4 @@
-import { Button, OrderCard, Spinner } from '~/libs/components/components.js';
+import { OrderCard, Spinner } from '~/libs/components/components.js';
 import { OrderStatus } from '~/libs/components/orders-status/order-status.js';
 import { AppRoute } from '~/libs/enums/app-route.enum.js';
 import { DataStatus } from '~/libs/enums/data-status.enum.js';
@@ -24,6 +24,7 @@ import {
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { NotFound } from '../pages.js';
+import { ButtonsSection } from './libs/components/components.js';
 import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
 import styles from './styles.module.scss';
 
@@ -35,11 +36,11 @@ const OrderStatusPage: React.FC = () => {
   const dataStatus = useAppSelector(selectDataStatus);
 
   const status = order?.status;
-  const pendingScreen = status === OrderStatusEnum.PENDING;
-  const cancelScreen = status === OrderStatusEnum.CANCELED;
-  const confirmScreen = status === OrderStatusEnum.CONFIRMED;
-  const onPointScreen = status === OrderStatusEnum.PICKING_UP;
-  const doneScreen = status === OrderStatusEnum.DONE;
+  const isPendingScreenOpen = status === OrderStatusEnum.PENDING;
+  const isCancelScreenOpen = status === OrderStatusEnum.CANCELED;
+  const isConfirmScreenOpen = status === OrderStatusEnum.CONFIRMED;
+  const isPickingUpScreenOpen = status === OrderStatusEnum.PICKING_UP;
+  const isDoneScreenOpen = status === OrderStatusEnum.DONE;
 
   const truckId = useAppSelector(selectChosenTruck)?.id;
 
@@ -97,50 +98,13 @@ const OrderStatusPage: React.FC = () => {
     [],
   );
 
-  const Card = (): JSX.Element | null => {
-    if (!cancelScreen && !doneScreen) {
-      return (
-        <OrderCard
-          isDriverShown={confirmScreen || onPointScreen || doneScreen}
-          className={styles.card}
-        />
-      );
-    }
-
-    return null;
-  };
-
-  const isDeclineButtonShown = pendingScreen || confirmScreen;
-  const isPayNowButtonShown = onPointScreen;
-  const isHomepageButtonShown = cancelScreen || doneScreen;
-  const ButtonsSection = (): JSX.Element => (
-    <section className={styles.buttonsSection}>
-      {isDeclineButtonShown && (
-        <Button
-          label="DECLINE"
-          className={styles.buttonDecline}
-          size={'md'}
-          onClick={handleCancelClick}
-        />
-      )}
-      {isPayNowButtonShown && (
-        <Button
-          label="PAY NOW"
-          className={styles.buttonPayNow}
-          size={'md'}
-          onClick={handlePayClick}
-        />
-      )}
-      {isHomepageButtonShown && (
-        <Button
-          label="HOMEPAGE"
-          className={styles.buttonHomepage}
-          size={'md'}
-          onClick={handleHomepageClick}
-        />
-      )}
-    </section>
-  );
+  const isDeclineButtonShown = isPendingScreenOpen || isConfirmScreenOpen;
+  const isPayNowButtonShown = isPickingUpScreenOpen;
+  const isHomepageButtonShown = isCancelScreenOpen || isDoneScreenOpen;
+  const isDriverShown =
+    isConfirmScreenOpen || isPickingUpScreenOpen || isDoneScreenOpen;
+  const isOrderCardShown = !isCancelScreenOpen && !isDoneScreenOpen;
+  const isMapShown = !isCancelScreenOpen && !isDoneScreenOpen;
 
   if (dataStatus === DataStatus.PENDING || dataStatus === DataStatus.IDLE) {
     return <Spinner />;
@@ -156,10 +120,10 @@ const OrderStatusPage: React.FC = () => {
         className={getValidClassNames(
           styles.status,
           styles.statusTop,
-          (cancelScreen || doneScreen) && styles.statusBig,
+          (isCancelScreenOpen || isDoneScreenOpen) && styles.statusBig,
         )}
       />
-      {!cancelScreen && !doneScreen && (
+      {isMapShown && (
         <section className={styles.mapSection}>
           <MapElement />
         </section>
@@ -168,8 +132,17 @@ const OrderStatusPage: React.FC = () => {
         <OrderStatus
           className={getValidClassNames(styles.status, styles.statusBottom)}
         />
-        <Card />
-        <ButtonsSection />
+        {isOrderCardShown && (
+          <OrderCard isDriverShown={isDriverShown} className={styles.card} />
+        )}
+        <ButtonsSection
+          isDeclineButtonShown={isDeclineButtonShown}
+          isPayNowButtonShown={isPayNowButtonShown}
+          isHomepageButtonShown={isHomepageButtonShown}
+          onCancelClick={handleCancelClick}
+          onHomepageClick={handleHomepageClick}
+          onPayClick={handlePayClick}
+        />
       </section>
     </div>
   );

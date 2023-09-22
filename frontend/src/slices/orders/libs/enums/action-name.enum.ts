@@ -1,6 +1,6 @@
 import { name as sliceName } from '~/slices/orders/order.slice.js';
 
-const ActionNames = {
+const ActionName = {
   GET_ORDER: `${sliceName}/get-order`,
   SOCKET: {
     UPDATE_ORDER: `${sliceName}/socket/update-order`,
@@ -10,4 +10,4 @@ const ActionNames = {
   GET_ORDER_POINTS: `${sliceName}/get-order-points`,
 };
 
-export { ActionNames };
+export { ActionName };

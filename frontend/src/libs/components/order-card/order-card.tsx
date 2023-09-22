@@ -9,6 +9,7 @@ import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectOrder, selectOrderData } from '~/slices/orders/selectors.js';
 
 import { PlainSvgIcon } from '../plain-svg-icon/plain-svg-icon.js';
+import { CardHeader } from './libs/components/components.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -48,36 +49,6 @@ const OrderCard: React.FC<Properties> = ({
       );
     }
   }, [dispatch, order]);
-  const CardHeader = (): JSX.Element => (
-    <div className={styles.header}>
-      <div className={styles.headerImageContainer}>
-        {
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          profileURL ? (
-            <img
-              className={styles.profileImage}
-              src={profileURL}
-              alt="header"
-            />
-          ) : (
-            <div className={styles.noAvatar}></div>
-          )
-        }
-      </div>
-      <div className={styles.headerInfoContainer}>
-        <div className={styles.headerTitleContainer}>
-          <span className="textMd">
-            {firstName} {lastName}
-          </span>
-        </div>
-        <div className={styles.headerSubtitleContainer}>
-          <span className={getValidClassNames(styles.subtitle, 'textSm')}>
-            {licensePlate}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div className={getValidClassNames(styles.container, className)}>
@@ -87,7 +58,14 @@ const OrderCard: React.FC<Properties> = ({
             <PlainSvgIcon name={PlainSvgIconName.HORIZONTAL_BAR} />
           </div>
         </div>
-        {isDriverShown && <CardHeader />}
+        {isDriverShown && (
+          <CardHeader
+            profileURL={profileURL}
+            firstName={firstName}
+            lastName={lastName}
+            licensePlate={licensePlate}
+          />
+        )}
         <div className={styles.body}>
           <div className={styles.bodyContent}>
             <div
@@ -98,17 +76,11 @@ const OrderCard: React.FC<Properties> = ({
             >
               <PlainSvgIcon name={PlainSvgIconName.BLUE_CIRCLE} />
             </div>
-            <div
-              className={getValidClassNames(
-                styles.routeInfoStart,
-                styles.routeInfo,
-              )}
-            >
-              <span
-                className={getValidClassNames('text-sm', styles.routeInfoInner)}
-              >
+            <div className={styles.routeInfoStart}>
+              <div className={styles.routeInfo}>
                 {startLocation}
-              </span>
+                <span className={styles.tooltipTextStart}>{startLocation}</span>
+              </div>
             </div>
             <div className={styles.routeArrow}>
               <PlainSvgIcon name={PlainSvgIconName.ARROW_DOWN} />
@@ -121,17 +93,11 @@ const OrderCard: React.FC<Properties> = ({
             >
               <PlainSvgIcon name={PlainSvgIconName.RED_CIRCLE} />
             </div>
-            <div
-              className={getValidClassNames(
-                styles.routeInfoEnd,
-                styles.routeInfo,
-              )}
-            >
-              <span
-                className={getValidClassNames('text-sm', styles.routeInfoInner)}
-              >
+            <div className={styles.routeInfoEnd}>
+              <div className={styles.routeInfo}>
                 {endLocation}
-              </span>
+                <span className={styles.tooltipTextEnd}>{endLocation}</span>
+              </div>
             </div>
             <div className={styles.distanceIcon}>
               <PlainSvgIcon name={PlainSvgIconName.MAP} />

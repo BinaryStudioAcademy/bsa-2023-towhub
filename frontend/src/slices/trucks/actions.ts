@@ -13,7 +13,7 @@ import {
 } from '~/packages/trucks/libs/types/types.js';
 
 import { jsonToLatLngLiteral } from '../orders/libs/helpers/json-to-lat-lng-literal.helper.js';
-import { ActionNames } from './enums/action-names.enum.js';
+import { ActionName } from './enums/action-name.enum.js';
 import { name as sliceName } from './trucks.slice.js';
 import { type TruckArrivalTime } from './types/truck-arrival-time.type.js';
 
@@ -52,12 +52,12 @@ const updateTruckLocationFromSocket = createAsyncThunk<
   truckLocationPayload,
   truckLocationPayload,
   AsyncThunkConfig
->(ActionNames.SOCKET.UPDATE_TRUCK_LOCATION, (location) => {
+>(ActionName.SOCKET.UPDATE_TRUCK_LOCATION, (location) => {
   return location;
 });
 
 const subscribeTruckUpdates = createAction(
-  ActionNames.SOCKET.SUBSCRIBE_TRUCK_UPDATES,
+  ActionName.SOCKET.SUBSCRIBE_TRUCK_UPDATES,
   (truckId: number) => {
     return {
       payload: `${truckId}`,
@@ -66,7 +66,7 @@ const subscribeTruckUpdates = createAction(
 );
 
 const unsubscribeTruckUpdates = createAction(
-  ActionNames.SOCKET.UNSUBSCRIBE_TRUCK_UPDATES,
+  ActionName.SOCKET.UNSUBSCRIBE_TRUCK_UPDATES,
   (truckId: number) => {
     return {
       payload: `${truckId}`,
@@ -79,7 +79,7 @@ const calculateArrivalTime = createAsyncThunk<
   { origin: truckLocationPayload; destination: string },
   AsyncThunkConfig
 >(
-  ActionNames.CALCULATE_ARRIVAL_TIME,
+  ActionName.CALCULATE_ARRIVAL_TIME,
   async ({ origin, destination }, { extra }) => {
     const { mapServiceFactory } = extra;
     const routeData = {

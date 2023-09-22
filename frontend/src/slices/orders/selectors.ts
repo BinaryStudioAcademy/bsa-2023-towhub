@@ -11,10 +11,14 @@ const selectPrice = (state: RootState): number => state.orders.price;
 
 export { selectPrice };
 
-const selectOrder = (state: RootState): (OrderResponseDto | undefined)[] =>
-  state.orders.orders;
-const selectOrderData = (state: RootState): RouteData => state.orders.routeData;
-const selectDataStatus = (state: RootState): ValueOf<typeof DataStatus> =>
-  state.orders.dataStatus;
+const selectOrder = (state: RootState): (OrderResponseDto | undefined)[] => {
+  return state.orders.orders;
+};
+const selectOrderData = (state: RootState): RouteData => {
+  return state.orders.routeData;
+};
+const selectDataStatus = (state: RootState): ValueOf<typeof DataStatus> => {
+  return state.orders.dataStatus;
+};
 
 export { selectDataStatus, selectOrder, selectOrderData };

@@ -10,7 +10,7 @@ import {
   type OrderResponseDto,
 } from '~/packages/orders/orders.js';
 
-import { ActionNames } from './libs/enums/enums.js';
+import { ActionName } from './libs/enums/enums.js';
 import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.helper.js';
 import { type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
@@ -45,7 +45,7 @@ const calculateOrderPrice = createAsyncThunk<
 });
 
 const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
-  ActionNames.GET_ORDER,
+  ActionName.GET_ORDER,
   (orderId, { extra }) => {
     const { ordersApi } = extra;
 
@@ -57,7 +57,7 @@ const getRouteData = createAsyncThunk<
   RouteData,
   { origin: string; destination: string },
   AsyncThunkConfig
->(ActionNames.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
+>(ActionName.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
   const { mapServiceFactory } = extra;
   const routeData = {
     origin: jsonToLatLngLiteral(origin),
@@ -85,12 +85,12 @@ const updateOrderFromSocket = createAsyncThunk<
   OrderResponseDto,
   OrderResponseDto,
   AsyncThunkConfig
->(ActionNames.SOCKET.UPDATE_ORDER, (order) => {
+>(ActionName.SOCKET.UPDATE_ORDER, (order) => {
   return order;
 });
 
 const subscribeOrderUpdates = createAction(
-  ActionNames.SOCKET.SUBSCRIBE_ORDER_UPDATES,
+  ActionName.SOCKET.SUBSCRIBE_ORDER_UPDATES,
   (orderId: string) => {
     return {
       payload: `${orderId}`,
@@ -99,7 +99,7 @@ const subscribeOrderUpdates = createAction(
 );
 
 const unsubscribeOrderUpdates = createAction(
-  ActionNames.SOCKET.UNSUBSCRIBE_ORDER_UPDATES,
+  ActionName.SOCKET.UNSUBSCRIBE_ORDER_UPDATES,
   (orderId: string) => {
     return {
       payload: `${orderId}`,

@@ -5,7 +5,9 @@ import { type TruckArrivalTime, type TruckLocation } from './types/types.js';
 
 const selectTrucks = (
   state: RootState,
-): RootState[typeof TruckSliceName]['trucks'] => state[TruckSliceName].trucks;
+): RootState[typeof TruckSliceName]['trucks'] => {
+  return state[TruckSliceName].trucks;
+};
 
 const selectChosenTruck = (
   state: RootState,
@@ -13,11 +15,13 @@ const selectChosenTruck = (
   return state[TruckSliceName].chosenTruck;
 };
 
-const selectTruckLocation = (state: RootState): TruckLocation | null =>
-  state.trucks.truckLocation;
+const selectTruckLocation = (state: RootState): TruckLocation | null => {
+  return state.trucks.truckLocation;
+};
 
-const selectTruckArrivalTime = (state: RootState): TruckArrivalTime | null =>
-  state.trucks.truckArrivalTime;
+const selectTruckArrivalTime = (state: RootState): TruckArrivalTime | null => {
+  return state.trucks.truckArrivalTime;
+};
 
 export {
   selectChosenTruck,

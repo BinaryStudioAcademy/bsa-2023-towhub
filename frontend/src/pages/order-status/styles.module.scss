@@ -52,30 +52,8 @@ $section-max-width: 416px;
   font-size: 23px;
 }
 
-.buttonsSection {
-  display: flex;
-  justify-content: space-between;
-  max-width: $section-max-width;
-  margin: 20px 0;
-}
-
 .statusTop {
   display: none;
-}
-
-.buttonDecline {
-  font-weight: $font-weight-normal;
-  background-color: $red-light;
-}
-
-.buttonPayNow {
-  font-weight: $font-weight-normal;
-  background-color: $green;
-}
-
-.buttonHomepage {
-  font-weight: $font-weight-normal;
-  background-color: $blue-extra-dark;
 }
 
 @media screen and (width <= 600px) {

@@ -1,1 +1,1 @@
-export { ActionNames } from './action-names.enum.js';
+export { ActionName } from './action-name.enum.js';
