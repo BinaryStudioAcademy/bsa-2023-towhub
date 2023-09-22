@@ -1,10 +1,10 @@
 import { Button } from '~/libs/components/components.js';
-import { AppRoute } from '~/libs/enums/app-route.enum';
+import { AppRoute } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useLocation, useNavigate } from '~/libs/hooks/hooks.js';
 import { type TabName } from '~/libs/types/types.js';
 
-import { checkActiveTab } from './libs/helpers.js';
+import { checkActiveTab } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 import { TABS } from './tabs.js';
 
@@ -35,13 +35,9 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
           <li key={tab.name}>
             <Button
               label={isCollapsed ? '' : tab.name}
-              className={[
-                'h5',
-                styles.btn,
-                {
-                  [styles.active]: checkActiveTab(location.pathname, tab.name),
-                },
-              ]}
+              className={getValidClassNames('h5', styles.btn, {
+                [styles.active]: checkActiveTab(location.pathname, tab.name),
+              })}
               frontIcon={tab.icon}
               variant="text"
               onClick={handleTabClick(tab.name)}

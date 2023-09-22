@@ -69,9 +69,10 @@ class MapService implements IMapService {
       center,
       zoom,
       styles: mapStyle as google.maps.MapTypeStyle[],
+      disableDefaultUI: true,
+      fullscreenControl: true,
       mapTypeControl: false,
       streetViewControl: false,
-      fullscreenControl: false,
     });
   }
 

@@ -1,4 +1,4 @@
-import { type EntityPagination } from '~/libs/types/entity-pagination.js';
+import { type EntityPagination } from '~/libs/types/entity-pagination.type.js';
 
 import { type DriverWithUserData } from '../driver-with-user-data.type.js';
 
