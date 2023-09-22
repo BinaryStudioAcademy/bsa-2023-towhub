@@ -1,5 +1,5 @@
 export {
-  ClientSocketEvent,
-  ServerSocketEvent,
-  SocketResponseStatus,
+  ClientToServerEvent,
+  ServerToClientEvent,
+  ServerToClientResponseStatus,
 } from 'shared/build/index.js';

@@ -65,9 +65,9 @@ class Store {
       notification,
       truckApi,
       driversApi,
+      businessApi,
       ordersApi,
       localStorage: LocalStorage,
-      businessApi,
     };
   }
 }

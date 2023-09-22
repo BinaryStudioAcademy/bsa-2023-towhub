@@ -7,6 +7,8 @@ import {
   schema,
 } from '~/libs/packages/database/schema/schema.js';
 
+import { type TruckEntityT } from '../trucks/libs/types/types.js';
+import { TruckEntity } from '../trucks/truck.entity.js';
 import { type ShiftDatabaseModel } from './libs/types/types.js';
 import { type ShiftEntityT as ShiftEntityT } from './shift.js';
 
@@ -100,6 +102,17 @@ class ShiftRepository implements IRepository {
       .orderBy(desc(this.shiftSchema.startDate))
       .where(isNull(this.shiftSchema.endDate))
       .execute();
+  }
+
+  public async getAllOpenedWithTrucks(): Promise<TruckEntityT[]> {
+    const result = await this.db.driver().query.shifts.findMany({
+      where: isNull(this.shiftSchema.endDate),
+      with: { truck: true },
+    });
+
+    return result.map((it) =>
+      TruckEntity.initialize({ ...it.truck }).toObject(),
+    );
   }
 
   public async create(

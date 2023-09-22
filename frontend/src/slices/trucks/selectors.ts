@@ -5,6 +5,8 @@ import {
   type ValueOf,
 } from '~/libs/types/types.js';
 
+import { name as TruckSliceName } from './trucks.slice.js';
+
 const selectDataStatus = (state: RootState): ValueOf<typeof DataStatus> => {
   return state.trucks.dataStatus;
 };
@@ -20,6 +22,8 @@ const selectTruck =
 
 const selectChosenTruck = (
   state: RootState,
-): (TruckEntityT & { driverId: number }) | null => state.trucks.chosenTruck;
+): RootState[typeof TruckSliceName]['chosenTruck'] => {
+  return state[TruckSliceName].chosenTruck;
+};
 
 export { selectChosenTruck, selectDataStatus, selectTruck, selectTrucks };

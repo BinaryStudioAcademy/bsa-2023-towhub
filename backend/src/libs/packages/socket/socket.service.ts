@@ -7,7 +7,7 @@ import { type ShiftSocketService } from '~/packages/shifts/shift.js';
 import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service';
 
-import { ServerSocketEvent } from './libs/enums/enums.js';
+import { ClientToServerEvent, SocketRoom } from './libs/enums/enums.js';
 
 class SocketService {
   private io: SocketServer | null = null;
@@ -42,7 +42,7 @@ class SocketService {
 
     await this.shiftSocketService.fetchStartedShifts();
 
-    this.io.on(ServerSocketEvent.CONNECTION, async (socket: Socket) => {
+    this.io.on(ClientToServerEvent.CONNECTION, async (socket: Socket) => {
       const socketUserId = socket.handshake.auth.userId as number | undefined;
       let user: UserEntityObjectWithGroupT | null = null;
 
@@ -58,13 +58,23 @@ class SocketService {
           socket,
           io: this.io as Server,
         });
-
-        this.geolocationCacheSocketService.initialize({ socket });
       }
 
-      socket.on(ServerSocketEvent.DISCONNECT, () => {
+      this.geolocationCacheSocketService.initialize({
+        socket,
+        io: this.io as Server,
+      });
+
+      socket.on(ClientToServerEvent.DISCONNECT, () => {
         logger.info(`${socket.id} disconnected`);
       });
+
+      socket.on(ClientToServerEvent.JOIN_HOME_ROOM, () =>
+        socket.join(SocketRoom.HOME_ROOM),
+      );
+      socket.on(ClientToServerEvent.LEAVE_HOME_ROOM, () =>
+        socket.leave(SocketRoom.HOME_ROOM),
+      );
     });
   }
 }

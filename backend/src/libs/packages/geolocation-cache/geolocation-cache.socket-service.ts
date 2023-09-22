@@ -1,41 +1,70 @@
-import { type Socket } from 'socket.io';
+import { type Server, type Socket } from 'socket.io';
 
-import { ServerSocketEvent } from '~/libs/packages/socket/libs/enums/enums.js';
-import { type ServerSocketEventParameter } from '~/libs/packages/socket/libs/types/types.js';
+import {
+  ClientToServerEvent,
+  ServerToClientEvent,
+  SocketRoom,
+} from '~/libs/packages/socket/libs/enums/enums.js';
+import { getTrucksList } from '~/libs/packages/socket/libs/helpers/helpers.js';
+import { type ClientToServerEventParameter } from '~/libs/packages/socket/libs/types/types.js';
+import { type ShiftService } from '~/packages/shifts/shift.js';
 
+import { type IConfig } from '../config/config.js';
 import { type GeolocationCacheService } from './geolocation-cache.package.js';
 
 class GeolocationCacheSocketService {
   private socket!: Socket;
 
-  private geolocationCacheService!: GeolocationCacheService;
+  private io!: Server;
+
+  private geolocationCacheService: GeolocationCacheService;
+
+  private shiftService: ShiftService;
+
+  private appConfig: IConfig;
 
   public constructor({
     geolocationCacheService,
+    shiftService,
+    appConfig,
   }: {
     geolocationCacheService: GeolocationCacheService;
+    shiftService: ShiftService;
+    appConfig: IConfig;
   }) {
+    this.appConfig = appConfig;
     this.geolocationCacheService = geolocationCacheService;
+    this.shiftService = shiftService;
   }
 
-  public initialize({ socket }: { socket: Socket }): void {
+  public initialize({ socket, io }: { socket: Socket; io: Server }): void {
     this.socket = socket;
+    this.io = io;
     this.initializeListeners();
   }
 
   private initializeListeners(): void {
     this.socket.on(
-      ServerSocketEvent.TRUCK_LOCATION_UPDATE,
+      ClientToServerEvent.TRUCK_LOCATION_UPDATE,
       (
-        payload: ServerSocketEventParameter[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATE],
+        payload: ClientToServerEventParameter[typeof ClientToServerEvent.TRUCK_LOCATION_UPDATE],
       ): void => {
         this.truckLocationUpdate(payload);
       },
     );
+    setInterval(() => {
+      void getTrucksList(this.shiftService, this.geolocationCacheService).then(
+        (result) => {
+          this.io
+            .to(SocketRoom.HOME_ROOM)
+            .emit(ServerToClientEvent.TRUCKS_LIST_UPDATE, result);
+        },
+      );
+    }, this.appConfig.ENV.SOCKET.TRUCK_LIST_UPDATE_INTERVAL);
   }
 
   private truckLocationUpdate(
-    payload: ServerSocketEventParameter[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATE],
+    payload: ClientToServerEventParameter[typeof ClientToServerEvent.TRUCK_LOCATION_UPDATE],
   ): void {
     const { truckId, latLng } = payload;
     this.geolocationCacheService.setCache(truckId, latLng);

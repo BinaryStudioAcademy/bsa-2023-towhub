@@ -6,31 +6,38 @@ import {
 } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
-import { type ClientSocketEventParameter } from '~/libs/packages/socket/libs/types/types.js';
-import { type ClientSocketEvent } from '~/libs/packages/socket/socket.js';
-import { type TruckEntityT, type ValueOf } from '~/libs/types/types.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
+import { type ServerToClientEventParameter } from '~/libs/packages/socket/libs/types/types.js';
+import { type ServerToClientEvent } from '~/libs/packages/socket/socket.js';
+import { type ValueOf } from '~/libs/types/types.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
+import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
 
 import {
   addTruck,
+  findAllTrucksForBusiness,
   getAllTrucksByUserId,
-  getTrucksForBusiness,
+  setTrucks,
 } from './actions.js';
 
 type State = {
-  trucks: TruckEntityT[];
-  chosenTruck: (TruckEntityT & { driverId: number }) | null;
+  trucks: TruckGetItemResponseDto[];
+  chosenTruck: TruckGetItemResponseDto | null;
   dataStatus: ValueOf<typeof DataStatus>;
+  total: number;
+  error: HttpError | null;
 };
 
 const initialState: State = {
   trucks: [],
+  total: 0,
+  error: null,
   chosenTruck: null,
   dataStatus: DataStatus.IDLE,
 };
 
 type TruckChosenPayload =
-  ClientSocketEventParameter[typeof ClientSocketEvent.TRUCK_CHOSEN];
+  ServerToClientEventParameter[typeof ServerToClientEvent.TRUCK_CHOSEN];
 
 const truckChosen: CaseReducer<State, PayloadAction<TruckChosenPayload>> = (
   state,
@@ -46,7 +53,7 @@ const truckChosen: CaseReducer<State, PayloadAction<TruckChosenPayload>> = (
 };
 
 type TruckAvailablePayload =
-  ClientSocketEventParameter[typeof ClientSocketEvent.TRUCK_AVAILABLE];
+  ServerToClientEventParameter[typeof ServerToClientEvent.TRUCK_AVAILABLE];
 
 const truckAvailable: CaseReducer<
   State,
@@ -67,21 +74,22 @@ const { reducer, actions, name } = createSlice({
   reducers: {
     truckChosen,
     truckAvailable,
-    setChosenTruck: (
-      state,
-      action: PayloadAction<TruckEntityT & { driverId: number }>,
-    ) => {
+    setChosenTruck: (state, action: PayloadAction<TruckGetItemResponseDto>) => {
       state.chosenTruck = action.payload;
     },
   },
   extraReducers(builder) {
     builder
       .addCase(addTruck.fulfilled, (state, action) => {
-        state.trucks.push(action.payload);
+        state.trucks.unshift(action.payload);
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(getTrucksForBusiness.fulfilled, (state, action) => {
+      .addCase(setTrucks.fulfilled, (state, action) => {
+        state.trucks = action.payload;
+      })
+      .addCase(findAllTrucksForBusiness.fulfilled, (state, action) => {
         state.trucks = action.payload.items;
+        state.total = action.payload.total;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(addTruck.rejected, (state) => {
@@ -98,15 +106,16 @@ const { reducer, actions, name } = createSlice({
         state.dataStatus = DataStatus.REJECTED;
       })
       .addMatcher(
-        isAnyOf(getTrucksForBusiness.pending, addTruck.pending),
+        isAnyOf(findAllTrucksForBusiness.pending, addTruck.pending),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
         },
       )
       .addMatcher(
-        isAnyOf(getTrucksForBusiness.rejected, addTruck.rejected),
-        (state) => {
+        isAnyOf(addTruck.rejected, findAllTrucksForBusiness.rejected),
+        (state, action) => {
           state.dataStatus = DataStatus.REJECTED;
+          state.error = action.payload as HttpError | null;
         },
       );
   },

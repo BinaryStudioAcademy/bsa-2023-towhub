@@ -5,6 +5,7 @@ export {
   CommonValidationMessage,
   ContentType,
   ServerErrorType,
+  SortMethod,
 } from './libs/enums/enums.js';
 export {
   ApplicationError,
@@ -29,12 +30,12 @@ export {
   HttpMessage,
 } from './libs/packages/http/http.js';
 export {
-  type ClientSocketEventParameter,
-  type ServerSocketEventParameter,
-  type ServerSocketEventResponse,
-  ClientSocketEvent,
-  ServerSocketEvent,
-  SocketResponseStatus,
+  type ClientToServerEventParameter,
+  type ServerToClientEventParameter,
+  type ServerToClientEventResponse,
+  ClientToServerEvent,
+  ServerToClientEvent,
+  ServerToClientResponseStatus,
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
@@ -45,11 +46,13 @@ export {
   type NullableProperties,
   type OperationResult,
   type PaginationParameters,
+  type PaginationWithSortingParameters,
   type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
   type ServerValidationErrorResponse,
+  type SortMethodValue,
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
@@ -140,7 +143,10 @@ export {
   ShiftValidationMessage,
 } from './packages/shifts/shifts.js';
 export {
+  type TruckAddRequestDto,
   type TruckEntityT,
+  type TruckGetAllResponseDto,
+  type TruckGetItemResponseDto,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,

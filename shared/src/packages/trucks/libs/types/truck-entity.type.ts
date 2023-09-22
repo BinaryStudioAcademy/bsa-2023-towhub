@@ -16,6 +16,7 @@ type TruckEntityT = {
   pricePerKm: number;
   status: ValueOf<typeof TruckStatus>;
   businessId: number;
+  createdAt: string;
 };
 
 export { type TruckEntityT };

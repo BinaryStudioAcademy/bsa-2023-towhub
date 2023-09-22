@@ -7,7 +7,6 @@ import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 import {
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
-  type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 
 type Constructor = {
@@ -21,12 +20,11 @@ class DriversApi extends HttpApi {
     super({ path: ApiPath.BUSINESS, baseUrl, http, storage });
   }
 
-  public async getPageOfDrivers({
-    page,
-    size,
-  }: GetPaginatedPageQuery): Promise<DriverGetAllResponseDto> {
+  public async getPageOfDrivers(
+    queryString = '',
+  ): Promise<DriverGetAllResponseDto> {
     const data = await this.load(
-      this.getFullEndpoint(`${ApiPath.DRIVERS}?page=${page}&size=${size}`, {}),
+      this.getFullEndpoint(`${ApiPath.DRIVERS}?${queryString}`, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,

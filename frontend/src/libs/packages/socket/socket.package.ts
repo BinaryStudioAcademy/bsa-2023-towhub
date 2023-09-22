@@ -6,54 +6,62 @@ import {
   type ValueOf,
 } from '~/libs/types/types.js';
 
-import { type SocketResponseStatus } from './libs/enums/enums.js';
 import {
-  type ClientSocketEventParameter,
-  type ServerSocketEventParameter,
-  type ServerSocketEventResponse,
+  type ClientToServerEvent,
+  type ServerToClientEvent,
+  type ServerToClientResponseStatus,
+} from './libs/enums/enums.js';
+import {
+  type ClientToServerEventParameter,
+  type ServerToClientEventParameter,
+  type ServerToClientEventResponse,
 } from './libs/types/types.js';
 
 class SocketService {
   private io: Socket | undefined;
 
   public connect(user: UserEntityObjectWithGroupT | null): void {
-    const auth = user ? { userId: user.id } : {};
-    this.io = io(config.ENV.API.SERVER_URL, {
-      transports: ['websocket', 'polling'],
-      auth,
-    });
+    if (!this.io) {
+      const auth = user ? { userId: user.id } : {};
+      this.io = io(config.ENV.API.SERVER_URL, {
+        transports: ['websocket', 'polling'],
+        auth,
+      });
+    }
   }
 
   public addListener<
     T extends
-      keyof ClientSocketEventParameter = keyof ClientSocketEventParameter,
+      keyof ServerToClientEventParameter = keyof ServerToClientEventParameter,
   >(
     event: T,
-    listener: (payload?: ClientSocketEventParameter[T]) => void,
+    listener: (payload?: ServerToClientEventParameter[T]) => void,
   ): void {
     this.io?.on(event as string, listener);
   }
 
-  public emit<T extends keyof ServerSocketEventParameter>({
+  public emit<T extends keyof ClientToServerEventParameter>({
     event,
     eventPayload,
   }: {
-    event: T;
-    eventPayload: ServerSocketEventParameter[T];
+    event:
+      | ValueOf<typeof ClientToServerEvent>
+      | ValueOf<typeof ServerToClientEvent>;
+    eventPayload?: ClientToServerEventParameter[T];
   }): void {
     this.io?.emit(event, eventPayload);
   }
 
-  public emitWithAck<T extends keyof ServerSocketEventResponse>({
+  public emitWithAck<T extends keyof ServerToClientEventResponse>({
     event,
     eventPayload,
     callback,
   }: {
     event: T;
-    eventPayload: ServerSocketEventParameter[T];
+    eventPayload: ClientToServerEventParameter[T];
     callback: (
-      status: ValueOf<typeof SocketResponseStatus>,
-      response: ServerSocketEventResponse[T],
+      status: ValueOf<typeof ServerToClientResponseStatus>,
+      response: ServerToClientEventResponse[T],
     ) => void;
   }): void {
     this.io?.emit(event, eventPayload, callback);

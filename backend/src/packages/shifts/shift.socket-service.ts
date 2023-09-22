@@ -1,12 +1,12 @@
 import { type Server, type Socket } from 'socket.io';
 
 import {
-  ClientSocketEvent,
-  ServerSocketEvent,
+  ClientToServerEvent,
+  ServerToClientEvent,
+  ServerToClientResponseStatus,
   SocketError,
-  SocketResponseStatus,
 } from '~/libs/packages/socket/libs/enums/enums.js';
-import { type ServerSocketEventParameter } from '~/libs/packages/socket/libs/types/types.js';
+import { type ClientToServerEventParameter } from '~/libs/packages/socket/libs/types/types.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
 import { type TruckService } from '../trucks/truck.service.js';
@@ -70,11 +70,11 @@ class ShiftSocketService {
     });
 
     socket.on(
-      ServerSocketEvent.START_SHIFT,
+      ClientToServerEvent.START_SHIFT,
       async (
-        payload: ServerSocketEventParameter[typeof ServerSocketEvent.START_SHIFT],
+        payload: ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT],
         callback: (
-          status: ValueOf<typeof SocketResponseStatus>,
+          status: ValueOf<typeof ServerToClientResponseStatus>,
           message?: string,
         ) => void,
       ): Promise<void> => {
@@ -82,15 +82,15 @@ class ShiftSocketService {
       },
     );
 
-    socket.on(ServerSocketEvent.END_SHIFT, async () => {
+    socket.on(ClientToServerEvent.END_SHIFT, async () => {
       await this.endShift({ io, user });
     });
   }
 
   private async startShift(
-    payload: ServerSocketEventParameter[typeof ServerSocketEvent.START_SHIFT],
+    payload: ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT],
     callback: (
-      status: ValueOf<typeof SocketResponseStatus>,
+      status: ValueOf<typeof ServerToClientResponseStatus>,
       message?: string,
     ) => void,
     {
@@ -109,13 +109,13 @@ class ShiftSocketService {
 
     if (isTruckNotAvailable) {
       return callback(
-        SocketResponseStatus.BAD_EMIT,
+        ServerToClientResponseStatus.BAD_EMIT,
         SocketError.TRUCK_NOT_AVAILABLE,
       );
     }
 
     const timer = setTimeout(() => {
-      socket.emit(ClientSocketEvent.DRIVER_TIMED_OUT);
+      socket.emit(ServerToClientEvent.DRIVER_TIMED_OUT);
       void socketEndShift({
         io,
         startedShiftsStore: this.startedShiftsStore,
@@ -135,7 +135,7 @@ class ShiftSocketService {
       startedShift: { socket, timer },
     });
 
-    callback(SocketResponseStatus.OK);
+    callback(ServerToClientResponseStatus.OK);
   }
 
   private async endShift({

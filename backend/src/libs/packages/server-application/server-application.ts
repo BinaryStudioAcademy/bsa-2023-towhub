@@ -10,7 +10,7 @@ import {
   shiftController,
   shiftSocketService,
 } from '~/packages/shifts/shift.js';
-import { truckController, truckService } from '~/packages/trucks/trucks.js';
+import { truckController } from '~/packages/trucks/trucks.js';
 import { userController, userService } from '~/packages/users/users.js';
 
 import { ServerApp } from './server-app.js';
@@ -33,7 +33,6 @@ const serverApp = new ServerApp({
   logger,
   database,
   apis: [apiV1],
-  truckService,
   geolocationCacheSocketService,
   userService,
   shiftSocketService,

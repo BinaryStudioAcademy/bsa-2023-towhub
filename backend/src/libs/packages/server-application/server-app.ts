@@ -28,7 +28,6 @@ import {
 import { authPlugin } from '~/packages/auth/auth.js';
 import { filesValidationPlugin } from '~/packages/files/files.js';
 import { type ShiftSocketService } from '~/packages/shifts/shift.js';
-import { type TruckService } from '~/packages/trucks/truck.service.js';
 import { type UserService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
@@ -48,7 +47,6 @@ type Constructor = {
   database: IDatabase;
   apis: IServerAppApi[];
   geolocationCacheSocketService: GeolocationCacheSocketService;
-  truckService: TruckService;
   userService: UserService;
   shiftSocketService: ShiftSocketService;
 };
@@ -66,8 +64,6 @@ class ServerApp implements IServerApp {
 
   private geolocationCacheSocketService: GeolocationCacheSocketService;
 
-  private truckService: TruckService;
-
   private userService: UserService;
 
   private shiftSocketService: ShiftSocketService;
@@ -78,7 +74,6 @@ class ServerApp implements IServerApp {
     database,
     apis,
     geolocationCacheSocketService,
-    truckService,
     userService,
     shiftSocketService,
   }: Constructor) {
@@ -88,7 +83,6 @@ class ServerApp implements IServerApp {
     this.apis = apis;
 
     this.geolocationCacheSocketService = geolocationCacheSocketService;
-    this.truckService = truckService;
     this.userService = userService;
     this.shiftSocketService = shiftSocketService;
 

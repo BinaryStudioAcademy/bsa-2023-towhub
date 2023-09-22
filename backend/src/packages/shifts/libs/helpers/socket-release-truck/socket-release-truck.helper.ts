@@ -1,6 +1,6 @@
 import { type Server } from 'socket.io';
 
-import { ClientSocketEvent } from '~/libs/packages/socket/libs/enums/enums.js';
+import { ServerToClientEvent } from '~/libs/packages/socket/libs/enums/enums.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
 import { type TruckService } from '~/packages/trucks/truck.service.js';
 
@@ -13,7 +13,7 @@ const socketReleaseTruck = async (
     status: TruckStatus.AVAILABLE,
   });
 
-  io?.emit(ClientSocketEvent.TRUCK_AVAILABLE, { truckId });
+  io?.emit(ServerToClientEvent.TRUCK_AVAILABLE, { truckId });
 };
 
 export { socketReleaseTruck };

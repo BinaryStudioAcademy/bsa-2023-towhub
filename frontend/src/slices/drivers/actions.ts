@@ -6,21 +6,15 @@ import {
 
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import { type AsyncThunkConfig } from '~/libs/types/async-thunk-config.type';
-import {
-  type DriverGetAllResponseDto,
-  type PaginationParameters,
-} from '~/libs/types/types.js';
+import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 import { DriverCreationMessage } from '~/packages/drivers/libs/enums/enums.js';
-import {
-  type DriverAddPayload,
-  type GetPaginatedPageQuery,
-} from '~/packages/drivers/libs/types/types.js';
+import { type DriverAddPayload } from '~/packages/drivers/libs/types/types.js';
 
 import { ACTIONS_TYPES } from './libs/enums/driver-action.js';
 
 const getDriversPage = createAsyncThunk<
   DriverGetAllResponseDto,
-  GetPaginatedPageQuery,
+  string | undefined,
   AsyncThunkConfig
 >(ACTIONS_TYPES.GET_DRIVERS_PAGE, async (payload, { extra }) => {
   return await extra.driversApi.getPageOfDrivers(payload);
@@ -28,15 +22,15 @@ const getDriversPage = createAsyncThunk<
 
 const addDriver = createAsyncThunk<
   DriverAddResponseWithGroup,
-  DriverAddPayload & PaginationParameters,
+  DriverAddPayload & { queryString?: string },
   AsyncThunkConfig
 >(
   ACTIONS_TYPES.ADD_DRIVER,
-  async ({ size, page, ...payload }, { rejectWithValue, extra, dispatch }) => {
+  async ({ queryString, ...payload }, { rejectWithValue, extra, dispatch }) => {
     try {
       const result = await extra.driversApi.addDriver(payload);
 
-      await dispatch(getDriversPage({ size, page }));
+      await dispatch(getDriversPage(queryString));
 
       extra.notification.success(DriverCreationMessage.SUCCESS);
 

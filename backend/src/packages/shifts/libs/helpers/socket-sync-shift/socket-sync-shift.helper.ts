@@ -1,6 +1,6 @@
 import { type Socket } from 'socket.io';
 
-import { ClientSocketEvent } from '~/libs/packages/socket/libs/types/types.js';
+import { ServerToClientEvent } from '~/libs/packages/socket/libs/types/types.js';
 import { type TruckService } from '~/packages/trucks/trucks.js';
 
 import { type StartedShiftsStore } from '../../types/types.js';
@@ -19,7 +19,7 @@ const socketSyncShift = async ({
   const shift = startedShiftsStore.get(userId);
 
   if (!shift) {
-    socket.emit(ClientSocketEvent.SHIFT_SYNC, null);
+    socket.emit(ServerToClientEvent.SHIFT_SYNC, null);
 
     return;
   }
@@ -29,7 +29,7 @@ const socketSyncShift = async ({
   const { truckId } = shift.data;
 
   const truck = await truckService.findById(truckId);
-  socket.emit(ClientSocketEvent.SHIFT_SYNC, {
+  socket.emit(ServerToClientEvent.SHIFT_SYNC, {
     truck,
   });
 };

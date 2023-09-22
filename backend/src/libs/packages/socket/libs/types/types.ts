@@ -1,4 +1,4 @@
 export {
-  type ServerSocketEventParameter,
-  ClientSocketEvent,
+  type ClientToServerEventParameter,
+  ServerToClientEvent,
 } from 'shared/build/index.js';

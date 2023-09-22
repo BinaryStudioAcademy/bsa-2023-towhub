@@ -30,6 +30,8 @@ class TruckEntity implements IEntity {
 
   private status: ValueOf<typeof TruckStatus>;
 
+  private createdAt: string;
+
   private constructor({
     id,
     manufacturer,
@@ -40,6 +42,7 @@ class TruckEntity implements IEntity {
     towType,
     status,
     businessId,
+    createdAt,
   }: NullableProperties<TruckEntityT, 'id'>) {
     this.id = id;
     this.manufacturer = manufacturer;
@@ -50,6 +53,7 @@ class TruckEntity implements IEntity {
     this.towType = towType;
     this.businessId = businessId;
     this.status = status;
+    this.createdAt = createdAt;
   }
 
   public static initialize({
@@ -62,6 +66,7 @@ class TruckEntity implements IEntity {
     towType,
     status,
     businessId,
+    createdAt,
   }: TruckDatabaseModel): TruckEntity {
     return new TruckEntity({
       id,
@@ -73,6 +78,7 @@ class TruckEntity implements IEntity {
       year,
       status,
       businessId,
+      createdAt: new Date(createdAt).toDateString(),
     });
   }
 
@@ -84,6 +90,7 @@ class TruckEntity implements IEntity {
     year,
     towType,
     businessId,
+    createdAt,
   }: Omit<TruckDatabaseModel, 'id'>): TruckEntity {
     return new TruckEntity({
       id: null,
@@ -95,6 +102,7 @@ class TruckEntity implements IEntity {
       year,
       status: TruckStatus.AVAILABLE,
       businessId,
+      createdAt: new Date(createdAt).toDateString(),
     });
   }
 
@@ -109,6 +117,7 @@ class TruckEntity implements IEntity {
       licensePlateNumber: this.licensePlateNumber,
       status: this.status,
       businessId: this.businessId,
+      createdAt: this.createdAt,
     };
   }
 
@@ -122,6 +131,7 @@ class TruckEntity implements IEntity {
       licensePlateNumber: this.licensePlateNumber,
       status: this.status,
       businessId: this.businessId,
+      createdAt: this.createdAt,
     };
   }
 }
