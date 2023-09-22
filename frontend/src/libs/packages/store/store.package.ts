@@ -8,6 +8,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { AppEnvironment } from '~/libs/enums/enums.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { authApi } from '~/packages/auth/auth.js';
+import { businessApi } from '~/packages/business/business.js';
 import { driverApi } from '~/packages/drivers/drivers.js';
 import { filesApi } from '~/packages/files/files.js';
 import { ordersApi } from '~/packages/orders/orders.js';
@@ -59,6 +60,7 @@ class Store {
       filesApi,
       notification,
       truckApi,
+      businessApi,
       driverApi,
       ordersApi,
       localStorage: LocalStorage,

@@ -1,6 +1,7 @@
 import { type notification } from '~/libs/packages/notification/notification.js';
 import { type LocalStorage } from '~/libs/packages/storage/storage.js';
 import { type authApi } from '~/packages/auth/auth.js';
+import { type businessApi } from '~/packages/business/business.js';
 import { type driverApi } from '~/packages/drivers/drivers.js';
 import { type filesApi } from '~/packages/files/files.js';
 import { type ordersApi } from '~/packages/orders/orders.js';
@@ -27,6 +28,7 @@ type ExtraArguments = {
   notification: typeof notification;
   truckApi: typeof truckApi;
   localStorage: typeof LocalStorage;
+  businessApi: typeof businessApi;
   ordersApi: typeof ordersApi;
   driverApi: typeof driverApi;
 };

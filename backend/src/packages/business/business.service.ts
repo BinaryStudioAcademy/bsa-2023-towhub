@@ -1,6 +1,7 @@
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
+import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 
 import { type DriverService } from '../drivers/driver.service.js';
@@ -11,6 +12,12 @@ import {
   type DriverGetAllResponseDto,
 } from '../drivers/drivers.js';
 import { type ShiftEntity } from '../shifts/shift.js';
+import {
+  type TruckAddRequestDto,
+  type TruckEntity,
+  type TruckGetAllResponseDto,
+} from '../trucks/libs/types/types.js';
+import { type TruckService } from '../trucks/truck.service.js';
 import { type UserEntityT } from '../users/users.js';
 import { BusinessEntity } from './business.entity.js';
 import { type BusinessRepository } from './business.repository.js';
@@ -27,12 +34,16 @@ class BusinessService implements IService {
 
   private driverService: DriverService;
 
+  private truckService: TruckService;
+
   public constructor(
     businessRepository: BusinessRepository,
     driverService: DriverService,
+    truckService: TruckService,
   ) {
     this.businessRepository = businessRepository;
     this.driverService = driverService;
+    this.truckService = truckService;
   }
 
   public async findById(id: number): Promise<BusinessEntityT | null> {
@@ -202,6 +213,41 @@ class BusinessService implements IService {
     }
 
     return await this.driverService.delete(driverId);
+  }
+
+  public async findAllTrucksByBusinessId(
+    userId: number,
+    query: PaginationWithSortingParameters,
+  ): Promise<TruckGetAllResponseDto> {
+    const business = await this.findByOwnerId(userId);
+
+    if (!business) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.truckService.findAllByBusinessId(business.id, query);
+  }
+
+  public async createTruck(
+    payload: TruckAddRequestDto,
+    userId: number,
+  ): Promise<TruckEntity> {
+    const business = await this.findByOwnerId(userId);
+
+    if (!business) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.BUSINESS_DOES_NOT_EXIST,
+      });
+    }
+
+    return await this.truckService.create({
+      ...payload,
+      businessId: business.id,
+    });
   }
 
   public checkisDriverBelongedToBusiness({

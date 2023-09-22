@@ -128,6 +128,9 @@ const trucks = pgTable(
     id: serial('id').primaryKey(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    businessId: integer('business_id')
+      .notNull()
+      .references(() => business.id),
     manufacturer: varchar('manufacturer').notNull(),
     capacity: integer('capacity').notNull(),
     pricePerKm: real('price_per_km').notNull(),
@@ -187,6 +190,13 @@ const businessRelations = relations(users, ({ many }) => ({
   orders: many(orders),
 }));
 
+const shiftsRelations = relations(shifts, ({ one }) => ({
+  truck: one(trucks, {
+    fields: [shifts.truckId],
+    references: [trucks.id],
+  }),
+}));
+
 const usersTrucksRelations = relations(usersTrucks, ({ one }) => ({
   truck: one(trucks, {
     fields: [usersTrucks.truckId],
@@ -221,6 +231,7 @@ export {
   ordersRelations,
   orderStatus,
   shifts,
+  shiftsRelations,
   trucks,
   trucksRelations,
   users,
