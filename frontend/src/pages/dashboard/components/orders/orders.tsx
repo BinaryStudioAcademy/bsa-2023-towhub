@@ -6,10 +6,14 @@ import {
   useAppDispatch,
   useAppSelector,
   useEffect,
+  useMemo,
   useState,
 } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
-import { type OrderQueryParameters } from '~/libs/types/types.js';
+import {
+  type OrderQueryParameters,
+  type OrderResponseDto,
+} from '~/libs/types/types.js';
 import { actions as ordersActions } from '~/slices/orders/orders.js';
 import { selectOrders } from '~/slices/orders/selectors.js';
 
@@ -46,6 +50,16 @@ const Orders: React.FC = () => {
     );
   }, [orders]);
 
+  const sortOrders = useMemo(
+    () =>
+      [...orders].sort(
+        (a: OrderResponseDto, b: OrderResponseDto) =>
+          new Date(a.scheduledTime).getTime() -
+          new Date(b.scheduledTime).getTime(),
+      ),
+    [orders],
+  );
+
   return (
     <div className={styles.orders}>
       <LoadScript
@@ -54,7 +68,7 @@ const Orders: React.FC = () => {
       >
         <div className={styles.orderlistArea}>
           <OrderFilter onChange={setFilter} />
-          <OrderList orders={orders} select={setShownRoute} />
+          <OrderList orders={sortOrders} select={setShownRoute} />
         </div>
         <div className={styles.mapArea}>
           <div className={styles.mapWrapper}>

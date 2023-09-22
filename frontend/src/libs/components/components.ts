@@ -21,7 +21,7 @@ export { Notification } from './notification/notification.js';
 export { OrderCard } from './order-card/order-card.js';
 export { OrderFilter } from './order-filter/order-filter.js';
 export { OrderList } from './order-list/order-list.js';
-export { OrderListCardBusiness } from './order-list-card/order-list-card-business.js';
+export { OrderListCardBusiness } from './order-list-card-business/order-list-card-business.js';
 export { PageLayout } from './page-layout/page-layout.js';
 export { Pagination } from './pagination/pagination.js';
 export { PlainSvgIcon } from './plain-svg-icon/plain-svg-icon.js';

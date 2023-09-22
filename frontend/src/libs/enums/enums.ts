@@ -15,5 +15,7 @@ export {
   ContentType,
   HttpMessage,
   ORDER_STATUSES,
+  OrderStatus,
   ServerErrorType,
+  SortMethod,
 } from 'shared/build/index.js';

@@ -3,9 +3,8 @@ import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
 import { MapService } from '~/libs/packages/map/map.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
+import { DEFAULT_ZOOM } from './libs/constants/constants.js';
 import styles from './styles.module.scss';
-
-const DEFAULT_ZOOM = 16;
 
 type Properties = {
   center?: google.maps.LatLngLiteral;
@@ -27,11 +26,11 @@ const Map: React.FC<Properties> = ({
   center,
   zoom = DEFAULT_ZOOM,
   className,
+  markers = [],
   destination,
   pricePerKm,
   startAddress,
   endAddress,
-  markers,
   shownRoute,
 }: Properties) => {
   const mapReference = useRef<HTMLDivElement>(null);
@@ -45,7 +44,7 @@ const Map: React.FC<Properties> = ({
       return;
     }
 
-    if (!center && markers) {
+    if (!center && markers.length > 0) {
       const bounds = new google.maps.LatLngBounds();
 
       for (const marker of markers) {
@@ -87,7 +86,7 @@ const Map: React.FC<Properties> = ({
   }, [dispatch, endAddress, startAddress, pricePerKm]);
 
   useEffect(() => {
-    if (markers && markers.length > 0) {
+    if (markers.length > 0) {
       for (const marker of markers) {
         mapService.current?.addMarker(marker, false);
       }

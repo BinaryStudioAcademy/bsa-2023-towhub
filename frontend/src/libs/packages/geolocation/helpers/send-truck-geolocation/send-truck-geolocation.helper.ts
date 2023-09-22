@@ -9,7 +9,7 @@ const sendTruckGeolocation = (
     event: ServerSocketEvent.TRUCK_LOCATION_UPDATE,
     eventPayload: {
       truckId,
-      latLng: { latitude: coords.latitude, longitude: coords.longitude },
+      latLng: { lat: coords.latitude, lng: coords.longitude },
     },
   });
 };

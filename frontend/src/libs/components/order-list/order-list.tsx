@@ -1,4 +1,4 @@
-import { type OrderResponseDto } from 'shared/build';
+import { type OrderResponseDto } from '~/libs/types/types.js';
 
 import { OrderListCardBusiness } from '../components.js';
 import styles from './styles.module.scss';
@@ -19,10 +19,7 @@ const OrderList: React.FC<Properties> = ({ orders, select }: Properties) => {
     <ul className={styles.orderList}>
       {orders.map((order) => (
         <li key={order.id} className={styles.orderItem}>
-          <OrderListCardBusiness
-            order={order}
-            select={select}
-          ></OrderListCardBusiness>
+          <OrderListCardBusiness order={order} select={select} />
         </li>
       ))}
     </ul>
