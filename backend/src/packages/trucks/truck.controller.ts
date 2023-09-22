@@ -10,10 +10,9 @@ import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { TruckApiPath } from './libs/enums/enums.js';
 import { type TruckEntity } from './libs/types/types.js';
 import {
-  truckCreateRequestBody,
   truckGetParameters,
   truckUpdateRequestBody,
-} from './libs/validation-schema/validation-schemas.js';
+} from './libs/validation-schemas/validation-schemas.js';
 import { type TruckService } from './truck.service.js';
 
 /**
@@ -102,6 +101,9 @@ import { type TruckService } from './truck.service.js';
  *         pricePerKm:
  *           type: number
  *           example: 5
+ *         businessId:
+ *           type: number
+ *           example: 1
  *
  *     ErrorType:
  *       type: object
@@ -137,20 +139,6 @@ class TruckController extends Controller {
     this.truckService = truckService;
 
     this.addRoute({
-      path: TruckApiPath.ROOT,
-      method: 'POST',
-      validation: {
-        body: truckCreateRequestBody,
-      },
-      handler: (request) =>
-        this.create(
-          request as ApiHandlerOptions<{
-            body: Omit<TruckEntity, 'id'>;
-          }>,
-        ),
-    });
-
-    this.addRoute({
       path: TruckApiPath.$ID,
       method: 'PUT',
       validation: {
@@ -160,7 +148,7 @@ class TruckController extends Controller {
       handler: (request) =>
         this.update(
           request as ApiHandlerOptions<{
-            body: Partial<TruckEntity>;
+            body: Partial<Omit<TruckEntity, 'createdAt'>>;
             params: { id: number };
           }>,
         ),
@@ -203,42 +191,6 @@ class TruckController extends Controller {
 
   /**
    * @swagger
-   * /trucks/:
-   *   post:
-   *     summary: Create a new truck
-   *     tags:
-   *       - truck
-   *     requestBody:
-   *       description: Truck data to be added
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             $ref: '#/components/schemas/Truck'
-   *     responses:
-   *       '201':
-   *         description: Truck created successfully
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/TruckResponse'
-   *       '400':
-   *         description: Bad request
-   *
-   */
-  private async create(
-    options: ApiHandlerOptions<{
-      body: Omit<TruckEntity, 'id'>;
-    }>,
-  ): Promise<ApiHandlerResponse> {
-    return {
-      status: HttpCode.CREATED,
-      payload: await this.truckService.create(options.body),
-    };
-  }
-
-  /**
-   * @swagger
    * /trucks/{id}:
    *   put:
    *     summary: Update a truck by ID
@@ -274,7 +226,7 @@ class TruckController extends Controller {
 
   private async update(
     options: ApiHandlerOptions<{
-      body: Partial<TruckEntity>;
+      body: Partial<Omit<TruckEntity, 'createdAt'>>;
       params: { id: number };
     }>,
   ): Promise<ApiHandlerResponse> {

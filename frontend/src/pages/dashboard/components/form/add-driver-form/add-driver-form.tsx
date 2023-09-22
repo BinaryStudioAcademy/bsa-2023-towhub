@@ -25,7 +25,7 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
   const trucks = useAppSelector((state) => state.trucks.trucks);
 
   useEffect(
-    () => void dispatch(truckActions.getTrucksForBusiness()),
+    () => void dispatch(truckActions.findAllTrucksForBusiness()),
     [dispatch],
   );
 

@@ -7,21 +7,26 @@ import {
   useAppTable,
   useCallback,
   useQueryParameters,
-  useState,
+  useToggle,
 } from '~/libs/hooks/hooks.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
-import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
+import {
+  type DriverGetAllResponseDto,
+  type PaginationParameters,
+} from '~/libs/types/types.js';
 import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
-import { AddDriverForm } from '~/pages/business/components/add-driver-form/add-driver-form.js';
 import { getDriversPage } from '~/slices/drivers/actions.js';
 import { actions } from '~/slices/drivers/drivers.js';
 
+import { AddDriverForm } from '../../form/form.js';
 import { columns } from './columns/columns.js';
 import styles from './styles.module.scss';
 
 const DriverTable: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { getQueryParameters } = useQueryParameters();
+  const { getQueryParameters, searchParameters } = useQueryParameters();
+  const [isToggled, handleToggle] = useToggle();
+
   const { drivers, total, dataStatus } = useAppSelector(({ drivers }) => ({
     drivers: drivers.drivers,
     total: drivers.total,
@@ -32,35 +37,29 @@ const DriverTable: React.FC = () => {
     'page',
   ) as Queries;
 
-  const [isActiveModal, setIsActiveModal] = useState(false);
-
-  const { pageSize, pageIndex, changePageSize, changePageIndex } =
-    useAppTable<DriverGetAllResponseDto>({
-      tableFetchCall: getDriversPage,
-      initialPageIndex: initialPage ? Number(initialPage) : null,
-      initialPageSize: initialSize ? Number(initialSize) : null,
-    });
-
-  const handleModal = useCallback(() => {
-    setIsActiveModal((isActiveModal) => !isActiveModal);
-  }, []);
+  const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
+    DriverGetAllResponseDto,
+    PaginationParameters
+  >({
+    tableFetchCall: getDriversPage,
+    initialPageIndex: initialPage ? Number(initialPage) : null,
+    initialPageSize: initialSize ? Number(initialSize) : null,
+  });
 
   const handleSubmit = useCallback(
     (payload: DriverCreateUpdateRequestDto) => {
       void dispatch(
-        actions.addDriver({ payload, size: pageSize, page: pageIndex }),
+        actions.addDriver({
+          payload,
+          queryString: searchParameters.toString(),
+        }),
       );
-      handleModal();
+      handleToggle();
     },
-    [dispatch, pageSize, pageIndex, handleModal],
+    [dispatch, searchParameters, handleToggle],
   );
 
-  const message = (
-    <div>
-      There are no data here yet. Please,{' '}
-      <span className={styles.red}>add new driver</span>
-    </div>
-  );
+  const message = 'There are no data here yet. Please, add a driver';
 
   return (
     <div className={styles.container}>
@@ -69,9 +68,9 @@ const DriverTable: React.FC = () => {
           Company Drivers
         </h2>
         <Button
-          label="Add a Driver"
+          label="Add Driver"
           className={styles.btn}
-          onClick={handleModal}
+          onClick={handleToggle}
         />
       </div>
       <Table
@@ -86,7 +85,7 @@ const DriverTable: React.FC = () => {
         changePageSize={changePageSize}
         emptyTableMessage={message}
       />
-      <Modal isOpen={isActiveModal} isCentered onClose={handleModal}>
+      <Modal isOpen={isToggled} isCentered onClose={handleToggle}>
         <div className={styles.formWrapper}>
           <AddDriverForm onSubmit={handleSubmit} />
         </div>
