@@ -1,0 +1,85 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  border: 1px solid $blue-light;
+  border-radius: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 13px 13px 10px;
+  font-size: 20px;
+  border-bottom: 1px solid $grey-border;
+}
+
+.body {
+  padding: 6px 16px;
+  color: $grey;
+}
+
+.badge {
+  width: 100px;
+}
+
+.done {
+  color: $green;
+}
+
+.canceled {
+  color: $red-dark;
+}
+
+.locations {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 20px;
+  padding-left: 30px;
+}
+
+.startPoint,
+.endPoint {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.startPoint::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #d7e5ff;
+  border: 1px solid #7392e2;
+  border-radius: 100%;
+}
+
+.startPoint::after {
+  content: url("src/assets/img/arrow.svg");
+  position: absolute;
+  top: 19px;
+  left: 0;
+}
+
+.endPoint::before {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #fed6d7;
+  border: 1px solid #d2abac;
+  border-radius: 100%;
+}
+
+.price {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+  font-size: 20px;
+}

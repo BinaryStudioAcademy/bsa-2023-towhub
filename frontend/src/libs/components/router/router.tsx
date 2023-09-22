@@ -5,6 +5,7 @@ import { useEffect, useGetCurrentUser } from '~/libs/hooks/hooks.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import {
   Auth,
+  CustomerHistory,
   Dashboard,
   HomePage,
   NotFound,
@@ -57,6 +58,19 @@ const Router = (): JSX.Element => {
           element={
             <PageLayout>
               <Dashboard />
+            </PageLayout>
+          }
+        />
+      </Route>
+      <Route
+        path={AppRoute.ROOT}
+        element={<ProtectedRoute allowedUserGroup={UserGroupKey.CUSTOMER} />}
+      >
+        <Route
+          path={AppRoute.ORDER_HISTORY}
+          element={
+            <PageLayout isSidebarHidden>
+              <CustomerHistory />
             </PageLayout>
           }
         />

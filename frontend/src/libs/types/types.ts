@@ -11,6 +11,7 @@ export { type TruckFilters } from './truck-filters.type.js';
 export { type Libraries, LoadScript } from '@react-google-maps/api';
 export { type ColumnDef } from '@tanstack/react-table';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
+export { type SingleValue } from 'react-select';
 export {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,

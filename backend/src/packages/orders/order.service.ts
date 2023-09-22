@@ -10,8 +10,10 @@ import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
+  type FindAllUserOrdersResponse,
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
+  type OrderFindAllUserOrdersQuery,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
@@ -233,6 +235,26 @@ class OrderService implements Omit<IService, 'find'> {
     });
 
     return usersOrders.map((it) => OrderEntity.initialize(it).toObject());
+  }
+
+  public async findAllUserOrders(
+    userId: number,
+    { status, ...query }: OrderFindAllUserOrdersQuery,
+  ): Promise<FindAllUserOrdersResponse> {
+    const search = {
+      userId,
+      status,
+    };
+    const usersOrders = await this.orderRepository.findAllUserOrders(
+      search,
+      query,
+    );
+    const total = await this.orderRepository.getTotal(search);
+
+    return {
+      items: usersOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      total,
+    };
   }
 
   public async delete({

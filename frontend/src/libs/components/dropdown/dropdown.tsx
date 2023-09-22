@@ -52,7 +52,7 @@ const getClassNames = ({
     container: () => styles.container,
     control: () => styles.control,
     option: () => styles.option,
-    menu: () => styles.singleValue,
+    menu: () => styles.menu,
     placeholder: () => styles.placeholder,
     singleValue: () => styles.singleValue,
     dropdownIndicator: () =>
@@ -79,7 +79,6 @@ const Dropdown = <T extends FieldValues>({
   isCustomValueContainer = false,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const handleOpenMenu = useCallback(() => {
     setIsMenuOpen(true);
   }, []);

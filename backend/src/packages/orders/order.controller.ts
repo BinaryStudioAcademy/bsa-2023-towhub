@@ -13,14 +13,17 @@ import { AuthStrategy } from '../auth/auth.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrdersApiPath } from './libs/enums/enums.js';
 import {
+  type FindAllUserOrdersResponse,
   type Id,
   type OrderCalculatePriceRequestDto,
   type OrderCreateRequestDto,
+  type OrderFindAllUserOrdersQuery,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import {
   orderCreateRequestBody,
+  orderFindAllUserOrdersQuery,
   orderGetParameter,
   orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';
@@ -229,6 +232,22 @@ class OrderController extends Controller {
         this.findAllBusinessOrders(
           options as ApiHandlerOptions<{
             user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: OrdersApiPath.USER,
+      method: 'GET',
+      authStrategy: AuthStrategy.INJECT_USER,
+      validation: {
+        query: orderFindAllUserOrdersQuery,
+      },
+      handler: (options) =>
+        this.findAllUserOrders(
+          options as ApiHandlerOptions<{
+            user: UserEntityObjectWithGroupT;
+            query: OrderFindAllUserOrdersQuery;
           }>,
         ),
     });
@@ -535,6 +554,64 @@ class OrderController extends Controller {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.findAllBusinessOrders(options.user),
+    };
+  }
+
+  /**
+   * @swagger
+   * /orders/user:
+   *    get:
+   *      tags:
+   *       - orders
+   *      summary: Get all user orders
+   *      description: Get all user orders
+   *      security:
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Orders found
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                    items:
+   *                      type: array
+   *                      items:
+   *                        $ref: '#/components/schemas/Order'
+   *                    total:
+   *                      type: string
+   *                      example: 1
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *        400:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/BusinessNotExistError'
+   */
+
+  private async findAllUserOrders(
+    options: ApiHandlerOptions<{
+      user: UserEntityObjectWithGroupT;
+      query: OrderFindAllUserOrdersQuery;
+    }>,
+  ): Promise<ApiHandlerResponse<FindAllUserOrdersResponse>> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.orderService.findAllUserOrders(
+        options.user.id,
+        options.query,
+      ),
     };
   }
 

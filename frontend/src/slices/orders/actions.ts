@@ -4,12 +4,14 @@ import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
+  type FindAllUserOrdersResponse,
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderResponseDto,
 } from '~/packages/orders/orders.js';
 
+import { ACTIONS_TYPES } from './libs/enums/order-action.js';
 import { name as sliceName } from './order.slice.js';
 
 const createOrder = createAsyncThunk<
@@ -41,4 +43,12 @@ const calculateOrderPrice = createAsyncThunk<
   return ordersApi.calculatePrice(payload);
 });
 
-export { calculateOrderPrice, createOrder };
+const getUserOrdersPage = createAsyncThunk<
+  FindAllUserOrdersResponse,
+  string | undefined,
+  AsyncThunkConfig
+>(ACTIONS_TYPES.GET_USER_ORDERS_PAGE, async (payload, { extra }) => {
+  return await extra.ordersApi.getAllUserOrders(payload);
+});
+
+export { calculateOrderPrice, createOrder, getUserOrdersPage };

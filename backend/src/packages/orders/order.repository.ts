@@ -1,10 +1,12 @@
-import { eq } from 'drizzle-orm';
+import { and, desc, eq, notInArray, sql } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
+import { type GetPaginatedPageQuery } from '../business/libs/types/types.js';
 import { type UserEntityT } from '../users/users.js';
+import { OrderStatus } from './libs/enums/enums.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
   type OrderDatabaseModel,
@@ -153,6 +155,75 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       );
   }
 
+  public async findAllUserOrders(
+    search: Partial<{
+      userId: OrderEntityT['userId'];
+      status: OrderEntityT['status'];
+    }>,
+    query: GetPaginatedPageQuery,
+  ): Promise<OrderEntityT[]> {
+    const offset = query.page * query.size;
+
+    return await this.db
+      .driver()
+      .select({
+        id: this.ordersSchema.id,
+        userId: this.ordersSchema.userId,
+        businessId: this.ordersSchema.businessId,
+        price: this.ordersSchema.price,
+        scheduledTime: this.ordersSchema.scheduledTime,
+        startPoint: this.ordersSchema.startPoint,
+        endPoint: this.ordersSchema.endPoint,
+        status: this.ordersSchema.status,
+        carsQty: this.ordersSchema.carsQty,
+        customerName: this.ordersSchema.customerName,
+        customerPhone: this.ordersSchema.customerPhone,
+        shiftId: this.ordersSchema.shiftId,
+        driver: {
+          id: this.shiftsSchema.driverId,
+          firstName: this.usersSchema.firstName,
+          lastName: this.usersSchema.lastName,
+          email: this.usersSchema.email,
+          phone: this.usersSchema.phone,
+          driverLicenseNumber: this.driversSchema.driverLicenseNumber,
+        },
+        truck: {
+          id: this.shiftsSchema.truckId,
+          licensePlateNumber: this.trucksSchema.licensePlateNumber,
+        },
+      })
+      .from(this.ordersSchema)
+      .innerJoin(
+        this.shiftsSchema,
+        eq(this.ordersSchema.shiftId, this.shiftsSchema.id),
+      )
+      .innerJoin(
+        this.usersSchema,
+        eq(this.shiftsSchema.driverId, this.usersSchema.id),
+      )
+      .innerJoin(
+        this.driversSchema,
+        eq(this.driversSchema.userId, this.shiftsSchema.driverId),
+      )
+      .innerJoin(
+        this.trucksSchema,
+        eq(this.trucksSchema.id, this.shiftsSchema.truckId),
+      )
+      .where(
+        and(
+          combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
+          notInArray(this.ordersSchema.status, [
+            OrderStatus.CONFIRMED,
+            OrderStatus.PENDING,
+            OrderStatus.PICKING_UP,
+          ]),
+        ),
+      )
+      .offset(offset)
+      .limit(query.size)
+      .orderBy(desc(this.ordersSchema.createdAt));
+  }
+
   public async create(
     entity: Omit<OrderEntityT, 'id' | 'shift' | 'driver' | 'truck'> & {
       shiftId: number;
@@ -195,6 +266,30 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .returning();
 
     return Boolean(item);
+  }
+
+  public async getTotal(
+    search: Partial<{
+      userId: OrderEntityT['userId'];
+      status: OrderEntityT['status'];
+    }>,
+  ): Promise<number> {
+    const [order] = await this.db
+      .driver()
+      .select({ count: sql<number>`count(*)` })
+      .from(this.ordersSchema)
+      .where(
+        and(
+          combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
+          notInArray(this.ordersSchema.status, [
+            OrderStatus.CONFIRMED,
+            OrderStatus.PENDING,
+            OrderStatus.PICKING_UP,
+          ]),
+        ),
+      );
+
+    return order.count;
   }
 }
 

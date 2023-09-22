@@ -21,6 +21,7 @@ $colors: (
   blue-dark: $blue-dark,
   grey: $grey,
   red: $red,
+  red-extra-light: $red-extra-light,
   blue: $blue,
   white: $white,
   red-light: $red-light,
@@ -28,6 +29,7 @@ $colors: (
   grey-light: $grey-light,
   grey-extra-light: $grey-extra-light,
   green: $green,
+  green-extra-light: $green-extra-light,
 );
 
 @each $color, $value in $colors {
