@@ -1,3 +1,3 @@
-type PlainViewRenderParameter = { body?: string };
+type PlainViewRenderParameter = { body: string };
 
 export { type PlainViewRenderParameter };

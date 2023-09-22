@@ -20,7 +20,7 @@ import {
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
-import { TemplateName } from '../mail/libs/enums/template-name.enum.js';
+import { TemplateName } from '../mail/libs/enums/enums.js';
 import { type DriverCredentialsViewRenderParameter } from '../mail/libs/views/driver-credentials/libs/types/types.js';
 import { mailService } from '../mail/mail.js';
 import { type TruckService } from '../trucks/truck.service.js';
