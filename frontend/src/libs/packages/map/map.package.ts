@@ -5,7 +5,7 @@ import { createIcon } from './libs/helpers/helpers.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
 import mapStyle from './map.config.json';
 
-type Constructor = {
+type MapOptions = {
   mapElement: HTMLDivElement;
   center?: google.maps.LatLngLiteral;
   zoom: number;
@@ -24,7 +24,7 @@ class MapService implements IMapService {
 
   private geoCoder: google.maps.Geocoder;
 
-  public constructor({ mapElement, center, zoom, bounds }: Constructor) {
+  public constructor({ mapElement, center, zoom, bounds }: MapOptions) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
@@ -37,17 +37,7 @@ class MapService implements IMapService {
     this.initMap({ mapElement, center, zoom, bounds });
   }
 
-  private initMap({
-    mapElement,
-    center,
-    zoom,
-    bounds,
-  }: {
-    mapElement: HTMLDivElement;
-    center?: google.maps.LatLngLiteral;
-    zoom?: number;
-    bounds?: google.maps.LatLngBounds;
-  }): void {
+  private initMap({ mapElement, center, zoom, bounds }: MapOptions): void {
     if (!center && bounds) {
       this.map = new google.maps.Map(mapElement, {
         zoom,
