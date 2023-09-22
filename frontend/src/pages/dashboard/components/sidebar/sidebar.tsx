@@ -45,13 +45,11 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
       >
         <Button
           {...(!isCollapsed && { label: tab.name })}
-          className={[
+          className={getValidClassNames(
             'h5',
             styles.btn,
-            {
-              [styles.active]: checkActiveTab(location.pathname, tab.name),
-            },
-          ]}
+            checkActiveTab(location.pathname, tab.path) && styles.active,
+          )}
           frontIcon={tab.icon}
           variant="text"
           onClick={handleTabClick(tab.name)}

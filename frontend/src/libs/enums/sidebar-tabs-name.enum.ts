@@ -1,9 +1,9 @@
-const TabsPath = {
+const SidebarTabsName = {
   ORDERS: 'orders',
   TRUCKS: 'trucks',
+  TRUCK: 'truck',
   DRIVERS: 'drivers',
-  CHOOSE_TRUCK: 'choose-truck',
   PROFILE: 'profile',
 } as const;
 
-export { TabsPath };
+export { SidebarTabsName };
