@@ -120,6 +120,7 @@ export {
   type OrderEntity,
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
+  type OrderStatusValues,
   type OrderUpdateRequestDto,
   ORDER_STATUSES,
   orderCreateRequestBody,

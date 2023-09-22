@@ -6,7 +6,7 @@
   height: max-content;
   min-height: 100%;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: $white;
 
   @media screen and (min-width: $screen-size-lg) {
     flex-direction: row;
@@ -33,5 +33,5 @@
   height: calc(100vh - 160px);
   overflow: hidden;
   border-radius: 20px;
-  box-shadow: 0 4px 4px #00000021;
+  box-shadow: $shadow-light;
 }

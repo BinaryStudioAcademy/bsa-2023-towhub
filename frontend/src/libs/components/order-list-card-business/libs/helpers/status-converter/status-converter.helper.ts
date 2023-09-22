@@ -1,7 +1,6 @@
-import { OrderStatus } from 'shared/build';
-import { type OrderStatusValues } from 'shared/build/packages/orders/libs/types/order-status-values.type';
-
+import { OrderStatus } from '~/libs/enums/enums.js';
 import { type Color } from '~/libs/types/color.type';
+import { type OrderStatusValues } from '~/libs/types/types.js';
 
 const statusConverter = (
   status: OrderStatusValues,

@@ -1,11 +1,10 @@
-import { type OrderResponseDto } from 'shared/build/index.js';
-
-import { IconName } from '~/libs/enums/icon-name.enum';
+import { IconName } from '~/libs/enums/enums.js';
 import {
   getValidClassNames,
   jsonToLatLngLiteral,
 } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
+import { type OrderResponseDto } from '~/libs/types/types.js';
 
 import { Badge, Icon } from '../components.js';
 import { statusConverter } from './libs/helpers/helpers.js';
