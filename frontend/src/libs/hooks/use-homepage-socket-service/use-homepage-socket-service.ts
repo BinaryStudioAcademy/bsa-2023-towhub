@@ -22,10 +22,6 @@ const useHomePageSocketService = (): ReturnType => {
     socketService.addListener(
       ServerToClientEvent.TRUCKS_LIST_UPDATE,
       (payload): void => {
-        if (!payload) {
-          return;
-        }
-
         void dispatch(actions.setTrucks(payload));
       },
     );

@@ -3,10 +3,12 @@ import { Route } from 'react-router-dom';
 import { DriverSocketProvider } from '~/libs/components/driver-socket-provider/driver-socket-provider.js';
 import { AppRoute } from '~/libs/enums/enums.js';
 import {
+  useAppDispatch,
   useAppSelector,
   useEffect,
   useGetCurrentUser,
 } from '~/libs/hooks/hooks.js';
+import { socketTryAddDriverListeners } from '~/libs/packages/socket/libs/helpers/helpers.js';
 import { socket } from '~/libs/packages/socket/socket.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import {
@@ -27,15 +29,22 @@ import { RouterProvider } from '../router-provider/router-provider.js';
 const Router = (): JSX.Element => {
   const { getCurrentUser } = useGetCurrentUser();
   const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    void getCurrentUser();
+    if (!user) {
+      void getCurrentUser();
+    }
     socket.connect(user);
+
+    if (user && user.group.key === UserGroupKey.DRIVER) {
+      socketTryAddDriverListeners(dispatch);
+    }
 
     return () => {
       socket.disconnect();
     };
-  }, [getCurrentUser, user]);
+  }, [getCurrentUser, user, dispatch]);
 
   return (
     <RouterProvider>

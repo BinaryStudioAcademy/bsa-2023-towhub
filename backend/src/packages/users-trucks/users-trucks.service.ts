@@ -38,7 +38,9 @@ class UsersTrucksService implements IService<UsersTrucksEntityObjectT> {
   ): Promise<TruckEntityT[]> {
     const trucks = await this.usersTrucksRepository.findTrucksByUserId(userId);
 
-    return trucks.map((truck) => TruckEntity.initialize(truck).toObject());
+    return trucks.map((truck) => {
+      return TruckEntity.initialize(truck).toObject();
+    });
   }
 
   public async create(

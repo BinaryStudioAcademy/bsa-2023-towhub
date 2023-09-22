@@ -7,19 +7,21 @@ import {
 import { actions as driverActions } from '~/slices/driver/driver.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
-const socketAddDriverListeners = (
+const socketTryAddDriverListeners = (
   dispatch: ReturnType<typeof useAppDispatch>,
 ): void => {
+  const hasDriverListeners = socketClient.hasListeners(
+    ServerToClientEvent.SHIFT_SYNC,
+  );
+
+  if (hasDriverListeners) {
+    return;
+  }
+
   socketClient.addListener(ServerToClientEvent.ERROR, (payload) => {
-    if (!payload) {
-      return;
-    }
     notification.error(payload.message);
   });
   socketClient.addListener(ServerToClientEvent.TRUCK_CHOSEN, (payload) => {
-    if (!payload) {
-      return;
-    }
     dispatch(truckActions.truckChosen(payload));
   });
   socketClient.addListener(ServerToClientEvent.DRIVER_TIMED_OUT, () => {
@@ -29,18 +31,11 @@ const socketAddDriverListeners = (
     dispatch(driverActions.shiftEnded());
   });
   socketClient.addListener(ServerToClientEvent.TRUCK_AVAILABLE, (payload) => {
-    if (!payload) {
-      return;
-    }
     dispatch(truckActions.truckAvailable(payload));
   });
   socketClient.addListener(ServerToClientEvent.SHIFT_SYNC, (payload) => {
-    void dispatch(
-      payload
-        ? driverActions.setStartShiftSuccess(payload.truck)
-        : driverActions.shiftEnded(),
-    );
+    void dispatch(driverActions.setStartShiftSuccess(payload.truck));
   });
 };
 
-export { socketAddDriverListeners };
+export { socketTryAddDriverListeners };

@@ -83,7 +83,7 @@ class ShiftSocketService {
     );
 
     socket.on(ClientToServerEvent.END_SHIFT, async () => {
-      await this.endShift({ io, user });
+      await this.endShift({ io, user, socket });
     });
   }
 
@@ -141,11 +141,15 @@ class ShiftSocketService {
   private async endShift({
     user,
     io,
+    socket,
   }: {
     user: UserEntityObjectWithGroupT;
     io: Server;
+    socket: Socket;
   }): Promise<void> {
     if (!this.startedShiftsStore.has(user.id)) {
+      socket.emit(ServerToClientEvent.SHIFT_ENDED);
+
       return;
     }
     await socketEndShift({

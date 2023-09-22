@@ -39,7 +39,6 @@ const socket: Middleware<
       case driverActions.startShift.type: {
         const { truckId } =
           action.payload as ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT];
-
         socketClient.emitWithAck({
           event: ClientToServerEvent.START_SHIFT,
           eventPayload: {

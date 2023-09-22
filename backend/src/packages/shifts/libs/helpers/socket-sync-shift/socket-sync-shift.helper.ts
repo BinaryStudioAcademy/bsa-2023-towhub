@@ -19,7 +19,7 @@ const socketSyncShift = async ({
   const shift = startedShiftsStore.get(userId);
 
   if (!shift) {
-    socket.emit(ServerToClientEvent.SHIFT_SYNC, null);
+    socket.emit(ServerToClientEvent.SHIFT_ENDED, null);
 
     return;
   }

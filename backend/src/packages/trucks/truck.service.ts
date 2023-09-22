@@ -86,9 +86,7 @@ class TruckService implements IService {
       });
     }
 
-    const updatePayload = { ...truck, ...payload };
-
-    const [result] = await this.repository.update(id, updatePayload);
+    const [result] = await this.repository.update(id, payload);
 
     return TruckEntity.initialize(result).toObject();
   }

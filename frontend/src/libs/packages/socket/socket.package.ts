@@ -18,7 +18,14 @@ import {
 } from './libs/types/types.js';
 
 class SocketService {
-  private io: Socket | undefined;
+  private io: Socket | null = null;
+
+  public hasListeners<
+    T extends
+      keyof ServerToClientEventParameter = keyof ServerToClientEventParameter,
+  >(event: T): boolean {
+    return this.io ? this.io.hasListeners(event) : false;
+  }
 
   public connect(user: UserEntityObjectWithGroupT | null): void {
     if (!this.io) {
@@ -35,9 +42,16 @@ class SocketService {
       keyof ServerToClientEventParameter = keyof ServerToClientEventParameter,
   >(
     event: T,
-    listener: (payload?: ServerToClientEventParameter[T]) => void,
+    listener: (payload: ServerToClientEventParameter[T]) => void,
   ): void {
     this.io?.on(event as string, listener);
+  }
+
+  public removeAllListeners<
+    T extends
+      keyof ServerToClientEventParameter = keyof ServerToClientEventParameter,
+  >(event: T): void {
+    this.io?.removeAllListeners(event);
   }
 
   public emit<T extends keyof ClientToServerEventParameter>({
@@ -69,6 +83,7 @@ class SocketService {
 
   public disconnect(): void {
     this.io?.disconnect();
+    this.io = null;
   }
 }
 

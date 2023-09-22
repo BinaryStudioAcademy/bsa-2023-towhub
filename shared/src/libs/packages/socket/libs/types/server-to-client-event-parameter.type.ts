@@ -12,7 +12,7 @@ type ServerToClientEventParameter = {
   };
   [ServerToClientEvent.SHIFT_SYNC]: {
     truck: TruckEntityT;
-  } | null;
+  };
   [ServerToClientEvent.ERROR]: {
     message: string;
   };
