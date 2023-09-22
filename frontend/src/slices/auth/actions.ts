@@ -81,4 +81,21 @@ const getCurrent = createAsyncThunk<
   }
 });
 
-export { getCurrent, signIn, signUp };
+const logOut = createAsyncThunk<unknown, undefined, AsyncThunkConfig>(
+  `${sliceName}/logout`,
+  async (_, { extra, rejectWithValue }) => {
+    const { authApi, notification, localStorage } = extra;
+
+    try {
+      await authApi.logOut();
+      await localStorage.drop(StorageKey.TOKEN);
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
+      notification.warning(getErrorMessage(error));
+
+      return rejectWithValue({ ...error, message: error.message });
+    }
+  },
+);
+
+export { getCurrent, logOut, signIn, signUp };

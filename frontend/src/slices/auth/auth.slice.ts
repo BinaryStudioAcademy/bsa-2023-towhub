@@ -9,7 +9,7 @@ import {
   type ValueOf,
 } from '~/libs/types/types.js';
 
-import { getCurrent, signIn, signUp } from './actions.js';
+import { getCurrent, logOut, signIn, signUp } from './actions.js';
 
 type State = {
   error: HttpError | null;
@@ -69,6 +69,17 @@ const { reducer, actions, name } = createSlice({
     });
     builder.addCase(getCurrent.rejected, (state) => {
       state.dataStatus = DataStatus.REJECTED;
+    });
+    builder.addCase(logOut.pending, (state) => {
+      state.dataStatus = DataStatus.PENDING;
+    });
+    builder.addCase(logOut.fulfilled, (state) => {
+      state.user = initialState.user;
+      state.dataStatus = DataStatus.FULFILLED;
+    });
+    builder.addCase(logOut.rejected, (state, { payload }) => {
+      state.dataStatus = DataStatus.REJECTED;
+      state.error = payload ?? null;
     });
   },
 });
