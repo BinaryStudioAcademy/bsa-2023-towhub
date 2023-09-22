@@ -7,7 +7,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { AppEnvironment } from '~/libs/enums/enums.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
-import { socket } from '~/libs/packages/store/middlewares/middlewares.js';
+import { socket as socketClient } from '~/libs/packages/socket/socket.js';
 import { authApi } from '~/packages/auth/auth.js';
 import { businessApi } from '~/packages/business/business.js';
 import { driversApi } from '~/packages/drivers/drivers.js';
@@ -52,7 +52,6 @@ class Store {
             extraArgument: this.extraArguments,
           },
         }),
-        socket,
       ],
     });
   }
@@ -68,6 +67,7 @@ class Store {
       businessApi,
       ordersApi,
       localStorage: LocalStorage,
+      socketClient,
     };
   }
 }

@@ -10,7 +10,10 @@ import {
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
 import { selectUser } from '~/slices/auth/selectors.js';
 import { actions as driverActions } from '~/slices/driver/driver.js';
-import { ShiftStatus } from '~/slices/driver/libs/enums/enums.js';
+import {
+  ShiftStatus,
+  TruckChoiceStatus,
+} from '~/slices/driver/libs/enums/enums.js';
 import {
   selectShiftStatus,
   selectTruckChoiceStatus,
@@ -28,9 +31,8 @@ const AvailableTrucks: React.FC = () => {
   const trucks = useAppSelector(selectTrucks);
   const areTrucksLoading = dataStatus === DataStatus.PENDING;
   const navigate = useNavigate();
-  const { isPending: isTruckBeingChosen } = useAppSelector(
-    selectTruckChoiceStatus,
-  );
+  const truckChoiceStatus = useAppSelector(selectTruckChoiceStatus);
+  const isTruckBeingChosen = truckChoiceStatus === TruckChoiceStatus.PENDING;
   const shiftStatus = useAppSelector(selectShiftStatus);
 
   useEffect(() => {
@@ -41,7 +43,7 @@ const AvailableTrucks: React.FC = () => {
 
   const handleClick = useCallback(
     (truckId: number) => {
-      dispatch(driverActions.startShift(truckId));
+      void dispatch(driverActions.startShift({ truckId }));
     },
     [dispatch],
   );

@@ -12,18 +12,10 @@ const selectDataStatus = (state: RootState): ValueOf<typeof DataStatus> => {
 };
 
 const selectTrucks = (state: RootState): TruckEntityT[] => state.trucks.trucks;
-
-const selectTruck =
-  (truckId: number | null) =>
-  (state: RootState): TruckEntityT | undefined =>
-    truckId
-      ? state.trucks.trucks.find((truck) => truck.id === truckId)
-      : undefined;
-
 const selectChosenTruck = (
   state: RootState,
 ): RootState[typeof TruckSliceName]['chosenTruck'] => {
   return state[TruckSliceName].chosenTruck;
 };
 
-export { selectChosenTruck, selectDataStatus, selectTruck, selectTrucks };
+export { selectChosenTruck, selectDataStatus, selectTrucks };

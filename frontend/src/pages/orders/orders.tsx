@@ -25,7 +25,7 @@ const Orders: React.FC = () => {
     }
   }, [shiftStatus, navigate]);
   const handleClick = useCallback(() => {
-    dispatch(driverActions.endShift());
+    void dispatch(driverActions.endShift());
   }, [dispatch]);
 
   return (

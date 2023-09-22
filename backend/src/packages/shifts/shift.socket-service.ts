@@ -7,7 +7,7 @@ import {
   SocketError,
 } from '~/libs/packages/socket/libs/enums/enums.js';
 import { type ClientToServerEventParameter } from '~/libs/packages/socket/libs/types/types.js';
-import { type ValueOf } from '~/libs/types/types.js';
+import { type FirstParameter, type ValueOf } from '~/libs/types/types.js';
 
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/libs/types/types.js';
@@ -72,7 +72,9 @@ class ShiftSocketService {
     socket.on(
       ClientToServerEvent.START_SHIFT,
       async (
-        payload: ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT],
+        payload: FirstParameter<
+          ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT]
+        >,
         callback: (
           status: ValueOf<typeof ServerToClientResponseStatus>,
           message?: string,
@@ -88,7 +90,9 @@ class ShiftSocketService {
   }
 
   private async startShift(
-    payload: ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT],
+    payload: FirstParameter<
+      ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT]
+    >,
     callback: (
       status: ValueOf<typeof ServerToClientResponseStatus>,
       message?: string,

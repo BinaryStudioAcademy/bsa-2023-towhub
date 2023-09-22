@@ -9,7 +9,7 @@ import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
 import { type ServerToClientEventParameter } from '~/libs/packages/socket/libs/types/types.js';
 import { type ServerToClientEvent } from '~/libs/packages/socket/socket.js';
-import { type ValueOf } from '~/libs/types/types.js';
+import { type FirstParameter, type ValueOf } from '~/libs/types/types.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
 import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
 
@@ -36,15 +36,16 @@ const initialState: State = {
   dataStatus: DataStatus.IDLE,
 };
 
-type TruckChosenPayload =
-  ServerToClientEventParameter[typeof ServerToClientEvent.TRUCK_CHOSEN];
+type TruckChosenPayload = FirstParameter<
+  ServerToClientEventParameter[typeof ServerToClientEvent.TRUCK_CHOSEN]
+>;
 
 const truckChosen: CaseReducer<State, PayloadAction<TruckChosenPayload>> = (
   state,
   action,
 ) => {
-  const { truckId } = action.payload;
-  const chosenTruck = state.trucks.find((truck) => truck.id === truckId);
+  const { id } = action.payload;
+  const chosenTruck = state.trucks.find((truck) => truck.id === id);
 
   if (!chosenTruck) {
     return;
@@ -52,15 +53,16 @@ const truckChosen: CaseReducer<State, PayloadAction<TruckChosenPayload>> = (
   chosenTruck.status = TruckStatus.ACTIVE;
 };
 
-type TruckAvailablePayload =
-  ServerToClientEventParameter[typeof ServerToClientEvent.TRUCK_AVAILABLE];
+type TruckAvailablePayload = FirstParameter<
+  ServerToClientEventParameter[typeof ServerToClientEvent.TRUCK_AVAILABLE]
+>;
 
 const truckAvailable: CaseReducer<
   State,
   PayloadAction<TruckAvailablePayload>
 > = (state, action) => {
-  const { truckId } = action.payload;
-  const chosenTruck = state.trucks.find((truck) => truck.id === truckId);
+  const { id } = action.payload;
+  const chosenTruck = state.trucks.find((truck) => truck.id === id);
 
   if (!chosenTruck) {
     return;

@@ -2,15 +2,11 @@ import { type Socket, io } from 'socket.io-client';
 
 import { config } from '~/libs/packages/config/config.js';
 import {
+  type FirstParameter,
   type UserEntityObjectWithGroupT,
-  type ValueOf,
 } from '~/libs/types/types.js';
 
-import {
-  type ClientToServerEvent,
-  type ServerToClientEvent,
-  type ServerToClientResponseStatus,
-} from './libs/enums/enums.js';
+import { type ClientToServerEvent } from './libs/enums/enums.js';
 import {
   type ClientToServerEventParameter,
   type ServerToClientEventParameter,
@@ -18,7 +14,10 @@ import {
 } from './libs/types/types.js';
 
 class SocketService {
-  private io: Socket | null = null;
+  private io: Socket<
+    ServerToClientEventParameter,
+    ClientToServerEventParameter
+  > | null = null;
 
   public hasListeners<
     T extends
@@ -40,11 +39,8 @@ class SocketService {
   public addListener<
     T extends
       keyof ServerToClientEventParameter = keyof ServerToClientEventParameter,
-  >(
-    event: T,
-    listener: (payload: ServerToClientEventParameter[T]) => void,
-  ): void {
-    this.io?.on(event as string, listener);
+  >(event: T, listener: ServerToClientEventParameter[T]): void {
+    this.io?.on(event, listener as never);
   }
 
   public removeAllListeners<
@@ -54,31 +50,37 @@ class SocketService {
     this.io?.removeAllListeners(event);
   }
 
-  public emit<T extends keyof ClientToServerEventParameter>({
+  public emit<
+    T extends
+      keyof ClientToServerEventParameter = keyof ClientToServerEventParameter,
+  >({
     event,
     eventPayload,
-  }: {
-    event:
-      | ValueOf<typeof ClientToServerEvent>
-      | ValueOf<typeof ServerToClientEvent>;
-    eventPayload?: ClientToServerEventParameter[T];
-  }): void {
-    this.io?.emit(event, eventPayload);
-  }
-
-  public emitWithAck<T extends keyof ServerToClientEventResponse>({
-    event,
-    eventPayload,
-    callback,
   }: {
     event: T;
-    eventPayload: ClientToServerEventParameter[T];
-    callback: (
-      status: ValueOf<typeof ServerToClientResponseStatus>,
-      response: ServerToClientEventResponse[T],
-    ) => void;
+    eventPayload?: FirstParameter<ClientToServerEventParameter[T]>;
   }): void {
-    this.io?.emit(event, eventPayload, callback);
+    this.io?.emit(event as 'end_shift', eventPayload);
+  }
+
+  public emitWithAck<
+    T extends
+      keyof ClientToServerEventParameter = keyof ClientToServerEventParameter,
+    R extends keyof ServerToClientEventResponse = Extract<
+      T,
+      keyof ServerToClientEventResponse
+    >,
+  >({
+    event,
+    eventPayload,
+  }: {
+    event: T;
+    eventPayload: FirstParameter<ClientToServerEventParameter[T]>;
+  }): Promise<ServerToClientEventResponse[R]> | undefined {
+    return this.io?.emitWithAck(
+      event as typeof ClientToServerEvent.EVENT_WITH_ACK,
+      eventPayload,
+    );
   }
 
   public disconnect(): void {

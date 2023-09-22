@@ -3,10 +3,10 @@ import { type TruckEntityT } from '~/slices/trucks/libs/types/types.js';
 
 import {
   type ShiftStatusValue,
-  type TruckChoiceStatus,
+  type TruckChoiceStatusValues,
 } from './libs/types/types.js';
 
-const selectTruckChoiceStatus = (state: RootState): TruckChoiceStatus => {
+const selectTruckChoiceStatus = (state: RootState): TruckChoiceStatusValues => {
   return state.driver.truckChoiceStatus;
 };
 

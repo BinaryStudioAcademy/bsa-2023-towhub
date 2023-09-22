@@ -7,6 +7,7 @@ import {
 } from '~/libs/packages/socket/libs/enums/enums.js';
 import { getTrucksList } from '~/libs/packages/socket/libs/helpers/helpers.js';
 import { type ClientToServerEventParameter } from '~/libs/packages/socket/libs/types/types.js';
+import { type FirstParameter } from '~/libs/types/types.js';
 import { type ShiftService } from '~/packages/shifts/shift.js';
 
 import { type IConfig } from '../config/config.js';
@@ -47,7 +48,9 @@ class GeolocationCacheSocketService {
     this.socket.on(
       ClientToServerEvent.TRUCK_LOCATION_UPDATE,
       (
-        payload: ClientToServerEventParameter[typeof ClientToServerEvent.TRUCK_LOCATION_UPDATE],
+        payload: FirstParameter<
+          ClientToServerEventParameter[typeof ClientToServerEvent.TRUCK_LOCATION_UPDATE]
+        >,
       ): void => {
         this.truckLocationUpdate(payload);
       },
@@ -64,7 +67,9 @@ class GeolocationCacheSocketService {
   }
 
   private truckLocationUpdate(
-    payload: ClientToServerEventParameter[typeof ClientToServerEvent.TRUCK_LOCATION_UPDATE],
+    payload: FirstParameter<
+      ClientToServerEventParameter[typeof ClientToServerEvent.TRUCK_LOCATION_UPDATE]
+    >,
   ): void {
     const { truckId, latLng } = payload;
     this.geolocationCacheService.setCache(truckId, latLng);

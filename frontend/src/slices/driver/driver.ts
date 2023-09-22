@@ -11,8 +11,8 @@ const allActions = {
   ...actions,
   endShift,
   setShiftStatus,
-  setStartShiftSuccess,
   shiftEnded,
+  setStartShiftSuccess,
   startShift,
 };
 

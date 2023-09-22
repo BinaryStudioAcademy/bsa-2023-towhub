@@ -2,30 +2,21 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { type TruckEntityT } from '~/slices/trucks/libs/types/types.js';
 
-import {
-  setShiftStatus,
-  setStartShiftSuccess,
-  shiftEnded,
-  startShift,
-} from './actions.js';
-import { ShiftStatus } from './libs/enums/enums.js';
+import { setShiftStatus, shiftEnded, startShift } from './actions.js';
+import { ShiftStatus, TruckChoiceStatus } from './libs/enums/enums.js';
 import {
   type ShiftStatusValue,
-  type TruckChoiceStatus,
+  type TruckChoiceStatusValues,
 } from './libs/types/types.js';
 
 type State = {
-  truckChoiceStatus: TruckChoiceStatus;
+  truckChoiceStatus: TruckChoiceStatusValues;
   activeTruck: TruckEntityT | null;
   shiftStatus: ShiftStatusValue;
 };
 
 const initialState: State = {
-  truckChoiceStatus: {
-    isSuccess: false,
-    isPending: false,
-    isIdle: false,
-  },
+  truckChoiceStatus: TruckChoiceStatus.IDLE,
   activeTruck: null,
   shiftStatus: ShiftStatus.UNKNOWN,
 };
@@ -35,30 +26,22 @@ const { reducer, actions, name } = createSlice({
   name: 'drivers',
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(startShift, (state) => {
-      state.truckChoiceStatus.isIdle = false;
-      state.truckChoiceStatus.isSuccess = false;
-      state.truckChoiceStatus.isPending = true;
+    builder.addCase(startShift.pending, (state) => {
+      state.truckChoiceStatus = TruckChoiceStatus.PENDING;
     });
     builder.addCase(shiftEnded, (state) => {
-      state.truckChoiceStatus.isIdle = false;
-      state.truckChoiceStatus.isSuccess = false;
-      state.truckChoiceStatus.isPending = false;
+      state.truckChoiceStatus = TruckChoiceStatus.IDLE;
       state.shiftStatus = ShiftStatus.DISABLED;
       state.activeTruck = null;
     });
-    builder.addCase(setStartShiftSuccess, (state, action) => {
+    builder.addCase(startShift.fulfilled, (state, action) => {
+      state.truckChoiceStatus = TruckChoiceStatus.SUCCESS;
       state.shiftStatus = ShiftStatus.ACTIVE;
-      state.activeTruck = action.payload.truck;
-      state.truckChoiceStatus.isIdle = false;
-      state.truckChoiceStatus.isSuccess = true;
-      state.truckChoiceStatus.isPending = false;
+      state.activeTruck = action.payload;
     });
     builder.addCase(setShiftStatus, (state, action) => {
       state.shiftStatus = action.payload.shiftStatus;
-      state.truckChoiceStatus.isIdle = false;
-      state.truckChoiceStatus.isSuccess = false;
-      state.truckChoiceStatus.isPending = false;
+      state.truckChoiceStatus = TruckChoiceStatus.UNKNOWN;
     });
   },
 });

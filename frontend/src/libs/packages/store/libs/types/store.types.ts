@@ -1,4 +1,5 @@
 import { type notification } from '~/libs/packages/notification/notification.js';
+import { type socket as socketClient } from '~/libs/packages/socket/socket.js';
 import { type LocalStorage } from '~/libs/packages/storage/storage.js';
 import { type authApi } from '~/packages/auth/auth.js';
 import { type businessApi } from '~/packages/business/business.js';
@@ -33,6 +34,7 @@ type ExtraArguments = {
   businessApi: typeof businessApi;
   ordersApi: typeof ordersApi;
   driversApi: typeof driversApi;
+  socketClient: typeof socketClient;
 };
 
 export { type ExtraArguments, type RootReducer };

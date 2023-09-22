@@ -708,7 +708,6 @@
     "truck_status": {
       "name": "truck_status",
       "values": {
-        "Not available": "Not available",
         "Available": "Available",
         "Active": "Active",
         "Busy": "Busy"

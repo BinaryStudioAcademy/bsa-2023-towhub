@@ -124,7 +124,6 @@ const drivers = pgTable('driver_details', {
 });
 
 const truckStatusEnum = pgEnum('truck_status', [
-  TruckStatus.NOT_AVAILABLE,
   TruckStatus.AVAILABLE,
   TruckStatus.ACTIVE,
   TruckStatus.BUSY,

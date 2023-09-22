@@ -36,11 +36,13 @@ export {
   ClientToServerEvent,
   ServerToClientEvent,
   ServerToClientResponseStatus,
+  SocketError,
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type EntityPagination,
   type ErrorConstructor,
+  type FirstParameter,
   type GetPaginatedPageQuery,
   type Id,
   type NullableProperties,

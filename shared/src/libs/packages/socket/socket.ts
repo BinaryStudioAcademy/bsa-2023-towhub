@@ -2,6 +2,7 @@ export {
   ClientToServerEvent,
   ServerToClientEvent,
   ServerToClientResponseStatus,
+  SocketError,
 } from './libs/enums/enums.js';
 export {
   type ClientToServerEventParameter,

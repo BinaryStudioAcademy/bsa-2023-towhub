@@ -33,8 +33,8 @@ const socketTryAddDriverListeners = (
   socketClient.addListener(ServerToClientEvent.TRUCK_AVAILABLE, (payload) => {
     dispatch(truckActions.truckAvailable(payload));
   });
-  socketClient.addListener(ServerToClientEvent.SHIFT_SYNC, (payload) => {
-    void dispatch(driverActions.setStartShiftSuccess(payload.truck));
+  socketClient.addListener(ServerToClientEvent.SHIFT_SYNC, ({ truck }) => {
+    void dispatch(driverActions.setStartShiftSuccess(truck));
   });
 };
 
