@@ -27,7 +27,7 @@ type Properties<T> = {
   isLoading?: boolean;
   isTableEditable?: boolean;
   columns: ColumnDef<T>[];
-  emptyTableMessage?: JSX.Element;
+  emptyTableMessage?: string;
   pageSize: number;
   totalRow: number;
   pageIndex: number;
@@ -110,7 +110,9 @@ const Table = <T,>({
   return (
     <div className={styles.container}>
       {isLoading ? (
-        <Spinner />
+        <div className={styles.spinnerWrapper}>
+          <Spinner />
+        </div>
       ) : (
         <div className={styles.wrapper}>
           <table
