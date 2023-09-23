@@ -5,7 +5,7 @@ export {
   type DriverBusinessIdPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetDriversPagePayload,
   type DriverGetDriversPayloadWithBusinessId,

@@ -5,7 +5,7 @@ import {
   TruckCapacity,
   TruckPricePerKm,
 } from '~/packages/trucks/libs/enums/enums.js';
-import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
+import { type TruckEntityT } from '~/packages/trucks/libs/types/types.js';
 import {
   TruckManufacturer,
   TruckTowType,
@@ -24,7 +24,7 @@ const convertToSelectOptions = (
 };
 
 const ADD_TRUCK_FIELDS: FormField<
-  Omit<TruckEntity, 'id' | 'businessId' | 'createdAt'>
+  Omit<TruckEntityT, 'id' | 'businessId' | 'createdAt' | 'status'>
 >[] = [
   {
     id: FormLabel.MANUFACTURER,

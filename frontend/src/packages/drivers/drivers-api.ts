@@ -15,7 +15,7 @@ type Constructor = {
   storage: IStorage;
 };
 
-class DriverApi extends HttpApi {
+class DriversApi extends HttpApi {
   public constructor({ baseUrl, http, storage }: Constructor) {
     super({ path: ApiPath.BUSINESS, baseUrl, http, storage });
   }
@@ -52,4 +52,4 @@ class DriverApi extends HttpApi {
   }
 }
 
-export { DriverApi };
+export { DriversApi };
