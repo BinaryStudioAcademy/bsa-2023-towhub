@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 import { AppRoute } from '~/libs/enums/enums.js';
 import { useEffect, useGetCurrentUser } from '~/libs/hooks/hooks.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
+import { DriverOrder } from '~/pages/driver-order/driver-order.js';
 import {
   Auth,
   Dashboard,
@@ -31,6 +32,7 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.SIGN_UP_BUSINESS} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP_CUSTOMER} element={<Auth />} />
         <Route path={AppRoute.ORDER} element={<Order />} />
+        <Route path={AppRoute.DRIVER_ORDER} element={<DriverOrder />} />
       </Route>
       <Route
         path={AppRoute.ROOT}

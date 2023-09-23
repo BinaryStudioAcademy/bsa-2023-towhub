@@ -1,0 +1,102 @@
+@import "src/assets/css/vars.scss";
+
+.page {
+  display: flex;
+  height: 100%;
+  padding: 30px;
+}
+
+.left {
+  width: 50%;
+  height: 100%;
+  margin-right: 24px;
+}
+
+.trip-info {
+  height: 120px;
+  margin-bottom: 20px;
+  padding: 7px 24px;
+  background-color: $white;
+  border: 5px solid $white;
+  border-radius: 10px;
+}
+
+.header {
+  color: $title-color;
+  font-size: 20px;
+  text-align: center;
+}
+
+.trip-info-content {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.trip-info-content span {
+  margin-right: 10%;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.trip-info-content span:first-child {
+  margin-right: 65%;
+}
+
+.order-details {
+  height: calc(100% - 140px);
+  padding: 24px 65px 36px 80px;
+  overflow: auto;
+  background-color: $white;
+  border: 5px solid $white;
+  border-radius: 10px;
+}
+
+.order-details .header {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.detail {
+  margin-bottom: 20px;
+  color: $grey;
+  font-size: 20px;
+}
+
+.detail .value {
+  color: $black;
+}
+
+.comment-header {
+  margin-bottom: 25px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.comment {
+  margin-bottom: 30px;
+  padding: 22px 25px;
+  background: $grey;
+  border-radius: 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  width: 40%;
+}
+
+.button.accept {
+  background-color: $green;
+}
+
+.right {
+  width: 50%;
+  height: 100%;
+  background-color: blue;
+  border: 5px solid $white;
+  border-radius: 10px;
+}
