@@ -15,6 +15,8 @@ import {
   usersRelations,
   usersTrucks,
   usersTrucksRelations,
+  verificationName,
+  verificationStatus,
 } from './tables-schema.js';
 
 const schema = {
@@ -34,6 +36,8 @@ const schema = {
   usersRelations,
   usersTrucks,
   usersTrucksRelations,
+  verificationName,
+  verificationStatus,
 };
 
 type DatabaseSchema = typeof schema;

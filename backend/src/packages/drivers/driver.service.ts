@@ -12,10 +12,13 @@ import {
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity as DriverEntityT,
+  type DriverEntityT,
+  type DriverEntityWithFileVerificationStatusT,
   type DriverGetAllResponseDto,
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
+import { type FileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
+import { FileVerificationStatus } from '../file-verification-status/libs/enums/enums.js';
 import { type GroupService } from '../groups/group.service.js';
 import { type UserService } from '../users/user.service.js';
 
@@ -28,21 +31,26 @@ class DriverService implements IService {
 
   private geolocationCacheService: GeolocationCacheService;
 
+  private fileVerificationStatusService: FileVerificationStatusService;
+
   public constructor({
     driverRepository,
     userService,
     groupService,
     geolocationCacheService,
+    fileVerificationStatusService,
   }: {
     driverRepository: DriverRepository;
     userService: UserService;
     groupService: GroupService;
     geolocationCacheService: GeolocationCacheService;
+    fileVerificationStatusService: FileVerificationStatusService;
   }) {
     this.driverRepository = driverRepository;
     this.userService = userService;
     this.groupService = groupService;
     this.geolocationCacheService = geolocationCacheService;
+    this.fileVerificationStatusService = fileVerificationStatusService;
   }
 
   public async getGeolocationById(id: number): Promise<GeolocationLatLng> {
@@ -67,16 +75,74 @@ class DriverService implements IService {
     return geolocation;
   }
 
-  public async findById(id: number): Promise<DriverEntityT | null> {
-    const [driver = null] = await this.driverRepository.find({ id });
+  private async getDriverWithFileVerificationStatus(
+    driver: DriverEntityT | null,
+  ): Promise<DriverEntityWithFileVerificationStatusT> {
+    if (!driver) {
+      return {
+        driverLicenseFileId: -1,
+        businessId: -1,
+        driverLicenseNumber: '',
+        userId: -1,
+        id: -1,
+        fileVerificationStatus: {
+          status: FileVerificationStatus.NOT_STARTED,
+          message: 'fileVerificationStatus.message',
+          name: 'driver_license_scan',
+        },
+      };
+    }
 
-    return driver ? DriverEntity.initialize(driver).toObject() : null;
+    const fileVerificationStatus =
+      await this.fileVerificationStatusService.findByFileId(
+        driver.driverLicenseFileId,
+      );
+
+    if (!fileVerificationStatus) {
+      return {
+        ...driver,
+        fileVerificationStatus: {
+          status: FileVerificationStatus.NOT_STARTED,
+          message: 'fileVerificationStatus.message',
+          name: 'driver_license_scan',
+        },
+      };
+    }
+
+    return {
+      ...driver,
+      fileVerificationStatus: {
+        status: fileVerificationStatus.status,
+        message: fileVerificationStatus.message,
+        name: fileVerificationStatus.name,
+      },
+    };
   }
 
-  public async findByUserId(userId: number): Promise<DriverEntityT | null> {
+  public async findByLicenseFileId(
+    driverLicenseFileId: number,
+  ): Promise<DriverEntityWithFileVerificationStatusT | null> {
+    const [driver = null] = await this.driverRepository.find({
+      driverLicenseFileId,
+    });
+
+    return await this.getDriverWithFileVerificationStatus(driver);
+  }
+
+  public async findById(
+    id: number,
+  ): Promise<DriverEntityWithFileVerificationStatusT | null> {
+    const [driver = null] = await this.driverRepository.find({ id });
+
+    return await this.getDriverWithFileVerificationStatus(driver);
+  }
+
+  public async findByUserId(
+    userId: number,
+  ): Promise<DriverEntityWithFileVerificationStatusT | null> {
     const [driver = null] = await this.driverRepository.find({ userId });
 
-    return driver ? DriverEntity.initialize(driver).toObject() : null;
+    return await this.getDriverWithFileVerificationStatus(driver);
   }
 
   public async findAllByBusinessId(
@@ -85,14 +151,22 @@ class DriverService implements IService {
     const items = await this.driverRepository.findAllByBusinessId(businessId);
 
     return {
-      items: items.map((it) => it.toObject()),
+      items: await Promise.all(
+        items.map(
+          async (it) =>
+            await this.getDriverWithFileVerificationStatus(it.toObject()),
+        ),
+      ),
     };
   }
 
   public async create({
     payload,
     businessId,
-  }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
+    driverLicenseFileId,
+  }: DriverAddPayload & {
+    driverLicenseFileId: DriverEntityT['driverLicenseFileId'];
+  }): Promise<DriverAddResponseWithGroup> {
     const { password, email, lastName, firstName, phone, driverLicenseNumber } =
       payload;
 
@@ -105,15 +179,34 @@ class DriverService implements IService {
     if (doesDriverExist) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.DRIVER_ALREADY_EXISTS,
+        message: HttpMessage.DRIVER_LICENSE_ALREADY_EXISTS,
       });
     }
+
+    const userByPhone = await this.userService.findByPhone(phone);
+
+    if (userByPhone) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.USER_PHONE_ALREADY_EXISTS,
+      });
+    }
+
+    const userByEmail = await this.userService.findByEmail(email);
+
+    if (userByEmail) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.USER_EMAIL_ALREADY_EXISTS,
+      });
+    }
+
     const group = await this.groupService.findByKey(UserGroupKey.DRIVER);
 
     if (!group) {
       throw new HttpError({
-        message: HttpMessage.INVALID_GROUP,
         status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.INVALID_GROUP,
       });
     }
 
@@ -131,6 +224,7 @@ class DriverService implements IService {
         driverLicenseNumber,
         businessId,
         userId: user.id,
+        driverLicenseFileId,
       }),
     );
 

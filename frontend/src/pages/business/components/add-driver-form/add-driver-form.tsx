@@ -4,13 +4,16 @@ import {
   type DriverCreateUpdateRequestDto,
   driverCreateUpdateRequestBody,
 } from '~/packages/drivers/drivers.js';
+import { type FileObject } from '~/slices/files/libs/types/types.js';
 
 import { DEFAULT_ADD_DRIVER_PAYLOAD } from './libs/constants.js';
 import { addDriverFields } from './libs/fields.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onSubmit: (payload: DriverCreateUpdateRequestDto) => void;
+  onSubmit: (
+    payload: DriverCreateUpdateRequestDto & { files: FileObject[] },
+  ) => void;
 };
 
 const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {

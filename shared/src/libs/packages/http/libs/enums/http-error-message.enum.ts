@@ -5,7 +5,12 @@ const HttpMessage = {
   TRUCK_EXISTS: 'Truck already exists',
   NOT_FOUND: 'Not found',
   BUSINESS_ALREADY_EXISTS: 'Owner already has business!',
-  DRIVER_ALREADY_EXISTS: 'Driver already exists',
+  DRIVER_LICENSE_ALREADY_EXISTS:
+    'Driver with such license number already exists',
+  USER_FIRST_NAME_ALREADY_EXISTS: 'User with such first name already exists',
+  USER_LAST_NAME_ALREADY_EXISTS: 'User with such last name already exists',
+  USER_PHONE_ALREADY_EXISTS: 'User with such phone number already exists',
+  USER_EMAIL_ALREADY_EXISTS: 'User with such email already exists',
   DRIVER_LOCATION_UNKNOWN: 'Driver location is unknown',
   NAME_ALREADY_REGISTERED: 'Business with such name already exists!',
   INVALID_USER_GROUP: 'User of the group cannot create or update this!',

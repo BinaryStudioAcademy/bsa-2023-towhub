@@ -25,6 +25,7 @@ class RekognitionService {
         accessKeyId: config.ENV.AWS.ACCESS_KEY_ID,
         secretAccessKey: config.ENV.AWS.SECRET_ACCESS_KEY,
       },
+      region: config.ENV.AWS.S3.REGION,
     });
     this.bucketName = config.ENV.AWS.S3.BUCKET_NAME;
     this.logger = logger;

@@ -65,7 +65,7 @@ class FileVerificationStatusService
       for (const callback of this.fileVerificationEventNameToHandler[
         eventName
       ]) {
-        this.addListener(eventName, callback);
+        this.addListener(eventName, callback.bind(this));
       }
     }
   }
@@ -118,7 +118,7 @@ class FileVerificationStatusService
 
   public async update(
     id: FileVerificationStatusEntityT['id'],
-    payload: FileVerificationStatusUpdateDto,
+    payload: Partial<FileVerificationStatusUpdateDto>,
   ): Promise<FileVerificationStatusEntityT> {
     const result = await this.fileVerificationStatusRepository.update(
       id,

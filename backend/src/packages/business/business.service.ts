@@ -11,6 +11,9 @@ import {
   type DriverGetAllResponseDto,
   type DriverUpdatePayload,
 } from '../drivers/drivers.js';
+import { type FileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
+import { FileVerificationName } from '../file-verification-status/libs/enums/enums.js';
+import { type FilesService } from '../files/files.js';
 import { type ShiftEntity } from '../shifts/shift.js';
 import { type UserEntityT } from '../users/users.js';
 import { BusinessEntity } from './business.entity.js';
@@ -22,17 +25,35 @@ import {
   type BusinessUpdateResponseDto,
 } from './libs/types/types.js';
 
+type Constructor = {
+  businessRepository: BusinessRepository;
+
+  driverService: DriverService;
+
+  filesService: FilesService;
+
+  fileVerificationStatusService: FileVerificationStatusService;
+};
+
 class BusinessService implements IService {
   private businessRepository: BusinessRepository;
 
   private driverService: DriverService;
 
-  public constructor(
-    businessRepository: BusinessRepository,
-    driverService: DriverService,
-  ) {
+  private fileService: FilesService;
+
+  private fileVerificationStatusService: FileVerificationStatusService;
+
+  public constructor({
+    businessRepository,
+    driverService,
+    filesService,
+    fileVerificationStatusService,
+  }: Constructor) {
     this.businessRepository = businessRepository;
     this.driverService = driverService;
+    this.fileService = filesService;
+    this.fileVerificationStatusService = fileVerificationStatusService;
   }
 
   public async findById(id: number): Promise<BusinessEntityT | null> {
@@ -143,7 +164,25 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.create({ payload, businessId });
+    const createdFiles = await this.fileService.create(payload.files);
+
+    const createdDriver = await this.driverService.create({
+      payload,
+      businessId,
+      driverLicenseFileId: createdFiles[0].id,
+    });
+
+    await Promise.all(
+      createdFiles.map(
+        async (createdFile) =>
+          await this.fileVerificationStatusService.create({
+            fileId: createdFile.id,
+            name: FileVerificationName.DRIVER_LICENSE_SCAN,
+          }),
+      ),
+    );
+
+    return createdDriver;
   }
 
   public updateDriver({
@@ -162,8 +201,22 @@ class BusinessService implements IService {
     return this.driverService.findAllByBusinessId(id);
   }
 
-  public deleteDriver(driverId: number): Promise<boolean> {
-    return this.driverService.delete(driverId);
+  public async deleteDriver(driverId: number): Promise<boolean> {
+    const driverToDelete = await this.driverService.findById(driverId);
+
+    if (!driverToDelete) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
+
+    await this.fileVerificationStatusService.deleteByFileId(
+      driverToDelete.driverLicenseFileId,
+    );
+    await this.fileService.delete(driverToDelete.driverLicenseFileId);
+
+    return await this.driverService.delete(driverId);
   }
 
   public checkisDriverBelongedToBusiness({

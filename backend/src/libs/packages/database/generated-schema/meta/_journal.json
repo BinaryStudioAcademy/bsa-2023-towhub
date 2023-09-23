@@ -85,6 +85,13 @@
       "when": 1694869716680,
       "tag": "0011_create_files_table",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1694971330343,
+      "tag": "0012_create_file_verification_status_table",
+      "breakpoints": true
     }
   ]
 }

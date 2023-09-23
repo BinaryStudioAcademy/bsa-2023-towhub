@@ -8,10 +8,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import { AppEnvironment } from '~/libs/enums/enums.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { authApi } from '~/packages/auth/auth.js';
+import { businessApi } from '~/packages/business/business.js';
 import { filesApi } from '~/packages/files/files.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
+import { reducer as businessReducer } from '~/slices/business/business.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
@@ -22,12 +24,14 @@ type RootReducer = {
   auth: ReturnType<typeof authReducer>;
   trucks: ReturnType<typeof truckReducer>;
   files: ReturnType<typeof filesReducer>;
+  business: ReturnType<typeof businessReducer>;
 };
 
 type ExtraArguments = {
   authApi: typeof authApi;
   userApi: typeof userApi;
   filesApi: typeof filesApi;
+  businessApi: typeof businessApi;
   notification: typeof notification;
   truckApi: typeof truckApi;
   localStorage: typeof LocalStorage;
@@ -49,6 +53,7 @@ class Store {
         auth: authReducer,
         trucks: truckReducer,
         files: filesReducer,
+        business: businessReducer,
       },
       middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({
@@ -65,6 +70,7 @@ class Store {
       authApi,
       userApi,
       filesApi,
+      businessApi,
       notification,
       truckApi,
       localStorage: LocalStorage,

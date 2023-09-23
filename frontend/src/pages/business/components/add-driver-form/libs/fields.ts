@@ -1,8 +1,12 @@
+import { fileInputAddDriverLicenseConfig } from '~/libs/components/file-input/libs/config/config.js';
 import { FormLabel, FormName } from '~/libs/enums/enums.js';
 import { type FormField } from '~/libs/types/types.js';
 import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
+import { type FileObject } from '~/slices/files/libs/types/types.js';
 
-const addDriverFields: FormField<DriverCreateUpdateRequestDto>[] = [
+const addDriverFields: FormField<
+  DriverCreateUpdateRequestDto & { files: FileObject[] }
+>[] = [
   {
     label: FormLabel.FIRST_NAME,
     placeholder: 'Enter driver first name',
@@ -30,6 +34,12 @@ const addDriverFields: FormField<DriverCreateUpdateRequestDto>[] = [
     label: FormLabel.DRIVER_LICENSE_NUMBER,
     placeholder: 'Enter driver license number',
     name: FormName.DRIVER_LICENSE_NUMBER,
+  },
+  {
+    type: 'file',
+    label: FormLabel.DRIVER_LICENSE_SCAN,
+    name: FormName.DRIVER_LICENSE_SCAN,
+    fileInputConfig: fileInputAddDriverLicenseConfig,
   },
 ];
 

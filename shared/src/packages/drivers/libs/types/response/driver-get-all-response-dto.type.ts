@@ -1,7 +1,7 @@
-import { type DriverEntity } from '../driver-entity.type.js';
+import { type DriverEntityWithFileVerificationStatusT } from '../driver-entity-with-file-verification-status.type.js';
 
 type DriverGetAllResponseDto = {
-  items: Pick<DriverEntity, 'id' | 'driverLicenseNumber'>[];
+  items: DriverEntityWithFileVerificationStatusT[];
 };
 
 export { type DriverGetAllResponseDto };

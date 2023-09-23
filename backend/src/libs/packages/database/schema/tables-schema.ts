@@ -266,4 +266,6 @@ export {
   usersRelations,
   usersTrucks,
   usersTrucksRelations,
+  verificationName,
+  verificationStatus,
 };

@@ -9,7 +9,9 @@ import swagger, { type StaticDocumentSpec } from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import Fastify, {
   type FastifyError,
+  type onRequestHookHandler,
   type preHandlerHookHandler,
+  type preValidationHookHandler,
 } from 'fastify';
 
 import { ServerErrorType } from '~/libs/enums/enums.js';
@@ -77,18 +79,19 @@ class ServerApp implements IServerApp {
       validateFilesStrategy,
     } = parameters;
 
-    const preHandler: preHandlerHookHandler[] = [];
+    const onRequest: onRequestHookHandler[] = [];
+    const preValidation: preValidationHookHandler[] = [];
 
     if (authStrategy) {
       const authStrategyHandler = this.resolveAuthStrategy(authStrategy);
 
       if (authStrategyHandler) {
-        preHandler.push(authStrategyHandler);
+        onRequest.push(authStrategyHandler);
       }
     }
 
     if (validateFilesStrategy) {
-      preHandler.push(
+      preValidation.push(
         this.resolveFileValidationStrategy(validateFilesStrategy),
       );
     }
@@ -97,7 +100,8 @@ class ServerApp implements IServerApp {
       url: path,
       method,
       handler,
-      preHandler,
+      onRequest,
+      preValidation,
       schema: {
         body: validation?.body,
         params: validation?.params,
@@ -257,7 +261,9 @@ class ServerApp implements IServerApp {
       userService,
       jwtService,
     });
-    await this.app.register(fastifyMultipart);
+    await this.app.register(fastifyMultipart, {
+      attachFieldsToBody: true,
+    });
     await this.app.register(filesValidationPlugin);
   }
 

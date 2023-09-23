@@ -8,7 +8,7 @@ import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { type OperationResult } from '~/libs/types/types.js';
 
 import { DriverEntity } from './driver.entity.js';
-import { type DriverEntity as DriverEntityT } from './drivers.js';
+import { type DriverEntityT } from './drivers.js';
 
 class DriverRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -38,7 +38,9 @@ class DriverRepository implements IRepository {
 
     return this.db
       .driver()
-      .query.drivers.findMany({ where: finalQuery })
+      .select()
+      .from(this.driverSchema)
+      .where(finalQuery)
       .execute();
   }
 
@@ -88,7 +90,8 @@ class DriverRepository implements IRepository {
   }
 
   public async create(entity: DriverEntity): Promise<DriverEntity> {
-    const { driverLicenseNumber, userId, businessId } = entity.toNewObject();
+    const { driverLicenseNumber, userId, businessId, driverLicenseFileId } =
+      entity.toNewObject();
 
     const [item] = await this.db
       .driver()
@@ -97,7 +100,7 @@ class DriverRepository implements IRepository {
         driverLicenseNumber,
         userId,
         businessId,
-        driverLicenseFileId: 1,
+        driverLicenseFileId,
       })
       .returning()
       .execute();

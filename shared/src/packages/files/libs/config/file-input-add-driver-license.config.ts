@@ -1,6 +1,6 @@
 import { type FileInputConfig } from '../types/file-input-config.js';
 
-const fileInputDefaultsConfig: FileInputConfig = {
+const fileInputAddDriverLicenseConfig: FileInputConfig = {
   multiple: false,
   maxFiles: 1,
   maxSizeBytes: 3_000_000,
@@ -13,4 +13,4 @@ const fileInputDefaultsConfig: FileInputConfig = {
   },
 };
 
-export { fileInputDefaultsConfig };
+export { fileInputAddDriverLicenseConfig };

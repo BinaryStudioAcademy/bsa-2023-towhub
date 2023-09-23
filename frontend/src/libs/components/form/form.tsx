@@ -18,7 +18,10 @@ import { Button } from '../button/button.jsx';
 import { DropdownInput } from '../dropdown-input/dropdown-input.js';
 import { FileInput } from '../file-input/file-input.js';
 import { fileInputDefaultsConfig } from '../file-input/libs/config/config.js';
-import { type FileFormType } from '../file-input/libs/types/types.js';
+import {
+  type FileFormType,
+  type FileInputConfig,
+} from '../file-input/libs/types/types.js';
 import { Input } from '../input/input.jsx';
 import styles from './styles.module.scss';
 
@@ -36,6 +39,7 @@ type Parameters<T extends FieldValues = FieldValues> = {
   errors: FieldErrors<T>;
   setError: UseFormReturn<T>['setError'];
   clearErrors: UseFormReturn<T>['clearErrors'];
+  fileInputConfig?: FileInputConfig;
 };
 
 const renderField = <T extends FieldValues = FieldValues>({
@@ -44,6 +48,7 @@ const renderField = <T extends FieldValues = FieldValues>({
   errors,
   setError,
   clearErrors,
+  fileInputConfig,
 }: Parameters<T>): JSX.Element => {
   const { options, name, label } = field;
 
@@ -76,7 +81,7 @@ const renderField = <T extends FieldValues = FieldValues>({
           control={control as unknown as Control<FileFormType, null>}
           errors={errors}
           isDisabled={false}
-          fileInputCustomConfig={fileInputDefaultsConfig}
+          fileInputCustomConfig={fileInputConfig ?? fileInputDefaultsConfig}
         />
       );
     }

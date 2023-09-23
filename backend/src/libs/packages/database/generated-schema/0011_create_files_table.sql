@@ -1,6 +1,3 @@
-ALTER TYPE "order_status"
-ADD VALUE 'picking_up';
-
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS
   "files" (

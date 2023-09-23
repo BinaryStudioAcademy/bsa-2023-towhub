@@ -2,6 +2,7 @@ import { database, schema } from '~/libs/packages/database/database.js';
 import { GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { DriverRepository } from '~/packages/drivers/driver.repository.js';
 
+import { fileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
 import { groupService } from '../groups/groups.js';
 import { userService } from '../users/users.js';
 import { DriverService } from './driver.service.js';
@@ -12,6 +13,7 @@ const driverService = new DriverService({
   userService,
   groupService,
   geolocationCacheService: GeolocationCacheService.getInstance(),
+  fileVerificationStatusService,
 });
 
 export { driverRepository, driverService };
@@ -21,7 +23,7 @@ export {
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetRequestParameters,
   type DriverUpdateDeleteRequestParameters,

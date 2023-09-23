@@ -18,6 +18,9 @@ import {
   driverGetParameters,
   driverUpdateDeleteParameters,
 } from '../drivers/libs/validation-schemas/validation-schemas.js';
+import { fileInputAddDriverLicenseConfig } from '../files/libs/config/config.js';
+import { FilesValidationStrategy } from '../files/libs/enums/enums.js';
+import { type MultipartParsedFile } from '../files/libs/types/types.js';
 import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 import {
@@ -317,13 +320,23 @@ class BusinessController extends Controller {
       path: BusinessApiPath.DRIVERS,
       method: 'POST',
       authStrategy: defaultStrategies,
+      validateFilesStrategy: {
+        strategy: FilesValidationStrategy.BASIC,
+        filesInputConfig: {
+          maxSizeBytes: fileInputAddDriverLicenseConfig.maxSizeBytes,
+          maxFiles: fileInputAddDriverLicenseConfig.maxFiles,
+          accept: fileInputAddDriverLicenseConfig.accept,
+        },
+      },
       validation: {
         body: driverCreateUpdateRequestBody,
       },
       handler: (options) =>
         this.createDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateUpdateRequestDto;
+            body: DriverCreateUpdateRequestDto & {
+              files: MultipartParsedFile[];
+            };
             params: { businessId: number };
           }>,
         ),
@@ -637,7 +650,7 @@ class BusinessController extends Controller {
 
   private async createDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateUpdateRequestDto;
+      body: DriverCreateUpdateRequestDto & { files: MultipartParsedFile[] };
       params: { businessId: number };
     }>,
   ): Promise<ApiHandlerResponse> {
