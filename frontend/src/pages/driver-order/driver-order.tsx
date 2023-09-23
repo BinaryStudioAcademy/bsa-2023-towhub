@@ -53,11 +53,11 @@ const DriverOrder = (): JSX.Element => {
               </span>
             </p>
             <p className={styles.detail}>
-              <Icon className={styles['phone-icon']} iconName="phone" /> Phone:
+              <Icon className={styles['phone-icon']} iconName="phone" /> Phone:{' '}
               <span className={styles.value}>{MOCK_ORDER_DETAILS.phone}</span>
             </p>
             <p className={styles.detail}>
-              <Icon className={styles['time-icon']} iconName="clock" /> Time:
+              <Icon className={styles['time-icon']} iconName="clock" /> Time:{' '}
               <span className={styles.value}>{MOCK_ORDER_DETAILS.time}</span>
             </p>
             <p className={styles.detail}>
@@ -65,7 +65,7 @@ const DriverOrder = (): JSX.Element => {
                 className={styles['location-icon']}
                 iconName="location dot"
               />{' '}
-              Location:
+              Location:{' '}
               <span className={styles.value}>
                 {MOCK_ORDER_DETAILS.location}
               </span>
@@ -75,14 +75,14 @@ const DriverOrder = (): JSX.Element => {
                 className={styles['destination-icon']}
                 iconName="location dot"
               />{' '}
-              Destination:
+              Destination:{' '}
               <span className={styles.value}>
                 {MOCK_ORDER_DETAILS.destination}
               </span>
             </p>
             <p className={styles.detail}>
               <Icon className={styles['car-icon']} iconName="car" /> Cars need
-              to be towed:
+              to be towed:{' '}
               <span className={styles.value}>{MOCK_ORDER_DETAILS.cars}</span>
             </p>
           </div>
