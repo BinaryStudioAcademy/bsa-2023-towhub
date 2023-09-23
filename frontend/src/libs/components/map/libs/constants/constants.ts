@@ -1,0 +1,4 @@
+const DEFAULT_ZOOM = 16;
+const DEFAULT_CENTER = { lat: 50.448_079, lng: 30.522_282 };
+
+export { DEFAULT_CENTER, DEFAULT_ZOOM };

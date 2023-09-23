@@ -3,10 +3,8 @@ import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
 import { MapService } from '~/libs/packages/map/map.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
+import { DEFAULT_CENTER, DEFAULT_ZOOM } from './libs/constants/constants.js';
 import styles from './styles.module.scss';
-
-const DEFAULT_ZOOM = 16;
-const DEFAULT_CENTER = { lat: 50.448_079, lng: 30.522_282 };
 
 type Properties = {
   center?: google.maps.LatLngLiteral;
@@ -44,7 +42,7 @@ const Map: React.FC<Properties> = ({
         zoom,
       });
 
-      if (center && destination) {
+      if (destination) {
         mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);
