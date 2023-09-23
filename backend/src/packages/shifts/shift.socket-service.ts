@@ -11,7 +11,7 @@ import { type FirstParameter, type ValueOf } from '~/libs/types/types.js';
 
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/libs/types/types.js';
-import { HOUR_IN_MS } from './libs/constants/constants.js';
+import { SHIFT_TIMEOUT_TIME_IN_MS } from './libs/constants/constants.js';
 import {
   createShift,
   socketChooseTruck,
@@ -138,7 +138,7 @@ class ShiftSocketService {
         truckService: this.truckService,
         user,
       });
-    }, HOUR_IN_MS);
+    }, SHIFT_TIMEOUT_TIME_IN_MS);
 
     await socketChooseTruck(truckId, this.truckService, io);
 
