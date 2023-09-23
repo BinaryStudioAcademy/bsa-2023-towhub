@@ -14,6 +14,7 @@ import {
   editBusiness,
   editCustomer,
   getCurrent,
+  logOut,
   signIn,
   signUp,
 } from './actions.js';
@@ -51,6 +52,16 @@ const { reducer, actions, name } = createSlice({
       .addCase(getCurrent.rejected, (state) => {
         state.dataStatus = DataStatus.REJECTED;
       })
+      .addCase(signIn.fulfilled, (state, action) => {
+        state.error = null;
+        state.user = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.error = null;
+        state.user = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
       .addCase(editBusiness.fulfilled, (state, action) => {
         const { firstName, lastName, phone, email, business } = action.payload;
 
@@ -85,27 +96,28 @@ const { reducer, actions, name } = createSlice({
         }
         state.dataStatus = DataStatus.FULFILLED;
       })
+      .addCase(logOut.fulfilled, (state) => {
+        state.user = initialState.user;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
       .addMatcher(
-        isAllOf(signUp.pending, signIn.pending, getCurrent.pending),
+        isAllOf(
+          signUp.pending,
+          signIn.pending,
+          getCurrent.pending,
+          logOut.pending,
+        ),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
         },
-      )
-      .addMatcher(
-        isAllOf(signIn.fulfilled, signUp.fulfilled),
-        (state, action) => {
-          state.error = null;
-          state.user = action.payload;
-          state.dataStatus = DataStatus.FULFILLED;
-        },
-      )
-      .addMatcher(
-        isAllOf(signUp.rejected, signIn.rejected),
-        (state, { payload }) => {
-          state.dataStatus = DataStatus.REJECTED;
-          state.error = payload ?? null;
-        },
       );
+    builder.addMatcher(
+      isAllOf(signUp.rejected, signIn.rejected, logOut.rejected),
+      (state, { payload }) => {
+        state.dataStatus = DataStatus.REJECTED;
+        state.error = payload ?? null;
+      },
+    );
   },
 });
 

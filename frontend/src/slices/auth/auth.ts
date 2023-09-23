@@ -2,6 +2,7 @@ import {
   editBusiness,
   editCustomer,
   getCurrent,
+  logOut,
   signIn,
   signUp,
 } from './actions.js';
@@ -14,6 +15,7 @@ const allActions = {
   signIn,
   signUp,
   getCurrent,
+  logOut,
 };
 
 export { allActions as actions };
