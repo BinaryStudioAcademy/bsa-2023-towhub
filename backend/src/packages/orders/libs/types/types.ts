@@ -6,13 +6,13 @@ type OrderDatabaseModel = InferModel<DatabaseSchema['orders']>;
 
 export {
   type DriverInfo,
-  type FindAllUserOrdersResponse,
   type Id,
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderFindAllUserOrdersQuery,
+  type OrderFindAllUserOrdersResponse,
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,

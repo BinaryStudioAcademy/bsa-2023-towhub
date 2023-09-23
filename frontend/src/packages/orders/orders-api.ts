@@ -5,12 +5,12 @@ import { type IStorage } from '~/libs/packages/storage/storage.js';
 
 import { OrdersApiPath } from './enums/enums.js';
 import {
-  type FindAllUserOrdersResponse,
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
+  type OrderFindAllUserOrdersResponse,
   type OrderResponseDto,
-} from './types/types.js';
+} from './libs/types/types.js';
 
 type Constructor = {
   baseUrl: string;
@@ -41,7 +41,7 @@ class OrdersApi extends HttpApi {
 
   public async getAllUserOrders(
     queryString = '',
-  ): Promise<FindAllUserOrdersResponse> {
+  ): Promise<OrderFindAllUserOrdersResponse> {
     const response = await this.load(
       this.getFullEndpoint(`${OrdersApiPath.USER}?${queryString}`, {}),
       {
@@ -51,7 +51,7 @@ class OrdersApi extends HttpApi {
       },
     );
 
-    return await response.json<FindAllUserOrdersResponse>();
+    return await response.json<OrderFindAllUserOrdersResponse>();
   }
 
   public async calculatePrice(

@@ -13,11 +13,11 @@ import { AuthStrategy } from '../auth/auth.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrdersApiPath } from './libs/enums/enums.js';
 import {
-  type FindAllUserOrdersResponse,
   type Id,
   type OrderCalculatePriceRequestDto,
   type OrderCreateRequestDto,
   type OrderFindAllUserOrdersQuery,
+  type OrderFindAllUserOrdersResponse,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
@@ -660,7 +660,7 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT;
       query: OrderFindAllUserOrdersQuery;
     }>,
-  ): Promise<ApiHandlerResponse<FindAllUserOrdersResponse>> {
+  ): Promise<ApiHandlerResponse<OrderFindAllUserOrdersResponse>> {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.findAllUserOrders(

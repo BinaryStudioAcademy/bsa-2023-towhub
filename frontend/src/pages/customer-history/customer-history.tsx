@@ -13,7 +13,7 @@ import {
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 import { type SingleValue } from '~/libs/types/types.js';
-import { type FindAllUserOrdersResponse } from '~/packages/orders/libs/types/types.js';
+import { type OrderFindAllUserOrdersResponse } from '~/packages/orders/orders.js';
 import { getUserOrdersPage } from '~/slices/orders/actions.js';
 
 import { options } from './libs/enums/options.js';
@@ -39,7 +39,7 @@ const CustomerHistory: React.FC = () => {
   ) as Queries;
 
   const listHook = useAppTable<
-    FindAllUserOrdersResponse,
+    OrderFindAllUserOrdersResponse,
     { status?: typeof CustomerOrderStatus }
   >({
     tableFetchCall: getUserOrdersPage,

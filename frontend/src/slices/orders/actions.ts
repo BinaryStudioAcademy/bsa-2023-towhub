@@ -4,10 +4,10 @@ import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
-  type FindAllUserOrdersResponse,
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
+  type OrderFindAllUserOrdersResponse,
   type OrderResponseDto,
 } from '~/packages/orders/orders.js';
 
@@ -44,7 +44,7 @@ const calculateOrderPrice = createAsyncThunk<
 });
 
 const getUserOrdersPage = createAsyncThunk<
-  FindAllUserOrdersResponse,
+  OrderFindAllUserOrdersResponse,
   string | undefined,
   AsyncThunkConfig
 >(ACTIONS_TYPES.GET_USER_ORDERS_PAGE, async (payload, { extra }) => {

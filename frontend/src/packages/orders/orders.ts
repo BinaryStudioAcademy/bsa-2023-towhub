@@ -5,14 +5,14 @@ import { LocalStorage } from '~/libs/packages/storage/storage.js';
 import { OrdersApi } from './orders-api.js';
 
 export {
-  type FindAllUserOrdersResponse,
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntity,
+  type OrderFindAllUserOrdersResponse,
   type OrderGetAllUserOrdersPayload,
   type OrderResponseDto,
-} from './types/types.js';
+} from './libs/types/types.js';
 export { orderCreateRequestBody } from './validation-schemas/validation-schemas.js';
 
 const ordersApi = new OrdersApi({
