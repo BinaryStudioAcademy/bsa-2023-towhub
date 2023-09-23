@@ -35,6 +35,7 @@ const useAuthNavigate = (): AuthNavigateHook => {
         break;
       }
       case UserGroupKey.DRIVER: {
+        navigate(AppRoute.DASHBOARD_ORDERS);
         break;
       }
       default: {
