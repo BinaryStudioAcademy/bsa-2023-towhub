@@ -12,7 +12,7 @@ import {
   setTrucks,
   updateTruckLocationFromSocket,
 } from './actions.js';
-import { type TruckLocation } from './types/types.js';
+import { type TruckArrivalTime, type TruckLocation } from './types/types.js';
 
 type State = {
   trucks: TruckGetItemResponseDto[];
@@ -21,7 +21,7 @@ type State = {
   total: number;
   error: HttpError | null;
   truckLocation: TruckLocation | null;
-  truckArrivalTime: { text: string; value: number } | null;
+  truckArrivalTime: TruckArrivalTime | null;
 };
 
 const initialState: State = {

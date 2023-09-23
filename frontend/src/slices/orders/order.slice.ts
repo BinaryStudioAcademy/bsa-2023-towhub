@@ -18,11 +18,13 @@ type State = {
   price: number;
   dataStatus: ValueOf<typeof DataStatus>;
   routeData: RouteData;
+  currentOrder: OrderResponseDto | null;
 };
 
 const initialState: State = {
   orders: [],
   price: 0,
+  currentOrder: null,
   dataStatus: DataStatus.IDLE,
   routeData: { origin: null, destination: null, distanceAndDuration: null },
 };
@@ -57,14 +59,14 @@ const { reducer, actions, name } = createSlice({
         state.dataStatus = DataStatus.PENDING;
       })
       .addCase(getOrder.fulfilled, (state, action) => {
-        state.orders = [action.payload];
+        state.currentOrder = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(getOrder.rejected, (state) => {
         state.dataStatus = DataStatus.REJECTED;
       })
       .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
-        state.orders = [action.payload];
+        state.currentOrder = action.payload;
       })
       .addCase(getRouteData.fulfilled, (state, action) => {
         state.routeData = action.payload;

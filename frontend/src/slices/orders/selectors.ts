@@ -11,8 +11,8 @@ const selectPrice = (state: RootState): number => state.orders.price;
 
 export { selectPrice };
 
-const selectOrder = (state: RootState): (OrderResponseDto | undefined)[] => {
-  return state.orders.orders;
+const selectOrder = (state: RootState): OrderResponseDto | null => {
+  return state.orders.currentOrder;
 };
 const selectOrderData = (state: RootState): RouteData => {
   return state.orders.routeData;

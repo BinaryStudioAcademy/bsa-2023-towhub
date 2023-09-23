@@ -4,9 +4,7 @@ import { selectOrder } from '~/slices/orders/selectors.js';
 import { selectTruckArrivalTime } from '~/slices/trucks/selectors.js';
 
 import { Spinner } from '../components.js';
-import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
-import { orderStatusToMessage } from './libs/maps/order-status-to-message.map.js';
-import { type OrderStatusValues } from './libs/types/types.js';
+import { getStatusMessageMapper } from './libs/helpers/get-status-message-mappper.helper.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -15,16 +13,7 @@ type Properties = {
 
 const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
   const arrivalTime = useAppSelector(selectTruckArrivalTime);
-  const [order] = useAppSelector(selectOrder);
-  const getStatusMessageMapper = (status: OrderStatusValues): string => {
-    if (status === OrderStatusEnum.CONFIRMED) {
-      return `${orderStatusToMessage[status]} ${
-        arrivalTime ? arrivalTime.text : '...'
-      }`;
-    }
-
-    return orderStatusToMessage[status];
-  };
+  const order = useAppSelector(selectOrder);
 
   const status = order?.status;
 
@@ -41,7 +30,9 @@ const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
       )}
     >
       <div className={styles.square}></div>
-      <span className={styles.text}>{getStatusMessageMapper(status)}</span>
+      <span className={styles.text}>
+        {getStatusMessageMapper(status, arrivalTime)}
+      </span>
     </div>
   );
 };

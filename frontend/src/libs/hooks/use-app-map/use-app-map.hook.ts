@@ -1,9 +1,8 @@
 import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
+import { DEFAULT_ZOOM } from '~/libs/packages/map/libs/constants/constants.js';
 import { type MapService } from '~/libs/packages/map/map.js';
 import { MapConnector } from '~/libs/packages/map/map-connector.package.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
-
-const DEFAULT_ZOOM = 16;
 
 type Properties = {
   center: google.maps.LatLngLiteral | null;

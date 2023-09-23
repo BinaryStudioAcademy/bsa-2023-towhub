@@ -32,7 +32,7 @@ const OrderStatusPage: React.FC = () => {
   const { orderId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [order] = useAppSelector(selectOrder);
+  const order = useAppSelector(selectOrder);
   const dataStatus = useAppSelector(selectDataStatus);
 
   const status = order?.status;
@@ -42,7 +42,8 @@ const OrderStatusPage: React.FC = () => {
   const isPickingUpScreenOpen = status === OrderStatusEnum.PICKING_UP;
   const isDoneScreenOpen = status === OrderStatusEnum.DONE;
 
-  const truckId = useAppSelector(selectChosenTruck)?.id;
+  const truckId =
+    useAppSelector(selectChosenTruck)?.id ?? order?.shift.truck?.id;
 
   useBlocker(
     useCallback(() => {

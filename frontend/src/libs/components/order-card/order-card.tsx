@@ -21,7 +21,7 @@ const OrderCard: React.FC<Properties> = ({
   className,
   isDriverShown = true,
 }: Properties) => {
-  const [order] = useAppSelector(selectOrder);
+  const order = useAppSelector(selectOrder);
   const {
     origin: startLocation = '',
     destination: endLocation = '',

@@ -1,6 +1,8 @@
+import { type ValueOf } from '~/libs/types/types.js';
+
 import { OrderStatus } from '../enums/order-status.enum.js';
 
-const orderStatusToMessage = {
+const orderStatusToMessage: Record<ValueOf<typeof OrderStatus>, string> = {
   [OrderStatus.PENDING]: 'Please wait for your order to be confirmed',
   [OrderStatus.CANCELED]:
     'The order has been canceled, please select another vehicle',

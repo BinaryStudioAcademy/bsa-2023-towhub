@@ -2,8 +2,6 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
-import { type ServerSocketEvent } from '~/libs/packages/socket/libs/enums/enums.js';
-import { type ServerToClientEvents } from '~/libs/packages/socket/libs/types/types.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import { TruckNotificationMessage } from '~/packages/trucks/libs/enums/enums.js';
 import {
@@ -16,10 +14,10 @@ import { jsonToLatLngLiteral } from '../orders/libs/helpers/json-to-lat-lng-lite
 import { ActionName } from './enums/action-name.enum.js';
 import { name as sliceName } from './trucks.slice.js';
 import { type TruckArrivalTime } from './types/truck-arrival-time.type.js';
-
-type truckLocationPayload = Parameters<
-  ServerToClientEvents[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATED]
->[0];
+import {
+  type CalculateArrivalTimeParameter,
+  type TruckLocationPayload,
+} from './types/types.js';
 
 const addTruck = createAsyncThunk<
   TruckEntity,
@@ -49,8 +47,8 @@ const addTruck = createAsyncThunk<
 );
 
 const updateTruckLocationFromSocket = createAsyncThunk<
-  truckLocationPayload,
-  truckLocationPayload,
+  TruckLocationPayload,
+  TruckLocationPayload,
   AsyncThunkConfig
 >(ActionName.SOCKET.UPDATE_TRUCK_LOCATION, (location) => {
   return location;
@@ -76,7 +74,7 @@ const unsubscribeTruckUpdates = createAction(
 
 const calculateArrivalTime = createAsyncThunk<
   TruckArrivalTime,
-  { origin: truckLocationPayload; destination: string },
+  CalculateArrivalTimeParameter,
   AsyncThunkConfig
 >(
   ActionName.CALCULATE_ARRIVAL_TIME,
