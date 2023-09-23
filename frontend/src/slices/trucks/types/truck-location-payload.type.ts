@@ -1,9 +1,9 @@
 import {
-  type ServerSocketEvent,
-  type ServerToClientEvents,
+  type ServerToClientEvent,
+  type ServerToClientEventParameter,
 } from 'shared/build';
 
 type TruckLocationPayload = Parameters<
-  ServerToClientEvents[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATED]
+  ServerToClientEventParameter[typeof ServerToClientEvent.TRUCK_LOCATION_UPDATED]
 >[0];
 export { type TruckLocationPayload };

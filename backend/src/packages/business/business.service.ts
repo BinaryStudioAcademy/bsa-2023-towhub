@@ -11,10 +11,10 @@ import {
   type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
 } from '../drivers/drivers.js';
-import { type ShiftEntity } from '../shifts/shift.js';
+import { type ShiftEntityT } from '../shifts/shift.js';
 import {
   type TruckAddRequestDto,
-  type TruckEntity,
+  type TruckEntityT,
   type TruckGetAllResponseDto,
 } from '../trucks/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
@@ -234,7 +234,7 @@ class BusinessService implements IService {
   public async createTruck(
     payload: TruckAddRequestDto,
     userId: number,
-  ): Promise<TruckEntity> {
+  ): Promise<TruckEntityT> {
     const business = await this.findByOwnerId(userId);
 
     if (!business) {
@@ -255,7 +255,7 @@ class BusinessService implements IService {
     driverId,
   }: {
     userId: UserEntityT['id'];
-    driverId: ShiftEntity['driverId'];
+    driverId: ShiftEntityT['driverId'];
   }): Promise<boolean> {
     return this.businessRepository.checkisDriverBelongedToBusiness(
       userId,

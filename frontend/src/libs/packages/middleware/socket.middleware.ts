@@ -19,10 +19,10 @@ import {
 } from '~/slices/trucks/actions.js';
 
 import {
-  ClientSocketEvent,
-  ServerSocketEvent,
+  ClientToServerEvent,
+  ServerToClientEvent,
 } from '../socket/libs/enums/enums.js';
-import { type ServerToClientEvents } from '../socket/libs/types/types.js';
+import { type ServerToClientEventParameter } from '../socket/libs/types/types.js';
 import { socket } from '../socket/socket.js';
 import { type RootReducer } from '../store/libs/types/root-reducer.type.js';
 import { type ExtraArguments } from '../store/libs/types/store.types.js';
@@ -42,16 +42,16 @@ const socketMiddleware: ThunkMiddleware<
 }) => {
   if (socketInstance) {
     socketInstance.on(
-      ServerSocketEvent.ORDER_UPDATED,
+      ServerToClientEvent.ORDER_UPDATED,
       (order: OrderResponseDto) => {
         void dispatch(updateOrderFromSocket(order));
       },
     );
     socketInstance.on(
-      ServerSocketEvent.TRUCK_LOCATION_UPDATED,
+      ServerToClientEvent.TRUCK_LOCATION_UPDATED,
       (
         truckLocation: Parameters<
-          ServerToClientEvents[typeof ServerSocketEvent.TRUCK_LOCATION_UPDATED]
+          ServerToClientEventParameter[typeof ServerToClientEvent.TRUCK_LOCATION_UPDATED]
         >[0],
       ) => {
         void dispatch(updateTruckLocationFromSocket(truckLocation));
@@ -73,34 +73,28 @@ const socketMiddleware: ThunkMiddleware<
     if (socketInstance) {
       switch (action.type) {
         case subscribeOrderUpdates.type: {
-          socketInstance.emit<typeof ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES>(
-            ClientSocketEvent.SUBSCRIBE_ORDER_UPDATES,
-            { orderId: `${action.payload as string}` },
-          );
+          socketInstance.emit(ClientToServerEvent.SUBSCRIBE_ORDER_UPDATES, {
+            orderId: `${action.payload as string}`,
+          });
           break;
         }
 
         case unsubscribeOrderUpdates.type: {
-          socketInstance.emit<
-            typeof ClientSocketEvent.UNSUBSCRIBE_ORDER_UPDATES
-          >(ClientSocketEvent.UNSUBSCRIBE_ORDER_UPDATES, {
+          socketInstance.emit(ClientToServerEvent.UNSUBSCRIBE_ORDER_UPDATES, {
             orderId: `${action.payload as string}`,
           });
           break;
         }
 
         case subscribeTruckUpdates.type: {
-          socketInstance.emit<typeof ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES>(
-            ClientSocketEvent.SUBSCRIBE_TRUCK_UPDATES,
-            { truckId: `${action.payload as string}` },
-          );
+          socketInstance.emit(ClientToServerEvent.SUBSCRIBE_TRUCK_UPDATES, {
+            truckId: `${action.payload as string}`,
+          });
           break;
         }
 
         case unsubscribeTruckUpdates.type: {
-          socketInstance.emit<
-            typeof ClientSocketEvent.UNSUBSCRIBE_TRUCK_UPDATES
-          >(ClientSocketEvent.UNSUBSCRIBE_TRUCK_UPDATES, {
+          socketInstance.emit(ClientToServerEvent.UNSUBSCRIBE_TRUCK_UPDATES, {
             truckId: `${action.payload as string}`,
           });
           break;

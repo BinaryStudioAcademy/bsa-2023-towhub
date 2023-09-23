@@ -1,9 +1,12 @@
 export {
-  ClientSocketEvent,
+  ClientToServerEvent,
   RoomPrefix,
-  ServerSocketEvent,
+  ServerToClientEvent,
+  ServerToClientResponseStatus,
+  SocketError,
 } from './libs/enums/enums.js';
 export {
-  type ClientToServerEvents,
-  type ServerToClientEvents,
+  type ClientToServerEventParameter,
+  type ServerToClientEventParameter,
+  type ServerToClientEventResponse,
 } from './libs/types/types.js';

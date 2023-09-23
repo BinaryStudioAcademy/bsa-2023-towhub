@@ -74,6 +74,7 @@ erDiagram
         updated_at timestamp "not null"
     }
     users_trucks {
+        id serial PK "not null"
         user_id integer FK "not null"
         truck_id integer FK "not null"
     }

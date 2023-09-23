@@ -9,7 +9,7 @@ type AsyncThunkConfig = {
   state: RootState;
   dispatch: AppDispatch;
   extra: typeof store.extraArguments;
-  rejectValue: HttpError;
+  rejectValue: HttpError | null;
 };
 
 export { type AsyncThunkConfig };
