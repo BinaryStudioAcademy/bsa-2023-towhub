@@ -87,7 +87,7 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   top: 8px;
   right: 10px;
   color: $grey-dark;
-  background-color: $white;
+  background-color: transparent;
   border: 0;
   cursor: pointer;
   user-select: none;

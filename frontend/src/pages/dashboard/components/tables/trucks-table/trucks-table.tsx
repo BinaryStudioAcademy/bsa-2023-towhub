@@ -71,22 +71,17 @@ const TruckTable: React.FC = () => {
     [dispatch, searchParameters, handleToggle],
   );
 
-  const message = (
-    <div>
-      There are no data here yet. Please,{' '}
-      <span className={styles.red}>add new driver</span>
-    </div>
-  );
+  const message = 'There are no data here yet. Please, add a truck';
 
   return (
     <>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2 className={getValidClassNames('uppercase', styles.title)}>
+          <h2 className={getValidClassNames('h3', styles.title)}>
             Company Trucks
           </h2>
           <Button
-            label="Add a truck"
+            label="Add Truck"
             className={styles.btn}
             onClick={handleToggle}
           />

@@ -107,6 +107,10 @@
   cursor: pointer;
 }
 
+.spinnerWrapper {
+  height: 40vh;
+}
+
 @media (hover: hover) {
   .resizer {
     opacity: 0;
