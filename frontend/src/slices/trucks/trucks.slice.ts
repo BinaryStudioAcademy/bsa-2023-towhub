@@ -19,7 +19,17 @@ const initialState: State = {
   trucks: [],
   total: 0,
   error: null,
-  chosenTruck: null,
+  chosenTruck: {
+    id: 1,
+    businessId: 1,
+    capacity: 5,
+    createdAt: 'fdsdf',
+    licensePlateNumber: 'AAA 123123',
+    manufacturer: 'daf',
+    pricePerKm: 4,
+    towType: 'flatbed_or_rollback',
+    year: 2003,
+  },
   dataStatus: DataStatus.IDLE,
 };
 
