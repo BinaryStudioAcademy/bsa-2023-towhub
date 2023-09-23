@@ -1,24 +1,29 @@
-import { type DataStatus } from '~/libs/enums/data-status.enum.js';
-import {
-  type OrderResponseDto,
-  type RootState,
-  type ValueOf,
-} from '~/libs/types/types.js';
+import { type RootState } from '~/libs/types/types.js';
 
-import { type RouteData } from './libs/types/types.js';
+import { type name as OrderSliceName } from './order.slice.js';
 
-const selectPrice = (state: RootState): number => state.orders.price;
+const selectPrice = (
+  state: RootState,
+): RootState[typeof OrderSliceName]['price'] => {
+  return state.orders.price;
+};
 
-export { selectPrice };
-
-const selectOrder = (state: RootState): OrderResponseDto | null => {
+const selectOrder = (
+  state: RootState,
+): RootState[typeof OrderSliceName]['currentOrder'] => {
   return state.orders.currentOrder;
 };
-const selectOrderData = (state: RootState): RouteData => {
+
+const selectOrderData = (
+  state: RootState,
+): RootState[typeof OrderSliceName]['routeData'] => {
   return state.orders.routeData;
 };
-const selectDataStatus = (state: RootState): ValueOf<typeof DataStatus> => {
+
+const selectDataStatus = (
+  state: RootState,
+): RootState[typeof OrderSliceName]['dataStatus'] => {
   return state.orders.dataStatus;
 };
 
-export { selectDataStatus, selectOrder, selectOrderData };
+export { selectDataStatus, selectOrder, selectOrderData, selectPrice };
