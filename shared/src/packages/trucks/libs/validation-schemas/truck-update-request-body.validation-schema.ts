@@ -5,6 +5,7 @@ import {
   TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
+  TruckStatus,
   TruckTowType,
   TruckYear,
 } from '../enums/enums.js';
@@ -65,6 +66,13 @@ const truckUpdateRequestBody = joi.object<
   towType: joi
     .string()
     .valid(...Object.values(TruckTowType))
+    .messages({
+      'any.only': TruckValidationMessage.INVALID,
+    }),
+
+  status: joi
+    .string()
+    .valid(...Object.values(TruckStatus))
     .messages({
       'any.only': TruckValidationMessage.INVALID,
     }),

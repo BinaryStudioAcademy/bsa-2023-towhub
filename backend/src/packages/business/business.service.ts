@@ -14,7 +14,7 @@ import {
   type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
 } from '../drivers/drivers.js';
-import { type ShiftEntity } from '../shifts/shift.js';
+import { type ShiftEntityT } from '../shifts/shift.js';
 import {
   type TruckAddRequestDto,
   type TruckEntityT,
@@ -288,7 +288,7 @@ class BusinessService implements IService {
     driverId,
   }: {
     userId: UserEntityT['id'];
-    driverId: ShiftEntity['driverId'];
+    driverId: ShiftEntityT['driverId'];
   }): Promise<boolean> {
     return this.businessRepository.checkisDriverBelongedToBusiness(
       userId,

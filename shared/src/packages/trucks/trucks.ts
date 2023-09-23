@@ -5,6 +5,7 @@ export {
   TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
+  TruckStatus,
   TruckTowType,
   TruckValidationMessage,
   TruckYear,

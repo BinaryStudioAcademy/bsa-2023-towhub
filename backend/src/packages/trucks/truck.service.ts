@@ -2,6 +2,8 @@ import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 
+import { type UsersTrucksService } from '../users-trucks/users-trucks.js';
+import { TruckStatus } from './libs/enums/enums.js';
 import {
   type DriverHaveAccessToTruck,
   type TruckEntityT,
@@ -13,14 +15,30 @@ import { type TruckRepository } from './truck.repository.js';
 class TruckService implements IService {
   private repository: TruckRepository;
 
-  public constructor(repository: TruckRepository) {
+  private usersTrucksService: UsersTrucksService;
+
+  public constructor(
+    repository: TruckRepository,
+    usersTrucksService: UsersTrucksService,
+  ) {
     this.repository = repository;
+    this.usersTrucksService = usersTrucksService;
+  }
+
+  public async checkIsNotAvailableById(id: number): Promise<boolean> {
+    const truck = await this.findById(id);
+
+    return !truck || truck.status !== TruckStatus.AVAILABLE;
   }
 
   public async findById(id: number): Promise<TruckEntityT | null> {
     const [truck = null] = await this.repository.findById(id);
 
     return truck ? TruckEntity.initialize(truck).toObject() : null;
+  }
+
+  public async findTrucksByUserId(userId: number): Promise<TruckEntityT[]> {
+    return await this.usersTrucksService.findTrucksByUserId(userId);
   }
 
   public async findAllByBusinessId(
@@ -37,7 +55,7 @@ class TruckService implements IService {
   }
 
   public async create(
-    payload: Omit<TruckEntityT, 'id' | 'createdAt'>,
+    payload: Omit<TruckEntityT, 'id' | 'createdAt' | 'status'>,
   ): Promise<TruckEntityT> {
     const existingTruck = await this.repository.find(
       payload.licensePlateNumber,
@@ -68,9 +86,7 @@ class TruckService implements IService {
       });
     }
 
-    const updatePayload = { ...truck, ...payload };
-
-    const [result] = await this.repository.update(id, updatePayload);
+    const [result] = await this.repository.update(id, payload);
 
     return TruckEntity.initialize(result).toObject();
   }

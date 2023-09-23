@@ -5,7 +5,7 @@ import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import { type UserEntityT } from '../users/users.js';
 import {
   type ShiftDatabaseModel,
-  type ShiftEntity as ShiftEntityT,
+  type ShiftEntityT as ShiftEntityT,
 } from './libs/types/types.js';
 
 class ShiftEntity implements IEntity {

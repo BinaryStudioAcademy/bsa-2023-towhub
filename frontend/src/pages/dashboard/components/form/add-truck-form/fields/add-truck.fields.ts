@@ -24,7 +24,7 @@ const convertToSelectOptions = (
 };
 
 const ADD_TRUCK_FIELDS: FormField<
-  Omit<TruckEntityT, 'id' | 'businessId' | 'createdAt'>
+  Omit<TruckEntityT, 'id' | 'businessId' | 'createdAt' | 'status'>
 >[] = [
   {
     id: FormLabel.MANUFACTURER,

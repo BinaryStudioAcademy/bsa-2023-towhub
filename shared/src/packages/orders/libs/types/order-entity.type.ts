@@ -7,7 +7,7 @@ import {
 
 import { type OrderStatusValues } from './order-status-values.type.js';
 
-type OrderEntity = {
+type OrderEntityT = {
   id: number;
   price: number;
   scheduledTime: string;
@@ -28,4 +28,4 @@ type DriverInfo = DriverCommonDetails &
   UserCommonDetails &
   Pick<UserEntityT, 'id'>;
 
-export { type DriverInfo, type OrderEntity };
+export { type DriverInfo, type OrderEntityT };

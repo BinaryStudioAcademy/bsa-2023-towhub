@@ -10,7 +10,7 @@ import {
 import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import { TruckEntity } from '../trucks/truck.entity.js';
 import { type ShiftDatabaseModel } from './libs/types/types.js';
-import { type ShiftEntity as ShiftEntityT } from './shift.js';
+import { type ShiftEntityT as ShiftEntityT } from './shift.js';
 
 class ShiftRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;

@@ -8,6 +8,7 @@ import {
   type TruckAddRequestDto,
   type TruckEntityT,
   type TruckGetAllResponseDto,
+  type UsersTrucksEntityT,
 } from '~/packages/trucks/libs/types/types.js';
 
 import { name as sliceName } from './trucks.slice.js';
@@ -39,6 +40,16 @@ const addTruck = createAsyncThunk<
   },
 );
 
+const getAllTrucksByUserId = createAsyncThunk<
+  TruckEntityT[],
+  Pick<UsersTrucksEntityT, 'userId'>,
+  AsyncThunkConfig
+>(`${sliceName}/get-all-trucks-by-user-id`, (payload, { extra }) => {
+  const { truckApi } = extra;
+
+  return truckApi.getAllTrucksByUserId(payload);
+});
+
 const findAllTrucksForBusiness = createAsyncThunk<
   TruckGetAllResponseDto,
   string | undefined,
@@ -65,4 +76,4 @@ const setTrucks = createAsyncThunk<TruckEntityT[], TruckEntityT[]>(
   (payload) => payload,
 );
 
-export { addTruck, findAllTrucksForBusiness, setTrucks };
+export { addTruck, findAllTrucksForBusiness, getAllTrucksByUserId, setTrucks };

@@ -10,7 +10,7 @@ import { ShiftEntity } from './shift.entity.js';
 import {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftEntity as ShiftEntityT,
+  type ShiftEntityT as ShiftEntityT,
   type ShiftResponseDto,
 } from './shift.js';
 import { type ShiftRepository } from './shift.repository.js';

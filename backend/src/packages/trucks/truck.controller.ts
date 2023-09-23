@@ -161,6 +161,17 @@ class TruckController extends Controller {
     });
 
     this.addRoute({
+      path: TruckApiPath.$USER_ID,
+      method: 'GET',
+      handler: (request) =>
+        this.getTrucksByUserId(
+          request as ApiHandlerOptions<{
+            params: { userId: number };
+          }>,
+        ),
+    });
+
+    this.addRoute({
       path: TruckApiPath.$ID,
       method: 'GET',
       validation: {
@@ -296,6 +307,21 @@ class TruckController extends Controller {
     return {
       status: HttpCode.OK,
       payload: await this.truckService.findById(options.params.id),
+    };
+  }
+
+  private async getTrucksByUserId(
+    options: ApiHandlerOptions<{
+      params: { userId: number };
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const trucks = await this.truckService.findTrucksByUserId(
+      options.params.userId,
+    );
+
+    return {
+      status: HttpCode.OK,
+      payload: trucks,
     };
   }
 
