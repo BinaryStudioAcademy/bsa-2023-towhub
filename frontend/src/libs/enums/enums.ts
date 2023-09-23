@@ -6,7 +6,8 @@ export { IconName } from './icon-name.enum.js';
 export { IconSize } from './icon-size.enum.js';
 export { InputType } from './input-type.enum.js';
 export { PlainSvgIconName } from './plain-svg-icon-name.enum.js';
-export { TabsName } from './sidebar-tabs.enum.js';
+export { SidebarTabsName } from './sidebar-tabs-name.enum.js';
+export { SidebarTabsPath } from './sidebar-tabs-path.enum.js';
 export {
   ApiPath,
   AppEnvironment,
