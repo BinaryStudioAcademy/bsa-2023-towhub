@@ -7,8 +7,9 @@
 }
 
 .left {
+  display: flex;
+  flex-direction: column;
   width: 50%;
-  height: 100%;
   margin-right: 24px;
 }
 
@@ -22,7 +23,9 @@
 }
 
 .header {
+  margin-bottom: 10px;
   color: $title-color;
+  font-weight: $font-weight-bold;
   font-size: 20px;
   text-align: center;
 }
@@ -33,18 +36,14 @@
   width: 100%;
 }
 
-.trip-info-content span {
-  margin-right: 10%;
-  margin-bottom: 15px;
-  font-size: 20px;
-}
-
-.trip-info-content span:first-child {
-  margin-right: 65%;
+.trip-info-content .item {
+  width: 50%;
+  margin-bottom: 10px;
+  font-size: 18px;
 }
 
 .order-details {
-  height: calc(100% - 140px);
+  flex-grow: 1;
   padding: 24px 65px 20px 80px;
   overflow: auto;
   background-color: $white;
@@ -60,41 +59,14 @@
 .detail {
   margin-bottom: 20px;
   color: $grey;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .detail .value {
   color: $black;
 }
 
-.comment-header {
-  margin-bottom: 25px;
-  font-size: 20px;
-  text-align: center;
-}
-
-.comment {
-  margin-bottom: 30px;
-  padding: 22px 25px;
-  font-size: 20px;
-  background: $grey;
-  border-radius: 10px;
-}
-
-.buttons {
-  display: flex;
-  justify-content: space-between;
-}
-
-.button {
-  width: 40%;
-}
-
-.button.accept {
-  background-color: $green;
-}
-
-.icon {
+.detail svg {
   width: 20px;
   margin-right: 15px;
 }
@@ -121,6 +93,33 @@
 
 .car-icon {
   color: $title-color;
+}
+
+.comment-header {
+  margin-bottom: 25px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.comment {
+  margin-bottom: 30px;
+  padding: 22px 25px;
+  font-size: 18px;
+  background: $grey;
+  border-radius: 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  width: 40%;
+}
+
+.button.accept {
+  background-color: $green;
 }
 
 .right {
