@@ -6,13 +6,14 @@ import { type OrderResponseDto } from '~/packages/orders/orders.js';
 
 import {
   calculateOrderPrice,
-  changeAcceptOrderStatus,
+  changeAcceptOrderStatusByCustomer,
+  changeAcceptOrderStatusByDriver,
   createOrder,
   updateOrderFromSocket,
 } from './actions.js';
 
 type State = {
-  orders: (OrderResponseDto | undefined)[];
+  orders: OrderResponseDto[];
   price: number;
   dataStatus: ValueOf<typeof DataStatus>;
 };
@@ -37,18 +38,31 @@ const { reducer, actions, name } = createSlice({
         state.price = action.payload.price;
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(changeAcceptOrderStatus.fulfilled, (state, action) => {
-        state.orders = [action.payload];
-        state.dataStatus = DataStatus.FULFILLED;
-      })
       .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
         state.orders = [action.payload];
       })
       .addMatcher(
         isAnyOf(
+          changeAcceptOrderStatusByDriver.fulfilled,
+          changeAcceptOrderStatusByCustomer.fulfilled,
+        ),
+        (state, action) => {
+          const updatedOrders = state.orders.map((order) => {
+            return order.id === action.payload.id
+              ? { ...order, status: action.payload.status }
+              : order;
+          });
+
+          state.orders = updatedOrders;
+          state.dataStatus = DataStatus.FULFILLED;
+        },
+      )
+      .addMatcher(
+        isAnyOf(
           calculateOrderPrice.pending,
           createOrder.pending,
-          changeAcceptOrderStatus.pending,
+          changeAcceptOrderStatusByDriver.pending,
+          changeAcceptOrderStatusByCustomer.pending,
         ),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
@@ -58,7 +72,8 @@ const { reducer, actions, name } = createSlice({
         isAnyOf(
           calculateOrderPrice.rejected,
           createOrder.rejected,
-          changeAcceptOrderStatus.rejected,
+          changeAcceptOrderStatusByDriver.rejected,
+          changeAcceptOrderStatusByCustomer.rejected,
         ),
         (state) => {
           state.dataStatus = DataStatus.REJECTED;

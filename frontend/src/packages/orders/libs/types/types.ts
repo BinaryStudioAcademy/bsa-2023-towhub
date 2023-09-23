@@ -5,5 +5,6 @@ export {
   type OrderEntity,
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
+  type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
 } from 'shared/build/index.js';

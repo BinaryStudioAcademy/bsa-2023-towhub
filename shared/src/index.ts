@@ -115,6 +115,7 @@ export {
   type OrderResponseDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusRequsetParameter,
   type OrderUpdateRequestDto,
   ORDER_STATUSES,
   orderCreateRequestBody,
@@ -123,6 +124,7 @@ export {
   OrderStatus,
   OrdersValidationMessage,
   orderUpdateAcceptStatusRequestBody,
+  orderUpdateAcceptStatusRequestParameter,
   orderUpdateRequestBody,
 } from './packages/orders/orders.js';
 export {

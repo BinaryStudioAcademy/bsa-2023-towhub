@@ -8,6 +8,7 @@ import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderResponseDto,
+  type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
 } from './libs/types/types.js';
 import { type OrderCreateRequestDto } from './orders.js';
@@ -55,12 +56,12 @@ class OrdersApi extends HttpApi {
     return await response.json<OrderCalculatePriceResponseDto>();
   }
 
-  public async changeAcceptOrderStatus(
+  public async changeAcceptOrderStatusByDriver(
     orderId: string,
     payload: OrderUpdateAcceptStatusRequestDto,
-  ): Promise<OrderResponseDto> {
+  ): Promise<{ id: number; status: OrderStatusValues }> {
     const response = await this.load(
-      this.getFullEndpoint(OrdersApiPath.$ID, { id: orderId }),
+      this.getFullEndpoint(OrdersApiPath.DRIVER, { orderId }),
       {
         method: 'PATCH',
         contentType: ContentType.JSON,
@@ -69,7 +70,24 @@ class OrdersApi extends HttpApi {
       },
     );
 
-    return await response.json<OrderResponseDto>();
+    return await response.json<{ id: number; status: OrderStatusValues }>();
+  }
+
+  public async changeAcceptOrderStatusByCustomer(
+    orderId: string,
+    payload: OrderUpdateAcceptStatusRequestDto,
+  ): Promise<{ id: number; status: OrderStatusValues }> {
+    const response = await this.load(
+      this.getFullEndpoint(OrdersApiPath.CUSTOMER, { orderId }),
+      {
+        method: 'PATCH',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: false,
+      },
+    );
+
+    return await response.json<{ id: number; status: OrderStatusValues }>();
   }
 }
 

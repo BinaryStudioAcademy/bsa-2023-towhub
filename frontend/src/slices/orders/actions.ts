@@ -3,7 +3,10 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
-import { type OrderUpdateAcceptStatusRequestDto } from '~/packages/orders/libs/types/types.js';
+import {
+  type OrderStatusValues,
+  type OrderUpdateAcceptStatusRequestDto,
+} from '~/packages/orders/libs/types/types.js';
 import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
@@ -14,8 +17,8 @@ import {
 import { ActionNames } from './libs/enums/enums.js';
 import { name as sliceName } from './order.slice.js';
 
-const changeAcceptOrderStatus = createAsyncThunk<
-  OrderResponseDto,
+const changeAcceptOrderStatusByDriver = createAsyncThunk<
+  { id: number; status: OrderStatusValues },
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
   AsyncThunkConfig
 >(
@@ -23,7 +26,20 @@ const changeAcceptOrderStatus = createAsyncThunk<
   ({ isAccepted, orderId }, { extra }) => {
     const { ordersApi } = extra;
 
-    return ordersApi.changeAcceptOrderStatus(orderId, { isAccepted });
+    return ordersApi.changeAcceptOrderStatusByDriver(orderId, { isAccepted });
+  },
+);
+
+const changeAcceptOrderStatusByCustomer = createAsyncThunk<
+  { id: number; status: OrderStatusValues },
+  OrderUpdateAcceptStatusRequestDto & { orderId: string },
+  AsyncThunkConfig
+>(
+  ActionNames.CHANGE_ACCEPT_ORDER_STATUS,
+  ({ isAccepted, orderId }, { extra }) => {
+    const { ordersApi } = extra;
+
+    return ordersApi.changeAcceptOrderStatusByCustomer(orderId, { isAccepted });
   },
 );
 
@@ -84,7 +100,8 @@ const calculateOrderPrice = createAsyncThunk<
 
 export {
   calculateOrderPrice,
-  changeAcceptOrderStatus,
+  changeAcceptOrderStatusByCustomer,
+  changeAcceptOrderStatusByDriver,
   createOrder,
   listenOrderUpdates,
   stopListenOrderUpdates,

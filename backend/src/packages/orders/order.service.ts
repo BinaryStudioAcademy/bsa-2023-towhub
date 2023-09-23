@@ -7,7 +7,6 @@ import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
 import { type TruckService } from '../trucks/truck.service.js';
-import { type UserGroupKeyT } from '../users/libs/types/types.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
@@ -234,40 +233,23 @@ class OrderService implements Omit<IService, 'find'> {
     return order;
   }
 
-  public async updateByCustomer({
+  public async updateAcceptStatusByDriver({
     id,
     payload,
+    user,
   }: {
     id: OrderEntityT['id'];
-    payload: OrderUpdateRequestDto;
-  }): Promise<OrderResponseDto> {
-    const foundOrder = await this.orderRepository.findById(id);
+    payload: OrderUpdateAcceptStatusRequestDto;
+    user: UserEntityObjectWithGroupT;
+  }): Promise<{ id: number; status: OrderStatusValues }> {
+    const status = this.checkIsOrderAccepted(payload.isAccepted, user);
 
-    if (!foundOrder?.driver) {
-      throw new NotFoundError({
-        message: HttpMessage.ORDER_DOES_NOT_EXIST,
-      });
-    }
+    await this.shiftService.checkDriverStartShift(user.id);
 
-    const shift = await this.shiftService.findByShiftId(foundOrder.shiftId);
-
-    const driver = await this.driverService.findByUserId(shift.driverId);
-
-    if (!driver) {
-      throw new NotFoundError({
-        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
-      });
-    }
-
-    const truck = await this.truckService.findById(shift.truckId);
-
-    if (!truck) {
-      throw new NotFoundError({
-        message: HttpMessage.TRUCK_DOES_NOT_EXISTS,
-      });
-    }
-
-    const updatedOrder = await this.orderRepository.update({ id, payload });
+    const updatedOrder = await this.orderRepository.update({
+      id,
+      payload: { status },
+    });
 
     if (!updatedOrder) {
       throw new NotFoundError({
@@ -275,28 +257,14 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
-    const orderExtended = {
-      ...updatedOrder,
-      shift: { id: shift.id },
-      driver: {
-        id: driver.userId,
-        firstName: foundOrder.driver.firstName,
-        lastName: foundOrder.driver.lastName,
-        email: foundOrder.driver.email,
-        phone: foundOrder.driver.phone,
-        driverLicenseNumber: driver.driverLicenseNumber,
-      },
-      truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
-    };
-
-    const order = OrderEntity.initialize(orderExtended).toObject();
+    const order = OrderEntity.initializeUpdate(updatedOrder).toObject();
 
     this.socketService.notifyOrderUpdate(order.id, order);
 
-    return order;
+    return { id: order.id, status: order.status };
   }
 
-  public async updateAcceptStatus({
+  public async updateAcceptStatusByCustomer({
     id,
     payload,
     user,
@@ -304,29 +272,25 @@ class OrderService implements Omit<IService, 'find'> {
     id: OrderEntityT['id'];
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT | null;
-  }): Promise<OrderResponseDto> {
-    const acceptStatus = this.checkIsOrderAccepted(payload.isAccepted, user);
+  }): Promise<{ id: number; status: OrderStatusValues }> {
+    const status = this.checkIsOrderAccepted(payload.isAccepted, user);
 
-    if (user && checkIsDriver(user.group.key)) {
-      await this.shiftService.checkDriverStartShift(user.id);
+    const updatedOrder = await this.orderRepository.update({
+      id,
+      payload: { status },
+    });
 
-      return await this.update({
-        id,
-        payload: { status: acceptStatus },
-        user,
-      });
-    }
-
-    if (checkIsCustomer(user?.group.key as UserGroupKeyT)) {
-      return await this.updateByCustomer({
-        id,
-        payload: { status: acceptStatus },
-      });
-    } else {
+    if (!updatedOrder) {
       throw new NotFoundError({
-        message: HttpMessage.USER_CAN_NOT_ACCEPT_OR_DECLINE_ORDER,
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
       });
     }
+
+    const order = OrderEntity.initializeUpdate(updatedOrder).toObject();
+
+    this.socketService.notifyOrderUpdate(order.id, order);
+
+    return { id: order.id, status: order.status };
   }
 
   public async findAllBusinessOrders(
@@ -417,7 +381,7 @@ class OrderService implements Omit<IService, 'find'> {
     user: UserEntityObjectWithGroupT | null,
   ): OrderStatusValues {
     if (user && checkIsDriver(user.group.key)) {
-      return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REFUSED;
+      return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REJECTED;
     } else if ((!user || checkIsCustomer(user.group.key)) && !isAccepted) {
       return OrderStatus.CANCELED;
     } else {

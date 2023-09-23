@@ -6,4 +6,5 @@ export { type OrderFindByIdResponseDto } from './order-find-by-id-response-dto.t
 export { type OrderResponseDto } from './order-response-dto.type.js';
 export { type OrderStatusValues } from './order-status-values.type.js';
 export { type OrderUpdateAcceptStatusRequestDto } from './order-update-accept-status-request-dto.type.js';
+export { type OrderUpdateAcceptStatusRequsetParameter } from './order-update-accept-status-request-parameter.type.js';
 export { type OrderUpdateRequestDto } from './order-update-request-dto.type.js';

@@ -137,6 +137,40 @@ class OrderEntity implements IEntity {
     });
   }
 
+  public static initializeUpdate({
+    id,
+    price,
+    scheduledTime,
+    carsQty,
+    startPoint,
+    endPoint,
+    status,
+    userId,
+    businessId,
+    shiftId,
+    customerName,
+    customerPhone,
+  }: Omit<OrderEntityT, 'driver' | 'truck'> & {
+    shiftId: number;
+  }): OrderEntity {
+    return new OrderEntity({
+      id,
+      price,
+      scheduledTime,
+      carsQty,
+      startPoint,
+      endPoint,
+      status,
+      userId,
+      businessId,
+      customerName,
+      customerPhone,
+      shiftId,
+      driver: null,
+      truck: null,
+    });
+  }
+
   public toObject(): OrderResponseDto {
     return {
       id: this.id as number,

@@ -18,12 +18,14 @@ import {
   type OrderCreateRequestDto,
   type OrderResponseDto,
   type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusRequsetParameter,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import {
   orderCreateRequestBody,
   orderGetParameter,
   orderUpdateAcceptStatusRequestBody,
+  orderUpdateAcceptStatusRequestParameter,
   orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';
 
@@ -270,19 +272,37 @@ class OrderController extends Controller {
     });
 
     this.addRoute({
-      path: OrdersApiPath.$ID,
+      path: OrdersApiPath.CUSTOMER,
       method: 'PATCH',
       authStrategy: AuthStrategy.INJECT_USER,
       validation: {
-        params: orderGetParameter,
+        params: orderUpdateAcceptStatusRequestParameter,
         body: orderUpdateAcceptStatusRequestBody,
       },
       handler: (options) =>
-        this.updateAcceptStatus(
+        this.updateAcceptStatusByCustomer(
           options as ApiHandlerOptions<{
-            params: Id;
+            params: OrderUpdateAcceptStatusRequsetParameter;
             body: OrderUpdateAcceptStatusRequestDto;
             user: UserEntityObjectWithGroupT | null;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: OrdersApiPath.DRIVER,
+      method: 'PATCH',
+      authStrategy: [AuthStrategy.VERIFY_JWT, AuthStrategy.VERIFY_DRIVER_GROUP],
+      validation: {
+        params: orderUpdateAcceptStatusRequestParameter,
+        body: orderUpdateAcceptStatusRequestBody,
+      },
+      handler: (options) =>
+        this.updateAcceptStatusByDriver(
+          options as ApiHandlerOptions<{
+            params: OrderUpdateAcceptStatusRequsetParameter;
+            body: OrderUpdateAcceptStatusRequestDto;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -511,7 +531,7 @@ class OrderController extends Controller {
 
   /**
    * @swagger
-   * /orders/{id}:
+   * /orders/driver/{orderId}:
    *    patch:
    *      tags:
    *       - orders
@@ -519,7 +539,7 @@ class OrderController extends Controller {
    *      description: Accept/decline order by Id
    *      parameters:
    *       - in: path
-   *         name: id
+   *         name: orderId
    *         schema:
    *           type: integer
    *         required: true
@@ -562,17 +582,87 @@ class OrderController extends Controller {
    *
    */
 
-  private async updateAcceptStatus(
+  private async updateAcceptStatusByDriver(
     options: ApiHandlerOptions<{
-      params: Id;
+      params: OrderUpdateAcceptStatusRequsetParameter;
+      body: OrderUpdateAcceptStatusRequestDto;
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.orderService.updateAcceptStatusByDriver({
+        id: options.params.orderId,
+        payload: options.body,
+        user: options.user,
+      }),
+    };
+  }
+
+  /**
+   * @swagger
+   * /orders/customer/{orderId}:
+   *    patch:
+   *      tags:
+   *       - orders
+   *      summary: Update order status by Id
+   *      description: Accept/decline order by Id
+   *      parameters:
+   *       - in: path
+   *         name: orderId
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the order to update
+   *         example: 1
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                isAccepted:
+   *                  type: boolean
+   *                  example: true
+   *      security:
+   *        - {}
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Order updated
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Order'
+   *        404:
+   *          description:
+   *            Order with such ID does not found
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/OrderDoesNotExist'
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *
+   */
+
+  private async updateAcceptStatusByCustomer(
+    options: ApiHandlerOptions<{
+      params: OrderUpdateAcceptStatusRequsetParameter;
       body: OrderUpdateAcceptStatusRequestDto;
       user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.updateAcceptStatus({
-        id: options.params.id,
+      payload: await this.orderService.updateAcceptStatusByCustomer({
+        id: options.params.orderId,
         payload: options.body,
         user: options.user,
       }),

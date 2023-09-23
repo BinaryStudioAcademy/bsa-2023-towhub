@@ -2,7 +2,7 @@ const OrderStatus = {
   PENDING: 'pending',
   CONFIRMED: 'confirmed',
   CANCELED: 'canceled',
-  REFUSED: 'refused',
+  REJECTED: 'rejected',
   DONE: 'done',
   PICKING_UP: 'picking_up',
 } as const;
