@@ -1,3 +1,3 @@
-const HOUR_IN_MS = 25e3;
+const SHIFT_TIMEOUT_TIME_IN_MS = 3.6e6;
 
-export { HOUR_IN_MS };
+export { SHIFT_TIMEOUT_TIME_IN_MS };
