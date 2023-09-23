@@ -1,4 +1,7 @@
-import { NotFoundError } from '~/libs/exceptions/exceptions.js';
+import {
+  EntityAccessDeniedError,
+  NotFoundError,
+} from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
@@ -11,20 +14,24 @@ import {
   type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
 } from '../drivers/drivers.js';
-import { type ShiftEntity } from '../shifts/shift.js';
+import { type ShiftEntityT } from '../shifts/shift.js';
 import {
   type TruckAddRequestDto,
-  type TruckEntity,
+  type TruckEntityT,
   type TruckGetAllResponseDto,
 } from '../trucks/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
-import { type UserEntityT } from '../users/users.js';
+import {
+  type UserEntityObjectWithGroupT,
+  type UserEntityT,
+} from '../users/users.js';
 import { BusinessEntity } from './business.entity.js';
 import { type BusinessRepository } from './business.repository.js';
 import {
   type BusinessAddResponseDto,
   type BusinessCreatePayload,
   type BusinessEntityT,
+  type BusinessUpdateRequestDto,
   type BusinessUpdateResponseDto,
   type GetPaginatedPageQuery,
 } from './libs/types/types.js';
@@ -46,10 +53,26 @@ class BusinessService implements IService {
     this.truckService = truckService;
   }
 
-  public async findById(id: number): Promise<BusinessEntityT | null> {
-    const [business = null] = await this.businessRepository.find({ id });
+  public async findById(
+    id: number,
+    { owner }: { owner: UserEntityObjectWithGroupT },
+  ): Promise<BusinessEntityT | null> {
+    const [foundBusiness = null] = await this.businessRepository.find({ id });
 
-    return business ? BusinessEntity.initialize(business).toObject() : null;
+    if (!foundBusiness) {
+      return null;
+    }
+
+    const isOwner = this.checkIsOwner({
+      userId: owner.id,
+      business: foundBusiness,
+    });
+
+    if (!isOwner) {
+      throw new EntityAccessDeniedError({});
+    }
+
+    return BusinessEntity.initialize(foundBusiness).toObject();
   }
 
   public async findByOwnerId(ownerId: number): Promise<BusinessEntityT | null> {
@@ -98,16 +121,26 @@ class BusinessService implements IService {
     return business.toObject();
   }
 
-  public async update({
-    id,
-    payload,
+  public checkIsOwner({
+    userId,
+    business,
   }: {
-    id: number;
-    payload: Pick<BusinessEntityT, 'companyName'>;
-  }): Promise<BusinessUpdateResponseDto> {
-    const foundBusinessById = await this.findById(id);
+    userId: UserEntityObjectWithGroupT['id'];
+    business: BusinessEntityT;
+  }): boolean {
+    return userId === business.ownerId;
+  }
 
-    if (!foundBusinessById) {
+  public async update({
+    payload,
+    owner,
+  }: {
+    payload: BusinessUpdateRequestDto;
+    owner: UserEntityObjectWithGroupT;
+  }): Promise<BusinessUpdateResponseDto> {
+    const foundBusiness = await this.findByOwnerId(owner.id);
+
+    if (!foundBusiness) {
       throw new NotFoundError({});
     }
 
@@ -124,21 +157,21 @@ class BusinessService implements IService {
     }
 
     const business = await this.businessRepository.update({
-      id: foundBusinessById.id,
+      id: foundBusiness.id,
       payload,
     });
 
     return business.toObject();
   }
 
-  public async delete(id: number): Promise<boolean> {
-    const foundBusiness = await this.findById(id);
+  public async delete(owner: UserEntityObjectWithGroupT): Promise<boolean> {
+    const foundBusiness = await this.findByOwnerId(owner.id);
 
     if (!foundBusiness) {
       throw new NotFoundError({});
     }
 
-    return await this.businessRepository.delete(id);
+    return await this.businessRepository.delete(foundBusiness.id);
   }
 
   public async createDriver(
@@ -234,7 +267,7 @@ class BusinessService implements IService {
   public async createTruck(
     payload: TruckAddRequestDto,
     userId: number,
-  ): Promise<TruckEntity> {
+  ): Promise<TruckEntityT> {
     const business = await this.findByOwnerId(userId);
 
     if (!business) {
@@ -255,7 +288,7 @@ class BusinessService implements IService {
     driverId,
   }: {
     userId: UserEntityT['id'];
-    driverId: ShiftEntity['driverId'];
+    driverId: ShiftEntityT['driverId'];
   }): Promise<boolean> {
     return this.businessRepository.checkisDriverBelongedToBusiness(
       userId,

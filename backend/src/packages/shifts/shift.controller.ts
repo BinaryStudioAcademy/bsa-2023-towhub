@@ -14,7 +14,7 @@ import {
 import {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftEntity,
+  type ShiftEntityT,
   type ShiftResponseDto,
   shiftCloseValidationSchema,
   shiftCreateValidationSchema,
@@ -64,7 +64,7 @@ class ShiftController extends Controller {
           options as ApiHandlerOptions<{
             body: ShiftCloseRequestDto;
             user: UserEntityObjectWithGroupT;
-            params: Pick<ShiftEntity, 'id'>;
+            params: Pick<ShiftEntityT, 'id'>;
           }>,
         ),
     });
@@ -75,7 +75,7 @@ class ShiftController extends Controller {
       handler: (options) =>
         this.getByShiftId(
           options as ApiHandlerOptions<{
-            params: Pick<ShiftEntity, 'id'>;
+            params: Pick<ShiftEntityT, 'id'>;
           }>,
         ),
     });
@@ -117,7 +117,7 @@ class ShiftController extends Controller {
     options: ApiHandlerOptions<{
       body: ShiftCloseRequestDto;
       user: UserEntityObjectWithGroupT;
-      params: Pick<ShiftEntity, 'id'>;
+      params: Pick<ShiftEntityT, 'id'>;
     }>,
   ): Promise<ApiHandlerResponse<ShiftResponseDto>> {
     return {
@@ -128,7 +128,7 @@ class ShiftController extends Controller {
 
   private async getByShiftId(
     options: ApiHandlerOptions<{
-      params: Pick<ShiftEntity, 'id'>;
+      params: Pick<ShiftEntityT, 'id'>;
     }>,
   ): Promise<ApiHandlerResponse<ShiftResponseDto>> {
     return {
