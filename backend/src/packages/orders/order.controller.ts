@@ -415,19 +415,11 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse<OrderResponseDto>> {
-    const userId = options.user?.id ?? null;
-    const customerPhone =
-      options.body.customerPhone ?? options.user?.phone ?? null;
-    const customerName =
-      options.body.customerName ?? options.user?.firstName ?? null;
-
     return {
       status: HttpCode.OK,
       payload: await this.orderService.create({
         ...options.body,
-        userId,
-        customerPhone,
-        customerName,
+        user: options.user,
       }),
     };
   }
