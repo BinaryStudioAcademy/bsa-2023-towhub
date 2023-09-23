@@ -7,6 +7,7 @@ const ClientToServerEvent = {
   TRUCK_LOCATION_UPDATE: 'truck_location_update',
   END_SHIFT: 'end_shift',
   START_SHIFT: 'start_shift',
+  AUTHORIZE_DRIVER: 'authorize_driver',
   BASE_EVENT: 'base_event',
 } as const;
 

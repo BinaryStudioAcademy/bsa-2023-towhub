@@ -44,8 +44,8 @@ const truckChosen: CaseReducer<State, PayloadAction<TruckChosenPayload>> = (
   state,
   action,
 ) => {
-  const { id } = action.payload;
-  const chosenTruck = state.trucks.find((truck) => truck.id === id);
+  const { truckId } = action.payload;
+  const chosenTruck = state.trucks.find((truck) => truck.id === truckId);
 
   if (!chosenTruck) {
     return;
@@ -61,8 +61,8 @@ const truckAvailable: CaseReducer<
   State,
   PayloadAction<TruckAvailablePayload>
 > = (state, action) => {
-  const { id } = action.payload;
-  const chosenTruck = state.trucks.find((truck) => truck.id === id);
+  const { truckId } = action.payload;
+  const chosenTruck = state.trucks.find((truck) => truck.id === truckId);
 
   if (!chosenTruck) {
     return;

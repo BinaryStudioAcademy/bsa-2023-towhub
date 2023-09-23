@@ -31,6 +31,7 @@ const useHomePageSocketService = (): ReturnType => {
     socketService.emit({
       event: ClientToServerEvent.LEAVE_HOME_ROOM,
     });
+    socketService.removeAllListeners(ServerToClientEvent.TRUCKS_LIST_UPDATE);
   }, []);
 
   return { connectToHomeRoom, disconnectFromHomeRoom };

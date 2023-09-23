@@ -7,6 +7,7 @@ const ServerToClientEvent = {
   TRUCK_AVAILABLE: 'truck_available',
   TRUCK_CHOSEN: 'truck_chosen',
   TRUCKS_LIST_UPDATE: 'trucks_list_update',
+  BASE_EVENT: 'base_event',
 } as const;
 
 export { ServerToClientEvent };

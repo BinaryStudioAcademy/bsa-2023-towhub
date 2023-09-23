@@ -3,7 +3,10 @@ import {
   socket as socketClient,
 } from '~/libs/packages/socket/socket.js';
 
-const socketRemoveDriverListeners = (): void => {
+const socketTryRemoveDriverListeners = (): void => {
+  if (!socketClient.hasListeners(ServerToClientEvent.SHIFT_SYNC)) {
+    return;
+  }
   socketClient.removeAllListeners(ServerToClientEvent.ERROR);
   socketClient.removeAllListeners(ServerToClientEvent.TRUCK_CHOSEN);
   socketClient.removeAllListeners(ServerToClientEvent.DRIVER_TIMED_OUT);
@@ -12,4 +15,4 @@ const socketRemoveDriverListeners = (): void => {
   socketClient.removeAllListeners(ServerToClientEvent.SHIFT_SYNC);
 };
 
-export { socketRemoveDriverListeners };
+export { socketTryRemoveDriverListeners };

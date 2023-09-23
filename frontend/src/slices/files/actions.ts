@@ -10,7 +10,7 @@ const uploadFile = createAsyncThunk<
   FileUploadResponseDto,
   File[],
   AsyncThunkConfig
->(`${sliceName}/sign-up`, async (files: File[], { extra, rejectWithValue }) => {
+>(`${sliceName}/upload`, async (files: File[], { extra, rejectWithValue }) => {
   const { filesApi } = extra;
 
   const formData = new FormData();

@@ -1,12 +1,12 @@
 import { type Socket, io } from 'socket.io-client';
 
 import { config } from '~/libs/packages/config/config.js';
-import {
-  type FirstParameter,
-  type UserEntityObjectWithGroupT,
-} from '~/libs/types/types.js';
+import { type FirstParameter } from '~/libs/types/types.js';
 
-import { type ClientToServerEvent } from './libs/enums/enums.js';
+import {
+  type ClientToServerEvent,
+  type ServerToClientEvent,
+} from './libs/enums/enums.js';
 import {
   type ClientToServerEventParameter,
   type ServerToClientEventParameter,
@@ -26,12 +26,10 @@ class SocketService {
     return this.io ? this.io.hasListeners(event) : false;
   }
 
-  public connect(user: UserEntityObjectWithGroupT | null): void {
+  public connect(): void {
     if (!this.io) {
-      const auth = user ? { userId: user.id } : {};
       this.io = io(config.ENV.API.SERVER_URL, {
         transports: ['websocket', 'polling'],
-        auth,
       });
     }
   }
@@ -40,7 +38,10 @@ class SocketService {
     T extends
       keyof ServerToClientEventParameter = keyof ServerToClientEventParameter,
   >(event: T, listener: ServerToClientEventParameter[T]): void {
-    this.io?.on(event, listener as never);
+    this.io?.on(
+      event as typeof ServerToClientEvent.BASE_EVENT,
+      listener as ServerToClientEventParameter[typeof ServerToClientEvent.BASE_EVENT],
+    );
   }
 
   public removeAllListeners<

@@ -7,31 +7,20 @@ import {
 import { type ClientToServerEvent } from '../enums/enums.js';
 
 type ClientToServerEventParameter = {
-  [ClientToServerEvent.TRUCK_LOCATION_UPDATE]: (
-    payload: {
-      latLng: GeolocationLatLng;
-      truckId: number;
-    },
-    callback?: EventAckCollback,
-  ) => void;
+  [ClientToServerEvent.AUTHORIZE_DRIVER]: (payload: { userId: number }) => void;
+  [ClientToServerEvent.TRUCK_LOCATION_UPDATE]: (payload: {
+    latLng: GeolocationLatLng;
+    truckId: number;
+  }) => void;
   [ClientToServerEvent.START_SHIFT]: (
     payload: { truckId: number },
     callback: EventAckCollback<
       ServerToClientEventResponse[typeof ClientToServerEvent.START_SHIFT]
     >,
   ) => void;
-  [ClientToServerEvent.END_SHIFT]: (
-    payload: unknown,
-    callback?: EventAckCollback,
-  ) => void;
-  [ClientToServerEvent.LEAVE_HOME_ROOM]: (
-    payload: unknown,
-    callback?: EventAckCollback,
-  ) => void;
-  [ClientToServerEvent.JOIN_HOME_ROOM]: (
-    payload: unknown,
-    callback?: EventAckCollback,
-  ) => void;
+  [ClientToServerEvent.END_SHIFT]: () => void;
+  [ClientToServerEvent.LEAVE_HOME_ROOM]: () => void;
+  [ClientToServerEvent.JOIN_HOME_ROOM]: () => void;
   [ClientToServerEvent.BASE_EVENT]: (
     payload: unknown,
     callback?: EventAckCollback,

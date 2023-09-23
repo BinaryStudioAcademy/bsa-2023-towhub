@@ -3,11 +3,20 @@ import { type Server, type Socket, Server as SocketServer } from 'socket.io';
 
 import { type GeolocationCacheSocketService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { logger } from '~/libs/packages/logger/logger.js';
+import { type FirstParameter } from '~/libs/types/types.js';
+import { UserGroupKey } from '~/packages/groups/groups.js';
 import { type ShiftSocketService } from '~/packages/shifts/shift.js';
-import { type UserEntityObjectWithGroupT } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service';
 
-import { ClientToServerEvent, SocketRoom } from './libs/enums/enums.js';
+import {
+  ClientToServerEvent,
+  SocketError,
+  SocketRoom,
+} from './libs/enums/enums.js';
+import {
+  type ClientToServerEventParameter,
+  ServerToClientEvent,
+} from './libs/types/types.js';
 
 class SocketService {
   private io: SocketServer | null = null;
@@ -42,23 +51,8 @@ class SocketService {
 
     await this.shiftSocketService.fetchStartedShifts();
 
-    this.io.on(ClientToServerEvent.CONNECTION, async (socket: Socket) => {
-      const socketUserId = socket.handshake.auth.userId as number | undefined;
-      let user: UserEntityObjectWithGroupT | null = null;
-
+    this.io.on(ClientToServerEvent.CONNECTION, (socket: Socket) => {
       logger.info(`${socket.id} connected`);
-
-      if (socketUserId) {
-        user = await this.userService.findById(socketUserId);
-      }
-
-      if (user) {
-        await this.shiftSocketService.initializeListeners({
-          user,
-          socket,
-          io: this.io as Server,
-        });
-      }
 
       this.geolocationCacheSocketService.initialize({
         socket,
@@ -74,6 +68,29 @@ class SocketService {
       );
       socket.on(ClientToServerEvent.LEAVE_HOME_ROOM, () =>
         socket.leave(SocketRoom.HOME_ROOM),
+      );
+
+      socket.on(
+        ClientToServerEvent.AUTHORIZE_DRIVER,
+        async ({
+          userId,
+        }: FirstParameter<
+          ClientToServerEventParameter[typeof ClientToServerEvent.AUTHORIZE_DRIVER]
+        >) => {
+          const user = await this.userService.findById(userId);
+
+          if (!user || user.group.key !== UserGroupKey.DRIVER) {
+            socket.emit(ServerToClientEvent.ERROR, SocketError.NOT_AUTHORIZED);
+
+            return;
+          }
+
+          await this.shiftSocketService.initializeListeners({
+            user,
+            socket,
+            io: this.io as Server,
+          });
+        },
       );
     });
   }

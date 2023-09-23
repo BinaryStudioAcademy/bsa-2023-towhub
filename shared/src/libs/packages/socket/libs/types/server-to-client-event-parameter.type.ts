@@ -13,5 +13,6 @@ type ServerToClientEventParameter = {
   [ServerToClientEvent.ERROR]: (payload: { message: string }) => void;
   [ServerToClientEvent.DRIVER_TIMED_OUT]: (payload: null) => void;
   [ServerToClientEvent.SHIFT_ENDED]: (payload: null) => void;
+  [ServerToClientEvent.BASE_EVENT]: (payload: unknown) => void;
 };
 export { type ServerToClientEventParameter };

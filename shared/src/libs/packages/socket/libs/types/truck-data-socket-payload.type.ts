@@ -1,5 +1,5 @@
 import { type TruckEntityT } from '~/packages/trucks/libs/types/types.js';
 
-type TruckDataSocketPayload = Pick<TruckEntityT, 'id'>;
+type TruckDataSocketPayload = { truckId: TruckEntityT['id'] };
 
 export { type TruckDataSocketPayload };

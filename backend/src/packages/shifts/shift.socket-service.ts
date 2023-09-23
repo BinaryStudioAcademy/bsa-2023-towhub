@@ -62,12 +62,16 @@ class ShiftSocketService {
     socket: Socket;
     io: Server;
   }): Promise<void> {
-    await socketSyncShift({
-      startedShiftsStore: this.startedShiftsStore,
-      userId: user.id,
-      socket,
-      truckService: this.truckService,
-    });
+    if (socket.eventNames().includes(ClientToServerEvent.END_SHIFT)) {
+      await socketSyncShift({
+        startedShiftsStore: this.startedShiftsStore,
+        userId: user.id,
+        socket,
+        truckService: this.truckService,
+      });
+
+      return;
+    }
 
     socket.on(
       ClientToServerEvent.START_SHIFT,
@@ -86,6 +90,13 @@ class ShiftSocketService {
 
     socket.on(ClientToServerEvent.END_SHIFT, async () => {
       await this.endShift({ io, user, socket });
+    });
+
+    await socketSyncShift({
+      startedShiftsStore: this.startedShiftsStore,
+      userId: user.id,
+      socket,
+      truckService: this.truckService,
     });
   }
 

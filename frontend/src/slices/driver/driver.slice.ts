@@ -2,7 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { type TruckEntityT } from '~/slices/trucks/libs/types/types.js';
 
-import { setShiftStatus, shiftEnded, startShift } from './actions.js';
+import {
+  setShiftStatus,
+  setStartShiftSuccess,
+  shiftEnded,
+  startShift,
+} from './actions.js';
 import { ShiftStatus, TruckChoiceStatus } from './libs/enums/enums.js';
 import {
   type ShiftStatusValue,
@@ -23,7 +28,7 @@ const initialState: State = {
 
 const { reducer, actions, name } = createSlice({
   initialState,
-  name: 'drivers',
+  name: 'driver',
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(startShift.pending, (state) => {
@@ -42,6 +47,11 @@ const { reducer, actions, name } = createSlice({
     builder.addCase(setShiftStatus, (state, action) => {
       state.shiftStatus = action.payload.shiftStatus;
       state.truckChoiceStatus = TruckChoiceStatus.UNKNOWN;
+    });
+    builder.addCase(setStartShiftSuccess, (state, action) => {
+      state.truckChoiceStatus = TruckChoiceStatus.SUCCESS;
+      state.shiftStatus = ShiftStatus.ACTIVE;
+      state.activeTruck = action.payload.truck;
     });
   },
 });
