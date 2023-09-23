@@ -24,3 +24,4 @@ export {
   customerSignUpValidationSchema,
 } from './libs/validation-schemas/validation-schemas.js';
 export { userController, userService };
+export { UserService } from './user.service.js';

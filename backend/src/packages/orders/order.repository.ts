@@ -8,7 +8,7 @@ import { type UserEntityT } from '../users/users.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
   type OrderDatabaseModel,
-  type OrderEntity as OrderEntityT,
+  type OrderEntityT,
   type OrderQueryParameters,
 } from './libs/types/types.js';
 

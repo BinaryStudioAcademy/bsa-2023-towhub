@@ -1,7 +1,7 @@
-import { type OrderEntity } from './order-entity.type.js';
+import { type OrderEntityT } from './order-entity.type.js';
 
 type OrderCreateRequestDto = Pick<
-  OrderEntity,
+  OrderEntityT,
   | 'scheduledTime'
   | 'carsQty'
   | 'startPoint'

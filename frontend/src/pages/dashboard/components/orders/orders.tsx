@@ -23,6 +23,7 @@ import {
   DEFAULT_PAGE_SIZE,
 } from '~/libs/hooks/use-app-table/libs/constant.js';
 import { config } from '~/libs/packages/config/config.js';
+import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import {
   type OrderQueryParameters,
   type OrderResponseDto,
@@ -44,10 +45,7 @@ const Orders: React.FC = () => {
   const [endPointMarkers, setEndPointMarkers] =
     useState<google.maps.LatLngLiteral[]>();
 
-  const [shownRoute, setShownRoute] = useState<{
-    startPoint: google.maps.LatLngLiteral;
-    endPoint: google.maps.LatLngLiteral;
-  }>();
+  const [shownRoute, setShownRoute] = useState<PlaceLatLng>();
 
   const [filter, setFilter] = useState<{
     status: OrderQueryParameters['status'];

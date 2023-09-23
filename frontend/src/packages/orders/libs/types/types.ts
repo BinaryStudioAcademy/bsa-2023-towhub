@@ -1,1 +1,1 @@
-export { type OrderEntity } from 'shared/build/index.js';
+export { type OrderEntityT } from 'shared/build/index.js';
