@@ -5,7 +5,7 @@ import { type ShiftEntityT } from '../shifts/shift.js';
 import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import {
   type DriverInfo,
-  type OrderEntityT as OrderEntityT,
+  type OrderEntityT,
   type OrderResponseDto,
 } from './libs/types/types.js';
 
