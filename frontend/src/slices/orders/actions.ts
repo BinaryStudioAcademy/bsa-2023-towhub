@@ -12,14 +12,14 @@ import {
 
 import { name as sliceName } from './order.slice.js';
 
-const getOrders = createAsyncThunk<
+const getBusinessOrders = createAsyncThunk<
   OrderResponseDto[],
   undefined,
   AsyncThunkConfig
 >(`${sliceName}/orders`, async (_, { extra }) => {
   const { ordersApi } = extra;
 
-  return await ordersApi.getOrders();
+  return await ordersApi.getBusinessOrders();
 });
 
 const createOrder = createAsyncThunk<
@@ -51,4 +51,4 @@ const calculateOrderPrice = createAsyncThunk<
   return ordersApi.calculatePrice(payload);
 });
 
-export { calculateOrderPrice, createOrder, getOrders };
+export { calculateOrderPrice, createOrder, getBusinessOrders };

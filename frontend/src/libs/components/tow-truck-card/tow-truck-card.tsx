@@ -1,6 +1,6 @@
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { type TruckEntity } from '~/libs/types/types.js';
+import { type TruckEntityT } from '~/libs/types/types.js';
 import { manufacturerKeyToReadableName } from '~/packages/trucks/libs/maps/maps.js';
 
 import { Badge } from '../badge/badge.js';
@@ -10,7 +10,7 @@ import { getTowTruckImage } from './lib/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  truck: TruckEntity;
+  truck: TruckEntityT;
   distance?: number;
   hasButton?: boolean;
   onOrderButtonClick?: () => void;

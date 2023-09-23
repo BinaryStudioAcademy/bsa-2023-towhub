@@ -1,24 +1,20 @@
+import avatarDefault from '~/assets/img/order-card/avatar-default.png';
 import { IconName } from '~/libs/enums/enums.js';
 import {
   getValidClassNames,
   jsonToLatLngLiteral,
 } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
+import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import { type OrderResponseDto } from '~/libs/types/types.js';
 
 import { Badge, Icon } from '../components.js';
-import { statusConverter } from './libs/helpers/helpers.js';
+import { statusMapper } from './libs/mapper/status-mapper/status.mapper.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   order: OrderResponseDto;
-  select: ({
-    startPoint,
-    endPoint,
-  }: {
-    startPoint: google.maps.LatLngLiteral;
-    endPoint: google.maps.LatLngLiteral;
-  }) => void;
+  select: ({ startPoint, endPoint }: PlaceLatLng) => void;
 };
 
 const OrderListCardBusiness: React.FC<Properties> = ({
@@ -33,8 +29,6 @@ const OrderListCardBusiness: React.FC<Properties> = ({
     shift: { driver, truck },
   } = order;
 
-  const statusBadge = statusConverter(status);
-
   const selectCard = useCallback(
     (startPoint: string, endPoint: string) => () => {
       select({
@@ -45,6 +39,8 @@ const OrderListCardBusiness: React.FC<Properties> = ({
     [select],
   );
 
+  const statusBadge = statusMapper.get(status);
+
   return (
     <div
       className={styles.container}
@@ -54,11 +50,11 @@ const OrderListCardBusiness: React.FC<Properties> = ({
         <p className={getValidClassNames('textMdBold', styles.cardName)}>
           Order {id}
         </p>
-        <Badge color={statusBadge.color}>{statusBadge.name}</Badge>
+        <Badge color={statusBadge?.color}>{statusBadge?.name ?? 'N/A'}</Badge>
       </div>
       <div className={styles.content}>
         <img
-          src="https://media-cldnry.s-nbcnews.com/image/upload/t_fit-1500w,f_auto,q_auto:best/newscms/2020_03/3184101/phil-helsel-circle-byline-template.jpg"
+          src={avatarDefault}
           alt={driver.firstName}
           className={styles.avatar}
         />

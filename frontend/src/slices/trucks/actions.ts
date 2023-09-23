@@ -6,14 +6,15 @@ import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import { TruckNotificationMessage } from '~/packages/trucks/libs/enums/enums.js';
 import {
   type TruckAddRequestDto,
-  type TruckEntity,
+  type TruckEntityT,
   type TruckGetAllResponseDto,
+  type UsersTrucksEntityT,
 } from '~/packages/trucks/libs/types/types.js';
 
 import { name as sliceName } from './trucks.slice.js';
 
 const addTruck = createAsyncThunk<
-  TruckEntity,
+  TruckEntityT,
   TruckAddRequestDto & { queryString?: string },
   AsyncThunkConfig
 >(
@@ -39,6 +40,16 @@ const addTruck = createAsyncThunk<
   },
 );
 
+const getAllTrucksByUserId = createAsyncThunk<
+  TruckEntityT[],
+  Pick<UsersTrucksEntityT, 'userId'>,
+  AsyncThunkConfig
+>(`${sliceName}/get-all-trucks-by-user-id`, (payload, { extra }) => {
+  const { truckApi } = extra;
+
+  return truckApi.getAllTrucksByUserId(payload);
+});
+
 const findAllTrucksForBusiness = createAsyncThunk<
   TruckGetAllResponseDto,
   string | undefined,
@@ -60,9 +71,9 @@ const findAllTrucksForBusiness = createAsyncThunk<
   },
 );
 
-const setTrucks = createAsyncThunk<TruckEntity[], TruckEntity[]>(
+const setTrucks = createAsyncThunk<TruckEntityT[], TruckEntityT[]>(
   `${sliceName}/set-trucks`,
   (payload) => payload,
 );
 
-export { addTruck, findAllTrucksForBusiness, setTrucks };
+export { addTruck, findAllTrucksForBusiness, getAllTrucksByUserId, setTrucks };

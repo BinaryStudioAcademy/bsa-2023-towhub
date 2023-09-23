@@ -3,6 +3,7 @@ import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 import { MAP_INFO_WINDOW_WIDTH } from './libs/constants/constants.js';
 import { createIcon } from './libs/helpers/helpers.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
+import { type PlaceLatLng } from './libs/types/types.js';
 import mapStyle from './map.config.json';
 
 type MapOptions = {
@@ -178,13 +179,7 @@ class MapService implements IMapService {
     });
   }
 
-  public async addRoute({
-    startPoint,
-    endPoint,
-  }: {
-    startPoint: google.maps.LatLngLiteral;
-    endPoint: google.maps.LatLngLiteral;
-  }): Promise<void> {
+  public async addRoute({ startPoint, endPoint }: PlaceLatLng): Promise<void> {
     this.throwIfMapNotInitialized();
 
     const path = await this.directionsService.route({
@@ -198,16 +193,16 @@ class MapService implements IMapService {
       map: this.map,
       preserveViewport: true,
     });
-    await this.showInfoWindow(startPoint, endPoint);
+    await this.showInfoWindow({ startPoint, endPoint });
   }
 
-  public async showInfoWindow(
-    startpoit: google.maps.LatLngLiteral,
-    endPoint: google.maps.LatLngLiteral,
-  ): Promise<void> {
+  public async showInfoWindow({
+    startPoint,
+    endPoint,
+  }: PlaceLatLng): Promise<void> {
     const anchor = this.addMarker(endPoint, false);
 
-    const startAddress = await this.getAddress(startpoit);
+    const startAddress = await this.getAddress(startPoint);
     const endAddress = await this.getAddress(endPoint);
 
     this.infoWindow.setContent(`${startAddress} → ${endAddress}`);
@@ -221,7 +216,9 @@ class MapService implements IMapService {
       location: place,
     });
 
-    return result.results[2].formatted_address;
+    const [address] = result.results;
+
+    return address.formatted_address;
   }
 }
 

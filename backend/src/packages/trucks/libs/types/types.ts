@@ -2,6 +2,6 @@ export { type DriverHaveAccessToTruck } from './driver-have-acces-to-truck.type.
 export { type TruckDatabaseModel } from './truck-entity-type/truck-database-model.type.js';
 export {
   type TruckAddRequestDto,
-  type TruckEntity,
+  type TruckEntityT,
   type TruckGetAllResponseDto,
 } from 'shared/build/index.js';

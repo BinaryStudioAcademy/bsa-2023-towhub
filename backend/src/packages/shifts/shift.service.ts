@@ -4,13 +4,13 @@ import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import { UserGroupKey } from '../groups/groups.js';
-import { type TruckEntity } from '../trucks/libs/types/types.js';
+import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { ShiftEntity } from './shift.entity.js';
 import {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftEntity as ShiftEntityT,
+  type ShiftEntityT as ShiftEntityT,
   type ShiftResponseDto,
 } from './shift.js';
 import { type ShiftRepository } from './shift.repository.js';
@@ -38,7 +38,7 @@ class ShiftService implements IService {
     return shifts.map((it) => ShiftEntity.initialize(it).toObject());
   }
 
-  public getAllStartedWithTrucks(): Promise<TruckEntity[]> {
+  public getAllStartedWithTrucks(): Promise<TruckEntityT[]> {
     return this.shiftRepository.getAllOpenedWithTrucks();
   }
 

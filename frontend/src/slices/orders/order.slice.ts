@@ -4,7 +4,11 @@ import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type OrderResponseDto } from '~/packages/orders/orders.js';
 
-import { calculateOrderPrice, createOrder, getOrders } from './actions.js';
+import {
+  calculateOrderPrice,
+  createOrder,
+  getBusinessOrders,
+} from './actions.js';
 
 type State = {
   orders: OrderResponseDto[];
@@ -44,15 +48,14 @@ const { reducer, actions, name } = createSlice({
       .addCase(calculateOrderPrice.rejected, (state) => {
         state.dataStatus = DataStatus.REJECTED;
       })
-      .addCase(getOrders.pending, (state) => {
-        state.orders = [];
-        state.dataStatus = DataStatus.FULFILLED;
+      .addCase(getBusinessOrders.pending, (state) => {
+        state.dataStatus = DataStatus.PENDING;
       })
-      .addCase(getOrders.fulfilled, (state, action) => {
+      .addCase(getBusinessOrders.fulfilled, (state, action) => {
         state.orders = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(getOrders.rejected, (state) => {
+      .addCase(getBusinessOrders.rejected, (state) => {
         state.dataStatus = DataStatus.REJECTED;
       });
   },

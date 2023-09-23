@@ -1,5 +1,5 @@
-import { type DriverEntity } from './types.js';
+import { type DriverEntityT } from './types.js';
 
-type DriverCommonDetails = Pick<DriverEntity, 'driverLicenseNumber'>;
+type DriverCommonDetails = Pick<DriverEntityT, 'driverLicenseNumber'>;
 
 export { type DriverCommonDetails };

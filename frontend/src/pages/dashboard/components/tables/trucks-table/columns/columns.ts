@@ -1,7 +1,7 @@
 import { capitalizeFirstLetter } from '~/libs/helpers/helpers.js';
-import { type ColumnDef, type TruckEntity } from '~/libs/types/types.js';
+import { type ColumnDef, type TruckEntityT } from '~/libs/types/types.js';
 
-const columns: ColumnDef<TruckEntity>[] = [
+const columns: ColumnDef<TruckEntityT>[] = [
   {
     header: 'Manufacturer',
     accessorFn: (trucks): string => capitalizeFirstLetter(trucks.manufacturer),

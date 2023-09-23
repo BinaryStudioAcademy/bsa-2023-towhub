@@ -9,6 +9,7 @@ import {
   useState,
 } from '~/libs/hooks/hooks.js';
 import { config } from '~/libs/packages/config/config.js';
+import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import { actions as ordersActions } from '~/slices/orders/orders.js';
 import { selectOrders } from '~/slices/orders/selectors.js';
 
@@ -24,13 +25,10 @@ const Orders: React.FC = () => {
   const [endPointMarkers, setEndPointMarkers] =
     useState<google.maps.LatLngLiteral[]>();
 
-  const [shownRoute, setShownRoute] = useState<{
-    startPoint: google.maps.LatLngLiteral;
-    endPoint: google.maps.LatLngLiteral;
-  }>();
+  const [shownRoute, setShownRoute] = useState<PlaceLatLng>();
 
   useEffect(() => {
-    void dispatch(ordersActions.getOrders());
+    void dispatch(ordersActions.getBusinessOrders());
   }, [dispatch]);
 
   useEffect(() => {
@@ -52,7 +50,6 @@ const Orders: React.FC = () => {
         <div className={styles.mapArea}>
           <div className={styles.mapWrapper}>
             <Map
-              zoom={10}
               className={styles.map}
               markers={endPointMarkers}
               shownRoute={shownRoute}

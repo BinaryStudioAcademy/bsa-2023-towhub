@@ -22,7 +22,7 @@ class OrdersApi extends HttpApi {
     super({ path: ApiPath.ORDERS, baseUrl, http, storage });
   }
 
-  public async getOrders(): Promise<OrderResponseDto[]> {
+  public async getBusinessOrders(): Promise<OrderResponseDto[]> {
     const response = await this.load(
       this.getFullEndpoint(OrdersApiPath.ROOT, {}),
       {
