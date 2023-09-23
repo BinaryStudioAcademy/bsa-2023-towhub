@@ -6,6 +6,7 @@ import { actions as orderActions } from '~/slices/orders/order.js';
 import styles from './styles.module.scss';
 
 const DEFAULT_ZOOM = 16;
+const DEFAULT_CENTER = { lat: 50.448_079, lng: 30.522_282 };
 
 type Properties = {
   center?: google.maps.LatLngLiteral;
@@ -20,7 +21,7 @@ type Properties = {
 };
 
 const Map: React.FC<Properties> = ({
-  center,
+  center = DEFAULT_CENTER,
   zoom = DEFAULT_ZOOM,
   className,
   markers = [],
