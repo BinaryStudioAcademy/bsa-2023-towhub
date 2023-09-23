@@ -58,9 +58,10 @@ const { reducer, actions, name } = createSlice({
           createOrder.rejected,
           calculateOrderPrice.rejected,
           getUserOrdersPage.rejected,
-        ),(state)=>{
+        ),
+        (state) => {
           state.dataStatus = DataStatus.REJECTED;
-        }
+        },
       );
   },
 });
