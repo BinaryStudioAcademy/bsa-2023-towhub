@@ -69,17 +69,11 @@ export {
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,
-  type BusinessDeleteRequestParameters,
   type BusinessEntityT,
-  type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
-  type BusinessUpdateRequestParameters,
   type BusinessUpdateResponseDto,
   businessAddRequestBody,
   BusinessApiPath,
-  businessDeleteParameters,
-  businessGetParameters,
-  businessUpdateParameters,
   businessUpdateRequestBody,
   BusinessValidationMessage,
 } from './packages/business/business.js';
