@@ -7,3 +7,4 @@ export { type OrderQueryParameters } from './order-query-parameters.type.js';
 export { type OrderResponseDto } from './order-response-dto.type.js';
 export { type OrderStatusValues } from './order-status-values.type.js';
 export { type OrderUpdateRequestDto } from './order-update-request-dto.type.js';
+export { type OrdersListResponseDto } from './orders-list-response-dto.type.js';

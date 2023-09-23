@@ -2,23 +2,15 @@ import { type SingleValue } from 'react-select';
 
 import { useCallback } from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
-import { type OrderQueryParameters } from '~/libs/types/types.js';
+import { type OrderStatusValues } from '~/libs/types/types.js';
 
 import { Dropdown } from '../dropdown/dropdown.js';
+import { dropdownOptions } from './libs/constants/constants.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onChange: (filters: { status: OrderQueryParameters['status'] }) => void;
+  onChange: (filters: { status: OrderStatusValues | 'all' }) => void;
 };
-
-const options = [
-  { label: 'Pending', value: 'pending' },
-  { label: 'On the way', value: 'confirmed' },
-  { label: 'Arrived', value: 'picking_up' },
-  { label: 'Canceled', value: 'canceled' },
-  { label: 'Done', value: 'done' },
-  { label: 'All', value: 'all' },
-];
 
 const OrderFilter = ({ onChange }: Properties): JSX.Element => {
   const handleStatusChange = useCallback(
@@ -26,9 +18,7 @@ const OrderFilter = ({ onChange }: Properties): JSX.Element => {
       if (!option) {
         return;
       }
-      onChange({
-        'status': option.value,
-      });
+      onChange({ status: option.value as OrderStatusValues | 'all' });
     },
     [onChange],
   );
@@ -39,7 +29,7 @@ const OrderFilter = ({ onChange }: Properties): JSX.Element => {
         <span className={styles.filterTitle}>Status</span>
         <div className={styles.dropdownWrapper}>
           <Dropdown
-            options={options}
+            options={dropdownOptions}
             defaultValue={{ label: 'All', value: 'all' }}
             placeholder="Select order status"
             onChange={handleStatusChange}

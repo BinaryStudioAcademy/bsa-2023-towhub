@@ -18,10 +18,12 @@ import {
   type OrderCreateRequestDto,
   type OrderQueryParameters,
   type OrderResponseDto,
+  type OrdersListResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import {
   orderCreateRequestBody,
+  orderFindAllBusinessOrdersQuery,
   orderGetParameter,
   orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';
@@ -281,11 +283,14 @@ class OrderController extends Controller {
         AuthStrategy.VERIFY_JWT,
         AuthStrategy.VERIFY_BUSINESS_GROUP,
       ],
+      validation: {
+        query: orderFindAllBusinessOrdersQuery,
+      },
       handler: (options) =>
         this.findAllBusinessOrders(
           options as ApiHandlerOptions<{
             user: UserEntityObjectWithGroupT;
-            query: Pick<OrderQueryParameters, 'status'>;
+            query: OrderQueryParameters;
           }>,
         ),
     });
@@ -563,9 +568,14 @@ class OrderController extends Controller {
    *          content:
    *            application/json:
    *              schema:
-   *                type: array
-   *                items:
-   *                  $ref: '#/components/schemas/Order'
+   *                type: object
+   *                  properties:
+   *                    items:
+   *                      type: array
+   *                        $ref: '#/components/schemas/Order'
+   *                    total:
+   *                      type: number
+   *                      example: 10
    *        401:
    *          UnauthorizedError:
    *            description:
@@ -587,9 +597,9 @@ class OrderController extends Controller {
   private async findAllBusinessOrders(
     options: ApiHandlerOptions<{
       user: UserEntityObjectWithGroupT;
-      query: Pick<OrderQueryParameters, 'status'>;
+      query: OrderQueryParameters;
     }>,
-  ): Promise<ApiHandlerResponse<OrderResponseDto[]>> {
+  ): Promise<ApiHandlerResponse<OrdersListResponseDto>> {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.findAllBusinessOrders(options),

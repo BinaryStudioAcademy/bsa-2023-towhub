@@ -1,3 +1,5 @@
+import { type OrdersListResponseDto } from 'shared/build/index.js';
+
 import { ApiPath, ContentType } from '~/libs/enums/enums.js';
 import { HttpApi } from '~/libs/packages/api/http-api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
@@ -8,7 +10,6 @@ import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderQueryParameters,
   type OrderResponseDto,
 } from './types/types.js';
 
@@ -24,12 +25,10 @@ class OrdersApi extends HttpApi {
   }
 
   public async getOrdersBusiness(
-    filter: Pick<OrderQueryParameters, 'status'>,
-  ): Promise<OrderResponseDto[]> {
-    const query = `status=${filter.status}`;
-
+    queryString: string,
+  ): Promise<OrdersListResponseDto> {
     const response = await this.load(
-      this.getFullEndpoint(`${OrdersApiPath.BUSINESS}?${query}`, {}),
+      this.getFullEndpoint(`${OrdersApiPath.BUSINESS}?${queryString}`, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,
@@ -37,7 +36,7 @@ class OrdersApi extends HttpApi {
       },
     );
 
-    return await response.json<OrderResponseDto[]>();
+    return await response.json<OrdersListResponseDto>();
   }
 
   public async createOrder(

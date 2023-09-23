@@ -1,9 +1,9 @@
-import { getOrders } from './actions.js';
+import { getOrdersBusiness } from './actions.js';
 import { actions } from './order.slice.js';
 
 const allActions = {
   ...actions,
-  getOrders,
+  getOrdersBusiness,
 };
 
 export { allActions as actions };

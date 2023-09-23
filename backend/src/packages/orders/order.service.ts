@@ -14,6 +14,7 @@ import {
   type OrderEntity as OrderEntityT,
   type OrderQueryParameters,
   type OrderResponseDto,
+  type OrdersListResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import { OrderEntity } from './order.entity.js';
@@ -225,8 +226,8 @@ class OrderService implements Omit<IService, 'find'> {
     query,
   }: {
     user: UserEntityObjectWithGroupT;
-    query: Pick<OrderQueryParameters, 'status'>;
-  }): Promise<OrderResponseDto[]> {
+    query: OrderQueryParameters;
+  }): Promise<OrdersListResponseDto> {
     const business = await this.businessService.findByOwnerId(user.id);
 
     if (!business) {
@@ -234,13 +235,24 @@ class OrderService implements Omit<IService, 'find'> {
     }
 
     const usersOrders = await this.orderRepository.findAllBusinessOrders(
-      {
-        businessId: business.id,
-      },
+      { businessId: business.id },
       query,
     );
 
-    return usersOrders.map((it) => OrderEntity.initialize(it).toObject());
+    const total =
+      query.status === 'all'
+        ? await this.orderRepository.getTotalBusiness({
+            businessId: business.id,
+          })
+        : await this.orderRepository.getTotalBusiness({
+            businessId: business.id,
+            status: query.status,
+          });
+
+    return {
+      items: usersOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      total,
+    };
   }
 
   public async delete({

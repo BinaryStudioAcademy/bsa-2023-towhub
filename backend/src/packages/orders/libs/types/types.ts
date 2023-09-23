@@ -14,6 +14,7 @@ export {
   type OrderFindByIdResponseDto,
   type OrderQueryParameters,
   type OrderResponseDto,
+  type OrdersListResponseDto,
   type OrderUpdateRequestDto,
 } from 'shared/build/index.js';
 export { type OrderDatabaseModel };

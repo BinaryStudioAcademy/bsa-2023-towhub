@@ -1,11 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { type OrdersListResponseDto } from 'shared/build/index.js';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
-import {
-  type AsyncThunkConfig,
-  type OrderQueryParameters,
-} from '~/libs/types/types.js';
+import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
@@ -15,14 +13,14 @@ import {
 
 import { name as sliceName } from './order.slice.js';
 
-const getOrders = createAsyncThunk<
-  OrderResponseDto[],
-  Pick<OrderQueryParameters, 'status'>,
+const getOrdersBusiness = createAsyncThunk<
+  OrdersListResponseDto,
+  string,
   AsyncThunkConfig
->(`${sliceName}/orders`, async (filter, { extra }) => {
+>(`${sliceName}/orders`, async (queryString, { extra }) => {
   const { ordersApi } = extra;
 
-  return await ordersApi.getOrdersBusiness(filter);
+  return await ordersApi.getOrdersBusiness(queryString);
 });
 
 const createOrder = createAsyncThunk<
@@ -54,4 +52,4 @@ const calculateOrderPrice = createAsyncThunk<
   return ordersApi.calculatePrice(payload);
 });
 
-export { calculateOrderPrice, createOrder, getOrders };
+export { calculateOrderPrice, createOrder, getOrdersBusiness };

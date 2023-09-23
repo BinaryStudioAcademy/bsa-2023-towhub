@@ -1,14 +1,27 @@
 import { type Libraries, LoadScript } from '@react-google-maps/api';
 
-import { Map, OrderFilter, OrderList } from '~/libs/components/components.js';
+import {
+  Map,
+  OrderFilter,
+  OrderList,
+  Pagination,
+  Spinner,
+} from '~/libs/components/components.js';
+import { DataStatus } from '~/libs/enums/data-status.enum';
 import { jsonToLatLngLiteral } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppSelector,
+  useCallback,
   useEffect,
   useMemo,
+  useQueryParameters,
   useState,
 } from '~/libs/hooks/hooks.js';
+import {
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGE_SIZE,
+} from '~/libs/hooks/use-app-table/libs/constant.js';
 import { config } from '~/libs/packages/config/config.js';
 import {
   type OrderQueryParameters,
@@ -24,7 +37,9 @@ const libraries: Libraries = ['places'];
 const Orders: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const orders = useAppSelector(selectOrders);
+  const { orders, total, dataStatus } = useAppSelector(selectOrders);
+
+  const { setQueryParameters, searchParameters } = useQueryParameters();
 
   const [endPointMarkers, setEndPointMarkers] =
     useState<google.maps.LatLngLiteral[]>();
@@ -40,15 +55,42 @@ const Orders: React.FC = () => {
     status: 'all',
   });
 
+  const [pageIndex, setPageIndex] = useState<number>(DEFAULT_PAGE_INDEX);
+
   useEffect(() => {
-    void dispatch(ordersActions.getOrders(filter));
-  }, [dispatch, filter]);
+    setQueryParameters({
+      size: DEFAULT_PAGE_SIZE,
+      page: pageIndex,
+      status: filter.status,
+    });
+  }, [dispatch, filter.status, pageIndex, setQueryParameters]);
+
+  useEffect(() => {
+    void dispatch(ordersActions.getOrdersBusiness(searchParameters.toString()));
+  }, [dispatch, searchParameters]);
 
   useEffect(() => {
     setEndPointMarkers(
       orders.map((order) => jsonToLatLngLiteral(order.endPoint)),
     );
   }, [orders]);
+
+  const totalPages = useMemo(
+    () => Math.ceil(total / DEFAULT_PAGE_SIZE),
+    [total],
+  );
+
+  const handleChangePage = useCallback((pageIndex: number) => {
+    setPageIndex(pageIndex);
+  }, []);
+
+  const handleChangeFilter = useCallback(
+    (filter: { status: OrderQueryParameters['status'] }) => {
+      setFilter(filter);
+      setPageIndex(DEFAULT_PAGE_INDEX);
+    },
+    [],
+  );
 
   const sortOrders = useMemo(
     () =>
@@ -60,26 +102,42 @@ const Orders: React.FC = () => {
     [orders],
   );
 
+  const isLoading = dataStatus === DataStatus.PENDING;
+
   return (
     <div className={styles.orders}>
       <LoadScript
         googleMapsApiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
         libraries={libraries}
       >
-        <div className={styles.orderlistArea}>
-          <OrderFilter onChange={setFilter} />
-          <OrderList orders={sortOrders} select={setShownRoute} />
-        </div>
-        <div className={styles.mapArea}>
-          <div className={styles.mapWrapper}>
-            <Map
-              zoom={10}
-              className={styles.map}
-              markers={endPointMarkers}
-              shownRoute={shownRoute}
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <div className={styles.orderlistArea}>
+            <OrderFilter onChange={handleChangeFilter} />
+            <OrderList orders={sortOrders} select={setShownRoute} />
+            <Pagination
+              pageCount={totalPages}
+              pageIndex={pageIndex}
+              pageSize={DEFAULT_PAGE_SIZE}
+              onClick={handleChangePage}
             />
           </div>
-        </div>
+        )}
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <div className={styles.mapArea}>
+            <div className={styles.mapWrapper}>
+              <Map
+                zoom={10}
+                className={styles.map}
+                markers={endPointMarkers}
+                shownRoute={shownRoute}
+              />
+            </div>
+          </div>
+        )}
       </LoadScript>
     </div>
   );

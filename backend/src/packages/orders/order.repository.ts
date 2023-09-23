@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { desc, eq, sql } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
@@ -103,15 +103,18 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       driverId: UserEntityT['id'];
       businessId: OrderEntityT['businessId'];
     }>,
-    query: Pick<OrderQueryParameters, 'status'>,
+    query: OrderQueryParameters,
   ): Promise<OrderEntityT[]> {
+    const { status, size, page } = query;
     const whereClause =
-      query.status === 'all'
+      status === 'all'
         ? combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search)
         : combineFilters<DatabaseSchema['orders']>(this.ordersSchema, {
             ...search,
-            ...query,
+            status: status,
           });
+
+    const offset = page * size;
 
     return await this.db
       .driver()
@@ -158,7 +161,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         this.trucksSchema,
         eq(this.trucksSchema.id, this.shiftsSchema.truckId),
       )
-      .where(whereClause);
+      .where(whereClause)
+      .offset(offset)
+      .limit(size)
+      .orderBy(desc(this.ordersSchema.createdAt));
   }
 
   public async create(
@@ -203,6 +209,23 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .returning();
 
     return Boolean(item);
+  }
+
+  public async getTotalBusiness(
+    search: Partial<{
+      businessId: OrderEntityT['businessId'];
+      status: OrderEntityT['status'];
+    }>,
+  ): Promise<number> {
+    const [order] = await this.db
+      .driver()
+      .select({ count: sql<number>`count(*)` })
+      .from(this.ordersSchema)
+      .where(
+        combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
+      );
+
+    return order.count;
   }
 }
 
