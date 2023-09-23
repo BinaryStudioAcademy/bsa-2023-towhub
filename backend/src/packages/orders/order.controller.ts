@@ -109,6 +109,11 @@ import {
  *           format: number
  *           minimum: 1
  *           example: 1
+ *         driverId:
+ *           type: number
+ *           format: number
+ *           minimum: 1
+ *           example: 1
  *         customerName:
  *           type: string
  *           pattern: ^[A-Za-z][\s'A-Za-z-]{0,39}$
@@ -410,11 +415,16 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT | null;
     }>,
   ): Promise<ApiHandlerResponse<OrderResponseDto>> {
+    const customerPhone = options.body.customerPhone ?? options.user?.phone;
+    const customerName = options.body.customerName ?? options.user?.firstName;
+
     return {
       status: HttpCode.OK,
       payload: await this.orderService.create({
         ...options.body,
         userId: options.user?.id ?? null,
+        customerPhone: customerPhone ?? null,
+        customerName: customerName ?? null,
       }),
     };
   }
