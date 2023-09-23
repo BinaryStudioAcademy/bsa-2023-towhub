@@ -1,10 +1,11 @@
-import { type UserEntityObjectWithGroupAndBusinessT } from 'shared/build';
-
 import { Form } from '~/libs/components/components.js';
 import { AuthMode } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useAppSelector } from '~/libs/hooks/hooks.js';
-import { type ValueOf } from '~/libs/types/types.js';
+import { useAppSelector, useCallback } from '~/libs/hooks/hooks.js';
+import {
+  type UserEntityObjectWithGroupAndBusinessT,
+  type ValueOf,
+} from '~/libs/types/types.js';
 import {
   type BusinessEditDto,
   type CustomerEditDto,
@@ -26,36 +27,57 @@ const EditForm: React.FC<Properties> = ({ onSubmit, mode }: Properties) => {
     selectUser,
   ) as UserEntityObjectWithGroupAndBusinessT;
 
+  const getScreen = useCallback((): React.ReactNode => {
+    switch (mode) {
+      case AuthMode.CUSTOMER: {
+        return (
+          <Form
+            defaultValues={{ firstName, lastName, phone, email }}
+            validationSchema={customerEditValidationSchema}
+            onSubmit={onSubmit}
+            btnLabel="Save"
+            fields={editCustomerFields}
+          />
+        );
+      }
+      case AuthMode.BUSINESS: {
+        {
+          return (
+            <Form
+              defaultValues={{
+                firstName,
+                lastName,
+                phone,
+                email,
+                taxNumber: business.taxNumber,
+                companyName: business.companyName,
+              }}
+              validationSchema={businessEditValidationSchema}
+              onSubmit={onSubmit}
+              btnLabel="Save"
+              fields={editBusinessFields}
+            />
+          );
+        }
+      }
+    }
+  }, [
+    business.companyName,
+    business.taxNumber,
+    email,
+    firstName,
+    lastName,
+    mode,
+    onSubmit,
+    phone,
+  ]);
+
   return (
     <div className={styles.formWrapper}>
       <h3 className={getValidClassNames('h4', 'uppercase', styles.title)}>
         Edit profile
       </h3>
-      {mode === AuthMode.CUSTOMER && (
-        <Form
-          defaultValues={{ firstName, lastName, phone, email }}
-          validationSchema={customerEditValidationSchema}
-          onSubmit={onSubmit}
-          btnLabel="Save"
-          fields={editCustomerFields}
-        />
-      )}
-      {mode === AuthMode.BUSINESS && (
-        <Form
-          defaultValues={{
-            firstName,
-            lastName,
-            phone,
-            email,
-            taxNumber: business.taxNumber,
-            companyName: business.companyName,
-          }}
-          validationSchema={businessEditValidationSchema}
-          onSubmit={onSubmit}
-          btnLabel="Save"
-          fields={editBusinessFields}
-        />
-      )}
+      {getScreen()}
     </div>
   );
 };

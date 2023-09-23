@@ -19,12 +19,15 @@ const Profile: React.FC<Properties> = ({ mode }: Properties) => {
 
   const handleSubmit = useCallback(
     (payload: CustomerEditDto | BusinessEditDto): void => {
-      if (mode === AuthMode.CUSTOMER) {
-        void dispatch(authActions.editCustomer(payload));
-      }
-
-      if (mode === AuthMode.BUSINESS) {
-        void dispatch(authActions.editBusiness(payload as BusinessEditDto));
+      switch (mode) {
+        case AuthMode.CUSTOMER: {
+          void dispatch(authActions.editCustomer(payload));
+          break;
+        }
+        case AuthMode.BUSINESS: {
+          void dispatch(authActions.editBusiness(payload as BusinessEditDto));
+          break;
+        }
       }
     },
     [dispatch, mode],

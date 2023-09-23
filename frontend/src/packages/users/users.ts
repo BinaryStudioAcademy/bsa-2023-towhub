@@ -19,6 +19,7 @@ export {
   type UserCommonDetails as CustomerEditDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type UserEntityObjectWithGroupAndBusinessT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
   type UserSignInRequestDto,
