@@ -30,14 +30,19 @@ export {
   HttpMessage,
 } from './libs/packages/http/http.js';
 export {
-  type ServerSocketEventParameter,
-  ClientSocketEvent,
-  ServerSocketEvent,
+  type ClientToServerEventParameter,
+  type ServerToClientEventParameter,
+  type ServerToClientEventResponse,
+  ClientToServerEvent,
+  ServerToClientEvent,
+  ServerToClientResponseStatus,
+  SocketError,
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
   type EntityPagination,
   type ErrorConstructor,
+  type FirstParameter,
   type GetPaginatedPageQuery,
   type Id,
   type NullableProperties,
@@ -84,7 +89,7 @@ export {
   type DriverBusinessIdPayload,
   type DriverCreateRequestDto,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetDriversPagePayload,
   type DriverGetDriversPayloadWithBusinessId,
@@ -119,7 +124,7 @@ export {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderEntity,
+  type OrderEntityT,
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
@@ -134,7 +139,7 @@ export {
 export {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftEntity,
+  type ShiftEntityT,
   type ShiftResponseDto,
   shiftClose as shiftCloseValidationSchema,
   shiftCreate as shiftCreateValidationSchema,
@@ -143,7 +148,7 @@ export {
 } from './packages/shifts/shifts.js';
 export {
   type TruckAddRequestDto,
-  type TruckEntity,
+  type TruckEntityT,
   type TruckGetAllResponseDto,
   type TruckGetItemResponseDto,
   LICENSE_PLATE_NUMBER,
@@ -155,6 +160,7 @@ export {
   TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
+  TruckStatus,
   TruckTowType,
   truckUpdateRequestBody,
   TruckValidationMessage,
@@ -180,3 +186,4 @@ export {
   UsersApiPath,
   userSignInValidationSchema,
 } from './packages/users/users.js';
+export { type UsersTrucksEntityT } from './packages/users-trucks/users-trucks.js';

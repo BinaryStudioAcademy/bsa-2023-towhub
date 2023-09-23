@@ -22,7 +22,7 @@ export {
   type DriverAddResponseWithGroup,
   type DriverCreateRequestDto,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetDriversPagePayload,
   type DriverRequestParameters,

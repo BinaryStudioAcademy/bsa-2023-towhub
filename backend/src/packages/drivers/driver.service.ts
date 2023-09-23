@@ -5,7 +5,6 @@ import {
 } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { MailContent } from '~/libs/packages/mailer/libs/enums/enums.js';
-import { AuthApiPath } from '~/packages/auth/auth.js';
 
 import { UserGroupKey } from '../auth/libs/enums/enums.js';
 import { DriverEntity } from '../drivers/driver.entity.js';
@@ -14,7 +13,7 @@ import {
   type DriverAddPayloadWithBusinessId,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity as DriverEntityT,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetDriversPayloadWithBusinessId,
   type DriverUpdatePayload,
@@ -25,6 +24,7 @@ import { type DriverCredentialsViewRenderParameter } from '../mail/libs/views/dr
 import { mailService } from '../mail/mail.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
+import { AuthApiPath } from './libs/enums/enums.js';
 import {
   convertToDriverUser,
   getFullName,

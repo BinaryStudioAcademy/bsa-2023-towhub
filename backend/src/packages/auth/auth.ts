@@ -22,4 +22,4 @@ const authController = new AuthController(logger, authService);
 
 export { authPlugin } from './auth.app-plugin.js';
 export { authController, authService };
-export { AuthApiPath, AuthStrategy } from './libs/enums/enums.js';
+export { AuthStrategy } from './libs/enums/enums.js';

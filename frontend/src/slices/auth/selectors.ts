@@ -12,8 +12,18 @@ const selectUser = (
   store: RootState,
 ): RootState[typeof AuthSliceName]['user'] => store[AuthSliceName].user;
 
+const selectSocketDriverAuthStatus = (
+  store: RootState,
+): RootState[typeof AuthSliceName]['socketDriverAuthStatus'] =>
+  store[AuthSliceName].socketDriverAuthStatus;
+
 const selectAuthServerError = (
   store: RootState,
 ): RootState[typeof AuthSliceName]['error'] => store[AuthSliceName].error;
 
-export { selectAuthServerError, selectIsLoading, selectUser };
+export {
+  selectAuthServerError,
+  selectIsLoading,
+  selectSocketDriverAuthStatus,
+  selectUser,
+};
