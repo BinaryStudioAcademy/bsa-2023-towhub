@@ -4,6 +4,7 @@ import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
+import { type DriverEntity } from '../drivers/drivers.js';
 import { type UserEntityT } from '../users/users.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
@@ -96,7 +97,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     return order;
   }
 
-  public async findAllOrders(
+  public async findAllBusinessOrders(
     search: Partial<{
       userId: OrderEntityT['userId'];
       driverId: UserEntityT['id'];
@@ -151,6 +152,57 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .where(
         combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
       );
+  }
+
+  public async findAllDriverOrders(
+    driverId: DriverEntity['id'],
+  ): Promise<OrderEntityT[]> {
+    return await this.db
+      .driver()
+      .select({
+        id: this.ordersSchema.id,
+        userId: this.ordersSchema.userId,
+        businessId: this.ordersSchema.businessId,
+        price: this.ordersSchema.price,
+        scheduledTime: this.ordersSchema.scheduledTime,
+        startPoint: this.ordersSchema.startPoint,
+        endPoint: this.ordersSchema.endPoint,
+        status: this.ordersSchema.status,
+        carsQty: this.ordersSchema.carsQty,
+        customerName: this.ordersSchema.customerName,
+        customerPhone: this.ordersSchema.customerPhone,
+        shiftId: this.ordersSchema.shiftId,
+        driver: {
+          id: this.shiftsSchema.driverId,
+          firstName: this.usersSchema.firstName,
+          lastName: this.usersSchema.lastName,
+          email: this.usersSchema.email,
+          phone: this.usersSchema.phone,
+          driverLicenseNumber: this.driversSchema.driverLicenseNumber,
+        },
+        truck: {
+          id: this.shiftsSchema.truckId,
+          licensePlateNumber: this.trucksSchema.licensePlateNumber,
+        },
+      })
+      .from(this.ordersSchema)
+      .innerJoin(
+        this.shiftsSchema,
+        eq(this.ordersSchema.shiftId, this.shiftsSchema.id),
+      )
+      .innerJoin(
+        this.usersSchema,
+        eq(this.shiftsSchema.driverId, this.usersSchema.id),
+      )
+      .innerJoin(
+        this.driversSchema,
+        eq(this.driversSchema.userId, this.shiftsSchema.driverId),
+      )
+      .innerJoin(
+        this.trucksSchema,
+        eq(this.trucksSchema.id, this.shiftsSchema.truckId),
+      )
+      .where(eq(this.shiftsSchema.driverId, driverId));
   }
 
   public async create(

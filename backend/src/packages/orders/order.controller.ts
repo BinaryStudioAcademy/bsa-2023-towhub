@@ -196,6 +196,15 @@ import {
  *               type: string
  *               enum:
  *                 - Business does not exist!
+ *     DriverNotExistError:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - Driver does not exist!
  *
  */
 
@@ -236,10 +245,7 @@ class OrderController extends Controller {
     this.addRoute({
       path: OrdersApiPath.DRIVER,
       method: 'GET',
-      authStrategy: [
-        AuthStrategy.VERIFY_JWT,
-        AuthStrategy.VERIFY_DRIVER_GROUP,
-      ],
+      authStrategy: [AuthStrategy.VERIFY_JWT, AuthStrategy.VERIFY_DRIVER_GROUP],
       handler: (options) =>
         this.findAllDriverOrders(
           options as ApiHandlerOptions<{
@@ -553,9 +559,9 @@ class OrderController extends Controller {
     };
   }
 
-   /**
+  /**
    * @swagger
-   * /orders:
+   * /orders/driver:
    *    get:
    *      tags:
    *       - orders
@@ -575,22 +581,6 @@ class OrderController extends Controller {
    *                  properties:
    *                    items:
    *                      $ref: '#/components/schemas/Order'
-   *        401:
-   *          UnauthorizedError:
-   *            description:
-   *              You are not authorized
-   *          content:
-   *            plain/text:
-   *              schema:
-   *                $ref: '#/components/schemas/UnauthorizedError'
-   *        400:
-   *          UnauthorizedError:
-   *            description:
-   *              You are not authorized
-   *          content:
-   *            plain/text:
-   *              schema:
-   *                $ref: '#/components/schemas/BusinessNotExistError'
    */
 
   private async findAllDriverOrders(

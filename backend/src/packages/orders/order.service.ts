@@ -228,7 +228,7 @@ class OrderService implements Omit<IService, 'find'> {
       throw new NotFoundError({});
     }
 
-    const usersOrders = await this.orderRepository.findAllOrders({
+    const usersOrders = await this.orderRepository.findAllBusinessOrders({
       businessId: business.id,
     });
 
@@ -244,9 +244,7 @@ class OrderService implements Omit<IService, 'find'> {
       throw new NotFoundError({});
     }
 
-    const usersOrders = await this.orderRepository.findAllOrders({
-      driverId: driver.id,
-    });
+    const usersOrders = await this.orderRepository.findAllDriverOrders(user.id);
 
     return usersOrders.map((it) => OrderEntity.initialize(it).toObject());
   }
