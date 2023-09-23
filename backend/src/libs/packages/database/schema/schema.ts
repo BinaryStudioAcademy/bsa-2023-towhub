@@ -10,6 +10,7 @@ import {
   shiftsRelations,
   trucks,
   trucksRelations,
+  truckStatusEnum,
   users,
   usersRelations,
   usersTrucks,
@@ -32,6 +33,7 @@ const schema = {
   usersTrucksRelations,
   orders,
   ordersRelations,
+  truckStatusEnum,
 };
 
 type DatabaseSchema = typeof schema;

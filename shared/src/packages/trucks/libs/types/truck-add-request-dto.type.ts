@@ -1,5 +1,8 @@
-import { type TruckEntity } from './truck-entity.type.js';
+import { type TruckEntityT } from './truck-entity.type.js';
 
-type TruckAddRequestDto = Omit<TruckEntity, 'id' | 'createdAt' | 'businessId'>;
+type TruckAddRequestDto = Omit<
+  TruckEntityT,
+  'id' | 'createdAt' | 'businessId' | 'status'
+>;
 
 export { type TruckAddRequestDto };

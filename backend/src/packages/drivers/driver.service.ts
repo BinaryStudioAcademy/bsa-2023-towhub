@@ -12,7 +12,7 @@ import {
   type DriverAddPayloadWithBusinessId,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity as DriverEntityT,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetDriversPayloadWithBusinessId,
   type DriverUpdatePayload,
