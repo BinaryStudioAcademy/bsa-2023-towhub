@@ -41,9 +41,9 @@ const truckCreateRequestBody = joi.object<TruckAddRequestDto, true>({
     .max(TruckPricePerKm.MAX)
     .required()
     .messages({
-      'number.base': TruckValidationMessage.NUMBER_INVALID,
-      'number.min': TruckValidationMessage.NUMBER_INVALID,
-      'number.max': TruckValidationMessage.NUMBER_INVALID,
+      'number.base': TruckValidationMessage.PRICE_INVALID,
+      'number.min': TruckValidationMessage.PRICE_INVALID,
+      'number.max': TruckValidationMessage.PRICE_INVALID,
       'any.required': TruckValidationMessage.REQUIRED,
     }),
 
@@ -58,6 +58,8 @@ const truckCreateRequestBody = joi.object<TruckAddRequestDto, true>({
       'string.empty': TruckValidationMessage.REQUIRED,
       'any.required': TruckValidationMessage.REQUIRED,
       'string.pattern.base': TruckValidationMessage.LICENSE_PLATE_INVALID,
+      'string.min': TruckValidationMessage.LICENSE_PLATE_INVALID,
+      'string.max': TruckValidationMessage.LICENSE_PLATE_INVALID,
     }),
 
   year: joi.number().min(TruckYear.MIN).max(TruckYear.MAX).required().messages({

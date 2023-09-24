@@ -1,1 +1,1 @@
-export { DriverApiPath } from 'shared/build/index.js';
+export { AuthApiPath, DriverApiPath } from 'shared/build/index.js';
