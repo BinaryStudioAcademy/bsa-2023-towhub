@@ -68,7 +68,7 @@ class OrderService implements Omit<IService, 'find'> {
 
   public async create(
     payload: OrderCreateRequestDto & {
-      userId: number | null;
+      user: UserEntityObjectWithGroupT | null;
     },
   ): Promise<OrderResponseDto> {
     const {
@@ -79,8 +79,12 @@ class OrderService implements Omit<IService, 'find'> {
       customerName,
       customerPhone,
       truckId,
-      userId,
+      user,
     } = payload;
+
+    const { firstName = null, phone = null, id: userId = null } = user ?? {};
+    const nameInOrder = customerName ?? firstName;
+    const phoneInOrder = customerPhone ?? phone;
 
     const truck = await this.truckService.findById(truckId);
 
@@ -114,8 +118,8 @@ class OrderService implements Omit<IService, 'find'> {
       userId,
       businessId: shift.businessId,
       shiftId: shift.id,
-      customerName,
-      customerPhone,
+      customerName: nameInOrder,
+      customerPhone: phoneInOrder,
     });
 
     return OrderEntity.initialize({
