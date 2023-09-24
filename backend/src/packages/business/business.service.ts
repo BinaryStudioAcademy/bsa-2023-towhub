@@ -164,23 +164,18 @@ class BusinessService implements IService {
       });
     }
 
-    const createdFiles = await this.fileService.create(payload.files);
+    const createdFile = await this.fileService.create(payload.files[0]);
 
     const createdDriver = await this.driverService.create({
       payload,
       businessId,
-      driverLicenseFileId: createdFiles[0].id,
+      driverLicenseFileId: createdFile.id,
     });
 
-    await Promise.all(
-      createdFiles.map(
-        async (createdFile) =>
-          await this.fileVerificationStatusService.create({
-            fileId: createdFile.id,
-            name: FileVerificationName.DRIVER_LICENSE_SCAN,
-          }),
-      ),
-    );
+    await this.fileVerificationStatusService.create({
+      fileId: createdFile.id,
+      name: FileVerificationName.DRIVER_LICENSE_SCAN,
+    });
 
     return createdDriver;
   }

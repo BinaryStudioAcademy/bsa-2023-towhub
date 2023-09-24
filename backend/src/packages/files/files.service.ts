@@ -61,7 +61,7 @@ class FilesService
     return await this.s3ClientService.getObjectPresignedUrl(fileRecord.key);
   }
 
-  public async create(
+  public async createMany(
     parsedFiles: MultipartParsedFile[],
   ): Promise<FileEntityObjectT[]> {
     const filesRecords: FileEntityObjectT[] = [];
@@ -95,6 +95,37 @@ class FilesService
     }
 
     return filesRecords;
+  }
+
+  public async create(
+    parsedFile: MultipartParsedFile,
+  ): Promise<FileEntityObjectT> {
+    const key = v4();
+    const name = parsedFile.filename;
+    const body = parsedFile.content;
+    let S3OperationSuccess = false;
+
+    try {
+      await this.s3ClientService.putObject(key, body);
+
+      S3OperationSuccess = true;
+
+      const result = await this.fileRepository.create({
+        contentType: parsedFile.mimetype,
+        name,
+        key,
+      });
+
+      return FilesEntity.initialize(result).toObject();
+    } catch (error_) {
+      const error = error_ as Error;
+
+      if (S3OperationSuccess) {
+        await this.s3ClientService.deleteObject(parsedFile.filename);
+      }
+
+      throw new FileTransactionError({ message: error.message });
+    }
   }
 
   public async update(

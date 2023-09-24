@@ -7,6 +7,7 @@ import { filesService } from '~/packages/files/files.js';
 
 import {
   FileVerificationMessage,
+  FileVerificationName,
   FileVerificationStatus,
 } from '../enums/enums.js';
 import { type FileVerificationEventName } from '../enums/enums.js';
@@ -17,9 +18,10 @@ const driverLicenseScanHandler: FileVerificationEventHandler[typeof FileVerifica
     this: FileVerificationStatusService,
     payload: FileVerificationStatusEntityT,
   ): Promise<void> {
-    // if (payload.name !== FileVerificationName.DRIVER_LICENSE_SCAN) {
-    //   return;
-    // }
+    //`as string` is temporal until there are other types of verification
+    if ((payload.name as string) !== FileVerificationName.DRIVER_LICENSE_SCAN) {
+      return;
+    }
     const fileToVerificate = await filesService.findById(payload.fileId);
 
     if (!fileToVerificate) {

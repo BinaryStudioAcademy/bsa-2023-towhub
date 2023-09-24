@@ -216,7 +216,7 @@ class FilesController extends Controller {
       parsedFiles: MultipartParsedFile[];
     }>,
   ): Promise<ApiHandlerResponse<FileUploadResponseDto>> {
-    const result = await this.fileService.create(options.parsedFiles);
+    const result = await this.fileService.createMany(options.parsedFiles);
 
     return {
       status: HttpCode.CREATED,
