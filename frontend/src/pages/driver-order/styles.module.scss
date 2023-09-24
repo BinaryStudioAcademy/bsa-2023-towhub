@@ -13,7 +13,7 @@
   margin-right: 24px;
 }
 
-.trip-info {
+.tripInfo {
   height: 120px;
   margin-bottom: 20px;
   padding: 7px 24px;
@@ -30,19 +30,19 @@
   text-align: center;
 }
 
-.trip-info-content {
+.tripInfoContent {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
 }
 
-.trip-info-content .item {
+.tripInfoContent .item {
   width: 50%;
   margin-bottom: 10px;
   font-size: 18px;
 }
 
-.order-details {
+.orderDetails {
   flex-grow: 1;
   padding: 24px 65px 20px 80px;
   overflow: auto;
@@ -51,7 +51,7 @@
   border-radius: 10px;
 }
 
-.order-details .header {
+.orderDetails .header {
   margin-bottom: 20px;
   font-size: 24px;
 }
@@ -71,41 +71,41 @@
   margin-right: 15px;
 }
 
-.user-icon {
+.userIcon {
   color: $title-color;
 }
 
-.phone-icon {
+.phoneIcon {
   color: $title-color;
 }
 
-.time-icon {
+.timeIcon {
   color: $red;
 }
 
-.location-icon {
+.locationIcon {
   color: $blue-light;
 }
 
-.destination-icon {
+.destinationIcon {
   color: $red-light;
 }
 
-.car-icon {
+.carIcon {
   color: $title-color;
 }
 
-.comment-header {
+.commentHeader {
   margin-bottom: 25px;
   font-size: 20px;
   text-align: center;
 }
 
-.comment {
+.commentContent {
   margin-bottom: 30px;
   padding: 22px 25px;
   font-size: 18px;
-  background: $grey;
+  background: $grey-light;
   border-radius: 10px;
 }
 
