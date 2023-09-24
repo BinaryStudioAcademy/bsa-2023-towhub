@@ -3,7 +3,7 @@
 .formWrapper {
   flex-grow: 1;
   width: 100%;
-  padding: 20px 15% 35px;
+  padding: 20px 100px 35px;
   overflow: auto;
   background-color: $white;
   border-radius: 8px;
@@ -12,5 +12,6 @@
 .title {
   margin-bottom: 15px;
   color: $title-color;
+  font-weight: $font-weight-bold;
   font-size: 20px;
 }

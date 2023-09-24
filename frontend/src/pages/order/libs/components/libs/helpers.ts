@@ -5,7 +5,7 @@ import { TruckCarsQuantity } from './enums.js';
 const getCurrentDate = (): string => {
   const currentDatetime = new Date();
 
-  return currentDatetime.toISOString().slice(0, 16);
+  return currentDatetime.toISOString();
 };
 
 const getCreateOrderDefaultPayload = (
