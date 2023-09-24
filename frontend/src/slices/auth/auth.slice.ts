@@ -11,6 +11,7 @@ import {
 } from '~/libs/types/types.js';
 
 import {
+  authorizeDriverSocket,
   editBusiness,
   editCustomer,
   getCurrent,
@@ -22,6 +23,7 @@ import {
 type State = {
   error: HttpError | null;
   dataStatus: ValueOf<typeof DataStatus>;
+  socketDriverAuthStatus: ValueOf<typeof DataStatus>;
   user:
     | UserSignInResponseDto
     | CustomerSignUpResponseDto
@@ -32,6 +34,7 @@ type State = {
 const initialState: State = {
   error: null,
   dataStatus: DataStatus.IDLE,
+  socketDriverAuthStatus: DataStatus.IDLE,
   user: null,
 };
 
@@ -100,24 +103,31 @@ const { reducer, actions, name } = createSlice({
         state.user = initialState.user;
         state.dataStatus = DataStatus.FULFILLED;
       })
+      .addCase(authorizeDriverSocket.rejected, (state) => {
+        state.socketDriverAuthStatus = DataStatus.REJECTED;
+      })
+      .addCase(authorizeDriverSocket.fulfilled, (state) => {
+        state.socketDriverAuthStatus = DataStatus.FULFILLED;
+      })
       .addMatcher(
         isAnyOf(
           signUp.pending,
           signIn.pending,
           getCurrent.pending,
           logOut.pending,
+          authorizeDriverSocket.pending,
         ),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
         },
+      )
+      .addMatcher(
+        isAnyOf(signUp.rejected, signIn.rejected, logOut.rejected),
+        (state, { payload }) => {
+          state.dataStatus = DataStatus.REJECTED;
+          state.error = payload ?? null;
+        },
       );
-    builder.addMatcher(
-      isAnyOf(signUp.rejected, signIn.rejected, logOut.rejected),
-      (state, { payload }) => {
-        state.dataStatus = DataStatus.REJECTED;
-        state.error = payload ?? null;
-      },
-    );
   },
 });
 

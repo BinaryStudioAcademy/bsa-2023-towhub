@@ -2,7 +2,7 @@ import { ApiPath, ContentType } from '~/libs/enums/enums.js';
 import { HttpApi } from '~/libs/packages/api/http-api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
-import { type TruckEntity } from '~/libs/types/types.js';
+import { type TruckEntityT } from '~/libs/types/types.js';
 
 import {
   type TruckAddRequestDto,
@@ -40,7 +40,7 @@ class BusinessApi extends HttpApi {
     return await response.json<TruckGetAllResponseDto>();
   }
 
-  public async addTruck(payload: TruckAddRequestDto): Promise<TruckEntity> {
+  public async addTruck(payload: TruckAddRequestDto): Promise<TruckEntityT> {
     const response = await this.load(
       this.getFullEndpoint(BusinessApiPath.TRUCKS, {}),
       {
@@ -51,7 +51,7 @@ class BusinessApi extends HttpApi {
       },
     );
 
-    return await response.json<TruckEntity>();
+    return await response.json<TruckEntityT>();
   }
 
   public async editBusiness(

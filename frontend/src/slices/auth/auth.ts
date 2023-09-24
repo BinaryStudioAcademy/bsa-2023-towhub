@@ -1,4 +1,5 @@
 import {
+  authorizeDriverSocket,
   editBusiness,
   editCustomer,
   getCurrent,
@@ -13,6 +14,7 @@ const allActions = {
   editBusiness,
   editCustomer,
   signIn,
+  authorizeDriverSocket,
   signUp,
   getCurrent,
   logOut,

@@ -8,7 +8,7 @@ import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 
 import { TruckApiPath } from './libs/enums/enums.js';
-import { type TruckEntity } from './libs/types/types.js';
+import { type TruckEntityT } from './libs/types/types.js';
 import {
   truckGetParameters,
   truckUpdateRequestBody,
@@ -148,7 +148,7 @@ class TruckController extends Controller {
       handler: (request) =>
         this.update(
           request as ApiHandlerOptions<{
-            body: Partial<Omit<TruckEntity, 'createdAt'>>;
+            body: Partial<Omit<TruckEntityT, 'createdAt'>>;
             params: { id: number };
           }>,
         ),
@@ -158,6 +158,17 @@ class TruckController extends Controller {
       path: TruckApiPath.ROOT,
       method: 'GET',
       handler: () => this.getAll(),
+    });
+
+    this.addRoute({
+      path: TruckApiPath.$USER_ID,
+      method: 'GET',
+      handler: (request) =>
+        this.getTrucksByUserId(
+          request as ApiHandlerOptions<{
+            params: { userId: number };
+          }>,
+        ),
     });
 
     this.addRoute({
@@ -226,7 +237,7 @@ class TruckController extends Controller {
 
   private async update(
     options: ApiHandlerOptions<{
-      body: Partial<Omit<TruckEntity, 'createdAt'>>;
+      body: Partial<Omit<TruckEntityT, 'createdAt'>>;
       params: { id: number };
     }>,
   ): Promise<ApiHandlerResponse> {
@@ -296,6 +307,21 @@ class TruckController extends Controller {
     return {
       status: HttpCode.OK,
       payload: await this.truckService.findById(options.params.id),
+    };
+  }
+
+  private async getTrucksByUserId(
+    options: ApiHandlerOptions<{
+      params: { userId: number };
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const trucks = await this.truckService.findTrucksByUserId(
+      options.params.userId,
+    );
+
+    return {
+      status: HttpCode.OK,
+      payload: trucks,
     };
   }
 

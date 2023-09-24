@@ -2,6 +2,7 @@ export {
   type EntityPagination,
   type ErrorConstructor,
   type FileInputConfig,
+  type FirstParameter,
   type Id,
   type NullableProperties,
   type OperationResult,
