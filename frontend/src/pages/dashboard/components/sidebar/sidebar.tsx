@@ -1,8 +1,8 @@
 import { Button } from '~/libs/components/components.js';
-import { AppRoute } from '~/libs/enums/enums.js';
+import { type AppRoute } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useLocation, useNavigate } from '~/libs/hooks/hooks.js';
-import { type TabName, type TabsType } from '~/libs/types/types.js';
+import { type TabsType, type ValueOf } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { useAuthUser } from '~/slices/auth/auth.js';
 
@@ -26,8 +26,8 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
   }, [user?.group.key]);
 
   const handleTabClick = useCallback(
-    (tabName: TabName) => () => {
-      navigate(`${AppRoute.DASHBOARD}/${tabName}`);
+    (tabName: ValueOf<typeof AppRoute>) => () => {
+      navigate(tabName);
     },
     [navigate],
   );
@@ -52,7 +52,7 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
           )}
           frontIcon={tab.icon}
           variant="text"
-          onClick={handleTabClick(tab.name)}
+          onClick={handleTabClick(tab.path)}
         >
           <span className={'visually-hidden'}>{tab.name}</span>
         </Button>
