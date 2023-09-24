@@ -1,10 +1,10 @@
 import { type TruckArrivalTime } from '~/slices/trucks/types/truck-arrival-time.type.js';
 
-import { OrderStatus } from '../enums/order-status.enum.js';
-import { orderStatusToMessage } from '../maps/order-status-to-message.map.js';
+import { OrderStatus } from '../enums/enums.js';
+import { orderStatusToMessage } from '../maps/maps.js';
 import { type OrderStatusValues } from '../types/types.js';
 
-const getStatusMessageMapper = (
+const mapOrderStatusToMessage = (
   status: OrderStatusValues,
   arrivalTime: TruckArrivalTime | null,
 ): string => {
@@ -17,4 +17,4 @@ const getStatusMessageMapper = (
   return orderStatusToMessage[status];
 };
 
-export { getStatusMessageMapper };
+export { mapOrderStatusToMessage };

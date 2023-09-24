@@ -3,8 +3,8 @@ import { useAppSelector } from '~/libs/hooks/hooks.js';
 import { selectOrder } from '~/slices/orders/selectors.js';
 import { selectTruckArrivalTime } from '~/slices/trucks/selectors.js';
 
-import { Spinner } from '../components.js';
-import { getStatusMessageMapper } from './libs/helpers/get-status-message-mappper.helper.js';
+import { Spinner } from '../spinner/spinner.js';
+import { mapOrderStatusToMessage } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -29,9 +29,8 @@ const OrderStatus: React.FC<Properties> = ({ className }: Properties) => {
         styles[status],
       )}
     >
-      <div className={styles.square}></div>
       <span className={styles.text}>
-        {getStatusMessageMapper(status, arrivalTime)}
+        {mapOrderStatusToMessage(status, arrivalTime)}
       </span>
     </div>
   );

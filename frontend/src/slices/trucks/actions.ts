@@ -59,7 +59,7 @@ const subscribeTruckUpdates = createAction(
   ActionName.SOCKET.SUBSCRIBE_TRUCK_UPDATES,
   (truckId: number) => {
     return {
-      payload: `${truckId}`,
+      payload: truckId,
     };
   },
 );
@@ -68,7 +68,7 @@ const unsubscribeTruckUpdates = createAction(
   ActionName.SOCKET.UNSUBSCRIBE_TRUCK_UPDATES,
   (truckId: number) => {
     return {
-      payload: `${truckId}`,
+      payload: truckId,
     };
   },
 );

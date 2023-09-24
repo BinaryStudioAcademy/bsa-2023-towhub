@@ -7,7 +7,6 @@ import {
   useAppDispatch,
   useAppMap,
   useAppSelector,
-  useBlocker,
   useCallback,
   useEffect,
   useNavigate,
@@ -21,58 +20,46 @@ import {
   selectChosenTruck,
   selectTruckLocation,
 } from '~/slices/trucks/selectors.js';
-import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { NotFound } from '../pages.js';
 import { ButtonsSection } from './libs/components/components.js';
-import { OrderStatus as OrderStatusEnum } from './libs/enums/enums.js';
+import { OrderStatus as OrderStatusValue } from './libs/enums/enums.js';
+import { useGetOrderData } from './libs/hooks/use-get-order-data.hook.js';
+import { useGetRouteData } from './libs/hooks/use-get-route-data.hook.js';
+import { useSubscribeUpdates } from './libs/hooks/use-subscribe-updates.hook.js';
 import styles from './styles.module.scss';
 
 const OrderStatusPage: React.FC = () => {
   const { orderId } = useParams();
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const order = useAppSelector(selectOrder);
   const dataStatus = useAppSelector(selectDataStatus);
+  const dispatch = useAppDispatch();
 
   const status = order?.status;
-  const isPendingScreenOpen = status === OrderStatusEnum.PENDING;
-  const isCancelScreenOpen = status === OrderStatusEnum.CANCELED;
-  const isConfirmScreenOpen = status === OrderStatusEnum.CONFIRMED;
-  const isPickingUpScreenOpen = status === OrderStatusEnum.PICKING_UP;
-  const isDoneScreenOpen = status === OrderStatusEnum.DONE;
-
-  const truckId =
-    useAppSelector(selectChosenTruck)?.id ?? order?.shift.truck?.id;
-
-  useBlocker(
-    useCallback(() => {
-      if (truckId) {
-        void dispatch(truckActions.unsubscribeTruckUpdates(truckId));
-      }
-
-      if (orderId) {
-        void dispatch(orderActions.unsubscribeOrderUpdates(orderId));
-      }
-
-      return false;
-    }, [dispatch, orderId, truckId]),
-  );
-
-  const truckLocation = useAppSelector(selectTruckLocation);
+  const isCancelScreenOpen = status === OrderStatusValue.CANCELED;
+  const isConfirmScreenOpen = status === OrderStatusValue.CONFIRMED;
+  const isPickingUpScreenOpen = status === OrderStatusValue.PICKING_UP;
+  const isDoneScreenOpen = status === OrderStatusValue.DONE;
 
   useEffect(() => {
     if (orderId) {
       void dispatch(orderActions.getOrder(orderId));
-      void dispatch(orderActions.subscribeOrderUpdates(orderId));
     }
   }, [orderId, dispatch]);
 
-  useEffect(() => {
-    if (truckId) {
-      void dispatch(truckActions.subscribeTruckUpdates(truckId));
-    }
-  }, [truckId, dispatch]);
+  const truckId =
+    useAppSelector(selectChosenTruck)?.id ?? order?.shift.truck?.id;
+  useSubscribeUpdates(orderId, truckId);
+
+  const truckLocation = useAppSelector(selectTruckLocation);
+  const mapReference = useRef<HTMLDivElement>(null);
+  useAppMap({
+    center: truckLocation,
+    destination: order ? jsonToLatLngLiteral(order.startPoint) : null,
+    className: styles.map,
+    mapReference: mapReference,
+  });
 
   const handleHomepageClick = useCallback(() => {
     navigate(AppRoute.ROOT);
@@ -85,34 +72,28 @@ const OrderStatusPage: React.FC = () => {
     //TODO
   }, []);
 
-  const mapReference = useRef<HTMLDivElement>(null);
-
-  useAppMap({
-    center: truckLocation,
-    destination: order ? jsonToLatLngLiteral(order.startPoint) : null,
-    className: styles.map,
-    mapReference: mapReference,
-  });
-
-  const MapElement = useCallback(
-    () => <div ref={mapReference} id="map" className={styles.map} />,
-    [],
-  );
-
-  const isDeclineButtonShown = isPendingScreenOpen || isConfirmScreenOpen;
-  const isPayNowButtonShown = isPickingUpScreenOpen;
-  const isHomepageButtonShown = isCancelScreenOpen || isDoneScreenOpen;
   const isDriverShown =
     isConfirmScreenOpen || isPickingUpScreenOpen || isDoneScreenOpen;
-  const isOrderCardShown = !isCancelScreenOpen && !isDoneScreenOpen;
   const isMapShown = !isCancelScreenOpen && !isDoneScreenOpen;
 
-  if (dataStatus === DataStatus.PENDING || dataStatus === DataStatus.IDLE) {
-    return <Spinner />;
-  }
+  const { firstName, lastName, licensePlate, price } = useGetOrderData(order);
+  const { distanceLeft, timespanLeft, startLocation, endLocation } =
+    useGetRouteData(order);
+  const profileURL = null;
+
+  const isOrderCardShown =
+    !isCancelScreenOpen &&
+    !isDoneScreenOpen &&
+    startLocation &&
+    endLocation &&
+    price;
 
   if (dataStatus === DataStatus.REJECTED) {
     return <NotFound />;
+  }
+
+  if (dataStatus !== DataStatus.FULFILLED) {
+    return <Spinner />;
   }
 
   return (
@@ -126,7 +107,7 @@ const OrderStatusPage: React.FC = () => {
       />
       {isMapShown && (
         <section className={styles.mapSection}>
-          <MapElement />
+          <div ref={mapReference} id="map" className={styles.map} />
         </section>
       )}
       <section className={styles.cardSection}>
@@ -134,16 +115,30 @@ const OrderStatusPage: React.FC = () => {
           className={getValidClassNames(styles.status, styles.statusBottom)}
         />
         {isOrderCardShown && (
-          <OrderCard isDriverShown={isDriverShown} className={styles.card} />
+          <OrderCard
+            isDriverShown={isDriverShown}
+            className={styles.card}
+            cardData={{
+              profileURL,
+              firstName,
+              lastName,
+              licensePlate,
+              startLocation,
+              endLocation,
+              distanceLeft,
+              timespanLeft,
+              price,
+            }}
+          />
         )}
-        <ButtonsSection
-          isDeclineButtonShown={isDeclineButtonShown}
-          isPayNowButtonShown={isPayNowButtonShown}
-          isHomepageButtonShown={isHomepageButtonShown}
-          onCancelClick={handleCancelClick}
-          onHomepageClick={handleHomepageClick}
-          onPayClick={handlePayClick}
-        />
+        {status && (
+          <ButtonsSection
+            status={status}
+            onCancelClick={handleCancelClick}
+            onHomepageClick={handleHomepageClick}
+            onPayClick={handlePayClick}
+          />
+        )}
       </section>
     </div>
   );

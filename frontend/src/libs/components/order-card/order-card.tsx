@@ -1,12 +1,5 @@
 import { PlainSvgIconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import {
-  useAppDispatch,
-  useAppSelector,
-  useEffect,
-} from '~/libs/hooks/hooks.js';
-import { actions as orderActions } from '~/slices/orders/order.js';
-import { selectOrder, selectOrderData } from '~/slices/orders/selectors.js';
 
 import { PlainSvgIcon } from '../plain-svg-icon/plain-svg-icon.js';
 import { CardHeader } from './libs/components/components.js';
@@ -15,40 +8,35 @@ import styles from './styles.module.scss';
 type Properties = {
   className?: string;
   isDriverShown?: boolean;
+  cardData: {
+    profileURL: string | null;
+    firstName: string;
+    lastName: string;
+    licensePlate: string;
+    startLocation: string;
+    endLocation: string;
+    distanceLeft: string;
+    timespanLeft: string;
+    price: number;
+  };
 };
 
 const OrderCard: React.FC<Properties> = ({
   className,
   isDriverShown = true,
+  cardData,
 }: Properties) => {
-  const order = useAppSelector(selectOrder);
   const {
-    origin: startLocation = '',
-    destination: endLocation = '',
-    distanceAndDuration,
-  } = useAppSelector(selectOrderData);
-
-  const { distance, duration } = distanceAndDuration ?? {};
-  const { text: distanceLeft = '' } = distance ?? {};
-  const { text: timespanLeft = '' } = duration ?? {};
-  const { shift, price } = order ?? {};
-  const { truck, driver } = shift ?? {};
-  const { licensePlateNumber: licensePlate = '' } = truck ?? {};
-  const { firstName: firstName = '', lastName: lastName = '' } = driver ?? {};
-
-  const profileURL = null;
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (order) {
-      void dispatch(
-        orderActions.getRouteData({
-          origin: order.startPoint,
-          destination: order.endPoint,
-        }),
-      );
-    }
-  }, [dispatch, order]);
+    profileURL,
+    firstName,
+    lastName,
+    licensePlate,
+    startLocation,
+    endLocation,
+    distanceLeft,
+    timespanLeft,
+    price,
+  } = cardData;
 
   return (
     <div className={getValidClassNames(styles.container, className)}>

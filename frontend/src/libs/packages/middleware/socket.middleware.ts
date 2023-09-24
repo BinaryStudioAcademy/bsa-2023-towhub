@@ -55,7 +55,8 @@ const socketMiddleware: ThunkMiddleware<
         >[0],
       ) => {
         void dispatch(updateTruckLocationFromSocket(truckLocation));
-        const startPoint = getState().orders.orders[0]?.startPoint;
+        const { orders } = getState();
+        const { startPoint: startPoint = null } = orders.currentOrder ?? {};
 
         if (startPoint) {
           void dispatch(

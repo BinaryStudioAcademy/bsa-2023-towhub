@@ -1,1 +1,1 @@
-export { getStatusMessageMapper } from './get-status-message-mappper.helper.js';
+export { mapOrderStatusToMessage } from './map-order-status-to-message.helper.js';
