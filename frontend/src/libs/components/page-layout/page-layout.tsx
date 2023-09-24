@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 
-import { Sidebar } from '~/pages/dashboard/components/sidebar/sidebar.js';
+import { Sidebar } from '~/libs/components/sidebar/sidebar.js';
 
 import { Header } from '../header/header.js';
 import { RouterOutlet } from '../router/router.js';

@@ -18,18 +18,19 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAuthUser();
+  const group = user?.group.key;
 
   const getTabs = useCallback((): TabsType[] => {
-    return user?.group.key === UserGroupKey.BUSINESS
-      ? BUSINESS_TABS
-      : DRIVER_TABS;
-  }, [user?.group.key]);
+    return group === UserGroupKey.BUSINESS ? BUSINESS_TABS : DRIVER_TABS;
+  }, [group]);
 
   const handleTabClick = useCallback(
     (tabName: TabName) => () => {
-      navigate(`${AppRoute.DASHBOARD}/${tabName}`);
+      group === UserGroupKey.BUSINESS
+        ? navigate(`${AppRoute.DASHBOARD}/${tabName}`)
+        : navigate(`${AppRoute.DRIVERS_DASHBOARD}/${tabName}`);
     },
-    [navigate],
+    [navigate, group],
   );
 
   const renderTabs = useCallback(() => {
