@@ -3,7 +3,7 @@ const HttpMessage = {
   USER_PHONE_EXISTS: 'User with this phone already exists',
   FILE_DOES_NOT_EXIST: 'File with such id does not exist!',
   BUSINESS_EXISTS: 'Business with specified tax number already exists',
-  TRUCK_EXISTS: 'Truck already exists',
+  TRUCK_EXISTS: 'Truck with specified license plate number already exists',
   TRUCK_DOES_NOT_EXIST: 'Truck does not exist',
   NOT_FOUND: 'Not found',
   BUSINESS_ALREADY_EXISTS: 'Owner already has business',
