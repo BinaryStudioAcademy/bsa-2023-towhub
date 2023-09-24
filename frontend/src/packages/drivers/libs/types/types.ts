@@ -1,8 +1,9 @@
 export {
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
-  type DriverCreateUpdateRequestDto,
+  type DriverCreateRequestDto,
   type DriverGetDriversPagePayload,
+  type DriverUpdateRequestDto,
   type GetPaginatedPageQuery,
   type UserEntityObjectWithGroupAndBusinessT,
 } from 'shared/build/index.js';

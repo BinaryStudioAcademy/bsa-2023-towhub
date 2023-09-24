@@ -1,7 +1,8 @@
-import { type templateNameToView } from '../maps/maps.js';
-import { type TemplateNameValues } from './template-name-values.type.js';
+import { type DriverCredentialsViewRenderParameter } from '../views/driver-credentials/libs/types/types.js';
+import { type PlainViewRenderParameter } from '../views/plain/libs/types/types.js';
 
-type RenderParameter<T extends TemplateNameValues = TemplateNameValues> =
-  Parameters<(typeof templateNameToView)[T]['render']>[0];
+type RenderParameter =
+  | PlainViewRenderParameter
+  | DriverCredentialsViewRenderParameter;
 
 export { type RenderParameter };

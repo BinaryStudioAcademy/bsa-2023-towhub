@@ -144,6 +144,19 @@ class TruckRepository implements IRepository {
 
     await preparedQuery.execute();
   }
+
+  public async getTrucksByUserId(
+    userId: number,
+  ): Promise<DriverHaveAccessToTruck[]> {
+    const preparedQuery = this.db
+      .driver()
+      .select()
+      .from(this.usersTrucksSchema)
+      .where(eq(this.usersTrucksSchema.userId, userId))
+      .prepare('getTrucksByUserId');
+
+    return await preparedQuery.execute();
+  }
 }
 
 export { TruckRepository };

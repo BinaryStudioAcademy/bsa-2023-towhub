@@ -10,6 +10,9 @@ const driversApi = new DriversApi({
   http,
 });
 
-export { type DriverCreateUpdateRequestDto } from './libs/types/types.js';
-export { driverCreateUpdateRequestBody } from './libs/validation-schemas/validation-schemas.js';
+export {
+  type DriverCreateRequestDto,
+  type DriverUpdateRequestDto,
+} from './libs/types/types.js';
+export { driverCreateRequestBody } from './libs/validation-schemas/validation-schemas.js';
 export { driversApi };
