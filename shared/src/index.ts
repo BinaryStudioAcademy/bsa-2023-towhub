@@ -81,7 +81,7 @@ export {
   type DriverAddPayloadWithBusinessId,
   type DriverAddResponseWithGroup,
   type DriverBusinessIdPayload,
-  type DriverCreateUpdateRequestDto,
+  type DriverCreateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverEntityT,
   type DriverGetAllResponseDto,
@@ -89,10 +89,12 @@ export {
   type DriverGetDriversPayloadWithBusinessId,
   type DriverRequestParameters,
   type DriverUpdatePayload,
+  type DriverUpdateRequestDto,
   type DriverWithUserData,
   DriverApiPath,
-  driverCreateUpdateRequestBody,
+  driverCreateRequestBody,
   driverParameters,
+  driverUpdateRequestBody,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
