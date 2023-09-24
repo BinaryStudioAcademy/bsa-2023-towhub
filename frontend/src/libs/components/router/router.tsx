@@ -1,6 +1,6 @@
 import { Route } from 'react-router-dom';
 
-import { AppRoute, AuthMode } from '~/libs/enums/enums.js';
+import { AppRoute } from '~/libs/enums/enums.js';
 import { useEffect, useGetCurrentUser } from '~/libs/hooks/hooks.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import {
@@ -13,7 +13,11 @@ import {
   WelcomePage,
 } from '~/pages/pages.js';
 
-import { PageLayout, ProtectedRoute } from '../components.js';
+import {
+  PageLayout,
+  ProtectedRoute,
+  ProtectedRouteBusinessCustomer,
+} from '../components.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => {
@@ -61,24 +65,13 @@ const Router = (): JSX.Element => {
             </PageLayout>
           }
         />
-        <Route
-          path={AppRoute.EDIT_BUSINESS_PROFILE}
-          element={
-            <PageLayout isSidebarHidden>
-              <Profile mode={AuthMode.BUSINESS} />
-            </PageLayout>
-          }
-        />
       </Route>
-      <Route
-        path={AppRoute.ROOT}
-        element={<ProtectedRoute allowedUserGroup={UserGroupKey.CUSTOMER} />}
-      >
+      <Route path={AppRoute.ROOT} element={<ProtectedRouteBusinessCustomer />}>
         <Route
-          path={AppRoute.EDIT_CUSTOMER_PROFILE}
+          path={AppRoute.PROFILE}
           element={
             <PageLayout isSidebarHidden>
-              <Profile mode={AuthMode.CUSTOMER} />
+              <Profile />
             </PageLayout>
           }
         />

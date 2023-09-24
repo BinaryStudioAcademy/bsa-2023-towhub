@@ -1,41 +1,37 @@
-import { AuthMode } from '~/libs/enums/enums.js';
 import { useAppDispatch, useCallback } from '~/libs/hooks/hooks.js';
-import { type ValueOf } from '~/libs/types/types.js';
+import { type UserEntityObjectWithGroupAndBusinessT } from '~/libs/types/types.js';
+import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import {
   type BusinessEditDto,
   type CustomerEditDto,
 } from '~/packages/users/users.js';
-import { actions as authActions } from '~/slices/auth/auth.js';
+import { actions as authActions, useAuthUser } from '~/slices/auth/auth.js';
 
 import { EditForm } from './components/edit-form/edit-form.js';
 import styles from './styles.module.scss';
 
-type Properties = {
-  mode: ValueOf<typeof AuthMode>;
-};
-
-const Profile: React.FC<Properties> = ({ mode }: Properties) => {
+const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
-
+  const user = useAuthUser() as UserEntityObjectWithGroupAndBusinessT;
   const handleSubmit = useCallback(
     (payload: CustomerEditDto | BusinessEditDto): void => {
-      switch (mode) {
-        case AuthMode.CUSTOMER: {
+      switch (user.group.key) {
+        case UserGroupKey.CUSTOMER: {
           void dispatch(authActions.editCustomer(payload));
           break;
         }
-        case AuthMode.BUSINESS: {
+        case UserGroupKey.BUSINESS: {
           void dispatch(authActions.editBusiness(payload as BusinessEditDto));
           break;
         }
       }
     },
-    [dispatch, mode],
+    [dispatch, user],
   );
 
   return (
     <div className={styles.page}>
-      <EditForm onSubmit={handleSubmit} mode={mode} />
+      <EditForm onSubmit={handleSubmit} />
     </div>
   );
 };

@@ -9,7 +9,7 @@ const BURGER_MENU_ITEMS = {
     },
     {
       name: BurgerMenuItemsName.EDIT,
-      navigateTo: AppRoute.EDIT_BUSINESS_PROFILE,
+      navigateTo: AppRoute.PROFILE,
       icon: IconName.USER_PEN,
     },
     {
@@ -21,7 +21,7 @@ const BURGER_MENU_ITEMS = {
   customerMenu: [
     {
       name: BurgerMenuItemsName.EDIT,
-      navigateTo: AppRoute.EDIT_CUSTOMER_PROFILE,
+      navigateTo: AppRoute.PROFILE,
       icon: IconName.USER_PEN,
     },
     {

@@ -1,4 +1,4 @@
-import { createSlice, isAllOf } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
@@ -101,7 +101,7 @@ const { reducer, actions, name } = createSlice({
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addMatcher(
-        isAllOf(
+        isAnyOf(
           signUp.pending,
           signIn.pending,
           getCurrent.pending,
@@ -112,7 +112,7 @@ const { reducer, actions, name } = createSlice({
         },
       );
     builder.addMatcher(
-      isAllOf(signUp.rejected, signIn.rejected, logOut.rejected),
+      isAnyOf(signUp.rejected, signIn.rejected, logOut.rejected),
       (state, { payload }) => {
         state.dataStatus = DataStatus.REJECTED;
         state.error = payload ?? null;

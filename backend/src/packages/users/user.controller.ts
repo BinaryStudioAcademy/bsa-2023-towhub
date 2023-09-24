@@ -52,19 +52,15 @@ class UserController extends Controller {
   private userService: UserService;
 
   public constructor(logger: ILogger, userService: UserService) {
-    super(logger, ApiPath.USERS);
+    const defaultStrategies = [AuthStrategy.VERIFY_JWT];
+
+    super(logger, ApiPath.USERS, defaultStrategies);
 
     this.userService = userService;
-
-    const defaultStrategies = [
-      AuthStrategy.VERIFY_JWT,
-      AuthStrategy.VERIFY_CUSTOMER_GROUP,
-    ];
 
     this.addRoute({
       path: UsersApiPath.$ID,
       method: 'GET',
-      authStrategy: AuthStrategy.VERIFY_JWT,
       handler: (options) =>
         this.findById(
           options as ApiHandlerOptions<{
@@ -76,7 +72,7 @@ class UserController extends Controller {
     this.addRoute({
       path: UsersApiPath.ROOT,
       method: 'PUT',
-      authStrategy: defaultStrategies,
+      authStrategy: [...defaultStrategies, AuthStrategy.VERIFY_CUSTOMER_GROUP],
       validation: {
         body: customerEditValidationSchema,
       },
