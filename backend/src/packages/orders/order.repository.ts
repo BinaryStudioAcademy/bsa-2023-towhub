@@ -11,7 +11,7 @@ import { OrderStatus } from './libs/enums/enums.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
   type OrderDatabaseModel,
-  type OrderEntity as OrderEntityT,
+  type OrderEntityT as OrderEntityT,
 } from './libs/types/types.js';
 
 class OrderRepository implements Omit<IRepository, 'find'> {

@@ -1,0 +1,3 @@
+const SHIFT_TIMEOUT_TIME_IN_MS = 3.6e6;
+
+export { SHIFT_TIMEOUT_TIME_IN_MS };

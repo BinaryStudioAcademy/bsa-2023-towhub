@@ -8,6 +8,7 @@ export { Checkbox } from './checkbox/checkbox.js';
 export { CustomerCard } from './customer-card/customer-card.js';
 export { CustomerOrderCard } from './customer-order-card/customer-order-card.js';
 export { CustomerOrderList } from './customer-order-list/customer-order-list.js';
+export { DriverSocketProvider } from './driver-socket-provider/driver-socket-provider.js';
 export { Dropdown } from './dropdown/dropdown.js';
 export { DropdownInput } from './dropdown-input/dropdown-input.js';
 export { Form } from './form/form.jsx';

@@ -11,7 +11,7 @@ import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
-  type OrderEntity as OrderEntityT,
+  type OrderEntityT,
   type OrderFindAllUserOrdersQuery,
   type OrderFindAllUserOrdersResponse,
   type OrderResponseDto,

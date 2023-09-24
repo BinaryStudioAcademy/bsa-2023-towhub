@@ -8,7 +8,7 @@ import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { type OperationResult } from '~/libs/types/types.js';
 
 import { DriverEntity } from './driver.entity.js';
-import { type DriverEntity as DriverEntityT } from './drivers.js';
+import { type DriverEntityT } from './drivers.js';
 import { countOffsetByQuery } from './libs/helpers/helpers.js';
 import { type GetPaginatedPageQuery } from './libs/types/types.js';
 
@@ -70,7 +70,7 @@ class DriverRepository implements IRepository {
     return drivers.map(({ createdAt, ...pureDriver }) =>
       DriverEntity.initialize({
         ...pureDriver,
-        createdAt: createdAt.toISOString(),
+        createdAt: new Date(createdAt).toISOString(),
       }),
     );
   }
@@ -120,7 +120,7 @@ class DriverRepository implements IRepository {
 
     return DriverEntity.initialize({
       ...pureDriver,
-      createdAt: createdAt.toISOString(),
+      createdAt: new Date(createdAt).toISOString(),
     });
   }
 
@@ -141,7 +141,7 @@ class DriverRepository implements IRepository {
 
     return DriverEntity.initialize({
       ...pureDriver,
-      createdAt: createdAt.toISOString(),
+      createdAt: new Date(createdAt).toISOString(),
     });
   }
 

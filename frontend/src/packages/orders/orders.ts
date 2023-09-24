@@ -9,7 +9,7 @@ export {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderEntity,
+  type OrderEntityT,
   type OrderFindAllUserOrdersResponse,
   type OrderGetAllUserOrdersPayload,
   type OrderResponseDto,

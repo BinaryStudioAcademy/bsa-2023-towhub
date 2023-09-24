@@ -5,6 +5,7 @@ export {
   TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
+  TruckStatus,
   TruckTowType,
   TruckValidationMessage,
   TruckYear,
@@ -12,7 +13,7 @@ export {
 export { LICENSE_PLATE_NUMBER } from './libs/regex-patterns/regex-patterns.js';
 export {
   type TruckAddRequestDto,
-  type TruckEntity,
+  type TruckEntityT,
   type TruckGetAllResponseDto,
   type TruckGetItemResponseDto,
 } from './libs/types/types.js';
