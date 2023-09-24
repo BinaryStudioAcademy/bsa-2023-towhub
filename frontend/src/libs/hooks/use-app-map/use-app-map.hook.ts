@@ -1,5 +1,8 @@
 import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
-import { DEFAULT_ZOOM } from '~/libs/packages/map/libs/constants/constants.js';
+import {
+  DEFAULT_CENTER,
+  DEFAULT_ZOOM,
+} from '~/libs/packages/map/libs/constants/constants.js';
 import { type MapService } from '~/libs/packages/map/map.js';
 import { MapConnector } from '~/libs/packages/map/map-connector.package.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
@@ -35,7 +38,7 @@ const useAppMap = ({
 
       mapService.current = new MapConnector().getMapService({
         mapElement: mapReference.current,
-        center: center ?? { lat: 0, lng: 0 },
+        center: center ?? DEFAULT_CENTER,
         zoom,
       });
 
