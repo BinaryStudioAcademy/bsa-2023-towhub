@@ -113,7 +113,6 @@ export {
   filesUpdateKeyRequestParameters,
 } from './packages/files/files.js';
 export {
-  type CustomerOrderStatusValues,
   type DriverInfo,
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
@@ -124,7 +123,6 @@ export {
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
-  CustomerOrderStatus,
   ORDER_STATUSES,
   orderCreateRequestBody,
   orderFindAllUserOrdersQuery,

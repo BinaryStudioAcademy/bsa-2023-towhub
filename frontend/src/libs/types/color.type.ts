@@ -15,6 +15,7 @@ type LightColor =
   | 'red-extra-light'
   | 'grey-light'
   | 'grey-extra-light'
-  | 'green-extra-light';
+  | 'green-extra-light'
+  | 'blue-extra-light';
 
 export { type DarkColor, type LightColor };

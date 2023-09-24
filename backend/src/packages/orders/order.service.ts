@@ -245,14 +245,19 @@ class OrderService implements Omit<IService, 'find'> {
       userId,
       status,
     };
-    const usersOrders = await this.orderRepository.findAllUserOrders(
+    const userOrdersRequest = this.orderRepository.findAllUserOrders(
       search,
       query,
     );
-    const total = await this.orderRepository.getTotal(search);
+    const totalRequest = this.orderRepository.getUserTotal(search);
+
+    const [userOrders, total] = await Promise.all([
+      userOrdersRequest,
+      totalRequest,
+    ]);
 
     return {
-      items: usersOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      items: userOrders.map((it) => OrderEntity.initialize(it).toObject()),
       total,
     };
   }

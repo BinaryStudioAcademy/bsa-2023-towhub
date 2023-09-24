@@ -1,4 +1,3 @@
-export { type CustomerOrderStatusValues } from './customer-order-status-values.type.js';
 export { type OrderCalculatePriceRequestDto } from './order-calculate-price-request-dto.type.js';
 export { type OrderCalculatePriceResponseDto } from './order-calculate-price-response-dto.type.js';
 export { type OrderCreateRequestDto } from './order-create-request-dto.type.js';

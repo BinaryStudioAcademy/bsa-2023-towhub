@@ -1,6 +1,5 @@
-import { useCallback } from 'react';
-
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { useCallback } from '~/libs/hooks/hooks.js';
 import { type OrderResponseDto } from '~/packages/orders/orders.js';
 
 import { CustomerOrderCard } from '../customer-order-card/customer-order-card.jsx';

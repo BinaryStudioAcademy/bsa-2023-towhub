@@ -1,7 +1,10 @@
-import { Button, Dropdown } from '~/libs/components/components.js';
-import { CustomerOrderList } from '~/libs/components/customer-order-list/customer-order-list.js';
+import {
+  Button,
+  CustomerOrderList,
+  Dropdown,
+} from '~/libs/components/components.js';
 import { DataStatus } from '~/libs/enums/data-status.enum.js';
-import { IconName } from '~/libs/enums/icon-name.enum';
+import { IconName } from '~/libs/enums/icon-name.enum.js';
 import {
   useAppDispatch,
   useAppSelector,
@@ -13,12 +16,14 @@ import {
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 import { type SingleValue } from '~/libs/types/types.js';
-import { type OrderFindAllUserOrdersResponse } from '~/packages/orders/orders.js';
+import {
+  type OrderFindAllUserOrdersResponse,
+  type OrderStatus,
+} from '~/packages/orders/orders.js';
 import { getUserOrdersPage } from '~/slices/orders/actions.js';
 
-import { options } from './libs/enums/options.js';
 import { getFilterByName } from './libs/helpers/helpers.js';
-import { type CustomerOrderStatus } from './libs/types/types.js';
+import { options } from './libs/options/options.js';
 import styles from './styles.module.scss';
 
 const CustomerHistory: React.FC = () => {
@@ -40,7 +45,7 @@ const CustomerHistory: React.FC = () => {
 
   const listHook = useAppTable<
     OrderFindAllUserOrdersResponse,
-    { status?: typeof CustomerOrderStatus }
+    { status?: typeof OrderStatus }
   >({
     tableFetchCall: getUserOrdersPage,
     initialPageIndex: initialPage ? Number(initialPage) : null,
@@ -55,21 +60,17 @@ const CustomerHistory: React.FC = () => {
   const handleChangeFilter = useCallback(
     (option: SingleValue<SelectOption>) => {
       if (option?.value) {
+        listHook.changePageIndex(0);
         setQueryParameters({
           size: listHook.pageSize,
-          page: listHook.pageIndex,
+          page: 0,
           status: option.value,
         });
       } else {
         removeQueryParameters('status');
       }
     },
-    [
-      listHook.pageIndex,
-      listHook.pageSize,
-      removeQueryParameters,
-      setQueryParameters,
-    ],
+    [listHook, removeQueryParameters, setQueryParameters],
   );
 
   return (

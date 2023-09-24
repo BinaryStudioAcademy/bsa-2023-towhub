@@ -1,12 +1,10 @@
 export { ORDER_STATUSES } from './libs/constants/constants.js';
 export {
-  CustomerOrderStatus,
   OrdersApiPath,
   OrderStatus,
   OrdersValidationMessage,
 } from './libs/enums/enums.js';
 export {
-  type CustomerOrderStatusValues,
   type DriverInfo,
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,

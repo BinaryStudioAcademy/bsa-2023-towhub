@@ -1,5 +1,6 @@
-import { and, desc, eq, notInArray, sql } from 'drizzle-orm';
+import { desc, eq, sql } from 'drizzle-orm';
 
+import { countOffsetByQuery } from '~/libs/helpers/count-offset-by-query.helper.js';
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
@@ -160,9 +161,9 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       userId: OrderEntityT['userId'];
       status: OrderEntityT['status'];
     }>,
-    query: GetPaginatedPageQuery,
+    { size, page }: GetPaginatedPageQuery,
   ): Promise<OrderEntityT[]> {
-    const offset = query.page * query.size;
+    const offset = countOffsetByQuery({ size, page });
 
     return await this.db
       .driver()
@@ -210,18 +211,16 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         eq(this.trucksSchema.id, this.shiftsSchema.truckId),
       )
       .where(
-        and(
-          combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
-          notInArray(this.ordersSchema.status, [
-            OrderStatus.CONFIRMED,
-            OrderStatus.PENDING,
-            OrderStatus.PICKING_UP,
-          ]),
-        ),
+        combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
       )
       .offset(offset)
-      .limit(query.size)
-      .orderBy(desc(this.ordersSchema.createdAt));
+      .limit(size)
+      .orderBy(
+        desc(eq(this.ordersSchema.status, OrderStatus.PENDING)),
+        desc(eq(this.ordersSchema.status, OrderStatus.PICKING_UP)),
+        desc(eq(this.ordersSchema.status, OrderStatus.CONFIRMED)),
+        desc(this.ordersSchema.createdAt),
+      );
   }
 
   public async create(
@@ -268,7 +267,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     return Boolean(item);
   }
 
-  public async getTotal(
+  public async getUserTotal(
     search: Partial<{
       userId: OrderEntityT['userId'];
       status: OrderEntityT['status'];
@@ -279,14 +278,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .select({ count: sql<number>`count(*)` })
       .from(this.ordersSchema)
       .where(
-        and(
-          combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
-          notInArray(this.ordersSchema.status, [
-            OrderStatus.CONFIRMED,
-            OrderStatus.PENDING,
-            OrderStatus.PICKING_UP,
-          ]),
-        ),
+        combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
       );
 
     return order.count;
