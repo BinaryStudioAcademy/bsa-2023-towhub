@@ -25,6 +25,7 @@ import {
 
 import { Icon } from '../icon/icon.jsx';
 import { fileInputDefaultsConfig } from './libs/config/config.js';
+import { ZERO_VALUE } from './libs/constants/constants.js';
 import {
   checkValidFileName,
   DropzoneFormatErrorMessage,
@@ -86,8 +87,10 @@ const FileInput = <T extends FieldValues & FileFormType>({
 
   const handleDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+      const isNotEmptyRejectedFiles = rejectedFiles.length > ZERO_VALUE;
+      const isEmptyAcceptedFiles = acceptedFiles.length === ZERO_VALUE;
       const areAllFilesInvalid =
-        rejectedFiles.length > 0 || acceptedFiles.length === 0;
+        isNotEmptyRejectedFiles || isEmptyAcceptedFiles;
 
       if (areAllFilesInvalid) {
         return;

@@ -99,18 +99,18 @@ class ServerApp implements IServerApp {
       validateFilesStrategy,
     } = parameters;
 
-    const preHandler: preHandlerHookHandler[] = [];
+    const preHandlers: preHandlerHookHandler[] = [];
 
     if (authStrategy) {
       const authStrategyHandler = this.resolveAuthStrategy(authStrategy);
 
       if (authStrategyHandler) {
-        preHandler.push(authStrategyHandler);
+        preHandlers.push(authStrategyHandler);
       }
     }
 
     if (validateFilesStrategy) {
-      preHandler.push(
+      preHandlers.push(
         this.resolveFileValidationStrategy(validateFilesStrategy),
       );
     }
@@ -119,7 +119,7 @@ class ServerApp implements IServerApp {
       url: path,
       method,
       handler,
-      preHandler,
+      preHandler: preHandlers,
       schema: {
         body: validation?.body,
         params: validation?.params,

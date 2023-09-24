@@ -4,6 +4,10 @@ const calculateRad = (rotationAngle: number): number => {
   return (rotationAngle * Math.PI) / 180;
 };
 
+const getHalf = (dividend: number): number => {
+  return dividend / 2;
+};
+
 const rotateCanvas = (
   canvas: HTMLCanvasElement,
   image: HTMLImageElement,
@@ -11,9 +15,9 @@ const rotateCanvas = (
 ): void => {
   const context = canvas.getContext('2d');
 
-  context?.translate(canvas.width / 2, canvas.height / 2);
+  context?.translate(getHalf(canvas.width), getHalf(canvas.height));
   context?.rotate(rotationRad);
-  context?.drawImage(image, -image.width / 2, -image.height / 2);
+  context?.drawImage(image, getHalf(-image.width), getHalf(-image.height));
 };
 
 const rotateImg = (url: string, rotationAngle: number): string => {

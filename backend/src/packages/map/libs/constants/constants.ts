@@ -1,3 +1,4 @@
 const METERS_IN_ONE_KM = 1000;
+const DECIMAL = 2;
 
-export { METERS_IN_ONE_KM };
+export { DECIMAL, METERS_IN_ONE_KM };

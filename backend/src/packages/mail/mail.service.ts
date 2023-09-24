@@ -16,7 +16,7 @@ class MailService {
   }
 
   public async sendText(header: SendTextMailHeader): Promise<void> {
-    await this.mailer.transporter().sendMail({ ...header });
+    await this.mailer.getTransporter().sendMail({ ...header });
   }
 
   public async sendPage<T extends TemplateNameValues = TemplateNameValues>(
@@ -26,7 +26,7 @@ class MailService {
   ): Promise<void> {
     const chosenView = templateNameToView[viewName];
     await this.mailer
-      .transporter()
+      .getTransporter()
       .sendMail({ ...header, html: chosenView.render(viewParameters) });
   }
 }

@@ -1,6 +1,12 @@
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 
 import { Icon } from '../components.js';
+import {
+  EMPTY,
+  FULL,
+  MAX_STARS,
+  MIN_STARS,
+} from './libs/constants/constants.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -26,13 +32,13 @@ const StarRating: React.FC<Properties> = ({ rating }: Properties) => {
 
   const createStars = (): JSX.Element[] => {
     const stars: JSX.Element[] = [];
-    for (let index = 1; index <= 5; index++) {
+    for (let index = MIN_STARS; index <= MAX_STARS; index++) {
       if (fullFieldStars >= index) {
-        stars.push(createStarItem(100, index));
+        stars.push(createStarItem(FULL, index));
       } else if (allStarts >= index) {
-        stars.push(createStarItem((rating - fullFieldStars) * 100, index));
+        stars.push(createStarItem((rating - fullFieldStars) * FULL, index));
       } else {
-        stars.push(createStarItem(0, index));
+        stars.push(createStarItem(EMPTY, index));
       }
     }
 
