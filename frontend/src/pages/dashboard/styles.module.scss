@@ -1,0 +1,10 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  height: calc(100% - 20px);
+  margin: 10px 30px 10px 20px;
+  overflow: auto;
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+}

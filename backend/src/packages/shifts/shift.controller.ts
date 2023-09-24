@@ -14,7 +14,7 @@ import {
 import {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftEntity,
+  type ShiftEntityT,
   type ShiftResponseDto,
   shiftCloseValidationSchema,
   shiftCreateValidationSchema,
@@ -39,7 +39,7 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.ROOT,
       method: 'POST',
-      authStrategy: AuthStrategy.INJECT_USER,
+      authStrategy: AuthStrategy.VERIFY_JWT,
       validation: {
         body: shiftCreateValidationSchema,
       },
@@ -55,7 +55,7 @@ class ShiftController extends Controller {
     this.addRoute({
       path: ShiftsApiPath.$ID,
       method: 'PUT',
-      authStrategy: AuthStrategy.INJECT_USER,
+      authStrategy: AuthStrategy.VERIFY_JWT,
       validation: {
         body: shiftCloseValidationSchema,
       },
@@ -64,7 +64,7 @@ class ShiftController extends Controller {
           options as ApiHandlerOptions<{
             body: ShiftCloseRequestDto;
             user: UserEntityObjectWithGroupT;
-            params: Pick<ShiftEntity, 'id'>;
+            params: Pick<ShiftEntityT, 'id'>;
           }>,
         ),
     });
@@ -75,7 +75,7 @@ class ShiftController extends Controller {
       handler: (options) =>
         this.getByShiftId(
           options as ApiHandlerOptions<{
-            params: Pick<ShiftEntity, 'id'>;
+            params: Pick<ShiftEntityT, 'id'>;
           }>,
         ),
     });
@@ -117,7 +117,7 @@ class ShiftController extends Controller {
     options: ApiHandlerOptions<{
       body: ShiftCloseRequestDto;
       user: UserEntityObjectWithGroupT;
-      params: Pick<ShiftEntity, 'id'>;
+      params: Pick<ShiftEntityT, 'id'>;
     }>,
   ): Promise<ApiHandlerResponse<ShiftResponseDto>> {
     return {
@@ -128,7 +128,7 @@ class ShiftController extends Controller {
 
   private async getByShiftId(
     options: ApiHandlerOptions<{
-      params: Pick<ShiftEntity, 'id'>;
+      params: Pick<ShiftEntityT, 'id'>;
     }>,
   ): Promise<ApiHandlerResponse<ShiftResponseDto>> {
     return {
@@ -345,7 +345,7 @@ export { ShiftController };
 
 /**
  * @swagger
- * /shifts/drive/{id}:
+ * /shifts/driver/{id}:
  *    get:
  *      tags:
  *      - shifts

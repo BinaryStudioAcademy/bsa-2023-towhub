@@ -64,9 +64,9 @@ const Input = <T extends FieldValues>({
   const toggleShowPassword = useCallback(
     (event: React.MouseEvent<HTMLElement>): void => {
       event.preventDefault();
-      setIsPasswordShown(!isPasswordShown);
+      setIsPasswordShown((old) => !old);
     },
-    [isPasswordShown],
+    [],
   );
   const clearError = useCallback(() => {
     if (setError && (serverError.common || serverError.validation)) {

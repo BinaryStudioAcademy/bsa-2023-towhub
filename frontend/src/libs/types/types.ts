@@ -1,5 +1,5 @@
 export { type RootState } from '../packages/store/store.js';
-export { type AppThunk } from './app-think.type.js';
+export { type AppThunk } from './app-thunk.type.js';
 export { type AsyncThunkConfig } from './async-thunk-config.type.js';
 export { type BurgerMenuItem } from './burger-menu-item.type.js';
 export { type DarkColor, type LightColor } from './color.type.js';
@@ -16,17 +16,26 @@ export {
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type DriverGetAllResponseDto,
+  type DriverWithUserData,
   type EntityPagination,
+  type FirstParameter,
+  type PaginationParameters,
+  type PaginationWithSortingParameters,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
   type ServerValidationErrorResponse,
-  type TruckEntity,
+  type SortMethodValue,
+  type TruckEntityT,
   type TruckTowType,
+  type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupT,
   type UserEntityT,
   type UserGroupEntityT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
   type ValidationSchema,
   type ValueOf,
+  ServerErrorType,
 } from 'shared/build/index.js';

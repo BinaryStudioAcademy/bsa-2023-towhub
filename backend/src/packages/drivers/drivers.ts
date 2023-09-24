@@ -3,6 +3,7 @@ import { GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolo
 import { DriverRepository } from '~/packages/drivers/driver.repository.js';
 
 import { groupService } from '../groups/groups.js';
+import { truckService } from '../trucks/trucks.js';
 import { userService } from '../users/users.js';
 import { DriverService } from './driver.service.js';
 
@@ -11,6 +12,7 @@ const driverService = new DriverService({
   driverRepository,
   userService,
   groupService,
+  truckService,
   geolocationCacheService: GeolocationCacheService.getInstance(),
 });
 
@@ -20,8 +22,9 @@ export {
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
+  type DriverGetDriversPagePayload,
   type DriverRequestParameters,
   type DriverUpdatePayload,
 } from './libs/types/types.js';
