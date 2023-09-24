@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { type AuthMode } from '~/libs/enums/enums.js';
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
+import { ClientToServerEvent } from '~/libs/packages/socket/socket.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
 import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
 import {
@@ -38,6 +39,31 @@ const signUp = createAsyncThunk<
 
       return rejectWithValue({ ...error, message: error.message });
     }
+  },
+);
+
+const authorizeDriverSocket = createAsyncThunk<
+  null,
+  undefined,
+  AsyncThunkConfig
+>(
+  `${sliceName}/socket-driver-authorize`,
+  (_, { extra, getState, rejectWithValue }) => {
+    const { socketClient } = extra;
+    const user = getState().auth.user;
+
+    if (!user) {
+      return rejectWithValue(null);
+    }
+
+    socketClient.emit({
+      event: ClientToServerEvent.AUTHORIZE_DRIVER,
+      eventPayload: {
+        userId: user.id,
+      },
+    });
+
+    return null;
   },
 );
 
@@ -93,4 +119,4 @@ const logOut = createAsyncThunk<unknown, undefined, AsyncThunkConfig>(
   },
 );
 
-export { getCurrent, logOut, signIn, signUp };
+export { authorizeDriverSocket, getCurrent, logOut, signIn, signUp };
