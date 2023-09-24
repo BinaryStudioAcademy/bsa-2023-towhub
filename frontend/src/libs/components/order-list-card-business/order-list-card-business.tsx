@@ -1,5 +1,4 @@
-import avatarDefault from '~/assets/img/order-card/avatar-default.png';
-import { IconName } from '~/libs/enums/enums.js';
+import { IconName, ImgPath } from '~/libs/enums/enums.js';
 import {
   getValidClassNames,
   jsonToLatLngLiteral,
@@ -54,7 +53,7 @@ const OrderListCardBusiness: React.FC<Properties> = ({
       </div>
       <div className={styles.content}>
         <img
-          src={avatarDefault}
+          src={ImgPath.AVAVTAR_DEFAULT}
           alt={driver.firstName}
           className={styles.avatar}
         />
