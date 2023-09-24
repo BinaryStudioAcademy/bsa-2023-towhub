@@ -3,9 +3,9 @@ import {
   type GeolocationLatLng,
 } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { type ShiftService } from '~/packages/shifts/shift.service.js';
-import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
+import { type TruckEntityT } from '~/packages/trucks/libs/types/types.js';
 
-type Result = TruckEntity & {
+type Result = TruckEntityT & {
   location: GeolocationLatLng | undefined;
 };
 

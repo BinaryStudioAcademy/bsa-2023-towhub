@@ -1,26 +1,44 @@
 import { Route } from 'react-router-dom';
 
+import { DriverSocketProvider } from '~/libs/components/driver-socket-provider/driver-socket-provider.js';
 import { AppRoute } from '~/libs/enums/enums.js';
-import { useEffect, useGetCurrentUser } from '~/libs/hooks/hooks.js';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useEffect,
+  useGetCurrentUser,
+} from '~/libs/hooks/hooks.js';
+import { socketTryRemoveDriverListeners } from '~/libs/packages/socket/libs/helpers/helpers.js';
+import { socket } from '~/libs/packages/socket/socket.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import {
   Auth,
+  AvailableTrucks,
   Dashboard,
   HomePage,
   NotFound,
   Order,
+  Orders,
   WelcomePage,
 } from '~/pages/pages.js';
+import { selectUser } from '~/slices/auth/selectors.js';
 
 import { PageLayout, ProtectedRoute } from '../components.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => {
   const { getCurrentUser } = useGetCurrentUser();
+  const user = useAppSelector(selectUser);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    void getCurrentUser();
-  }, [getCurrentUser]);
+    if (!user) {
+      socketTryRemoveDriverListeners();
+      void getCurrentUser();
+    }
+    socket.connect();
+  }, [getCurrentUser, user, dispatch]);
 
   return (
     <RouterProvider>
@@ -60,6 +78,30 @@ const Router = (): JSX.Element => {
             </PageLayout>
           }
         />
+      </Route>
+      <Route
+        path={AppRoute.ROOT}
+        element={<ProtectedRoute allowedUserGroup={UserGroupKey.DRIVER} />}
+      >
+        <Route element={<DriverSocketProvider />}>
+          <Route
+            path={AppRoute.AVAILABLE_TRUCKS}
+            element={
+              <PageLayout isSidebarHidden>
+                <AvailableTrucks />
+              </PageLayout>
+            }
+          />
+
+          <Route
+            path={AppRoute.ORDERS}
+            element={
+              <PageLayout isSidebarHidden>
+                <Orders />
+              </PageLayout>
+            }
+          />
+        </Route>
       </Route>
       <Route path={AppRoute.ANY} element={<NotFound />} />
     </RouterProvider>

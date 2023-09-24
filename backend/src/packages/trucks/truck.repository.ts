@@ -9,7 +9,7 @@ import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import {
   type DriverHaveAccessToTruck,
   type TruckDatabaseModel,
-  type TruckEntity,
+  type TruckEntityT,
 } from './libs/types/types.js';
 
 class TruckRepository implements IRepository {
@@ -74,7 +74,7 @@ class TruckRepository implements IRepository {
   }
 
   public async create(
-    entity: Omit<TruckEntity, 'id' | 'createdAt'>,
+    entity: Omit<TruckEntityT, 'id' | 'createdAt' | 'status'>,
   ): Promise<TruckDatabaseModel[]> {
     const preparedQuery = this.db
       .driver()
@@ -88,7 +88,7 @@ class TruckRepository implements IRepository {
 
   public async update(
     id: number,
-    payload: Partial<Omit<TruckEntity, 'createdAt'>>,
+    payload: Partial<Omit<TruckEntityT, 'createdAt'>>,
   ): Promise<TruckDatabaseModel[]> {
     const preparedQuery = this.db
       .driver()
