@@ -14,18 +14,22 @@ class DriverEntity implements IEntity {
 
   private businessId: DriverEntityT['businessId'];
 
+  private verificationStatus: DriverEntityT['verificationStatus'] | null;
+
   private constructor({
     id,
     driverLicenseNumber,
     userId,
     businessId,
     driverLicenseFileId,
-  }: NullableProperties<DriverEntityT, 'id'>) {
+    verificationStatus,
+  }: NullableProperties<DriverEntityT, 'id' | 'verificationStatus'>) {
     this.id = id;
     this.driverLicenseNumber = driverLicenseNumber;
     this.userId = userId;
     this.businessId = businessId;
     this.driverLicenseFileId = driverLicenseFileId;
+    this.verificationStatus = verificationStatus;
   }
 
   public static initialize({
@@ -34,6 +38,7 @@ class DriverEntity implements IEntity {
     userId,
     businessId,
     driverLicenseFileId,
+    verificationStatus,
   }: DriverEntityT): DriverEntity {
     return new DriverEntity({
       id,
@@ -41,6 +46,7 @@ class DriverEntity implements IEntity {
       userId,
       businessId,
       driverLicenseFileId,
+      verificationStatus,
     });
   }
 
@@ -49,13 +55,14 @@ class DriverEntity implements IEntity {
     userId,
     businessId,
     driverLicenseFileId,
-  }: Omit<DriverEntityT, 'id'>): DriverEntity {
+  }: Omit<DriverEntityT, 'id' | 'verificationStatus'>): DriverEntity {
     return new DriverEntity({
       id: null,
       driverLicenseNumber,
       userId,
       businessId,
       driverLicenseFileId,
+      verificationStatus: null,
     });
   }
 
@@ -66,10 +73,11 @@ class DriverEntity implements IEntity {
       userId: this.userId,
       businessId: this.businessId,
       driverLicenseFileId: this.driverLicenseFileId,
+      verificationStatus: this.verificationStatus,
     };
   }
 
-  public toNewObject(): Omit<DriverEntityT, 'id'> {
+  public toNewObject(): Omit<DriverEntityT, 'id' | 'verificationStatus'> {
     return {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,

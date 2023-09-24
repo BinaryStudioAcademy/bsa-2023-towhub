@@ -1,7 +1,7 @@
-import { type DriverEntityWithFileVerificationStatusT } from '../driver-entity-with-file-verification-status.type.js';
+import { type DriverEntityT } from '../driver-entity.type.js';
 
 type DriverGetAllResponseDto = {
-  items: DriverEntityWithFileVerificationStatusT[];
+  items: DriverEntityT[];
 };
 
 export { type DriverGetAllResponseDto };

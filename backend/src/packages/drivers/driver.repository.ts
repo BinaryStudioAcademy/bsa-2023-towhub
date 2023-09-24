@@ -4,11 +4,15 @@ import { AppErrorMessage } from '~/libs/enums/enums.js';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 import { type IRepository } from '~/libs/interfaces/repository.interface.js';
 import { type IDatabase } from '~/libs/packages/database/libs/interfaces/database.interface.js';
-import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
+import {
+  type DatabaseSchema,
+  schema,
+} from '~/libs/packages/database/schema/schema.js';
 import { type OperationResult } from '~/libs/types/types.js';
 
 import { DriverEntity } from './driver.entity.js';
 import { type DriverEntityT } from './drivers.js';
+import { selectDriverJoinFileVerificationStatus } from './libs/constants/constants.js';
 
 class DriverRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -25,7 +29,7 @@ class DriverRepository implements IRepository {
   }
 
   public find(
-    partial: Partial<DriverEntityT>,
+    partial: Partial<Omit<DriverEntityT, 'verificationStatus'>>,
   ): ReturnType<IRepository<DriverEntityT>['find']> {
     const queries = Object.entries(partial).map(([key, value]) =>
       eq(
@@ -38,8 +42,15 @@ class DriverRepository implements IRepository {
 
     return this.db
       .driver()
-      .select()
+      .select(selectDriverJoinFileVerificationStatus)
       .from(this.driverSchema)
+      .innerJoin(
+        schema.fileVerificationStatus,
+        eq(
+          this.driverSchema.driverLicenseFileId,
+          schema.fileVerificationStatus.fileId,
+        ),
+      )
       .where(finalQuery)
       .execute();
   }
@@ -49,7 +60,7 @@ class DriverRepository implements IRepository {
   ): Promise<DriverEntity[]> {
     const drivers = await this.db
       .driver()
-      .select()
+      .select(selectDriverJoinFileVerificationStatus)
       .from(this.driverSchema)
       .where(eq(this.driverSchema.businessId, businessId));
 
@@ -78,7 +89,7 @@ class DriverRepository implements IRepository {
       });
     }
 
-    const [driver]: DriverEntityT[] = await this.db
+    const [driver] = await this.db
       .driver()
       .select()
       .from(this.driverSchema)
@@ -93,7 +104,7 @@ class DriverRepository implements IRepository {
     const { driverLicenseNumber, userId, businessId, driverLicenseFileId } =
       entity.toNewObject();
 
-    const [item] = await this.db
+    const [result] = await this.db
       .driver()
       .insert(this.driverSchema)
       .values({
@@ -105,6 +116,8 @@ class DriverRepository implements IRepository {
       .returning()
       .execute();
 
+    const [item] = await this.find({ id: result.id });
+
     return DriverEntity.initialize(item);
   }
 
@@ -115,7 +128,7 @@ class DriverRepository implements IRepository {
     id: number;
     payload: Partial<Pick<DriverEntityT, 'driverLicenseNumber'>>;
   }): Promise<DriverEntity> {
-    const [item] = await this.db
+    const [result] = await this.db
       .driver()
       .update(this.driverSchema)
       .set(payload)
@@ -123,18 +136,20 @@ class DriverRepository implements IRepository {
       .returning()
       .execute();
 
+    const [item] = await this.find({ id: result.id });
+
     return DriverEntity.initialize(item);
   }
 
   public async delete(id: number): Promise<boolean> {
-    const [item] = await this.db
+    const [result] = await this.db
       .driver()
       .delete(this.driverSchema)
       .where(eq(this.driverSchema.id, id))
       .returning()
       .execute();
 
-    return Boolean(item);
+    return Boolean(result);
   }
 }
 

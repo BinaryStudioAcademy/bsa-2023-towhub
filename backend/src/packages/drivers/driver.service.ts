@@ -13,12 +13,10 @@ import {
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
   type DriverEntityT,
-  type DriverEntityWithFileVerificationStatusT,
   type DriverGetAllResponseDto,
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
 import { type FileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
-import { FileVerificationStatus } from '../file-verification-status/libs/enums/enums.js';
 import { type GroupService } from '../groups/group.service.js';
 import { type UserService } from '../users/user.service.js';
 
@@ -75,74 +73,26 @@ class DriverService implements IService {
     return geolocation;
   }
 
-  private async getDriverWithFileVerificationStatus(
-    driver: DriverEntityT | null,
-  ): Promise<DriverEntityWithFileVerificationStatusT> {
-    if (!driver) {
-      return {
-        driverLicenseFileId: -1,
-        businessId: -1,
-        driverLicenseNumber: '',
-        userId: -1,
-        id: -1,
-        fileVerificationStatus: {
-          status: FileVerificationStatus.NOT_STARTED,
-          message: 'fileVerificationStatus.message',
-          name: 'driver_license_scan',
-        },
-      };
-    }
-
-    const fileVerificationStatus =
-      await this.fileVerificationStatusService.findByFileId(
-        driver.driverLicenseFileId,
-      );
-
-    if (!fileVerificationStatus) {
-      return {
-        ...driver,
-        fileVerificationStatus: {
-          status: FileVerificationStatus.NOT_STARTED,
-          message: 'fileVerificationStatus.message',
-          name: 'driver_license_scan',
-        },
-      };
-    }
-
-    return {
-      ...driver,
-      fileVerificationStatus: {
-        status: fileVerificationStatus.status,
-        message: fileVerificationStatus.message,
-        name: fileVerificationStatus.name,
-      },
-    };
-  }
-
   public async findByLicenseFileId(
     driverLicenseFileId: number,
-  ): Promise<DriverEntityWithFileVerificationStatusT | null> {
+  ): Promise<DriverEntityT | null> {
     const [driver = null] = await this.driverRepository.find({
       driverLicenseFileId,
     });
 
-    return await this.getDriverWithFileVerificationStatus(driver);
+    return driver;
   }
 
-  public async findById(
-    id: number,
-  ): Promise<DriverEntityWithFileVerificationStatusT | null> {
+  public async findById(id: number): Promise<DriverEntityT | null> {
     const [driver = null] = await this.driverRepository.find({ id });
 
-    return await this.getDriverWithFileVerificationStatus(driver);
+    return driver;
   }
 
-  public async findByUserId(
-    userId: number,
-  ): Promise<DriverEntityWithFileVerificationStatusT | null> {
+  public async findByUserId(userId: number): Promise<DriverEntityT | null> {
     const [driver = null] = await this.driverRepository.find({ userId });
 
-    return await this.getDriverWithFileVerificationStatus(driver);
+    return driver;
   }
 
   public async findAllByBusinessId(
@@ -151,12 +101,7 @@ class DriverService implements IService {
     const items = await this.driverRepository.findAllByBusinessId(businessId);
 
     return {
-      items: await Promise.all(
-        items.map(
-          async (it) =>
-            await this.getDriverWithFileVerificationStatus(it.toObject()),
-        ),
-      ),
+      items: items.map((it) => it.toObject()),
     };
   }
 

@@ -603,7 +603,7 @@ class BusinessController extends Controller {
    *         example: 1
    *      requestBody:
    *        content:
-   *          application/json:
+   *          multipart/formdata:
    *            schema:
    *              type: object
    *              required:
@@ -629,6 +629,11 @@ class BusinessController extends Controller {
    *                  minimum: 6
    *                  maximum: 20
    *                  pattern: ^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$
+   *                files:
+   *                  type: array
+   *                  items:
+   *                    type: string
+   *                    format: binary
    *      security:
    *        - bearerAuth: []
    *      responses:
