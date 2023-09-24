@@ -1,6 +1,8 @@
 @import "src/assets/css/vars.scss";
 
 .container {
+  display: flex;
+  flex-direction: column;
   width: 210px;
   height: calc(100% - 20px);
   margin: 10px;

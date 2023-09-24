@@ -6,6 +6,7 @@ import { type TabsType, type ValueOf } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { useAuthUser } from '~/slices/auth/auth.js';
 
+import { EndShiftButton } from './components/end-shift-button.js';
 import { checkActiveTab } from './libs/helpers.js';
 import { BUSINESS_TABS, DRIVER_TABS } from './libs/tabs.js';
 import styles from './styles.module.scss';
@@ -68,6 +69,7 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
       )}
     >
       <ul className={styles.list}>{renderTabs()}</ul>
+      {user?.group.key === UserGroupKey.DRIVER && <EndShiftButton />}
     </div>
   );
 };
