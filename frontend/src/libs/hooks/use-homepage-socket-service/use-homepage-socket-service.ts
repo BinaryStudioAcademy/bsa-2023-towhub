@@ -1,9 +1,8 @@
 import {
-  ClientSocketEvent,
-  ServerSocketEvent,
+  ClientToServerEvent,
+  ServerToClientEvent,
   socket as socketService,
 } from '~/libs/packages/socket/socket.js';
-import { type TruckEntity } from '~/packages/trucks/libs/types/types.js';
 import { actions } from '~/slices/trucks/trucks.js';
 
 import { useAppDispatch, useCallback } from '../hooks.js';
@@ -18,20 +17,21 @@ const useHomePageSocketService = (): ReturnType => {
 
   const connectToHomeRoom = useCallback((): void => {
     socketService.emit({
-      event: ClientSocketEvent.JOIN_HOME_ROOM,
+      event: ClientToServerEvent.JOIN_HOME_ROOM,
     });
     socketService.addListener(
-      ServerSocketEvent.TRUCKS_LIST_UPDATE,
+      ServerToClientEvent.TRUCKS_LIST_UPDATE,
       (payload): void => {
-        void dispatch(actions.setTrucks(payload as TruckEntity[]));
+        void dispatch(actions.setTrucks(payload));
       },
     );
   }, [dispatch]);
 
   const disconnectFromHomeRoom = useCallback((): void => {
     socketService.emit({
-      event: ClientSocketEvent.LEAVE_HOME_ROOM,
+      event: ClientToServerEvent.LEAVE_HOME_ROOM,
     });
+    socketService.removeAllListeners(ServerToClientEvent.TRUCKS_LIST_UPDATE);
   }, []);
 
   return { connectToHomeRoom, disconnectFromHomeRoom };

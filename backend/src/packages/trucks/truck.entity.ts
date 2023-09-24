@@ -4,10 +4,11 @@ import { type NullableProperties, type ValueOf } from '~/libs/types/types.js';
 import {
   type TruckManufacturer,
   type TruckTowType,
+  TruckStatus,
 } from './libs/enums/enums.js';
 import {
   type TruckDatabaseModel,
-  type TruckEntity as TruckEntityT,
+  type TruckEntityT,
 } from './libs/types/types.js';
 
 class TruckEntity implements IEntity {
@@ -27,6 +28,8 @@ class TruckEntity implements IEntity {
 
   private businessId: number;
 
+  private status: ValueOf<typeof TruckStatus>;
+
   private createdAt: string;
 
   private constructor({
@@ -37,6 +40,7 @@ class TruckEntity implements IEntity {
     licensePlateNumber,
     year,
     towType,
+    status,
     businessId,
     createdAt,
   }: NullableProperties<TruckEntityT, 'id'>) {
@@ -48,6 +52,7 @@ class TruckEntity implements IEntity {
     this.year = year;
     this.towType = towType;
     this.businessId = businessId;
+    this.status = status;
     this.createdAt = createdAt;
   }
 
@@ -59,6 +64,7 @@ class TruckEntity implements IEntity {
     licensePlateNumber,
     year,
     towType,
+    status,
     businessId,
     createdAt,
   }: TruckDatabaseModel): TruckEntity {
@@ -70,6 +76,7 @@ class TruckEntity implements IEntity {
       pricePerKm,
       licensePlateNumber,
       year,
+      status,
       businessId,
       createdAt: new Date(createdAt).toDateString(),
     });
@@ -93,6 +100,7 @@ class TruckEntity implements IEntity {
       pricePerKm,
       licensePlateNumber,
       year,
+      status: TruckStatus.AVAILABLE,
       businessId,
       createdAt: new Date(createdAt).toDateString(),
     });
@@ -107,6 +115,7 @@ class TruckEntity implements IEntity {
       capacity: this.capacity,
       pricePerKm: this.pricePerKm,
       licensePlateNumber: this.licensePlateNumber,
+      status: this.status,
       businessId: this.businessId,
       createdAt: this.createdAt,
     };
@@ -120,6 +129,7 @@ class TruckEntity implements IEntity {
       capacity: this.capacity,
       pricePerKm: this.pricePerKm,
       licensePlateNumber: this.licensePlateNumber,
+      status: this.status,
       businessId: this.businessId,
       createdAt: this.createdAt,
     };

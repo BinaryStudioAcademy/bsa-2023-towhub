@@ -20,11 +20,17 @@ export { driverRepository, driverService };
 export {
   type DriverAddPayload,
   type DriverAddResponseWithGroup,
-  type DriverCreateUpdateRequestDto,
+  type DriverCreateRequestDto,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetDriversPagePayload,
   type DriverRequestParameters,
   type DriverUpdatePayload,
+  type DriverUpdateRequestDto,
 } from './libs/types/types.js';
+export {
+  driverCreateRequestBody,
+  driverParameters,
+  driverUpdateRequestBody,
+} from './libs/validation-schemas/validation-schemas.js';

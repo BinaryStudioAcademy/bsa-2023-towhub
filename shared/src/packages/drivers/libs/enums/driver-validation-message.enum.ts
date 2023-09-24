@@ -7,6 +7,7 @@ const DriverValidationMessage = {
   BUSINESS_ID_MUST_BE_NUMBER: 'Driver user id must be number',
   UPDATE_AT_LEAST_ONE_FIELD:
     'Update fields are empty, there is nothing to update',
+  TRUCK_IS_REQUIRED: 'Truck is required',
 } as const;
 
 export { DriverValidationMessage };

@@ -1,9 +1,15 @@
-import { addTruck, findAllTrucksForBusiness, setTrucks } from './actions.js';
+import {
+  addTruck,
+  findAllTrucksForBusiness,
+  getAllTrucksByUserId,
+  setTrucks,
+} from './actions.js';
 import { actions } from './trucks.slice.js';
 
 const allActions = {
   ...actions,
   addTruck,
+  getAllTrucksByUserId,
   findAllTrucksForBusiness,
   setTrucks,
 };

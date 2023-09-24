@@ -11,7 +11,7 @@ import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
-  type OrderEntity as OrderEntityT,
+  type OrderEntityT as OrderEntityT,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
@@ -61,7 +61,7 @@ class OrderService implements Omit<IService, 'find'> {
 
   public async create(
     payload: OrderCreateRequestDto & {
-      userId: number | null;
+      user: UserEntityObjectWithGroupT | null;
     },
   ): Promise<OrderResponseDto> {
     const {
@@ -72,8 +72,12 @@ class OrderService implements Omit<IService, 'find'> {
       customerName,
       customerPhone,
       truckId,
-      userId,
+      user,
     } = payload;
+
+    const { firstName = null, phone = null, id: userId = null } = user ?? {};
+    const nameInOrder = customerName ?? firstName;
+    const phoneInOrder = customerPhone ?? phone;
 
     const truck = await this.truckService.findById(truckId);
 
@@ -107,8 +111,8 @@ class OrderService implements Omit<IService, 'find'> {
       userId,
       businessId: shift.businessId,
       shiftId: shift.id,
-      customerName,
-      customerPhone,
+      customerName: nameInOrder,
+      customerPhone: phoneInOrder,
     });
 
     return OrderEntity.initialize({
