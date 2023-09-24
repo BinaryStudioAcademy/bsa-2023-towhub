@@ -112,7 +112,7 @@ const Orders: React.FC = () => {
           <Spinner />
         ) : (
           <div className={styles.orderlistArea}>
-            <OrderFilter onChange={handleChangeFilter} />
+            <OrderFilter onChange={handleChangeFilter} label={filter.status} />
             <OrderList orders={sortOrders} select={setShownRoute} />
             <Pagination
               pageCount={totalPages}
@@ -126,14 +126,16 @@ const Orders: React.FC = () => {
           <Spinner />
         ) : (
           <div className={styles.mapArea}>
-            <div className={styles.mapWrapper}>
-              <Map
-                zoom={10}
-                className={styles.map}
-                markers={endPointMarkers}
-                shownRoute={shownRoute}
-              />
-            </div>
+            {orders.length > 0 && (
+              <div className={styles.mapWrapper}>
+                <Map
+                  zoom={10}
+                  className={styles.map}
+                  markers={endPointMarkers}
+                  shownRoute={shownRoute}
+                />
+              </div>
+            )}
           </div>
         )}
       </LoadScript>

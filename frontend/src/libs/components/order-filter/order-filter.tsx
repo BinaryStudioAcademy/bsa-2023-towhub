@@ -10,9 +10,10 @@ import styles from './styles.module.scss';
 
 type Properties = {
   onChange: (filters: { status: OrderStatusValues | 'all' }) => void;
+  label: string;
 };
 
-const OrderFilter = ({ onChange }: Properties): JSX.Element => {
+const OrderFilter = ({ onChange, label }: Properties): JSX.Element => {
   const handleStatusChange = useCallback(
     (option: SingleValue<SelectOption>) => {
       if (!option) {
@@ -30,7 +31,7 @@ const OrderFilter = ({ onChange }: Properties): JSX.Element => {
         <div className={styles.dropdownWrapper}>
           <Dropdown
             options={dropdownOptions}
-            defaultValue={{ label: 'All', value: 'all' }}
+            label={label}
             placeholder="Select order status"
             onChange={handleStatusChange}
             className={styles.input}
