@@ -8,7 +8,7 @@ import { ServerErrorType } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
 import { type FormField } from '~/libs/types/types.js';
 
-import { FIELD_PATH_DELIMITER } from '../consts/consts.js';
+import { FIELD_PATH_DELIMITER } from '../constants/constants.js';
 import { ServerErrorSymbol } from '../enums/enums.js';
 
 const handleServerError = <T extends FieldValues>(

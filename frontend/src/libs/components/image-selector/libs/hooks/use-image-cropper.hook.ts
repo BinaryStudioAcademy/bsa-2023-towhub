@@ -6,7 +6,8 @@ import { useCallback, useEffect, useState } from '~/libs/hooks/hooks.js';
 
 import { DefaultSettings, ImageFormat } from '../enums/enums.js';
 import { type ResultOptions } from '../types/types.js';
-import { canAttachCropper, scaleSize } from './libs/helpers/helpers.js';
+import { checkCanAttachCropper, scaleSize } from './libs/helpers/helpers.js';
+import { type CroppedImage } from './libs/types/types.js';
 import {
   type HookProperties,
   type HookReturnType,
@@ -42,7 +43,9 @@ const useImageCropper = ({
   const [cropper, setCropper] = useState<Croppie | undefined>();
 
   useEffect(() => {
-    if (!canAttachCropper(cropHolderReference.current)) {
+    const canAttachCropper = checkCanAttachCropper(cropHolderReference.current);
+
+    if (!canAttachCropper) {
       return;
     }
 
@@ -66,7 +69,7 @@ const useImageCropper = ({
   }, [cropper, imageAsDataUrl]);
 
   const getCroppedImage = useCallback(
-    async (options?: ResultOptions) => {
+    async (options?: ResultOptions): Promise<CroppedImage | undefined> => {
       if (!cropper) {
         return;
       }

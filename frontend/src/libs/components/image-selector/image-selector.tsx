@@ -16,6 +16,7 @@ import { DefaultSettings as Default } from './libs/enums/default-settings.enum.j
 import {
   convertFormatToMimetype,
   createFileList,
+  hasSingleFile,
   readFile,
 } from './libs/helpers/helpers.js';
 import { type CroppedImage } from './libs/hooks/libs/types/types.js';
@@ -74,7 +75,7 @@ const ImageSelector = <
 
   const handleImageSelected = useCallback(
     ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-      if (!target.files || target.files.length !== 1) {
+      if (!hasSingleFile(target.files)) {
         return;
       }
       const [file] = target.files;

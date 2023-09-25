@@ -1,6 +1,6 @@
-import { CROPPIE_CONTAINER_SIGNATURE } from '../consts/croppie-container-signature.const.js';
+import { CROPPIE_CONTAINER_SIGNATURE } from '../constants/croppie-container-signature.constant.js';
 
-const canAttachCropper = (
+const checkCanAttachCropper = (
   container: HTMLDivElement | null,
 ): container is HTMLDivElement => {
   return (
@@ -8,4 +8,4 @@ const canAttachCropper = (
   );
 };
 
-export { canAttachCropper };
+export { checkCanAttachCropper };

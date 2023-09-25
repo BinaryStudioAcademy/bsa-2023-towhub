@@ -1,4 +1,4 @@
-import { FILE_EXTENSION_REGEX } from '../consts/consts.js';
+import { FILE_EXTENSION_REGEX } from '../constants/constants.js';
 
 const changeFileExtension = (
   filename: string,
