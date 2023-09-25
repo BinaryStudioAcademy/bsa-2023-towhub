@@ -1,14 +1,7 @@
-import truckImg from '~/assets/img/tow-truck-small.svg';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 
-import {
-  MAP_INFO_WINDOW_WIDTH,
-  TRUCK_IMG_ANCHOR_X,
-  TRUCK_IMG_ANCHOR_Y,
-  TRUCK_IMG_HEIGHT,
-  TRUCK_IMG_WIDTH,
-} from './libs/constants/constants.js';
-import { rotateImg } from './libs/helpers/rotate-img.helper.js';
+import { MAP_INFO_WINDOW_WIDTH } from './libs/constants/constants.js';
+import { createIcon } from './libs/helpers/helpers.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
 import {
   type MapServiceParameters,
@@ -301,22 +294,10 @@ class MapService implements IMapService {
   ): google.maps.Marker {
     this.throwIfMapNotInitialized();
 
-    const rotatedIconUrl = rotateImg(truckImg, angle);
-
     const marker = new google.maps.Marker({
       position,
       map: this.map,
-      icon: isOrigin
-        ? {
-            url: rotatedIconUrl,
-            anchor: new google.maps.Point(
-              TRUCK_IMG_ANCHOR_X,
-              TRUCK_IMG_ANCHOR_Y,
-            ),
-            size: new google.maps.Size(TRUCK_IMG_WIDTH, TRUCK_IMG_HEIGHT),
-            scale: 1,
-          }
-        : truckImg,
+      icon: createIcon(isOrigin, angle),
     });
     this.markers.push(marker);
 

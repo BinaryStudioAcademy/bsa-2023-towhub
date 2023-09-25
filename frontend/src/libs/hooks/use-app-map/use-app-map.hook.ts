@@ -8,6 +8,8 @@ import { type MapService } from '~/libs/packages/map/map.js';
 import { MapConnector } from '~/libs/packages/map/map-connector.package.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
+import { getBounds } from './libs/helpers/helpers.js';
+
 type Properties = {
   center: google.maps.LatLngLiteral | null;
   points?: google.maps.LatLngLiteral[];
@@ -20,18 +22,6 @@ type Properties = {
   onPriceChange?: (price: number) => void;
   mapReference: React.RefObject<HTMLDivElement>;
   shownRoute?: PlaceLatLng;
-};
-
-const getBounds = (
-  points: google.maps.LatLngLiteral[],
-): google.maps.LatLngBounds => {
-  const bounds = new google.maps.LatLngBounds();
-
-  for (const point of points) {
-    bounds.extend(point);
-  }
-
-  return bounds;
 };
 
 const useAppMap = ({
