@@ -11,11 +11,11 @@ import {
 import { socketTryRemoveDriverListeners } from '~/libs/packages/socket/libs/helpers/helpers.js';
 import { socket } from '~/libs/packages/socket/socket.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
-import { DriverOrder } from '~/pages/driver-order/driver-order.js';
 import {
   Auth,
   AvailableTrucks,
   Dashboard,
+  DriverOrder,
   HomePage,
   NotFound,
   Order,
@@ -50,7 +50,6 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.SIGN_UP_BUSINESS} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP_CUSTOMER} element={<Auth />} />
         <Route path={AppRoute.ORDER} element={<Order />} />
-        <Route path={AppRoute.DRIVER_ORDER} element={<DriverOrder />} />
       </Route>
       <Route
         path={AppRoute.ROOT}
@@ -100,6 +99,15 @@ const Router = (): JSX.Element => {
             element={
               <PageLayout isSidebarHidden>
                 <Orders />
+              </PageLayout>
+            }
+          />
+
+          <Route
+            path={AppRoute.DRIVER_ORDER}
+            element={
+              <PageLayout isSidebarHidden>
+                <DriverOrder />
               </PageLayout>
             }
           />
