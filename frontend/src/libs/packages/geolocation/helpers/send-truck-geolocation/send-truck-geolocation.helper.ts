@@ -1,4 +1,4 @@
-import { ServerSocketEvent } from '~/libs/packages/socket/libs/enums/enums.js';
+import { ClientToServerEvent } from '~/libs/packages/socket/libs/enums/enums.js';
 import { socket as socketService } from '~/libs/packages/socket/socket.js';
 
 const sendTruckGeolocation = (
@@ -6,10 +6,10 @@ const sendTruckGeolocation = (
   { coords }: GeolocationPosition,
 ): void => {
   socketService.emit({
-    event: ServerSocketEvent.TRUCK_LOCATION_UPDATE,
+    event: ClientToServerEvent.TRUCK_LOCATION_UPDATE,
     eventPayload: {
       truckId,
-      latLng: { latitude: coords.latitude, longitude: coords.longitude },
+      latLng: { lat: coords.latitude, lng: coords.longitude },
     },
   });
 };

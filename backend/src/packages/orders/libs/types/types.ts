@@ -11,7 +11,6 @@ export {
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntity,
-  type OrderFindByIdResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from 'shared/build/index.js';

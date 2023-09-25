@@ -4,20 +4,34 @@ import {
   type GeolocationLatLng,
 } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
+import { MailContent } from '~/libs/packages/mailer/libs/enums/enums.js';
 
 import { UserGroupKey } from '../auth/libs/enums/enums.js';
 import { DriverEntity } from '../drivers/driver.entity.js';
 import { type DriverRepository } from '../drivers/driver.repository.js';
 import {
-  type DriverAddPayload,
+  type DriverAddPayloadWithBusinessId,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
-  type DriverEntity as DriverEntityT,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
+  type DriverGetDriversPayloadWithBusinessId,
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
+import { TemplateName } from '../mail/libs/enums/enums.js';
+import { type DriverCredentialsViewRenderParameter } from '../mail/libs/views/driver-credentials/libs/types/types.js';
+import { mailService } from '../mail/mail.js';
+import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
+import { AuthApiPath } from './libs/enums/enums.js';
+import {
+  convertToDriverUser,
+  getFullName,
+  getFullPath,
+  getPasswordLength,
+  getRandomCharacter,
+} from './libs/helpers/helpers.js';
 
 class DriverService implements IService {
   private driverRepository: DriverRepository;
@@ -28,21 +42,26 @@ class DriverService implements IService {
 
   private geolocationCacheService: GeolocationCacheService;
 
+  private truckService: TruckService;
+
   public constructor({
     driverRepository,
     userService,
     groupService,
     geolocationCacheService,
+    truckService,
   }: {
     driverRepository: DriverRepository;
     userService: UserService;
     groupService: GroupService;
     geolocationCacheService: GeolocationCacheService;
+    truckService: TruckService;
   }) {
     this.driverRepository = driverRepository;
     this.userService = userService;
     this.groupService = groupService;
     this.geolocationCacheService = geolocationCacheService;
+    this.truckService = truckService;
   }
 
   public async getGeolocationById(id: number): Promise<GeolocationLatLng> {
@@ -79,21 +98,30 @@ class DriverService implements IService {
     return driver ? DriverEntity.initialize(driver).toObject() : null;
   }
 
-  public async findAllByBusinessId(
-    businessId: number,
-  ): Promise<DriverGetAllResponseDto> {
-    const items = await this.driverRepository.findAllByBusinessId(businessId);
+  public async findAllByBusinessId({
+    businessId,
+    query,
+  }: DriverGetDriversPayloadWithBusinessId): Promise<DriverGetAllResponseDto> {
+    const items = await this.driverRepository.findAllByBusinessId(
+      businessId,
+      query,
+    );
+    const total = await this.driverRepository.getTotal(businessId);
 
     return {
-      items: items.map((it) => it.toObject()),
+      items: items.map((item) => convertToDriverUser(item)),
+      total,
     };
   }
 
   public async create({
     payload,
     businessId,
-  }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
-    const { password, email, lastName, firstName, phone, driverLicenseNumber } =
+    reference,
+  }: DriverAddPayloadWithBusinessId & {
+    reference: string;
+  }): Promise<DriverAddResponseWithGroup> {
+    const { email, lastName, firstName, phone, driverLicenseNumber, truckIds } =
       payload;
 
     const { result: doesDriverExist } = await this.driverRepository.checkExists(
@@ -117,6 +145,8 @@ class DriverService implements IService {
       });
     }
 
+    const password = await this.generatePassword();
+
     const user = await this.userService.create({
       password,
       email,
@@ -136,7 +166,63 @@ class DriverService implements IService {
 
     const driverObject = driver.toObject();
 
-    return { ...user, ...driverObject, group };
+    const emailData: DriverCredentialsViewRenderParameter = {
+      name: getFullName(firstName, lastName),
+      email: email,
+      password: password,
+      signInLink: getFullPath(reference, AuthApiPath.SIGN_IN),
+    };
+
+    await mailService.sendPage(
+      { to: email, subject: MailContent.SUBJECT },
+      TemplateName.DRIVER_CREDENTIALS,
+      emailData,
+    );
+
+    await this.truckService.addTrucksToDriver(user.id, truckIds);
+
+    return {
+      ...user,
+      ...driverObject,
+      group,
+      possibleTruckIds: truckIds,
+    };
+  }
+
+  private async generatePassword(): Promise<string> {
+    const MIN_LENGTH = 6;
+    const MAX_LENGTH = 20;
+    const UPPER_CASE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const LOWER_CASE_CHARS = 'abcdefghijklmnopqrstuvwxyz';
+    const NUMBER_CHARS = '0123456789';
+    const HALF = 0.5;
+
+    const passwordLength = getPasswordLength(MIN_LENGTH, MAX_LENGTH);
+
+    const charSets = [LOWER_CASE_CHARS, UPPER_CASE_CHARS, NUMBER_CHARS].sort(
+      () => Math.random() - HALF,
+    );
+    let password = '';
+
+    for (const charSet of charSets) {
+      password += getRandomCharacter(charSet);
+    }
+
+    for (let index = charSets.length; index < passwordLength; index++) {
+      const characterSet = UPPER_CASE_CHARS + LOWER_CASE_CHARS + NUMBER_CHARS;
+
+      password += getRandomCharacter(characterSet);
+    }
+
+    const hasDigit = /\d/.test(password);
+    const hasUpperCaseLetter = /[A-Z]/.test(password);
+    const hasLowerCaseLetter = /[a-z]/.test(password);
+
+    if (!hasDigit || !hasUpperCaseLetter || !hasLowerCaseLetter) {
+      return await this.generatePassword();
+    }
+
+    return password;
   }
 
   public async update({

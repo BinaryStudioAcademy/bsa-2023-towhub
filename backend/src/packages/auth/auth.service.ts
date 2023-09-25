@@ -227,6 +227,10 @@ class AuthService {
     return user;
   }
 
+  public async logOut(user: UserEntityObjectWithGroupT): Promise<void> {
+    return await this.userService.removeAccessToken(user.id);
+  }
+
   public async generateAccessTokenAndUpdateUser(
     userId: UserEntityT['id'],
   ): Promise<UserEntityObjectT> {
