@@ -21,8 +21,6 @@ copy_files() {
   fi
 }
 
-# Copy mail layouts
-copy_files "./backend/src/packages/mail/libs/views/layouts" "./build/backend/packages/mail/libs/views/layouts"
 
 copy_and_clean "./backend/build" "./build/backend/"
 mkdir -p "./build/shared/"
@@ -33,4 +31,5 @@ copy_and_clean "./frontend/build" "./build/backend/public"
 # Copy package files
 cp "package.json" "package-lock.json" "./build/"
 
-
+# Copy mail layouts
+copy_files "./backend/src/packages/mail/libs/views/layouts" "./build/backend/packages/mail/libs/views/layouts"

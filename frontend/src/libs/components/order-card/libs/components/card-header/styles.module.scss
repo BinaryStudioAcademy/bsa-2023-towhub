@@ -1,0 +1,56 @@
+@import "src/assets/css/styles.scss";
+
+$row-gap-md: 1vmin;
+
+.header {
+  $side-padding: 2.25vmin;
+
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 3fr;
+  padding: 0 $side-padding 0 $side-padding;
+  column-gap: 2.25vmin;
+}
+
+.headerImageContainer {
+  display: grid;
+  place-content: center;
+  justify-self: center;
+}
+
+.headerInfoContainer {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  row-gap: $row-gap-md;
+}
+
+.headerTitleContainer {
+  display: grid;
+  align-items: end;
+}
+
+.headerSubtitleContainer {
+  display: grid;
+  align-items: start;
+}
+
+.subtitle {
+  $color: $grey-dark;
+}
+
+.noAvatar {
+  $size: 11vmin;
+
+  width: $size;
+  aspect-ratio: 1 / 1;
+  background-color: $body-background;
+  border-radius: 55px;
+}
+
+.profileImage {
+  $size: 11vmin;
+
+  width: $size;
+  aspect-ratio: 1 / 1;
+  border-radius: 55px;
+}
