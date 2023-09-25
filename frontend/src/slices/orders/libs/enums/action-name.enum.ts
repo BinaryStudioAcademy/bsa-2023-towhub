@@ -8,6 +8,6 @@ const ActionName = {
     UNSUBSCRIBE_ORDER_UPDATES: `${sliceName}/unsubscribe-order-updates`,
   },
   GET_ORDER_POINTS: `${sliceName}/get-order-points`,
-};
+} as const;
 
 export { ActionName };

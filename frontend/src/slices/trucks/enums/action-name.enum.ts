@@ -7,6 +7,6 @@ const ActionName = {
     UNSUBSCRIBE_TRUCK_UPDATES: `${sliceName}/unsubscribe-truck-updates`,
   },
   CALCULATE_ARRIVAL_TIME: `${sliceName}/calculate-arrival-time`,
-};
+} as const;
 
 export { ActionName };

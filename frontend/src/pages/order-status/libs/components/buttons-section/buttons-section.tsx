@@ -1,6 +1,6 @@
 import { Button } from '~/libs/components/components.js';
 
-import { OrderStatus } from '../../enums/order-status.enum.js';
+import { OrderStatus } from '../../enums/enums.js';
 import { type OrderStatusValues } from '../types/types.js';
 import styles from './styles.module.scss';
 
