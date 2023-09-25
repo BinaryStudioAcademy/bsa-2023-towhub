@@ -1,11 +1,16 @@
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
-import { MapService } from '~/libs/packages/map/map.js';
+import {
+  useAppDispatch,
+  useCallback,
+  useEffect,
+  useRef,
+} from '~/libs/hooks/hooks.js';
+import { DEFAULT_ZOOM } from '~/libs/packages/map/libs/constants/constants.js';
+import { type MapService } from '~/libs/packages/map/map.js';
+import { MapConnector } from '~/libs/packages/map/map-connector.package';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
 import styles from './styles.module.scss';
-
-const DEFAULT_ZOOM = 16;
 
 type Properties = {
   center?: google.maps.LatLngLiteral;
@@ -35,15 +40,18 @@ const Map: React.FC<Properties> = ({
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
+  const getMap = useCallback(async () => {
     if (mapReference.current) {
-      mapService.current = new MapService({
+      await MapConnector.getInstance();
+
+      mapService.current = new MapConnector().getMapService({
         mapElement: mapReference.current,
         center,
         zoom,
       });
 
       if (center && destination) {
+        mapService.current.removeMarkers();
         mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);
@@ -55,7 +63,11 @@ const Map: React.FC<Properties> = ({
         }
       }
     }
-  }, [center, zoom, destination, markers]);
+  }, [center, destination, markers, zoom]);
+
+  useEffect(() => {
+    void getMap();
+  }, [getMap]);
 
   useEffect(() => {
     if (pricePerKm && startAddress && endAddress) {

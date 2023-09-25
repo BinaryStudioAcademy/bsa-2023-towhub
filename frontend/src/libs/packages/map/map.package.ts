@@ -9,28 +9,75 @@ import {
 } from './libs/constants/constants.js';
 import { rotateImg } from './libs/helpers/rotate-img.helper.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
+import { type MapServiceParameters } from './libs/types/types.js';
 import mapStyle from './map.config.json';
 
-type Constructor = {
-  mapElement: HTMLDivElement;
-  center?: google.maps.LatLngLiteral;
-  zoom: number;
+type Constructor = MapServiceParameters & {
+  extraLibraries?: {
+    geocoding: google.maps.Geocoder;
+    routes: google.maps.DistanceMatrixService;
+    directionsService: google.maps.DirectionsService;
+    directionsRenderer: google.maps.DirectionsRenderer;
+  };
+  map: google.maps.Map | null;
+  markers: google.maps.Marker[];
+  setMap: (map: google.maps.Map) => void;
 };
 
 class MapService implements IMapService {
-  private map: google.maps.Map | null = null;
+  private map: google.maps.Map | null;
 
-  private directionsService: google.maps.DirectionsService;
+  private markers: google.maps.Marker[];
 
-  private directionsRenderer: google.maps.DirectionsRenderer;
+  private directionsService!: google.maps.DirectionsService;
 
-  public constructor({ mapElement, center, zoom }: Constructor) {
+  private directionsRenderer!: google.maps.DirectionsRenderer;
+
+  private geocoder!: google.maps.Geocoder;
+
+  private routes!: google.maps.DistanceMatrixService;
+
+  private setMap: (map: google.maps.Map) => void;
+
+  public constructor({
+    mapElement,
+    center,
+    zoom,
+    extraLibraries,
+    map,
+    markers,
+    setMap,
+  }: Constructor) {
+    this.map = map;
+    this.setMap = setMap;
+    this.markers = markers;
+
+    if (extraLibraries) {
+      this.geocoder = extraLibraries.geocoding;
+      this.routes = extraLibraries.routes;
+      this.directionsRenderer = extraLibraries.directionsRenderer;
+      this.directionsService = extraLibraries.directionsService;
+
+      if (mapElement && center && zoom) {
+        if (this.map) {
+          this.map.panTo(center);
+
+          return;
+        }
+
+        this.initMap(mapElement, center, zoom);
+      }
+
+      return;
+    }
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
     });
 
-    this.initMap(mapElement, center, zoom);
+    if (mapElement && center && zoom) {
+      this.initMap(mapElement, center, zoom);
+    }
   }
 
   private initMap(
@@ -47,6 +94,7 @@ class MapService implements IMapService {
       mapTypeControl: false,
       streetViewControl: false,
     });
+    this.setMap(this.map);
   }
 
   private throwIfMapNotInitialized(): void {
@@ -76,7 +124,7 @@ class MapService implements IMapService {
       this.directionsRenderer.setDirections(response);
 
       const angle = this.findAngle(response, origin);
-
+      this.removeMarkers();
       this.addMarker(origin, true, angle);
       this.addMarker(destination);
 
@@ -94,6 +142,50 @@ class MapService implements IMapService {
     } catch (error: unknown) {
       throw new ApplicationError({
         message: 'Error fetching directions',
+        cause: error,
+      });
+    }
+  }
+
+  public async getPointAddress(
+    point: google.maps.LatLngLiteral,
+  ): Promise<string> {
+    try {
+      const {
+        results: [result],
+      } = await this.geocoder.geocode({ location: point });
+
+      return result.formatted_address;
+    } catch (error: unknown) {
+      throw new ApplicationError({
+        message: 'Error decoding coordinates',
+        cause: error,
+      });
+    }
+  }
+
+  public async calculateDistanceAndDuration(
+    origin: google.maps.LatLngLiteral,
+    destination: google.maps.LatLngLiteral,
+  ): Promise<{
+    distance: { text: string; value: number };
+    duration: { text: string; value: number };
+  }> {
+    try {
+      const routes = await this.routes.getDistanceMatrix({
+        origins: [origin],
+        destinations: [destination],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false,
+      });
+      const firstRow = routes.rows[0].elements[0];
+
+      return { distance: firstRow.distance, duration: firstRow.duration };
+    } catch (error: unknown) {
+      throw new ApplicationError({
+        message: 'Error calculating distance and time',
         cause: error,
       });
     }
@@ -151,6 +243,12 @@ class MapService implements IMapService {
     return google.maps.geometry.spherical.computeHeading(origin, nextPoint);
   }
 
+  public removeMarkers(): void {
+    for (const marker of this.markers) {
+      marker.setMap(null);
+    }
+  }
+
   public addMarker(
     position: google.maps.LatLngLiteral,
     isOrigin = false,
@@ -160,7 +258,7 @@ class MapService implements IMapService {
 
     const rotatedIconUrl = rotateImg(truckImg, angle);
 
-    new google.maps.Marker({
+    const marker = new google.maps.Marker({
       position,
       map: this.map,
       icon: isOrigin
@@ -175,6 +273,7 @@ class MapService implements IMapService {
           }
         : undefined,
     });
+    this.markers.push(marker);
   }
 }
 

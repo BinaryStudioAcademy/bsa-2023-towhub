@@ -9,6 +9,10 @@ const ClientToServerEvent = {
   START_SHIFT: 'start_shift',
   AUTHORIZE_DRIVER: 'authorize_driver',
   BASE_EVENT: 'base_event',
+  SUBSCRIBE_ORDER_UPDATES: 'subscribe_order_updates',
+  SUBSCRIBE_TRUCK_UPDATES: 'subscribe_truck_updates',
+  UNSUBSCRIBE_ORDER_UPDATES: 'unsubscribe_order_updates',
+  UNSUBSCRIBE_TRUCK_UPDATES: 'unsubscribe_truck_updates',
 } as const;
 
 export { ClientToServerEvent };
