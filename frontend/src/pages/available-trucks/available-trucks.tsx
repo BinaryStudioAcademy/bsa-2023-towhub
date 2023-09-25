@@ -21,7 +21,7 @@ import {
 import { selectDataStatus, selectTrucks } from '~/slices/trucks/selectors.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
-import { AvailableTruckCard } from './components/components.js';
+import { AvailableTruckCard } from './libs/components/components.js';
 import styles from './styles.module.scss';
 
 const AvailableTrucks: React.FC = () => {

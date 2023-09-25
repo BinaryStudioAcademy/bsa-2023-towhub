@@ -78,7 +78,48 @@ const getRouteData = createAsyncThunk<
     origin: originName,
     destination: destinationName,
     distanceAndDuration,
+    startPoint: null,
+    endPoint: null,
   };
+});
+
+const getRouteDataFromAddresses = createAsyncThunk<
+  RouteData,
+  { origin: string; destination: string },
+  AsyncThunkConfig
+>(ActionName.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
+  const { mapServiceFactory } = extra;
+
+  const mapService = await mapServiceFactory({ mapElement: null });
+
+  const startPoint = await mapService.getAddressPoint(origin);
+  const endPoint = await mapService.getAddressPoint(destination);
+
+  const routeData = {
+    origin: startPoint,
+    destination: endPoint,
+  };
+
+  const distanceAndDuration = await mapService.calculateDistanceAndDuration(
+    routeData.origin,
+    routeData.destination,
+  );
+
+  return {
+    origin,
+    destination,
+    distanceAndDuration,
+    startPoint,
+    endPoint,
+  };
+});
+
+const createOrderFromSocket = createAsyncThunk<
+  OrderResponseDto,
+  OrderResponseDto,
+  AsyncThunkConfig
+>(ActionName.SOCKET.CREATE_ORDER, (order) => {
+  return order;
 });
 
 const updateOrderFromSocket = createAsyncThunk<
@@ -110,8 +151,10 @@ const unsubscribeOrderUpdates = createAction(
 export {
   calculateOrderPrice,
   createOrder,
+  createOrderFromSocket,
   getOrder,
   getRouteData,
+  getRouteDataFromAddresses,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,

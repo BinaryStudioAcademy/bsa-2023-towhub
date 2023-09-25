@@ -7,6 +7,7 @@ import { type OrderResponseDto } from '~/packages/orders/orders.js';
 import {
   calculateOrderPrice,
   createOrder,
+  createOrderFromSocket,
   getOrder,
   getRouteData,
   updateOrderFromSocket,
@@ -66,6 +67,9 @@ const { reducer, actions, name } = createSlice({
         state.dataStatus = DataStatus.REJECTED;
       })
       .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
+        state.currentOrder = action.payload;
+      })
+      .addCase(createOrderFromSocket.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
       })
       .addCase(getRouteData.pending, (state) => {

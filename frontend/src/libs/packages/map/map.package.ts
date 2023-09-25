@@ -164,6 +164,26 @@ class MapService implements IMapService {
     }
   }
 
+  public async getAddressPoint(
+    address: string,
+  ): Promise<google.maps.LatLngLiteral> {
+    try {
+      const {
+        results: [result],
+      } = await this.geocoder.geocode({ address: address });
+
+      return {
+        lat: result.geometry.location.lat(),
+        lng: result.geometry.location.lng(),
+      };
+    } catch (error: unknown) {
+      throw new ApplicationError({
+        message: 'Error decoding coordinates',
+        cause: error,
+      });
+    }
+  }
+
   public async calculateDistanceAndDuration(
     origin: google.maps.LatLngLiteral,
     destination: google.maps.LatLngLiteral,
