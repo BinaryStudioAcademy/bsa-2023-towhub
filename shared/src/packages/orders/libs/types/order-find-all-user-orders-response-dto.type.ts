@@ -1,8 +1,8 @@
 import { type OrderResponseDto } from './order-response-dto.type.js';
 
-type OrderFindAllUserOrdersResponse = {
+type OrderFindAllUserOrdersResponseDto = {
   items: OrderResponseDto[];
   total: number;
 };
 
-export { type OrderFindAllUserOrdersResponse };
+export { type OrderFindAllUserOrdersResponseDto };

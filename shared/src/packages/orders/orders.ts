@@ -11,7 +11,7 @@ export {
   type OrderCreateRequestDto,
   type OrderEntityT,
   type OrderFindAllUserOrdersQuery,
-  type OrderFindAllUserOrdersResponse,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,

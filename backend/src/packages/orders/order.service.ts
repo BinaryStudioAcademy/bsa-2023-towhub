@@ -13,7 +13,7 @@ import {
   type OrderCreateRequestDto,
   type OrderEntityT,
   type OrderFindAllUserOrdersQuery,
-  type OrderFindAllUserOrdersResponse,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
@@ -244,7 +244,7 @@ class OrderService implements Omit<IService, 'find'> {
   public async findAllUserOrders(
     userId: number,
     { status, ...query }: OrderFindAllUserOrdersQuery,
-  ): Promise<OrderFindAllUserOrdersResponse> {
+  ): Promise<OrderFindAllUserOrdersResponseDto> {
     const search = {
       userId,
       status,

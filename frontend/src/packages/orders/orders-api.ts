@@ -8,7 +8,7 @@ import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderFindAllUserOrdersResponse,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
 } from './libs/types/types.js';
 
@@ -41,7 +41,7 @@ class OrdersApi extends HttpApi {
 
   public async getAllUserOrders(
     queryString = '',
-  ): Promise<OrderFindAllUserOrdersResponse> {
+  ): Promise<OrderFindAllUserOrdersResponseDto> {
     const response = await this.load(
       this.getFullEndpoint(`${OrdersApiPath.USER}?${queryString}`, {}),
       {
@@ -51,7 +51,7 @@ class OrdersApi extends HttpApi {
       },
     );
 
-    return await response.json<OrderFindAllUserOrdersResponse>();
+    return await response.json<OrderFindAllUserOrdersResponseDto>();
   }
 
   public async calculatePrice(

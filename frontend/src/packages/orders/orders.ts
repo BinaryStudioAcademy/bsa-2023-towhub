@@ -10,7 +10,7 @@ export {
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntityT,
-  type OrderFindAllUserOrdersResponse,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderGetAllUserOrdersPayload,
   type OrderResponseDto,
 } from './libs/types/types.js';

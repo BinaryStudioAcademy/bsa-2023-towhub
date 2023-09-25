@@ -8,7 +8,7 @@ import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderFindAllUserOrdersResponse,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
 } from '~/packages/orders/orders.js';
 
@@ -45,7 +45,7 @@ const calculateOrderPrice = createAsyncThunk<
 });
 
 const getUserOrdersPage = createAsyncThunk<
-  OrderFindAllUserOrdersResponse,
+  OrderFindAllUserOrdersResponseDto,
   string | undefined,
   AsyncThunkConfig
 >(

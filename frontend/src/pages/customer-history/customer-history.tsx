@@ -17,7 +17,7 @@ import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parame
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 import { type SingleValue } from '~/libs/types/types.js';
 import {
-  type OrderFindAllUserOrdersResponse,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderStatus,
 } from '~/packages/orders/orders.js';
 import { getUserOrdersPage } from '~/slices/orders/actions.js';
@@ -44,7 +44,7 @@ const CustomerHistory: React.FC = () => {
   ) as Queries;
 
   const listHook = useAppTable<
-    OrderFindAllUserOrdersResponse,
+    OrderFindAllUserOrdersResponseDto,
     { status?: typeof OrderStatus }
   >({
     tableFetchCall: getUserOrdersPage,

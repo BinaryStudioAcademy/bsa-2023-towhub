@@ -17,7 +17,7 @@ import {
   type OrderCalculatePriceRequestDto,
   type OrderCreateRequestDto,
   type OrderFindAllUserOrdersQuery,
-  type OrderFindAllUserOrdersResponse,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
@@ -299,7 +299,7 @@ class OrderController extends Controller {
     this.addRoute({
       path: OrdersApiPath.USER,
       method: 'GET',
-      authStrategy: AuthStrategy.INJECT_USER,
+      authStrategy: AuthStrategy.VERIFY_JWT,
       validation: {
         query: orderFindAllUserOrdersQuery,
       },
@@ -665,7 +665,7 @@ class OrderController extends Controller {
       user: UserEntityObjectWithGroupT;
       query: OrderFindAllUserOrdersQuery;
     }>,
-  ): Promise<ApiHandlerResponse<OrderFindAllUserOrdersResponse>> {
+  ): Promise<ApiHandlerResponse<OrderFindAllUserOrdersResponseDto>> {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.findAllUserOrders(
