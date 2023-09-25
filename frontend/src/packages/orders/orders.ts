@@ -8,7 +8,7 @@ export {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderEntityT,
+  type OrderEntity,
   type OrderResponseDto,
 } from './types/types.js';
 export { orderCreateRequestBody } from './validation-schemas/validation-schemas.js';

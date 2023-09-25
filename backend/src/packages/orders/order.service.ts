@@ -1,6 +1,7 @@
 import { HttpMessage } from '~/libs/enums/enums.js';
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
+import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
@@ -11,7 +12,7 @@ import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
-  type OrderEntityT as OrderEntityT,
+  type OrderEntity as OrderEntityT,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
@@ -31,6 +32,8 @@ class OrderService implements Omit<IService, 'find'> {
 
   private userService: UserService;
 
+  private socketService: SocketService;
+
   public constructor({
     businessService,
     orderRepository,
@@ -38,6 +41,7 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService,
     truckService,
     userService,
+    socket,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
@@ -45,6 +49,7 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService: ShiftService;
     truckService: TruckService;
     userService: UserService;
+    socket: SocketService;
   }) {
     this.orderRepository = orderRepository;
 
@@ -57,6 +62,8 @@ class OrderService implements Omit<IService, 'find'> {
     this.truckService = truckService;
 
     this.userService = userService;
+
+    this.socketService = socket;
   }
 
   public async create(
@@ -220,7 +227,10 @@ class OrderService implements Omit<IService, 'find'> {
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     };
 
-    return OrderEntity.initialize(orderExtended).toObject();
+    const order = OrderEntity.initialize(orderExtended).toObject();
+    this.socketService.notifyOrderUpdate(order.id, order);
+
+    return order;
   }
 
   public async findAllBusinessOrders(
