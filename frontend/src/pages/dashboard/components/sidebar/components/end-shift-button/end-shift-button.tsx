@@ -1,12 +1,12 @@
 import { Button } from '~/libs/components/components.js';
-import { IconName } from '~/libs/enums/icon-name.enum';
+import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppSelector,
   useCallback,
 } from '~/libs/hooks/hooks.js';
-import { manufacturerKeyToReadableName } from '~/packages/trucks/libs/maps/manufacturer-key-to-readable-name.map';
+import { manufacturerKeyToReadableName } from '~/packages/trucks/libs/maps/manufacturer-key-to-readable-name.map.js';
 import { actions as driverActions } from '~/slices/driver/driver.js';
 import { ShiftStatus } from '~/slices/driver/libs/enums/enums.js';
 import {
