@@ -164,9 +164,11 @@ class DriverRepository implements IRepository {
       .returning()
       .execute();
 
-    const [item] = await this.find({ id: pureDriver.id });
-
-    return DriverEntity.initialize(item);
+    return DriverEntity.initialize({
+      ...pureDriver,
+      createdAt: new Date(createdAt).toISOString(),
+      verificationStatus: null,
+    });
   }
 
   public async delete(id: number): Promise<boolean> {

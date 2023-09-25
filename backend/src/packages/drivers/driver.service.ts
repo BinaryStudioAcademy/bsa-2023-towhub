@@ -203,7 +203,12 @@ class DriverService implements IService {
   public async update({
     driverId,
     payload,
-  }: DriverUpdatePayload): Promise<DriverCreateUpdateResponseDto> {
+  }: {
+    driverId: DriverUpdatePayload['driverId'];
+    payload: DriverUpdatePayload['payload'] & {
+      driverLicenseFileId: DriverEntityT['driverLicenseFileId'];
+    };
+  }): Promise<DriverCreateUpdateResponseDto> {
     const { password, email, lastName, firstName, phone, driverLicenseNumber } =
       payload;
 

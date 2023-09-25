@@ -244,7 +244,7 @@ class BusinessService implements IService {
     driverId,
     ownerId,
   }: {
-    payload: DriverCreateUpdateRequestDto;
+    payload: DriverCreateUpdateRequestDto & { files: MultipartParsedFile[] };
     driverId: number;
     ownerId: number;
   }): Promise<DriverCreateUpdateResponseDto> {
@@ -257,10 +257,41 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.update({
+    const driverToUpdate = await this.driverService.findById(driverId);
+
+    if (!driverToUpdate) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
+
+    await this.fileVerificationStatusService.deleteByFileId(
+      driverToUpdate.driverLicenseFileId,
+    );
+
+    const newLicenseFile = await this.fileService.create(payload.files[0]);
+
+    const updatedDriver = await this.driverService.update({
       driverId,
-      payload,
+      payload: {
+        ...payload,
+        driverLicenseFileId: newLicenseFile.id,
+      },
     });
+
+    const { id, status, name, message } =
+      await this.fileVerificationStatusService.create({
+        fileId: newLicenseFile.id,
+        name: FileVerificationName.DRIVER_LICENSE_SCAN,
+      });
+
+    await this.fileService.delete(driverToUpdate.driverLicenseFileId);
+
+    return {
+      ...updatedDriver,
+      verificationStatus: { id, status, name, message },
+    };
   }
 
   public async findAllDriversByBusinessId({

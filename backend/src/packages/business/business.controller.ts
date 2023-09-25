@@ -345,7 +345,9 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.updateDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateUpdateRequestDto;
+            body: DriverCreateUpdateRequestDto & {
+              files: MultipartParsedFile[];
+            };
             params: DriverRequestParameters;
             user: UserEntityObjectWithGroupT;
           }>,
@@ -726,7 +728,7 @@ class BusinessController extends Controller {
 
   private async updateDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateUpdateRequestDto;
+      body: DriverCreateUpdateRequestDto & { files: MultipartParsedFile[] };
       params: DriverRequestParameters;
       user: UserEntityObjectWithGroupT;
     }>,
