@@ -11,6 +11,7 @@ import {
 import { socketTryRemoveDriverListeners } from '~/libs/packages/socket/libs/helpers/helpers.js';
 import { socket } from '~/libs/packages/socket/socket.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
+import { OrderStatus } from '~/pages/order-status/order-status.js';
 import {
   Auth,
   Dashboard,
@@ -49,6 +50,7 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.SIGN_UP_BUSINESS} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP_CUSTOMER} element={<Auth />} />
         <Route path={AppRoute.ORDER} element={<Order />} />
+        <Route path={AppRoute.ORDER_STATUS} element={<OrderStatus />} />
         <Route path={AppRoute.TEST} element={<TestPage />} />
       </Route>
       <Route
