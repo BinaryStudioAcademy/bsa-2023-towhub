@@ -18,8 +18,12 @@ import {
 import { type UserService } from '~/packages/users/user.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
-import { UserGroupKey } from './libs/enums/enums.js';
-import { createUnauthorizedError } from './libs/helpers/helpers.js';
+import { TimeConstants, UserGroupKey } from './libs/enums/enums.js';
+import {
+  createUnauthorizedError,
+  getLifetimeInMilliseconds,
+  getTimeDifferenceInMilliseconds,
+} from './libs/helpers/helpers.js';
 import { type UserSignInRequestDto } from './libs/types/types.js';
 
 type AuthServiceConstructorProperties = {
@@ -255,15 +259,13 @@ class AuthService {
     }
 
     const currentTimestamp = Date.now();
-    const tokenIssuedAtTimestamp = payload.iat * 1000;
-    const timeDifferenceInMilliseconds = Math.abs(
-      currentTimestamp - tokenIssuedAtTimestamp,
+    const tokenIssuedAtTimestamp =
+      payload.iat * TimeConstants.MILLISECONDS_IN_SECOND;
+
+    return (
+      getLifetimeInMilliseconds(accessLifetime) >=
+      getTimeDifferenceInMilliseconds(currentTimestamp, tokenIssuedAtTimestamp)
     );
-
-    const lifetimeInMilliseconds =
-      Number.parseInt(accessLifetime) * 60 * 60 * 1000;
-
-    return lifetimeInMilliseconds >= timeDifferenceInMilliseconds;
   }
 }
 
