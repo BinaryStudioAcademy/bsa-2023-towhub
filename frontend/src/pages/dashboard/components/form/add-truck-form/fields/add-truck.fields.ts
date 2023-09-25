@@ -47,6 +47,7 @@ const ADD_TRUCK_FIELDS: FormField<
     name: FormName.YEAR,
     min: TruckYear.MIN,
     max: TruckYear.MAX,
+    placeholder: 'Enter a year starting from 2000',
   },
   {
     id: FormLabel.LICENSE_PLATE,
@@ -61,6 +62,7 @@ const ADD_TRUCK_FIELDS: FormField<
     label: FormLabel.CAPACITY,
     name: FormName.CAPACITY,
     min: TruckCapacity.MIN,
+    placeholder: 'Enter the capacity in tons',
   },
   {
     id: FormLabel.PRICE_PER_KM,
@@ -70,6 +72,7 @@ const ADD_TRUCK_FIELDS: FormField<
     min: TruckPricePerKm.MIN,
     max: TruckPricePerKm.MAX,
     step: TruckPricePerKm.STEP,
+    placeholder: 'Enter the payment per kilometer in USD',
   },
 ];
 
