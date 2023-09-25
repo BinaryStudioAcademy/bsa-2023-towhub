@@ -1,6 +1,7 @@
 import { type ColumnDef } from '@tanstack/react-table';
 import { getFullName } from 'shared/build';
 
+import { ImgPath } from '~/libs/enums/enums.js';
 import { type DriverWithUserData } from '~/libs/types/types.js';
 
 const columns: ColumnDef<DriverWithUserData>[] = [
@@ -13,9 +14,9 @@ const columns: ColumnDef<DriverWithUserData>[] = [
   },
   {
     header: 'Photo',
-    accessorFn: (driver: DriverWithUserData) =>
-      driver.driver.avatarUrl ??
-      'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png',
+    accessorFn: (driver: DriverWithUserData): string => {
+      return driver.driver.avatarUrl ?? ImgPath.AVATAR_DEFAULT;
+    },
     footer: 'Photo',
     size: 180,
     cell: ({ getValue }) => (

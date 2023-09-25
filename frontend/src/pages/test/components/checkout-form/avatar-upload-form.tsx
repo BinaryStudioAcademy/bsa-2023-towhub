@@ -1,4 +1,5 @@
 import { Button, ImageSelector } from '~/libs/components/components.js';
+import { ImgPath } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppForm,
@@ -49,10 +50,7 @@ const AvatarUploadForm: React.FC = () => {
               width={250}
               height={250}
               viewMode="circle"
-              initialImageUrl={
-                avatarUrl ??
-                'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png'
-              }
+              initialImageUrl={avatarUrl ?? ImgPath.AVATAR_DEFAULT}
               resultOptions={{ circle: true }}
             />
           </div>
