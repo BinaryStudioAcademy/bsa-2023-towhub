@@ -1,31 +1,31 @@
-import { type Libraries, LoadScript } from '@react-google-maps/api';
-
-import { Map, OrderList } from '~/libs/components/components.js';
+import { OrderList } from '~/libs/components/components.js';
 import { jsonToLatLngLiteral } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
+  useAppMap,
   useAppSelector,
   useEffect,
+  useRef,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { config } from '~/libs/packages/config/config.js';
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import { actions as ordersActions } from '~/slices/orders/orders.js';
 import { selectOrders } from '~/slices/orders/selectors.js';
 
 import styles from './styles.module.scss';
 
-const libraries: Libraries = ['places'];
-
 const Orders: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const orders = useAppSelector(selectOrders);
 
-  const [endPointMarkers, setEndPointMarkers] =
-    useState<google.maps.LatLngLiteral[]>();
+  const [endPointMarkers, setEndPointMarkers] = useState<
+    google.maps.LatLngLiteral[]
+  >([]);
 
   const [shownRoute, setShownRoute] = useState<PlaceLatLng>();
+
+  const mapReference = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     void dispatch(ordersActions.getBusinessOrders());
@@ -37,26 +37,25 @@ const Orders: React.FC = () => {
     );
   }, [orders]);
 
+  useAppMap({
+    mapReference: mapReference,
+    points: endPointMarkers,
+    shownRoute,
+    center: null,
+    destination: null,
+  });
+
   return (
     <div className={styles.orders}>
-      <LoadScript
-        googleMapsApiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
-        libraries={libraries}
-      >
-        <div className={styles.orderlistArea}>
-          <div>Filter</div>
-          <OrderList orders={orders} select={setShownRoute} />
+      <div className={styles.orderlistArea}>
+        <div>Filter</div>
+        <OrderList orders={orders} select={setShownRoute} />
+      </div>
+      <div className={styles.mapArea}>
+        <div className={styles.mapWrapper}>
+          <div ref={mapReference} id="map" className={styles.mapWrapper} />
         </div>
-        <div className={styles.mapArea}>
-          <div className={styles.mapWrapper}>
-            <Map
-              className={styles.map}
-              markers={endPointMarkers}
-              shownRoute={shownRoute}
-            />
-          </div>
-        </div>
-      </LoadScript>
+      </div>
     </div>
   );
 };

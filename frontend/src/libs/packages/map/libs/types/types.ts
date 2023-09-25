@@ -10,6 +10,7 @@ type PlaceLatLng = {
   endPoint: google.maps.LatLngLiteral;
 };
 
+export { type MapServiceParameters } from './map-service-parameters.type.js';
 export {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,

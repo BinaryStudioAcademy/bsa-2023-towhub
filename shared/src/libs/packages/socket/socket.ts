@@ -1,5 +1,6 @@
 export {
   ClientToServerEvent,
+  RoomPrefix,
   ServerToClientEvent,
   ServerToClientResponseStatus,
   SocketError,

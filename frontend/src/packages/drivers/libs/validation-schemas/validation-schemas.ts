@@ -1,1 +1,1 @@
-export { driverCreateUpdateRequestBody } from 'shared/build/index.js';
+export { driverCreateRequestBody } from 'shared/build/index.js';

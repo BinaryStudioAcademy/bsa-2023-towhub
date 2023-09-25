@@ -1,9 +1,15 @@
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
-import { MapService } from '~/libs/packages/map/map.js';
+import {
+  useAppDispatch,
+  useCallback,
+  useEffect,
+  useRef,
+} from '~/libs/hooks/hooks.js';
+import { DEFAULT_ZOOM } from '~/libs/packages/map/libs/constants/constants.js';
+import { type MapService } from '~/libs/packages/map/map.js';
+import { MapConnector } from '~/libs/packages/map/map-connector.package';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
-import { DEFAULT_ZOOM } from './libs/constants/constants.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -12,10 +18,6 @@ type Properties = {
   destination?: google.maps.LatLngLiteral;
   className?: string;
   markers?: google.maps.LatLngLiteral[];
-  shownRoute?: {
-    startPoint: google.maps.LatLngLiteral;
-    endPoint: google.maps.LatLngLiteral;
-  };
   pricePerKm?: number;
   startAddress?: string;
   endAddress?: string;
@@ -31,7 +33,6 @@ const Map: React.FC<Properties> = ({
   pricePerKm,
   startAddress,
   endAddress,
-  shownRoute,
 }: Properties) => {
   const mapReference = useRef<HTMLDivElement>(null);
   const mapService = useRef<MapService | null>(null);
@@ -39,39 +40,34 @@ const Map: React.FC<Properties> = ({
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (!mapReference.current) {
-      return;
-    }
+  const getMap = useCallback(async () => {
+    if (mapReference.current) {
+      await MapConnector.getInstance();
 
-    if (!center && markers.length > 0) {
-      const bounds = new google.maps.LatLngBounds();
-
-      for (const marker of markers) {
-        bounds.extend(marker);
-      }
-
-      mapService.current = new MapService({
+      mapService.current = new MapConnector().getMapService({
         mapElement: mapReference.current,
+        center,
         zoom,
-        bounds,
       });
 
-      return;
+      if (center && destination) {
+        mapService.current.removeMarkers();
+        mapService.current.addMarker(destination);
+
+        void mapService.current.calculateRouteAndTime(center, destination);
+      }
+
+      if (markers.length > 0) {
+        for (const marker of markers) {
+          mapService.current.addMarker(marker, true);
+        }
+      }
     }
+  }, [center, destination, markers, zoom]);
 
-    mapService.current = new MapService({
-      mapElement: mapReference.current,
-      center,
-      zoom,
-    });
-
-    if (center && destination) {
-      mapService.current.addMarker(destination);
-
-      void mapService.current.calculateRouteAndTime(center, destination);
-    }
-  }, [center, zoom, destination, markers]);
+  useEffect(() => {
+    void getMap();
+  }, [getMap]);
 
   useEffect(() => {
     if (pricePerKm && startAddress && endAddress) {
@@ -84,18 +80,6 @@ const Map: React.FC<Properties> = ({
       );
     }
   }, [dispatch, endAddress, startAddress, pricePerKm]);
-
-  useEffect(() => {
-    if (markers.length > 0) {
-      for (const marker of markers) {
-        mapService.current?.addMarker(marker, false);
-      }
-
-      if (shownRoute) {
-        void mapService.current?.addRoute(shownRoute);
-      }
-    }
-  }, [markers, shownRoute]);
 
   return <div ref={mapReference} id="map" className={mapClasses} />;
 };

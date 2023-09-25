@@ -10,9 +10,10 @@ import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import {
   type DriverAddResponseWithGroup,
-  type DriverCreateUpdateRequestDto,
+  type DriverCreateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
+  type DriverUpdateRequestDto,
 } from '../drivers/drivers.js';
 import { type ShiftEntityT } from '../shifts/shift.js';
 import {
@@ -175,8 +176,9 @@ class BusinessService implements IService {
   }
 
   public async createDriver(
-    payload: DriverCreateUpdateRequestDto,
+    payload: DriverCreateRequestDto,
     ownerId: number,
+    reference: string,
   ): Promise<DriverAddResponseWithGroup> {
     const business = await this.findByOwnerId(ownerId);
 
@@ -190,11 +192,12 @@ class BusinessService implements IService {
     return await this.driverService.create({
       payload,
       businessId: business.id,
+      reference,
     });
   }
 
   public async updateDriver(
-    payload: DriverCreateUpdateRequestDto,
+    payload: DriverUpdateRequestDto,
     driverId: number,
     ownerId: number,
   ): Promise<DriverCreateUpdateResponseDto> {

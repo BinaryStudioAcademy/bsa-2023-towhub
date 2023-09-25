@@ -1,31 +1,98 @@
+import truckImg from '~/assets/img/tow-truck-small.svg';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 
-import { MAP_INFO_WINDOW_WIDTH } from './libs/constants/constants.js';
-import { createIcon } from './libs/helpers/helpers.js';
+import {
+  MAP_INFO_WINDOW_WIDTH,
+  TRUCK_IMG_ANCHOR_X,
+  TRUCK_IMG_ANCHOR_Y,
+  TRUCK_IMG_HEIGHT,
+  TRUCK_IMG_WIDTH,
+} from './libs/constants/constants.js';
+import { rotateImg } from './libs/helpers/rotate-img.helper.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
-import { type PlaceLatLng } from './libs/types/types.js';
+import {
+  type MapServiceParameters,
+  type PlaceLatLng,
+} from './libs/types/types.js';
 import mapStyle from './map.config.json';
 
-type MapOptions = {
-  mapElement: HTMLDivElement;
-  center?: google.maps.LatLngLiteral;
-  zoom: number;
+type Constructor = MapServiceParameters & {
+  extraLibraries?: {
+    geocoding: google.maps.Geocoder;
+    routes: google.maps.DistanceMatrixService;
+    directionsService: google.maps.DirectionsService;
+    directionsRenderer: google.maps.DirectionsRenderer;
+    infoWindow: google.maps.InfoWindow;
+  };
+  map: google.maps.Map | null;
+  markers: google.maps.Marker[];
   bounds?: google.maps.LatLngBounds;
+  setMap: (map: google.maps.Map) => void;
 };
 
-// NOTE: The map is supposed to accept either the center or the bounds (if the center is unknown)
 class MapService implements IMapService {
-  private map: google.maps.Map | null = null;
+  private map: google.maps.Map | null;
 
-  private directionsService: google.maps.DirectionsService;
+  private markers: google.maps.Marker[];
 
-  private directionsRenderer: google.maps.DirectionsRenderer;
+  private directionsService!: google.maps.DirectionsService;
+
+  private directionsRenderer!: google.maps.DirectionsRenderer;
+
+  private geocoder!: google.maps.Geocoder;
+
+  private routes!: google.maps.DistanceMatrixService;
 
   private infoWindow: google.maps.InfoWindow;
 
-  private geoCoder: google.maps.Geocoder;
+  private setMap: (map: google.maps.Map) => void;
 
-  public constructor({ mapElement, center, zoom, bounds }: MapOptions) {
+  public constructor({
+    mapElement,
+    center,
+    zoom,
+    extraLibraries,
+    map,
+    bounds,
+    markers,
+    setMap,
+  }: Constructor) {
+    this.map = map;
+    this.setMap = setMap;
+    this.markers = markers;
+
+    const init = (): void => {
+      if (mapElement && center && zoom) {
+        if (this.map) {
+          this.map.panTo(center);
+
+          return;
+        }
+        this.initMap(mapElement, center, zoom);
+      }
+
+      if (mapElement && bounds && zoom) {
+        if (this.map) {
+          this.map.fitBounds(bounds);
+
+          return;
+        }
+
+        this.initMapBounds(mapElement, bounds, zoom);
+      }
+    };
+
+    if (extraLibraries) {
+      this.geocoder = extraLibraries.geocoding;
+      this.routes = extraLibraries.routes;
+      this.directionsRenderer = extraLibraries.directionsRenderer;
+      this.directionsService = extraLibraries.directionsService;
+      this.infoWindow = extraLibraries.infoWindow;
+
+      init();
+
+      return;
+    }
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
@@ -33,25 +100,15 @@ class MapService implements IMapService {
     this.infoWindow = new google.maps.InfoWindow({
       maxWidth: MAP_INFO_WINDOW_WIDTH,
     });
-    this.geoCoder = new google.maps.Geocoder();
 
-    this.initMap({ mapElement, center, zoom, bounds });
+    init();
   }
 
-  private initMap({ mapElement, center, zoom, bounds }: MapOptions): void {
-    if (!center && bounds) {
-      this.map = new google.maps.Map(mapElement, {
-        zoom,
-        styles: mapStyle as google.maps.MapTypeStyle[],
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullscreenControl: false,
-      });
-      this.map.fitBounds(bounds);
-
-      return;
-    }
-
+  private initMap(
+    mapElement: HTMLDivElement,
+    center?: google.maps.LatLngLiteral,
+    zoom?: number,
+  ): void {
     this.map = new google.maps.Map(mapElement, {
       center,
       zoom,
@@ -61,6 +118,24 @@ class MapService implements IMapService {
       mapTypeControl: false,
       streetViewControl: false,
     });
+    this.setMap(this.map);
+  }
+
+  private initMapBounds(
+    mapElement: HTMLDivElement,
+    bounds: google.maps.LatLngBounds,
+    zoom?: number,
+  ): void {
+    this.map = new google.maps.Map(mapElement, {
+      zoom,
+      styles: mapStyle as google.maps.MapTypeStyle[],
+      disableDefaultUI: true,
+      fullscreenControl: true,
+      mapTypeControl: false,
+      streetViewControl: false,
+    });
+    this.map.fitBounds(bounds);
+    this.setMap(this.map);
   }
 
   private throwIfMapNotInitialized(): void {
@@ -90,7 +165,7 @@ class MapService implements IMapService {
       this.directionsRenderer.setDirections(response);
 
       const angle = this.findAngle(response, origin);
-
+      this.removeMarkers();
       this.addMarker(origin, true, angle);
       this.addMarker(destination);
 
@@ -108,6 +183,50 @@ class MapService implements IMapService {
     } catch (error: unknown) {
       throw new ApplicationError({
         message: 'Error fetching directions',
+        cause: error,
+      });
+    }
+  }
+
+  public async getPointAddress(
+    point: google.maps.LatLngLiteral,
+  ): Promise<string> {
+    try {
+      const {
+        results: [result],
+      } = await this.geocoder.geocode({ location: point });
+
+      return result.formatted_address;
+    } catch (error: unknown) {
+      throw new ApplicationError({
+        message: 'Error decoding coordinates',
+        cause: error,
+      });
+    }
+  }
+
+  public async calculateDistanceAndDuration(
+    origin: google.maps.LatLngLiteral,
+    destination: google.maps.LatLngLiteral,
+  ): Promise<{
+    distance: { text: string; value: number };
+    duration: { text: string; value: number };
+  }> {
+    try {
+      const routes = await this.routes.getDistanceMatrix({
+        origins: [origin],
+        destinations: [destination],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false,
+      });
+      const firstRow = routes.rows[0].elements[0];
+
+      return { distance: firstRow.distance, duration: firstRow.duration };
+    } catch (error: unknown) {
+      throw new ApplicationError({
+        message: 'Error calculating distance and time',
         cause: error,
       });
     }
@@ -165,6 +284,16 @@ class MapService implements IMapService {
     return google.maps.geometry.spherical.computeHeading(origin, nextPoint);
   }
 
+  public removeMarkers(): void {
+    for (const marker of this.markers) {
+      marker.setMap(null);
+    }
+  }
+
+  public fitMap(bounds: google.maps.LatLngBounds): void {
+    this.map?.fitBounds(bounds);
+  }
+
   public addMarker(
     position: google.maps.LatLngLiteral,
     isOrigin = false,
@@ -172,11 +301,26 @@ class MapService implements IMapService {
   ): google.maps.Marker {
     this.throwIfMapNotInitialized();
 
-    return new google.maps.Marker({
+    const rotatedIconUrl = rotateImg(truckImg, angle);
+
+    const marker = new google.maps.Marker({
       position,
       map: this.map,
-      icon: createIcon(isOrigin, angle),
+      icon: isOrigin
+        ? {
+            url: rotatedIconUrl,
+            anchor: new google.maps.Point(
+              TRUCK_IMG_ANCHOR_X,
+              TRUCK_IMG_ANCHOR_Y,
+            ),
+            size: new google.maps.Size(TRUCK_IMG_WIDTH, TRUCK_IMG_HEIGHT),
+            scale: 1,
+          }
+        : truckImg,
     });
+    this.markers.push(marker);
+
+    return marker;
   }
 
   public async addRoute({ startPoint, endPoint }: PlaceLatLng): Promise<void> {
@@ -202,23 +346,11 @@ class MapService implements IMapService {
   }: PlaceLatLng): Promise<void> {
     const anchor = this.addMarker(endPoint, false);
 
-    const startAddress = await this.getAddress(startPoint);
-    const endAddress = await this.getAddress(endPoint);
+    const startAddress = await this.getPointAddress(startPoint);
+    const endAddress = await this.getPointAddress(endPoint);
 
     this.infoWindow.setContent(`${startAddress} → ${endAddress}`);
     this.infoWindow.open({ map: this.map, anchor });
-  }
-
-  public async getAddress(place: google.maps.LatLngLiteral): Promise<string> {
-    this.throwIfMapNotInitialized();
-
-    const result: google.maps.GeocoderResponse = await this.geoCoder.geocode({
-      location: place,
-    });
-
-    const [address] = result.results;
-
-    return address.formatted_address;
   }
 }
 

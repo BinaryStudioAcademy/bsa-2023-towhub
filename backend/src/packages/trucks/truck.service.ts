@@ -105,8 +105,19 @@ class TruckService implements IService {
     userId: number,
     truckIds: number[],
   ): Promise<void> {
-    const uniqueItems = [...new Set(truckIds)];
-    const driverTrucks: DriverHaveAccessToTruck[] = uniqueItems.map(
+    if (truckIds.length === 0) {
+      return;
+    }
+
+    const existingTrucks = await this.repository.getTrucksByUserId(userId);
+
+    const uniqueTruckIds = [...new Set(truckIds)];
+
+    const filteredTruckIds = uniqueTruckIds.filter(
+      (truckId) => !existingTrucks.some((it) => it.truckId === truckId),
+    );
+
+    const driverTrucks: DriverHaveAccessToTruck[] = filteredTruckIds.map(
       (truckId) => ({
         userId,
         truckId,
