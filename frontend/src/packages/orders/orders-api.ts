@@ -56,6 +56,19 @@ class OrdersApi extends HttpApi {
     return await response.json<OrderCalculatePriceResponseDto>();
   }
 
+  public async getOrder(orderId: string): Promise<OrderResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(OrdersApiPath.$ID, { id: orderId }),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<OrderResponseDto>();
+  }
+
   public async changeAcceptOrderStatusByDriver(
     orderId: string,
     payload: OrderUpdateAcceptStatusRequestDto,
@@ -66,6 +79,7 @@ class OrdersApi extends HttpApi {
         method: 'PATCH',
         contentType: ContentType.JSON,
         payload: JSON.stringify(payload),
+
         hasAuth: true,
       },
     );

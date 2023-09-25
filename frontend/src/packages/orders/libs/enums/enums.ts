@@ -1,1 +1,1 @@
-export { OrdersApiPath, ServerSocketEvent } from 'shared/build/index.js';
+export { OrdersApiPath, ServerToClientEvent } from 'shared/build/index.js';

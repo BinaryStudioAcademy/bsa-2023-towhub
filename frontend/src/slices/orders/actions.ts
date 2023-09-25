@@ -14,7 +14,9 @@ import {
   type OrderResponseDto,
 } from '~/packages/orders/orders.js';
 
-import { ActionNames } from './libs/enums/enums.js';
+import { ActionName } from './libs/enums/enums.js';
+import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.helper.js';
+import { type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
 const changeAcceptOrderStatusByDriver = createAsyncThunk<
@@ -22,7 +24,7 @@ const changeAcceptOrderStatusByDriver = createAsyncThunk<
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
   AsyncThunkConfig
 >(
-  ActionNames.CHANGE_ACCEPT_ORDER_STATUS,
+  ActionName.CHANGE_ACCEPT_ORDER_STATUS,
   ({ isAccepted, orderId }, { extra }) => {
     const { ordersApi } = extra;
 
@@ -35,37 +37,11 @@ const changeAcceptOrderStatusByCustomer = createAsyncThunk<
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
   AsyncThunkConfig
 >(
-  ActionNames.CHANGE_ACCEPT_ORDER_STATUS,
+  ActionName.CHANGE_ACCEPT_ORDER_STATUS,
   ({ isAccepted, orderId }, { extra }) => {
     const { ordersApi } = extra;
 
     return ordersApi.changeAcceptOrderStatusByCustomer(orderId, { isAccepted });
-  },
-);
-
-const updateOrderFromSocket = createAsyncThunk<
-  OrderResponseDto,
-  OrderResponseDto,
-  AsyncThunkConfig
->(ActionNames.SOCKET.UPDATE_ORDER, (order) => {
-  return order;
-});
-
-const listenOrderUpdates = createAction(
-  ActionNames.SOCKET.LISTEN_ORDER_UPDATES,
-  (orderId: string) => {
-    return {
-      payload: `${orderId}`,
-    };
-  },
-);
-
-const stopListenOrderUpdates = createAction(
-  ActionNames.SOCKET.STOP_LISTEN_ORDER_UPDATES,
-  (orderId: string) => {
-    return {
-      payload: orderId,
-    };
   },
 );
 
@@ -98,12 +74,77 @@ const calculateOrderPrice = createAsyncThunk<
   return ordersApi.calculatePrice(payload);
 });
 
+const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
+  ActionName.GET_ORDER,
+  (orderId, { extra }) => {
+    const { ordersApi } = extra;
+
+    return ordersApi.getOrder(orderId);
+  },
+);
+
+const getRouteData = createAsyncThunk<
+  RouteData,
+  { origin: string; destination: string },
+  AsyncThunkConfig
+>(ActionName.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
+  const { mapServiceFactory } = extra;
+  const routeData = {
+    origin: jsonToLatLngLiteral(origin),
+    destination: jsonToLatLngLiteral(destination),
+  };
+
+  const mapService = await mapServiceFactory({ mapElement: null });
+  const [originName, destinationName, distanceAndDuration] = await Promise.all([
+    mapService.getPointAddress(routeData.origin),
+    mapService.getPointAddress(routeData.destination),
+    mapService.calculateDistanceAndDuration(
+      routeData.origin,
+      routeData.destination,
+    ),
+  ]);
+
+  return {
+    origin: originName,
+    destination: destinationName,
+    distanceAndDuration,
+  };
+});
+
+const updateOrderFromSocket = createAsyncThunk<
+  OrderResponseDto,
+  OrderResponseDto,
+  AsyncThunkConfig
+>(ActionName.SOCKET.UPDATE_ORDER, (order) => {
+  return order;
+});
+
+const subscribeOrderUpdates = createAction(
+  ActionName.SOCKET.SUBSCRIBE_ORDER_UPDATES,
+  (orderId: string) => {
+    return {
+      payload: `${orderId}`,
+    };
+  },
+);
+
+const unsubscribeOrderUpdates = createAction(
+  ActionName.SOCKET.UNSUBSCRIBE_ORDER_UPDATES,
+  (orderId: string) => {
+    return {
+      payload: `${orderId}`,
+    };
+  },
+);
+
 export {
   calculateOrderPrice,
   changeAcceptOrderStatusByCustomer,
   changeAcceptOrderStatusByDriver,
   createOrder,
-  listenOrderUpdates,
-  stopListenOrderUpdates,
+  getOrder,
+  getRouteData,
+  subscribeOrderUpdates,
+  unsubscribeOrderUpdates,
   updateOrderFromSocket,
 };

@@ -2,7 +2,7 @@ export { ShiftsApiPath, ShiftValidationMessage } from './libs/enums/enums.js';
 export {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftEntity,
+  type ShiftEntityT,
   type ShiftResponseDto,
 } from './libs/types/types.js';
 export {

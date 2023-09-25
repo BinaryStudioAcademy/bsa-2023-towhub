@@ -18,9 +18,9 @@ const orderService = new OrderService({
   businessService,
   driverService,
   shiftService,
-  socket,
   truckService,
   userService,
+  socket,
 });
 const orderController = new OrderController({
   logger,

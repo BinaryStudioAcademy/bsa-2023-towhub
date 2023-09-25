@@ -1,8 +1,7 @@
-import { type DriverCreateUpdateRequestDto } from '../types.js';
+import { type DriverCreateRequestDto } from '../types.js';
 
 type DriverAddPayload = {
-  payload: DriverCreateUpdateRequestDto;
-  businessId: number;
+  payload: DriverCreateRequestDto;
 };
 
 export { type DriverAddPayload };

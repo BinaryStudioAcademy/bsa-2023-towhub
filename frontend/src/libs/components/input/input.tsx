@@ -66,9 +66,9 @@ const Input = <T extends FieldValues>({
   const toggleShowPassword = useCallback(
     (event: React.MouseEvent<HTMLElement>): void => {
       event.preventDefault();
-      setIsPasswordShown(!isPasswordShown);
+      setIsPasswordShown((old) => !old);
     },
-    [isPasswordShown],
+    [],
   );
 
   const clearError = useCallback(() => {
@@ -116,6 +116,7 @@ const Input = <T extends FieldValues>({
               styles.passwordEye,
               isPasswordShown && styles.passwordEyeLight,
             )}
+            type="button"
             onClick={toggleShowPassword}
             tabIndex={-1}
           >

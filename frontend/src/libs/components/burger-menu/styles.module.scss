@@ -26,20 +26,30 @@
   border-radius: 16px;
 
   .btn {
-    display: inline-flex;
     justify-content: start;
+    width: 100%;
     background-color: $blue-dark;
     border-radius: 0;
 
-    &:hover {
+    &:hover,
+    &:active,
+    &:focus {
       background-color: $blue;
     }
   }
 
   .menuIcon {
     width: 100%;
+    padding: 10px 20px;
     color: $white;
     font-size: 24px;
+    background-color: $blue-dark;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: $blue;
+    }
   }
 }
 
@@ -48,12 +58,20 @@
     width: 80px;
     background-color: $blue-dark;
 
-    li {
-      padding: 10px 20px;
+    .btn {
+      display: none;
+    }
+  }
+}
 
-      &:hover {
-        background-color: $blue;
-      }
+@media (width > $screen-size-lg) {
+  .menu {
+    .btn {
+      display: inline-flex;
+    }
+
+    .menuIcon {
+      display: none;
     }
   }
 }

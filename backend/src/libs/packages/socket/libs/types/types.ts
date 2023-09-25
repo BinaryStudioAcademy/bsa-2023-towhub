@@ -1,5 +1,5 @@
 export {
-  type ClientToServerEvents,
+  type ClientToServerEventParameter,
   type OrderResponseDto,
-  type ServerSocketEventParameter,
+  ServerToClientEvent,
 } from 'shared/build/index.js';

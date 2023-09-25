@@ -4,7 +4,7 @@ import {
   type FieldValues,
 } from 'react-hook-form';
 
-import { type HttpMessage } from '~/libs/enums/enums.js';
+import { type FormLabel, type HttpMessage } from '~/libs/enums/enums.js';
 
 import { type InputType } from '../enums/input-type.enum.js';
 import { type LocationChangeHandler } from './location-change-handler.type.js';
@@ -33,7 +33,7 @@ type FormField<T extends FieldValues> = {
   max?: number;
   currency?: string;
   step?: number;
-  id?: number;
+  id?: ValueOf<typeof FormLabel>;
   onLocationChange?: LocationChangeHandler;
   associateServerErrors?: ErrorDescriptor[];
 };
