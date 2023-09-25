@@ -2,10 +2,10 @@ import { Button, ImageSelector } from '~/libs/components/components.js';
 import {
   useAppDispatch,
   useAppForm,
-  // useAppSelector,
   useCallback,
+  useMemo,
 } from '~/libs/hooks/hooks.js';
-// import { selectUser } from '~/slices/auth/selectors.js';
+import { useAuthUser } from '~/slices/auth/auth.js';
 import { uploadAvatar } from '~/slices/files/actions.js';
 
 import { type AvatarUploadFormData } from './libs/types/types.js';
@@ -16,7 +16,7 @@ const AvatarUploadForm: React.FC = () => {
     defaultValues: { avatar: undefined, test: 0 },
   });
 
-  // const user = useAppSelector(selectUser);
+  const user = useAuthUser();
   const dispatch = useAppDispatch();
 
   const handleFormSubmit = useCallback(
@@ -25,13 +25,17 @@ const AvatarUploadForm: React.FC = () => {
         const [file] = payload.avatar;
         file.type;
 
-        void dispatch(uploadAvatar(file)).then(() => {
-          // console.log('done', result);
-        });
+        void dispatch(uploadAvatar(file));
       })(event_);
     },
     [dispatch, handleSubmit],
   );
+
+  const avatarUrl = useMemo(() => {
+    if (user && 'driver' in user) {
+      return user.driver.avatarUrl;
+    }
+  }, [user]);
 
   return (
     <div className={styles.wrapper}>
@@ -45,8 +49,11 @@ const AvatarUploadForm: React.FC = () => {
               width={250}
               height={250}
               viewMode="circle"
-              initialImageUrl="https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png"
-              resultOptions={{}}
+              initialImageUrl={
+                avatarUrl ??
+                'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png'
+              }
+              resultOptions={{ circle: true }}
             />
           </div>
           <Button label={'Submit'} type="submit" />

@@ -90,6 +90,7 @@ export {
   type DriverRequestParameters,
   type DriverUpdatePayload,
   type DriverUpdateRequestDto,
+  type DriverWithAvatarUrl,
   type DriverWithUserData,
   DriverApiPath,
   driverCreateRequestBody,

@@ -5,12 +5,16 @@ import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
 import { ClientToServerEvent } from '~/libs/packages/socket/socket.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
-import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
+import {
+  type AsyncThunkConfig,
+  type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
+  type UserEntityObjectWithGroupT,
+  type ValueOf,
+} from '~/libs/types/types.js';
 import {
   type BusinessSignUpRequestDto,
-  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
-  type CustomerSignUpResponseDto,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
 } from '~/packages/users/users.js';
@@ -18,7 +22,7 @@ import {
 import { name as sliceName } from './auth.slice.js';
 
 const signUp = createAsyncThunk<
-  CustomerSignUpResponseDto | BusinessSignUpResponseDto,
+  UserEntityObjectWithGroupT | UserEntityObjectWithGroupAndBusinessT,
   {
     payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto;
     mode: ValueOf<typeof AuthMode>;
@@ -87,7 +91,9 @@ const signIn = createAsyncThunk<
 });
 
 const getCurrent = createAsyncThunk<
-  CustomerSignUpResponseDto | BusinessSignUpResponseDto,
+  | UserEntityObjectWithGroupT
+  | UserEntityObjectWithGroupAndBusinessT
+  | UserEntityObjectWithGroupAndDriverT,
   undefined,
   AsyncThunkConfig
 >(`${sliceName}/current`, async (_, { extra }) => {

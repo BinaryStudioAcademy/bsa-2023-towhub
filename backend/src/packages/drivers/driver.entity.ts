@@ -3,8 +3,11 @@ import { type NullableProperties } from '~/libs/types/types.js';
 
 import { type FileEntityT } from '../files/libs/types/types.js';
 import { type UserEntityT } from '../users/users.js';
-import { getAvatarUrl } from './libs/helpers/get-avatar-url.helper.js';
-import { type DriverEntityT } from './libs/types/types.js';
+import { getAvatarUrl } from './libs/helpers/helpers.js';
+import {
+  type DriverEntityT,
+  type DriverWithAvatarUrl,
+} from './libs/types/types.js';
 
 class DriverEntity implements IEntity {
   private id: DriverEntityT['id'] | null;
@@ -86,7 +89,7 @@ class DriverEntity implements IEntity {
     });
   }
 
-  public toObject(): DriverEntityT & { avatarUrl?: string } {
+  public toObject(): DriverWithAvatarUrl {
     return {
       id: this.id as number,
       driverLicenseNumber: this.driverLicenseNumber,

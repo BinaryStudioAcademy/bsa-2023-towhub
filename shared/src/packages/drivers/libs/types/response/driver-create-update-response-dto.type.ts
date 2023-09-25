@@ -1,8 +1,7 @@
 import { type UserCommonDetails } from '~/packages/users/users.js';
 
-import { type DriverEntityT } from '../driver-entity.type.js';
+import { type DriverWithAvatarUrl } from '../driver-with-avatar-url.type.js';
 
-type DriverCreateUpdateResponseDto = UserCommonDetails &
-  DriverEntityT & { avatarUrl?: string };
+type DriverCreateUpdateResponseDto = UserCommonDetails & DriverWithAvatarUrl;
 
 export { type DriverCreateUpdateResponseDto };

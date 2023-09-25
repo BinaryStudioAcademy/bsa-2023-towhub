@@ -3,9 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
 import {
-  type BusinessSignUpResponseDto,
-  type CustomerSignUpResponseDto,
-  type UserSignInResponseDto,
+  type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
+  type UserEntityObjectWithGroupT,
   type ValueOf,
 } from '~/libs/types/types.js';
 
@@ -22,9 +22,9 @@ type State = {
   dataStatus: ValueOf<typeof DataStatus>;
   socketDriverAuthStatus: ValueOf<typeof DataStatus>;
   user:
-    | UserSignInResponseDto
-    | CustomerSignUpResponseDto
-    | BusinessSignUpResponseDto
+    | UserEntityObjectWithGroupT
+    | UserEntityObjectWithGroupAndBusinessT
+    | UserEntityObjectWithGroupAndDriverT
     | null;
 };
 

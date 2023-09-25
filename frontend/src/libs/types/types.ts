@@ -30,6 +30,7 @@ export {
   type TruckEntityT,
   type TruckTowType,
   type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
   type UserGroupEntityT,

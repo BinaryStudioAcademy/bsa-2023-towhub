@@ -13,10 +13,10 @@ import {
   type DriverAddPayloadWithBusinessId,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
-  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetDriversPayloadWithBusinessId,
   type DriverUpdatePayload,
+  type DriverWithAvatarUrl,
   type DriverWithUserData,
 } from '../drivers/libs/types/types.js';
 import { type FilesService, S3PublicFolder } from '../files/files.js';
@@ -95,13 +95,15 @@ class DriverService implements IService {
     return geolocation;
   }
 
-  public async findById(id: number): Promise<DriverEntityT | null> {
+  public async findById(id: number): Promise<DriverWithAvatarUrl | null> {
     const [driver = null] = await this.driverRepository.find({ id });
 
     return driver ? driver.toObject() : null;
   }
 
-  public async findByUserId(userId: number): Promise<DriverEntityT | null> {
+  public async findByUserId(
+    userId: number,
+  ): Promise<DriverWithAvatarUrl | null> {
     const [driver = null] = await this.driverRepository.find({ userId });
 
     return driver ? driver.toObject() : null;

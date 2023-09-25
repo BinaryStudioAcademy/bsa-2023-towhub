@@ -228,8 +228,6 @@ class ServerApp implements IServerApp {
   private initErrorHandler(): void {
     this.app.setErrorHandler(
       (error: FastifyError | ValidationError, _request, replay) => {
-        // console.log(error);
-
         if ('isJoi' in error) {
           this.logger.error(`[Validation Error]: ${error.message}`);
 
