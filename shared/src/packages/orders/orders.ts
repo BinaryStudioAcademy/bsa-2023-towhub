@@ -10,12 +10,15 @@ export {
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntityT,
+  type OrderFindAllDriverOrdersQuery,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 export {
   orderCreateRequestBody,
+  orderFindAllDriverOrdersQuery,
   orderGetParameter,
   orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';

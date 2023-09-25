@@ -9,6 +9,7 @@ export {
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntityT,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderResponseDto,
 } from './types/types.js';
 export { orderCreateRequestBody } from './validation-schemas/validation-schemas.js';

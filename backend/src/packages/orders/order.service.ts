@@ -12,6 +12,8 @@ import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntityT as OrderEntityT,
+  type OrderFindAllDriverOrdersQuery,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
@@ -241,16 +243,33 @@ class OrderService implements Omit<IService, 'find'> {
 
   public async findAllDriverOrders(
     user: UserEntityObjectWithGroupT,
-  ): Promise<OrderResponseDto[]> {
+    { status, ...query }: OrderFindAllDriverOrdersQuery,
+  ): Promise<OrderFindAllDriverOrdersResponseDto> {
     const driver = await this.driverService.findByUserId(user.id);
 
     if (!driver) {
       throw new NotFoundError({});
     }
+    const search = {
+      driverId: user.id,
+      status,
+    };
 
-    const usersOrders = await this.orderRepository.findAllDriverOrders(user.id);
+    const driverOrdersRequest = this.orderRepository.findAllDriverOrders(
+      search,
+      query,
+    );
+    const totalRequest = this.orderRepository.getDriverTotal(search);
 
-    return usersOrders.map((it) => OrderEntity.initialize(it).toObject());
+    const [driverOrders, total] = await Promise.all([
+      driverOrdersRequest,
+      totalRequest,
+    ]);
+
+    return {
+      items: driverOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      total,
+    };
   }
 
   public async delete({

@@ -8,6 +8,7 @@ import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderResponseDto,
 } from './types/types.js';
 
@@ -52,6 +53,21 @@ class OrdersApi extends HttpApi {
     );
 
     return await response.json<OrderCalculatePriceResponseDto>();
+  }
+
+  public async getAllDriverOrders(
+    queryString = '',
+  ): Promise<OrderFindAllDriverOrdersResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(`${OrdersApiPath.DRIVER}?${queryString}`, {}),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<OrderFindAllDriverOrdersResponseDto>();
   }
 }
 

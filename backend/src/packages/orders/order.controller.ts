@@ -16,11 +16,14 @@ import {
   type Id,
   type OrderCalculatePriceRequestDto,
   type OrderCreateRequestDto,
+  type OrderFindAllDriverOrdersQuery,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import {
   orderCreateRequestBody,
+  orderFindAllDriverOrdersQuery,
   orderGetParameter,
   orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';
@@ -306,10 +309,14 @@ class OrderController extends Controller {
       path: OrdersApiPath.DRIVER,
       method: 'GET',
       authStrategy: [AuthStrategy.VERIFY_JWT, AuthStrategy.VERIFY_DRIVER_GROUP],
+      validation: {
+        query: orderFindAllDriverOrdersQuery,
+      },
       handler: (options) =>
         this.findAllDriverOrders(
           options as ApiHandlerOptions<{
             user: UserEntityObjectWithGroupT;
+            query: OrderFindAllDriverOrdersQuery;
           }>,
         ),
     });
@@ -635,22 +642,45 @@ class OrderController extends Controller {
    *          content:
    *            application/json:
    *              schema:
-   *                type: array
-   *                items:
-   *                  type: object
-   *                  properties:
+   *                type: object
+   *                properties:
    *                    items:
-   *                      $ref: '#/components/schemas/Order'
+   *                      type: array
+   *                      items:
+   *                        $ref: '#/components/schemas/Order'
+   *                    total:
+   *                      type: string
+   *                      example: 1
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *        400:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/BusinessNotExistError'
    */
 
   private async findAllDriverOrders(
     options: ApiHandlerOptions<{
       user: UserEntityObjectWithGroupT;
+      query: OrderFindAllDriverOrdersQuery;
     }>,
-  ): Promise<ApiHandlerResponse<OrderResponseDto[]>> {
+  ): Promise<ApiHandlerResponse<OrderFindAllDriverOrdersResponseDto>> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findAllDriverOrders(options.user),
+      payload: await this.orderService.findAllDriverOrders(
+        options.user,
+        options.query,
+      ),
     };
   }
 

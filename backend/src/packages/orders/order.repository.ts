@@ -1,11 +1,14 @@
-import { eq } from 'drizzle-orm';
+import { and, desc, eq, sql } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
+import { type GetPaginatedPageQuery } from '../business/libs/types/types.js';
 import { type DriverEntityT as DriverEntity } from '../drivers/drivers.js';
+import { countOffsetByQuery } from '../drivers/libs/helpers/helpers.js';
 import { type UserEntityT } from '../users/users.js';
+import { OrderStatus } from './libs/enums/enums.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
   type OrderDatabaseModel,
@@ -155,8 +158,14 @@ class OrderRepository implements Omit<IRepository, 'find'> {
   }
 
   public async findAllDriverOrders(
-    driverId: DriverEntity['id'],
+    search: {
+      driverId: DriverEntity['id'];
+      status?: OrderEntityT['status'];
+    },
+    { size, page }: GetPaginatedPageQuery,
   ): Promise<OrderEntityT[]> {
+    const offset = countOffsetByQuery({ size, page });
+
     return await this.db
       .driver()
       .select({
@@ -202,7 +211,46 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         this.trucksSchema,
         eq(this.trucksSchema.id, this.shiftsSchema.truckId),
       )
-      .where(eq(this.shiftsSchema.driverId, driverId));
+      .where(
+        and(
+          eq(this.shiftsSchema.driverId, search.driverId),
+          combineFilters<DatabaseSchema['orders']>(this.ordersSchema, {
+            status: search.status,
+          }),
+        ),
+      )
+      .offset(offset)
+      .limit(size)
+      .orderBy(
+        desc(eq(this.ordersSchema.status, OrderStatus.PENDING)),
+        desc(eq(this.ordersSchema.status, OrderStatus.PICKING_UP)),
+        desc(eq(this.ordersSchema.status, OrderStatus.CONFIRMED)),
+        desc(this.ordersSchema.createdAt),
+      );
+  }
+
+  public async getDriverTotal(search: {
+    driverId: DriverEntity['id'];
+    status?: OrderEntityT['status'];
+  }): Promise<number> {
+    const [order] = await this.db
+      .driver()
+      .select({ count: sql<number>`count(*)` })
+      .from(this.ordersSchema)
+      .innerJoin(
+        this.shiftsSchema,
+        eq(this.ordersSchema.shiftId, this.shiftsSchema.id),
+      )
+      .where(
+        and(
+          eq(this.shiftsSchema.driverId, search.driverId),
+          combineFilters<DatabaseSchema['orders']>(this.ordersSchema, {
+            status: search.status,
+          }),
+        ),
+      );
+
+    return order.count;
   }
 
   public async create(

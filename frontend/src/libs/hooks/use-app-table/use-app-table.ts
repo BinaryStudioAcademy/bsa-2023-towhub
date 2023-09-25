@@ -9,6 +9,7 @@ import {
 import { useQueryParameters } from '../hooks.js';
 import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
+import { type ReturnValue } from './libs/types/types.js';
 
 type Properties<T, K> = {
   tableFetchCall: AsyncThunk<T, string | undefined, AsyncThunkConfig>;
@@ -16,14 +17,7 @@ type Properties<T, K> = {
   initialPageSize?: number | null;
   initialPageIndex?: number | null;
   sort?: SortMethodValue | null;
-};
-
-type ReturnValue = {
-  pageSize: number;
-  pageIndex: number;
-  changePageSize: React.Dispatch<React.SetStateAction<number>>;
-  changePageIndex: React.Dispatch<React.SetStateAction<number>>;
-  updatePage: () => void;
+  filterName?: string;
 };
 
 const useAppTable = <T, K>({
@@ -32,6 +26,7 @@ const useAppTable = <T, K>({
   initialPageSize,
   initialPageIndex,
   sort,
+  filterName,
 }: Properties<T, K>): ReturnValue => {
   const [pageSize, changePageSize] = useState(
     initialPageSize ?? DEFAULT_PAGE_SIZE,
@@ -40,7 +35,8 @@ const useAppTable = <T, K>({
     initialPageIndex ?? DEFAULT_PAGE_INDEX,
   );
 
-  const { setQueryParameters, searchParameters } = useQueryParameters();
+  const { setQueryParameters, searchParameters, getQueryParameters } =
+    useQueryParameters();
   const dispatch = useAppDispatch();
 
   const updatePage = useCallback(() => {
@@ -50,13 +46,25 @@ const useAppTable = <T, K>({
       size: pageSize,
     };
 
-    const queryParameters = sort ? { ...actionPayload, sort } : actionPayload;
+    const queryParameters: Record<string, string | number> = sort
+      ? { ...actionPayload, sort }
+      : actionPayload;
+
+    if (filterName) {
+      const filterValue = getQueryParameters(filterName) as string;
+
+      if (filterValue) {
+        queryParameters[filterName] = filterValue;
+      }
+    }
 
     setQueryParameters(queryParameters);
 
     void dispatch(tableFetchCall(searchParameters.toString()));
   }, [
     dispatch,
+    filterName,
+    getQueryParameters,
     pageIndex,
     pageSize,
     payload,

@@ -11,6 +11,8 @@ export {
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntityT,
+  type OrderFindAllDriverOrdersQuery,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
