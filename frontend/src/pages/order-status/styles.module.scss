@@ -1,0 +1,113 @@
+@import "src/assets/css/vars.scss";
+
+$section-max-width: 416px;
+
+.container {
+  display: flex;
+  flex-flow: row-reverse wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 18px;
+  padding: 100px 24px 0;
+  background-color: $background-color-grey;
+}
+
+.cardSection {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 593px;
+  min-height: 729px;
+  margin: 0 10px;
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+}
+
+.mapSection {
+  display: flex;
+  margin: 0 10px;
+  padding: 5px;
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+}
+
+.card {
+  max-width: $section-max-width;
+  background-color: $white;
+}
+
+.map {
+  width: 539px;
+  min-height: 300px;
+}
+
+.status {
+  max-width: $section-max-width;
+  height: 175px;
+  margin: 30px 0 44px;
+  font-size: 23px;
+}
+
+.statusTop {
+  display: none;
+}
+
+@media screen and (width <= 600px) {
+  $section-max-width-sm: calc(100vw - 2px);
+
+  .status.statusBig {
+    margin-top: 50px;
+    padding: 75px;
+  }
+
+  .cardSection {
+    width: 100%;
+    max-width: $section-max-width-sm;
+    min-height: auto;
+    margin: 0;
+    background-color: inherit;
+    box-shadow: none;
+  }
+
+  .mapSection {
+    width: 100%;
+    margin: 0;
+  }
+
+  .card {
+    width: 100%;
+    margin-top: 10px;
+    box-shadow: $shadow-light;
+  }
+
+  .map {
+    width: $section-max-width-sm;
+    height: 240px;
+  }
+
+  .status {
+    width: $section-max-width-sm;
+    min-width: 300px;
+    height: 72px;
+    margin: 0 0 10px;
+    padding: 0;
+    font-size: 17px;
+  }
+
+  .statusTop {
+    display: flex;
+  }
+
+  .statusBottom {
+    display: none;
+  }
+
+  .container {
+    gap: 10px;
+    padding: 10px 5px 0;
+  }
+}

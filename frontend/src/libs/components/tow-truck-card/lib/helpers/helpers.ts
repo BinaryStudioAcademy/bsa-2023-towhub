@@ -1,4 +1,4 @@
-import { type ValueOf, TruckTowType } from 'shared/build';
+import { type ValueOf, TruckTowType } from 'shared/build/index.js';
 
 import img1 from '~/assets/img/truck/type-1.svg';
 import img2 from '~/assets/img/truck/type-2.svg';

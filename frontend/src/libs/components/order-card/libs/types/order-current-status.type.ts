@@ -1,7 +1,5 @@
 type OrderCurrentStatus = {
-  timespanLastUpdated: string;
-  location: string;
-  distanceLeft: number;
+  distanceLeft: string;
   timespanLeft: string;
 };
 
