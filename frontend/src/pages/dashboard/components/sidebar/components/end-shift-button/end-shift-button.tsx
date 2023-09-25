@@ -1,12 +1,14 @@
 import { Button } from '~/libs/components/components.js';
+import { IconName } from '~/libs/enums/icon-name.enum';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppSelector,
   useCallback,
 } from '~/libs/hooks/hooks.js';
+import { manufacturerKeyToReadableName } from '~/packages/trucks/libs/maps/manufacturer-key-to-readable-name.map';
 import { actions as driverActions } from '~/slices/driver/driver.js';
-import { ShiftStatus } from '~/slices/driver/libs/enums/shift-status.enum';
+import { ShiftStatus } from '~/slices/driver/libs/enums/enums.js';
 import {
   selectActiveTruck,
   selectShiftStatus,
@@ -25,14 +27,17 @@ const EndShiftButton: React.FC = () => {
     void dispatch(driverActions.endShift());
   }, [dispatch]);
 
+  const manufacturerName =
+    truck && manufacturerKeyToReadableName[truck.manufacturer];
+
   return isActive ? (
     <div className={styles.block}>
       <p className={getValidClassNames(styles.truckInfo, 'textMd')}>
-        {truck?.manufacturer} {truck?.licensePlateNumber}
+        {manufacturerName} {truck?.licensePlateNumber}
       </p>
       <Button
         label={'End shift'}
-        frontIcon={'truck'}
+        frontIcon={IconName.TRUCK}
         onClick={handleClick}
         className={styles.button}
       />

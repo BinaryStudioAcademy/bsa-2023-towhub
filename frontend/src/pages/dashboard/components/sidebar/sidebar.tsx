@@ -6,8 +6,7 @@ import { type TabsType, type ValueOf } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { useAuthUser } from '~/slices/auth/auth.js';
 
-import { EndShiftButton } from './components/end-shift-button.js';
-import { checkActiveTab } from './libs/helpers.js';
+import { EndShiftButton } from './components/end-shift-button/end-shift-button.js';
 import { BUSINESS_TABS, DRIVER_TABS } from './libs/tabs.js';
 import styles from './styles.module.scss';
 
@@ -20,11 +19,11 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
   const location = useLocation();
   const user = useAuthUser();
 
+  const isDriver = user?.group.key === UserGroupKey.DRIVER;
+
   const getTabs = useCallback((): TabsType[] => {
-    return user?.group.key === UserGroupKey.BUSINESS
-      ? BUSINESS_TABS
-      : DRIVER_TABS;
-  }, [user?.group.key]);
+    return isDriver ? DRIVER_TABS : BUSINESS_TABS;
+  }, [isDriver]);
 
   const handleTabClick = useCallback(
     (tabName: ValueOf<typeof AppRoute>) => () => {
@@ -40,7 +39,7 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
       <li
         className={getValidClassNames(
           styles.item,
-          checkActiveTab(location.pathname, tab.path) && styles.active,
+          location.pathname === tab.path && styles.active,
         )}
         key={tab.name}
       >
@@ -49,7 +48,7 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
           className={getValidClassNames(
             'h5',
             styles.btn,
-            checkActiveTab(location.pathname, tab.path) && styles.active,
+            location.pathname === tab.path && styles.active,
           )}
           frontIcon={tab.icon}
           variant="text"
@@ -69,7 +68,7 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
       )}
     >
       <ul className={styles.list}>{renderTabs()}</ul>
-      {user?.group.key === UserGroupKey.DRIVER && <EndShiftButton />}
+      {isDriver && <EndShiftButton />}
     </div>
   );
 };
