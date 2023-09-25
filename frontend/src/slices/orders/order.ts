@@ -1,7 +1,12 @@
 import {
   calculateOrderPrice,
   createOrder,
+  getOrder,
+  getRouteData,
   getUserOrdersPage,
+  subscribeOrderUpdates,
+  unsubscribeOrderUpdates,
+  updateOrderFromSocket,
 } from './actions.js';
 import { actions } from './order.slice.js';
 
@@ -10,6 +15,11 @@ const allActions = {
   createOrder,
   calculateOrderPrice,
   getUserOrdersPage,
+  getOrder,
+  subscribeOrderUpdates,
+  unsubscribeOrderUpdates,
+  updateOrderFromSocket,
+  getRouteData,
 };
 
 export { allActions as actions };

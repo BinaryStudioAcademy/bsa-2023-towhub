@@ -21,6 +21,7 @@ export {
   type DriverWithUserData,
   type EntityPagination,
   type FirstParameter,
+  type OrderResponseDto,
   type PaginationParameters,
   type PaginationWithSortingParameters,
   type ServerCommonErrorResponse,
