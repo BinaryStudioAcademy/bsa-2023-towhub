@@ -1,0 +1,34 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 375px;
+  max-width: 416px;
+  color: $white;
+  border-radius: 10px;
+}
+
+.pending,
+.confirmed,
+.picking_up {
+  background-color: $blue-dark;
+}
+
+.canceled {
+  background-color: $red;
+}
+
+.done {
+  background-color: $green;
+}
+
+.text {
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 80%;
+  text-align: center;
+}
