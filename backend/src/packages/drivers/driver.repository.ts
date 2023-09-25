@@ -46,9 +46,10 @@ class DriverRepository implements IRepository {
       })
       .execute();
 
-    return drivers.map(({ createdAt, updatedAt, ...pureDriver }) =>
+    return drivers.map(({ createdAt, avatar, ...pureDriver }) =>
       DriverEntity.initialize({
         ...pureDriver,
+        avatar: avatar ?? undefined,
         createdAt: createdAt.toISOString(),
       }),
     );
@@ -70,10 +71,11 @@ class DriverRepository implements IRepository {
       })
       .execute();
 
-    return drivers.map(({ createdAt, ...pureDriver }) =>
+    return drivers.map(({ createdAt, avatar, ...pureDriver }) =>
       DriverEntity.initialize({
         ...pureDriver,
-        createdAt: new Date(createdAt).toISOString(),
+        avatar: avatar ?? undefined,
+        createdAt: createdAt.toISOString(),
       }),
     );
   }

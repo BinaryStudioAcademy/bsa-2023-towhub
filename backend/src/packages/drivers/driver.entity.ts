@@ -20,11 +20,11 @@ class DriverEntity implements IEntity {
 
   private createdAt: DriverEntityT['createdAt'] | null;
 
-  private user?: UserEntityT;
+  private user: UserEntityT | null;
 
   private avatarId: DriverEntityT['avatarId'];
 
-  private avatar?: FileEntityT;
+  private avatar: FileEntityT | null;
 
   private constructor({
     id,
@@ -37,16 +37,16 @@ class DriverEntity implements IEntity {
     avatar,
   }: NullableProperties<DriverEntityT, 'id' | 'createdAt'> & {
     user?: UserEntityT;
-    avatar?: FileEntityT | null;
+    avatar?: FileEntityT;
   }) {
     this.id = id;
     this.driverLicenseNumber = driverLicenseNumber;
     this.userId = userId;
     this.businessId = businessId;
     this.createdAt = createdAt;
-    this.user = user;
+    this.user = user ?? null;
     this.avatarId = avatarId;
-    this.avatar = avatar ?? undefined;
+    this.avatar = avatar ?? null;
   }
 
   public static initialize({
@@ -60,7 +60,7 @@ class DriverEntity implements IEntity {
     avatar,
   }: DriverEntityT & {
     user?: UserEntityT;
-    avatar?: FileEntityT | null;
+    avatar?: FileEntityT;
   }): DriverEntity {
     return new DriverEntity({
       id,
@@ -113,7 +113,7 @@ class DriverEntity implements IEntity {
 
   public toObjectWithUser(): DriverEntityT & {
     user: UserEntityT;
-    avatarUrl?: string;
+    avatarUrl: string | null;
   } {
     return {
       id: this.id as number,
@@ -128,8 +128,8 @@ class DriverEntity implements IEntity {
   }
 
   public toObjectWithAvatar(): DriverEntityT & {
-    avatar: FileEntityT | undefined;
-    avatarUrl?: string;
+    avatar: FileEntityT | null;
+    avatarUrl: string | null;
   } {
     return {
       id: this.id as number,
