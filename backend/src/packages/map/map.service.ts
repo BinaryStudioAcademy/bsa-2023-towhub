@@ -1,4 +1,4 @@
-import { DECIMAL } from './libs/constants/constants.js';
+import { PRECISION } from './libs/constants/constants.js';
 import { TravelMode } from './libs/enums/enums.js';
 import { convertMetersToKm } from './libs/helpers/helpers.js';
 import {
@@ -43,7 +43,7 @@ class MapService {
   }: OrderCalculatePriceRequestDto): Promise<OrderCalculatePriceResponseDto> {
     const distance = await this.getDistance(startAddress, endAddress);
     const km = convertMetersToKm(distance.value);
-    const orderPrice = (pricePerKm * km).toFixed(DECIMAL);
+    const orderPrice = (pricePerKm * km).toFixed(PRECISION);
 
     return { price: Number(orderPrice) };
   }

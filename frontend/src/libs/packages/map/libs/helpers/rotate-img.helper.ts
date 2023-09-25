@@ -17,7 +17,7 @@ const rotateCanvas = (
 
   context?.translate(getHalf(canvas.width), getHalf(canvas.height));
   context?.rotate(rotationRad);
-  context?.drawImage(image, getHalf(-image.width), getHalf(-image.height));
+  context?.drawImage(image, -getHalf(image.width), -getHalf(image.height));
 };
 
 const rotateImg = (url: string, rotationAngle: number): string => {
