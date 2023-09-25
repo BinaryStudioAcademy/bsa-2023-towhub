@@ -6,6 +6,7 @@ export {
   type CustomerSignUpResponseDto,
   type UserCommonDetails,
   type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
   type UserGetAllItemResponseDto,

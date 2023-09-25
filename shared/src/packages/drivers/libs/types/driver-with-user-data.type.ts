@@ -6,7 +6,7 @@ type DriverWithUserData = Omit<
   UserEntityT,
   'passwordHash' | 'passwordSalt' | 'accessToken'
 > & {
-  driver: DriverEntityT;
+  driver: DriverEntityT & { avatarUrl?: string };
 };
 
 export { type DriverWithUserData };

@@ -26,6 +26,7 @@ class Config implements IConfig {
         DRIVER_GEOLOCATION_UPDATE_INTERVAL: Number(
           import.meta.env.VITE_DRIVER_GEOLOCATION_UPDATE_INTERVAL,
         ),
+        AWS_S3_BUCKET_NAME: import.meta.env.AWS_S3_BUCKET_NAME as string,
       },
     };
   }

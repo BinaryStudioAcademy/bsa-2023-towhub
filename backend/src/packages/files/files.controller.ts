@@ -216,7 +216,7 @@ class FilesController extends Controller {
       parsedFiles: MultipartParsedFile[];
     }>,
   ): Promise<ApiHandlerResponse<FileUploadResponseDto>> {
-    const result = await this.fileService.create(options.parsedFiles);
+    const result = await this.fileService.createMany(options.parsedFiles);
 
     return {
       status: HttpCode.CREATED,
@@ -278,7 +278,7 @@ class FilesController extends Controller {
       body: UpdateFileKeyRequestDto;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const updatedFileRecord = await this.fileService.update(
+    const updatedFileRecord = await this.fileService.softUpdate(
       options.params.id,
       options.body,
     );

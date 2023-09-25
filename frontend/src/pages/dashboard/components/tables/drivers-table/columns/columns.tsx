@@ -12,6 +12,22 @@ const columns: ColumnDef<DriverWithUserData>[] = [
     size: 250,
   },
   {
+    header: 'Photo',
+    accessorFn: (driver: DriverWithUserData) =>
+      driver.driver.avatarUrl ??
+      'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png',
+    footer: 'Photo',
+    size: 180,
+    cell: ({ getValue }) => (
+      <img
+        src={getValue() as string}
+        alt="Driver Personal Avatar"
+        width={180}
+        height={180}
+      />
+    ),
+  },
+  {
     header: 'Driver License Number',
     accessorKey: 'driver.driverLicenseNumber',
     footer: 'Driver License Number',

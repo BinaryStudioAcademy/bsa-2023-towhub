@@ -13,7 +13,6 @@ import { socket } from '~/libs/packages/socket/socket.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import {
   Auth,
-  AvailableTrucks,
   Dashboard,
   HomePage,
   NotFound,
@@ -21,6 +20,7 @@ import {
   Orders,
   WelcomePage,
 } from '~/pages/pages.js';
+import { TestPage } from '~/pages/test/test.js';
 import { selectUser } from '~/slices/auth/selectors.js';
 
 import { PageLayout, ProtectedRoute } from '../components.js';
@@ -49,6 +49,7 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.SIGN_UP_BUSINESS} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP_CUSTOMER} element={<Auth />} />
         <Route path={AppRoute.ORDER} element={<Order />} />
+        <Route path={AppRoute.TEST} element={<TestPage />} />
       </Route>
       <Route
         path={AppRoute.ROOT}
@@ -88,7 +89,7 @@ const Router = (): JSX.Element => {
             path={AppRoute.AVAILABLE_TRUCKS}
             element={
               <PageLayout isSidebarHidden>
-                <AvailableTrucks />
+                <TestPage />
               </PageLayout>
             }
           />

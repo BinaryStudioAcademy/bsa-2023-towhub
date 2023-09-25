@@ -119,6 +119,7 @@ const drivers = pgTable('driver_details', {
   businessId: integer('business_id')
     .notNull()
     .references(() => business.id),
+  avatarId: integer('avatar_id').references(() => files.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
@@ -229,6 +230,10 @@ const driversRelations = relations(drivers, ({ one, many }) => ({
   business: one(business, {
     fields: [drivers.businessId],
     references: [business.id],
+  }),
+  avatar: one(files, {
+    fields: [drivers.avatarId],
+    references: [files.id],
   }),
   orders: many(orders),
 }));

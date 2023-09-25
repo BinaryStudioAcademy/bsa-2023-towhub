@@ -5,6 +5,7 @@ export { type CustomerSignUpResponseDto } from './customer-sign-up-response-dto.
 export { type UserCommonDetails } from './user-common-details.type.js';
 export {
   type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
 } from './user-entity.type.js';

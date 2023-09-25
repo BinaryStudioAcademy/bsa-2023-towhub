@@ -10,6 +10,7 @@ type EnvironmentSchema = {
     SERVER_URL: string;
     GOOGLE_MAPS_API_KEY: string;
     DRIVER_GEOLOCATION_UPDATE_INTERVAL: number;
+    AWS_S3_BUCKET_NAME: string;
   };
 };
 

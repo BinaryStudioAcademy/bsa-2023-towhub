@@ -1,4 +1,5 @@
 import { type BusinessEntityT } from '~/packages/business/business.js';
+import { type DriverEntityT } from '~/packages/drivers/drivers.js';
 
 import { type UserGroupEntityT } from './types.js';
 
@@ -25,8 +26,13 @@ type UserEntityObjectWithGroupAndBusinessT = UserEntityObjectWithGroupT & {
   business: BusinessEntityT;
 };
 
+type UserEntityObjectWithGroupAndDriverT = UserEntityObjectWithGroupT & {
+  driver: DriverEntityT;
+};
+
 export {
   type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type UserEntity as UserEntityT,
 };
