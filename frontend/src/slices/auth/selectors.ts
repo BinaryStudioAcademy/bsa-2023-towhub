@@ -1,22 +1,29 @@
 import { type DataStatus } from '~/libs/enums/enums.js';
-import {
-  type BusinessSignUpResponseDto,
-  type CustomerSignUpResponseDto,
-  type RootState,
-  type ValueOf,
-} from '~/libs/types/types.js';
-import { type UserSignInResponseDto } from '~/packages/users/users.js';
+import { type RootState } from '~/libs/packages/store/store.js';
+import { type ValueOf } from '~/libs/types/types.js';
+
+import { name as AuthSliceName } from './auth.slice.js';
 
 const selectIsLoading = (state: RootState): ValueOf<typeof DataStatus> => {
   return state.auth.dataStatus;
 };
 
 const selectUser = (
-  state: RootState,
-):
-  | UserSignInResponseDto
-  | CustomerSignUpResponseDto
-  | BusinessSignUpResponseDto
-  | null => state.auth.user;
+  store: RootState,
+): RootState[typeof AuthSliceName]['user'] => store[AuthSliceName].user;
 
-export { selectIsLoading, selectUser };
+const selectSocketDriverAuthStatus = (
+  store: RootState,
+): RootState[typeof AuthSliceName]['socketDriverAuthStatus'] =>
+  store[AuthSliceName].socketDriverAuthStatus;
+
+const selectAuthServerError = (
+  store: RootState,
+): RootState[typeof AuthSliceName]['error'] => store[AuthSliceName].error;
+
+export {
+  selectAuthServerError,
+  selectIsLoading,
+  selectSocketDriverAuthStatus,
+  selectUser,
+};

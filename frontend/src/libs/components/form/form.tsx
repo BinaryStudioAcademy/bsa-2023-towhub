@@ -2,20 +2,21 @@ import {
   type Control,
   type FieldErrors,
   type UseFormClearErrors,
-  type UseFormReturn,
   type UseFormSetError,
 } from 'react-hook-form';
 
-import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
+import { useAppForm, useCallback, useEffect } from '~/libs/hooks/hooks.js';
 import {
   type DeepPartial,
   type FieldValues,
   type FormField,
+  type ServerErrorHandling,
   type ValidationSchema,
 } from '~/libs/types/types.js';
 
 import { Button } from '../button/button.jsx';
 import { DropdownInput } from '../dropdown-input/dropdown-input.js';
+import { DropdownMultiSelect } from '../dropdown-multi-select/dropdown-multi-select.js';
 import { FileInput } from '../file-input/file-input.js';
 import { fileInputDefaultsConfig } from '../file-input/libs/config/config.js';
 import {
@@ -23,6 +24,8 @@ import {
   type FileInputConfig,
 } from '../file-input/libs/types/types.js';
 import { Input } from '../input/input.jsx';
+import { LocationInput } from '../location-input/location-input.js';
+import { handleServerError } from './libs/helpers/handle-server-error.helper.js';
 import styles from './styles.module.scss';
 
 type Properties<T extends FieldValues> = {
@@ -30,15 +33,19 @@ type Properties<T extends FieldValues> = {
   defaultValues: DeepPartial<T>;
   validationSchema: ValidationSchema;
   btnLabel?: string;
+  isDisabled?: boolean;
   onSubmit: (payload: T) => void;
+  serverError?: ServerErrorHandling;
+  additionalFields?: JSX.Element;
 };
 
-type Parameters<T extends FieldValues = FieldValues> = {
+type RenderFieldProperties<T extends FieldValues = FieldValues> = {
   field: FormField<T>;
   control: Control<T, null>;
   errors: FieldErrors<T>;
-  setError: UseFormReturn<T>['setError'];
-  clearErrors: UseFormReturn<T>['clearErrors'];
+  setError: UseFormSetError<T>;
+  clearErrors: UseFormClearErrors<T>;
+  clearServerError?: ServerErrorHandling['clearError'];
   fileInputConfig?: FileInputConfig;
 };
 
@@ -48,19 +55,29 @@ const renderField = <T extends FieldValues = FieldValues>({
   errors,
   setError,
   clearErrors,
+  clearServerError,
   fileInputConfig,
-}: Parameters<T>): JSX.Element => {
-  const { options, name, label } = field;
+}: RenderFieldProperties<T>): JSX.Element => {
+  const { options } = field;
 
   switch (field.type) {
     case 'dropdown': {
       return (
         <DropdownInput
+          {...field}
           options={options ?? []}
-          name={name}
           control={control}
           errors={errors}
-          label={label}
+        />
+      );
+    }
+    case 'multi-select': {
+      return (
+        <DropdownMultiSelect
+          {...field}
+          options={options ?? []}
+          control={control}
+          errors={errors}
         />
       );
     }
@@ -68,9 +85,20 @@ const renderField = <T extends FieldValues = FieldValues>({
     case 'text':
     case 'email':
     case 'password': {
-      return <Input {...field} control={control} errors={errors} />;
+      return (
+        <Input
+          {...field}
+          control={control}
+          errors={errors}
+          setError={setError}
+          clearServerError={clearServerError}
+        />
+      );
     }
+
     case 'file': {
+      const { label } = field;
+
       return (
         <FileInput
           setError={setError as unknown as UseFormSetError<FileFormType>}
@@ -85,8 +113,19 @@ const renderField = <T extends FieldValues = FieldValues>({
         />
       );
     }
+    case 'location': {
+      return <LocationInput {...field} control={control} errors={errors} />;
+    }
+
     default: {
-      return <Input {...field} control={control} errors={errors} />;
+      return (
+        <Input
+          {...field}
+          control={control}
+          errors={errors}
+          setError={setError}
+        />
+      );
     }
   }
 };
@@ -96,7 +135,10 @@ const Form = <T extends FieldValues = FieldValues>({
   defaultValues,
   validationSchema,
   btnLabel,
+  additionalFields,
+  isDisabled,
   onSubmit,
+  serverError,
 }: Properties<T>): JSX.Element => {
   const { control, errors, handleSubmit, setError, clearErrors } =
     useAppForm<T>({
@@ -104,8 +146,16 @@ const Form = <T extends FieldValues = FieldValues>({
       validationSchema,
     });
 
+  useEffect(() => {
+    if (serverError?.error) {
+      handleServerError(serverError.error, setError, fields);
+    }
+  }, [fields, serverError?.error, setError]);
+
   const handleFormSubmit = useCallback(
     (event_: React.BaseSyntheticEvent): void => {
+      event_.preventDefault();
+
       void handleSubmit(onSubmit)(event_);
     },
     [handleSubmit, onSubmit],
@@ -113,8 +163,15 @@ const Form = <T extends FieldValues = FieldValues>({
 
   const createInputs = (): JSX.Element[] => {
     return fields.map((field, index) => (
-      <div key={(field.id = index)}>
-        {renderField({ field, control, errors, setError, clearErrors })}
+      <div key={field.id ?? index}>
+        {renderField({
+          field,
+          control,
+          errors,
+          setError,
+          clearErrors,
+          clearServerError: serverError?.clearError,
+        })}
       </div>
     ));
   };
@@ -122,7 +179,13 @@ const Form = <T extends FieldValues = FieldValues>({
   return (
     <form onSubmit={handleFormSubmit} className={styles.form} noValidate>
       {createInputs()}
-      <Button type="submit" label={btnLabel ?? 'Submit'} isFullWidth />
+      {additionalFields}
+      <Button
+        type="submit"
+        label={btnLabel ?? 'Submit'}
+        isDisabled={isDisabled}
+        isFullWidth
+      />
     </form>
   );
 };

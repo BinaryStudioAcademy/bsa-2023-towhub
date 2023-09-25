@@ -1,6 +1,7 @@
 import { type IEntity } from '~/libs/interfaces/entity.interface.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
+import { type UserEntityT } from '../users/users.js';
 import { type DriverEntityT } from './libs/types/types.js';
 
 class DriverEntity implements IEntity {
@@ -16,6 +17,10 @@ class DriverEntity implements IEntity {
 
   private verificationStatus: DriverEntityT['verificationStatus'] | null;
 
+  private createdAt: DriverEntityT['createdAt'] | null;
+
+  private user?: UserEntityT;
+
   private constructor({
     id,
     driverLicenseNumber,
@@ -23,13 +28,22 @@ class DriverEntity implements IEntity {
     businessId,
     driverLicenseFileId,
     verificationStatus,
-  }: NullableProperties<DriverEntityT, 'id' | 'verificationStatus'>) {
+    createdAt,
+    user,
+  }: NullableProperties<
+    DriverEntityT,
+    'id' | 'verificationStatus' | 'createdAt'
+  > & {
+    user?: UserEntityT;
+  }) {
     this.id = id;
     this.driverLicenseNumber = driverLicenseNumber;
     this.userId = userId;
     this.businessId = businessId;
     this.driverLicenseFileId = driverLicenseFileId;
     this.verificationStatus = verificationStatus;
+    this.createdAt = createdAt;
+    this.user = user;
   }
 
   public static initialize({
@@ -39,7 +53,11 @@ class DriverEntity implements IEntity {
     businessId,
     driverLicenseFileId,
     verificationStatus,
-  }: NullableProperties<DriverEntityT, 'verificationStatus'>): DriverEntity {
+    createdAt,
+    user,
+  }: NullableProperties<DriverEntityT, 'verificationStatus'> & {
+    user?: UserEntityT;
+  }): DriverEntity {
     return new DriverEntity({
       id,
       driverLicenseNumber,
@@ -47,6 +65,8 @@ class DriverEntity implements IEntity {
       businessId,
       driverLicenseFileId,
       verificationStatus,
+      createdAt,
+      user,
     });
   }
 
@@ -55,7 +75,10 @@ class DriverEntity implements IEntity {
     userId,
     businessId,
     driverLicenseFileId,
-  }: Omit<DriverEntityT, 'id' | 'verificationStatus'>): DriverEntity {
+  }: Omit<
+    DriverEntityT,
+    'id' | 'verificationStatus' | 'createdAt'
+  >): DriverEntity {
     return new DriverEntity({
       id: null,
       driverLicenseNumber,
@@ -63,6 +86,7 @@ class DriverEntity implements IEntity {
       businessId,
       driverLicenseFileId,
       verificationStatus: null,
+      createdAt: null,
     });
   }
 
@@ -74,6 +98,7 @@ class DriverEntity implements IEntity {
       businessId: this.businessId,
       driverLicenseFileId: this.driverLicenseFileId,
       verificationStatus: this.verificationStatus,
+      createdAt: this.createdAt as string,
     };
   }
 
@@ -83,6 +108,20 @@ class DriverEntity implements IEntity {
       userId: this.userId,
       businessId: this.businessId,
       driverLicenseFileId: this.driverLicenseFileId,
+      createdAt: this.createdAt as string,
+    };
+  }
+
+  public toObjectWithUser(): DriverEntityT & { user: UserEntityT } {
+    return {
+      id: this.id as number,
+      driverLicenseNumber: this.driverLicenseNumber,
+      userId: this.userId,
+      businessId: this.businessId,
+      driverLicenseFileId: this.driverLicenseFileId,
+      verificationStatus: this.verificationStatus,
+      createdAt: this.createdAt as string,
+      user: this.user as UserEntityT,
     };
   }
 }

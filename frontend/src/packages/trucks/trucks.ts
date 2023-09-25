@@ -5,8 +5,6 @@ import { LocalStorage } from '~/libs/packages/storage/storage.js';
 import { TruckApi } from './trucks-api.js';
 
 export {
-  FormLabel,
-  FormName,
   TruckManufacturer,
   TruckTowType,
   TruckYear,

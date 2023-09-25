@@ -26,6 +26,8 @@ const driverCreateUpdateRequestBody = joi.object<
     .messages({
       'string.empty': DriverValidationMessage.DRIVER_LICENSE_NUMBER_REQUIRED,
     }),
+
+  truckIds: joi.array().items(joi.number()),
   files: joi
     .array()
     .items(joi.object())

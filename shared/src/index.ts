@@ -2,8 +2,10 @@ export {
   ApiPath,
   AppEnvironment,
   AppErrorMessage,
+  CommonValidationMessage,
   ContentType,
   ServerErrorType,
+  SortMethod,
 } from './libs/enums/enums.js';
 export {
   ApplicationError,
@@ -14,6 +16,7 @@ export {
 export {
   configureString,
   filesize,
+  getFullName,
   pluralizeString,
 } from './libs/helpers/helpers.js';
 export { type IEventEmitter } from './libs/interfaces/interfaces.js';
@@ -28,26 +31,35 @@ export {
   HttpMessage,
 } from './libs/packages/http/http.js';
 export {
-  type ServerSocketEventParameter,
-  ClientSocketEvent,
-  ServerSocketEvent,
+  type ClientToServerEventParameter,
+  type ServerToClientEventParameter,
+  type ServerToClientEventResponse,
+  ClientToServerEvent,
+  ServerToClientEvent,
+  ServerToClientResponseStatus,
+  SocketError,
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
-  type CapitalizeEnum,
   type EntityPagination,
   type ErrorConstructor,
+  type FirstParameter,
+  type GetPaginatedPageQuery,
   type Id,
   type NullableProperties,
   type OperationResult,
+  type PaginationParameters,
+  type PaginationWithSortingParameters,
   type RequireProperty,
   type ServerCommonErrorResponse,
   type ServerErrorDetail,
   type ServerErrorResponse,
   type ServerValidationErrorResponse,
+  type SortMethodValue,
   type ValidationSchema,
   type ValueOf,
 } from './libs/types/types.js';
+export { commonGetPageQuery } from './libs/validation-schemas/validation-schemas.js';
 export {
   type JwtPayload,
   AuthApiPath,
@@ -57,34 +69,31 @@ export {
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,
-  type BusinessDeleteRequestParameters,
   type BusinessEntityT,
-  type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
-  type BusinessUpdateRequestParameters,
   type BusinessUpdateResponseDto,
   businessAddRequestBody,
   BusinessApiPath,
-  businessDeleteParameters,
-  businessGetParameters,
-  businessUpdateParameters,
   businessUpdateRequestBody,
   BusinessValidationMessage,
 } from './packages/business/business.js';
 export {
-  type BusinessGetAllDriversRequestParameters,
   type DriverAddPayload,
+  type DriverAddPayloadWithBusinessId,
+  type DriverAddResponseWithGroup,
+  type DriverBusinessIdPayload,
   type DriverCreateUpdateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverEntityT,
   type DriverGetAllResponseDto,
-  type DriverGetRequestParameters,
-  type DriverUpdateDeleteRequestParameters,
+  type DriverGetDriversPagePayload,
+  type DriverGetDriversPayloadWithBusinessId,
+  type DriverRequestParameters,
   type DriverUpdatePayload,
+  type DriverWithUserData,
   DriverApiPath,
   driverCreateUpdateRequestBody,
-  driverGetParameters,
-  driverUpdateDeleteParameters,
+  driverParameters,
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
@@ -117,8 +126,10 @@ export {
 } from './packages/files/files.js';
 export {
   type DriverInfo,
+  type OrderCalculatePriceRequestDto,
+  type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderEntity,
+  type OrderEntityT,
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
@@ -133,7 +144,7 @@ export {
 export {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftEntity,
+  type ShiftEntityT,
   type ShiftResponseDto,
   shiftClose as shiftCloseValidationSchema,
   shiftCreate as shiftCreateValidationSchema,
@@ -141,15 +152,20 @@ export {
   ShiftValidationMessage,
 } from './packages/shifts/shifts.js';
 export {
-  type TruckEntity,
+  type TruckAddRequestDto,
+  type TruckEntityT,
+  type TruckGetAllResponseDto,
+  type TruckGetItemResponseDto,
   LICENSE_PLATE_NUMBER,
   TruckApiPath,
   TruckCapacity,
+  TruckCarsQuantity,
   truckCreateRequestBody,
   truckGetParameters,
   TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
+  TruckStatus,
   TruckTowType,
   truckUpdateRequestBody,
   TruckValidationMessage,
@@ -165,10 +181,8 @@ export {
   type UserEntityT,
   type UserGetAllItemResponseDto,
   type UserGetAllResponseDto,
-  type UserGroupEntityObjectT,
   type UserGroupEntityT,
   type UserGroupKeyT,
-  type UserGroupNameT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
   businessSignUpValidationSchema,
@@ -177,3 +191,4 @@ export {
   UsersApiPath,
   userSignInValidationSchema,
 } from './packages/users/users.js';
+export { type UsersTrucksEntityT } from './packages/users-trucks/users-trucks.js';

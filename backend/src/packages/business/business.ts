@@ -6,12 +6,14 @@ import { BusinessService } from '~/packages/business/business.service.js';
 import { driverService } from '../drivers/drivers.js';
 import { fileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
 import { filesService } from '../files/files.js';
+import { truckService } from '../trucks/trucks.js';
 import { BusinessController } from './business.controller.js';
 
 const businessRepository = new BusinessRepository(database, schema.business);
 const businessService = new BusinessService({
   businessRepository,
   driverService,
+  truckService,
   filesService,
   fileVerificationStatusService,
 });
@@ -22,17 +24,11 @@ export { businessController, businessRepository, businessService };
 export {
   type BusinessAddRequestDto,
   type BusinessAddResponseDto,
-  type BusinessDeleteRequestParameters,
   type BusinessEntityT,
-  type BusinessGetRequestParameters,
   type BusinessUpdateRequestDto,
-  type BusinessUpdateRequestParameters,
   type BusinessUpdateResponseDto,
 } from './libs/types/types.js';
 export {
   businessAddRequestBody,
-  businessDeleteParameters,
-  businessGetParameters,
-  businessUpdateParameters,
   businessUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';

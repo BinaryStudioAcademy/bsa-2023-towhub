@@ -75,6 +75,7 @@ erDiagram
         updated_at timestamp "not null"
     }
     users_trucks {
+        id serial PK "not null"
         user_id integer FK "not null"
         truck_id integer FK "not null"
     }
@@ -86,8 +87,10 @@ erDiagram
         license_plate_number varchar "not null"
         year integer "not null"
         tow_type varchar "not null"
+        business_id integer FK "not null"
         created_at timestamp "not null"
         updated_at timestamp "not null"
+        business_id integer FK "not null"
     }
     business_details {
         id serial PK "not null"
@@ -144,6 +147,7 @@ erDiagram
     business_details zero or one -- one users: "business_details(owner_id) belongs to users(id)"
     driver_details one -- one files: "driver_details(driver_license_file_id) has files(id)"
     driver_details zero or one -- one users: "driver_details(user_id) belongs to users(id)"
+    trucks one or many -- one business_details: "trucks(business_id) belongs to business_details(id)"
     driver_details one or many -- one business_details: "driver_details(business_id) belongs to business_details(id)"
     users one -- zero or many orders: "users(id) has orders(user_id)"
     users one -- zero or many orders: "users(id) has orders(user_id)"

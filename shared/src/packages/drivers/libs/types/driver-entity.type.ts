@@ -8,6 +8,7 @@ type DriverEntityT = {
   driverLicenseNumber: string;
   userId: UserEntityT['id'];
   businessId: BusinessEntityT['id'];
+  createdAt: string;
   driverLicenseFileId: FileEntityT['id'];
   verificationStatus: Omit<FileVerificationStatusEntityT, 'fileId'> | null;
 };

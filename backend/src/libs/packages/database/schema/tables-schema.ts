@@ -7,6 +7,7 @@ import {
   real,
   serial,
   timestamp,
+  unique,
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
@@ -14,6 +15,7 @@ import {
   FILE_VERIFICATION_NAMES,
   FILE_VERIFICATION_STATUSES,
   ORDER_STATUSES,
+  TruckStatus,
 } from 'shared/build/index.js';
 
 const verificationName = pgEnum('verification_name', FILE_VERIFICATION_NAMES);
@@ -155,18 +157,28 @@ const drivers = pgTable('driver_details', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+const truckStatusEnum = pgEnum('truck_status', [
+  TruckStatus.AVAILABLE,
+  TruckStatus.ACTIVE,
+  TruckStatus.BUSY,
+]);
+
 const trucks = pgTable(
   'trucks',
   {
     id: serial('id').primaryKey(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    businessId: integer('business_id')
+      .notNull()
+      .references(() => business.id),
     manufacturer: varchar('manufacturer').notNull(),
     capacity: integer('capacity').notNull(),
     pricePerKm: real('price_per_km').notNull(),
     licensePlateNumber: varchar('license_plate_number').notNull(),
     year: integer('year').notNull(),
     towType: varchar('tow_type').notNull(),
+    status: truckStatusEnum('status').notNull().default(TruckStatus.AVAILABLE),
   },
   (trucks) => {
     return {
@@ -184,6 +196,7 @@ const trucksRelations = relations(trucks, ({ many }) => ({
 const usersTrucks = pgTable(
   'users_trucks',
   {
+    id: serial('id').primaryKey(),
     userId: integer('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
@@ -193,7 +206,11 @@ const usersTrucks = pgTable(
   },
   (table) => {
     return {
-      pk: primaryKey(table.userId, table.truckId),
+      unique_user_id_truck_id: unique('unique_user_id_truck_id').on(
+        table.userId,
+        table.truckId,
+      ),
+      pk: primaryKey(table.id),
     };
   },
 );
@@ -218,6 +235,13 @@ const shifts = pgTable('shifts', {
 });
 const businessRelations = relations(users, ({ many }) => ({
   orders: many(orders),
+}));
+
+const shiftsRelations = relations(shifts, ({ one }) => ({
+  truck: one(trucks, {
+    fields: [shifts.truckId],
+    references: [trucks.id],
+  }),
 }));
 
 const usersTrucksRelations = relations(usersTrucks, ({ one }) => ({
@@ -260,8 +284,10 @@ export {
   ordersRelations,
   orderStatus,
   shifts,
+  shiftsRelations,
   trucks,
   trucksRelations,
+  truckStatusEnum,
   users,
   usersRelations,
   usersTrucks,

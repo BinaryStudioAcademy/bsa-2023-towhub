@@ -1,4 +1,4 @@
-import { type SQL, and, eq, or } from 'drizzle-orm';
+import { type SQL, and, desc, eq, or, sql } from 'drizzle-orm';
 
 import { AppErrorMessage } from '~/libs/enums/enums.js';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
@@ -13,6 +13,8 @@ import { type OperationResult } from '~/libs/types/types.js';
 import { DriverEntity } from './driver.entity.js';
 import { type DriverEntityT } from './drivers.js';
 import { SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS } from './libs/constants/constants.js';
+import { countOffsetByQuery } from './libs/helpers/helpers.js';
+import { type GetPaginatedPageQuery } from './libs/types/types.js';
 
 class DriverRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -29,7 +31,7 @@ class DriverRepository implements IRepository {
   }
 
   public async find(
-    partial: Partial<Omit<DriverEntityT, 'verificationStatus'>>,
+    partial: Partial<Omit<DriverEntityT, 'user' | 'verificationStatus'>>,
   ): ReturnType<IRepository<DriverEntityT>['find']> {
     const queries = Object.entries(partial).map(([key, value]) =>
       eq(
@@ -40,7 +42,7 @@ class DriverRepository implements IRepository {
 
     const finalQuery = queries.length === 1 ? queries[0] : and(...queries);
 
-    return await this.db
+    const drivers = await this.db
       .driver()
       .select(SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS)
       .from(this.driverSchema)
@@ -53,11 +55,20 @@ class DriverRepository implements IRepository {
       )
       .where(finalQuery)
       .execute();
+
+    return drivers.map(({ createdAt, updatedAt, ...pureDriver }) =>
+      DriverEntity.initialize({
+        ...pureDriver,
+        createdAt: createdAt.toISOString(),
+      }).toObject(),
+    );
   }
 
   public async findAllByBusinessId(
     businessId: number,
+    query: GetPaginatedPageQuery,
   ): Promise<DriverEntity[]> {
+    const offset = countOffsetByQuery(query);
     const drivers = await this.db
       .driver()
       .select(SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS)
@@ -69,9 +80,17 @@ class DriverRepository implements IRepository {
           schema.fileVerificationStatus.fileId,
         ),
       )
-      .where(eq(this.driverSchema.businessId, businessId));
+      .limit(query.size)
+      .offset(offset)
+      .where(eq(this.driverSchema.businessId, businessId))
+      .orderBy(desc(this.driverSchema.createdAt));
 
-    return drivers.map((it) => DriverEntity.initialize(it));
+    return drivers.map(({ createdAt, ...pureDriver }) =>
+      DriverEntity.initialize({
+        ...pureDriver,
+        createdAt: new Date(createdAt).toISOString(),
+      }),
+    );
   }
 
   public async checkExists({
@@ -111,7 +130,7 @@ class DriverRepository implements IRepository {
     const { driverLicenseNumber, userId, businessId, driverLicenseFileId } =
       entity.toNewObject();
 
-    const [result] = await this.db
+    const [{ createdAt, ...pureDriver }] = await this.db
       .driver()
       .insert(this.driverSchema)
       .values({
@@ -123,7 +142,11 @@ class DriverRepository implements IRepository {
       .returning()
       .execute();
 
-    return DriverEntity.initialize({ ...result, verificationStatus: null });
+    return DriverEntity.initialize({
+      ...pureDriver,
+      createdAt: new Date(createdAt).toISOString(),
+      verificationStatus: null,
+    });
   }
 
   public async update({
@@ -133,7 +156,7 @@ class DriverRepository implements IRepository {
     id: number;
     payload: Partial<Pick<DriverEntityT, 'driverLicenseNumber'>>;
   }): Promise<DriverEntity> {
-    const [result] = await this.db
+    const [{ createdAt, ...pureDriver }] = await this.db
       .driver()
       .update(this.driverSchema)
       .set(payload)
@@ -141,7 +164,7 @@ class DriverRepository implements IRepository {
       .returning()
       .execute();
 
-    const [item] = await this.find({ id: result.id });
+    const [item] = await this.find({ id: pureDriver.id });
 
     return DriverEntity.initialize(item);
   }
@@ -155,6 +178,16 @@ class DriverRepository implements IRepository {
       .execute();
 
     return Boolean(result);
+  }
+
+  public async getTotal(id: number): Promise<number> {
+    const [driver] = await this.db
+      .driver()
+      .select({ count: sql<number>`count(*)` })
+      .from(this.driverSchema)
+      .where(eq(this.driverSchema.businessId, id));
+
+    return driver.count;
   }
 }
 

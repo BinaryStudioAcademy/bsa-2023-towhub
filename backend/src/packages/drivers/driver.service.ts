@@ -9,16 +9,19 @@ import { UserGroupKey } from '../auth/libs/enums/enums.js';
 import { DriverEntity } from '../drivers/driver.entity.js';
 import { type DriverRepository } from '../drivers/driver.repository.js';
 import {
-  type DriverAddPayload,
+  type DriverAddPayloadWithBusinessId,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
   type DriverEntityT,
   type DriverGetAllResponseDto,
+  type DriverGetDriversPayloadWithBusinessId,
   type DriverUpdatePayload,
 } from '../drivers/libs/types/types.js';
 import { type FileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
 import { type GroupService } from '../groups/group.service.js';
+import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
+import { convertToDriverUser } from './libs/helpers/helpers.js';
 
 class DriverService implements IService {
   private driverRepository: DriverRepository;
@@ -31,23 +34,28 @@ class DriverService implements IService {
 
   private fileVerificationStatusService: FileVerificationStatusService;
 
+  private truckService: TruckService;
+
   public constructor({
     driverRepository,
     userService,
     groupService,
     geolocationCacheService,
+    truckService,
     fileVerificationStatusService,
   }: {
     driverRepository: DriverRepository;
     userService: UserService;
     groupService: GroupService;
     geolocationCacheService: GeolocationCacheService;
+    truckService: TruckService;
     fileVerificationStatusService: FileVerificationStatusService;
   }) {
     this.driverRepository = driverRepository;
     this.userService = userService;
     this.groupService = groupService;
     this.geolocationCacheService = geolocationCacheService;
+    this.truckService = truckService;
     this.fileVerificationStatusService = fileVerificationStatusService;
   }
 
@@ -95,13 +103,19 @@ class DriverService implements IService {
     return driver;
   }
 
-  public async findAllByBusinessId(
-    businessId: number,
-  ): Promise<DriverGetAllResponseDto> {
-    const items = await this.driverRepository.findAllByBusinessId(businessId);
+  public async findAllByBusinessId({
+    businessId,
+    query,
+  }: DriverGetDriversPayloadWithBusinessId): Promise<DriverGetAllResponseDto> {
+    const items = await this.driverRepository.findAllByBusinessId(
+      businessId,
+      query,
+    );
+    const total = await this.driverRepository.getTotal(businessId);
 
     return {
-      items: items.map((it) => it.toObject()),
+      items: items.map((item) => convertToDriverUser(item)),
+      total,
     };
   }
 
@@ -109,11 +123,18 @@ class DriverService implements IService {
     payload,
     businessId,
     driverLicenseFileId,
-  }: DriverAddPayload & {
+  }: DriverAddPayloadWithBusinessId & {
     driverLicenseFileId: DriverEntityT['driverLicenseFileId'];
   }): Promise<DriverAddResponseWithGroup> {
-    const { password, email, lastName, firstName, phone, driverLicenseNumber } =
-      payload;
+    const {
+      password,
+      email,
+      lastName,
+      firstName,
+      phone,
+      driverLicenseNumber,
+      truckIds,
+    } = payload;
 
     const { result: doesDriverExist } = await this.driverRepository.checkExists(
       {
@@ -164,18 +185,19 @@ class DriverService implements IService {
       groupId: group.id,
     });
 
-    const newEntity = DriverEntity.initializeNew({
-      driverLicenseNumber,
-      businessId,
-      userId: user.id,
-      driverLicenseFileId,
-    });
-
-    const driver = await this.driverRepository.create(newEntity);
+    const driver = await this.driverRepository.create(
+      DriverEntity.initializeNew({
+        driverLicenseNumber,
+        businessId,
+        userId: user.id,
+        driverLicenseFileId,
+      }),
+    );
+    await this.truckService.addTrucksToDriver(user.id, truckIds);
 
     const driverObject = driver.toObject();
 
-    return { ...user, ...driverObject, group };
+    return { ...user, ...driverObject, group, possibleTruckIds: truckIds };
   }
 
   public async update({

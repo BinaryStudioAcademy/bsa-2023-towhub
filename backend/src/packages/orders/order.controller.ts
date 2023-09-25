@@ -6,6 +6,7 @@ import {
 } from '~/libs/packages/controller/controller.js';
 import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
+import { type MapService } from '~/packages/map/map.service.js';
 import { type OrderService } from '~/packages/orders/order.service.js';
 
 import { AuthStrategy } from '../auth/auth.js';
@@ -13,6 +14,7 @@ import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type Id,
+  type OrderCalculatePriceRequestDto,
   type OrderCreateRequestDto,
   type OrderResponseDto,
   type OrderUpdateRequestDto,
@@ -88,11 +90,11 @@ import {
  *         startPoint:
  *           type: string
  *           minLength: 1
- *           example: A
+ *           example: "{ \"lat\": \"-34.655\", \"lng\": \"150.590\" }"
  *         endPoint:
  *           type: string
  *           minLength: 1
- *           example: B
+ *           example: "{ \"lat\": \"-34.655\", \"lng\": \"150.590\" }"
  *         status:
  *           type: string
  *           enum: [pending, confirmed, cancelled, done]
@@ -107,11 +109,6 @@ import {
  *           format: number
  *           minimum: 1
  *           example: 1
- *         driverId:
- *           type: number
- *           format: number
- *           minimum: 1
- *           example: 1
  *         customerName:
  *           type: string
  *           pattern: ^[A-Za-z][\s'A-Za-z-]{0,39}$
@@ -122,6 +119,45 @@ import {
  *           pattern: ^\+\d{8,19}$
  *           nullable: true
  *           example: +123456789
+ *         shift:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: number
+ *               minimum: 1
+ *               example: 1
+ *             driver:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: number
+ *                   minimum: 1
+ *                   example: 1
+ *                 firstName:
+ *                   $ref: '#/components/schemas/Customer-sign-up-request/properties/firstName'
+ *                 lastName:
+ *                   $ref: '#/components/schemas/Customer-sign-up-request/properties/lastName'
+ *                 phone:
+ *                   $ref: '#/components/schemas/Customer-sign-up-request/properties/phone'
+ *                 email:
+ *                   $ref: '#/components/schemas/Customer-sign-up-request/properties/email'
+ *                 driverLicenseNumber:
+ *                   type: string
+ *                   minLength: 10
+ *                   example: AAA 123456
+ *             truck:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: number
+ *                   minimum: 1
+ *                   example: 1
+ *                 licensePlateNumber:
+ *                   type: string
+ *                   minLength: 3
+ *                   maxLength: 10
+ *                   pattern: ^(?!.*\\s)[\\dA-ZЁА-Я-]{3,10}}$
+ *                   example: DD1111RR
  *
  *       CreateOrderWithRegisteredUser:
  *         type: object
@@ -185,6 +221,27 @@ import {
  *               type: string
  *               enum:
  *                 - Driver does not exist!
+ *
+ *     TruckNotExistError:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - Truck does not exist!
+ *
+ *     ShiftNotOpenError:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - This truck is not inactive, please choose another one!
+ *
  *     BusinessNotExistError:
  *       allOf:
  *         - $ref: '#/components/schemas/ErrorType'
@@ -200,16 +257,21 @@ import {
 class OrderController extends Controller {
   private orderService: OrderService;
 
+  private mapService: MapService;
+
   public constructor({
     logger,
     orderService,
+    mapService,
   }: {
     logger: ILogger;
     orderService: OrderService;
+    mapService: MapService;
   }) {
     super(logger, ApiPath.ORDERS);
 
     this.orderService = orderService;
+    this.mapService = mapService;
 
     this.addRoute({
       path: OrdersApiPath.ROOT,
@@ -291,6 +353,19 @@ class OrderController extends Controller {
           }>,
         ),
     });
+
+    this.addRoute({
+      path: OrdersApiPath.CALCULATE_PRICE,
+      method: 'POST',
+      authStrategy: AuthStrategy.INJECT_USER,
+      handler: (options) =>
+        this.calculatePrice(
+          options as ApiHandlerOptions<{
+            body: OrderCalculatePriceRequestDto;
+            user: UserEntityObjectWithGroupT | null;
+          }>,
+        ),
+    });
   }
 
   /**
@@ -318,7 +393,7 @@ class OrderController extends Controller {
    *            application/json:
    *              schema:
    *                $ref: '#/components/schemas/Order'
-   *        400:
+   *        404:
    *          description:
    *            Order creation error
    *          content:
@@ -326,8 +401,8 @@ class OrderController extends Controller {
    *              schema:
    *                oneOf:
    *                 - $ref: '#/components/schemas/DriverNotExistError'
-   *                 - $ref: '#/components/schemas/OrderCreationError'
-   *
+   *                 - $ref: '#/components/schemas/TruckNotExistError'
+   *                 - $ref: '#/components/schemas/ShiftNotOpenError'
    */
   private async create(
     options: ApiHandlerOptions<{
@@ -440,7 +515,10 @@ class OrderController extends Controller {
    *          content:
    *            plain/text:
    *              schema:
-   *                $ref: '#/components/schemas/OrderDoesNotExist'
+   *                oneOf:
+   *                  - $ref: '#/components/schemas/OrderDoesNotExist'
+   *                  - $ref: '#/components/schemas/TruckNotExistError'
+   *                  - $ref: '#/components/schemas/DriverNotExistError'
    *        401:
    *          UnauthorizedError:
    *            description:
@@ -485,10 +563,7 @@ class OrderController extends Controller {
    *              schema:
    *                type: array
    *                items:
-   *                  type: object
-   *                  properties:
-   *                    items:
-   *                      $ref: '#/components/schemas/Order'
+   *                  $ref: '#/components/schemas/Order'
    *        401:
    *          UnauthorizedError:
    *            description:
@@ -497,7 +572,7 @@ class OrderController extends Controller {
    *            plain/text:
    *              schema:
    *                $ref: '#/components/schemas/UnauthorizedError'
-   *        400:
+   *        404:
    *          UnauthorizedError:
    *            description:
    *              You are not authorized
@@ -549,7 +624,9 @@ class OrderController extends Controller {
    *          content:
    *            plain/text:
    *              schema:
-   *                $ref: '#/components/schemas/OrderDoesNotExist'
+   *                oneOf:
+   *                - $ref: '#/components/schemas/OrderDoesNotExist'
+   *                - $ref: '#/components/schemas/BusinessDoesNotExist'
    *        401:
    *          UnauthorizedError:
    *            description:
@@ -571,6 +648,20 @@ class OrderController extends Controller {
       payload: await this.orderService.delete({
         id: options.params.id,
         user: options.user,
+      }),
+    };
+  }
+
+  private async calculatePrice(
+    options: ApiHandlerOptions<{
+      body: OrderCalculatePriceRequestDto;
+      user: UserEntityObjectWithGroupT | null;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.mapService.getPriceByDistance({
+        ...options.body,
       }),
     };
   }
