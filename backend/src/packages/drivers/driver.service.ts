@@ -164,14 +164,14 @@ class DriverService implements IService {
       groupId: group.id,
     });
 
-    const driver = await this.driverRepository.create(
-      DriverEntity.initializeNew({
-        driverLicenseNumber,
-        businessId,
-        userId: user.id,
-        driverLicenseFileId,
-      }),
-    );
+    const newEntity = DriverEntity.initializeNew({
+      driverLicenseNumber,
+      businessId,
+      userId: user.id,
+      driverLicenseFileId,
+    });
+
+    const driver = await this.driverRepository.create(newEntity);
 
     const driverObject = driver.toObject();
 

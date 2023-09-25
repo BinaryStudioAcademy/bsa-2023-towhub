@@ -12,7 +12,7 @@ import { type OperationResult } from '~/libs/types/types.js';
 
 import { DriverEntity } from './driver.entity.js';
 import { type DriverEntityT } from './drivers.js';
-import { selectDriverJoinFileVerificationStatus } from './libs/constants/constants.js';
+import { SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS } from './libs/constants/constants.js';
 
 class DriverRepository implements IRepository {
   private db: Pick<IDatabase, 'driver'>;
@@ -28,7 +28,7 @@ class DriverRepository implements IRepository {
     this.driverSchema = driverSchema;
   }
 
-  public find(
+  public async find(
     partial: Partial<Omit<DriverEntityT, 'verificationStatus'>>,
   ): ReturnType<IRepository<DriverEntityT>['find']> {
     const queries = Object.entries(partial).map(([key, value]) =>
@@ -40,9 +40,9 @@ class DriverRepository implements IRepository {
 
     const finalQuery = queries.length === 1 ? queries[0] : and(...queries);
 
-    return this.db
+    return await this.db
       .driver()
-      .select(selectDriverJoinFileVerificationStatus)
+      .select(SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS)
       .from(this.driverSchema)
       .innerJoin(
         schema.fileVerificationStatus,
@@ -60,8 +60,15 @@ class DriverRepository implements IRepository {
   ): Promise<DriverEntity[]> {
     const drivers = await this.db
       .driver()
-      .select(selectDriverJoinFileVerificationStatus)
+      .select(SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS)
       .from(this.driverSchema)
+      .innerJoin(
+        schema.fileVerificationStatus,
+        eq(
+          this.driverSchema.driverLicenseFileId,
+          schema.fileVerificationStatus.fileId,
+        ),
+      )
       .where(eq(this.driverSchema.businessId, businessId));
 
     return drivers.map((it) => DriverEntity.initialize(it));
@@ -116,9 +123,7 @@ class DriverRepository implements IRepository {
       .returning()
       .execute();
 
-    const [item] = await this.find({ id: result.id });
-
-    return DriverEntity.initialize(item);
+    return DriverEntity.initialize({ ...result, verificationStatus: null });
   }
 
   public async update({

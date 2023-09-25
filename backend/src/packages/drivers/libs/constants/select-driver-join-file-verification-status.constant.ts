@@ -1,6 +1,6 @@
 import { schema } from '~/libs/packages/database/schema/schema.js';
 
-const selectDriverJoinFileVerificationStatus = {
+const SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS = {
   id: schema.drivers.id,
   driverLicenseNumber: schema.drivers.driverLicenseNumber,
   driverLicenseFileId: schema.drivers.driverLicenseFileId,
@@ -16,4 +16,4 @@ const selectDriverJoinFileVerificationStatus = {
   },
 };
 
-export { selectDriverJoinFileVerificationStatus };
+export { SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS };

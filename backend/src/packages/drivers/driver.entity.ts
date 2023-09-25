@@ -39,7 +39,7 @@ class DriverEntity implements IEntity {
     businessId,
     driverLicenseFileId,
     verificationStatus,
-  }: DriverEntityT): DriverEntity {
+  }: NullableProperties<DriverEntityT, 'verificationStatus'>): DriverEntity {
     return new DriverEntity({
       id,
       driverLicenseNumber,

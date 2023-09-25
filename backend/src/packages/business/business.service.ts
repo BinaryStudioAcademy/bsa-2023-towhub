@@ -166,18 +166,27 @@ class BusinessService implements IService {
 
     const createdFile = await this.fileService.create(payload.files[0]);
 
-    const createdDriver = await this.driverService.create({
+    const result = await this.driverService.create({
       payload,
       businessId,
       driverLicenseFileId: createdFile.id,
     });
 
-    await this.fileVerificationStatusService.create({
-      fileId: createdFile.id,
-      name: FileVerificationName.DRIVER_LICENSE_SCAN,
-    });
+    const { id, status, name, message } =
+      await this.fileVerificationStatusService.create({
+        fileId: createdFile.id,
+        name: FileVerificationName.DRIVER_LICENSE_SCAN,
+      });
 
-    return createdDriver;
+    return {
+      ...result,
+      verificationStatus: {
+        id,
+        status,
+        name,
+        message,
+      },
+    };
   }
 
   public updateDriver({
@@ -206,12 +215,14 @@ class BusinessService implements IService {
       });
     }
 
+    const result = await this.driverService.delete(driverId);
+
     await this.fileVerificationStatusService.deleteByFileId(
       driverToDelete.driverLicenseFileId,
     );
     await this.fileService.delete(driverToDelete.driverLicenseFileId);
 
-    return await this.driverService.delete(driverId);
+    return result;
   }
 
   public checkisDriverBelongedToBusiness({
