@@ -9,11 +9,12 @@ export {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderEntityT,
+  type OrderEntity,
   type OrderFindAllDriverOrdersQuery,
   type OrderFindAllDriverOrdersResponseDto,
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
+  type OrderStatusValues,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 export {

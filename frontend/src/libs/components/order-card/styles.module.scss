@@ -13,12 +13,11 @@ $blue-shallow: #becee8;
   $side-padding: 4.25vmin;
 
   display: flex;
-  width: 75vmin;
+  width: 100%;
   height: min-content;
-  padding: 0 $side-padding 6vmin $side-padding;
-  background-color: $white;
-  border-radius: 5%;
-  box-shadow: $shadow-dark;
+  padding: 0 2% 2%;
+  border: 0.5px solid $blue-dark;
+  border-radius: 8px;
 }
 
 .cardLayout {
@@ -34,50 +33,6 @@ $blue-shallow: #becee8;
   margin: 2.25vmin 0;
 }
 
-.header {
-  $side-padding: 2.25vmin;
-
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: 1fr 3fr;
-  padding: 0 $side-padding 0 $side-padding;
-  column-gap: 2.25vmin;
-}
-
-.headerImageContainer {
-  display: grid;
-  place-content: center;
-  justify-self: center;
-}
-
-.profileImage {
-  $size: 11vmin;
-
-  width: $size;
-  height: $size;
-  border-radius: 55px;
-}
-
-.headerInfoContainer {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  row-gap: $row-gap-md;
-}
-
-.headerTitleContainer {
-  display: grid;
-  align-items: end;
-}
-
-.headerSubtitleContainer {
-  display: grid;
-  align-items: start;
-}
-
-.subtitle {
-  $color: $grey-dark;
-}
-
 .body {
   display: grid;
   padding-top: 4.5vmin;
@@ -85,18 +40,16 @@ $blue-shallow: #becee8;
 
 .bodyContent {
   display: grid;
-  grid-template-columns: 20px auto;
+  grid-template-columns: 20px minmax(0, 1fr);
   grid-template-areas:
-    "locationDot         location"
-    "    .             lastUpdate"
     "routeDotStart routeInfoStart"
     "routeArrow          .       "
     "routeDotEnd   routeInfoEnd  "
     "distanceIcon   distanceInfo  ";
   align-items: center;
-  row-gap: $row-gap-md;
+  row-gap: 10px;
   height: max-content;
-  column-gap: 1.7vmin;
+  column-gap: 10px;
 }
 
 .locationDot {
@@ -135,21 +88,45 @@ $blue-shallow: #becee8;
 
 .routeInfo {
   display: inline-block;
+  width: 100%;
   overflow: hidden;
   color: $grey-darker;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
+.routeInfoEnd .tooltipTextEnd,
+.routeInfoStart .tooltipTextStart {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1;
+  max-width: 100%;
+  padding: 2px 5px;
+  color: $white;
+  white-space: normal;
+  text-align: center;
+  background-color: $grey-light;
+  border-radius: 6px;
+  visibility: hidden;
+}
+
+.routeInfoEnd:hover .tooltipTextEnd,
+.routeInfoStart:hover .tooltipTextStart {
+  visibility: visible;
+}
+
 $routes-margin-top: 1.5vmin;
 $routes-margin-bottom: 3.5vmin;
 
 .routeInfoStart {
+  position: relative;
   grid-area: routeInfoStart;
   margin-top: $routes-margin-top;
 }
 
 .routeInfoEnd {
+  position: relative;
   grid-area: routeInfoEnd;
   margin-bottom: $routes-margin-bottom;
 }
@@ -194,4 +171,31 @@ $routes-margin-bottom: 3.5vmin;
 .distanceInfo {
   grid-area: distanceInfo;
   color: $grey-darker;
+}
+
+.priceContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 48px;
+}
+
+.price {
+  color: $blue-extra-dark;
+  font-weight: $font-weight-normal;
+  font-size: 20px;
+  font-family: $font-family;
+}
+
+@media screen and (width <= 600px) {
+  .priceContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .container {
+    border: 0;
+  }
 }

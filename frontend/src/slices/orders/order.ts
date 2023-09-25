@@ -2,6 +2,11 @@ import {
   calculateOrderPrice,
   createOrder,
   getDriverOrdersPage,
+  getOrder,
+  getRouteData,
+  subscribeOrderUpdates,
+  unsubscribeOrderUpdates,
+  updateOrderFromSocket,
 } from './actions.js';
 import { actions } from './order.slice.js';
 
@@ -9,6 +14,11 @@ const allActions = {
   ...actions,
   createOrder,
   calculateOrderPrice,
+  getOrder,
+  subscribeOrderUpdates,
+  unsubscribeOrderUpdates,
+  updateOrderFromSocket,
+  getRouteData,
   getDriverOrdersPage,
 };
 

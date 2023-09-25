@@ -55,6 +55,19 @@ class OrdersApi extends HttpApi {
     return await response.json<OrderCalculatePriceResponseDto>();
   }
 
+  public async getOrder(orderId: string): Promise<OrderResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(OrdersApiPath.$ID, { id: orderId }),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<OrderResponseDto>();
+  }
+
   public async getAllDriverOrders(
     queryString = '',
   ): Promise<OrderFindAllDriverOrdersResponseDto> {

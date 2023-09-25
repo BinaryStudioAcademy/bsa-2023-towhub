@@ -13,6 +13,7 @@ import { socket } from '~/libs/packages/socket/socket.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { DriversDashboard } from '~/pages/drivers-dashboard/drivers-dashboard.js';
 import { DriversOrderHistory } from '~/pages/drivers-order-history/drivers-order-history.js';
+import { OrderStatus } from '~/pages/order-status/order-status.js';
 import {
   Auth,
   AvailableTrucks,
@@ -51,6 +52,7 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.SIGN_UP_BUSINESS} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP_CUSTOMER} element={<Auth />} />
         <Route path={AppRoute.ORDER} element={<Order />} />
+        <Route path={AppRoute.ORDER_STATUS} element={<OrderStatus />} />
       </Route>
       <Route
         path={AppRoute.ROOT}
