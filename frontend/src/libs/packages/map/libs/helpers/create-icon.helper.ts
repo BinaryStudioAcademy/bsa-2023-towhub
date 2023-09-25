@@ -1,4 +1,4 @@
-import truckImg from '~/assets/img/tow-truck-small.svg';
+import { ImgPath } from '~/libs/enums/img-path.enum.js';
 
 import {
   TRUCK_IMG_ANCHOR_X,
@@ -11,7 +11,7 @@ import { type Icon } from '../types/types.js';
 import { rotateImg } from './helpers.js';
 
 const createIcon = (isOrigin: boolean, angle: number): string | Icon => {
-  const rotatedIconUrl = rotateImg(truckImg, angle);
+  const rotatedIconUrl = rotateImg(ImgPath.TRUCK_SM, angle);
 
   return isOrigin
     ? {
@@ -20,7 +20,7 @@ const createIcon = (isOrigin: boolean, angle: number): string | Icon => {
         size: new google.maps.Size(TRUCK_IMG_WIDTH, TRUCK_IMG_HEIGHT),
         scale: TRUCK_IMG_SCALE,
       }
-    : truckImg;
+    : ImgPath.TRUCK_SM;
 };
 
 export { createIcon };

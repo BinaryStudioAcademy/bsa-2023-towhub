@@ -1,6 +1,7 @@
 import { HttpMessage } from '~/libs/enums/enums.js';
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
+import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
@@ -11,7 +12,7 @@ import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
 import {
   type OrderCreateRequestDto,
-  type OrderEntityT,
+  type OrderEntity as OrderEntityT,
   type OrderQueryParameters,
   type OrderResponseDto,
   type OrdersListResponseDto,
@@ -33,6 +34,8 @@ class OrderService implements Omit<IService, 'find'> {
 
   private userService: UserService;
 
+  private socketService: SocketService;
+
   public constructor({
     businessService,
     orderRepository,
@@ -40,6 +43,7 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService,
     truckService,
     userService,
+    socket,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
@@ -47,6 +51,7 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService: ShiftService;
     truckService: TruckService;
     userService: UserService;
+    socket: SocketService;
   }) {
     this.orderRepository = orderRepository;
 
@@ -59,11 +64,13 @@ class OrderService implements Omit<IService, 'find'> {
     this.truckService = truckService;
 
     this.userService = userService;
+
+    this.socketService = socket;
   }
 
   public async create(
     payload: OrderCreateRequestDto & {
-      userId: number | null;
+      user: UserEntityObjectWithGroupT | null;
     },
   ): Promise<OrderResponseDto> {
     const {
@@ -74,8 +81,12 @@ class OrderService implements Omit<IService, 'find'> {
       customerName,
       customerPhone,
       truckId,
-      userId,
+      user,
     } = payload;
+
+    const { firstName = null, phone = null, id: userId = null } = user ?? {};
+    const nameInOrder = customerName ?? firstName;
+    const phoneInOrder = customerPhone ?? phone;
 
     const truck = await this.truckService.findById(truckId);
 
@@ -109,8 +120,8 @@ class OrderService implements Omit<IService, 'find'> {
       userId,
       businessId: shift.businessId,
       shiftId: shift.id,
-      customerName,
-      customerPhone,
+      customerName: nameInOrder,
+      customerPhone: phoneInOrder,
     });
 
     return OrderEntity.initialize({
@@ -218,7 +229,10 @@ class OrderService implements Omit<IService, 'find'> {
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     };
 
-    return OrderEntity.initialize(orderExtended).toObject();
+    const order = OrderEntity.initialize(orderExtended).toObject();
+    this.socketService.notifyOrderUpdate(order.id, order);
+
+    return order;
   }
 
   public async findAllBusinessOrders({

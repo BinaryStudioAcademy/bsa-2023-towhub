@@ -8,7 +8,7 @@ import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import { type OrderResponseDto } from '~/libs/types/types.js';
 
 import { Badge, Icon } from '../components.js';
-import { statusMapper } from './libs/mapper/status-mapper/status.mapper.js';
+import { statusName } from './libs/map/maps.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -38,7 +38,7 @@ const OrderListCardBusiness: React.FC<Properties> = ({
     [select],
   );
 
-  const statusBadge = statusMapper.get(status);
+  const statusBadge = statusName[status];
 
   return (
     <div
@@ -49,11 +49,11 @@ const OrderListCardBusiness: React.FC<Properties> = ({
         <p className={getValidClassNames('textMdBold', styles.cardName)}>
           Order {id}
         </p>
-        <Badge color={statusBadge?.color}>{statusBadge?.name ?? 'N/A'}</Badge>
+        <Badge color={statusBadge.color}>{statusBadge.name}</Badge>
       </div>
       <div className={styles.content}>
         <img
-          src={ImgPath.AVAVTAR_DEFAULT}
+          src={ImgPath.AVATAR_DEFAULT}
           alt={driver.firstName}
           className={styles.avatar}
         />

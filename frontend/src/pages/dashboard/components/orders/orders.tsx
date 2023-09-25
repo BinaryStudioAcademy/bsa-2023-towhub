@@ -1,7 +1,4 @@
-import { type Libraries, LoadScript } from '@react-google-maps/api';
-
 import {
-  Map,
   OrderFilter,
   OrderList,
   Pagination,
@@ -11,39 +8,39 @@ import { DataStatus } from '~/libs/enums/data-status.enum';
 import { jsonToLatLngLiteral } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
+  useAppMap,
   useAppSelector,
   useCallback,
   useEffect,
   useMemo,
   useQueryParameters,
+  useRef,
   useState,
 } from '~/libs/hooks/hooks.js';
 import {
   DEFAULT_PAGE_INDEX,
   DEFAULT_PAGE_SIZE,
 } from '~/libs/hooks/use-app-table/libs/constant.js';
-import { config } from '~/libs/packages/config/config.js';
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import {
   type OrderQueryParameters,
   type OrderResponseDto,
 } from '~/libs/types/types.js';
 import { actions as ordersActions } from '~/slices/orders/orders.js';
-import { selectOrders } from '~/slices/orders/selectors.js';
+import { selectOrdersBusiness } from '~/slices/orders/selectors.js';
 
 import styles from './styles.module.scss';
-
-const libraries: Libraries = ['places'];
 
 const Orders: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const { orders, total, dataStatus } = useAppSelector(selectOrders);
+  const { orders, total, dataStatus } = useAppSelector(selectOrdersBusiness);
 
   const { setQueryParameters, searchParameters } = useQueryParameters();
 
-  const [endPointMarkers, setEndPointMarkers] =
-    useState<google.maps.LatLngLiteral[]>();
+  const [endPointMarkers, setEndPointMarkers] = useState<
+    google.maps.LatLngLiteral[]
+  >([]);
 
   const [shownRoute, setShownRoute] = useState<PlaceLatLng>();
 
@@ -54,6 +51,7 @@ const Orders: React.FC = () => {
   });
 
   const [pageIndex, setPageIndex] = useState<number>(DEFAULT_PAGE_INDEX);
+  const mapReference = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setQueryParameters({
@@ -100,45 +98,41 @@ const Orders: React.FC = () => {
     [orders],
   );
 
+  useAppMap({
+    mapReference: mapReference,
+    points: endPointMarkers,
+    shownRoute,
+    center: null,
+    destination: null,
+  });
+
   const isLoading = dataStatus === DataStatus.PENDING;
 
   return (
     <div className={styles.orders}>
-      <LoadScript
-        googleMapsApiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
-        libraries={libraries}
-      >
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          <div className={styles.orderlistArea}>
-            <OrderFilter onChange={handleChangeFilter} label={filter.status} />
-            <OrderList orders={sortOrders} select={setShownRoute} />
-            <Pagination
-              pageCount={totalPages}
-              pageIndex={pageIndex}
-              pageSize={DEFAULT_PAGE_SIZE}
-              onClick={handleChangePage}
-            />
-          </div>
-        )}
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          <div className={styles.mapArea}>
-            {orders.length > 0 && (
-              <div className={styles.mapWrapper}>
-                <Map
-                  zoom={10}
-                  className={styles.map}
-                  markers={endPointMarkers}
-                  shownRoute={shownRoute}
-                />
-              </div>
-            )}
-          </div>
-        )}
-      </LoadScript>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className={styles.orderlistArea}>
+          <OrderFilter onChange={handleChangeFilter} label={filter.status} />
+          <OrderList orders={sortOrders} select={setShownRoute} />
+          <Pagination
+            pageCount={totalPages}
+            pageIndex={pageIndex}
+            pageSize={DEFAULT_PAGE_SIZE}
+            onClick={handleChangePage}
+          />
+        </div>
+      )}
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className={styles.mapArea}>
+          {orders.length > 0 && (
+            <div ref={mapReference} id="map" className={styles.mapWrapper} />
+          )}
+        </div>
+      )}
     </div>
   );
 };

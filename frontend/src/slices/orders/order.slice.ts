@@ -7,21 +7,29 @@ import { type OrderResponseDto } from '~/packages/orders/orders.js';
 import {
   calculateOrderPrice,
   createOrder,
+  getOrder,
   getOrdersBusiness,
+  getRouteData,
+  updateOrderFromSocket,
 } from './actions.js';
+import { type RouteData } from './libs/types/route-data.type.js';
 
 type State = {
   orders: OrderResponseDto[];
   total: number;
   price: number;
   dataStatus: ValueOf<typeof DataStatus>;
+  routeData: RouteData | null;
+  currentOrder: OrderResponseDto | null;
 };
 
 const initialState: State = {
   orders: [],
   total: 0,
   price: 0,
+  currentOrder: null,
   dataStatus: DataStatus.IDLE,
+  routeData: null,
 };
 
 const { reducer, actions, name } = createSlice({
@@ -59,6 +67,29 @@ const { reducer, actions, name } = createSlice({
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(getOrdersBusiness.rejected, (state) => {
+        state.dataStatus = DataStatus.REJECTED;
+      })
+      .addCase(getOrder.pending, (state) => {
+        state.dataStatus = DataStatus.PENDING;
+      })
+      .addCase(getOrder.fulfilled, (state, action) => {
+        state.currentOrder = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(getOrder.rejected, (state) => {
+        state.dataStatus = DataStatus.REJECTED;
+      })
+      .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
+        state.currentOrder = action.payload;
+      })
+      .addCase(getRouteData.pending, (state) => {
+        state.dataStatus = DataStatus.PENDING;
+      })
+      .addCase(getRouteData.fulfilled, (state, action) => {
+        state.routeData = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(getRouteData.rejected, (state) => {
         state.dataStatus = DataStatus.REJECTED;
       });
   },

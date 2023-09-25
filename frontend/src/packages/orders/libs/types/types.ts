@@ -1,1 +1,1 @@
-export { type OrderEntityT } from 'shared/build/index.js';
+export { type OrderEntity, type OrderResponseDto } from 'shared/build/index.js';
