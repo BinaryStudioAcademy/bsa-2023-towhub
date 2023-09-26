@@ -200,6 +200,7 @@ class MapService implements IMapService {
         avoidHighways: false,
         avoidTolls: false,
       });
+
       const firstRow = routes.rows[0].elements[0];
 
       return { distance: firstRow.distance, duration: firstRow.duration };
