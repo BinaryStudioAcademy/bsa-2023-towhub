@@ -4,6 +4,8 @@ import { getFullName } from 'shared/build';
 import { ImgPath } from '~/libs/enums/enums.js';
 import { type DriverWithUserData } from '~/libs/types/types.js';
 
+const AVATAR_SIZE = 180;
+
 const columns: ColumnDef<DriverWithUserData>[] = [
   {
     header: 'Full Name',
@@ -18,13 +20,13 @@ const columns: ColumnDef<DriverWithUserData>[] = [
       return driver.driver.avatarUrl ?? ImgPath.AVATAR_DEFAULT;
     },
     footer: 'Photo',
-    size: 180,
+    size: AVATAR_SIZE,
     cell: ({ getValue }) => (
       <img
         src={getValue() as string}
         alt="Driver Personal Avatar"
-        width={180}
-        height={180}
+        width={AVATAR_SIZE}
+        height={AVATAR_SIZE}
       />
     ),
   },

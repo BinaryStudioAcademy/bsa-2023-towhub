@@ -1,11 +1,6 @@
-const createFileList = (
-  image: Blob,
-  filename: string,
-  mimetype: string,
-): FileList => {
-  const file = new File([image], filename, {
-    type: mimetype,
-  });
+const createFileList = (image: Blob, filename: string): FileList => {
+  const { type } = image;
+  const file = new File([image], filename, { type });
   const dt = new DataTransfer();
   dt.items.add(file);
 

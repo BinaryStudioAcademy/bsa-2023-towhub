@@ -1,9 +1,10 @@
 import 'croppie/croppie.css';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   type FieldValues,
   type PathValue,
+  type UseFormRegister,
   type UseFormSetValue,
 } from 'react-hook-form';
 
@@ -14,7 +15,6 @@ import { changeFileExtension } from '~/packages/files/files.js';
 
 import { DefaultSettings as Default } from './libs/enums/default-settings.enum.js';
 import {
-  convertFormatToMimetype,
   createFileList,
   hasSingleFile,
   readFile,
@@ -34,6 +34,8 @@ interface ImageSelectorProperties<
 > {
   name: K;
   setValue: UseFormSetValue<T>;
+  register: UseFormRegister<T>;
+  inputReference?: React.MutableRefObject<HTMLInputElement | null>; // can be used to trigger the selection externally
   initialImageUrl?: string;
   width: number;
   height: number;
@@ -51,6 +53,8 @@ const ImageSelector = <
 >({
   name,
   setValue,
+  register,
+  inputReference,
   initialImageUrl,
   width,
   height,
@@ -66,7 +70,9 @@ const ImageSelector = <
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [cropDataUrl, setCropDataUrl] = useState<string>(initialImageUrl ?? '');
 
-  const inputReference = useRef<React.ElementRef<'input'>>(null);
+  const isCircular = viewMode === 'circle';
+
+  const fallbackInputReference = useRef<React.ElementRef<'input'> | null>(null);
 
   const handleFileRead = useCallback((url: string) => {
     setUploadedDataUrl(url);
@@ -90,53 +96,67 @@ const ImageSelector = <
   }, []);
 
   const handleSelectImageClick = useCallback(() => {
-    if (inputReference.current) {
-      inputReference.current.click();
+    if (fallbackInputReference.current) {
+      fallbackInputReference.current.click();
     }
-  }, []);
+  }, [fallbackInputReference]);
 
   const handleCropSuccess = useCallback(
     (image: CroppedImage | undefined) => {
       if (uploadedFile && image) {
-        setCropDataUrl(image.link);
-        setIsSelecting(false);
-
-        const fileName = resultOptions?.overrideFilename ?? uploadedFile.name;
-
-        const fileList = createFileList(
+        const inputValue = createFileList(
           image.blob,
           changeFileExtension(
-            fileName,
+            resultOptions?.overrideFilename ?? uploadedFile.name,
             resultOptions?.format ?? Default.OUTPUT_FORMAT,
           ),
-          resultOptions?.format
-            ? convertFormatToMimetype(resultOptions.format)
-            : uploadedFile.type,
         );
-        setValue(name, fileList as PathValue<T, K>);
+
+        setCropDataUrl(image.link);
+        setValue(name, inputValue as PathValue<T, K>);
       }
+      setIsSelecting(false);
     },
     [name, resultOptions, setValue, uploadedFile],
   );
 
-  const isCircular = viewMode === 'circle';
+  const { ref: setReactHookFormReference, ...inputReactHookFormProperties } =
+    useMemo(
+      () =>
+        register(name, {
+          onChange: handleImageSelected,
+        }),
+      [handleImageSelected, name, register],
+    );
+
+  const getInputReference = useCallback(
+    (instance: HTMLInputElement): void => {
+      if (inputReference) {
+        inputReference.current = instance;
+      }
+      fallbackInputReference.current = instance;
+      setReactHookFormReference(instance);
+    },
+    [inputReference, setReactHookFormReference],
+  );
 
   return (
     <div className={getValidClassNames(styles.wrapper, className)}>
       <input
-        ref={inputReference}
-        name={name}
+        ref={getInputReference}
         type="file"
         accept="image/*"
-        onChange={handleImageSelected}
         hidden
+        {...inputReactHookFormProperties}
       />
-      <Icon
-        iconName="edit"
-        onClick={handleSelectImageClick}
-        size="lg"
-        className={styles.editIcon}
-      />
+      {!inputReference && (
+        <Icon
+          iconName="edit"
+          onClick={handleSelectImageClick}
+          size="lg"
+          className={styles.editIcon}
+        />
+      )}
       <img
         className={isCircular ? styles.croppedImageCircle : undefined}
         alt={`${name} preview`}

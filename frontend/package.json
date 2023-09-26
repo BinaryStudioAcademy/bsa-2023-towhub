@@ -29,7 +29,6 @@
     "@tanstack/react-table": "8.9.3",
     "@vitejs/plugin-react": "4.0.4",
     "balloon-css": "1.2.0",
-    "@vitejs/plugin-react": "4.0.4",
     "clsx": "2.0.0",
     "croppie": "2.6.5",
     "modern-normalize": "2.0.0",

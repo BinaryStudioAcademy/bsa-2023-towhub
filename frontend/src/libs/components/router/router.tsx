@@ -14,14 +14,15 @@ import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { OrderStatus } from '~/pages/order-status/order-status.js';
 import {
   Auth,
+  AvailableTrucks,
   Dashboard,
+  EditDriverProfilePage,
   HomePage,
   NotFound,
   Order,
   Orders,
   WelcomePage,
 } from '~/pages/pages.js';
-import { TestPage } from '~/pages/test/test.js';
 import { selectUser } from '~/slices/auth/selectors.js';
 
 import { PageLayout, ProtectedRoute } from '../components.js';
@@ -51,7 +52,6 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.SIGN_UP_CUSTOMER} element={<Auth />} />
         <Route path={AppRoute.ORDER} element={<Order />} />
         <Route path={AppRoute.ORDER_STATUS} element={<OrderStatus />} />
-        <Route path={AppRoute.TEST} element={<TestPage />} />
       </Route>
       <Route
         path={AppRoute.ROOT}
@@ -91,11 +91,18 @@ const Router = (): JSX.Element => {
             path={AppRoute.AVAILABLE_TRUCKS}
             element={
               <PageLayout isSidebarHidden>
-                <TestPage />
+                <AvailableTrucks />
               </PageLayout>
             }
           />
-
+          <Route
+            path={AppRoute.EDIT_PROFILE}
+            element={
+              <PageLayout isSidebarHidden>
+                <EditDriverProfilePage />
+              </PageLayout>
+            }
+          />
           <Route
             path={AppRoute.ORDERS}
             element={
