@@ -19,12 +19,16 @@ import {
   type OrderFindAllUserOrdersQuery,
   type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
+  type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusRequestParameter,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import {
   orderCreateRequestBody,
   orderFindAllUserOrdersQuery,
   orderGetParameter,
+  orderUpdateAcceptStatusRequestBody,
+  orderUpdateAcceptStatusRequestParameter,
   orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';
 
@@ -347,6 +351,42 @@ class OrderController extends Controller {
     });
 
     this.addRoute({
+      path: OrdersApiPath.CUSTOMER,
+      method: 'PATCH',
+      authStrategy: AuthStrategy.INJECT_USER,
+      validation: {
+        params: orderUpdateAcceptStatusRequestParameter,
+        body: orderUpdateAcceptStatusRequestBody,
+      },
+      handler: (options) =>
+        this.updateAcceptStatusByCustomer(
+          options as ApiHandlerOptions<{
+            params: OrderUpdateAcceptStatusRequestParameter;
+            body: OrderUpdateAcceptStatusRequestDto;
+            user: UserEntityObjectWithGroupT | null;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: OrdersApiPath.DRIVER,
+      method: 'PATCH',
+      authStrategy: [AuthStrategy.VERIFY_JWT, AuthStrategy.VERIFY_DRIVER_GROUP],
+      validation: {
+        params: orderUpdateAcceptStatusRequestParameter,
+        body: orderUpdateAcceptStatusRequestBody,
+      },
+      handler: (options) =>
+        this.updateAcceptStatusByDriver(
+          options as ApiHandlerOptions<{
+            params: OrderUpdateAcceptStatusRequestParameter;
+            body: OrderUpdateAcceptStatusRequestDto;
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
+
+    this.addRoute({
       path: OrdersApiPath.ROOT,
       method: 'POST',
       authStrategy: AuthStrategy.INJECT_USER,
@@ -525,6 +565,7 @@ class OrderController extends Controller {
    *                - $ref: '#/components/schemas/Order/CreateOrderWithRegisteredUser'
    *                - $ref: '#/components/schemas/Order/CreateOrderWithNotRegisteredUser'
    *      security:
+   *        - {}
    *        - bearerAuth: []
    *      responses:
    *        200:
@@ -569,6 +610,147 @@ class OrderController extends Controller {
       }),
     };
   }
+
+  /**
+   * @swagger
+   * /orders/driver/{orderId}:
+   *    patch:
+   *      tags:
+   *       - orders
+   *      summary: Update order status by Id
+   *      description: Accept/decline order by Id
+   *      parameters:
+   *       - in: path
+   *         name: orderId
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the order to update
+   *         example: 1
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                isAccepted:
+   *                  type: boolean
+   *                  example: true
+   *      security:
+   *        - {}
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Order updated
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Order'
+   *        404:
+   *          description:
+   *            Order with such ID does not found
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/OrderDoesNotExist'
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *
+   */
+
+  private async updateAcceptStatusByDriver(
+    options: ApiHandlerOptions<{
+      params: OrderUpdateAcceptStatusRequestParameter;
+      body: OrderUpdateAcceptStatusRequestDto;
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.orderService.updateAcceptStatusByDriver({
+        orderId: options.params.orderId,
+        payload: options.body,
+        user: options.user,
+      }),
+    };
+  }
+
+  /**
+   * @swagger
+   * /orders/customer/{orderId}:
+   *    patch:
+   *      tags:
+   *       - orders
+   *      summary: Update order status by Id
+   *      description: Accept/decline order by Id
+   *      parameters:
+   *       - in: path
+   *         name: orderId
+   *         schema:
+   *           type: integer
+   *         required: true
+   *         description: Numeric ID of the order to update
+   *         example: 1
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                isAccepted:
+   *                  type: boolean
+   *                  example: true
+   *      security:
+   *        - {}
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Order updated
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Order'
+   *        404:
+   *          description:
+   *            Order with such ID does not found
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/OrderDoesNotExist'
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *
+   */
+
+  private async updateAcceptStatusByCustomer(
+    options: ApiHandlerOptions<{
+      params: OrderUpdateAcceptStatusRequestParameter;
+      body: OrderUpdateAcceptStatusRequestDto;
+      user: UserEntityObjectWithGroupT | null;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.orderService.updateAcceptStatusByCustomer({
+        orderId: options.params.orderId,
+        payload: options.body,
+        user: options.user,
+      }),
+    };
+  }
+
   /**
    * @swagger
    * /orders:

@@ -6,10 +6,13 @@ import { type OrderResponseDto } from '~/packages/orders/orders.js';
 
 import {
   calculateOrderPrice,
+  changeAcceptOrderStatusByCustomer,
+  changeAcceptOrderStatusByDriver,
   createOrder,
   getOrder,
   getRouteData,
   getUserOrdersPage,
+  removeOrder,
   updateOrderFromSocket,
 } from './actions.js';
 import { type RouteData } from './libs/types/route-data.type.js';
@@ -44,7 +47,7 @@ const { reducer, actions, name } = createSlice({
         state.total = actions.payload.total;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.orders.push(action.payload);
+        state.currentOrder = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(calculateOrderPrice.fulfilled, (state, action) => {
@@ -60,13 +63,33 @@ const { reducer, actions, name } = createSlice({
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
-        state.currentOrder = action.payload;
+        state.currentOrder = { ...state.currentOrder, ...action.payload };
       })
+      .addCase(removeOrder, (state) => {
+        state.currentOrder = null;
+      })
+      .addMatcher(
+        isAnyOf(
+          changeAcceptOrderStatusByDriver.fulfilled,
+          changeAcceptOrderStatusByCustomer.fulfilled,
+        ),
+        (state, action) => {
+          const { status } = action.payload;
+
+          if (state.currentOrder) {
+            state.currentOrder.status = status;
+          }
+
+          state.dataStatus = DataStatus.FULFILLED;
+        },
+      )
       .addMatcher(
         isAnyOf(
           createOrder.pending,
           calculateOrderPrice.pending,
           getUserOrdersPage.pending,
+          changeAcceptOrderStatusByDriver.pending,
+          changeAcceptOrderStatusByCustomer.pending,
           getOrder.pending,
           getRouteData.pending,
         ),
@@ -79,6 +102,8 @@ const { reducer, actions, name } = createSlice({
           createOrder.rejected,
           calculateOrderPrice.rejected,
           getUserOrdersPage.rejected,
+          changeAcceptOrderStatusByDriver.rejected,
+          changeAcceptOrderStatusByCustomer.rejected,
           getOrder.rejected,
           getRouteData.rejected,
         ),

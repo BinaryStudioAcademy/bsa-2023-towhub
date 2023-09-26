@@ -20,9 +20,9 @@ class UserService implements IService<UserEntityObjectT> {
   }
 
   public async findAll(): Promise<UserEntityObjectT[]> {
-    const result = await this.userRepository.findAll();
+    const results = await this.userRepository.findAll();
 
-    return result.map((item) => UserEntity.initialize(item).toObject());
+    return results.map((item) => UserEntity.initialize(item).toObject());
   }
 
   public async findByPhoneOrEmail(

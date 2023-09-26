@@ -48,9 +48,9 @@ class S3ClientService {
       return null;
     }
 
-    const intArrayContent = await result.Body.transformToByteArray();
+    const contents = await result.Body.transformToByteArray();
 
-    return Buffer.from(intArrayContent);
+    return Buffer.from(contents);
   }
 
   public async getObjectPresignedUrl(
