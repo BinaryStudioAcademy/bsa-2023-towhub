@@ -97,7 +97,7 @@ const TruckTable: React.FC = () => {
           pageSize={pageSize}
           setSorting={setSorting}
           sorting={sorting}
-          isLoading={dataStatus === DataStatus.IDLE}
+          isLoading={dataStatus === DataStatus.PENDING}
           changePageSize={changePageSize}
           changePageIndex={changePageIndex}
           emptyTableMessage={message}
