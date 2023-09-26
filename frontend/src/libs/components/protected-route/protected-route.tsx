@@ -1,8 +1,9 @@
-import { DataStatus } from '~/libs/enums/enums.js';
+import { Navigate } from 'react-router-dom';
+
+import { AppRoute, DataStatus } from '~/libs/enums/enums.js';
 import { useAppSelector } from '~/libs/hooks/hooks.js';
 import { type ValueOf } from '~/libs/types/types.js';
 import { type UserGroupKey } from '~/packages/users/libs/enums/enums.js';
-import { NotFound } from '~/pages/not-found/not-found.js';
 import { useAuthUser } from '~/slices/auth/auth.js';
 import { selectIsLoading } from '~/slices/auth/selectors.js';
 
@@ -26,7 +27,7 @@ const ProtectedRoute = ({
   return user && allowedUserGroup === user.group.key ? (
     <RouterOutlet />
   ) : (
-    <NotFound />
+    <Navigate to={AppRoute.SIGN_IN} />
   );
 };
 

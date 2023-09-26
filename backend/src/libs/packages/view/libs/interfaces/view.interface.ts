@@ -1,5 +1,7 @@
-interface IView<T extends Record<string, unknown>> {
-  render(parameters: T): string;
+import { type RenderParameter } from '~/packages/mail/libs/types/render-parameter.type.js';
+
+interface IView {
+  render(parameters: RenderParameter): string;
 }
 
 export { type IView };

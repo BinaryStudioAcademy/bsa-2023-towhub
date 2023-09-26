@@ -6,8 +6,8 @@ import {
   useEffect,
 } from '~/libs/hooks/hooks.js';
 import {
-  type DriverCreateUpdateRequestDto,
-  driverCreateUpdateRequestBody,
+  type DriverCreateRequestDto,
+  driverCreateRequestBody,
 } from '~/packages/drivers/drivers.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
@@ -16,7 +16,7 @@ import { getInitialFields } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onSubmit: (payload: DriverCreateUpdateRequestDto) => void;
+  onSubmit: (payload: DriverCreateRequestDto) => void;
 };
 
 const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
@@ -38,7 +38,7 @@ const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
       </h3>
       <Form
         defaultValues={DEFAULT_ADD_DRIVER_PAYLOAD}
-        validationSchema={driverCreateUpdateRequestBody}
+        validationSchema={driverCreateRequestBody}
         onSubmit={onSubmit}
         btnLabel="Add driver"
         fields={addDriverFields}

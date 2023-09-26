@@ -15,10 +15,13 @@ import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types
 
 import {
   addTruck,
+  calculateArrivalTime,
   findAllTrucksForBusiness,
   getAllTrucksByUserId,
   setTrucks,
+  updateTruckLocationFromSocket,
 } from './actions.js';
+import { type TruckArrivalTime, type TruckLocation } from './types/types.js';
 
 type State = {
   trucks: TruckGetItemResponseDto[];
@@ -26,6 +29,8 @@ type State = {
   dataStatus: ValueOf<typeof DataStatus>;
   total: number;
   error: HttpError | null;
+  truckLocation: TruckLocation | null;
+  truckArrivalTime: TruckArrivalTime | null;
 };
 
 const initialState: State = {
@@ -34,6 +39,8 @@ const initialState: State = {
   error: null,
   chosenTruck: null,
   dataStatus: DataStatus.IDLE,
+  truckLocation: null,
+  truckArrivalTime: null,
 };
 
 type TruckChosenPayload = FirstParameter<
@@ -115,6 +122,12 @@ const { reducer, actions, name } = createSlice({
       })
       .addCase(getAllTrucksByUserId.rejected, (state) => {
         state.dataStatus = DataStatus.REJECTED;
+      })
+      .addCase(updateTruckLocationFromSocket.fulfilled, (state, action) => {
+        state.truckLocation = action.payload.latLng;
+      })
+      .addCase(calculateArrivalTime.fulfilled, (state, action) => {
+        state.truckArrivalTime = action.payload;
       })
       .addMatcher(
         isAnyOf(findAllTrucksForBusiness.pending, addTruck.pending),

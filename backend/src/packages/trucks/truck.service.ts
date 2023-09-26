@@ -57,11 +57,11 @@ class TruckService implements IService {
   public async create(
     payload: Omit<TruckEntityT, 'id' | 'createdAt' | 'status'>,
   ): Promise<TruckEntityT> {
-    const existingTruck = await this.repository.find(
+    const existingTrucks = await this.repository.find(
       payload.licensePlateNumber,
     );
 
-    if (existingTruck.length > 0) {
+    if (existingTrucks.length > 0) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpMessage.TRUCK_EXISTS,
@@ -105,8 +105,19 @@ class TruckService implements IService {
     userId: number,
     truckIds: number[],
   ): Promise<void> {
-    const uniqueItems = [...new Set(truckIds)];
-    const driverTrucks: DriverHaveAccessToTruck[] = uniqueItems.map(
+    if (truckIds.length === 0) {
+      return;
+    }
+
+    const existingTrucks = await this.repository.getTrucksByUserId(userId);
+
+    const uniqueTruckIds = [...new Set(truckIds)];
+
+    const filteredTruckIds = uniqueTruckIds.filter(
+      (truckId) => !existingTrucks.some((it) => it.truckId === truckId),
+    );
+
+    const driverTrucks: DriverHaveAccessToTruck[] = filteredTruckIds.map(
       (truckId) => ({
         userId,
         truckId,

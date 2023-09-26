@@ -2,8 +2,9 @@ const OrderStatus = {
   PENDING: 'pending',
   CONFIRMED: 'confirmed',
   CANCELED: 'canceled',
-  DONE: 'done',
+  REJECTED: 'rejected',
   PICKING_UP: 'picking_up',
+  DONE: 'done',
 } as const;
 
 export { OrderStatus };
