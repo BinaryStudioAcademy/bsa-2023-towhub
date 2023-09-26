@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
@@ -6,9 +6,12 @@ import { type OrderResponseDto } from '~/packages/orders/orders.js';
 
 import {
   calculateOrderPrice,
+  changeAcceptOrderStatusByCustomer,
+  changeAcceptOrderStatusByDriver,
   createOrder,
   getOrder,
   getRouteData,
+  removeOrder,
   updateOrderFromSocket,
 } from './actions.js';
 import { type RouteData } from './libs/types/route-data.type.js';
@@ -35,49 +38,69 @@ const { reducer, actions, name } = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(createOrder.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.orders.push(action.payload);
+        state.currentOrder = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
-      })
-      .addCase(createOrder.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
-      })
-      .addCase(calculateOrderPrice.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
       })
       .addCase(calculateOrderPrice.fulfilled, (state, action) => {
         state.price = action.payload.price;
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(calculateOrderPrice.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
-      })
-      .addCase(getOrder.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
       .addCase(getOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
-      })
-      .addCase(getOrder.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
-      })
-      .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
-        state.currentOrder = action.payload;
-      })
-      .addCase(getRouteData.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
       })
       .addCase(getRouteData.fulfilled, (state, action) => {
         state.routeData = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(getRouteData.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
-      });
+      .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
+        state.currentOrder = { ...state.currentOrder, ...action.payload };
+      })
+      .addCase(removeOrder, (state) => {
+        state.currentOrder = null;
+      })
+      .addMatcher(
+        isAnyOf(
+          changeAcceptOrderStatusByDriver.fulfilled,
+          changeAcceptOrderStatusByCustomer.fulfilled,
+        ),
+        (state, action) => {
+          const { status } = action.payload;
+
+          if (state.currentOrder) {
+            state.currentOrder.status = status;
+          }
+
+          state.dataStatus = DataStatus.FULFILLED;
+        },
+      )
+      .addMatcher(
+        isAnyOf(
+          calculateOrderPrice.pending,
+          createOrder.pending,
+          changeAcceptOrderStatusByDriver.pending,
+          changeAcceptOrderStatusByCustomer.pending,
+          getOrder.pending,
+          getRouteData.pending,
+        ),
+        (state) => {
+          state.dataStatus = DataStatus.PENDING;
+        },
+      )
+      .addMatcher(
+        isAnyOf(
+          calculateOrderPrice.rejected,
+          createOrder.rejected,
+          changeAcceptOrderStatusByDriver.rejected,
+          changeAcceptOrderStatusByCustomer.rejected,
+          getOrder.rejected,
+          getRouteData.rejected,
+        ),
+        (state) => {
+          state.dataStatus = DataStatus.REJECTED;
+        },
+      );
   },
 });
 

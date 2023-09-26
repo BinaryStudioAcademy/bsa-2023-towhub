@@ -50,25 +50,25 @@ class BusinessRepository implements IRepository {
     companyName,
     ownerId,
   }: Partial<BusinessEntityT>): Promise<OperationResult<boolean>> {
-    const filterClause: SQL[] = [];
+    const filterClauses: SQL[] = [];
 
     if (id) {
-      filterClause.push(eq(this.businessSchema.id, id));
+      filterClauses.push(eq(this.businessSchema.id, id));
     }
 
     if (taxNumber) {
-      filterClause.push(eq(this.businessSchema.taxNumber, taxNumber));
+      filterClauses.push(eq(this.businessSchema.taxNumber, taxNumber));
     }
 
     if (companyName) {
-      filterClause.push(eq(this.businessSchema.companyName, companyName));
+      filterClauses.push(eq(this.businessSchema.companyName, companyName));
     }
 
     if (ownerId) {
-      filterClause.push(eq(this.businessSchema.ownerId, ownerId));
+      filterClauses.push(eq(this.businessSchema.ownerId, ownerId));
     }
 
-    if (filterClause.length === 0) {
+    if (filterClauses.length === 0) {
       throw new ApplicationError({
         message: AppErrorMessage.INVALID_QUERY,
       });
@@ -78,7 +78,7 @@ class BusinessRepository implements IRepository {
       .driver()
       .select()
       .from(this.businessSchema)
-      .where(or(...filterClause));
+      .where(or(...filterClauses));
 
     return {
       result: Boolean(business),
