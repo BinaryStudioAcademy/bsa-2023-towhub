@@ -29,6 +29,17 @@ const getOrdersBusiness = createAsyncThunk<
 
   return await ordersApi.getOrdersBusiness(queryString);
 });
+
+const getBusinessOrders = createAsyncThunk<
+  OrderResponseDto[],
+  undefined,
+  AsyncThunkConfig
+>(`${sliceName}/orders`, async (_, { extra }) => {
+  const { ordersApi } = extra;
+
+  return await ordersApi.getBusinessOrders();
+});
+
 const changeAcceptOrderStatusByDriver = createAsyncThunk<
   OrderUpdateAcceptStatusResponseDto,
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
@@ -160,6 +171,7 @@ export {
   changeAcceptOrderStatusByCustomer,
   changeAcceptOrderStatusByDriver,
   createOrder,
+  getBusinessOrders,
   getOrder,
   getOrdersBusiness,
   getRouteData,

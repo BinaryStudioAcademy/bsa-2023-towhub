@@ -22,6 +22,7 @@ export {
   type FirstParameter,
   type OrderQueryParameters,
   type OrderResponseDto,
+  type OrdersListResponseDto,
   type OrderStatusValues,
   type PaginationParameters,
   type PaginationWithSortingParameters,

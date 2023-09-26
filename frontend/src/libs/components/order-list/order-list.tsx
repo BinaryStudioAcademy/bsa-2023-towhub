@@ -6,15 +6,15 @@ import styles from './styles.module.scss';
 
 type Properties = {
   orders: OrderResponseDto[];
-  select: ({ startPoint, endPoint }: PlaceLatLng) => void;
+  onSelect: ({ startPoint, endPoint }: PlaceLatLng) => void;
 };
 
-const OrderList: React.FC<Properties> = ({ orders, select }: Properties) => {
+const OrderList: React.FC<Properties> = ({ orders, onSelect }: Properties) => {
   return (
     <ul className={styles.orderList}>
       {orders.map((order) => (
         <li key={order.id} className={styles.orderItem}>
-          <OrderListCardBusiness order={order} onSelect={select} />
+          <OrderListCardBusiness order={order} onSelect={onSelect} />
         </li>
       ))}
     </ul>

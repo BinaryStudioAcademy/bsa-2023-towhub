@@ -38,13 +38,14 @@ const useAppMap = ({
   const mapService = useRef<MapService | null>(null);
 
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    MapConnector.dropMap();
+  }, []);
 
   useEffect(() => {
     const configMap = async (): Promise<void> => {
       await MapConnector.getInstance();
-
-      !mapService.current &&
-        setMapService({ points, center, mapReference, mapService, zoom });
+      setMapService({ points, center, mapReference, mapService, zoom });
 
       if (mapService.current && center && destination) {
         mapService.current.removeMarkers();

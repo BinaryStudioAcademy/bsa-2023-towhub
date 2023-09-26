@@ -120,7 +120,7 @@ const Orders: React.FC = () => {
     <div className={styles.orders}>
       <div className={styles.orderlistArea}>
         <OrderFilter onChange={handleChangeFilter} label={filter.status} />
-        <OrderList orders={sortOrders} select={setShownRoute} />
+        <OrderList orders={sortOrders} onSelect={setShownRoute} />
         <Pagination
           pageCount={totalPages}
           pageIndex={pageIndex}
