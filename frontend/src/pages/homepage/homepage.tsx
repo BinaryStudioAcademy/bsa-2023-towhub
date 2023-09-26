@@ -13,7 +13,7 @@ import styles from './styles.module.scss';
 const HomePage: React.FC = () => {
   const trucks = useAppSelector(selectTrucks);
 
-  const mapReference = useRef<HTMLDivElement>(null);
+  const mapReference = useRef<HTMLDivElement | null>(null);
 
   useAppMap({
     center: null,
