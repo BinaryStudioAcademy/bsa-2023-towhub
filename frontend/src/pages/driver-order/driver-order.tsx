@@ -128,17 +128,15 @@ const DriverOrder = (): JSX.Element => {
       }
       case 'picking_up': {
         return (
-          <>
-            <Button
-              className={getValidClassNames(
-                styles.button,
-                styles.accept,
-                styles.complete,
-              )}
-              label={'Complete order'}
-              onClick={handleComplete}
-            />
-          </>
+          <Button
+            className={getValidClassNames(
+              styles.button,
+              styles.accept,
+              styles.complete,
+            )}
+            label={'Complete order'}
+            onClick={handleComplete}
+          />
         );
       }
       case 'rejected':
