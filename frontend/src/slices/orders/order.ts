@@ -9,7 +9,6 @@ import {
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,
-  updateOrderStatusFromSocket,
 } from './actions.js';
 import { actions } from './order.slice.js';
 
@@ -23,7 +22,6 @@ const allActions = {
   getRouteData,
   removeOrder,
   subscribeOrderUpdates,
-  updateOrderStatusFromSocket,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,
 };

@@ -267,7 +267,7 @@ class OrderService implements Omit<IService, 'find'> {
     const { id, status } =
       OrderEntity.initializeUpdate(updatedOrder).toObject();
 
-    this.socketService.notifyOrderUpdateStatus(id, status);
+    this.socketService.notifyOrderUpdate(id, { status });
 
     return { id, status };
   }
@@ -297,7 +297,7 @@ class OrderService implements Omit<IService, 'find'> {
     const { id, status } =
       OrderEntity.initializeUpdate(updatedOrder).toObject();
 
-    this.socketService.notifyOrderUpdateStatus(id, status);
+    this.socketService.notifyOrderUpdate(id, { status });
 
     return { id, status };
   }

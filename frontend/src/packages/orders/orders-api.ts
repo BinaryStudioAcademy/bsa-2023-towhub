@@ -79,7 +79,6 @@ class OrdersApi extends HttpApi {
         method: 'PATCH',
         contentType: ContentType.JSON,
         payload: JSON.stringify(payload),
-
         hasAuth: true,
       },
     );

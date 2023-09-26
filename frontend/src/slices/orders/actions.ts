@@ -4,7 +4,6 @@ import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
-  type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusResponseDto,
 } from '~/packages/orders/libs/types/types.js';
@@ -121,14 +120,6 @@ const updateOrderFromSocket = createAsyncThunk<
   return order;
 });
 
-const updateOrderStatusFromSocket = createAsyncThunk<
-  OrderStatusValues,
-  OrderStatusValues,
-  AsyncThunkConfig
->(ActionName.SOCKET.UPDATE_ORDER_STATUS, (status) => {
-  return status;
-});
-
 const subscribeOrderUpdates = createAction(
   ActionName.SOCKET.SUBSCRIBE_ORDER_UPDATES,
   (orderId: string) => {
@@ -165,5 +156,4 @@ export {
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,
-  updateOrderStatusFromSocket,
 };

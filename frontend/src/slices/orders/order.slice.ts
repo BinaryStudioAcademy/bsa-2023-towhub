@@ -13,7 +13,6 @@ import {
   getRouteData,
   removeOrder,
   updateOrderFromSocket,
-  updateOrderStatusFromSocket,
 } from './actions.js';
 import { type RouteData } from './libs/types/route-data.type.js';
 
@@ -56,12 +55,7 @@ const { reducer, actions, name } = createSlice({
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
-        state.currentOrder = action.payload;
-      })
-      .addCase(updateOrderStatusFromSocket.fulfilled, (state, action) => {
-        if (state.currentOrder) {
-          state.currentOrder.status = action.payload;
-        }
+        state.currentOrder = { ...state.currentOrder, ...action.payload };
       })
       .addCase(removeOrder, (state) => {
         state.currentOrder = null;

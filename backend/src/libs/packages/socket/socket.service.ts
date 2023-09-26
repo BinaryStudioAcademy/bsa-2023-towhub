@@ -18,7 +18,6 @@ import {
 import {
   type ClientToServerEventParameter,
   type OrderResponseDto,
-  type OrderStatusValues,
   ServerToClientEvent,
 } from './libs/types/types.js';
 
@@ -149,20 +148,11 @@ class SocketService {
 
   public notifyOrderUpdate(
     id: OrderResponseDto['id'],
-    order: OrderResponseDto,
+    order: Partial<OrderResponseDto>,
   ): void {
     this.io
       ?.to(`${RoomPrefix.ORDER}${id}`)
       .emit(ServerToClientEvent.ORDER_UPDATED, order);
-  }
-
-  public notifyOrderUpdateStatus(
-    id: OrderResponseDto['id'],
-    status: OrderStatusValues,
-  ): void {
-    this.io
-      ?.to(`${RoomPrefix.ORDER}${id}`)
-      .emit(ServerToClientEvent.ORDER_UPDATED_STATUS, status);
   }
 
   public notifyCustomerForTruckLocationUpdate(
