@@ -4,6 +4,10 @@ import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
+  type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusResponseDto,
+} from '~/packages/orders/libs/types/types.js';
+import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
@@ -24,6 +28,31 @@ const getBusinessOrders = createAsyncThunk<
 
   return await ordersApi.getBusinessOrders();
 });
+const changeAcceptOrderStatusByDriver = createAsyncThunk<
+  OrderUpdateAcceptStatusResponseDto,
+  OrderUpdateAcceptStatusRequestDto & { orderId: string },
+  AsyncThunkConfig
+>(
+  ActionName.CHANGE_ACCEPT_ORDER_STATUS,
+  ({ isAccepted, orderId }, { extra }) => {
+    const { ordersApi } = extra;
+
+    return ordersApi.changeAcceptOrderStatusByDriver(orderId, { isAccepted });
+  },
+);
+
+const changeAcceptOrderStatusByCustomer = createAsyncThunk<
+  OrderUpdateAcceptStatusResponseDto,
+  OrderUpdateAcceptStatusRequestDto & { orderId: string },
+  AsyncThunkConfig
+>(
+  ActionName.CHANGE_ACCEPT_ORDER_STATUS,
+  ({ isAccepted, orderId }, { extra }) => {
+    const { ordersApi } = extra;
+
+    return ordersApi.changeAcceptOrderStatusByCustomer(orderId, { isAccepted });
+  },
+);
 
 const createOrder = createAsyncThunk<
   OrderResponseDto,
@@ -56,10 +85,10 @@ const calculateOrderPrice = createAsyncThunk<
 
 const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
   ActionName.GET_ORDER,
-  (orderId, { extra }) => {
+  async (orderId, { extra }) => {
     const { ordersApi } = extra;
 
-    return ordersApi.getOrder(orderId);
+    return await ordersApi.getOrder(orderId);
   },
 );
 
@@ -75,6 +104,7 @@ const getRouteData = createAsyncThunk<
   };
 
   const mapService = await mapServiceFactory({ mapElement: null });
+
   const [originName, destinationName, distanceAndDuration] = await Promise.all([
     mapService.getPointAddress(routeData.origin),
     mapService.getPointAddress(routeData.destination),
@@ -117,12 +147,22 @@ const unsubscribeOrderUpdates = createAction(
   },
 );
 
+const removeOrder = createAction(
+  ActionName.REMOVE_ORDER,
+  (orderId: string) => ({
+    payload: orderId,
+  }),
+);
+
 export {
   calculateOrderPrice,
+  changeAcceptOrderStatusByCustomer,
+  changeAcceptOrderStatusByDriver,
   createOrder,
   getBusinessOrders,
   getOrder,
   getRouteData,
+  removeOrder,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,

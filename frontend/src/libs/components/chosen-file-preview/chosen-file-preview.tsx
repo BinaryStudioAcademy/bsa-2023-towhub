@@ -40,7 +40,9 @@ const ChosenFilePreview = ({
     if (beforeDeletionState) {
       const zoomOutSpeed = Number.parseInt(styles['zoom-out-speed']);
       const deletionTimeout = zoomOutSpeed - DELETE_TIME_OFFSET;
-      setTimeout(() => handleDeleteFile(id), deletionTimeout);
+      const timeout = setTimeout(() => handleDeleteFile(id), deletionTimeout);
+
+      return () => clearTimeout(timeout);
     }
   }, [beforeDeletionState, handleDeleteFile, name, id]);
 

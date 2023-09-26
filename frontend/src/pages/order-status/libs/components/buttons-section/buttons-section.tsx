@@ -20,7 +20,9 @@ const ButtonsSection = ({
     status === OrderStatus.PENDING || status === OrderStatus.CONFIRMED;
   const isPayNowButtonShown = status === OrderStatus.PICKING_UP;
   const isHomepageButtonShown =
-    status === OrderStatus.CANCELED || status === OrderStatus.DONE;
+    status === OrderStatus.CANCELED ||
+    status === OrderStatus.DONE ||
+    status === OrderStatus.REJECTED;
 
   return (
     <section className={styles.buttonsSection}>

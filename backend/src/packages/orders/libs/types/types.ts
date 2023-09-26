@@ -12,6 +12,10 @@ export {
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderResponseDto,
+  type OrderStatusValues,
+  type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusRequestParameter,
+  type OrderUpdateAcceptStatusResponseDto,
   type OrderUpdateRequestDto,
 } from 'shared/build/index.js';
 export { type OrderDatabaseModel };

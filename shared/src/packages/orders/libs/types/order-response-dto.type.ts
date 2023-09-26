@@ -6,8 +6,8 @@ import { type DriverInfo, type OrderEntity } from './order-entity.type.js';
 type OrderResponseDto = Omit<OrderEntity, 'shiftId' | 'driver' | 'truck'> & {
   shift: {
     id: ShiftEntityT['id'];
-    driver: DriverInfo;
-    truck: Pick<TruckEntityT, 'id' | 'licensePlateNumber'>;
+    driver: DriverInfo | null;
+    truck: Pick<TruckEntityT, 'id' | 'licensePlateNumber'> | null;
   };
 };
 

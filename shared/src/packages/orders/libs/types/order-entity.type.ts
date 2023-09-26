@@ -20,8 +20,8 @@ type OrderEntity = {
   customerName: string | null;
   customerPhone: string | null;
   shiftId: number;
-  driver: DriverInfo;
-  truck: Pick<TruckEntityT, 'id' | 'licensePlateNumber'>;
+  driver: DriverInfo | null;
+  truck: Pick<TruckEntityT, 'id' | 'licensePlateNumber'> | null;
 };
 
 type DriverInfo = DriverCommonDetails &

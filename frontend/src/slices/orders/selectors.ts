@@ -1,5 +1,5 @@
 import { type RootState } from '~/libs/types/types.js';
-import { type OrderResponseDto } from '~/packages/orders/types/types.js';
+import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
 
 import { type name as OrderSliceName } from './order.slice.js';
 
