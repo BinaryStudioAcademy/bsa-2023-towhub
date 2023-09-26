@@ -38,6 +38,9 @@ const useAppMap = ({
   const mapService = useRef<MapService | null>(null);
 
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    MapConnector.dropMap();
+  }, []);
 
   useEffect(() => {
     const configMap = async (): Promise<void> => {
