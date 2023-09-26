@@ -1,1 +1,1 @@
-export { statusName } from './status-name.map.js';
+export { mapOrderStatusToReadable } from './map-order-status-to-readable.map.js';

@@ -8,17 +8,18 @@ import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import { type OrderResponseDto } from '~/libs/types/types.js';
 
 import { Badge, Icon } from '../components.js';
-import { statusName } from './libs/map/maps.js';
+import { getFullName } from '../header/libs/helpers/helpers.js';
+import { mapOrderStatusToReadable } from './libs/map/maps.js';
 import styles from './styles.module.scss';
 
 type Properties = {
   order: OrderResponseDto;
-  select: ({ startPoint, endPoint }: PlaceLatLng) => void;
+  onSelect: ({ startPoint, endPoint }: PlaceLatLng) => void;
 };
 
 const OrderListCardBusiness: React.FC<Properties> = ({
   order,
-  select,
+  onSelect,
 }: Properties) => {
   const {
     id,
@@ -28,22 +29,22 @@ const OrderListCardBusiness: React.FC<Properties> = ({
     shift: { driver, truck },
   } = order;
 
-  const selectCard = useCallback(
+  const handleSelectCard = useCallback(
     (startPoint: string, endPoint: string) => () => {
-      select({
+      onSelect({
         startPoint: jsonToLatLngLiteral(startPoint),
         endPoint: jsonToLatLngLiteral(endPoint),
       });
     },
-    [select],
+    [onSelect],
   );
 
-  const statusBadge = statusName[status];
+  const statusBadge = mapOrderStatusToReadable[status];
 
   return (
     <div
       className={styles.container}
-      onMouseEnter={selectCard(startPoint, endPoint)}
+      onMouseEnter={handleSelectCard(startPoint, endPoint)}
     >
       <div className={styles.header}>
         <p className={getValidClassNames('textMdBold', styles.cardName)}>
@@ -59,7 +60,7 @@ const OrderListCardBusiness: React.FC<Properties> = ({
         />
         <div className={styles.driver}>
           <p className={getValidClassNames('textMdBold')}>
-            {driver.firstName} {driver.lastName}
+            {getFullName(driver.firstName, driver.lastName)}
           </p>
           <p className={getValidClassNames('textMd', styles.driverPhone)}>
             {driver.phone}

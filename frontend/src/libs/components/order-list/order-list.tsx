@@ -14,7 +14,7 @@ const OrderList: React.FC<Properties> = ({ orders, select }: Properties) => {
     <ul className={styles.orderList}>
       {orders.map((order) => (
         <li key={order.id} className={styles.orderItem}>
-          <OrderListCardBusiness order={order} select={select} />
+          <OrderListCardBusiness order={order} onSelect={select} />
         </li>
       ))}
     </ul>
