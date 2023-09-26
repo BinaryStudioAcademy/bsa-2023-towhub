@@ -29,7 +29,6 @@ export { Radio } from './radio/radio.js';
 export { Router } from './router/router.jsx';
 export { RouterProvider } from './router-provider/router-provider.js';
 export { Spinner } from './spinner/spinner.js';
-export { StarRating } from './star-rating/star-rating.jsx';
 export { Table } from './table/table.js';
 export { Toggle } from './toggle/toggle.js';
 export { TowTruckCard } from './tow-truck-card/tow-truck-card.js';
