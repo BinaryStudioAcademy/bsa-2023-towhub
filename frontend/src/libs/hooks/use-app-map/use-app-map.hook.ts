@@ -40,7 +40,8 @@ const useAppMap = ({
     const configMap = async (): Promise<void> => {
       await MapConnector.getInstance();
 
-      setMapService({ points, center, mapReference, mapService, zoom });
+      !mapService.current &&
+        setMapService({ points, center, mapReference, mapService, zoom });
 
       if (mapService.current && center && destination) {
         mapService.current.removeMarkers();
@@ -60,12 +61,14 @@ const useAppMap = ({
       for (const point of points) {
         mapService.current.addMarker(point, false);
       }
-
-      if (shownRoute) {
-        void mapService.current.addRoute(shownRoute);
-      }
     }
-  }, [points, shownRoute]);
+  }, [points]);
+
+  useEffect(() => {
+    if (mapService.current && shownRoute) {
+      void mapService.current.addRoute(shownRoute);
+    }
+  }, [shownRoute]);
 
   useEffect(() => {
     if (pricePerKm && startAddress && endAddress) {
