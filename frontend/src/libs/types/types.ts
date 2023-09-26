@@ -2,7 +2,7 @@ export { type RootState } from '../packages/store/store.js';
 export { type AppThunk } from './app-thunk.type.js';
 export { type AsyncThunkConfig } from './async-thunk-config.type.js';
 export { type BurgerMenuItem } from './burger-menu-item.type.js';
-export { type DarkColor, type LightColor } from './color.type.js';
+export { type Color, type DarkColor, type LightColor } from './color.type.js';
 export { type FormField } from './form.type.js';
 export { type SelectOption } from './select-option.type.js';
 export { type ServerErrorHandling } from './server-error-handling.type.js';
@@ -22,6 +22,7 @@ export {
   type EntityPagination,
   type FirstParameter,
   type OrderResponseDto,
+  type OrderStatusValues,
   type PaginationParameters,
   type PaginationWithSortingParameters,
   type ServerCommonErrorResponse,

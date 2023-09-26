@@ -18,4 +18,6 @@ type LightColor =
   | 'green-extra-light'
   | 'blue-extra-light';
 
-export { type DarkColor, type LightColor };
+type Color = DarkColor | LightColor;
+
+export { type Color, type DarkColor, type LightColor };

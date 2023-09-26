@@ -1,0 +1,62 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+  background-color: $white;
+  border: 1px solid $grey-border;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+
+  &:hover {
+    background-color: $grey-extra-light;
+    box-shadow: none;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2.25vmin;
+  border-bottom: 1px solid $grey-light;
+}
+
+.content {
+  display: flex;
+  padding: 2.25vmin;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.driver {
+  align-self: center;
+  margin-left: 15px;
+}
+
+.driverPhone {
+  margin-top: 15px;
+  color: $grey-dark;
+}
+
+.truck {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  color: $scroll-bar-thumb;
+}
+
+.truckNumber {
+  align-self: center;
+}

@@ -47,11 +47,11 @@ class Store {
       devTools: config.ENV.APP.ENVIRONMENT !== AppEnvironment.PRODUCTION,
       reducer: {
         auth: authReducer,
+        orders: orderReducer,
         trucks: truckReducer,
         drivers: driversReducer,
         driver: driverReducer,
         files: filesReducer,
-        orders: orderReducer,
       },
       middleware: (getDefaultMiddleware) => [
         ...getDefaultMiddleware({

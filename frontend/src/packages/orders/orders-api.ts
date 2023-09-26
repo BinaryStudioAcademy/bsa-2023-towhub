@@ -25,6 +25,19 @@ class OrdersApi extends HttpApi {
     super({ path: ApiPath.ORDERS, baseUrl, http, storage });
   }
 
+  public async getBusinessOrders(): Promise<OrderResponseDto[]> {
+    const response = await this.load(
+      this.getFullEndpoint(OrdersApiPath.ROOT, {}),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<OrderResponseDto[]>();
+  }
+
   public async createOrder(
     payload: OrderCreateRequestDto,
   ): Promise<OrderResponseDto> {

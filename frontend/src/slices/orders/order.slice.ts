@@ -9,6 +9,7 @@ import {
   changeAcceptOrderStatusByCustomer,
   changeAcceptOrderStatusByDriver,
   createOrder,
+  getBusinessOrders,
   getOrder,
   getRouteData,
   getUserOrdersPage,
@@ -67,6 +68,16 @@ const { reducer, actions, name } = createSlice({
       })
       .addCase(removeOrder, (state) => {
         state.currentOrder = null;
+      })
+      .addCase(getBusinessOrders.pending, (state) => {
+        state.dataStatus = DataStatus.PENDING;
+      })
+      .addCase(getBusinessOrders.fulfilled, (state, action) => {
+        state.orders = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(getBusinessOrders.rejected, (state) => {
+        state.dataStatus = DataStatus.REJECTED;
       })
       .addMatcher(
         isAnyOf(
