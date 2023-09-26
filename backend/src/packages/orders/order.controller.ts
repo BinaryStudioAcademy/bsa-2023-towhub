@@ -310,7 +310,7 @@ class OrderController extends Controller {
     });
 
     this.addRoute({
-      path: OrdersApiPath.DRIVER,
+      path: OrdersApiPath.DRIVER_ORDERS,
       method: 'GET',
       authStrategy: [AuthStrategy.VERIFY_JWT, AuthStrategy.VERIFY_DRIVER_GROUP],
       validation: {

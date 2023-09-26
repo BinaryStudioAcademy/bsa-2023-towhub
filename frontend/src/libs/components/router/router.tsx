@@ -11,8 +11,6 @@ import {
 import { socketTryRemoveDriverListeners } from '~/libs/packages/socket/libs/helpers/helpers.js';
 import { socket } from '~/libs/packages/socket/socket.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
-import { DriversDashboard } from '~/pages/drivers-dashboard/drivers-dashboard.js';
-import { DriversOrderHistory } from '~/pages/drivers-order-history/drivers-order-history.js';
 import { OrderStatus } from '~/pages/order-status/order-status.js';
 import {
   Auth,
@@ -105,22 +103,6 @@ const Router = (): JSX.Element => {
             element={
               <PageLayout>
                 <Orders />
-              </PageLayout>
-            }
-          />
-          <Route
-            path={AppRoute.DRIVERS_DASHBOARD}
-            element={
-              <PageLayout>
-                <DriversDashboard />
-              </PageLayout>
-            }
-          />
-          <Route
-            path={AppRoute.DRIVERS_DASHBOARD_ORDERS}
-            element={
-              <PageLayout>
-                <DriversOrderHistory />
               </PageLayout>
             }
           />

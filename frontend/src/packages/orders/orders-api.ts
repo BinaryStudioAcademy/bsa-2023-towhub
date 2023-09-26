@@ -121,7 +121,7 @@ class OrdersApi extends HttpApi {
     queryString = '',
   ): Promise<OrderFindAllDriverOrdersResponseDto> {
     const response = await this.load(
-      this.getFullEndpoint(`${OrdersApiPath.DRIVER}?${queryString}`, {}),
+      this.getFullEndpoint(`${OrdersApiPath.DRIVER_ORDERS}?${queryString}`, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,
