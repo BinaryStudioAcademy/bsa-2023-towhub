@@ -20,24 +20,14 @@ import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.help
 import { type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
-const getOrdersBusiness = createAsyncThunk<
+const getBusinessOrders = createAsyncThunk<
   OrdersListResponseDto,
   string,
   AsyncThunkConfig
 >(`${sliceName}/orders`, async (queryString, { extra }) => {
   const { ordersApi } = extra;
 
-  return await ordersApi.getOrdersBusiness(queryString);
-});
-
-const getBusinessOrders = createAsyncThunk<
-  OrderResponseDto[],
-  undefined,
-  AsyncThunkConfig
->(`${sliceName}/orders`, async (_, { extra }) => {
-  const { ordersApi } = extra;
-
-  return await ordersApi.getBusinessOrders();
+  return await ordersApi.getBusinessOrders(queryString);
 });
 
 const changeAcceptOrderStatusByDriver = createAsyncThunk<
@@ -173,7 +163,6 @@ export {
   createOrder,
   getBusinessOrders,
   getOrder,
-  getOrdersBusiness,
   getRouteData,
   removeOrder,
   subscribeOrderUpdates,

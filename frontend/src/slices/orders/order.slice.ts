@@ -11,7 +11,6 @@ import {
   createOrder,
   getBusinessOrders,
   getOrder,
-  getOrdersBusiness,
   getRouteData,
   removeOrder,
   updateOrderFromSocket,
@@ -64,26 +63,10 @@ const { reducer, actions, name } = createSlice({
       .addCase(removeOrder, (state) => {
         state.currentOrder = null;
       })
-      .addCase(getOrdersBusiness.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
-      .addCase(getOrdersBusiness.fulfilled, (state, action) => {
+      .addCase(getBusinessOrders.fulfilled, (state, action) => {
         state.orders = action.payload.items;
         state.total = action.payload.total;
         state.dataStatus = DataStatus.FULFILLED;
-      })
-      .addCase(getOrdersBusiness.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
-      })
-      .addCase(getBusinessOrders.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
-      .addCase(getBusinessOrders.fulfilled, (state, action) => {
-        state.orders = action.payload;
-        state.dataStatus = DataStatus.FULFILLED;
-      })
-      .addCase(getBusinessOrders.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
       })
       .addMatcher(
         isAnyOf(
@@ -108,6 +91,7 @@ const { reducer, actions, name } = createSlice({
           changeAcceptOrderStatusByCustomer.pending,
           getOrder.pending,
           getRouteData.pending,
+          getBusinessOrders.pending,
         ),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
@@ -121,6 +105,7 @@ const { reducer, actions, name } = createSlice({
           changeAcceptOrderStatusByCustomer.rejected,
           getOrder.rejected,
           getRouteData.rejected,
+          getBusinessOrders.rejected,
         ),
         (state) => {
           state.dataStatus = DataStatus.REJECTED;

@@ -62,7 +62,7 @@ const Orders: React.FC = () => {
   }, [dispatch, filter.status, pageIndex, setQueryParameters]);
 
   useEffect(() => {
-    void dispatch(ordersActions.getOrdersBusiness(searchParameters.toString()));
+    void dispatch(ordersActions.getBusinessOrders(searchParameters.toString()));
   }, [dispatch, searchParameters]);
 
   useEffect(() => {
