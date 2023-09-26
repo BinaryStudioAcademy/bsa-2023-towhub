@@ -10,9 +10,10 @@ import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import {
   type DriverAddResponseWithGroup,
-  type DriverCreateUpdateRequestDto,
+  type DriverCreateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverGetAllResponseDto,
+  type DriverUpdateRequestDto,
 } from '../drivers/drivers.js';
 import { type FileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
 import { FileVerificationName } from '../file-verification-status/libs/enums/enums.js';
@@ -201,9 +202,11 @@ class BusinessService implements IService {
   public async createDriver({
     payload,
     ownerId,
+    hostname,
   }: {
-    payload: DriverCreateUpdateRequestDto & { files: MultipartParsedFile[] };
+    payload: DriverCreateRequestDto & { files: MultipartParsedFile[] };
     ownerId: number;
+    hostname: string;
   }): Promise<DriverAddResponseWithGroup> {
     const business = await this.findByOwnerId(ownerId);
 
@@ -220,6 +223,7 @@ class BusinessService implements IService {
       payload,
       businessId: business.id,
       driverLicenseFileId: createdFile.id,
+      hostname,
     });
 
     const { id, status, name, message } =
@@ -244,7 +248,7 @@ class BusinessService implements IService {
     driverId,
     ownerId,
   }: {
-    payload: DriverCreateUpdateRequestDto & { files: MultipartParsedFile[] };
+    payload: DriverUpdateRequestDto & { files: MultipartParsedFile[] };
     driverId: number;
     ownerId: number;
   }): Promise<DriverCreateUpdateResponseDto> {

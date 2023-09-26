@@ -10,13 +10,13 @@ import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
-  type DriverCreateUpdateRequestDto,
+  type DriverCreateRequestDto,
   type DriverRequestParameters,
-} from '../drivers/drivers.js';
-import {
-  driverCreateUpdateRequestBody,
+  type DriverUpdateRequestDto,
+  driverCreateRequestBody,
   driverParameters,
-} from '../drivers/libs/validation-schemas/validation-schemas.js';
+  driverUpdateRequestBody,
+} from '../drivers/drivers.js';
 import { fileInputAddDriverLicenseConfig } from '../files/libs/config/config.js';
 import { FilesValidationStrategy } from '../files/libs/enums/enums.js';
 import { type MultipartParsedFile } from '../files/libs/types/types.js';
@@ -313,15 +313,16 @@ class BusinessController extends Controller {
         },
       },
       validation: {
-        body: driverCreateUpdateRequestBody,
+        body: driverCreateRequestBody,
       },
       handler: (options) =>
         this.createDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateUpdateRequestDto & {
+            body: DriverCreateRequestDto & {
               files: MultipartParsedFile[];
             };
             user: UserEntityObjectWithGroupT;
+            hostname: string;
           }>,
         ),
     });
@@ -339,13 +340,13 @@ class BusinessController extends Controller {
         },
       },
       validation: {
-        body: driverCreateUpdateRequestBody,
+        body: driverUpdateRequestBody,
         params: driverParameters,
       },
       handler: (options) =>
         this.updateDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateUpdateRequestDto & {
+            body: DriverUpdateRequestDto & {
               files: MultipartParsedFile[];
             };
             params: DriverRequestParameters;
@@ -656,13 +657,15 @@ class BusinessController extends Controller {
 
   private async createDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateUpdateRequestDto & { files: MultipartParsedFile[] };
+      body: DriverCreateRequestDto & { files: MultipartParsedFile[] };
       user: UserEntityObjectWithGroupT;
+      hostname: string;
     }>,
   ): Promise<ApiHandlerResponse> {
     const createdDriver = await this.businessService.createDriver({
       payload: options.body,
       ownerId: options.user.id,
+      hostname: options.hostname,
     });
 
     return {
@@ -728,7 +731,7 @@ class BusinessController extends Controller {
 
   private async updateDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateUpdateRequestDto & { files: MultipartParsedFile[] };
+      body: DriverUpdateRequestDto & { files: MultipartParsedFile[] };
       params: DriverRequestParameters;
       user: UserEntityObjectWithGroupT;
     }>,
@@ -882,7 +885,7 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /trucks:
+   * /business/trucks:
    *   post:
    *     summary: Create a new truck
    *     tags:

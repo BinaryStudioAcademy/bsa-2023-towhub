@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
@@ -14,7 +14,14 @@ import {
 import { setVerificationCompleted } from '~/slices/driver/actions.js';
 import { selectIsVerificationCompleted } from '~/slices/driver/selectors.js';
 
+import { jsonToLatLngLiteral } from '../orders/libs/helpers/json-to-lat-lng-literal.helper.js';
+import { ActionName } from './enums/action-name.enum.js';
 import { name as sliceName } from './trucks.slice.js';
+import { type TruckArrivalTime } from './types/truck-arrival-time.type.js';
+import {
+  type CalculateArrivalTimeParameter,
+  type TruckLocationPayload,
+} from './types/types.js';
 
 const addTruck = createAsyncThunk<
   TruckEntityT,
@@ -40,6 +47,55 @@ const addTruck = createAsyncThunk<
 
       return rejectWithValue({ ...error, message: error.message });
     }
+  },
+);
+
+const updateTruckLocationFromSocket = createAsyncThunk<
+  TruckLocationPayload,
+  TruckLocationPayload,
+  AsyncThunkConfig
+>(ActionName.SOCKET.UPDATE_TRUCK_LOCATION, (location) => {
+  return location;
+});
+
+const subscribeTruckUpdates = createAction(
+  ActionName.SOCKET.SUBSCRIBE_TRUCK_UPDATES,
+  (truckId: number) => {
+    return {
+      payload: truckId,
+    };
+  },
+);
+
+const unsubscribeTruckUpdates = createAction(
+  ActionName.SOCKET.UNSUBSCRIBE_TRUCK_UPDATES,
+  (truckId: number) => {
+    return {
+      payload: truckId,
+    };
+  },
+);
+
+const calculateArrivalTime = createAsyncThunk<
+  TruckArrivalTime,
+  CalculateArrivalTimeParameter,
+  AsyncThunkConfig
+>(
+  ActionName.CALCULATE_ARRIVAL_TIME,
+  async ({ origin, destination }, { extra }) => {
+    const { mapServiceFactory } = extra;
+    const routeData = {
+      origin: origin.latLng,
+      destination: jsonToLatLngLiteral(destination),
+    };
+
+    const mapService = await mapServiceFactory({ mapElement: null });
+    const distanceAndDuration = await mapService.calculateDistanceAndDuration(
+      routeData.origin,
+      routeData.destination,
+    );
+
+    return distanceAndDuration.duration;
   },
 );
 
@@ -96,4 +152,13 @@ const setTrucks = createAsyncThunk<TruckEntityT[], TruckEntityT[]>(
   (payload) => payload,
 );
 
-export { addTruck, findAllTrucksForBusiness, getAllTrucksByUserId, setTrucks };
+export {
+  addTruck,
+  calculateArrivalTime,
+  findAllTrucksForBusiness,
+  getAllTrucksByUserId,
+  setTrucks,
+  subscribeTruckUpdates,
+  unsubscribeTruckUpdates,
+  updateTruckLocationFromSocket,
+};

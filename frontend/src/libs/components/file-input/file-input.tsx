@@ -78,8 +78,10 @@ const FileInput = <T extends FieldValues & FileFormType>({
 
   const handleDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+      const isNotEmptyRejectedFiles = rejectedFiles.length > 0;
+      const isEmptyAcceptedFiles = acceptedFiles.length === 0;
       const areAllFilesInvalid =
-        rejectedFiles.length > 0 || acceptedFiles.length === 0;
+        isNotEmptyRejectedFiles || isEmptyAcceptedFiles;
 
       if (areAllFilesInvalid) {
         return;

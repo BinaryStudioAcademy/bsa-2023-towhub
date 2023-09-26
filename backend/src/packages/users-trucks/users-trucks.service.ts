@@ -46,21 +46,6 @@ class UsersTrucksService implements IService<UsersTrucksEntityObjectT> {
     });
   }
 
-  public async addTrucksToDriver(
-    userId: number,
-    truckIds: number[],
-  ): Promise<void> {
-    const uniqueItems = [...new Set(truckIds)];
-    const driverTrucks: DriverHaveAccessToTruck[] = uniqueItems.map(
-      (truckId) => ({
-        userId,
-        truckId,
-      }),
-    );
-
-    await this.usersTrucksRepository.addTruckToDriver(driverTrucks);
-  }
-
   public async create(
     payload: UsersTrucksCreateUpdate,
   ): ReturnType<IService<UsersTrucksEntityObjectT>['create']> {
@@ -87,6 +72,33 @@ class UsersTrucksService implements IService<UsersTrucksEntityObjectT> {
     id: UsersTrucksEntityT['id'],
   ): ReturnType<IService<UsersTrucksEntityObjectT>['delete']> {
     return this.usersTrucksRepository.delete(id);
+  }
+
+  public async addTrucksToDriver(
+    userId: number,
+    truckIds: number[],
+  ): Promise<void> {
+    if (truckIds.length === 0) {
+      return;
+    }
+
+    const existingTrucks =
+      await this.usersTrucksRepository.getTruckIdsByUserId(userId);
+
+    const uniqueTruckIds = [...new Set(truckIds)];
+
+    const filteredTruckIds = uniqueTruckIds.filter(
+      (truckId) => !existingTrucks.some((it) => it.truckId === truckId),
+    );
+
+    const driverTrucks: DriverHaveAccessToTruck[] = filteredTruckIds.map(
+      (truckId) => ({
+        userId,
+        truckId,
+      }),
+    );
+
+    await this.usersTrucksRepository.addTruckToDriver(driverTrucks);
   }
 }
 

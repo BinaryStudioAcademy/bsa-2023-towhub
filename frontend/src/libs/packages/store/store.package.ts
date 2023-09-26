@@ -1,5 +1,6 @@
 import {
   type AnyAction,
+  type Middleware,
   type MiddlewareArray,
   type ThunkMiddleware,
 } from '@reduxjs/toolkit';
@@ -23,6 +24,10 @@ import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as orderReducer } from '~/slices/orders/order.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
+import { type MapServiceParameters } from '../map/libs/types/map-service-parameters.type.js';
+import { type MapService } from '../map/map.package.js';
+import { MapConnector } from '../map/map-connector.package.js';
+import { socketMiddleware } from '../middleware/socket.middleware.js';
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
 import { type ExtraArguments, type RootReducer } from './libs/types/types.js';
@@ -32,7 +37,9 @@ class Store {
     typeof configureStore<
       RootReducer,
       AnyAction,
-      MiddlewareArray<[ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>]>
+      MiddlewareArray<
+        [ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>, Middleware]
+      >
     >
   >;
 
@@ -41,19 +48,19 @@ class Store {
       devTools: config.ENV.APP.ENVIRONMENT !== AppEnvironment.PRODUCTION,
       reducer: {
         auth: authReducer,
+        orders: orderReducer,
         trucks: truckReducer,
         drivers: driversReducer,
         driver: driverReducer,
         files: filesReducer,
         business: businessReducer,
-        orders: orderReducer,
       },
       middleware: (getDefaultMiddleware) => [
         ...getDefaultMiddleware({
           thunk: {
             extraArgument: this.extraArguments,
           },
-        }),
+        }).prepend(socketMiddleware),
       ],
     });
   }
@@ -70,6 +77,13 @@ class Store {
       ordersApi,
       localStorage: LocalStorage,
       socketClient,
+      mapServiceFactory: async (
+        parameters: MapServiceParameters,
+      ): Promise<MapService> => {
+        await MapConnector.getInstance();
+
+        return new MapConnector().getMapService(parameters);
+      },
     };
   }
 }

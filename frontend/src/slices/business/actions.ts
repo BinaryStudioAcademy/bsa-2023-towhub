@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { serialize } from 'object-to-formdata';
-import { type DriverCreateUpdateRequestDto } from 'shared/build';
+import { type DriverCreateRequestDto } from 'shared/build';
 
 import { type HttpError } from '~/libs/packages/http/libs/exceptions/exceptions.js';
 import { type AsyncThunkConfig } from '~/libs/types/async-thunk-config.type';
@@ -10,7 +10,7 @@ import { type FileObject } from '~/slices/files/libs/types/types.js';
 
 const createDriver = createAsyncThunk<
   null,
-  DriverCreateUpdateRequestDto & {
+  DriverCreateRequestDto & {
     businessId: number;
     files: FileObject[];
   },

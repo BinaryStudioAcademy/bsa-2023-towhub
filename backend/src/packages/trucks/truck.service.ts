@@ -84,11 +84,11 @@ class TruckService implements IService {
   public async create(
     payload: Omit<TruckEntityT, 'id' | 'createdAt' | 'status'>,
   ): Promise<TruckEntityT> {
-    const existingTruck = await this.repository.find(
+    const existingTrucks = await this.repository.find(
       payload.licensePlateNumber,
     );
 
-    if (existingTruck.length > 0) {
+    if (existingTrucks.length > 0) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpMessage.TRUCK_EXISTS,

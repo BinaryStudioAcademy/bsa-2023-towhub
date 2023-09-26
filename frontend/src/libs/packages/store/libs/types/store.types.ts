@@ -1,3 +1,5 @@
+import { type MapServiceParameters } from '~/libs/packages/map/libs/types/types.js';
+import { type MapService } from '~/libs/packages/map/map.package.js';
 import { type notification } from '~/libs/packages/notification/notification.js';
 import { type socket as socketClient } from '~/libs/packages/socket/socket.js';
 import { type LocalStorage } from '~/libs/packages/storage/storage.js';
@@ -20,10 +22,10 @@ type RootReducer = {
   auth: ReturnType<typeof authReducer>;
   trucks: ReturnType<typeof truckReducer>;
   files: ReturnType<typeof filesReducer>;
-  drivers: ReturnType<typeof driversReducer>;
   business: ReturnType<typeof businessReducer>;
   driver: ReturnType<typeof driverReducer>;
   orders: ReturnType<typeof orderReducer>;
+  drivers: ReturnType<typeof driversReducer>;
 };
 
 type ExtraArguments = {
@@ -35,6 +37,7 @@ type ExtraArguments = {
   localStorage: typeof LocalStorage;
   businessApi: typeof businessApi;
   ordersApi: typeof ordersApi;
+  mapServiceFactory: (parameters: MapServiceParameters) => Promise<MapService>;
   driversApi: typeof driversApi;
   socketClient: typeof socketClient;
 };

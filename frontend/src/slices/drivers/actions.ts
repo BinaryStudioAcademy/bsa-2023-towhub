@@ -1,6 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { serialize } from 'object-to-formdata';
-import { type DriverCreateUpdateRequestDto } from 'shared/build';
 
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import {
@@ -13,7 +12,10 @@ import { getFileFromFileObject } from '~/slices/files/libs/helpers/get-file-from
 import { type FileObject } from '~/slices/files/libs/types/types.js';
 
 import { ACTIONS_TYPES } from './libs/enums/driver-action.js';
-import { type DriverAddResponseWithGroup } from './libs/types/types.js';
+import {
+  type DriverAddResponseWithGroup,
+  type DriverCreateRequestDto,
+} from './libs/types/types.js';
 
 const getDriversPage = createAsyncThunk<
   DriverGetAllResponseDto,
@@ -26,7 +28,7 @@ const getDriversPage = createAsyncThunk<
 const addDriver = createAsyncThunk<
   DriverAddResponseWithGroup,
   {
-    payload: DriverCreateUpdateRequestDto & { files: FileObject[] };
+    payload: DriverCreateRequestDto & { files: FileObject[] };
     queryString?: string;
   },
   AsyncThunkConfig

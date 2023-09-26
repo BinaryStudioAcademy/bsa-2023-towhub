@@ -1,3 +1,4 @@
+import { EXIT_BUTTON } from '~/libs/components/modal/libs/constants/constants.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
 
 type Properties = {
@@ -17,7 +18,7 @@ const useModal = ({
 
   const handleExitKeydown: React.KeyboardEventHandler = useCallback(
     (event) => {
-      if (event.key === 'Escape') {
+      if (event.key === EXIT_BUTTON) {
         onClose();
       }
     },

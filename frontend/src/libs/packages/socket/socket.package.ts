@@ -14,10 +14,10 @@ import {
 } from './libs/types/types.js';
 
 class SocketService {
-  private io: Socket<
+  private io!: Socket<
     ServerToClientEventParameter,
     ClientToServerEventParameter
-  > | null = null;
+  > | null;
 
   public hasListeners<
     T extends
@@ -91,6 +91,13 @@ class SocketService {
   public disconnect(): void {
     this.io?.disconnect();
     this.io = null;
+  }
+
+  public getInstance(): Socket<
+    ServerToClientEventParameter,
+    ClientToServerEventParameter
+  > | null {
+    return this.io;
   }
 }
 

@@ -99,19 +99,19 @@ class DriverRepository implements IRepository {
     driverLicenseNumber,
     userId,
   }: Partial<DriverEntityT>): Promise<OperationResult<boolean>> {
-    const filterClause: SQL[] = [];
+    const filterClauses: SQL[] = [];
 
     if (driverLicenseNumber) {
-      filterClause.push(
+      filterClauses.push(
         eq(this.driverSchema.driverLicenseNumber, driverLicenseNumber),
       );
     }
 
     if (userId) {
-      filterClause.push(eq(this.driverSchema.userId, userId));
+      filterClauses.push(eq(this.driverSchema.userId, userId));
     }
 
-    if (filterClause.length === 0) {
+    if (filterClauses.length === 0) {
       throw new ApplicationError({
         message: AppErrorMessage.INVALID_QUERY,
       });
@@ -121,7 +121,7 @@ class DriverRepository implements IRepository {
       .driver()
       .select()
       .from(this.driverSchema)
-      .where(or(...filterClause));
+      .where(or(...filterClauses));
 
     return {
       result: Boolean(driver),

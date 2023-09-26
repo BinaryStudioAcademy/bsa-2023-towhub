@@ -101,19 +101,19 @@ class ServerApp implements IServerApp {
       validateFilesStrategy,
     } = parameters;
 
-    const onRequest: onRequestHookHandler[] = [];
-    const preValidation: preValidationHookHandler[] = [];
+    const onRequests: onRequestHookHandler[] = [];
+    const preValidations: preValidationHookHandler[] = [];
 
     if (authStrategy) {
       const authStrategyHandler = this.resolveAuthStrategy(authStrategy);
 
       if (authStrategyHandler) {
-        onRequest.push(authStrategyHandler);
+        onRequests.push(authStrategyHandler);
       }
     }
 
     if (validateFilesStrategy) {
-      preValidation.push(
+      preValidations.push(
         this.resolveFileValidationStrategy(validateFilesStrategy),
       );
     }
@@ -122,8 +122,8 @@ class ServerApp implements IServerApp {
       url: path,
       method,
       handler,
-      onRequest,
-      preValidation,
+      onRequest: onRequests,
+      preValidation: preValidations,
       schema: {
         body: validation?.body,
         params: validation?.params,

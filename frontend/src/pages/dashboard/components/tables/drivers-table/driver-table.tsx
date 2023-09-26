@@ -16,7 +16,7 @@ import {
   type DriverGetAllResponseDto,
   type PaginationParameters,
 } from '~/libs/types/types.js';
-import { type DriverCreateUpdateRequestDto } from '~/packages/drivers/drivers.js';
+import { type DriverCreateRequestDto } from '~/packages/drivers/drivers.js';
 import { getDriversPage } from '~/slices/drivers/actions.js';
 import { actions } from '~/slices/drivers/drivers.js';
 
@@ -50,7 +50,7 @@ const DriverTable: React.FC = () => {
 
   const handleSubmit = useCallback(
     (
-      payload: DriverCreateUpdateRequestDto & {
+      payload: DriverCreateRequestDto & {
         files: FileObject[];
       },
     ) => {

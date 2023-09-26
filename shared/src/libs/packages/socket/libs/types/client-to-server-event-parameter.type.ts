@@ -25,6 +25,18 @@ type ClientToServerEventParameter = {
     payload: unknown,
     callback?: EventAckCollback,
   ) => void;
+  [ClientToServerEvent.SUBSCRIBE_ORDER_UPDATES]: (payload: {
+    orderId: string;
+  }) => void;
+  [ClientToServerEvent.UNSUBSCRIBE_ORDER_UPDATES]: (payload: {
+    orderId: string;
+  }) => void;
+  [ClientToServerEvent.SUBSCRIBE_TRUCK_UPDATES]: (payload: {
+    truckId: string;
+  }) => void;
+  [ClientToServerEvent.UNSUBSCRIBE_TRUCK_UPDATES]: (payload: {
+    truckId: string;
+  }) => void;
 };
 
 export { type ClientToServerEventParameter };
