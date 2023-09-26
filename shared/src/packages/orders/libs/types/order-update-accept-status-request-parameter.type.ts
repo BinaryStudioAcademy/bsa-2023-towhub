@@ -1,3 +1,3 @@
-type OrderUpdateAcceptStatusRequsetParameter = { orderId: number };
+type OrderUpdateAcceptStatusRequestParameter = { orderId: number };
 
-export { type OrderUpdateAcceptStatusRequsetParameter };
+export { type OrderUpdateAcceptStatusRequestParameter };

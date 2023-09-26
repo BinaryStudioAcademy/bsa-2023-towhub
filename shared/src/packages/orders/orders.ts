@@ -14,7 +14,8 @@ export {
   type OrderResponseDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
-  type OrderUpdateAcceptStatusRequsetParameter,
+  type OrderUpdateAcceptStatusRequestParameter,
+  type OrderUpdateAcceptStatusResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 export {

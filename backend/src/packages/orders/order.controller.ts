@@ -18,7 +18,7 @@ import {
   type OrderCreateRequestDto,
   type OrderResponseDto,
   type OrderUpdateAcceptStatusRequestDto,
-  type OrderUpdateAcceptStatusRequsetParameter,
+  type OrderUpdateAcceptStatusRequestParameter,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import {
@@ -342,7 +342,7 @@ class OrderController extends Controller {
       handler: (options) =>
         this.updateAcceptStatusByCustomer(
           options as ApiHandlerOptions<{
-            params: OrderUpdateAcceptStatusRequsetParameter;
+            params: OrderUpdateAcceptStatusRequestParameter;
             body: OrderUpdateAcceptStatusRequestDto;
             user: UserEntityObjectWithGroupT | null;
           }>,
@@ -360,7 +360,7 @@ class OrderController extends Controller {
       handler: (options) =>
         this.updateAcceptStatusByDriver(
           options as ApiHandlerOptions<{
-            params: OrderUpdateAcceptStatusRequsetParameter;
+            params: OrderUpdateAcceptStatusRequestParameter;
             body: OrderUpdateAcceptStatusRequestDto;
             user: UserEntityObjectWithGroupT;
           }>,
@@ -647,7 +647,7 @@ class OrderController extends Controller {
 
   private async updateAcceptStatusByDriver(
     options: ApiHandlerOptions<{
-      params: OrderUpdateAcceptStatusRequsetParameter;
+      params: OrderUpdateAcceptStatusRequestParameter;
       body: OrderUpdateAcceptStatusRequestDto;
       user: UserEntityObjectWithGroupT;
     }>,
@@ -655,7 +655,7 @@ class OrderController extends Controller {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.updateAcceptStatusByDriver({
-        id: options.params.orderId,
+        orderId: options.params.orderId,
         payload: options.body,
         user: options.user,
       }),
@@ -717,7 +717,7 @@ class OrderController extends Controller {
 
   private async updateAcceptStatusByCustomer(
     options: ApiHandlerOptions<{
-      params: OrderUpdateAcceptStatusRequsetParameter;
+      params: OrderUpdateAcceptStatusRequestParameter;
       body: OrderUpdateAcceptStatusRequestDto;
       user: UserEntityObjectWithGroupT | null;
     }>,
@@ -725,7 +725,7 @@ class OrderController extends Controller {
     return {
       status: HttpCode.OK,
       payload: await this.orderService.updateAcceptStatusByCustomer({
-        id: options.params.orderId,
+        orderId: options.params.orderId,
         payload: options.body,
         user: options.user,
       }),

@@ -7,4 +7,5 @@ export {
   type OrderResponseDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusResponseDto,
 } from 'shared/build/index.js';

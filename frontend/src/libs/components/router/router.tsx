@@ -25,6 +25,7 @@ import {
 import { selectUser } from '~/slices/auth/selectors.js';
 
 import { PageLayout, ProtectedRoute } from '../components.js';
+import { OrderProvider } from '../order-provider/order-provider.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => {
@@ -49,7 +50,9 @@ const Router = (): JSX.Element => {
         <Route path={AppRoute.SIGN_IN} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP_BUSINESS} element={<Auth />} />
         <Route path={AppRoute.SIGN_UP_CUSTOMER} element={<Auth />} />
-        <Route path={AppRoute.ORDER} element={<Order />} />
+        <Route element={<OrderProvider />}>
+          <Route path={AppRoute.ORDER} element={<Order />} />
+        </Route>
         <Route path={AppRoute.ORDER_STATUS} element={<OrderStatus />} />
       </Route>
       <Route

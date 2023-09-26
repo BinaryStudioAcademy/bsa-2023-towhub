@@ -6,6 +6,7 @@ import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusResponseDto,
 } from '~/packages/orders/libs/types/types.js';
 import {
   type OrderCalculatePriceRequestDto,
@@ -20,7 +21,7 @@ import { type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
 const changeAcceptOrderStatusByDriver = createAsyncThunk<
-  { id: number; status: OrderStatusValues },
+  OrderUpdateAcceptStatusResponseDto,
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
   AsyncThunkConfig
 >(
@@ -33,7 +34,7 @@ const changeAcceptOrderStatusByDriver = createAsyncThunk<
 );
 
 const changeAcceptOrderStatusByCustomer = createAsyncThunk<
-  { id: number; status: OrderStatusValues },
+  OrderUpdateAcceptStatusResponseDto,
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
   AsyncThunkConfig
 >(
@@ -76,10 +77,10 @@ const calculateOrderPrice = createAsyncThunk<
 
 const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
   ActionName.GET_ORDER,
-  (orderId, { extra }) => {
+  async (orderId, { extra }) => {
     const { ordersApi } = extra;
 
-    return ordersApi.getOrder(orderId);
+    return await ordersApi.getOrder(orderId);
   },
 );
 
@@ -95,6 +96,7 @@ const getRouteData = createAsyncThunk<
   };
 
   const mapService = await mapServiceFactory({ mapElement: null });
+
   const [originName, destinationName, distanceAndDuration] = await Promise.all([
     mapService.getPointAddress(routeData.origin),
     mapService.getPointAddress(routeData.destination),
@@ -119,6 +121,14 @@ const updateOrderFromSocket = createAsyncThunk<
   return order;
 });
 
+const updateOrderStatusFromSocket = createAsyncThunk<
+  OrderStatusValues,
+  OrderStatusValues,
+  AsyncThunkConfig
+>(ActionName.SOCKET.UPDATE_ORDER_STATUS, (status) => {
+  return status;
+});
+
 const subscribeOrderUpdates = createAction(
   ActionName.SOCKET.SUBSCRIBE_ORDER_UPDATES,
   (orderId: string) => {
@@ -137,6 +147,13 @@ const unsubscribeOrderUpdates = createAction(
   },
 );
 
+const removeOrder = createAction(
+  ActionName.REMOVE_ORDER,
+  (orderId: string) => ({
+    payload: orderId,
+  }),
+);
+
 export {
   calculateOrderPrice,
   changeAcceptOrderStatusByCustomer,
@@ -144,7 +161,9 @@ export {
   createOrder,
   getOrder,
   getRouteData,
+  removeOrder,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,
+  updateOrderStatusFromSocket,
 };

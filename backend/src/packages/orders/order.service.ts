@@ -17,6 +17,7 @@ import {
   type OrderResponseDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import { OrderEntity } from './order.entity.js';
@@ -240,21 +241,21 @@ class OrderService implements Omit<IService, 'find'> {
   }
 
   public async updateAcceptStatusByDriver({
-    id,
+    orderId,
     payload,
     user,
   }: {
-    id: OrderEntityT['id'];
+    orderId: OrderEntityT['id'];
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT;
-  }): Promise<{ id: number; status: OrderStatusValues }> {
-    const status = this.checkIsOrderAccepted(payload.isAccepted, user);
+  }): Promise<OrderUpdateAcceptStatusResponseDto> {
+    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
 
     await this.shiftService.checkDriverStartShift(user.id);
 
     const updatedOrder = await this.orderRepository.update({
-      id,
-      payload: { status },
+      id: orderId,
+      payload: { status: statusForUpdate },
     });
 
     if (!updatedOrder) {
@@ -263,27 +264,28 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
-    const order = OrderEntity.initializeUpdate(updatedOrder).toObject();
+    const { id, status } =
+      OrderEntity.initializeUpdate(updatedOrder).toObject();
 
-    this.socketService.notifyOrderUpdate(order.id, order);
+    this.socketService.notifyOrderUpdateStatus(id, status);
 
-    return { id: order.id, status: order.status };
+    return { id, status };
   }
 
   public async updateAcceptStatusByCustomer({
-    id,
+    orderId,
     payload,
     user,
   }: {
-    id: OrderEntityT['id'];
+    orderId: OrderEntityT['id'];
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT | null;
-  }): Promise<{ id: number; status: OrderStatusValues }> {
-    const status = this.checkIsOrderAccepted(payload.isAccepted, user);
+  }): Promise<OrderUpdateAcceptStatusResponseDto> {
+    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
 
     const updatedOrder = await this.orderRepository.update({
-      id,
-      payload: { status },
+      id: orderId,
+      payload: { status: statusForUpdate },
     });
 
     if (!updatedOrder) {
@@ -292,11 +294,12 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
-    const order = OrderEntity.initializeUpdate(updatedOrder).toObject();
+    const { id, status } =
+      OrderEntity.initializeUpdate(updatedOrder).toObject();
 
-    this.socketService.notifyOrderUpdate(order.id, order);
+    this.socketService.notifyOrderUpdateStatus(id, status);
 
-    return { id: order.id, status: order.status };
+    return { id, status };
   }
 
   public async findAllBusinessOrders(

@@ -5,11 +5,15 @@ import {
   type ThunkMiddleware,
 } from '@reduxjs/toolkit';
 
-import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
+import {
+  type OrderResponseDto,
+  type OrderStatusValues,
+} from '~/packages/orders/libs/types/types.js';
 import {
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,
+  updateOrderStatusFromSocket,
 } from '~/slices/orders/actions.js';
 import {
   calculateArrivalTime,
@@ -45,6 +49,12 @@ const socketMiddleware: ThunkMiddleware<
       ServerToClientEvent.ORDER_UPDATED,
       (order: OrderResponseDto) => {
         void dispatch(updateOrderFromSocket(order));
+      },
+    );
+    socketInstance.on(
+      ServerToClientEvent.ORDER_UPDATED_STATUS,
+      (status: OrderStatusValues) => {
+        void dispatch(updateOrderStatusFromSocket(status));
       },
     );
     socketInstance.on(

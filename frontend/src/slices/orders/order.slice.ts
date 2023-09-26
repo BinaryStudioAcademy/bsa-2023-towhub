@@ -11,7 +11,9 @@ import {
   createOrder,
   getOrder,
   getRouteData,
+  removeOrder,
   updateOrderFromSocket,
+  updateOrderStatusFromSocket,
 } from './actions.js';
 import { type RouteData } from './libs/types/route-data.type.js';
 
@@ -38,7 +40,7 @@ const { reducer, actions, name } = createSlice({
   extraReducers(builder) {
     builder
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.orders.push(action.payload);
+        state.currentOrder = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(calculateOrderPrice.fulfilled, (state, action) => {
@@ -56,6 +58,14 @@ const { reducer, actions, name } = createSlice({
       .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
       })
+      .addCase(updateOrderStatusFromSocket.fulfilled, (state, action) => {
+        if (state.currentOrder) {
+          state.currentOrder.status = action.payload;
+        }
+      })
+      .addCase(removeOrder, (state) => {
+        state.currentOrder = null;
+      })
       .addMatcher(
         isAnyOf(
           changeAcceptOrderStatusByDriver.fulfilled,
@@ -65,9 +75,7 @@ const { reducer, actions, name } = createSlice({
           const { status } = action.payload;
 
           if (state.currentOrder) {
-            const updatedOrders = { ...state.currentOrder, status };
-
-            state.currentOrder = updatedOrders;
+            state.currentOrder.status = status;
           }
 
           state.dataStatus = DataStatus.FULFILLED;
