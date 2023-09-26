@@ -46,7 +46,7 @@ class MapConnector implements IMapConnector {
   }
 
   public getMapService(parameters: MapServiceParameters): MapService {
-    const setMap = (map: google.maps.Map): void => {
+    const setMap = (map: google.maps.Map | null): void => {
       MapConnector.map = map;
     };
 
@@ -57,6 +57,11 @@ class MapConnector implements IMapConnector {
       extraLibraries: MapConnector.libraries,
       setMap,
     });
+  }
+
+  public static dropMap(): void {
+    this.map = null;
+    this.markers = [];
   }
 }
 

@@ -60,7 +60,7 @@ const OrderStatusPage: React.FC = () => {
   const mapReference = useRef<HTMLDivElement>(null);
 
   useAppMap({
-    center: truckLocation ?? DEFAULT_CENTER, //FIXME: When the page refreshes, the truck data goes down. In addition, this value always comes as null
+    center: truckLocation ?? DEFAULT_CENTER,
     destination: order ? jsonToLatLngLiteral(order.startPoint) : null,
     className: styles.map,
     mapReference: mapReference,

@@ -31,24 +31,25 @@ const useAppMap = ({
   const mapService = useRef<MapService | null>(null);
 
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    MapConnector.dropMap();
+  }, []);
 
   useEffect(() => {
     const configMap = async (): Promise<void> => {
       await MapConnector.getInstance();
-      window.addEventListener('load', function () {
-        mapService.current = new MapConnector().getMapService({
-          mapElement: mapReference.current,
-          center: center ?? DEFAULT_CENTER,
-          zoom,
-        });
-
-        if (center && destination) {
-          mapService.current.removeMarkers();
-          mapService.current.addMarker(destination);
-
-          void mapService.current.calculateRouteAndTime(center, destination);
-        }
+      mapService.current = new MapConnector().getMapService({
+        mapElement: mapReference.current,
+        center: center ?? DEFAULT_CENTER,
+        zoom,
       });
+
+      if (center && destination) {
+        mapService.current.removeMarkers();
+        mapService.current.addMarker(destination);
+
+        void mapService.current.calculateRouteAndTime(center, destination);
+      }
     };
     void configMap();
   }, [center, destination, mapReference, zoom]);
