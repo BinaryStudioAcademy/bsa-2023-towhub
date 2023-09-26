@@ -6,11 +6,9 @@ import {
 import { DataStatus } from '~/libs/enums/data-status.enum.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import {
-  useAppDispatch,
   useAppSelector,
   useAppTable,
   useCallback,
-  useEffect,
   useQueryParameters,
 } from '~/libs/hooks/hooks.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
@@ -27,13 +25,8 @@ import { options } from './libs/options/options.js';
 import styles from './styles.module.scss';
 
 const CustomerHistory: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const {
-    setQueryParameters,
-    getQueryParameters,
-    searchParameters,
-    removeQueryParameters,
-  } = useQueryParameters();
+  const { setQueryParameters, getQueryParameters, removeQueryParameters } =
+    useQueryParameters();
 
   const { orders, total, dataStatus } = useAppSelector((state) => state.orders);
   const filterName = getQueryParameters('status') as string | null;
@@ -52,10 +45,6 @@ const CustomerHistory: React.FC = () => {
     initialPageSize: initialSize ? Number(initialSize) : null,
     filterName: 'status',
   });
-
-  useEffect(() => {
-    void dispatch(getUserOrdersPage(searchParameters.toString()));
-  }, [dispatch, searchParameters]);
 
   const handleChangeFilter = useCallback(
     (option: SingleValue<SelectOption>) => {
