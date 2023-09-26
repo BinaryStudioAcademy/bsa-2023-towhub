@@ -148,7 +148,7 @@ class SocketService {
 
   public notifyOrderUpdate(
     id: OrderResponseDto['id'],
-    order: OrderResponseDto,
+    order: Partial<OrderResponseDto>,
   ): void {
     this.io
       ?.to(`${RoomPrefix.ORDER}${id}`)
