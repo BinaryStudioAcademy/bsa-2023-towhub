@@ -18,59 +18,83 @@ import { type DriverWithUserData } from './libs/types/types.js';
 /**
  * @swagger
  * tags:
- *   name: files
- *   description: Files API
+ *   name: drivers
+ *   description: Drivers API
  * components:
- *    securitySchemes:
- *      bearerAuth:
- *        type: http
- *        scheme: bearer
- *        bearerFormat: JWT
- *    schemas:
- *      ErrorType:
- *        type: object
- *        properties:
- *          errorType:
- *            type: string
- *            example: COMMON
- *            enum:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *   schemas:
+ *     ErrorType:
+ *       type: object
+ *       properties:
+ *         errorType:
+ *           type: string
+ *           example: COMMON
+ *           enum:
  *             - COMMON
  *             - VALIDATION
- *      FileAlreadyExists:
- *        allOf:
- *          - $ref: '#/components/schemas/ErrorType'
- *          - type: object
- *            properties:
- *              message:
- *                type: string
- *                enum:
+ *     FileAlreadyExists:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
  *                 - File *name* already exists!
- *      FileDoesNotExist:
- *        allOf:
- *          - $ref: '#/components/schemas/ErrorType'
- *          - type: object
- *            properties:
- *              message:
- *                type: string
- *                enum:
+ *     FileDoesNotExist:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
  *                 - File with such id does not exist!
- *      File:
- *        type: object
- *        properties:
- *          id:
- *            type: number
- *            format: number
- *            minimum: 1
- *          key:
- *            type: string
- *            minLength: 1
- *            pattern: ^\w(?:[\w .-]*\w)?\.[\w-]+$
- *            example: image.jpg
- *          contentType:
- *            type: string
- *            pattern: \w+/[-+.\w]+
- *            description: Valid MIME type
- *            example: image/png
+ *     DriverNotFoundError:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                - Driver does not exist!
+ *     DriverWithUserData:
+ *       type: object
+ *       properties:
+ *         groupId:
+ *           type: number
+ *         id:
+ *           type: number
+ *         phone:
+ *           type: string
+ *         email:
+ *           type: string
+ *         firstName:
+ *           type: string
+ *         lastName:
+ *           type: string
+ *         driver:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: number
+ *             driverLicenseNumber:
+ *               type: string
+ *             userId:
+ *               type: number
+ *             businessId:
+ *               type: number
+ *             createdAt:
+ *               type: string
+ *             avatarId:
+ *               type: number
+ *             avatarUrl:
+ *               type: string
  *
  * security:
  *   - bearerAuth: []
@@ -106,7 +130,7 @@ class DriversController extends Controller {
 
   /**
    * @swagger
-   * /files/:
+   * /drivers/avatar:
    *    post:
    *      tags:
    *       - files
@@ -132,7 +156,13 @@ class DriversController extends Controller {
    *                type: object
    *                properties:
    *                  result:
-   *                    $ref: '#/components/schemas/File'
+   *                    $ref: '#/components/schemas/DriverWithUserData'
+   *        400:
+   *          description: Driver not found.
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/DriverNotFoundError'
    */
   private async setAvatar(
     options: ApiHandlerOptions<{
