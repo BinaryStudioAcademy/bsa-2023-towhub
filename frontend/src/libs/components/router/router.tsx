@@ -92,7 +92,7 @@ const Router = (): JSX.Element => {
           <Route
             path={AppRoute.AVAILABLE_TRUCKS}
             element={
-              <PageLayout isSidebarHidden>
+              <PageLayout>
                 <AvailableTrucks />
               </PageLayout>
             }
@@ -101,7 +101,7 @@ const Router = (): JSX.Element => {
           <Route
             path={AppRoute.ORDERS}
             element={
-              <PageLayout isSidebarHidden>
+              <PageLayout>
                 <Orders />
               </PageLayout>
             }

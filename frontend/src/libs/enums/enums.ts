@@ -4,6 +4,7 @@ export { DataStatus } from './data-status.enum.js';
 export { FormLabel, FormName } from './form.enum.js';
 export { IconName } from './icon-name.enum.js';
 export { IconSize } from './icon-size.enum.js';
+export { ImgPath } from './img-path.enum.js';
 export { InputType } from './input-type.enum.js';
 export { PlainSvgIconName } from './plain-svg-icon-name.enum.js';
 export { SidebarTabsName } from './sidebar-tabs-name.enum.js';
@@ -15,6 +16,7 @@ export {
   ContentType,
   HttpCode,
   HttpMessage,
+  OrderStatus,
   ServerErrorType,
   SortMethod,
 } from 'shared/build/index.js';
