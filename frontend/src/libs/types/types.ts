@@ -3,6 +3,7 @@ export { type AppThunk } from './app-thunk.type.js';
 export { type AsyncThunkConfig } from './async-thunk-config.type.js';
 export { type BurgerMenuItem } from './burger-menu-item.type.js';
 export {
+  type Color,
   type DarkColor,
   type LightColor,
   type PaleColor,
@@ -25,6 +26,7 @@ export {
   type EntityPagination,
   type FirstParameter,
   type OrderResponseDto,
+  type OrderStatusValues,
   type PaginationParameters,
   type PaginationWithSortingParameters,
   type ServerCommonErrorResponse,

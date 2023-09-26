@@ -1,6 +1,7 @@
 import { Loader } from '@googlemaps/js-api-loader';
 
 import { config } from '../config/config.js';
+import { MAP_INFO_WINDOW_WIDTH } from './libs/constants/constants.js';
 import { type MapServiceParameters } from './libs/types/types.js';
 import { MapService } from './map.package.js';
 
@@ -9,6 +10,7 @@ type Libraries = {
   routes: google.maps.DistanceMatrixService;
   directionsService: google.maps.DirectionsService;
   directionsRenderer: google.maps.DirectionsRenderer;
+  infoWindow: google.maps.InfoWindow;
 };
 
 interface IMapConnector {
@@ -39,6 +41,9 @@ class MapConnector implements IMapConnector {
         directionsRenderer: new RoutesLibrary.DirectionsRenderer({
           suppressMarkers: true,
         }),
+        infoWindow: new google.maps.InfoWindow({
+          maxWidth: MAP_INFO_WINDOW_WIDTH,
+        }),
       };
     }
 
@@ -46,7 +51,7 @@ class MapConnector implements IMapConnector {
   }
 
   public getMapService(parameters: MapServiceParameters): MapService {
-    const setMap = (map: google.maps.Map): void => {
+    const setMap = (map: google.maps.Map | null): void => {
       MapConnector.map = map;
     };
 
@@ -57,6 +62,11 @@ class MapConnector implements IMapConnector {
       extraLibraries: MapConnector.libraries,
       setMap,
     });
+  }
+
+  public static dropMap(): void {
+    this.map = null;
+    this.markers = [];
   }
 }
 

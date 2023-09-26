@@ -10,12 +10,16 @@ import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
+import { checkIsCustomer, checkIsDriver } from './libs/helpers/helpers.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
   type OrderFindAllDriverOrdersQuery,
   type OrderFindAllDriverOrdersResponseDto,
   type OrderResponseDto,
+  type OrderStatusValues,
+  type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import { OrderEntity } from './order.entity.js';
@@ -60,6 +64,8 @@ class OrderService implements Omit<IService, 'find'> {
     this.driverService = driverService;
 
     this.shiftService = shiftService;
+
+    this.socketService = socket;
 
     this.truckService = truckService;
 
@@ -230,9 +236,72 @@ class OrderService implements Omit<IService, 'find'> {
     };
 
     const order = OrderEntity.initialize(orderExtended).toObject();
+
     this.socketService.notifyOrderUpdate(order.id, order);
 
     return order;
+  }
+
+  public async updateAcceptStatusByDriver({
+    orderId,
+    payload,
+    user,
+  }: {
+    orderId: OrderEntityT['id'];
+    payload: OrderUpdateAcceptStatusRequestDto;
+    user: UserEntityObjectWithGroupT;
+  }): Promise<OrderUpdateAcceptStatusResponseDto> {
+    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+
+    await this.shiftService.checkDriverStartShift(user.id);
+
+    const updatedOrder = await this.orderRepository.update({
+      id: orderId,
+      payload: { status: statusForUpdate },
+    });
+
+    if (!updatedOrder) {
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
+    }
+
+    const { id, status } =
+      OrderEntity.initializeUpdate(updatedOrder).toObject();
+
+    this.socketService.notifyOrderUpdate(id, { status });
+
+    return { id, status };
+  }
+
+  public async updateAcceptStatusByCustomer({
+    orderId,
+    payload,
+    user,
+  }: {
+    orderId: OrderEntityT['id'];
+    payload: OrderUpdateAcceptStatusRequestDto;
+    user: UserEntityObjectWithGroupT | null;
+  }): Promise<OrderUpdateAcceptStatusResponseDto> {
+    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+
+    const updatedOrder = await this.orderRepository.update({
+      id: orderId,
+      payload: { status: statusForUpdate },
+    });
+
+    if (!updatedOrder) {
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
+    }
+
+    const { id, status } =
+      OrderEntity.initializeUpdate(updatedOrder).toObject();
+
+    this.socketService.notifyOrderUpdate(id, { status });
+
+    return { id, status };
   }
 
   public async findAllBusinessOrders(
@@ -347,6 +416,23 @@ class OrderService implements Omit<IService, 'find'> {
         message: HttpMessage.ORDER_DOES_NOT_EXIST,
       });
     }
+  }
+
+  private checkIsOrderAccepted(
+    isAccepted: boolean,
+    user: UserEntityObjectWithGroupT | null,
+  ): OrderStatusValues {
+    if (user && checkIsDriver(user.group.key)) {
+      return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REJECTED;
+    }
+
+    if ((!user || checkIsCustomer(user.group.key)) && !isAccepted) {
+      return OrderStatus.CANCELED;
+    }
+
+    throw new NotFoundError({
+      message: HttpMessage.USER_CAN_NOT_ACCEPT_OR_DECLINE_ORDER,
+    });
   }
 }
 

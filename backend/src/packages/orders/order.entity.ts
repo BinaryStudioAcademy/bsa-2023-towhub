@@ -116,11 +116,47 @@ class OrderEntity implements IEntity {
     shiftId,
     customerName,
     customerPhone,
-  }: Omit<OrderEntityT, 'id' | 'driver' | 'truck'> & {
+    driver,
+    truck,
+  }: Omit<OrderEntityT, 'id'> & {
     shiftId: number;
   }): OrderEntity {
     return new OrderEntity({
       id: null,
+      price,
+      scheduledTime,
+      carsQty,
+      startPoint,
+      endPoint,
+      status,
+      userId,
+      businessId,
+      customerName,
+      customerPhone,
+      shiftId,
+      driver,
+      truck,
+    });
+  }
+
+  public static initializeUpdate({
+    id,
+    price,
+    scheduledTime,
+    carsQty,
+    startPoint,
+    endPoint,
+    status,
+    userId,
+    businessId,
+    shiftId,
+    customerName,
+    customerPhone,
+  }: Omit<OrderEntityT, 'driver' | 'truck'> & {
+    shiftId: number;
+  }): OrderEntity {
+    return new OrderEntity({
+      id,
       price,
       scheduledTime,
       carsQty,

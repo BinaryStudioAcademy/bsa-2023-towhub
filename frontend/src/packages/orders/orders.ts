@@ -11,8 +11,9 @@ export {
   type OrderEntity,
   type OrderFindAllDriverOrdersResponseDto,
   type OrderResponseDto,
-} from './types/types.js';
-export { orderCreateRequestBody } from './validation-schemas/validation-schemas.js';
+  type OrderStatusValues,
+} from './libs/types/types.js';
+export { orderCreateRequestBody } from './libs/validation-schemas/validation-schemas.js';
 
 const ordersApi = new OrdersApi({
   baseUrl: config.ENV.API.ORIGIN_URL,

@@ -11,6 +11,7 @@ const RED = 'red-extra-light';
 const statusToBadgeColorMap: Record<ValueOf<typeof OrderStatus>, Color> = {
   [OrderStatus.DONE]: GREEN,
   [OrderStatus.CANCELED]: RED,
+  [OrderStatus.REJECTED]: RED,
   [OrderStatus.PENDING]: BLUE,
   [OrderStatus.PICKING_UP]: BLUE,
   [OrderStatus.CONFIRMED]: BLUE,

@@ -5,6 +5,10 @@ import { type HttpError } from '~/libs/packages/http/http.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import {
+  type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusResponseDto,
+} from '~/packages/orders/libs/types/types.js';
+import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
@@ -16,6 +20,41 @@ import { ActionName } from './libs/enums/enums.js';
 import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.helper.js';
 import { type RouteAddresses, type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
+
+const getBusinessOrders = createAsyncThunk<
+  OrderResponseDto[],
+  undefined,
+  AsyncThunkConfig
+>(`${sliceName}/orders`, async (_, { extra }) => {
+  const { ordersApi } = extra;
+
+  return await ordersApi.getBusinessOrders();
+});
+const changeAcceptOrderStatusByDriver = createAsyncThunk<
+  OrderUpdateAcceptStatusResponseDto,
+  OrderUpdateAcceptStatusRequestDto & { orderId: string },
+  AsyncThunkConfig
+>(
+  ActionName.CHANGE_ACCEPT_ORDER_STATUS,
+  ({ isAccepted, orderId }, { extra }) => {
+    const { ordersApi } = extra;
+
+    return ordersApi.changeAcceptOrderStatusByDriver(orderId, { isAccepted });
+  },
+);
+
+const changeAcceptOrderStatusByCustomer = createAsyncThunk<
+  OrderUpdateAcceptStatusResponseDto,
+  OrderUpdateAcceptStatusRequestDto & { orderId: string },
+  AsyncThunkConfig
+>(
+  ActionName.CHANGE_ACCEPT_ORDER_STATUS,
+  ({ isAccepted, orderId }, { extra }) => {
+    const { ordersApi } = extra;
+
+    return ordersApi.changeAcceptOrderStatusByCustomer(orderId, { isAccepted });
+  },
+);
 
 const createOrder = createAsyncThunk<
   OrderResponseDto,
@@ -48,10 +87,10 @@ const calculateOrderPrice = createAsyncThunk<
 
 const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
   ActionName.GET_ORDER,
-  (orderId, { extra }) => {
+  async (orderId, { extra }) => {
     const { ordersApi } = extra;
 
-    return ordersApi.getOrder(orderId);
+    return await ordersApi.getOrder(orderId);
   },
 );
 
@@ -67,6 +106,7 @@ const getRouteData = createAsyncThunk<
   };
 
   const mapService = await mapServiceFactory({ mapElement: null });
+
   const [originName, destinationName, distanceAndDuration] = await Promise.all([
     mapService.getPointAddress(routeData.origin),
     mapService.getPointAddress(routeData.destination),
@@ -143,6 +183,13 @@ const unsubscribeOrderUpdates = createAction(
     };
   },
 );
+
+const removeOrder = createAction(
+  ActionName.REMOVE_ORDER,
+  (orderId: string) => ({
+    payload: orderId,
+  }),
+);
 const getDriverOrdersPage = createAsyncThunk<
   OrderFindAllDriverOrdersResponseDto,
   string | undefined,
@@ -164,11 +211,15 @@ const getDriverOrdersPage = createAsyncThunk<
 
 export {
   calculateOrderPrice,
+  changeAcceptOrderStatusByCustomer,
+  changeAcceptOrderStatusByDriver,
   createOrder,
+  getBusinessOrders,
   getDriverOrdersPage,
   getOrder,
   getRouteAddresses,
   getRouteData,
+  removeOrder,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,

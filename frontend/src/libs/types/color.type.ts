@@ -13,4 +13,6 @@ type LightColor = 'white' | 'red-light' | 'grey-light' | 'grey-extra-light';
 
 type PaleColor = 'red-extra-light' | 'green-extra-light' | 'blue-extra-light';
 
-export { type DarkColor, type LightColor, type PaleColor };
+type Color = DarkColor | LightColor | PaleColor;
+
+export { type Color, type DarkColor, type LightColor, type PaleColor };

@@ -6,19 +6,22 @@ import { type OrderResponseDto } from '~/packages/orders/orders.js';
 
 import {
   calculateOrderPrice,
+  changeAcceptOrderStatusByCustomer,
+  changeAcceptOrderStatusByDriver,
   createOrder,
+  getBusinessOrders,
   getDriverOrdersPage,
   getOrder,
   getRouteAddresses,
   getRouteData,
+  removeOrder,
   updateOrderFromSocket,
 } from './actions.js';
-import { type RouteAddresses } from './libs/types/route-addresses.js';
 import { type RouteData } from './libs/types/route-data.type.js';
+import { type RouteAddresses } from './libs/types/types.js';
 
 type State = {
   orders: OrderResponseDto[];
-  total: number;
   price: number;
   dataStatus: ValueOf<typeof DataStatus>;
   routeData: RouteData | null;
@@ -26,12 +29,13 @@ type State = {
   routeAddresses: Partial<
     Record<RouteAddresses['orderId'], RouteAddresses['points']>
   >;
+  total: number;
 };
 
 const initialState: State = {
   orders: [],
-  total: 0,
   price: 0,
+  total: 0,
   currentOrder: null,
   dataStatus: DataStatus.IDLE,
   routeData: null,
@@ -45,7 +49,11 @@ const { reducer, actions, name } = createSlice({
   extraReducers(builder) {
     builder
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.orders.push(action.payload);
+        state.currentOrder = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(calculateOrderPrice.fulfilled, (state, action) => {
+        state.price = action.payload.price;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(getDriverOrdersPage.fulfilled, (state, actions) => {
@@ -53,19 +61,22 @@ const { reducer, actions, name } = createSlice({
         state.orders = actions.payload.items;
         state.total = actions.payload.total;
       })
-      .addCase(calculateOrderPrice.fulfilled, (state, action) => {
-        state.price = action.payload.price;
-        state.dataStatus = DataStatus.FULFILLED;
-      })
       .addCase(getOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
-        state.currentOrder = action.payload;
-      })
       .addCase(getRouteData.fulfilled, (state, action) => {
         state.routeData = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
+        state.currentOrder = { ...state.currentOrder, ...action.payload };
+      })
+      .addCase(removeOrder, (state) => {
+        state.currentOrder = null;
+      })
+      .addCase(getBusinessOrders.fulfilled, (state, action) => {
+        state.orders = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(getRouteAddresses.fulfilled, (state, action) => {
@@ -74,12 +85,30 @@ const { reducer, actions, name } = createSlice({
       })
       .addMatcher(
         isAnyOf(
-          createOrder.pending,
-          calculateOrderPrice.pending,
+          changeAcceptOrderStatusByDriver.fulfilled,
+          changeAcceptOrderStatusByCustomer.fulfilled,
+        ),
+        (state, action) => {
+          const { status } = action.payload;
+
+          if (state.currentOrder) {
+            state.currentOrder.status = status;
+          }
+
+          state.dataStatus = DataStatus.FULFILLED;
+        },
+      )
+      .addMatcher(
+        isAnyOf(
+          getBusinessOrders.pending,
           getDriverOrdersPage.pending,
-          getRouteData.pending,
           getRouteAddresses.pending,
+          calculateOrderPrice.pending,
+          createOrder.pending,
+          changeAcceptOrderStatusByDriver.pending,
+          changeAcceptOrderStatusByCustomer.pending,
           getOrder.pending,
+          getRouteData.pending,
         ),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
@@ -88,11 +117,14 @@ const { reducer, actions, name } = createSlice({
       .addMatcher(
         isAnyOf(
           createOrder.rejected,
-          calculateOrderPrice.rejected,
+          getBusinessOrders.rejected,
           getDriverOrdersPage.rejected,
-          getRouteData.rejected,
           getRouteAddresses.rejected,
+          calculateOrderPrice.rejected,
+          changeAcceptOrderStatusByDriver.rejected,
+          changeAcceptOrderStatusByCustomer.rejected,
           getOrder.rejected,
+          getRouteData.rejected,
         ),
         (state) => {
           state.dataStatus = DataStatus.REJECTED;

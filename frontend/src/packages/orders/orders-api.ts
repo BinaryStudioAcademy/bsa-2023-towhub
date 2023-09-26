@@ -3,14 +3,16 @@ import { HttpApi } from '~/libs/packages/api/http-api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 
-import { OrdersApiPath } from './enums/enums.js';
+import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
-  type OrderCreateRequestDto,
   type OrderFindAllDriverOrdersResponseDto,
   type OrderResponseDto,
-} from './types/types.js';
+  type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusResponseDto,
+} from './libs/types/types.js';
+import { type OrderCreateRequestDto } from './orders.js';
 
 type Constructor = {
   baseUrl: string;
@@ -21,6 +23,19 @@ type Constructor = {
 class OrdersApi extends HttpApi {
   public constructor({ baseUrl, http, storage }: Constructor) {
     super({ path: ApiPath.ORDERS, baseUrl, http, storage });
+  }
+
+  public async getBusinessOrders(): Promise<OrderResponseDto[]> {
+    const response = await this.load(
+      this.getFullEndpoint(OrdersApiPath.ROOT, {}),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<OrderResponseDto[]>();
   }
 
   public async createOrder(
@@ -61,11 +76,45 @@ class OrdersApi extends HttpApi {
       {
         method: 'GET',
         contentType: ContentType.JSON,
-        hasAuth: true,
+        hasAuth: false,
       },
     );
 
     return await response.json<OrderResponseDto>();
+  }
+
+  public async changeAcceptOrderStatusByDriver(
+    orderId: string,
+    payload: OrderUpdateAcceptStatusRequestDto,
+  ): Promise<OrderUpdateAcceptStatusResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(OrdersApiPath.DRIVER, { orderId }),
+      {
+        method: 'PATCH',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<OrderUpdateAcceptStatusResponseDto>();
+  }
+
+  public async changeAcceptOrderStatusByCustomer(
+    orderId: string,
+    payload: OrderUpdateAcceptStatusRequestDto,
+  ): Promise<OrderUpdateAcceptStatusResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(OrdersApiPath.CUSTOMER, { orderId }),
+      {
+        method: 'PATCH',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: false,
+      },
+    );
+
+    return await response.json<OrderUpdateAcceptStatusResponseDto>();
   }
 
   public async getAllDriverOrders(
