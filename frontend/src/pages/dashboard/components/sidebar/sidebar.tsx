@@ -1,12 +1,13 @@
 import { Button } from '~/libs/components/components.js';
-import { AppRoute } from '~/libs/enums/enums.js';
+import { type AppRoute } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useLocation, useNavigate } from '~/libs/hooks/hooks.js';
-import { type TabName, type TabsType } from '~/libs/types/types.js';
+import { type TabsType, type ValueOf } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { useAuthUser } from '~/slices/auth/auth.js';
 
-import { checkActiveTab } from './libs/helpers.js';
+import { EndShiftButton } from './components/end-shift-button/end-shift-button.js';
+import { checkActiveTab } from './libs/helpers/check-active-tab.helper.js';
 import { BUSINESS_TABS, DRIVER_TABS } from './libs/tabs.js';
 import styles from './styles.module.scss';
 
@@ -18,19 +19,18 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAuthUser();
-  const group = user?.group.key;
+
+  const isDriver = user?.group.key === UserGroupKey.DRIVER;
 
   const getTabs = useCallback((): TabsType[] => {
-    return group === UserGroupKey.BUSINESS ? BUSINESS_TABS : DRIVER_TABS;
-  }, [group]);
+    return isDriver ? DRIVER_TABS : BUSINESS_TABS;
+  }, [isDriver]);
 
   const handleTabClick = useCallback(
-    (tabName: TabName) => () => {
-      group === UserGroupKey.BUSINESS
-        ? navigate(`${AppRoute.DASHBOARD}/${tabName}`)
-        : navigate(`${AppRoute.DRIVERS_DASHBOARD}/${tabName}`);
+    (tabName: ValueOf<typeof AppRoute>) => () => {
+      navigate(tabName);
     },
-    [navigate, group],
+    [navigate],
   );
 
   const renderTabs = useCallback(() => {
@@ -53,7 +53,7 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
           )}
           frontIcon={tab.icon}
           variant="text"
-          onClick={handleTabClick(tab.name)}
+          onClick={handleTabClick(tab.path)}
         >
           <span className={'visually-hidden'}>{tab.name}</span>
         </Button>
@@ -69,6 +69,7 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
       )}
     >
       <ul className={styles.list}>{renderTabs()}</ul>
+      {isDriver && <EndShiftButton />}
     </div>
   );
 };
