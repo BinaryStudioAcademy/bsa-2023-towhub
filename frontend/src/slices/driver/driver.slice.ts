@@ -5,6 +5,7 @@ import { type TruckEntityT } from '~/slices/trucks/libs/types/types.js';
 import {
   setShiftStatus,
   setStartShiftSuccess,
+  setVerificationCompleted,
   shiftEnded,
   startShift,
 } from './actions.js';
@@ -18,12 +19,14 @@ type State = {
   truckChoiceStatus: TruckChoiceStatusValues;
   activeTruck: TruckEntityT | null;
   shiftStatus: ShiftStatusValue;
+  isVerificationCompleted: boolean;
 };
 
 const initialState: State = {
   truckChoiceStatus: TruckChoiceStatus.IDLE,
   activeTruck: null,
   shiftStatus: ShiftStatus.UNKNOWN,
+  isVerificationCompleted: false,
 };
 
 const { reducer, actions, name } = createSlice({
@@ -31,6 +34,9 @@ const { reducer, actions, name } = createSlice({
   name: 'driver',
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(setVerificationCompleted, (state) => {
+      state.isVerificationCompleted = true;
+    });
     builder.addCase(startShift.pending, (state) => {
       state.truckChoiceStatus = TruckChoiceStatus.PENDING;
     });

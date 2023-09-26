@@ -1,4 +1,5 @@
 import {
+  type Multipart,
   type MultipartFields,
   type MultipartFile,
   type MultipartValue,
@@ -16,15 +17,29 @@ const parseFormDataFields = (
       continue;
     }
 
-    if (Array.isArray(field) && field[0].type !== 'file') {
-      parsedBody[fieldName] = (field as MultipartValue[]).map(
-        (arrayElement) => arrayElement.value,
-      );
-    } else if (!Array.isArray(field) && field.type === 'file') {
-      parsedBody[fieldName] = [field];
-    } else {
-      parsedBody[fieldName] = (field as MultipartValue).value;
+    const isArrayName = fieldName.includes('[]');
+    const fieldArrayTyped = field as Multipart[];
+
+    if (isArrayName) {
+      const fieldNameWithoutBrackets = fieldName.split('[]')[0];
+      const isActualArray = Array.isArray(field);
+
+      if (isActualArray) {
+        const isFileArray = fieldArrayTyped[0].type === 'file';
+        parsedBody[fieldNameWithoutBrackets] = isFileArray
+          ? fieldArrayTyped
+          : (fieldArrayTyped as MultipartValue[]).map(
+              (arrayElement) => arrayElement.value,
+            );
+        continue;
+      }
+      const isFileArray = field.type === 'file';
+      parsedBody[fieldNameWithoutBrackets] = isFileArray
+        ? [field]
+        : [field.value];
+      continue;
     }
+    parsedBody[fieldName] = (field as MultipartValue).value;
   }
 
   return parsedBody;

@@ -4,7 +4,10 @@ import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
-import { type TruckDatabaseModel } from '../trucks/libs/types/types.js';
+import {
+  type DriverHaveAccessToTruck,
+  type TruckDatabaseModel,
+} from '../trucks/libs/types/types.js';
 import {
   type UsersTrucksEntityT,
   type UsersTrucksModel,
@@ -21,6 +24,18 @@ class UsersTrucksRepository implements IRepository {
   ) {
     this.db = database;
     this.usersTrucksSchema = usersTrucksSchema;
+  }
+
+  public async addTruckToDriver(
+    driverTruckIds: DriverHaveAccessToTruck[],
+  ): Promise<void> {
+    const preparedQuery = this.db
+      .driver()
+      .insert(this.usersTrucksSchema)
+      .values(driverTruckIds)
+      .prepare('addTruckToDriver');
+
+    await preparedQuery.execute();
   }
 
   public async find(

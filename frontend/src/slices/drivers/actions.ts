@@ -42,7 +42,7 @@ const addDriver = createAsyncThunk<
       const formData = serialize(payload);
 
       for (const file of files) {
-        formData.append('files', await getFileFromFileObject(file));
+        formData.append('files[]', await getFileFromFileObject(file));
       }
 
       const result = await driversApi.addDriver(formData);

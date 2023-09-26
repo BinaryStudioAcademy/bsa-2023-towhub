@@ -14,6 +14,10 @@ import { type AsyncThunkConfig } from '~/libs/types/async-thunk-config.type';
 import { name as sliceName } from './driver.slice.js';
 import { type ShiftStatusValue } from './libs/types/types.js';
 
+const setVerificationCompleted = createAction(
+  `${sliceName}/set-verification-completed`,
+);
+
 const endShift = createAsyncThunk<null, undefined, AsyncThunkConfig>(
   `${sliceName}/end-shift`,
   (_, { extra }) => {
@@ -88,6 +92,7 @@ export {
   endShift,
   setShiftStatus,
   setStartShiftSuccess,
+  setVerificationCompleted,
   shiftEnded,
   startShift,
 };

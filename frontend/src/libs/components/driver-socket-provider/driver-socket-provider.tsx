@@ -6,13 +6,18 @@ import {
   useAppSelector,
   useEffect,
 } from '~/libs/hooks/hooks.js';
-import { socketTryAddDriverListeners } from '~/libs/packages/socket/libs/helpers/helpers.js';
+import {
+  socketTryAddDriverListeners,
+  socketTryRemoveDriverListeners,
+} from '~/libs/packages/socket/libs/helpers/helpers.js';
+import { socket } from '~/libs/packages/socket/socket.js';
 import { actions as authActions } from '~/slices/auth/auth.js';
 import { selectSocketDriverAuthStatus } from '~/slices/auth/selectors.js';
 
 import { RouterOutlet } from '../router/router.js';
 
 const DriverSocketProvider: FC = () => {
+  const isConnected = socket.isConnected();
   const socketDriverAuthStatus = useAppSelector(selectSocketDriverAuthStatus);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -21,7 +26,11 @@ const DriverSocketProvider: FC = () => {
     if (socketDriverAuthStatus === DataStatus.IDLE) {
       void dispatch(authActions.authorizeDriverSocket());
     }
-  }, [dispatch, socketDriverAuthStatus]);
+
+    return () => {
+      socketTryRemoveDriverListeners();
+    };
+  }, [dispatch, socketDriverAuthStatus, isConnected]);
 
   return <RouterOutlet />;
 };

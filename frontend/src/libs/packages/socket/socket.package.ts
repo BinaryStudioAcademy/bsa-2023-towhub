@@ -34,6 +34,10 @@ class SocketService {
     }
   }
 
+  public isConnected(): boolean {
+    return this.io ? this.io.connected : false;
+  }
+
   public addListener<
     T extends
       keyof ServerToClientEventParameter = keyof ServerToClientEventParameter,

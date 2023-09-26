@@ -7,4 +7,8 @@ export {
   type FileVerificationStatusDatabaseModel,
 } from './file-verification-status-models.type.js';
 export { type FileVerificationStatusUpdateDto } from './file-verification-status-update-dto.type.js';
-export { type FileVerificationStatusEntityT } from 'shared/build/index.js';
+export { type VerificationStatusToReadableErrorMessage } from './verification-status-to-readable-error-message.type.js';
+export {
+  type FileVerificationStatusEntityT,
+  type FileVerificationStatusValues,
+} from 'shared/build/index.js';

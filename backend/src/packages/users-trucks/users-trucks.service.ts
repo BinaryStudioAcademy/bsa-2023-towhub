@@ -1,7 +1,10 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { TruckEntity } from '~/packages/trucks/truck.entity.js';
 
-import { type TruckEntityT } from '../trucks/libs/types/types.js';
+import {
+  type DriverHaveAccessToTruck,
+  type TruckEntityT,
+} from '../trucks/libs/types/types.js';
 import {
   type UsersTrucksCreateUpdate,
   type UsersTrucksEntityObjectT,
@@ -41,6 +44,21 @@ class UsersTrucksService implements IService<UsersTrucksEntityObjectT> {
     return trucks.map((truck) => {
       return TruckEntity.initialize(truck).toObject();
     });
+  }
+
+  public async addTrucksToDriver(
+    userId: number,
+    truckIds: number[],
+  ): Promise<void> {
+    const uniqueItems = [...new Set(truckIds)];
+    const driverTrucks: DriverHaveAccessToTruck[] = uniqueItems.map(
+      (truckId) => ({
+        userId,
+        truckId,
+      }),
+    );
+
+    await this.usersTrucksRepository.addTruckToDriver(driverTrucks);
   }
 
   public async create(

@@ -53,6 +53,7 @@ class DriverRepository implements IRepository {
           schema.fileVerificationStatus.fileId,
         ),
       )
+      .innerJoin(schema.users, eq(this.driverSchema.userId, schema.users.id))
       .where(finalQuery)
       .execute();
 
@@ -80,6 +81,7 @@ class DriverRepository implements IRepository {
           schema.fileVerificationStatus.fileId,
         ),
       )
+      .innerJoin(schema.users, eq(this.driverSchema.userId, schema.users.id))
       .limit(query.size)
       .offset(offset)
       .where(eq(this.driverSchema.businessId, businessId))

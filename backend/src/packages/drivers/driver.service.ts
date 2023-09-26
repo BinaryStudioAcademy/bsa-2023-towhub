@@ -4,6 +4,7 @@ import {
   type GeolocationLatLng,
 } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
+import { type UsersTrucksService } from '~/packages/users-trucks/users-trucks.service';
 
 import { UserGroupKey } from '../auth/libs/enums/enums.js';
 import { DriverEntity } from '../drivers/driver.entity.js';
@@ -19,7 +20,6 @@ import {
 } from '../drivers/libs/types/types.js';
 import { type FileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
 import { type GroupService } from '../groups/group.service.js';
-import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 import { convertToDriverUser } from './libs/helpers/helpers.js';
 
@@ -34,28 +34,28 @@ class DriverService implements IService {
 
   private fileVerificationStatusService: FileVerificationStatusService;
 
-  private truckService: TruckService;
+  private usersTrucksService: UsersTrucksService;
 
   public constructor({
     driverRepository,
     userService,
     groupService,
     geolocationCacheService,
-    truckService,
+    usersTrucksService,
     fileVerificationStatusService,
   }: {
     driverRepository: DriverRepository;
     userService: UserService;
     groupService: GroupService;
     geolocationCacheService: GeolocationCacheService;
-    truckService: TruckService;
+    usersTrucksService: UsersTrucksService;
     fileVerificationStatusService: FileVerificationStatusService;
   }) {
     this.driverRepository = driverRepository;
     this.userService = userService;
     this.groupService = groupService;
     this.geolocationCacheService = geolocationCacheService;
-    this.truckService = truckService;
+    this.usersTrucksService = usersTrucksService;
     this.fileVerificationStatusService = fileVerificationStatusService;
   }
 
@@ -184,7 +184,6 @@ class DriverService implements IService {
       phone,
       groupId: group.id,
     });
-
     const driver = await this.driverRepository.create(
       DriverEntity.initializeNew({
         driverLicenseNumber,
@@ -193,7 +192,8 @@ class DriverService implements IService {
         driverLicenseFileId,
       }),
     );
-    await this.truckService.addTrucksToDriver(user.id, truckIds);
+
+    await this.usersTrucksService.addTrucksToDriver(user.id, truckIds);
 
     const driverObject = driver.toObject();
 
