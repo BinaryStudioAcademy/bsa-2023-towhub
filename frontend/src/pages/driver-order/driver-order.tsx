@@ -5,10 +5,13 @@ import {
   useAppDispatch,
   useAppMap,
   useAppSelector,
+  useCallback,
   useEffect,
   useParams,
   useRef,
+  useState,
 } from '~/libs/hooks/hooks.js';
+import { notification } from '~/libs/packages/notification/notification.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectOrder } from '~/slices/orders/selectors.js';
 
@@ -30,6 +33,8 @@ const DriverOrder = (): JSX.Element => {
     useGetRouteData(order);
   const dispatch = useAppDispatch();
 
+  const [message, setMessage] = useState<string>();
+
   const mapReference = useRef<HTMLDivElement>(null);
   useAppMap({
     center: startPoint as google.maps.LatLngLiteral,
@@ -48,6 +53,16 @@ const DriverOrder = (): JSX.Element => {
       );
     }
   }, [dispatch, order]);
+
+  const handleAccept = useCallback(() => {
+    setMessage('Order Accepted');
+    notification.success('Order Accepted');
+  }, [setMessage]);
+
+  const handleDecline = useCallback(() => {
+    setMessage('Order Declined');
+    notification.warning('Order Declined');
+  }, [setMessage]);
 
   if (!order) {
     return <NotFound />;
@@ -101,11 +116,22 @@ const DriverOrder = (): JSX.Element => {
           <p className={styles.commentHeader}>Comment:</p>
           <p className={styles.commentContent}>{MOCK_ORDER_DETAILS.comment}</p>
           <div className={styles.buttons}>
-            <Button className={styles.button} label={'Decline'} />
-            <Button
-              className={getValidClassNames(styles.button, styles.accept)}
-              label={'Accept'}
-            />
+            {message ? (
+              <p className={styles.message}>{message}</p>
+            ) : (
+              <>
+                <Button
+                  className={styles.button}
+                  label={'Decline'}
+                  onClick={handleDecline}
+                />
+                <Button
+                  className={getValidClassNames(styles.button, styles.accept)}
+                  label={'Accept'}
+                  onClick={handleAccept}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
