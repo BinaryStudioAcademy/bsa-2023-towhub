@@ -3,6 +3,7 @@ import {
   createOrder,
   getDriverOrdersPage,
   getOrder,
+  getRouteAddresses,
   getRouteData,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
@@ -20,6 +21,7 @@ const allActions = {
   updateOrderFromSocket,
   getRouteData,
   getDriverOrdersPage,
+  getRouteAddresses,
 };
 
 export { allActions as actions };

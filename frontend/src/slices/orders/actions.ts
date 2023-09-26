@@ -14,7 +14,7 @@ import {
 
 import { ActionName } from './libs/enums/enums.js';
 import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.helper.js';
-import { type RouteData } from './libs/types/types.js';
+import { type RouteAddresses, type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
 const createOrder = createAsyncThunk<
@@ -83,6 +83,41 @@ const getRouteData = createAsyncThunk<
   };
 });
 
+const getRouteAddresses = createAsyncThunk<
+  Partial<Record<RouteAddresses['orderId'], RouteAddresses['points']>>,
+  { points: { origin: string; destination: string }; orderId: number },
+  AsyncThunkConfig
+>(
+  ActionName.GET_ORDER_ADDRESSES,
+  async ({ points, orderId }, { extra, getState }) => {
+    const routeAddresses = getState().orders.routeAddresses;
+
+    if (routeAddresses[orderId]) {
+      return routeAddresses;
+    }
+
+    const { origin, destination } = points;
+    const { mapServiceFactory } = extra;
+    const routeData = {
+      origin: jsonToLatLngLiteral(origin),
+      destination: jsonToLatLngLiteral(destination),
+    };
+
+    const mapService = await mapServiceFactory({ mapElement: null });
+    const [originName, destinationName] = await Promise.all([
+      mapService.getPointAddress(routeData.origin),
+      mapService.getPointAddress(routeData.destination),
+    ]);
+
+    return {
+      [orderId]: {
+        origin: originName,
+        destination: destinationName,
+      },
+    };
+  },
+);
+
 const updateOrderFromSocket = createAsyncThunk<
   OrderResponseDto,
   OrderResponseDto,
@@ -132,6 +167,7 @@ export {
   createOrder,
   getDriverOrdersPage,
   getOrder,
+  getRouteAddresses,
   getRouteData,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,

@@ -8,10 +8,12 @@ import {
   capitalizeFirstLetter,
   getValidClassNames,
 } from '~/libs/helpers/helpers.js';
+import { useAppSelector } from '~/libs/hooks/hooks.js';
 import { type OrderResponseDto } from '~/packages/orders/orders.js';
+import { selectRouteAddresses } from '~/slices/orders/selectors.js';
 
 import { Badge } from '../badge/badge.js';
-import { PlainSvgIcon } from '../components.js';
+import { PlainSvgIcon, Spinner } from '../components.js';
 import { Icon } from '../icon/icon.js';
 import { OrderStatus } from './libs/enums/enums.js';
 import { convertDate } from './libs/helpers/helpers.js';
@@ -23,18 +25,17 @@ type Properties = {
 };
 
 const DriverOrderCard: React.FC<Properties> = ({ order }: Properties) => {
-  const {
-    id,
-    scheduledTime,
-    startPoint,
-    endPoint,
-    price,
-    status,
-    customerPhone,
-    shift,
-  } = order;
+  const { id, scheduledTime, price, status, customerPhone, shift } = order;
   const badgeBg = statusToBadgeColorMap[status];
   const isActive = status === OrderStatus.PENDING;
+
+  const points = useAppSelector(selectRouteAddresses);
+
+  const { origin, destination } = points[id] ?? {};
+
+  if (!points[id]) {
+    return <Spinner />;
+  }
 
   return (
     <div
@@ -71,7 +72,7 @@ const DriverOrderCard: React.FC<Properties> = ({ order }: Properties) => {
           <div className={styles.pointsWrapper}>
             <PlainSvgIcon name={PlainSvgIconName.BLUE_CIRCLE} />
             <div className={getValidClassNames(styles.startPoint, 'textSm')}>
-              {startPoint}
+              {origin}
             </div>
           </div>
           <div className={styles.arrowDown}>
@@ -80,7 +81,7 @@ const DriverOrderCard: React.FC<Properties> = ({ order }: Properties) => {
           <div className={styles.pointsWrapper}>
             <PlainSvgIcon name={PlainSvgIconName.RED_CIRCLE} />
             <div className={getValidClassNames(styles.endPoint, 'textSm')}>
-              {endPoint}
+              {destination}
             </div>
           </div>
         </div>

@@ -9,9 +9,11 @@ import {
   createOrder,
   getDriverOrdersPage,
   getOrder,
+  getRouteAddresses,
   getRouteData,
   updateOrderFromSocket,
 } from './actions.js';
+import { type RouteAddresses } from './libs/types/route-addresses.js';
 import { type RouteData } from './libs/types/route-data.type.js';
 
 type State = {
@@ -21,6 +23,9 @@ type State = {
   dataStatus: ValueOf<typeof DataStatus>;
   routeData: RouteData | null;
   currentOrder: OrderResponseDto | null;
+  routeAddresses: Partial<
+    Record<RouteAddresses['orderId'], RouteAddresses['points']>
+  >;
 };
 
 const initialState: State = {
@@ -30,6 +35,7 @@ const initialState: State = {
   currentOrder: null,
   dataStatus: DataStatus.IDLE,
   routeData: null,
+  routeAddresses: {},
 };
 
 const { reducer, actions, name } = createSlice({
@@ -51,35 +57,29 @@ const { reducer, actions, name } = createSlice({
         state.price = action.payload.price;
         state.dataStatus = DataStatus.FULFILLED;
       })
-
-      .addCase(getOrder.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
       .addCase(getOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(getOrder.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
-      })
       .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
-      })
-      .addCase(getRouteData.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
       })
       .addCase(getRouteData.fulfilled, (state, action) => {
         state.routeData = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(getRouteData.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
+      .addCase(getRouteAddresses.fulfilled, (state, action) => {
+        state.routeAddresses = { ...state.routeAddresses, ...action.payload };
+        state.dataStatus = DataStatus.FULFILLED;
       })
       .addMatcher(
         isAnyOf(
           createOrder.pending,
           calculateOrderPrice.pending,
           getDriverOrdersPage.pending,
+          getRouteData.pending,
+          getRouteAddresses.pending,
+          getOrder.pending,
         ),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
@@ -90,6 +90,9 @@ const { reducer, actions, name } = createSlice({
           createOrder.rejected,
           calculateOrderPrice.rejected,
           getDriverOrdersPage.rejected,
+          getRouteData.rejected,
+          getRouteAddresses.rejected,
+          getOrder.rejected,
         ),
         (state) => {
           state.dataStatus = DataStatus.REJECTED;

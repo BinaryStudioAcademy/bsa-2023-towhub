@@ -1,16 +1,12 @@
 import { Dropdown } from '~/libs/components/components.js';
-import { DataStatus } from '~/libs/enums/data-status.enum.js';
-import { useAppSelector } from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 
-import { DriverOrderList } from './libs/components/components.js';
+import { DriverOrderListWrapper } from './libs/components/components.js';
 import { OrderStatus } from './libs/enums/enums.js';
 import { useFilter } from './libs/hooks/use-filter.hook.js';
 import styles from './styles.module.scss';
 
 const DriversOrderHistory: React.FC = () => {
-  const { orders, total, dataStatus } = useAppSelector((state) => state.orders);
-
   const options = [
     { label: 'Any', value: '' },
     { label: 'Done', value: OrderStatus.DONE },
@@ -38,12 +34,7 @@ const DriversOrderHistory: React.FC = () => {
           </div>
         </div>
         <div className={styles.orders}>
-          <DriverOrderList
-            {...listHook}
-            orders={orders}
-            totalElements={total}
-            isLoading={dataStatus === DataStatus.PENDING}
-          />
+          <DriverOrderListWrapper {...listHook} />
         </div>
       </section>
     </div>

@@ -1,10 +1,8 @@
 import { type SingleValue } from 'react-select';
 
 import {
-  useAppDispatch,
   useAppTable,
   useCallback,
-  useEffect,
   useQueryParameters,
 } from '~/libs/hooks/hooks.js';
 import { type ReturnValue } from '~/libs/hooks/use-app-table/libs/types/types.js';
@@ -19,13 +17,8 @@ const useFilter = (): {
   listHook: ReturnValue;
   handleChangeFilter: (option: SingleValue<SelectOption>) => void;
 } => {
-  const dispatch = useAppDispatch();
-  const {
-    setQueryParameters,
-    getQueryParameters,
-    searchParameters,
-    removeQueryParameters,
-  } = useQueryParameters();
+  const { setQueryParameters, getQueryParameters, removeQueryParameters } =
+    useQueryParameters();
   const { size: initialSize, page: initialPage } = getQueryParameters(
     'size',
     'page',
@@ -40,10 +33,6 @@ const useFilter = (): {
     initialPageSize: initialSize ? Number(initialSize) : null,
     filterName: 'status',
   });
-
-  useEffect(() => {
-    void dispatch(getDriverOrdersPage(searchParameters.toString()));
-  }, [dispatch, searchParameters]);
 
   const handleChangeFilter = useCallback(
     (option: SingleValue<SelectOption>) => {

@@ -9,7 +9,6 @@ import {
 import { useQueryParameters } from '../hooks.js';
 import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
-import { type ReturnValue } from './libs/types/types.js';
 
 type Properties<T, K> = {
   tableFetchCall: AsyncThunk<T, string | undefined, AsyncThunkConfig>;
@@ -20,6 +19,14 @@ type Properties<T, K> = {
   filterName?: string;
 };
 
+type ReturnValue = {
+  pageSize: number;
+  pageIndex: number;
+  changePageSize: React.Dispatch<React.SetStateAction<number>>;
+  changePageIndex: React.Dispatch<React.SetStateAction<number>>;
+  updatePage: () => void;
+};
+
 const useAppTable = <T, K>({
   tableFetchCall,
   payload,
@@ -28,6 +35,7 @@ const useAppTable = <T, K>({
   sort,
   filterName,
 }: Properties<T, K>): ReturnValue => {
+  const [queries, setQueries] = useState<string>();
   const [pageSize, changePageSize] = useState(
     initialPageSize ?? DEFAULT_PAGE_SIZE,
   );
@@ -59,8 +67,12 @@ const useAppTable = <T, K>({
     }
 
     setQueryParameters(queryParameters);
+    const newQueries = searchParameters.toString();
 
-    void dispatch(tableFetchCall(searchParameters.toString()));
+    if (queries !== newQueries) {
+      setQueries(newQueries);
+      void dispatch(tableFetchCall(newQueries));
+    }
   }, [
     dispatch,
     filterName,
@@ -68,6 +80,7 @@ const useAppTable = <T, K>({
     pageIndex,
     pageSize,
     payload,
+    queries,
     searchParameters,
     setQueryParameters,
     sort,
