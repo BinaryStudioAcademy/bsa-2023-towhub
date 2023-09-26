@@ -1,6 +1,6 @@
 import { type DataStatus } from '~/libs/enums/data-status.enum';
 import { type RootState, type ValueOf } from '~/libs/types/types.js';
-import { type OrderResponseDto } from '~/packages/orders/types/types.js';
+import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
 
 import { type name as OrderSliceName } from './order.slice.js';
 

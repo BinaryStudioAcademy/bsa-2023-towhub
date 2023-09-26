@@ -22,7 +22,7 @@ type Properties<T extends FieldValues> = {
   defaultValue?: SelectOption;
   onChange?: (value: string) => void;
   placeholder?: string;
-  insideInput?: boolean;
+  isInsideInput?: boolean;
 };
 
 const DropdownInput = <T extends FieldValues>({

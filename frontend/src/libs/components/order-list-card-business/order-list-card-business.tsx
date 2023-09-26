@@ -55,20 +55,20 @@ const OrderListCardBusiness: React.FC<Properties> = ({
       <div className={styles.content}>
         <img
           src={ImgPath.AVATAR_DEFAULT}
-          alt={driver.firstName}
+          alt={driver?.firstName}
           className={styles.avatar}
         />
         <div className={styles.driver}>
           <p className={getValidClassNames('textMdBold')}>
-            {getFullName(driver.firstName, driver.lastName)}
+            {driver && getFullName(driver.firstName, driver.lastName)}
           </p>
           <p className={getValidClassNames('textMd', styles.driverPhone)}>
-            {driver.phone}
+            {driver?.phone}
           </p>
         </div>
         <div className={styles.truck}>
           <Icon iconName={IconName.TRUCK} className={styles.icon} />
-          <p className={styles.truckNumber}>{truck.licensePlateNumber}</p>
+          <p className={styles.truckNumber}>{truck?.licensePlateNumber}</p>
         </div>
       </div>
     </div>

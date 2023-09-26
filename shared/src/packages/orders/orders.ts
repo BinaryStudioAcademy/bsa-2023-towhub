@@ -15,11 +15,16 @@ export {
   type OrderResponseDto,
   type OrdersListResponseDto,
   type OrderStatusValues,
+  type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusRequestParameter,
+  type OrderUpdateAcceptStatusResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 export {
   orderCreateRequestBody,
   orderFindAllBusinessOrdersQuery,
   orderGetParameter,
+  orderUpdateAcceptStatusRequestBody,
+  orderUpdateAcceptStatusRequestParameter,
   orderUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';

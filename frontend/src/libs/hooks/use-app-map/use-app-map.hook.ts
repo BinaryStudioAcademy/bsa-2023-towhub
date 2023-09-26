@@ -1,5 +1,8 @@
 import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
-import { DEFAULT_ZOOM } from '~/libs/packages/map/libs/constants/constants.js';
+import {
+  DEFAULT_CENTER,
+  DEFAULT_ZOOM,
+} from '~/libs/packages/map/libs/constants/constants.js';
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import { type MapService } from '~/libs/packages/map/map.js';
 import { MapConnector } from '~/libs/packages/map/map-connector.package.js';
@@ -22,8 +25,8 @@ type Properties = {
 };
 
 const useAppMap = ({
-  center,
   points,
+  center = DEFAULT_CENTER,
   zoom = DEFAULT_ZOOM,
   destination,
   pricePerKm,

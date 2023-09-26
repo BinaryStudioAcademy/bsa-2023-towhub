@@ -34,9 +34,9 @@ class OrderEntity implements IEntity {
 
   private shiftId: ShiftEntityT['id'];
 
-  private driver: DriverInfo;
+  private driver: DriverInfo | null;
 
-  private truck: Pick<TruckEntityT, 'id' | 'licensePlateNumber'>;
+  private truck: Pick<TruckEntityT, 'id' | 'licensePlateNumber'> | null;
 
   private constructor({
     id,
@@ -136,6 +136,40 @@ class OrderEntity implements IEntity {
       shiftId,
       driver,
       truck,
+    });
+  }
+
+  public static initializeUpdate({
+    id,
+    price,
+    scheduledTime,
+    carsQty,
+    startPoint,
+    endPoint,
+    status,
+    userId,
+    businessId,
+    shiftId,
+    customerName,
+    customerPhone,
+  }: Omit<OrderEntityT, 'driver' | 'truck'> & {
+    shiftId: number;
+  }): OrderEntity {
+    return new OrderEntity({
+      id,
+      price,
+      scheduledTime,
+      carsQty,
+      startPoint,
+      endPoint,
+      status,
+      userId,
+      businessId,
+      customerName,
+      customerPhone,
+      shiftId,
+      driver: null,
+      truck: null,
     });
   }
 
