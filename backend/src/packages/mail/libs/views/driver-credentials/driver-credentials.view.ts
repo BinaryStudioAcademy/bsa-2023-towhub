@@ -10,8 +10,8 @@ class DriverCredentialsView extends View implements IView {
   public constructor(templateName: TemplateNameValues) {
     const templatePath = path.join(
       path.dirname(url.fileURLToPath(import.meta.url)),
-      'libs',
-      'layout',
+      '..',
+      'layouts',
       `${templateName}.hbs`,
     );
     super(templatePath);
