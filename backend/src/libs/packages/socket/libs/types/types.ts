@@ -1,1 +1,6 @@
-export { type ServerSocketEventParameter } from 'shared/build/index.js';
+export {
+  type ClientToServerEventParameter,
+  type OrderResponseDto,
+  type OrderStatusValues,
+  ServerToClientEvent,
+} from 'shared/build/index.js';

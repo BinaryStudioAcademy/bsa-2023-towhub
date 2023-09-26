@@ -10,9 +10,9 @@ import {
 } from '../enums/enums.js';
 import { TruckValidationMessage } from '../enums/truck-validation-message.enum.js';
 import { LICENSE_PLATE_NUMBER } from '../regex-patterns/regex-patterns.js';
-import { type TruckEntity } from '../types/types.js';
+import { type TruckAddRequestDto } from '../types/types.js';
 
-const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
+const truckCreateRequestBody = joi.object<TruckAddRequestDto, true>({
   manufacturer: joi
     .string()
     .required()
@@ -41,9 +41,9 @@ const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
     .max(TruckPricePerKm.MAX)
     .required()
     .messages({
-      'number.base': TruckValidationMessage.NUMBER_INVALID,
-      'number.min': TruckValidationMessage.NUMBER_INVALID,
-      'number.max': TruckValidationMessage.NUMBER_INVALID,
+      'number.base': TruckValidationMessage.PRICE_INVALID,
+      'number.min': TruckValidationMessage.PRICE_INVALID,
+      'number.max': TruckValidationMessage.PRICE_INVALID,
       'any.required': TruckValidationMessage.REQUIRED,
     }),
 
@@ -58,6 +58,8 @@ const truckCreateRequestBody = joi.object<Omit<TruckEntity, 'id'>, true>({
       'string.empty': TruckValidationMessage.REQUIRED,
       'any.required': TruckValidationMessage.REQUIRED,
       'string.pattern.base': TruckValidationMessage.LICENSE_PLATE_INVALID,
+      'string.min': TruckValidationMessage.LICENSE_PLATE_INVALID,
+      'string.max': TruckValidationMessage.LICENSE_PLATE_INVALID,
     }),
 
   year: joi.number().min(TruckYear.MIN).max(TruckYear.MAX).required().messages({

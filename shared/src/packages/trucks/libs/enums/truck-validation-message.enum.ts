@@ -7,6 +7,7 @@ const TruckValidationMessage = {
   LICENSE_PLATE_INVALID: 'Must be 3 - 10 characters, no spaces.',
   YEAR_INVALID: `Must be 2000 - ${TruckYear.MAX}, no spaces.`,
   ID_NOT_A_NUMBER: 'ID must be a number',
+  PRICE_INVALID: 'Must be from 1 - 100 per km.',
 } as const;
 
 export { TruckValidationMessage };

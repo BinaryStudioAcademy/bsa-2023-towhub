@@ -9,6 +9,7 @@ type ReturnType = {
   getQueryParameters: (...keys: string[]) => string | Queries | null;
   setQueryParameters: (parameters: ParametersT) => void;
   removeQueryParameters: (...keys: string[]) => void;
+  searchParameters: URLSearchParams;
 };
 
 const useQueryParameters = (): ReturnType => {
@@ -24,7 +25,9 @@ const useQueryParameters = (): ReturnType => {
 
         return result;
       } else {
-        return searchParameters.get(keys[0]);
+        const [key] = keys;
+
+        return searchParameters.get(key);
       }
     },
     [searchParameters],
@@ -58,7 +61,12 @@ const useQueryParameters = (): ReturnType => {
     [searchParameters, setSearchParameters],
   );
 
-  return { getQueryParameters, setQueryParameters, removeQueryParameters };
+  return {
+    getQueryParameters,
+    setQueryParameters,
+    removeQueryParameters,
+    searchParameters,
+  };
 };
 
-export { useQueryParameters };
+export { type Queries, useQueryParameters };

@@ -23,7 +23,7 @@ class Mailer {
     this.logger = logger;
   }
 
-  public transporter(): Transporter {
+  public getTransporter(): Transporter {
     if (!this.connection) {
       throw new MailerConnectionError({
         message: 'Mailer: SMTP connection not established.',

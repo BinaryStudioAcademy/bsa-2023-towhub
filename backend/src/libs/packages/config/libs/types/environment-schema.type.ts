@@ -12,7 +12,7 @@ type EnvironmentSchema = {
     S3: {
       BUCKET_NAME: string;
       REGION: string;
-      SIGNED_URL_EXPIRES_IN: number;
+      SIGNED_URL_EXPIRES_IN_SECONDS: number;
     };
   };
   JWT: {
@@ -30,6 +30,9 @@ type EnvironmentSchema = {
     SENDGRID_USER: string;
     SMTP_TLS: boolean;
     SENDGRID_SENDER_EMAIL: string;
+  };
+  SOCKET: {
+    TRUCK_LIST_UPDATE_INTERVAL: number;
   };
   API: {
     GOOGLE_MAPS_API_KEY: string;

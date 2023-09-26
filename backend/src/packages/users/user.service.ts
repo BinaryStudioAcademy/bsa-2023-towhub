@@ -20,9 +20,9 @@ class UserService implements IService<UserEntityObjectT> {
   }
 
   public async findAll(): Promise<UserEntityObjectT[]> {
-    const result = await this.userRepository.findAll();
+    const results = await this.userRepository.findAll();
 
-    return result.map((item) => UserEntity.initialize(item).toObject());
+    return results.map((item) => UserEntity.initialize(item).toObject());
   }
 
   public async findByPhoneOrEmail(
@@ -145,6 +145,10 @@ class UserService implements IService<UserEntityObjectT> {
     const result = await this.userRepository.update(id, { accessToken: token });
 
     return UserEntity.initialize(result).toObject();
+  }
+
+  public async removeAccessToken(id: UserEntityT['id']): Promise<void> {
+    await this.userRepository.update(id, { accessToken: null });
   }
 }
 

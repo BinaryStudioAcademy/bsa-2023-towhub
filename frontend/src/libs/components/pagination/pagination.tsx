@@ -1,6 +1,5 @@
 import { type SingleValue } from 'react-select';
 
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 
@@ -13,6 +12,8 @@ import {
   createOption,
   createOptions,
   getMiddle,
+  getNextPageIndex,
+  getPreviousPageIndex,
 } from './libs/helpers.js';
 import styles from './styles.module.scss';
 
@@ -44,7 +45,7 @@ const Pagination: React.FC<Properties> = ({
     pageIndex > 0;
 
   const isHiddenLastPage =
-    pageIndex + middleValue < convertToIndex(pageCount) &&
+    pageIndex + middleValue <= convertToIndex(pageCount) &&
     paginationSize < pageCount;
 
   const handlePageClick = useCallback(
@@ -69,11 +70,11 @@ const Pagination: React.FC<Properties> = ({
   );
 
   const handlePreviousClick = useCallback(() => {
-    onClick(pageIndex - 1);
+    onClick(getPreviousPageIndex(pageIndex));
   }, [onClick, pageIndex]);
 
   const handleNextClick = useCallback(() => {
-    onClick(pageIndex + 1);
+    onClick(getNextPageIndex(pageIndex));
   }, [onClick, pageIndex]);
 
   const createButtons = useCallback(
@@ -81,15 +82,13 @@ const Pagination: React.FC<Properties> = ({
       const buttons: JSX.Element[] = [];
 
       for (let index = startIndex; index <= endIndex; index++) {
-        const buttonClass = getValidClassNames(styles.btn, {
-          [styles.active]: index === pageIndex,
-        });
         buttons.push(
           <Button
-            className={buttonClass}
-            onClick={handlePageClick}
             key={index}
+            className={styles.btn}
             label={`${convertToNumber(index)}`}
+            variant={index === pageIndex ? 'outlined' : 'text'}
+            onClick={handlePageClick}
           ></Button>,
         );
       }
@@ -122,17 +121,41 @@ const Pagination: React.FC<Properties> = ({
     <div className={styles.container}>
       <div className={styles.pagination}>
         <Button
+          className={styles['text-btn']}
           label="Prev"
           size="sm"
+          variant="text"
           onClick={handlePreviousClick}
           isDisabled={isFirstPage}
         />
-        {isHiddenFirstPage ? <div className={styles.dots}>...</div> : null}
+        {isHiddenFirstPage && (
+          <>
+            <Button
+              className={styles.btn}
+              label="1"
+              variant="text"
+              onClick={handlePageClick}
+            ></Button>
+            <div className={styles.dots}>...</div>
+          </>
+        )}
         {showButtons()}
-        {isHiddenLastPage ? <div className={styles.dots}>...</div> : null}
+        {isHiddenLastPage && (
+          <>
+            <div className={styles.dots}>...</div>
+            <Button
+              className={styles.btn}
+              label={pageCount}
+              variant="text"
+              onClick={handlePageClick}
+            ></Button>
+          </>
+        )}
         <Button
+          className={styles['text-btn']}
           label="Next"
           size="sm"
+          variant="text"
           onClick={handleNextClick}
           isDisabled={isLastPage}
         />
@@ -141,8 +164,10 @@ const Pagination: React.FC<Properties> = ({
         <div className={styles.size}>
           <label htmlFor="pageSize">Page size:</label>
           <Dropdown
+            className={styles.dropdown}
             options={createOptions([5, 10, 20, 50, 100])}
             defaultValue={createOption(pageSize)}
+            isCustomValueContainer
             onChange={handleChangePageSize}
           />
         </div>

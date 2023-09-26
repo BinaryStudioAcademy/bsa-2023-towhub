@@ -18,7 +18,7 @@
     padding: 0;
     padding-left: 5px;
     font-weight: $font-weight-regular;
-    font-size: 12px;
+    font-size: 14px;
     font-family: $font-family;
   }
 
@@ -43,5 +43,13 @@
 
   .placeholder {
     color: $grey;
+  }
+
+  .multiValueLabel {
+    font-size: 14px;
+  }
+
+  .multiControl {
+    height: fit-content;
   }
 }

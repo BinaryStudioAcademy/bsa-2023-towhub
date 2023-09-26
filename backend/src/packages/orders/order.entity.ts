@@ -1,8 +1,8 @@
 import { type IEntity } from '~/libs/interfaces/interfaces.js';
 import { type NullableProperties } from '~/libs/types/types.js';
 
-import { type ShiftEntity } from '../shifts/shift.js';
-import { type TruckEntity } from '../trucks/libs/types/types.js';
+import { type ShiftEntityT } from '../shifts/shift.js';
+import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import {
   type DriverInfo,
   type OrderEntity as OrderEntityT,
@@ -32,11 +32,11 @@ class OrderEntity implements IEntity {
 
   private customerPhone: OrderEntityT['customerPhone'] | null;
 
-  private shiftId: ShiftEntity['id'];
+  private shiftId: ShiftEntityT['id'];
 
   private driver: DriverInfo | null;
 
-  private truck: Pick<TruckEntity, 'id' | 'licensePlateNumber'> | null;
+  private truck: Pick<TruckEntityT, 'id' | 'licensePlateNumber'> | null;
 
   private constructor({
     id,
@@ -121,6 +121,40 @@ class OrderEntity implements IEntity {
   }): OrderEntity {
     return new OrderEntity({
       id: null,
+      price,
+      scheduledTime,
+      carsQty,
+      startPoint,
+      endPoint,
+      status,
+      userId,
+      businessId,
+      customerName,
+      customerPhone,
+      shiftId,
+      driver: null,
+      truck: null,
+    });
+  }
+
+  public static initializeUpdate({
+    id,
+    price,
+    scheduledTime,
+    carsQty,
+    startPoint,
+    endPoint,
+    status,
+    userId,
+    businessId,
+    shiftId,
+    customerName,
+    customerPhone,
+  }: Omit<OrderEntityT, 'driver' | 'truck'> & {
+    shiftId: number;
+  }): OrderEntity {
+    return new OrderEntity({
+      id,
       price,
       scheduledTime,
       carsQty,

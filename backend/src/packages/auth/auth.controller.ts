@@ -83,6 +83,18 @@ class AuthController extends Controller {
           }>,
         ),
     });
+
+    this.addRoute({
+      path: AuthApiPath.LOGOUT,
+      method: 'GET',
+      authStrategy: AuthStrategy.VERIFY_JWT,
+      handler: (options) =>
+        this.logOut(
+          options as ApiHandlerOptions<{
+            user: UserEntityObjectWithGroupT;
+          }>,
+        ),
+    });
   }
 
   private async signUpCustomer(
@@ -129,6 +141,17 @@ class AuthController extends Controller {
     return {
       status: HttpCode.OK,
       payload: await this.authService.getCurrent(options.user),
+    };
+  }
+
+  private async logOut(
+    options: ApiHandlerOptions<{
+      user: UserEntityObjectWithGroupT;
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    return {
+      status: HttpCode.NO_CONTENT,
+      payload: await this.authService.logOut(options.user),
     };
   }
 }
@@ -366,4 +389,27 @@ export { AuthController };
  *                   message:
  *                     type: string
  *                     example: This email is not registered
+ */
+
+/**
+ * @swagger
+ * /auth/logout:
+ *    get:
+ *      tags:
+ *      - auth
+ *      description: Log out of the system
+ *      security:
+ *        - {}
+ *        - bearerAuth: []
+ *      responses:
+ *        204:
+ *          description: Successful operation
+ *        401:
+ *          UnauthorizedError:
+ *            description:
+ *              You are not authorized
+ *          content:
+ *            plain/text:
+ *              schema:
+ *                $ref: '#/components/schemas/UnauthorizedError'
  */

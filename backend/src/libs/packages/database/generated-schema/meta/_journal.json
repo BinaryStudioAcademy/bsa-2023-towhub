@@ -85,6 +85,27 @@
       "when": 1694869716680,
       "tag": "0011_create_files_table",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1694887649378,
+      "tag": "0012_add_businessId_in_trucks",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1695239434448,
+      "tag": "0013_add_status_to_trucks_add_pk_id_to_users_trucks",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1695633968905,
+      "tag": "0014_add_rejected_status_to_orders",
+      "breakpoints": true
     }
   ]
 }

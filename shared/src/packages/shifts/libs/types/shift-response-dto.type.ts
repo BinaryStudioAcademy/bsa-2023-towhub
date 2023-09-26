@@ -1,4 +1,4 @@
-import { type ShiftEntity } from './shift-entity.type.js';
+import { type ShiftEntityT } from './shift-entity.type.js';
 
-type ShiftResponseDto = ShiftEntity;
+type ShiftResponseDto = ShiftEntityT;
 export { type ShiftResponseDto };
