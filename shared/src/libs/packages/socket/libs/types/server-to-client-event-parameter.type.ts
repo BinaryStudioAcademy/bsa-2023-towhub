@@ -1,5 +1,8 @@
 import { type GeolocationLatLng } from '~/libs/packages/geolocation/geolocation.js';
-import { type OrderResponseDto } from '~/packages/orders/orders.js';
+import {
+  type OrderResponseDto,
+  type OrderStatusValues,
+} from '~/packages/orders/orders.js';
 import { type TruckEntityT } from '~/packages/trucks/libs/types/truck-entity.type.js';
 
 import { type ServerToClientEvent } from '../enums/enums.js';
@@ -21,5 +24,8 @@ type ServerToClientEventParameter = {
     latLng: GeolocationLatLng;
   }) => void;
   [ServerToClientEvent.ORDER_UPDATED]: (order: OrderResponseDto) => void;
+  [ServerToClientEvent.ORDER_UPDATED_STATUS]: (
+    status: OrderStatusValues,
+  ) => void;
 };
 export { type ServerToClientEventParameter };
