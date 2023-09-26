@@ -49,7 +49,7 @@ const Orders: React.FC = () => {
     <div className={styles.orders}>
       <div className={styles.orderlistArea}>
         <div>Filter</div>
-        <OrderList orders={orders} select={setShownRoute} />
+        <OrderList orders={orders} onSelect={setShownRoute} />
       </div>
       <div className={styles.mapArea}>
         <div className={styles.mapWrapper}>
