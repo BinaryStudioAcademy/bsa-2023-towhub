@@ -391,13 +391,15 @@ class OrderService implements Omit<IService, 'find'> {
   ): OrderStatusValues {
     if (user && checkIsDriver(user.group.key)) {
       return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REJECTED;
-    } else if ((!user || checkIsCustomer(user.group.key)) && !isAccepted) {
-      return OrderStatus.CANCELED;
-    } else {
-      throw new NotFoundError({
-        message: HttpMessage.USER_CAN_NOT_ACCEPT_OR_DECLINE_ORDER,
-      });
     }
+
+    if ((!user || checkIsCustomer(user.group.key)) && !isAccepted) {
+      return OrderStatus.CANCELED;
+    }
+
+    throw new NotFoundError({
+      message: HttpMessage.USER_CAN_NOT_ACCEPT_OR_DECLINE_ORDER,
+    });
   }
 }
 
