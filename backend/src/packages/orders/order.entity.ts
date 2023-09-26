@@ -116,7 +116,9 @@ class OrderEntity implements IEntity {
     shiftId,
     customerName,
     customerPhone,
-  }: Omit<OrderEntityT, 'id' | 'driver' | 'truck'> & {
+    driver,
+    truck,
+  }: Omit<OrderEntityT, 'id'> & {
     shiftId: number;
   }): OrderEntity {
     return new OrderEntity({
@@ -132,8 +134,8 @@ class OrderEntity implements IEntity {
       customerName,
       customerPhone,
       shiftId,
-      driver: null,
-      truck: null,
+      driver,
+      truck,
     });
   }
 
