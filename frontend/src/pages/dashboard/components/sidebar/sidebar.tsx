@@ -7,6 +7,7 @@ import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import { useAuthUser } from '~/slices/auth/auth.js';
 
 import { EndShiftButton } from './components/end-shift-button/end-shift-button.js';
+import { checkActiveTab } from './libs/helpers/check-active-tab.helper.js';
 import { BUSINESS_TABS, DRIVER_TABS } from './libs/tabs.js';
 import styles from './styles.module.scss';
 
@@ -39,7 +40,7 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
       <li
         className={getValidClassNames(
           styles.item,
-          location.pathname === tab.path && styles.active,
+          checkActiveTab(location.pathname, tab.path) && styles.active,
         )}
         key={tab.name}
       >
@@ -48,7 +49,7 @@ const Sidebar: React.FC<Properties> = ({ isCollapsed = false }: Properties) => {
           className={getValidClassNames(
             'h5',
             styles.btn,
-            location.pathname === tab.path && styles.active,
+            checkActiveTab(location.pathname, tab.path) && styles.active,
           )}
           frontIcon={tab.icon}
           variant="text"

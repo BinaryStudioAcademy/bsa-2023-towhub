@@ -30,19 +30,23 @@ const EndShiftButton: React.FC = () => {
   const manufacturerName =
     truck && manufacturerKeyToReadableName[truck.manufacturer];
 
-  return isActive ? (
-    <div className={styles.block}>
-      <p className={getValidClassNames(styles.truckInfo, 'textMd')}>
-        {manufacturerName} {truck?.licensePlateNumber}
-      </p>
-      <Button
-        label={'End shift'}
-        frontIcon={IconName.TRUCK}
-        onClick={handleClick}
-        className={styles.button}
-      />
-    </div>
-  ) : null;
+  return (
+    <>
+      {isActive && (
+        <div className={styles.block}>
+          <p className={getValidClassNames(styles.truckInfo, 'textMd')}>
+            {manufacturerName} {truck?.licensePlateNumber}
+          </p>
+          <Button
+            label={'End shift'}
+            frontIcon={IconName.TRUCK}
+            onClick={handleClick}
+            className={styles.button}
+          />
+        </div>
+      )}
+    </>
+  );
 };
 
 export { EndShiftButton };
