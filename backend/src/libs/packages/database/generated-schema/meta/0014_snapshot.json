@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "63e63683-5db0-4bca-8bed-c23bf136ec8d",
+  "id": "bc68497b-b34d-47a7-9ef5-3be730d8a970",
   "prevId": "838bc476-50ac-4297-a8d3-378ad52471be",
   "tables": {
     "business_details": {
@@ -96,12 +96,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "avatar_id": {
-          "name": "avatar_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -133,15 +127,6 @@
           "tableFrom": "driver_details",
           "tableTo": "business_details",
           "columnsFrom": ["business_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "driver_details_avatar_id_files_id_fk": {
-          "name": "driver_details_avatar_id_files_id_fk",
-          "tableFrom": "driver_details",
-          "tableTo": "files",
-          "columnsFrom": ["avatar_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -716,8 +701,9 @@
         "pending": "pending",
         "confirmed": "confirmed",
         "canceled": "canceled",
-        "done": "done",
-        "picking_up": "picking_up"
+        "rejected": "rejected",
+        "picking_up": "picking_up",
+        "done": "done"
       }
     },
     "truck_status": {
