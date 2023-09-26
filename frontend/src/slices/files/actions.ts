@@ -35,16 +35,18 @@ const uploadFile = createAsyncThunk<
 const uploadAvatar = createAsyncThunk<FileEntityT, File, AsyncThunkConfig>(
   `${sliceName}/upload-avatar`,
   async (file: File, { extra, rejectWithValue }) => {
-    const { filesApi } = extra;
+    const { driverApi, notification } = extra;
 
     const formData = new FormData();
 
     formData.append('file', file);
 
     try {
-      return await filesApi.uploadAvatar(formData);
+      return await driverApi.uploadAvatar(formData);
     } catch (error_: unknown) {
       const error = error_ as HttpError;
+
+      notification.error(error.message);
 
       return rejectWithValue({ ...error, message: error.message });
     }
