@@ -9,11 +9,13 @@ import {
 } from 'react-hook-form';
 
 import { Icon, Modal } from '~/libs/components/components.js';
+import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useRef, useState } from '~/libs/hooks/hooks.js';
 import { changeFileExtension } from '~/packages/files/files.js';
 
-import { DefaultSettings as Default } from './libs/enums/default-settings.enum.js';
+import { DefaultSettings as Default } from './libs/configs/default-settings.config.js';
+import { ViewMode } from './libs/enums/enums.js';
 import {
   createFileList,
   hasSingleFile,
@@ -23,7 +25,7 @@ import { type CroppedImage } from './libs/hooks/libs/types/types.js';
 import {
   type ExtractFileListKeys,
   type ResultOptions,
-  type ViewMode,
+  type ViewModeT,
 } from './libs/types/types.js';
 import { ModalPopup } from './modal-popup.js';
 import styles from './styles.module.scss';
@@ -43,7 +45,7 @@ interface ImageSelectorProperties<
   modalImageWidth?: number;
   modalImageHeight?: number;
   modalImageScale?: number;
-  viewMode?: ViewMode;
+  viewMode?: ViewModeT;
   resultOptions?: ResultOptions;
 }
 
@@ -70,9 +72,9 @@ const ImageSelector = <
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [cropDataUrl, setCropDataUrl] = useState<string>(initialImageUrl ?? '');
 
-  const isCircular = viewMode === 'circle';
+  const isCircular = viewMode === ViewMode.CIRCLE;
 
-  const fallbackInputReference = useRef<React.ElementRef<'input'> | null>(null);
+  const fallbackInputReference = useRef<HTMLInputElement | null>(null);
 
   const handleFileRead = useCallback((url: string) => {
     setUploadedDataUrl(url);
@@ -102,8 +104,8 @@ const ImageSelector = <
   }, [fallbackInputReference]);
 
   const handleCropSuccess = useCallback(
-    (image: CroppedImage | undefined) => {
-      if (uploadedFile && image) {
+    (image: CroppedImage) => {
+      if (uploadedFile) {
         const inputValue = createFileList(
           image.blob,
           changeFileExtension(
@@ -151,14 +153,14 @@ const ImageSelector = <
       />
       {!inputReference && (
         <Icon
-          iconName="edit"
+          iconName={IconName.EDIT}
           onClick={handleSelectImageClick}
           size="lg"
           className={styles.editIcon}
         />
       )}
       <img
-        className={isCircular ? styles.croppedImageCircle : undefined}
+        className={getValidClassNames(isCircular && styles.croppedImageCircle)}
         alt={`${name} preview`}
         src={cropDataUrl}
         width={width}
@@ -180,3 +182,4 @@ const ImageSelector = <
 };
 
 export { ImageSelector };
+export { OutputFormat, ViewMode } from './libs/enums/enums.js';

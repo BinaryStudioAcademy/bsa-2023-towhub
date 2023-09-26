@@ -20,6 +20,7 @@ export {
   type DriverWithUserData,
   type EntityPagination,
   type FirstParameter,
+  type FrontendAuthUser,
   type OrderResponseDto,
   type PaginationParameters,
   type PaginationWithSortingParameters,

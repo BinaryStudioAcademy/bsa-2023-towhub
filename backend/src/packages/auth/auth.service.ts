@@ -5,6 +5,7 @@ import {
   type IJwtService,
 } from '~/libs/interfaces/interfaces.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
+import { type FrontendAuthUser } from '~/libs/types/types.js';
 import { type GroupService } from '~/packages/groups/group.service.js';
 import { GroupEntity } from '~/packages/groups/groups.js';
 import {
@@ -13,8 +14,6 @@ import {
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserEntityObjectT,
-  type UserEntityObjectWithGroupAndBusinessT,
-  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
 } from '~/packages/users/libs/types/types.js';
@@ -211,11 +210,7 @@ class AuthService {
 
   public async getCurrent(
     user: UserEntityObjectWithGroupT,
-  ): Promise<
-    | UserEntityObjectWithGroupT
-    | UserEntityObjectWithGroupAndBusinessT
-    | UserEntityObjectWithGroupAndDriverT
-  > {
+  ): Promise<FrontendAuthUser> {
     switch (user.group.key) {
       case UserGroupKey.BUSINESS: {
         const business = await this.businessService.findByOwnerId(user.id);

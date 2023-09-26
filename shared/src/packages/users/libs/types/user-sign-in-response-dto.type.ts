@@ -1,12 +1,5 @@
-import {
-  type UserEntityObjectWithGroupAndBusinessT,
-  type UserEntityObjectWithGroupAndDriverT,
-  type UserEntityObjectWithGroupT,
-} from './user-entity.type.js';
+import { type FrontendAuthUser } from './user-entity.type.js';
 
-type UserSignInResponseDto =
-  | UserEntityObjectWithGroupT
-  | UserEntityObjectWithGroupAndBusinessT
-  | UserEntityObjectWithGroupAndDriverT;
+type UserSignInResponseDto = FrontendAuthUser;
 
 export { type UserSignInResponseDto };

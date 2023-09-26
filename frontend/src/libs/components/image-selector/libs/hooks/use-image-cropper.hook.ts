@@ -4,7 +4,8 @@ import Croppie from 'croppie';
 
 import { useCallback, useEffect, useState } from '~/libs/hooks/hooks.js';
 
-import { DefaultSettings, ImageFormat } from '../enums/enums.js';
+import { DefaultSettings } from '../configs/default-settings.config.js';
+import { ImageFormat, ViewMode } from '../enums/enums.js';
 import { type ResultOptions } from '../types/types.js';
 import { checkCanAttachCropper, scaleSize } from './libs/helpers/helpers.js';
 import { type CroppedImage } from './libs/types/types.js';
@@ -38,7 +39,7 @@ const useImageCropper = ({
   initialZoom,
   viewMode,
   cropHolderReference,
-  imageAsDataUrl,
+  imageUrl,
 }: HookProperties): HookReturnType => {
   const [cropper, setCropper] = useState<Croppie | undefined>();
 
@@ -63,21 +64,21 @@ const useImageCropper = ({
   }, [cropHolderReference, viewMode, height, initialZoom, width]);
 
   useEffect(() => {
-    if (cropper && imageAsDataUrl) {
-      void cropper.bind({ url: imageAsDataUrl, zoom: 0 });
+    if (cropper && imageUrl) {
+      void cropper.bind({ url: imageUrl, zoom: 0 });
     }
-  }, [cropper, imageAsDataUrl]);
+  }, [cropper, imageUrl]);
 
   const getCroppedImage = useCallback(
-    async (options?: ResultOptions): Promise<CroppedImage | undefined> => {
+    async (options?: ResultOptions): Promise<CroppedImage | null> => {
       if (!cropper) {
-        return;
+        return null;
       }
 
       const intermediate: ResultOptions = {
         size: { width, height },
         format: DefaultSettings.OUTPUT_FORMAT,
-        circle: DefaultSettings.VIEW_MODE === 'circle',
+        circle: DefaultSettings.VIEW_MODE === ViewMode.CIRCLE,
         ...options,
       };
 

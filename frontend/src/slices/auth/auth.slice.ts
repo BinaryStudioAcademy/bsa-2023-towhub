@@ -2,12 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
-import {
-  type UserEntityObjectWithGroupAndBusinessT,
-  type UserEntityObjectWithGroupAndDriverT,
-  type UserEntityObjectWithGroupT,
-  type ValueOf,
-} from '~/libs/types/types.js';
+import { type FrontendAuthUser, type ValueOf } from '~/libs/types/types.js';
 
 import {
   authorizeDriverSocket,
@@ -21,11 +16,7 @@ type State = {
   error: HttpError | null;
   dataStatus: ValueOf<typeof DataStatus>;
   socketDriverAuthStatus: ValueOf<typeof DataStatus>;
-  user:
-    | UserEntityObjectWithGroupT
-    | UserEntityObjectWithGroupAndBusinessT
-    | UserEntityObjectWithGroupAndDriverT
-    | null;
+  user: FrontendAuthUser | null;
 };
 
 const initialState: State = {

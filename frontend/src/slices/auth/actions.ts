@@ -7,8 +7,8 @@ import { ClientToServerEvent } from '~/libs/packages/socket/socket.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
 import {
   type AsyncThunkConfig,
+  type FrontendAuthUser,
   type UserEntityObjectWithGroupAndBusinessT,
-  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type ValueOf,
 } from '~/libs/types/types.js';
@@ -91,9 +91,7 @@ const signIn = createAsyncThunk<
 });
 
 const getCurrent = createAsyncThunk<
-  | UserEntityObjectWithGroupT
-  | UserEntityObjectWithGroupAndBusinessT
-  | UserEntityObjectWithGroupAndDriverT,
+  FrontendAuthUser,
   undefined,
   AsyncThunkConfig
 >(`${sliceName}/current`, async (_, { extra }) => {

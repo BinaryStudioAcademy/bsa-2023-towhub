@@ -2,19 +2,16 @@ import { Button } from '~/libs/components/components.js';
 import { useCallback, useRef } from '~/libs/hooks/hooks.js';
 
 import { useImageCropper } from './libs/hooks/hooks.js';
-import { type ResultOptions, type ViewMode } from './libs/types/types.js';
+import { type CroppedImage } from './libs/hooks/libs/types/types.js';
+import { type ResultOptions, type ViewModeT } from './libs/types/types.js';
 import styles from './styles.module.scss';
 
 type ModalPopupProperties = {
-  onSuccess: (
-    image: Awaited<
-      ReturnType<ReturnType<typeof useImageCropper>['getCroppedImage']>
-    >,
-  ) => void;
+  onSuccess: (image: CroppedImage) => void;
   imageWidth: number;
   imageHeight: number;
   initialZoom: number;
-  viewMode: ViewMode;
+  viewMode: ViewModeT;
   uploadedDataUrl: string | null;
   resultOptions?: ResultOptions;
 };
@@ -31,7 +28,7 @@ const ModalPopup = ({
   const cropHolderReference = useRef<React.ElementRef<'div'>>(null);
 
   const { getCroppedImage } = useImageCropper({
-    imageAsDataUrl: uploadedDataUrl,
+    imageUrl: uploadedDataUrl,
     width: imageWidth,
     height: imageHeight,
     initialZoom,
@@ -40,7 +37,11 @@ const ModalPopup = ({
   });
 
   const handleImageApply = useCallback(() => {
-    void getCroppedImage(resultOptions).then(onSuccess);
+    void getCroppedImage(resultOptions).then((croppedImage) => {
+      if (croppedImage) {
+        onSuccess(croppedImage);
+      }
+    });
   }, [getCroppedImage, onSuccess, resultOptions]);
 
   return (

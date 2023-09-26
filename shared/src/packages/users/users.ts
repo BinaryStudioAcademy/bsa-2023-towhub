@@ -4,6 +4,7 @@ export {
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type FrontendAuthUser,
   type UserCommonDetails,
   type UserEntityObjectWithGroupAndBusinessT,
   type UserEntityObjectWithGroupAndDriverT,

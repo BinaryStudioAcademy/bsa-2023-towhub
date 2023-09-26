@@ -307,24 +307,24 @@ class DriverService implements IService {
     }
 
     const driverEntity = driver.toObjectWithAvatar();
-    const avatar = driverEntity.avatar;
+    const { avatar, id } = driverEntity;
 
     if (avatar) {
       await this.filesService.update(avatar.id, parsedFile);
 
       return convertToDriverUser(driver);
-    } else {
-      const file = await this.filesService.create(
-        parsedFile,
-        S3PublicFolder.AVATARS,
-      );
-      const newDriver = await this.driverRepository.update({
-        id: driverEntity.id,
-        payload: { avatarId: file.id },
-      });
-
-      return convertToDriverUser(newDriver);
     }
+
+    const file = await this.filesService.create(
+      parsedFile,
+      S3PublicFolder.AVATARS,
+    );
+    const newDriver = await this.driverRepository.update({
+      id,
+      payload: { avatarId: file.id },
+    });
+
+    return convertToDriverUser(newDriver);
   }
 }
 

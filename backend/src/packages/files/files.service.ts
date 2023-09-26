@@ -146,16 +146,14 @@ class FilesService
       });
     }
 
-    const name = parsedFile.filename;
-    const body = parsedFile.content;
-    const contentType = parsedFile.mimetype;
+    const { filename, content, mimetype } = parsedFile;
 
     try {
-      await this.s3ClientService.putObject(file.key, body, contentType);
+      await this.s3ClientService.putObject(file.key, content, mimetype);
 
       const result = await this.fileRepository.update(id, {
-        name,
-        contentType,
+        name: filename,
+        contentType: mimetype,
       });
 
       return FilesEntity.initialize(result).toObject();
@@ -180,16 +178,14 @@ class FilesService
       });
     }
 
-    const name = parsedFile.filename;
-    const body = parsedFile.content;
-    const contentType = parsedFile.mimetype;
+    const { filename, content, mimetype } = parsedFile;
 
     try {
-      await this.s3ClientService.putObject(file.key, body, contentType);
+      await this.s3ClientService.putObject(file.key, content, mimetype);
 
       const result = await this.fileRepository.update(file.id, {
-        name,
-        contentType,
+        name: filename,
+        contentType: mimetype,
       });
 
       return FilesEntity.initialize(result).toObject();

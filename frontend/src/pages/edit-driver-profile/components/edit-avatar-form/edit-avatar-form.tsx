@@ -1,4 +1,5 @@
 import { Button, ImageSelector } from '~/libs/components/components.js';
+import { ViewMode } from '~/libs/components/image-selector/image-selector.js';
 import { ImgPath } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
@@ -11,10 +12,9 @@ import {
 import { useAuthUser } from '~/slices/auth/auth.js';
 import { uploadAvatar } from '~/slices/files/actions.js';
 
+import { PROFILE_AVATAR_SIZE } from './libs/constants/profile-avatar-size.constant.js';
 import { type EditAvatarFormData } from './libs/types/types.js';
 import styles from './styles.module.scss';
-
-const AVATAR_SIZE = 200;
 
 const EditAvatarForm: React.FC = () => {
   const { handleSubmit, setValue, register, formState } =
@@ -38,7 +38,6 @@ const EditAvatarForm: React.FC = () => {
     (event_: React.BaseSyntheticEvent): void => {
       void handleSubmit((payload) => {
         const [file] = payload.avatar;
-        file.type;
 
         void dispatch(uploadAvatar(file));
       })(event_);
@@ -62,16 +61,16 @@ const EditAvatarForm: React.FC = () => {
               register={register}
               inputReference={inputReference}
               name="avatar"
-              width={AVATAR_SIZE}
-              height={AVATAR_SIZE}
-              viewMode="circle"
+              width={PROFILE_AVATAR_SIZE}
+              height={PROFILE_AVATAR_SIZE}
+              viewMode={ViewMode.CIRCLE}
               initialImageUrl={avatarUrl ?? ImgPath.AVATAR_DEFAULT}
               resultOptions={{ circle: true }}
             />
           </div>
           <div className={styles.buttonGroup}>
             <Button
-              label={'Update file'}
+              label="Update file"
               type="button"
               onClick={handleImageSelect}
               variant="outlined"
@@ -79,7 +78,7 @@ const EditAvatarForm: React.FC = () => {
               className={getValidClassNames(styles.button, styles.outlined)}
             />
             <Button
-              label={'Save'}
+              label="Save"
               type="submit"
               className={getValidClassNames(styles.button, styles.contained)}
               isDisabled={!isDirty}

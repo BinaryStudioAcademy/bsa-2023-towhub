@@ -3,6 +3,7 @@ export {
   type ErrorConstructor,
   type FileInputConfig,
   type FirstParameter,
+  type FrontendAuthUser,
   type Id,
   type NullableProperties,
   type OperationResult,

@@ -170,14 +170,14 @@ class DriversController extends Controller {
     }>,
   ): Promise<ApiHandlerResponse<DriverWithUserData>> {
     const [parsedFile] = options.parsedFiles;
-    const result = await this.driverService.setAvatar(
+    const newAvatar = await this.driverService.setAvatar(
       options.user.id,
       parsedFile,
     );
 
     return {
       status: HttpCode.OK,
-      payload: result,
+      payload: newAvatar,
     };
   }
 }

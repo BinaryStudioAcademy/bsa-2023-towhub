@@ -30,7 +30,13 @@ type UserEntityObjectWithGroupAndDriverT = UserEntityObjectWithGroupT & {
   driver: DriverWithAvatarUrl;
 };
 
+type FrontendAuthUser =
+  | UserEntityObjectWithGroupT
+  | UserEntityObjectWithGroupAndBusinessT
+  | UserEntityObjectWithGroupAndDriverT;
+
 export {
+  type FrontendAuthUser,
   type UserEntityObjectWithGroupAndBusinessT,
   type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
