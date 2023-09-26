@@ -160,7 +160,7 @@ const ImageSelector = <
         />
       )}
       <img
-        className={getValidClassNames(isCircular && styles.croppedImageCircle)}
+        className={isCircular ? styles.croppedImageCircle : undefined}
         alt={`${name} preview`}
         src={cropDataUrl}
         width={width}
