@@ -266,13 +266,13 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT;
   }): Promise<OrderUpdateAcceptStatusResponseDto> {
-    // const statusForUpdate = this.checkIsOrderAccepted(payload.newStatus, user);
+    const statusForUpdate = this.checkIsOrderAccepted(payload.newStatus, user);
 
     await this.shiftService.checkDriverStartShift(user.id);
 
     const updatedOrder = await this.orderRepository.update({
       id: orderId,
-      payload: { status: payload.newStatus },
+      payload: { status: statusForUpdate },
     });
 
     if (!updatedOrder) {
