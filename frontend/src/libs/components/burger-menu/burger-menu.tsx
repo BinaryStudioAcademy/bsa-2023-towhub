@@ -70,7 +70,7 @@ const BurgerMenu: React.FC<Properties> = ({ burgerItems }: Properties) => {
       className={getValidClassNames(styles.burgerMenu, isOpen && styles.open)}
     >
       <Icon
-        iconName={isOpen ? IconName.XMARK : IconName.BARS}
+        iconName={IconName.BARS}
         onClick={toggleMenu}
         className={styles.burgerIcon}
       />
