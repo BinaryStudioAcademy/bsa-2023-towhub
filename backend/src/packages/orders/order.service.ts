@@ -5,12 +5,17 @@ import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
+import { type MapService } from '../map/map.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
-import { checkIsCustomer, checkIsDriver } from './libs/helpers/helpers.js';
+import {
+  checkIsCustomer,
+  checkIsDriver,
+  jsonToLatLngLiteral,
+} from './libs/helpers/helpers.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
@@ -38,6 +43,8 @@ class OrderService implements Omit<IService, 'find'> {
 
   private socketService: SocketService;
 
+  private mapService: MapService;
+
   public constructor({
     businessService,
     orderRepository,
@@ -45,6 +52,7 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService,
     truckService,
     userService,
+    mapService,
     socket,
   }: {
     orderRepository: OrderRepository;
@@ -53,6 +61,7 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService: ShiftService;
     truckService: TruckService;
     userService: UserService;
+    mapService: MapService;
     socket: SocketService;
   }) {
     this.orderRepository = orderRepository;
@@ -68,6 +77,8 @@ class OrderService implements Omit<IService, 'find'> {
     this.truckService = truckService;
 
     this.userService = userService;
+
+    this.mapService = mapService;
 
     this.socketService = socket;
   }
@@ -114,8 +125,14 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
+    const { price } = await this.mapService.getPriceByDistance({
+      startAddress: jsonToLatLngLiteral(startPoint),
+      endAddress: jsonToLatLngLiteral(endPoint),
+      pricePerKm: truck.pricePerKm,
+    });
+
     const order = await this.orderRepository.create({
-      price: 100, //Mock, get price from truck and calculated distance
+      price,
       scheduledTime,
       carsQty,
       startPoint,

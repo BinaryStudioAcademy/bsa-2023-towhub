@@ -19,8 +19,8 @@ class MapService {
   }
 
   public async getDistance(
-    startPoint: string,
-    endPoint: string,
+    startPoint: string | google.maps.LatLngLiteral,
+    endPoint: string | google.maps.LatLngLiteral,
   ): Promise<Distance> {
     const response = await this.client.distancematrix({
       params: {
@@ -42,6 +42,7 @@ class MapService {
     pricePerKm,
   }: OrderCalculatePriceRequestDto): Promise<OrderCalculatePriceResponseDto> {
     const distance = await this.getDistance(startAddress, endAddress);
+
     const km = convertMetersToKm(distance.value);
     const orderPrice = (pricePerKm * km).toFixed(PRECISION);
 

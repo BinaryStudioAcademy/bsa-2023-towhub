@@ -17,6 +17,7 @@ export {
   configureString,
   filesize,
   getFullName,
+  jsonToLatLngLiteral,
   pluralizeString,
 } from './libs/helpers/helpers.js';
 export { type IConfig, FormatRegex } from './libs/packages/config/config.js';

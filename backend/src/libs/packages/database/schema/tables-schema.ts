@@ -16,7 +16,7 @@ import { ORDER_STATUSES, TruckStatus } from 'shared/build/index.js';
 const orderStatus = pgEnum('order_status', ORDER_STATUSES);
 const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
-  price: integer('price').notNull(),
+  price: real('price').notNull(),
   scheduledTime: timestamp('scheduled_time', { mode: 'string' }).notNull(),
   startPoint: varchar('start_point').notNull(),
   endPoint: varchar('end_point').notNull(),

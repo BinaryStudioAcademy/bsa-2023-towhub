@@ -18,6 +18,7 @@ type Constructor = MapServiceParameters & {
     routes: google.maps.DistanceMatrixService;
     directionsService: google.maps.DirectionsService;
     directionsRenderer: google.maps.DirectionsRenderer;
+    autocomplete: google.maps.places.AutocompleteService;
   };
   map: google.maps.Map | null;
   markers: google.maps.Marker[];
@@ -36,6 +37,8 @@ class MapService implements IMapService {
   private geocoder!: google.maps.Geocoder;
 
   private routes!: google.maps.DistanceMatrixService;
+
+  private autocomplete!: google.maps.places.AutocompleteService;
 
   private setMap: (map: google.maps.Map) => void;
 
@@ -57,6 +60,7 @@ class MapService implements IMapService {
       this.routes = extraLibraries.routes;
       this.directionsRenderer = extraLibraries.directionsRenderer;
       this.directionsService = extraLibraries.directionsService;
+      this.autocomplete = extraLibraries.autocomplete;
 
       if (mapElement && center && zoom) {
         if (this.map) {
@@ -295,6 +299,36 @@ class MapService implements IMapService {
         : undefined,
     });
     this.markers.push(marker);
+  }
+
+  public async autocompleteAddress(
+    query: string,
+  ): Promise<google.maps.places.QueryAutocompletePrediction[]> {
+    try {
+      const options = {
+        input: query,
+      };
+
+      return await new Promise<
+        google.maps.places.QueryAutocompletePrediction[]
+      >((resolve, reject) => {
+        this.autocomplete.getQueryPredictions(options, (results, status) => {
+          status === google.maps.places.PlacesServiceStatus.OK
+            ? resolve(results ?? [])
+            : reject(
+                new ApplicationError({
+                  message: 'Autocomplete failed',
+                  cause: status,
+                }),
+              );
+        });
+      });
+    } catch (error: unknown) {
+      throw new ApplicationError({
+        message: 'Error during address autocomplete',
+        cause: error,
+      });
+    }
   }
 }
 

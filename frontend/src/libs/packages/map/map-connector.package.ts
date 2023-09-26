@@ -9,6 +9,7 @@ type Libraries = {
   routes: google.maps.DistanceMatrixService;
   directionsService: google.maps.DirectionsService;
   directionsRenderer: google.maps.DirectionsRenderer;
+  autocomplete: google.maps.places.AutocompleteService;
 };
 
 interface IMapConnector {
@@ -28,13 +29,16 @@ class MapConnector implements IMapConnector {
       const loader = new Loader({
         apiKey,
       });
-      const [GeocodingLibrary, RoutesLibrary] = await Promise.all([
-        loader.importLibrary('geocoding'),
-        loader.importLibrary('routes'),
-      ]);
+      const [GeocodingLibrary, RoutesLibrary, AutocompleLibrary] =
+        await Promise.all([
+          loader.importLibrary('geocoding'),
+          loader.importLibrary('routes'),
+          loader.importLibrary('places'),
+        ]);
       MapConnector.libraries = {
         geocoding: new GeocodingLibrary.Geocoder(),
         routes: new RoutesLibrary.DistanceMatrixService(),
+        autocomplete: new AutocompleLibrary.AutocompleteService(),
         directionsService: new RoutesLibrary.DirectionsService(),
         directionsRenderer: new RoutesLibrary.DirectionsRenderer({
           suppressMarkers: true,

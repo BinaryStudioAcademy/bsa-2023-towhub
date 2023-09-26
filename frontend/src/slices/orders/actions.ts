@@ -15,6 +15,7 @@ import {
 } from '~/packages/orders/orders.js';
 
 import { ActionName } from './libs/enums/enums.js';
+import { latLngToJson } from './libs/helpers/helpers.js';
 import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.helper.js';
 import { type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
@@ -50,10 +51,23 @@ const createOrder = createAsyncThunk<
   OrderCreateRequestDto,
   AsyncThunkConfig
 >(`${sliceName}/create-order`, async (payload, { extra }) => {
-  const { ordersApi } = extra;
+  const { ordersApi, mapServiceFactory } = extra;
+
+  const mapService = await mapServiceFactory({ mapElement: null });
+
+  const startPoint = latLngToJson(
+    await mapService.getAddressPoint(payload.startPoint),
+  );
+  const endPoint = latLngToJson(
+    await mapService.getAddressPoint(payload.endPoint),
+  );
 
   try {
-    const result = await ordersApi.createOrder(payload);
+    const result = await ordersApi.createOrder({
+      ...payload,
+      endPoint,
+      startPoint,
+    });
 
     notification.success('Order successfully created');
 

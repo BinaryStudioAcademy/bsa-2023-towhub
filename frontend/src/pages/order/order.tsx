@@ -1,14 +1,14 @@
 import { TowTruckCard } from '~/libs/components/components.js';
-import { Map } from '~/libs/components/map/map.js';
 import {
   useAppDispatch,
+  useAppMap,
   useAppSelector,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { config } from '~/libs/packages/config/config.js';
-import { type Libraries, LoadScript } from '~/libs/types/types.js';
+import { DEFAULT_CENTER } from '~/libs/packages/map/libs/constants/constants.js';
 import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
 import { actions as orderActions, selectPrice } from '~/slices/orders/order.js';
 import { selectChosenTruck } from '~/slices/trucks/selectors.js';
@@ -16,8 +16,6 @@ import { selectChosenTruck } from '~/slices/trucks/selectors.js';
 import { NotFound } from '../not-found/not-found.js';
 import { OrderForm } from './libs/components/order-form.js';
 import styles from './styles.module.scss';
-
-const libraries: Libraries = ['places'];
 
 const Order = (): JSX.Element => {
   const [startAddress, setStartAddress] = useState<string>();
@@ -30,6 +28,18 @@ const Order = (): JSX.Element => {
 
   const chosenTruck = useAppSelector(selectChosenTruck);
   const price = useAppSelector(selectPrice);
+
+  const mapReference = useRef<HTMLDivElement | null>(null);
+
+  useAppMap({
+    center: startLocation ?? DEFAULT_CENTER,
+    destination: endLocation ?? null,
+    className: styles.right,
+    mapReference: mapReference,
+    pricePerKm: chosenTruck?.pricePerKm,
+    startAddress,
+    endAddress,
+  });
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((location) => {
@@ -46,7 +56,7 @@ const Order = (): JSX.Element => {
         void dispatch(orderActions.createOrder(payload));
       }
     },
-    [dispatch, chosenTruck],
+    [chosenTruck, dispatch],
   );
 
   const handleLocationChange = useCallback(
@@ -64,7 +74,6 @@ const Order = (): JSX.Element => {
     },
     [setEndLocation],
   );
-//  console.log(startAddress, endAddress, startLocation, endLocation ) 
 
   if (!chosenTruck) {
     return <NotFound />;
@@ -72,35 +81,24 @@ const Order = (): JSX.Element => {
 
   return (
     <section className={styles.page}>
-      <LoadScript
-        googleMapsApiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
-        libraries={libraries}
-      >
-        <div className={styles.left}>
-          <TowTruckCard truck={chosenTruck} hasButton={false} />
-          <OrderForm
-            onSubmit={handleSubmit}
-            onStartLocationChange={handleLocationChange}
-            onEndLocationChange={handleDestinationChange}
-            truckId={chosenTruck.id}
-            isDisabled={!chosenTruck}
-          >
-            <div className={styles.price}>
-              <span>Price:</span>
-              <span>${price}</span>
-            </div>
-          </OrderForm>
-        </div>
-        <div className={styles.right}>
-          <Map
-            center={startLocation}
-            destination={endLocation}
-            pricePerKm={chosenTruck.pricePerKm}
-            startAddress={startAddress}
-            endAddress={endAddress}
-          />
-        </div>
-      </LoadScript>
+      <div className={styles.left}>
+        <TowTruckCard truck={chosenTruck} hasButton={false} />
+        <OrderForm
+          onSubmit={handleSubmit}
+          onStartLocationChange={handleLocationChange}
+          onEndLocationChange={handleDestinationChange}
+          truckId={chosenTruck.id}
+          isDisabled={!chosenTruck}
+        >
+          <div className={styles.price}>
+            <span>Price:</span>
+            <span>${price}</span>
+          </div>
+        </OrderForm>
+      </div>
+      <div className={styles.right}>
+        <div ref={mapReference} id="map" className={styles.right} />
+      </div>
     </section>
   );
 };

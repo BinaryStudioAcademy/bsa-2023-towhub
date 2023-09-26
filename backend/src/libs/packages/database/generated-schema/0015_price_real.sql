@@ -1,0 +1,3 @@
+ALTER TABLE "orders"
+ALTER COLUMN "price"
+SET DATA TYPE real;
