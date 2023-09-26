@@ -10,6 +10,7 @@ import {
   changeAcceptOrderStatusByDriver,
   createOrder,
   createOrderFromSocket,
+  getBusinessOrders,
   getOrder,
   getRouteData,
   removeOrder,
@@ -63,6 +64,16 @@ const { reducer, actions, name } = createSlice({
       })
       .addCase(removeOrder, (state) => {
         state.currentOrder = null;
+      })
+      .addCase(getBusinessOrders.pending, (state) => {
+        state.dataStatus = DataStatus.PENDING;
+      })
+      .addCase(getBusinessOrders.fulfilled, (state, action) => {
+        state.orders = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(getBusinessOrders.rejected, (state) => {
+        state.dataStatus = DataStatus.REJECTED;
       })
       .addMatcher(
         isAnyOf(
