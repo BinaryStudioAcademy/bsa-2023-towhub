@@ -1,5 +1,5 @@
-import { type FrontendAuthUser } from './user-entity.type.js';
+import { type AuthUser } from './user-entity.type.js';
 
-type UserSignInResponseDto = FrontendAuthUser;
+type UserSignInResponseDto = AuthUser;
 
 export { type UserSignInResponseDto };

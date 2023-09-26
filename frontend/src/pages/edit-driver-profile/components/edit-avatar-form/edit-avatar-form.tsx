@@ -9,6 +9,7 @@ import {
   useMemo,
   useRef,
 } from '~/libs/hooks/hooks.js';
+import { type UserEntityObjectWithGroupAndDriverT } from '~/libs/types/types.js';
 import { useAuthUser } from '~/slices/auth/auth.js';
 import { uploadAvatar } from '~/slices/files/actions.js';
 
@@ -23,15 +24,13 @@ const EditAvatarForm: React.FC = () => {
     });
   const { isDirty } = formState;
 
-  const user = useAuthUser();
+  const user = useAuthUser<UserEntityObjectWithGroupAndDriverT>();
   const dispatch = useAppDispatch();
 
   const inputReference = useRef<React.ElementRef<'input'>>(null);
 
   const avatarUrl = useMemo(() => {
-    if (user && 'driver' in user) {
-      return user.driver.avatarUrl;
-    }
+    return user.driver.avatarUrl;
   }, [user]);
 
   const handleFormSubmit = useCallback(

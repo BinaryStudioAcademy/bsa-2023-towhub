@@ -7,7 +7,7 @@ import { ClientToServerEvent } from '~/libs/packages/socket/socket.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
 import {
   type AsyncThunkConfig,
-  type FrontendAuthUser,
+  type AuthUser,
   type UserEntityObjectWithGroupAndBusinessT,
   type UserEntityObjectWithGroupT,
   type ValueOf,
@@ -90,21 +90,20 @@ const signIn = createAsyncThunk<
   }
 });
 
-const getCurrent = createAsyncThunk<
-  FrontendAuthUser,
-  undefined,
-  AsyncThunkConfig
->(`${sliceName}/current`, async (_, { extra }) => {
-  const { authApi, notification, localStorage } = extra;
+const getCurrent = createAsyncThunk<AuthUser, undefined, AsyncThunkConfig>(
+  `${sliceName}/current`,
+  async (_, { extra }) => {
+    const { authApi, notification, localStorage } = extra;
 
-  try {
-    return await authApi.getCurrentUser();
-  } catch (error) {
-    notification.warning(getErrorMessage(error));
-    await localStorage.drop(StorageKey.TOKEN);
-    throw error;
-  }
-});
+    try {
+      return await authApi.getCurrentUser();
+    } catch (error) {
+      notification.warning(getErrorMessage(error));
+      await localStorage.drop(StorageKey.TOKEN);
+      throw error;
+    }
+  },
+);
 
 const logOut = createAsyncThunk<unknown, undefined, AsyncThunkConfig>(
   `${sliceName}/logout`,

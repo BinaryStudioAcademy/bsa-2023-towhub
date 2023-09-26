@@ -170,11 +170,11 @@ export {
   TruckYear,
 } from './packages/trucks/trucks.js';
 export {
+  type AuthUser,
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
-  type FrontendAuthUser,
   type UserCommonDetails,
   type UserEntityObjectWithGroupAndBusinessT,
   type UserEntityObjectWithGroupAndDriverT,
