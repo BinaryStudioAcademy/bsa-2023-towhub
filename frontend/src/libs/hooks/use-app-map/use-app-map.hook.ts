@@ -1,14 +1,11 @@
 import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
-import {
-  DEFAULT_CENTER,
-  DEFAULT_ZOOM,
-} from '~/libs/packages/map/libs/constants/constants.js';
+import { DEFAULT_ZOOM } from '~/libs/packages/map/libs/constants/constants.js';
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import { type MapService } from '~/libs/packages/map/map.js';
 import { MapConnector } from '~/libs/packages/map/map-connector.package.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
-import { getBounds } from './libs/helpers/helpers.js';
+import { getBounds, setMapService } from './libs/helpers/helpers.js';
 
 type Properties = {
   center: google.maps.LatLngLiteral | null;
@@ -43,34 +40,9 @@ const useAppMap = ({
     const configMap = async (): Promise<void> => {
       await MapConnector.getInstance();
 
-      if (!points) {
-        mapService.current = new MapConnector().getMapService({
-          mapElement: mapReference.current,
-          center: center ?? DEFAULT_CENTER,
-          zoom,
-        });
-      } else if (points.length === 1) {
-        const [center] = points;
-        mapService.current = new MapConnector().getMapService({
-          mapElement: mapReference.current,
-          center: center,
-          zoom,
-        });
-        mapService.current.addMarker(center, false);
-      } else {
-        const bounds = getBounds(points);
+      setMapService({ points, center, mapReference, mapService, zoom });
 
-        mapService.current = new MapConnector().getMapService({
-          mapElement: mapReference.current,
-          bounds: bounds,
-          zoom,
-        });
-        for (const point of points) {
-          mapService.current.addMarker(point, false);
-        }
-      }
-
-      if (center && destination) {
+      if (mapService.current && center && destination) {
         mapService.current.removeMarkers();
         mapService.current.addMarker(destination);
 
