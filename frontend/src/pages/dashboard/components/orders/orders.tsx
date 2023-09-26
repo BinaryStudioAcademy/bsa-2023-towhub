@@ -108,31 +108,31 @@ const Orders: React.FC = () => {
 
   const isLoading = dataStatus === DataStatus.PENDING;
 
+  if (isLoading) {
+    return (
+      <div className={styles.orders}>
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.orders}>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <div className={styles.orderlistArea}>
-          <OrderFilter onChange={handleChangeFilter} label={filter.status} />
-          <OrderList orders={sortOrders} select={setShownRoute} />
-          <Pagination
-            pageCount={totalPages}
-            pageIndex={pageIndex}
-            pageSize={DEFAULT_PAGE_SIZE}
-            onClick={handleChangePage}
-          />
-        </div>
-      )}
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <div className={styles.mapArea}>
-          {orders.length > 0 && (
-            <div ref={mapReference} id="map" className={styles.mapWrapper} />
-          )}
-        </div>
-      )}
+      <div className={styles.orderlistArea}>
+        <OrderFilter onChange={handleChangeFilter} label={filter.status} />
+        <OrderList orders={sortOrders} select={setShownRoute} />
+        <Pagination
+          pageCount={totalPages}
+          pageIndex={pageIndex}
+          pageSize={DEFAULT_PAGE_SIZE}
+          onClick={handleChangePage}
+        />
+      </div>
+      <div className={styles.mapArea}>
+        {orders.length > 0 && (
+          <div ref={mapReference} id="map" className={styles.mapWrapper} />
+        )}
+      </div>
     </div>
   );
 };
