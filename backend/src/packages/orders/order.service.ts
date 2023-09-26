@@ -266,13 +266,13 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT;
   }): Promise<OrderUpdateAcceptStatusResponseDto> {
-    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+    // const statusForUpdate = this.checkIsOrderAccepted(payload.newStatus, user);
 
     await this.shiftService.checkDriverStartShift(user.id);
 
     const updatedOrder = await this.orderRepository.update({
       id: orderId,
-      payload: { status: statusForUpdate },
+      payload: { status: payload.newStatus },
     });
 
     if (!updatedOrder) {
@@ -298,7 +298,7 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT | null;
   }): Promise<OrderUpdateAcceptStatusResponseDto> {
-    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+    const statusForUpdate = this.checkIsOrderAccepted(payload.newStatus, user);
 
     const updatedOrder = await this.orderRepository.update({
       id: orderId,
@@ -403,14 +403,17 @@ class OrderService implements Omit<IService, 'find'> {
   }
 
   private checkIsOrderAccepted(
-    isAccepted: boolean,
+    newStatus: OrderStatusValues,
     user: UserEntityObjectWithGroupT | null,
   ): OrderStatusValues {
     if (user && checkIsDriver(user.group.key)) {
-      return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REJECTED;
+      return newStatus;
     }
 
-    if ((!user || checkIsCustomer(user.group.key)) && !isAccepted) {
+    if (
+      (!user || checkIsCustomer(user.group.key)) &&
+      newStatus !== OrderStatus.PICKING_UP
+    ) {
       return OrderStatus.CANCELED;
     }
 

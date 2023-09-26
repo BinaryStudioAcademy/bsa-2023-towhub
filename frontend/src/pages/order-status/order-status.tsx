@@ -79,7 +79,7 @@ const OrderStatusPage: React.FC = () => {
       void dispatch(
         orderActions.changeAcceptOrderStatusByCustomer({
           orderId,
-          isAccepted: false,
+          newStatus: OrderStatusValue.REJECTED,
         }),
       );
     }

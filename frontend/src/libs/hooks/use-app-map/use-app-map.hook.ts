@@ -20,7 +20,7 @@ type Properties = {
 };
 
 const useAppMap = ({
-  center = DEFAULT_CENTER,
+  center,
   zoom = DEFAULT_ZOOM,
   destination,
   pricePerKm,

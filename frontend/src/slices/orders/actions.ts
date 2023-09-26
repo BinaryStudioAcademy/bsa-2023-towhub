@@ -25,10 +25,10 @@ const changeAcceptOrderStatusByDriver = createAsyncThunk<
   AsyncThunkConfig
 >(
   ActionName.CHANGE_ACCEPT_ORDER_STATUS,
-  ({ isAccepted, orderId }, { extra }) => {
+  ({ newStatus, orderId }, { extra }) => {
     const { ordersApi } = extra;
 
-    return ordersApi.changeAcceptOrderStatusByDriver(orderId, { isAccepted });
+    return ordersApi.changeAcceptOrderStatusByDriver(orderId, { newStatus });
   },
 );
 
@@ -38,10 +38,10 @@ const changeAcceptOrderStatusByCustomer = createAsyncThunk<
   AsyncThunkConfig
 >(
   ActionName.CHANGE_ACCEPT_ORDER_STATUS,
-  ({ isAccepted, orderId }, { extra }) => {
+  ({ newStatus, orderId }, { extra }) => {
     const { ordersApi } = extra;
 
-    return ordersApi.changeAcceptOrderStatusByCustomer(orderId, { isAccepted });
+    return ordersApi.changeAcceptOrderStatusByCustomer(orderId, { newStatus });
   },
 );
 

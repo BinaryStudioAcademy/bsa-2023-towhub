@@ -9,13 +9,13 @@ import {
   useEffect,
   useParams,
   useRef,
-  useState,
 } from '~/libs/hooks/hooks.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectOrder } from '~/slices/orders/selectors.js';
 
 import { NotFound } from '../pages.js';
+import { OrderStatus } from './libs/enums/order-status.enum.js';
 import { useGetRouteData } from './libs/hooks/use-get-route-data.hook.js';
 import { useSubscribeUpdates } from './libs/hooks/use-subscribe-order.hook.js';
 import styles from './styles.module.scss';
@@ -32,8 +32,6 @@ const DriverOrder = (): JSX.Element => {
   const { timespanLeft, distanceLeft, startPoint, endPoint } =
     useGetRouteData(order);
   const dispatch = useAppDispatch();
-
-  const [message, setMessage] = useState<string>();
 
   const mapReference = useRef<HTMLDivElement>(null);
   useAppMap({
@@ -55,14 +53,109 @@ const DriverOrder = (): JSX.Element => {
   }, [dispatch, order]);
 
   const handleAccept = useCallback(() => {
-    setMessage('Order Accepted');
+    void dispatch(
+      orderActions.changeAcceptOrderStatusByDriver({
+        newStatus: OrderStatus.CONFIRMED,
+        orderId: orderId as string,
+      }),
+    );
     notification.success('Order Accepted');
-  }, [setMessage]);
+  }, [dispatch, orderId]);
+
+  const handleConfirm = useCallback(() => {
+    void dispatch(
+      orderActions.changeAcceptOrderStatusByDriver({
+        newStatus: OrderStatus.PICKING_UP,
+        orderId: orderId as string,
+      }),
+    );
+    notification.success('Order Confirmed');
+  }, [dispatch, orderId]);
+
+  const handleComplete = useCallback(() => {
+    void dispatch(
+      orderActions.changeAcceptOrderStatusByDriver({
+        newStatus: OrderStatus.DONE,
+        orderId: orderId as string,
+      }),
+    );
+    notification.success('Order Completed');
+  }, [dispatch, orderId]);
 
   const handleDecline = useCallback(() => {
-    setMessage('Order Declined');
+    void dispatch(
+      orderActions.changeAcceptOrderStatusByDriver({
+        newStatus: OrderStatus.REJECTED,
+        orderId: orderId as string,
+      }),
+    );
     notification.warning('Order Declined');
-  }, [setMessage]);
+  }, [dispatch, orderId]);
+
+  const getButtons = useCallback(() => {
+    switch (order?.status) {
+      case 'pending': {
+        return (
+          <>
+            <Button
+              className={styles.button}
+              label={'Decline'}
+              onClick={handleDecline}
+            />
+            <Button
+              className={getValidClassNames(styles.button, styles.accept)}
+              label={'Accept'}
+              onClick={handleAccept}
+            />
+          </>
+        );
+      }
+      case 'confirmed': {
+        return (
+          <>
+            <Button
+              className={styles.button}
+              label={'Cancel order'}
+              onClick={handleDecline}
+            />
+            <Button
+              className={getValidClassNames(styles.button, styles.accept)}
+              label={'I am in a place'}
+              onClick={handleConfirm}
+            />
+          </>
+        );
+      }
+      case 'picking_up': {
+        return (
+          <>
+            <Button
+              className={getValidClassNames(
+                styles.button,
+                styles.accept,
+                styles.complete,
+              )}
+              label={'Complete order'}
+              onClick={handleComplete}
+            />
+          </>
+        );
+      }
+      case 'rejected':
+      case 'canceled': {
+        return <p className={styles.message}>Order is cancelled</p>;
+      }
+      case 'done': {
+        return <p className={styles.message}>Order is completed</p>;
+      }
+    }
+  }, [
+    handleAccept,
+    handleConfirm,
+    handleComplete,
+    handleDecline,
+    order?.status,
+  ]);
 
   if (!order) {
     return <NotFound />;
@@ -115,24 +208,7 @@ const DriverOrder = (): JSX.Element => {
           </div>
           <p className={styles.commentHeader}>Comment:</p>
           <p className={styles.commentContent}>{MOCK_ORDER_DETAILS.comment}</p>
-          <div className={styles.buttons}>
-            {message ? (
-              <p className={styles.message}>{message}</p>
-            ) : (
-              <>
-                <Button
-                  className={styles.button}
-                  label={'Decline'}
-                  onClick={handleDecline}
-                />
-                <Button
-                  className={getValidClassNames(styles.button, styles.accept)}
-                  label={'Accept'}
-                  onClick={handleAccept}
-                />
-              </>
-            )}
-          </div>
+          <div className={styles.buttons}>{getButtons()}</div>
         </div>
       </div>
       <div className={styles.right}>
