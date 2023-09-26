@@ -1,7 +1,7 @@
 import { type ColumnSort } from '@tanstack/react-table';
 
 import { Button, Modal, Table } from '~/libs/components/components.js';
-import { DataStatus } from '~/libs/enums/enums.js';
+import { DataStatus, HttpCode } from '~/libs/enums/enums.js';
 import {
   getSortingMethodValue,
   getValidClassNames,
@@ -22,6 +22,7 @@ import {
   type TruckGetAllResponseDto,
 } from '~/packages/trucks/libs/types/types.js';
 import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
+import { useTruckServerError } from '~/slices/trucks/libs/hooks/use-truck-server-error.hook.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { AddTruckForm } from '../../form/form.js';
@@ -57,6 +58,8 @@ const TruckTable: React.FC = () => {
     sort: sortMethod,
   });
 
+  const serverError = useTruckServerError();
+
   const handleSubmit = useCallback(
     (payload: TruckAddRequestDto) => {
       void dispatch(
@@ -64,9 +67,9 @@ const TruckTable: React.FC = () => {
           ...payload,
           queryString: searchParameters.toString(),
         }),
-      );
-
-      handleToggle();
+      ).then((response) => {
+        response.payload?.status !== HttpCode.BAD_REQUEST && handleToggle();
+      });
     },
     [dispatch, searchParameters, handleToggle],
   );
@@ -94,7 +97,7 @@ const TruckTable: React.FC = () => {
           pageSize={pageSize}
           setSorting={setSorting}
           sorting={sorting}
-          isLoading={dataStatus === DataStatus.PENDING}
+          isLoading={dataStatus === DataStatus.IDLE}
           changePageSize={changePageSize}
           changePageIndex={changePageIndex}
           emptyTableMessage={message}
@@ -102,7 +105,11 @@ const TruckTable: React.FC = () => {
       </div>
       <Modal isOpen={isToggled} isCentered onClose={handleToggle}>
         <div className={styles.formWrapper}>
-          <AddTruckForm onSubmit={handleSubmit} onClose={handleToggle} />
+          <AddTruckForm
+            onSubmit={handleSubmit}
+            onClose={handleToggle}
+            serverError={serverError}
+          />
         </div>
       </Modal>
     </>

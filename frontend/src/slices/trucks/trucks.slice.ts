@@ -86,6 +86,9 @@ const { reducer, actions, name } = createSlice({
     setChosenTruck: (state, action: PayloadAction<TruckGetItemResponseDto>) => {
       state.chosenTruck = action.payload;
     },
+    clearTruckServerError: (state: State): void => {
+      state.error = null;
+    },
   },
   extraReducers(builder) {
     builder

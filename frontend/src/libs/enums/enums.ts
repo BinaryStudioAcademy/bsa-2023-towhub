@@ -13,6 +13,7 @@ export {
   AppEnvironment,
   AuthMode,
   ContentType,
+  HttpCode,
   HttpMessage,
   ServerErrorType,
   SortMethod,

@@ -1,6 +1,7 @@
 import { Form, Icon } from '~/libs/components/components.js';
 import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import { type ServerErrorHandling } from '~/libs/types/types.js';
 import { type TruckAddRequestDto } from '~/packages/trucks/libs/types/types.js';
 import { truckCreateRequestBody } from '~/packages/trucks/libs/validation-schemas/validation-schemas.js';
 
@@ -11,11 +12,13 @@ import styles from './styles.module.scss';
 type Properties = {
   onClose: () => void;
   onSubmit: (payload: TruckAddRequestDto) => void;
+  serverError: ServerErrorHandling;
 };
 
 const AddTruckForm: React.FC<Properties> = ({
   onClose,
   onSubmit,
+  serverError,
 }: Properties) => {
   return (
     <div className={styles.formWrapper}>
@@ -32,7 +35,8 @@ const AddTruckForm: React.FC<Properties> = ({
         defaultValues={DEFAULT_TRUCK_PAYLOAD}
         validationSchema={truckCreateRequestBody}
         onSubmit={onSubmit}
-        btnLabel="ADD"
+        btnLabel="ADD TRUCK"
+        serverError={serverError}
       />
     </div>
   );
