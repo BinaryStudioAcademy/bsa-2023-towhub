@@ -64,6 +64,7 @@ const Order = (): JSX.Element => {
     },
     [setEndLocation],
   );
+//  console.log(startAddress, endAddress, startLocation, endLocation ) 
 
   if (!chosenTruck) {
     return <NotFound />;
