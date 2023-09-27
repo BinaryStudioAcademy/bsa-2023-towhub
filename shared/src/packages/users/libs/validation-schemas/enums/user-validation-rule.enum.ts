@@ -1,6 +1,6 @@
 const UserValidationRule = {
   PASSWORD: /^(?=.*[A-Za-z])(?=.*\d)[\dA-Za-z]{6,20}$/,
-  NAME: /^['A-Za-z-]{1,40}$/,
+  NAME: /^[A-Za-z][\s'A-Za-z-]{0,39}$/,
   PHONE: /^\+\d{7,18}$/,
   TAX_NUMBER: /^[\d\s./A-Z-]{8,19}$/,
   COMPANY_NAME: /^[\s\w!#&'*+,.;?@~-]{1,40}$/,

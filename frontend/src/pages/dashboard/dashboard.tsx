@@ -1,19 +1,20 @@
-import { useLocation } from 'react-router-dom';
-
 import { AppRoute } from '~/libs/enums/enums.js';
+import { useLocation } from '~/libs/hooks/hooks.js';
 
-import { DriverTable } from './components/table/drivers-table/driver-table.js';
+import { Orders } from './components/orders/orders.js';
+import { DriverTable, TruckTable } from './components/tables/tables.js';
 import styles from './styles.module.scss';
 
 const Dashboard: React.FC = () => {
   const location = useLocation();
+
   const getScreen = (path: string): React.ReactNode => {
     switch (path) {
       case AppRoute.DASHBOARD_ORDERS: {
-        return <div>Orders</div>;
+        return <Orders />;
       }
       case AppRoute.DASHBOARD_TRUCKS: {
-        return <div>Trucks</div>;
+        return <TruckTable />;
       }
       case AppRoute.DASHBOARD_DRIVERS: {
         return <DriverTable />;

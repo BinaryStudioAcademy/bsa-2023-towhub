@@ -1,3 +1,4 @@
+import { PRECISION } from './libs/constants/constants.js';
 import { TravelMode } from './libs/enums/enums.js';
 import { convertMetersToKilometers } from './libs/helpers/helpers.js';
 import {
@@ -29,20 +30,20 @@ class MapService {
         mode: TravelMode.driving,
       },
     });
-    const [resultArray] = response.data.rows;
-    const [resultElement] = resultArray.elements;
+    const [firstRow] = response.data.rows;
+    const [firstElement] = firstRow.elements;
 
-    return resultElement.distance;
+    return firstElement.distance;
   }
 
   public async getPriceByDistance({
     startAddress,
     endAddress,
-    pricePerKm,
+    pricePerKm, // TODO kilometer
   }: OrderCalculatePriceRequestDto): Promise<OrderCalculatePriceResponseDto> {
     const distance = await this.getDistance(startAddress, endAddress);
-    const km = convertMetersToKilometers(distance.value);
-    const orderPrice = (pricePerKm * km).toFixed(2);
+    const kilometers = convertMetersToKilometers(distance.value);
+    const orderPrice = (pricePerKm * kilometers).toFixed(PRECISION);
 
     return { price: Number(orderPrice) };
   }

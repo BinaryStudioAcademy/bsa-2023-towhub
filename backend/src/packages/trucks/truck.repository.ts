@@ -1,14 +1,15 @@
-import { desc, eq, ilike, placeholder, sql } from 'drizzle-orm';
+import { eq, ilike, placeholder, sql } from 'drizzle-orm';
 
+import { countOffsetByQuery, getSortedBy } from '~/libs/helpers/helpers.js';
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
+import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 
-import { type GetPaginatedPageQuery } from '../business/libs/types/types.js';
 import {
   type DriverHaveAccessToTruck,
   type TruckDatabaseModel,
-  type TruckEntity,
+  type TruckEntityT,
 } from './libs/types/types.js';
 
 class TruckRepository implements IRepository {
@@ -40,8 +41,40 @@ class TruckRepository implements IRepository {
     return await this.db.driver().select().from(this.trucksSchema);
   }
 
+  public async findAllByBusinessId(
+    businessId: number,
+    { size, sort, page }: PaginationWithSortingParameters,
+  ): Promise<TruckDatabaseModel[]> {
+    const offset = countOffsetByQuery({ size, page });
+
+    const sortedBy = getSortedBy(
+      sort,
+      this.trucksSchema.createdAt,
+      this.trucksSchema.year,
+    );
+
+    return await this.db
+      .driver()
+      .select()
+      .from(this.trucksSchema)
+      .where(eq(this.trucksSchema.businessId, businessId))
+      .orderBy(...sortedBy)
+      .offset(offset)
+      .limit(size);
+  }
+
+  public async getTotal(businessId: number): Promise<number> {
+    const [total] = await this.db
+      .driver()
+      .select({ count: sql<number>`count(${this.trucksSchema.businessId})` })
+      .from(this.trucksSchema)
+      .where(eq(this.trucksSchema.businessId, businessId));
+
+    return total.count;
+  }
+
   public async create(
-    entity: Omit<TruckEntity, 'id'>,
+    entity: Omit<TruckEntityT, 'id' | 'createdAt' | 'status'>,
   ): Promise<TruckDatabaseModel[]> {
     const preparedQuery = this.db
       .driver()
@@ -55,7 +88,7 @@ class TruckRepository implements IRepository {
 
   public async update(
     id: number,
-    payload: Partial<TruckEntity>,
+    payload: Partial<Omit<TruckEntityT, 'createdAt'>>,
   ): Promise<TruckDatabaseModel[]> {
     const preparedQuery = this.db
       .driver()
@@ -112,30 +145,17 @@ class TruckRepository implements IRepository {
     await preparedQuery.execute();
   }
 
-  public async findAllByBusinessId(
-    businessId: number,
-    query: GetPaginatedPageQuery,
-  ): Promise<TruckDatabaseModel[]> {
-    const index = query.page * query.size;
-
-    return await this.db
+  public async getTrucksByUserId(
+    userId: number,
+  ): Promise<DriverHaveAccessToTruck[]> {
+    const preparedQuery = this.db
       .driver()
       .select()
-      .from(this.trucksSchema)
-      .where(eq(this.trucksSchema.businessId, businessId))
-      .orderBy(desc(this.trucksSchema.createdAt))
-      .offset(index)
-      .limit(query.size);
-  }
+      .from(this.usersTrucksSchema)
+      .where(eq(this.usersTrucksSchema.userId, userId))
+      .prepare('getTrucksByUserId');
 
-  public async getTotal(businessId: number): Promise<number> {
-    const [total] = await this.db
-      .driver()
-      .select({ count: sql<number>`count(${this.trucksSchema.businessId})` })
-      .from(this.trucksSchema)
-      .where(eq(this.trucksSchema.businessId, businessId));
-
-    return total.count;
+    return await preparedQuery.execute();
   }
 }
 

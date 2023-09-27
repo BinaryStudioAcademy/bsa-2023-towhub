@@ -182,10 +182,13 @@ class StripeService {
     business: BusinessEntityT,
     account: Stripe.Account,
   ): Promise<void> {
-    if (!business.stripeId) {
-      await this.businessService.update({
-        id: business.id,
-        payload: { stripeId: account.id },
+    const { isStripeActivated, companyName, stripeId, id } = business;
+
+    if (!stripeId) {
+      await this.businessService.updateById(id, {
+        stripeId: account.id,
+        isStripeActivated,
+        companyName,
       });
     }
   }
@@ -200,9 +203,11 @@ class StripeService {
             );
 
             if (business && !business.isStripeActivated) {
-              await this.businessService.update({
-                id: business.id,
-                payload: { isStripeActivated: true },
+              const { companyName, stripeId, id } = business;
+              await this.businessService.updateById(id, {
+                stripeId,
+                isStripeActivated: true,
+                companyName,
               });
             }
           }

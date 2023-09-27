@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "3867c3b9-8536-426e-9715-b216a5239b8a",
+  "id": "838bc476-50ac-4297-a8d3-378ad52471be",
   "prevId": "08a6962e-9e03-4d5e-8308-e66c756c7125",
   "tables": {
     "business_details": {
@@ -25,19 +25,6 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
-        },
-        "stripe_id": {
-          "name": "stripe_id",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "is_stripe_activated": {
-          "name": "is_stripe_activated",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         },
         "owner_id": {
           "name": "owner_id",
@@ -78,11 +65,6 @@
           "name": "business_details_tax_number_unique",
           "nullsNotDistinct": false,
           "columns": ["tax_number"]
-        },
-        "business_details_stripe_id_unique": {
-          "name": "business_details_stripe_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["stripe_id"]
         }
       }
     },
@@ -519,6 +501,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "status": {
+          "name": "status",
+          "type": "truck_status",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Available'"
+        },
         "business_id": {
           "name": "business_id",
           "type": "integer",
@@ -650,6 +639,12 @@
       "name": "users_trucks",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
         "user_id": {
           "name": "user_id",
           "type": "integer",
@@ -685,12 +680,18 @@
         }
       },
       "compositePrimaryKeys": {
-        "users_trucks_user_id_truck_id": {
-          "name": "users_trucks_user_id_truck_id",
-          "columns": ["user_id", "truck_id"]
+        "users_trucks_id": {
+          "name": "users_trucks_id",
+          "columns": ["id"]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "unique_user_id_truck_id": {
+          "name": "unique_user_id_truck_id",
+          "nullsNotDistinct": false,
+          "columns": ["user_id", "truck_id"]
+        }
+      }
     }
   },
   "enums": {
@@ -702,6 +703,14 @@
         "canceled": "canceled",
         "done": "done",
         "picking_up": "picking_up"
+      }
+    },
+    "truck_status": {
+      "name": "truck_status",
+      "values": {
+        "Available": "Available",
+        "Active": "Active",
+        "Busy": "Busy"
       }
     }
   },

@@ -8,12 +8,11 @@ import { HttpCode } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 
 import { TruckApiPath } from './libs/enums/enums.js';
-import { type TruckEntity } from './libs/types/types.js';
+import { type TruckEntityT } from './libs/types/types.js';
 import {
-  truckCreateRequestBody,
   truckGetParameters,
   truckUpdateRequestBody,
-} from './libs/validation-schema/validation-schemas.js';
+} from './libs/validation-schemas/validation-schemas.js';
 import { type TruckService } from './truck.service.js';
 
 /**
@@ -102,6 +101,9 @@ import { type TruckService } from './truck.service.js';
  *         pricePerKm:
  *           type: number
  *           example: 5
+ *         businessId:
+ *           type: number
+ *           example: 1
  *
  *     ErrorType:
  *       type: object
@@ -137,20 +139,6 @@ class TruckController extends Controller {
     this.truckService = truckService;
 
     this.addRoute({
-      path: TruckApiPath.ROOT,
-      method: 'POST',
-      validation: {
-        body: truckCreateRequestBody,
-      },
-      handler: (request) =>
-        this.create(
-          request as ApiHandlerOptions<{
-            body: Omit<TruckEntity, 'id'>;
-          }>,
-        ),
-    });
-
-    this.addRoute({
       path: TruckApiPath.$ID,
       method: 'PUT',
       validation: {
@@ -160,7 +148,7 @@ class TruckController extends Controller {
       handler: (request) =>
         this.update(
           request as ApiHandlerOptions<{
-            body: Partial<TruckEntity>;
+            body: Partial<Omit<TruckEntityT, 'createdAt'>>;
             params: { id: number };
           }>,
         ),
@@ -170,6 +158,17 @@ class TruckController extends Controller {
       path: TruckApiPath.ROOT,
       method: 'GET',
       handler: () => this.getAll(),
+    });
+
+    this.addRoute({
+      path: TruckApiPath.$USER_ID,
+      method: 'GET',
+      handler: (request) =>
+        this.getTrucksByUserId(
+          request as ApiHandlerOptions<{
+            params: { userId: number };
+          }>,
+        ),
     });
 
     this.addRoute({
@@ -199,42 +198,6 @@ class TruckController extends Controller {
           }>,
         ),
     });
-  }
-
-  /**
-   * @swagger
-   * /trucks/:
-   *   post:
-   *     summary: Create a new truck
-   *     tags:
-   *       - truck
-   *     requestBody:
-   *       description: Truck data to be added
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             $ref: '#/components/schemas/Truck'
-   *     responses:
-   *       '201':
-   *         description: Truck created successfully
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/TruckResponse'
-   *       '400':
-   *         description: Bad request
-   *
-   */
-  private async create(
-    options: ApiHandlerOptions<{
-      body: Omit<TruckEntity, 'id'>;
-    }>,
-  ): Promise<ApiHandlerResponse> {
-    return {
-      status: HttpCode.CREATED,
-      payload: await this.truckService.create(options.body),
-    };
   }
 
   /**
@@ -274,13 +237,16 @@ class TruckController extends Controller {
 
   private async update(
     options: ApiHandlerOptions<{
-      body: Partial<TruckEntity>;
+      body: Partial<Omit<TruckEntityT, 'createdAt'>>;
       params: { id: number };
     }>,
   ): Promise<ApiHandlerResponse> {
     const { params, body } = options;
 
-    const updatedTruck = await this.truckService.update(params.id, body);
+    const updatedTruck = await this.truckService.updateByOwnerId(
+      params.id,
+      body,
+    );
 
     return {
       status: HttpCode.OK,
@@ -344,6 +310,21 @@ class TruckController extends Controller {
     return {
       status: HttpCode.OK,
       payload: await this.truckService.findById(options.params.id),
+    };
+  }
+
+  private async getTrucksByUserId(
+    options: ApiHandlerOptions<{
+      params: { userId: number };
+    }>,
+  ): Promise<ApiHandlerResponse> {
+    const trucks = await this.truckService.findTrucksByUserId(
+      options.params.userId,
+    );
+
+    return {
+      status: HttpCode.OK,
+      payload: trucks,
     };
   }
 

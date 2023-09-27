@@ -4,12 +4,13 @@ import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import { UserGroupKey } from '../groups/groups.js';
+import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { ShiftEntity } from './shift.entity.js';
 import {
   type ShiftCloseRequestDto,
   type ShiftCreateRequestDto,
-  type ShiftEntity as ShiftEntityT,
+  type ShiftEntityT as ShiftEntityT,
   type ShiftResponseDto,
 } from './shift.js';
 import { type ShiftRepository } from './shift.repository.js';
@@ -35,6 +36,10 @@ class ShiftService implements IService {
     const shifts = await this.shiftRepository.getAllOpened();
 
     return shifts.map((it) => ShiftEntity.initialize(it).toObject());
+  }
+
+  public getAllStartedWithTrucks(): Promise<TruckEntityT[]> {
+    return this.shiftRepository.getAllOpenedWithTrucks();
   }
 
   public async findById(id: number): Promise<ShiftResponseDto | null> {
@@ -158,7 +163,7 @@ class ShiftService implements IService {
     return ShiftEntity.initialize(updShift).toObject();
   }
 
-  public async update({
+  public async updateByOwnerId({
     id,
     payload,
   }: {
@@ -200,6 +205,19 @@ class ShiftService implements IService {
     }
 
     return false;
+  }
+
+  public async checkDriverStartShift(driverId: number): Promise<void> {
+    const [shift] = await this.shiftRepository.find({
+      driverId,
+    });
+
+    if (shift.endDate) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_START_SHIFT,
+      });
+    }
   }
 }
 

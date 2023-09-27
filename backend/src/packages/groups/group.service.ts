@@ -39,10 +39,10 @@ class GroupService implements IService<GroupEntityObjectT> {
     return GroupEntity.initialize(result).toObject();
   }
 
-  public async update(
+  public async updateByOwnerId(
     id: GroupEntityT['id'],
     payload: Partial<GroupDatabaseModelCreateUpdate>,
-  ): ReturnType<IService<GroupEntityObjectT>['update']> {
+  ): ReturnType<IService<GroupEntityObjectT>['updateByOwnerId']> {
     const result = await this.groupRepository.update(id, payload);
 
     return GroupEntity.initialize(result).toObject();

@@ -41,6 +41,7 @@ const useAuthNavigate = (): AuthNavigateHook => {
         break;
       }
       case UserGroupKey.DRIVER: {
+        navigate(AppRoute.AVAILABLE_TRUCKS);
         break;
       }
       default: {

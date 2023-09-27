@@ -5,15 +5,16 @@ import {
   TruckLicensePlateNumber,
   TruckManufacturer,
   TruckPricePerKm,
+  TruckStatus,
   TruckTowType,
   TruckYear,
 } from '../enums/enums.js';
 import { TruckValidationMessage } from '../enums/truck-validation-message.enum.js';
 import { LICENSE_PLATE_NUMBER } from '../regex-patterns/regex-patterns.js';
-import { type TruckEntity } from '../types/types.js';
+import { type TruckEntityT } from '../types/types.js';
 
 const truckUpdateRequestBody = joi.object<
-  Omit<TruckEntity, 'id' | 'businessId'>,
+  Omit<TruckEntityT, 'id' | 'createdAt' | 'businessId'>,
   true
 >({
   manufacturer: joi
@@ -65,6 +66,13 @@ const truckUpdateRequestBody = joi.object<
   towType: joi
     .string()
     .valid(...Object.values(TruckTowType))
+    .messages({
+      'any.only': TruckValidationMessage.INVALID,
+    }),
+
+  status: joi
+    .string()
+    .valid(...Object.values(TruckStatus))
     .messages({
       'any.only': TruckValidationMessage.INVALID,
     }),
