@@ -1,4 +1,4 @@
-const FrontendPath = {
+const AppRoute = {
   ROOT: '/',
   ANY: '*',
   WELCOME: '/welcome',
@@ -18,4 +18,4 @@ const FrontendPath = {
   PAYMENTS: '/payments',
 } as const;
 
-export { FrontendPath };
+export { AppRoute };

@@ -1,6 +1,6 @@
 export { StripeEvent } from './stripe-event.enum.js';
 export {
-  FrontendPath,
+  AppRoute,
   StripeApiPath,
   StripeOperationStatus,
   UserGroupKey,

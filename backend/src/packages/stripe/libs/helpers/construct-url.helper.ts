@@ -3,7 +3,7 @@ function constructUrl(
   path: string,
   queryParameters?: Record<string, string | number | boolean>,
 ): string {
-  const url = new URL(`${baseUrl}${path}`);
+  const url = new URL(path, baseUrl);
 
   if (queryParameters) {
     for (const key of Object.keys(queryParameters)) {

@@ -1,6 +1,6 @@
 import joi from 'joi';
 
-import { BusinessValidationMessage } from '~/index.js';
+import { BusinessValidationMessage } from '~/packages/business/business.js';
 
 import { type SetupPaymentFormData } from '../types/types.js';
 

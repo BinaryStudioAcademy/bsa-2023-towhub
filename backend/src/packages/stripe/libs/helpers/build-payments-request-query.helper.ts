@@ -4,9 +4,8 @@ import { type ValueOf } from '~/libs/types/types.js';
 
 import { type GetPaymentsRequest } from '../types/types.js';
 import { convertDateToUnixSeconds } from './convert-date-to-unix-seconds.helper.js';
-import { SUCCEEDED_STATUS } from './libs/consts/succeeded-status.const.js';
-import { QueryToken } from './libs/enums/enums.js';
-import { QueryTag } from './libs/enums/query-tag.enum.js';
+import { SUCCEEDED_STATUS } from './libs/constants/constants.js';
+import { QueryTag, QueryToken } from './libs/enums/enums.js';
 
 const quoteAndSanitize = (value: unknown): string => {
   const sanitizedValue = String(value).replace(/["\\]/g, '');
@@ -14,7 +13,7 @@ const quoteAndSanitize = (value: unknown): string => {
   return `"${sanitizedValue}"`;
 };
 
-const binaryOperator = (
+const composeString = (
   key: string,
   token: ValueOf<typeof QueryToken>,
   value: unknown,
@@ -22,21 +21,21 @@ const binaryOperator = (
   return key + token + quoteAndSanitize(value);
 };
 
-const keyOfObject = (objectName: string, keyName: string): string => {
+const composeKeyOfObject = (objectName: string, keyName: string): string => {
   return `${objectName}["${keyName}"]`;
 };
 
 const addMetadataTag = (
-  query: string[],
+  queries: string[],
   options: GetPaymentsRequest,
   key: keyof GetPaymentsRequest,
 ): void => {
   if (!(key in options)) {
     return;
   }
-  query.push(
-    binaryOperator(
-      keyOfObject(QueryTag.METADATA, key),
+  queries.push(
+    composeString(
+      composeKeyOfObject(QueryTag.METADATA, key),
       QueryToken.EQ,
       options[key],
     ),
@@ -46,28 +45,32 @@ const addMetadataTag = (
 const buildPaymetnsRequestQuery = (
   options: GetPaymentsRequest,
 ): Stripe.PaymentIntentSearchParams => {
-  const query: string[] = [];
+  const queries: string[] = [];
 
-  query.push(binaryOperator(QueryTag.STATUS, QueryToken.EQ, SUCCEEDED_STATUS));
+  queries.push(composeString(QueryTag.STATUS, QueryToken.EQ, SUCCEEDED_STATUS));
 
-  addMetadataTag(query, options, 'businessId');
-  addMetadataTag(query, options, 'orderId');
-  addMetadataTag(query, options, 'userId');
-  addMetadataTag(query, options, 'customerName');
-  addMetadataTag(query, options, 'customerPhone');
+  for (const fields of [
+    'businessId',
+    'orderId',
+    'userId',
+    'customerName',
+    'customerPhone',
+  ] as const) {
+    addMetadataTag(queries, options, fields);
+  }
 
   if (options.intervalFrom) {
     const value = convertDateToUnixSeconds(options.intervalFrom);
-    query.push(binaryOperator(QueryTag.CREATED, QueryToken.GTE, value));
+    queries.push(composeString(QueryTag.CREATED, QueryToken.GTE, value));
   }
 
   if (options.intervalTo) {
     const value = convertDateToUnixSeconds(options.intervalTo);
-    query.push(binaryOperator(QueryTag.CREATED, QueryToken.LT, value));
+    queries.push(composeString(QueryTag.CREATED, QueryToken.LT, value));
   }
 
   const result: Stripe.PaymentIntentSearchParams = {
-    query: query.join(QueryToken.AND),
+    query: queries.join(QueryToken.AND),
   };
 
   return result;

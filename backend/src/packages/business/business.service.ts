@@ -108,7 +108,7 @@ class BusinessService implements IService {
   }: {
     id: number;
     payload: Partial<
-      Pick<BusinessEntityT, 'companyName' | 'stripeActivated' | 'stripeId'>
+      Pick<BusinessEntityT, 'companyName' | 'isStripeActivated' | 'stripeId'>
     >;
   }): Promise<BusinessUpdateResponseDto> {
     const foundBusinessById = await this.findById(id);
@@ -117,7 +117,7 @@ class BusinessService implements IService {
       throw new NotFoundError({});
     }
 
-    if ('companyName' in payload) {
+    if (payload.companyName) {
       const { result: doesBusinessExist } =
         await this.businessRepository.checkExists({
           companyName: payload.companyName,

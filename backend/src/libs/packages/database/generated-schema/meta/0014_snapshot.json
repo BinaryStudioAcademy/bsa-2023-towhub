@@ -32,8 +32,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "stripe_activated": {
-          "name": "stripe_activated",
+        "is_stripe_activated": {
+          "name": "is_stripe_activated",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,

@@ -9,7 +9,7 @@ import { convertMetersToKm } from '../map/map.js';
 import { type MapService } from '../map/map.service.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
-import { DEFAULT_PAGE_SIZE } from './libs/consts/const.js';
+import { DEFAULT_PAGE_SIZE } from './libs/constants/constants.js';
 import { UserGroupKey } from './libs/enums/enums.js';
 import { StripeEvent } from './libs/enums/stripe-event.enum.js';
 import { paginateArray } from './libs/helpers/paginate-array.helper.js';
@@ -102,15 +102,14 @@ class StripeService {
       case StripeEvent.CAPABILITY_UPDATED: {
         {
           if (event.account && event.data.object.status === 'active') {
-            // Linked account has been activated
             const business = await this.businessService.findByStripeId(
               event.account,
             );
 
-            if (business && !business.stripeActivated) {
+            if (business && !business.isStripeActivated) {
               await this.businessService.update({
                 id: business.id,
-                payload: { stripeActivated: true },
+                payload: { isStripeActivated: true },
               });
             }
           }
@@ -153,7 +152,7 @@ class StripeService {
       });
     }
 
-    if (!business.stripeActivated || !business.stripeId) {
+    if (!business.isStripeActivated || !business.stripeId) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpMessage.BUSINESS_STRIPE_NOT_ACTIVATED,
@@ -204,7 +203,7 @@ class StripeService {
 
     return {
       items: itemsAsDto,
-      totalCount: items.length,
+      total: items.length,
     };
   }
 

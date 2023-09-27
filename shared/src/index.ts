@@ -2,9 +2,9 @@ export {
   ApiPath,
   AppEnvironment,
   AppErrorMessage,
+  AppRoute,
   CommonValidationMessage,
   ContentType,
-  FrontendPath,
   ServerErrorType,
 } from './libs/enums/enums.js';
 export {
@@ -42,7 +42,6 @@ export {
   type Id,
   type NullableProperties,
   type OperationResult,
-  type Paginated,
   type PaginationParameters,
   type RequireProperty,
   type ServerCommonErrorResponse,

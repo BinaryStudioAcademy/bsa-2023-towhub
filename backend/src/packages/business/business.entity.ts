@@ -14,14 +14,14 @@ class BusinessEntity implements IEntity {
 
   private stripeId: BusinessEntityT['stripeId'] | null;
 
-  private stripeActivated: BusinessEntityT['stripeActivated'];
+  private isStripeActivated: BusinessEntityT['isStripeActivated'];
 
   private constructor({
     id,
     companyName,
     taxNumber,
     stripeId,
-    stripeActivated,
+    isStripeActivated,
     ownerId,
   }: NullableProperties<BusinessEntityT, 'id' | 'stripeId'>) {
     this.id = id;
@@ -29,7 +29,7 @@ class BusinessEntity implements IEntity {
     this.taxNumber = taxNumber;
     this.ownerId = ownerId;
     this.stripeId = stripeId;
-    this.stripeActivated = stripeActivated;
+    this.isStripeActivated = isStripeActivated;
   }
 
   public static initialize({
@@ -38,7 +38,7 @@ class BusinessEntity implements IEntity {
     taxNumber,
     ownerId,
     stripeId,
-    stripeActivated,
+    isStripeActivated,
   }: BusinessEntityT): BusinessEntity {
     return new BusinessEntity({
       id,
@@ -46,7 +46,7 @@ class BusinessEntity implements IEntity {
       taxNumber,
       ownerId,
       stripeId,
-      stripeActivated,
+      isStripeActivated,
     });
   }
 
@@ -56,7 +56,7 @@ class BusinessEntity implements IEntity {
     ownerId,
   }: Omit<
     BusinessEntityT,
-    'id' | 'stripeId' | 'stripeActivated'
+    'id' | 'stripeId' | 'isStripeActivated'
   >): BusinessEntity {
     return new BusinessEntity({
       id: null,
@@ -64,7 +64,7 @@ class BusinessEntity implements IEntity {
       taxNumber,
       ownerId,
       stripeId: null,
-      stripeActivated: false,
+      isStripeActivated: false,
     });
   }
 
@@ -75,13 +75,13 @@ class BusinessEntity implements IEntity {
       taxNumber: this.taxNumber,
       ownerId: this.ownerId,
       stripeId: this.stripeId as string,
-      stripeActivated: this.stripeActivated,
+      isStripeActivated: this.isStripeActivated,
     };
   }
 
   public toNewObject(): Omit<
     BusinessEntityT,
-    'id' | 'stripeId' | 'stripeActivated'
+    'id' | 'stripeId' | 'isStripeActivated'
   > {
     return {
       companyName: this.companyName,

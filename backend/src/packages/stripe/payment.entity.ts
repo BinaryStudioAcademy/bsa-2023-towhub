@@ -3,8 +3,8 @@ import { type Stripe } from 'stripe';
 
 import { type IEntity } from '~/libs/interfaces/entity.interface.js';
 
+import { convertCentsToCurrency } from './libs/helpers/convert-cents-to-currency.helper.js';
 import { convertUnixSecondsToDate } from './libs/helpers/convert-unix-seconds-to-date.helper.js';
-import { inCurrency } from './libs/helpers/in-currency.helper.js';
 
 class PaymentEntity implements IEntity {
   private genuinePaymentIntent: Stripe.PaymentIntent;
@@ -48,7 +48,7 @@ class PaymentEntity implements IEntity {
       this.genuinePaymentIntent.amount -
       (this.genuinePaymentIntent.application_fee_amount ?? 0);
 
-    return inCurrency(amount);
+    return convertCentsToCurrency(amount);
   }
 }
 

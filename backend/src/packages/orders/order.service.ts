@@ -6,7 +6,7 @@ import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import { type MapService } from '../map/map.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
-import { inCents } from '../stripe/libs/helpers/helpers.js';
+import { convertCurrencyToCents } from '../stripe/libs/helpers/helpers.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
@@ -112,7 +112,7 @@ class OrderService implements Omit<IService, 'find'> {
     });
 
     const order = await this.orderRepository.create({
-      price: inCents(price.price),
+      price: convertCurrencyToCents(price.price),
       scheduledTime,
       carsQty,
       startPoint,

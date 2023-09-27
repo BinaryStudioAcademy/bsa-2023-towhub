@@ -1,11 +1,11 @@
-import Joi from 'joi';
+import joi from 'joi';
 
 import { type GetPaymentsRequest } from '../types/get-payments-request.type.js';
 
 const dateCustomValidator = (
   value: string,
-  helpers: Joi.CustomHelpers<Date>,
-): Date | Joi.ErrorReport => {
+  helpers: joi.CustomHelpers<Date>,
+): Date | joi.ErrorReport => {
   const dateObject = new Date(value);
 
   if (!Number.isNaN(dateObject.getTime())) {
@@ -15,16 +15,16 @@ const dateCustomValidator = (
   return helpers.error('any.invalid');
 };
 
-const getPaymentsValidationSchema = Joi.object<GetPaymentsRequest>({
-  businessId: Joi.number().integer(),
-  orderId: Joi.number().integer(),
-  userId: Joi.number().integer(),
-  customerName: Joi.string(),
-  customerPhone: Joi.string(),
-  intervalFrom: Joi.date().iso().custom(dateCustomValidator),
-  intervalTo: Joi.date().iso().custom(dateCustomValidator),
-  limit: Joi.number().integer().min(1),
-  page: Joi.number().integer().min(1),
+const getPaymentsValidationSchema = joi.object<GetPaymentsRequest>({
+  businessId: joi.number().integer(),
+  orderId: joi.number().integer(),
+  userId: joi.number().integer(),
+  customerName: joi.string(),
+  customerPhone: joi.string(),
+  intervalFrom: joi.date().iso().custom(dateCustomValidator),
+  intervalTo: joi.date().iso().custom(dateCustomValidator),
+  limit: joi.number().integer().min(1),
+  page: joi.number().integer().min(1),
 });
 
 export { getPaymentsValidationSchema };

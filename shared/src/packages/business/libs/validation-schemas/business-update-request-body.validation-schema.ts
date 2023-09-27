@@ -8,7 +8,7 @@ const businessUpdateRequestBody = joi.object<BusinessUpdateRequestDto, true>({
     'string.empty': BusinessValidationMessage.COMPANY_NAME_REQUIRED,
   }),
   stripeId: joi.string().trim(),
-  stripeActivated: joi.boolean(),
+  isStripeActivated: joi.boolean(),
 });
 
 export { businessUpdateRequestBody };

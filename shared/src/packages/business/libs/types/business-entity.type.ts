@@ -5,7 +5,7 @@ type BusinessEntity = {
   companyName: string;
   taxNumber: string;
   stripeId: string | null;
-  stripeActivated: boolean;
+  isStripeActivated: boolean;
   ownerId: UserEntityT['id'];
 };
 

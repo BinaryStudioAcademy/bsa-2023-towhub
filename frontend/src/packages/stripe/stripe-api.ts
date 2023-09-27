@@ -30,9 +30,9 @@ class StripeApi extends HttpApi {
         hasAuth: true,
       },
     );
-    const decoded = await response.json<{ result: string }>();
+    const { result } = await response.json<{ result: string }>();
 
-    return decoded.result;
+    return result;
   }
 
   public async generateCheckoutLink(
@@ -47,9 +47,9 @@ class StripeApi extends HttpApi {
         payload: JSON.stringify(payload),
       },
     );
-    const decoded = await response.json<{ result: string }>();
+    const { result } = await response.json<{ result: string }>();
 
-    return decoded.result;
+    return result;
   }
 
   public async getPayments(
@@ -69,4 +69,4 @@ class StripeApi extends HttpApi {
   }
 }
 
-export { StripeApi as StripeApi };
+export { StripeApi };

@@ -97,7 +97,7 @@ const business = pgTable('business_details', {
   companyName: varchar('company_name').notNull(),
   taxNumber: varchar('tax_number').unique().notNull(),
   stripeId: varchar('stripe_id').unique(),
-  stripeActivated: boolean('stripe_activated').notNull().default(false),
+  isStripeActivated: boolean('is_stripe_activated').notNull().default(false),
   ownerId: integer('owner_id')
     .notNull()
     .references(() => users.id),

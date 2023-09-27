@@ -10,8 +10,7 @@ export { TabsName } from './sidebar-tabs.enum.js';
 export {
   ApiPath,
   AppEnvironment,
-  // Left this for back compatibility. Eventually this should be removed
-  FrontendPath as AppRoute,
+  AppRoute,
   AuthMode,
   ContentType,
   HttpMessage,

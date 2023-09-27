@@ -1,9 +1,9 @@
-import Joi from 'joi';
+import joi from 'joi';
 
 import { getPaymentsValidationSchema } from './get-payments.validation-schema.js';
 
 const getPaymentsBusinessValidationSchema = getPaymentsValidationSchema.keys({
-  businessId: Joi.forbidden(),
+  businessId: joi.forbidden(),
 });
 
 export { getPaymentsBusinessValidationSchema };

@@ -7,17 +7,17 @@ import {
   CHECKOUT_MODE,
   CONNECT_ACCOUNT_BUSINESS_TYPE,
   CONNECT_ACCOUNT_TYPE,
-  DEFAULT_CURRENCTY,
+  DEFAULT_CURRENCY,
   ONBOARDING_LINK_TYPE,
   SERVICES_NAME,
   STRIPE_TOWING_SERVICES_MCC,
-  SUPPORTED_PAYMENT_METHOD,
-} from './libs/consts/const.js';
-import { FrontendPath, StripeOperationStatus } from './libs/enums/enums.js';
+  SUPPORTED_PAYMENT_METHODS,
+} from './libs/constants/constants.js';
+import { AppRoute, StripeOperationStatus } from './libs/enums/enums.js';
 import {
   buildPaymetnsRequestQuery,
   constructUrl,
-  inCents,
+  convertCurrencyToCents,
 } from './libs/helpers/helpers.js';
 import {
   type CheckoutProperties,
@@ -62,12 +62,12 @@ class StripeRepository {
     const applicationFeeAmount = this.calculateApplicationFee(total);
 
     const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: SUPPORTED_PAYMENT_METHOD,
+      payment_method_types: SUPPORTED_PAYMENT_METHODS,
       line_items: [
         {
           price_data: {
-            currency: DEFAULT_CURRENCTY,
-            unit_amount: inCents(pricePerUnit),
+            currency: DEFAULT_CURRENCY,
+            unit_amount: convertCurrencyToCents(pricePerUnit),
             product_data: {
               name: SERVICES_NAME,
             },
@@ -76,7 +76,7 @@ class StripeRepository {
         },
       ],
       payment_intent_data: {
-        application_fee_amount: inCents(applicationFeeAmount),
+        application_fee_amount: convertCurrencyToCents(applicationFeeAmount),
         on_behalf_of: businessStripeId,
         transfer_data: {
           destination: businessStripeId,
@@ -86,12 +86,12 @@ class StripeRepository {
       mode: CHECKOUT_MODE,
       success_url: constructUrl(
         this.config.APP.FRONTEND_BASE_URL,
-        FrontendPath.PAYMENTS,
+        AppRoute.PAYMENTS,
         { [StripeOperationStatus.SUCCESS]: true },
       ),
       cancel_url: constructUrl(
         this.config.APP.FRONTEND_BASE_URL,
-        FrontendPath.PAYMENTS,
+        AppRoute.PAYMENTS,
         { [StripeOperationStatus.CANCEL]: true },
       ),
     });
@@ -105,7 +105,7 @@ class StripeRepository {
     const accountParameters: Stripe.AccountCreateParams = {
       type: CONNECT_ACCOUNT_TYPE,
       email: user.email,
-      default_currency: DEFAULT_CURRENCTY,
+      default_currency: DEFAULT_CURRENCY,
       business_profile: {
         // TODO: this is temporary, I guess, we would eventually have a personal business page in our app
         // Anyway, this field will be shown to the enduser during registration unless we prefill it prematurely
@@ -143,8 +143,8 @@ class StripeRepository {
   ): Promise<Stripe.AccountLink> {
     return this.stripe.accountLinks.create({
       account: account.id,
-      refresh_url: `${this.config.APP.FRONTEND_BASE_URL}${FrontendPath.SETUP_PAYMENT}?refresh=true`,
-      return_url: `${this.config.APP.FRONTEND_BASE_URL}${FrontendPath.SETUP_PAYMENT}?success=true`,
+      refresh_url: `${this.config.APP.FRONTEND_BASE_URL}${AppRoute.SETUP_PAYMENT}?refresh=true`,
+      return_url: `${this.config.APP.FRONTEND_BASE_URL}${AppRoute.SETUP_PAYMENT}?success=true`,
       type: ONBOARDING_LINK_TYPE,
     });
   }
