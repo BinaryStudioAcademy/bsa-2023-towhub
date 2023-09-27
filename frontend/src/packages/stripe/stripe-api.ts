@@ -8,7 +8,7 @@ import {
   type GenerateCheckoutLinkRequest,
   type GetPaymentsRequest,
   type GetPaymentsResponse,
-} from './types/types.js';
+} from './libs/types/types.js';
 
 type Constructor = {
   baseUrl: string;

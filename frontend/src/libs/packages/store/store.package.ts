@@ -12,12 +12,14 @@ import { businessApi } from '~/packages/business/business.js';
 import { driverApi } from '~/packages/drivers/drivers.js';
 import { filesApi } from '~/packages/files/files.js';
 import { ordersApi } from '~/packages/orders/orders.js';
+import { stripeApi } from '~/packages/stripe/stripe.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
 import { reducer as drivers } from '~/slices/drivers/drivers.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as orderReducer } from '~/slices/orders/order.js';
+import { reducer as stripeReducer } from '~/slices/stripe/stripe.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { notification } from '../notification/notification.js';
@@ -42,6 +44,7 @@ class Store {
         drivers: drivers,
         files: filesReducer,
         orders: orderReducer,
+        stripe: stripeReducer,
       },
       middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({
@@ -64,6 +67,7 @@ class Store {
       ordersApi,
       localStorage: LocalStorage,
       businessApi,
+      stripeApi,
     };
   }
 }

@@ -5,12 +5,14 @@ import { type businessApi } from '~/packages/business/business.js';
 import { type driverApi } from '~/packages/drivers/drivers.js';
 import { type filesApi } from '~/packages/files/files.js';
 import { type ordersApi } from '~/packages/orders/orders.js';
+import { type stripeApi } from '~/packages/stripe/stripe.js';
 import { type truckApi } from '~/packages/trucks/trucks.js';
 import { type userApi } from '~/packages/users/users.js';
 import { type reducer as authReducer } from '~/slices/auth/auth.js';
-import { type reducer as drivers } from '~/slices/drivers/drivers.js';
+import { type reducer as driversReducer } from '~/slices/drivers/drivers.js';
 import { type reducer as filesReducer } from '~/slices/files/files.js';
 import { type reducer as orderReducer } from '~/slices/orders/order.js';
+import { type reducer as stripeReducer } from '~/slices/stripe/stripe.js';
 import { type reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 type RootReducer = {
@@ -18,7 +20,8 @@ type RootReducer = {
   trucks: ReturnType<typeof truckReducer>;
   files: ReturnType<typeof filesReducer>;
   orders: ReturnType<typeof orderReducer>;
-  drivers: ReturnType<typeof drivers>;
+  drivers: ReturnType<typeof driversReducer>;
+  stripe: ReturnType<typeof stripeReducer>;
 };
 
 type ExtraArguments = {
@@ -31,6 +34,7 @@ type ExtraArguments = {
   businessApi: typeof businessApi;
   ordersApi: typeof ordersApi;
   driverApi: typeof driverApi;
+  stripeApi: typeof stripeApi;
 };
 
 export { type ExtraArguments, type RootReducer };
