@@ -42,14 +42,6 @@ const Router = (): JSX.Element => {
           }
         />
         <Route
-          path={AppRoute.SETUP_PAYMENT}
-          element={
-            <PageLayout isSidebarHidden>
-              <SetupPayment />
-            </PageLayout>
-          }
-        />
-        <Route
           path={AppRoute.DASHBOARD_ORDERS}
           element={
             <PageLayout>

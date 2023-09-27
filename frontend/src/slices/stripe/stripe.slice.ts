@@ -1,6 +1,6 @@
 import { type SerializedError, createSlice, isAnyOf } from '@reduxjs/toolkit';
 
-import { DataStatus } from '~/libs/enums/data-status.enum';
+import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
 import {
@@ -50,7 +50,7 @@ const { actions, reducer, name } = createSlice({
       .addMatcher(
         isAnyOf(
           generateCheckoutLink.pending,
-          generateCheckoutLink.pending,
+          generateExpressAccountLink.pending,
           getPayments.pending,
         ),
         (state) => {
@@ -60,7 +60,7 @@ const { actions, reducer, name } = createSlice({
       .addMatcher(
         isAnyOf(
           generateCheckoutLink.rejected,
-          generateCheckoutLink.rejected,
+          generateExpressAccountLink.rejected,
           getPayments.rejected,
         ),
         (state, action) => {

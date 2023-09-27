@@ -14,4 +14,13 @@ const selectExpressAccountLink = (
 const selectPayments = (state: RootState): RootState[typeof name]['payments'] =>
   state[name].payments;
 
-export { selectCheckoutLink, selectExpressAccountLink, selectPayments };
+const selectStripeDataStatus = (
+  state: RootState,
+): RootState[typeof name]['dataStatus'] => state[name].dataStatus;
+
+export {
+  selectCheckoutLink,
+  selectExpressAccountLink,
+  selectPayments,
+  selectStripeDataStatus,
+};

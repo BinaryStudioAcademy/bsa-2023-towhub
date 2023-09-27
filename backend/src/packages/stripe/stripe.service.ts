@@ -155,11 +155,11 @@ class StripeService {
         // Anyway, this field will be shown to the enduser during registration unless we prefill it prematurely
         url:
           process.env.NODE_ENV === 'production'
-            ? this.config.APP.FRONTEND_BASE_URL
-            : constructUrl(
+            ? constructUrl(
                 this.config.APP.FRONTEND_BASE_URL,
                 `/business/${user.business.id}`,
-              ),
+              )
+            : 'https://towhub.com',
         mcc: String(STRIPE_TOWING_SERVICES_MCC),
         name: user.business.companyName,
       },

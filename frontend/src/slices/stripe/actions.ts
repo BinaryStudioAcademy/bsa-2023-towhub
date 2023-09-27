@@ -44,7 +44,7 @@ const getPayments = createAsyncThunk<
   GetPaymentsResponse,
   GetPaymentsRequest,
   AsyncThunkConfig
->(`${sliceName}/generate-checkout-link`, async (payload, { extra }) => {
+>(`${sliceName}/get-payments`, async (payload, { extra }) => {
   const { stripeApi, notification } = extra;
 
   try {

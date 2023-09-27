@@ -1,17 +1,34 @@
 import { Link } from 'react-router-dom';
 
 import { Button, Icon, Input } from '~/libs/components/components.js';
-import { IconName } from '~/libs/enums/icon-name.enum.js';
+import { DataStatus, IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useAppForm, useCallback, useState } from '~/libs/hooks/hooks.js';
-import { stripeApi } from '~/packages/stripe/stripe.js';
+import {
+  useAppDispatch,
+  useAppForm,
+  useAppSelector,
+  useCallback,
+  useEffect,
+  useState,
+} from '~/libs/hooks/hooks.js';
+import {
+  generateExpressAccountLink,
+  selectExpressAccountLink,
+  selectStripeDataStatus,
+} from '~/slices/stripe/stripe.js';
 
+import { STRIPE_URL } from './libs/constants/constants.js';
 import { type SetupPaymentFormData } from './libs/types/types.js';
 import { connectStripeValidationSchema } from './libs/validation-schemas/validation-schemas.js';
 import styles from './styles.module.scss';
 
 const ConnectStripeForm: React.FC = () => {
-  const [isFetching, setIsFetching] = useState(false);
+  const stripeDataStatus = useAppSelector(selectStripeDataStatus);
+  const expressAccountLink = useAppSelector(selectExpressAccountLink);
+
+  const dispatch = useAppDispatch();
+
+  const isFetching = stripeDataStatus === DataStatus.PENDING;
 
   const [showInput, setShowInput] = useState(false);
   const { control, errors, handleSubmit } = useAppForm<SetupPaymentFormData>({
@@ -33,14 +50,18 @@ const ConnectStripeForm: React.FC = () => {
   );
 
   const handleRegisterStripeAccountPress = useCallback(() => {
-    setIsFetching(true);
-    stripeApi
-      .generateExpressAccountLink()
-      .then((url) => {
-        window.location.href = url;
-      })
-      .finally(() => setIsFetching(false));
-  }, []);
+    if (isFetching) {
+      return;
+    }
+    void dispatch(generateExpressAccountLink());
+  }, [dispatch, isFetching]);
+
+  useEffect(() => {
+    if (!expressAccountLink) {
+      return;
+    }
+    window.location.href = expressAccountLink;
+  }, [expressAccountLink]);
 
   return (
     <div className={styles.wrapper}>
@@ -51,11 +72,7 @@ const ConnectStripeForm: React.FC = () => {
           need to connect your Stripe account.
         </p>
         <p className={styles.mainText}>
-          <Link
-            className="link commonLink"
-            to="https://stripe.com/"
-            target="_blank"
-          >
+          <Link className="link commonLink" to={STRIPE_URL} target="_blank">
             Stripe
           </Link>{' '}
           is a secure and trusted payment platform that allows you to send and
