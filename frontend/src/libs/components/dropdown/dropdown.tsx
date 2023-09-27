@@ -113,7 +113,7 @@ const Dropdown = <T extends FieldValues>({
       onMenuClose={handleCloseMenu}
       onChange={onChange}
       defaultValue={defaultValue}
-      value={field ? findOptionByValue(field.value) : findOptionByValue(label)}
+      value={findOptionByValue(field ? field.value : label)}
       placeholder={placeholder}
     />
   );

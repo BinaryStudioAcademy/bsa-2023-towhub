@@ -30,7 +30,7 @@ class OrdersApi extends HttpApi {
     queryString: string,
   ): Promise<OrdersListResponseDto> {
     const response = await this.load(
-      this.getFullEndpoint(`${OrdersApiPath.BUSINESS}?${queryString}`, {}),
+      this.getFullEndpoint(OrdersApiPath.BUSINESS, '?', queryString, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,

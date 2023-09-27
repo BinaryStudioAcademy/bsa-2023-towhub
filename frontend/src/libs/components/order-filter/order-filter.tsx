@@ -1,8 +1,10 @@
 import { type SingleValue } from 'react-select';
 
 import { useCallback } from '~/libs/hooks/hooks.js';
-import { type SelectOption } from '~/libs/types/select-option.type.js';
-import { type OrderStatusValues } from '~/libs/types/types.js';
+import {
+  type OrderStatusValues,
+  type SelectOption,
+} from '~/libs/types/types.js';
 
 import { Dropdown } from '../dropdown/dropdown.js';
 import { dropdownOptions } from './libs/constants/constants.js';

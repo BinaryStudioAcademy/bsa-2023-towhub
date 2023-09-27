@@ -54,6 +54,14 @@ const Orders: React.FC = () => {
   const [pageIndex, setPageIndex] = useState<number>(DEFAULT_PAGE_INDEX);
   const mapReference = useRef<HTMLDivElement>(null);
 
+  useAppMap({
+    mapReference: mapReference,
+    points: endPointMarkers,
+    shownRoute,
+    center: null,
+    destination: null,
+  });
+
   useEffect(() => {
     setQueryParameters({
       size: DEFAULT_PAGE_SIZE,
@@ -110,14 +118,6 @@ const Orders: React.FC = () => {
     [orders],
   );
 
-  useAppMap({
-    mapReference: mapReference,
-    points: endPointMarkers,
-    shownRoute,
-    center: null,
-    destination: null,
-  });
-
   const isLoading = dataStatus === DataStatus.PENDING;
 
   if (isLoading) {
@@ -144,9 +144,7 @@ const Orders: React.FC = () => {
         />
       </div>
       <div className={styles.mapArea}>
-        {orders.length > 0 && (
-          <div ref={mapReference} id="map" className={styles.mapWrapper} />
-        )}
+        <div ref={mapReference} id="map" className={styles.mapWrapper} />
       </div>
     </div>
   );

@@ -36,7 +36,6 @@ const useAppMap = ({
   shownRoute,
 }: Properties): void => {
   const mapService = useRef<MapService | null>(null);
-
   const dispatch = useAppDispatch();
   useEffect(() => {
     MapConnector.dropMap();

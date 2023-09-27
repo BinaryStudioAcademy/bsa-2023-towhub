@@ -15,7 +15,6 @@ export {
   AuthMode,
   ContentType,
   HttpMessage,
-  ORDER_STATUSES,
   OrderStatus,
   ServerErrorType,
   SortMethod,
