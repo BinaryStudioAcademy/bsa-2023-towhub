@@ -25,7 +25,9 @@ const useQueryParameters = (): ReturnType => {
 
         return result;
       } else {
-        return searchParameters.get(keys[0]);
+        const [key] = keys;
+
+        return searchParameters.get(key);
       }
     },
     [searchParameters],
