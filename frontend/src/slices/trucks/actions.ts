@@ -14,7 +14,6 @@ import {
 import { setVerificationCompleted } from '~/slices/driver/actions.js';
 import { selectIsVerificationCompleted } from '~/slices/driver/selectors.js';
 
-import { jsonToLatLngLiteral } from '../orders/libs/helpers/json-to-lat-lng-literal.helper.js';
 import { ActionName } from './enums/action-name.enum.js';
 import { name as sliceName } from './trucks.slice.js';
 import { type TruckArrivalTime } from './types/truck-arrival-time.type.js';
@@ -86,7 +85,7 @@ const calculateArrivalTime = createAsyncThunk<
     const { mapServiceFactory } = extra;
     const routeData = {
       origin: origin.latLng,
-      destination: jsonToLatLngLiteral(destination),
+      destination: destination,
     };
 
     const mapService = await mapServiceFactory({ mapElement: null });

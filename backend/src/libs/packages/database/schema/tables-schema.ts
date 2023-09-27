@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import {
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   primaryKey,
@@ -12,6 +13,7 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import {
+  type Coordinates,
   FILE_VERIFICATION_NAMES,
   FILE_VERIFICATION_STATUSES,
   ORDER_STATUSES,
@@ -45,12 +47,13 @@ const fileVerificationStatusRelations = relations(
 );
 
 const orderStatus = pgEnum('order_status', ORDER_STATUSES);
+
 const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
-  price: integer('price').notNull(),
+  price: real('price').notNull(),
   scheduledTime: timestamp('scheduled_time', { mode: 'string' }).notNull(),
-  startPoint: varchar('start_point').notNull(),
-  endPoint: varchar('end_point').notNull(),
+  startPoint: jsonb('start_point').$type<Coordinates>().notNull(),
+  endPoint: jsonb('end_point').$type<Coordinates>().notNull(),
   status: orderStatus('status').notNull(),
   userId: integer('user_id').references(() => users.id),
   businessId: integer('business_id').references(() => business.id),
