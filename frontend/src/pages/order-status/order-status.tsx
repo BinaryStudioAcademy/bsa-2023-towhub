@@ -13,6 +13,7 @@ import {
   useParams,
   useRef,
 } from '~/libs/hooks/hooks.js';
+import { DEFAULT_CENTER } from '~/libs/packages/map/libs/constants/constants.js';
 import { jsonToLatLngLiteral } from '~/slices/orders/libs/helpers/json-to-lat-lng-literal.helper.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectDataStatus, selectOrder } from '~/slices/orders/selectors.js';
@@ -33,11 +34,14 @@ const OrderStatusPage: React.FC = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const order = useAppSelector(selectOrder);
+
   const dataStatus = useAppSelector(selectDataStatus);
   const dispatch = useAppDispatch();
 
   const status = order?.status;
-  const isCancelScreenOpen = status === OrderStatusValue.CANCELED;
+  const isCancelScreenOpen =
+    status === OrderStatusValue.CANCELED ||
+    status === OrderStatusValue.REJECTED;
   const isConfirmScreenOpen = status === OrderStatusValue.CONFIRMED;
   const isPickingUpScreenOpen = status === OrderStatusValue.PICKING_UP;
   const isDoneScreenOpen = status === OrderStatusValue.DONE;
@@ -54,8 +58,9 @@ const OrderStatusPage: React.FC = () => {
 
   const truckLocation = useAppSelector(selectTruckLocation);
   const mapReference = useRef<HTMLDivElement>(null);
+
   useAppMap({
-    center: truckLocation,
+    center: truckLocation ?? DEFAULT_CENTER,
     destination: order ? jsonToLatLngLiteral(order.startPoint) : null,
     className: styles.map,
     mapReference: mapReference,
@@ -63,11 +68,23 @@ const OrderStatusPage: React.FC = () => {
 
   const handleHomepageClick = useCallback(() => {
     navigate(AppRoute.ROOT);
-  }, [navigate]);
+
+    if (orderId) {
+      dispatch(orderActions.removeOrder(orderId));
+    }
+  }, [dispatch, navigate, orderId]);
 
   const handleCancelClick = useCallback(() => {
-    //TODO
-  }, []);
+    if (orderId) {
+      void dispatch(
+        orderActions.changeAcceptOrderStatusByCustomer({
+          orderId,
+          isAccepted: false,
+        }),
+      );
+    }
+  }, [dispatch, orderId]);
+
   const handlePayClick = useCallback(() => {
     //TODO
   }, []);
@@ -77,6 +94,7 @@ const OrderStatusPage: React.FC = () => {
   const isMapShown = !isCancelScreenOpen && !isDoneScreenOpen;
 
   const { firstName, lastName, licensePlate, price } = useGetOrderData(order);
+
   const { distanceLeft, timespanLeft, startLocation, endLocation } =
     useGetRouteData(order);
   const profileURL = null;

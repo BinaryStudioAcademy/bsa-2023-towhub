@@ -1,5 +1,5 @@
 import { TruckFilter } from '~/libs/components/components.js';
-import { TruckFilterOption } from '~/libs/enums/enums.js';
+import { TruckFilterField } from '~/libs/enums/enums.js';
 import {
   useCallback,
   useEffect,
@@ -16,7 +16,7 @@ import { useGetTrucksWithDistance } from './libs/hooks/hooks.js';
 import styles from './styles.module.scss';
 
 const initialState = {
-  id: TruckFilterOption.DISTANCE,
+  id: TruckFilterField.LOCATION,
   desc: false,
 };
 

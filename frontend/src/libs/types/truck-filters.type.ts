@@ -1,8 +1,8 @@
-import { type TruckFilterOption } from '../enums/enums.js';
+import { type TruckFilterField } from '../enums/enums.js';
 import { type ValueOf } from './types.js';
 
 type TruckFilters = {
-  id: ValueOf<typeof TruckFilterOption>;
+  id: ValueOf<typeof TruckFilterField>;
   desc: boolean;
 };
 

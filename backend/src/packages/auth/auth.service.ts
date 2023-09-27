@@ -5,22 +5,28 @@ import {
   type IJwtService,
 } from '~/libs/interfaces/interfaces.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
+import { type AuthUser } from '~/libs/types/types.js';
 import { type GroupService } from '~/packages/groups/group.service.js';
 import { GroupEntity } from '~/packages/groups/groups.js';
 import {
   type BusinessSignUpRequestDto,
+  type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
+  type CustomerSignUpResponseDto,
   type UserEntityObjectT,
-  type UserEntityObjectWithGroupAndBusinessT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
 } from '~/packages/users/libs/types/types.js';
 import { type UserService } from '~/packages/users/user.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
+import { type DriverService } from '../drivers/driver.service.js';
 import { UserGroupKey } from './libs/enums/enums.js';
 import { createUnauthorizedError } from './libs/helpers/helpers.js';
-import { type UserSignInRequestDto } from './libs/types/types.js';
+import {
+  type UserSignInRequestDto,
+  type UserSignInResponseDto,
+} from './libs/types/types.js';
 
 type AuthServiceConstructorProperties = {
   userService: UserService;
@@ -28,6 +34,7 @@ type AuthServiceConstructorProperties = {
   jwtService: IJwtService;
   encryptService: IEncryptService;
   businessService: BusinessService;
+  driverService: DriverService;
   config: IConfig['ENV']['JWT'];
 };
 
@@ -42,6 +49,8 @@ class AuthService {
 
   private businessService: AuthServiceConstructorProperties['businessService'];
 
+  private driverService: AuthServiceConstructorProperties['driverService'];
+
   private config: AuthServiceConstructorProperties['config'];
 
   public constructor({
@@ -50,6 +59,7 @@ class AuthService {
     jwtService,
     encryptService,
     businessService,
+    driverService,
     config,
   }: AuthServiceConstructorProperties) {
     this.userService = userService;
@@ -57,6 +67,7 @@ class AuthService {
     this.jwtService = jwtService;
     this.encryptService = encryptService;
     this.businessService = businessService;
+    this.driverService = driverService;
     this.config = config;
   }
 
@@ -101,7 +112,7 @@ class AuthService {
 
   public async signUpCustomer(
     payload: CustomerSignUpRequestDto,
-  ): Promise<UserEntityObjectWithGroupT> {
+  ): Promise<CustomerSignUpResponseDto> {
     await this.checkIsExistingUser(payload);
     const group = await this.groupService.findByKey(UserGroupKey.CUSTOMER);
 
@@ -124,7 +135,7 @@ class AuthService {
 
   public async signUpBusiness(
     payload: BusinessSignUpRequestDto,
-  ): Promise<UserEntityObjectWithGroupAndBusinessT> {
+  ): Promise<BusinessSignUpResponseDto> {
     await this.checkIsExistingUser(payload);
     await this.checkIsExistingBusiness(payload);
 
@@ -173,9 +184,7 @@ class AuthService {
 
   public async signIn(
     credentials: UserSignInRequestDto,
-  ): Promise<
-    UserEntityObjectWithGroupAndBusinessT | UserEntityObjectWithGroupT
-  > {
+  ): Promise<UserSignInResponseDto> {
     const { email, password } = credentials;
 
     const user = await this.userService.findByEmailRaw(email);
@@ -194,33 +203,27 @@ class AuthService {
     }
 
     const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
+    const group = GroupEntity.initialize(user.group).toObject();
 
-    const userGroup = GroupEntity.initialize(user.group).toObject();
-
-    const userBusiness =
-      userGroup.key === UserGroupKey.BUSINESS
-        ? await this.businessService.findByOwnerId(updatedUser.id)
-        : null;
-
-    return {
-      ...updatedUser,
-      group: userGroup,
-      ...(userBusiness && { business: userBusiness }),
-    };
+    return await this.getCurrent({ ...updatedUser, group });
   }
 
-  public async getCurrent(
-    user: UserEntityObjectWithGroupT,
-  ): Promise<
-    UserEntityObjectWithGroupT | UserEntityObjectWithGroupAndBusinessT
-  > {
-    if (user.group.key === UserGroupKey.BUSINESS) {
-      const business = await this.businessService.findByOwnerId(user.id);
+  public async getCurrent(user: UserEntityObjectWithGroupT): Promise<AuthUser> {
+    switch (user.group.key) {
+      case UserGroupKey.BUSINESS: {
+        const business = await this.businessService.findByOwnerId(user.id);
 
-      return business ? { ...user, business } : user;
+        return business ? { ...user, business } : user;
+      }
+      case UserGroupKey.DRIVER: {
+        const driver = await this.driverService.findByUserId(user.id);
+
+        return driver ? { ...user, driver } : user;
+      }
+      default: {
+        return user;
+      }
     }
-
-    return user;
   }
 
   public async logOut(user: UserEntityObjectWithGroupT): Promise<void> {

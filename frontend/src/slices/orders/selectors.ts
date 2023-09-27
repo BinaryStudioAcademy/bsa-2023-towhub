@@ -1,4 +1,5 @@
 import { type RootState } from '~/libs/types/types.js';
+import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
 
 import { type name as OrderSliceName } from './order.slice.js';
 
@@ -26,4 +27,13 @@ const selectDataStatus = (
   return state.orders.dataStatus;
 };
 
-export { selectDataStatus, selectOrder, selectOrderData, selectPrice };
+const selectOrders = (state: RootState): OrderResponseDto[] =>
+  state.orders.orders;
+
+export {
+  selectDataStatus,
+  selectOrder,
+  selectOrderData,
+  selectOrders,
+  selectPrice,
+};

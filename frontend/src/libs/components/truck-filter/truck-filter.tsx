@@ -1,5 +1,6 @@
 import { type SingleValue } from 'react-select';
 
+import { TruckFilterField } from '~/libs/enums/enums.js';
 import {
   useAppForm,
   useCallback,
@@ -14,11 +15,7 @@ import {
 
 import { Autocomplete } from '../components.js';
 import { Dropdown } from '../dropdown/dropdown.js';
-import {
-  FilterOption,
-  FilterValue,
-  TruckFilterField,
-} from './libs/enums/enums.js';
+import { FilterOption, FilterValue } from './libs/enums/enums.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -63,7 +60,10 @@ const TruckFilter = ({
   });
 
   const handleSelectChange = useCallback(
-    (fieldName: string, option: SingleValue<SelectOption>) => {
+    (
+      fieldName: ValueOf<typeof TruckFilterField>,
+      option: SingleValue<SelectOption>,
+    ) => {
       onFilterChange({
         id: fieldName,
         desc: option?.value === FilterValue.DESC,

@@ -1,3 +1,4 @@
+import { TruckFilterField } from '~/libs/enums/enums.js';
 import { type TruckFilters } from '~/libs/types/types.js';
 
 import { type TruckWithDistance } from '../types/types.js';
@@ -7,7 +8,7 @@ const getSortedTrucks = (
   filters: TruckFilters,
 ): TruckWithDistance[] => {
   switch (filters.id) {
-    case 'distance': {
+    case TruckFilterField.LOCATION: {
       return [...trucks].sort(
         (
           { distance: firstTruckDistance = 0 },
@@ -19,14 +20,14 @@ const getSortedTrucks = (
         },
       );
     }
-    case 'price': {
+    case TruckFilterField.PRICE: {
       return [...trucks].sort((a, b) =>
         filters.desc
           ? b.pricePerKm - a.pricePerKm
           : a.pricePerKm - b.pricePerKm,
       );
     }
-    case 'capacity': {
+    case TruckFilterField.CAPACITY: {
       return [...trucks].sort((a, b) =>
         filters.desc ? b.capacity - a.capacity : a.capacity - b.capacity,
       );

@@ -48,9 +48,9 @@ class S3ClientService {
       return null;
     }
 
-    const intArrayContent = await result.Body.transformToByteArray();
+    const contents = await result.Body.transformToByteArray();
 
-    return Buffer.from(intArrayContent);
+    return Buffer.from(contents);
   }
 
   public async getObjectPresignedUrl(
@@ -70,11 +70,13 @@ class S3ClientService {
   public async putObject(
     key: string,
     body: Buffer,
+    contentType?: string,
   ): Promise<PutObjectCommandOutput> {
     const command = new PutObjectCommand({
       Bucket: this.bucketName,
       Key: key,
       Body: body,
+      ContentType: contentType,
     });
     const result = await this.s3Client.send(command);
     this.logger.info(`Put object: request sent. Key: "${key}"`);

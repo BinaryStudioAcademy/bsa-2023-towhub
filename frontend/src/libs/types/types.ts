@@ -2,7 +2,7 @@ export { type RootState } from '../packages/store/store.js';
 export { type AppThunk } from './app-thunk.type.js';
 export { type AsyncThunkConfig } from './async-thunk-config.type.js';
 export { type BurgerMenuItem } from './burger-menu-item.type.js';
-export { type DarkColor, type LightColor } from './color.type.js';
+export { type Color, type DarkColor, type LightColor } from './color.type.js';
 export { type FormField } from './form.type.js';
 export { type LocationChangeHandler } from './location-change-handler.type.js';
 export { type SelectOption } from './select-option.type.js';
@@ -13,6 +13,7 @@ export { type Libraries, LoadScript } from '@react-google-maps/api';
 export { type ColumnDef } from '@tanstack/react-table';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
 export {
+  type AuthUser,
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
@@ -22,6 +23,7 @@ export {
   type EntityPagination,
   type FirstParameter,
   type OrderResponseDto,
+  type OrderStatusValues,
   type PaginationParameters,
   type PaginationWithSortingParameters,
   type ServerCommonErrorResponse,
@@ -32,6 +34,7 @@ export {
   type TruckEntityT,
   type TruckTowType,
   type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
   type UserGroupEntityT,
