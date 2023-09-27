@@ -1,26 +1,43 @@
-import { type Libraries, LoadScript } from '@react-google-maps/api';
-
-import { Map } from '~/libs/components/map/map.js';
+import { TruckFilter } from '~/libs/components/components.js';
+import { TruckFilterOption } from '~/libs/enums/enums.js';
 import {
-  useAppSelector,
+  useCallback,
   useEffect,
   useHomePageSocketService,
   useMemo,
+  useState,
 } from '~/libs/hooks/hooks.js';
-import { config } from '~/libs/packages/config/config.js';
-import { selectTrucks } from '~/slices/trucks/selectors.js';
+import { type TruckFilters } from '~/libs/types/types.js';
 
+import { Map } from './components/map/map.js';
 import { TruckList } from './components/truck-list/truck-list.js';
-import { getTruckLocations } from './libs/helpers/get-truck-locations.helper.js';
+import { getSortedTrucks, getTrucksLocations } from './libs/helpers/helpers.js';
+import { useGetTrucksWithDistance } from './libs/hooks/hooks.js';
 import styles from './styles.module.scss';
 
-const libraries: Libraries = ['places'];
+const initialState = {
+  id: TruckFilterOption.DISTANCE,
+  desc: false,
+};
 
 const HomePage: React.FC = () => {
-  const trucks = useAppSelector(selectTrucks);
+  const [location, setLocation] = useState<google.maps.LatLngLiteral>();
+  const [filters, setFilters] = useState<TruckFilters>(initialState);
+  const trucks = useGetTrucksWithDistance(location);
 
-  const truckMarkers = useMemo(() => getTruckLocations(trucks), [trucks]);
+  const sortedTrucks = useMemo(
+    () => getSortedTrucks(trucks, filters),
+    [filters, trucks],
+  );
+  const truckMarkers = useMemo(() => getTrucksLocations(trucks), [trucks]);
 
+  const handleLocationChange = useCallback(
+    (location: { lat: number; lng: number }) => {
+      setLocation(location);
+      setFilters(initialState);
+    },
+    [],
+  );
   const { connectToHomeRoom, disconnectFromHomeRoom } =
     useHomePageSocketService();
 
@@ -33,19 +50,18 @@ const HomePage: React.FC = () => {
   }, [connectToHomeRoom, disconnectFromHomeRoom]);
 
   return (
-    <LoadScript
-      googleMapsApiKey={config.ENV.API.GOOGLE_MAPS_API_KEY}
-      libraries={libraries}
-    >
-      <div className={styles.container}>
-        <section className={styles.trucks}>
-          <TruckList trucks={trucks} />
-        </section>
-        <section className={styles.map}>
-          <Map className={styles['map-component']} markers={truckMarkers} />
-        </section>
-      </div>
-    </LoadScript>
+    <div className={styles.container}>
+      <section className={styles.trucks}>
+        <TruckFilter
+          onFilterChange={setFilters}
+          onLocationChange={handleLocationChange}
+        />
+        <TruckList trucks={sortedTrucks} />
+      </section>
+      <section className={styles.map}>
+        <Map markers={truckMarkers} userLocation={location} />
+      </section>
+    </div>
   );
 };
 
