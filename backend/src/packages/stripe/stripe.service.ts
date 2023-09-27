@@ -19,6 +19,7 @@ import {
   CONNECT_ACCOUNT_TYPE,
   DEFAULT_CURRENCY,
   DEFAULT_PAGE_SIZE,
+  FIRST_PAGE,
   MAX_PAGINATION_LIMIT,
   ONBOARDING_LINK_TYPE,
   SERVICES_NAME,
@@ -357,7 +358,7 @@ class StripeService {
 
     const items = await this.collectPaymentIntents(options);
 
-    const page = options.page ?? 1;
+    const page = options.page ?? FIRST_PAGE;
     const limit = options.limit ?? DEFAULT_PAGE_SIZE;
 
     const itemsAsDto = paginateArray(items, page, limit).map((item) =>

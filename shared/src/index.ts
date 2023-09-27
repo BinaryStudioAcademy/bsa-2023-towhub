@@ -16,8 +16,13 @@ export {
 } from './libs/exceptions/exceptions.js';
 export {
   configureString,
+  convertToIndex,
+  convertToNumber,
   filesize,
   getFullName,
+  getMiddle,
+  getNextPageIndex,
+  getPreviousPageIndex,
   pluralizeString,
 } from './libs/helpers/helpers.js';
 export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
