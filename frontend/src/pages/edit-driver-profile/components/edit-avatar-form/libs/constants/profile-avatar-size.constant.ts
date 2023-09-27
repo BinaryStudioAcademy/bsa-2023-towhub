@@ -1,0 +1,3 @@
+const PROFILE_AVATAR_SIZE = 200;
+
+export { PROFILE_AVATAR_SIZE };

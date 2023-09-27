@@ -11,6 +11,7 @@ import { type IConfig } from '~/libs/packages/config/config.js';
 import { socket as socketClient } from '~/libs/packages/socket/socket.js';
 import { authApi } from '~/packages/auth/auth.js';
 import { businessApi } from '~/packages/business/business.js';
+import { driverApi } from '~/packages/driver/driver.js';
 import { driversApi } from '~/packages/drivers/drivers.js';
 import { filesApi } from '~/packages/files/files.js';
 import { ordersApi } from '~/packages/orders/orders.js';
@@ -75,6 +76,7 @@ class Store {
       filesApi,
       notification,
       truckApi,
+      driverApi,
       driversApi,
       businessApi,
       ordersApi,

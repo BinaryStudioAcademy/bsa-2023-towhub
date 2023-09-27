@@ -12,6 +12,7 @@ export {
   type DriverRequestParameters,
   type DriverUpdatePayload,
   type DriverUpdateRequestDto,
+  type DriverWithAvatarUrl,
   type DriverWithUserData,
   type GetPaginatedPageQuery,
 } from 'shared/build/index.js';

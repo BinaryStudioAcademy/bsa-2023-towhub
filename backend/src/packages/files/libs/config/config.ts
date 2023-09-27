@@ -1,1 +1,4 @@
-export { fileInputDefaultsConfig } from 'shared/build/index.js';
+export {
+  avatarInputDefaultsConfig,
+  fileInputDefaultsConfig,
+} from 'shared/build/index.js';
