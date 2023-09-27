@@ -9,7 +9,7 @@ import {
 import { DriverCreationMessage } from '~/packages/drivers/libs/enums/enums.js';
 import { type DriverAddPayload } from '~/packages/drivers/libs/types/types.js';
 
-import { ACTIONS_TYPES } from './libs/enums/driver-action.js';
+import { ACTIONS_TYPES } from './libs/enums/enums.js';
 import { type DriverAddResponseWithGroup } from './libs/types/types.js';
 
 const getDriversPage = createAsyncThunk<

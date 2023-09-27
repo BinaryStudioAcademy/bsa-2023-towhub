@@ -10,13 +10,13 @@ import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import { AuthStrategy } from '~/packages/auth/libs/enums/enums.js';
 
 import {
-  type DriverCreateUpdateRequestDto,
+  type DriverCreateRequestDto,
   type DriverRequestParameters,
-} from '../drivers/drivers.js';
-import {
-  driverCreateUpdateRequestBody,
+  type DriverUpdateRequestDto,
+  driverCreateRequestBody,
   driverParameters,
-} from '../drivers/libs/validation-schemas/validation-schemas.js';
+  driverUpdateRequestBody,
+} from '../drivers/drivers.js';
 import { type TruckAddRequestDto } from '../trucks/libs/types/types.js';
 import { truckCreateRequestBody } from '../trucks/trucks.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
@@ -303,13 +303,14 @@ class BusinessController extends Controller {
       method: 'POST',
       authStrategy: defaultStrategies,
       validation: {
-        body: driverCreateUpdateRequestBody,
+        body: driverCreateRequestBody,
       },
       handler: (options) =>
         this.createDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateUpdateRequestDto;
+            body: DriverCreateRequestDto;
             user: UserEntityObjectWithGroupT;
+            hostname: string;
           }>,
         ),
     });
@@ -319,13 +320,13 @@ class BusinessController extends Controller {
       method: 'PUT',
       authStrategy: defaultStrategies,
       validation: {
-        body: driverCreateUpdateRequestBody,
+        body: driverUpdateRequestBody,
         params: driverParameters,
       },
       handler: (options) =>
         this.updateDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateUpdateRequestDto;
+            body: DriverUpdateRequestDto;
             params: DriverRequestParameters;
             user: UserEntityObjectWithGroupT;
           }>,
@@ -648,13 +649,15 @@ class BusinessController extends Controller {
 
   private async createDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateUpdateRequestDto;
+      body: DriverCreateRequestDto;
       user: UserEntityObjectWithGroupT;
+      hostname: string;
     }>,
   ): Promise<ApiHandlerResponse> {
     const createdDriver = await this.businessService.createDriver(
       options.body,
       options.user.id,
+      options.hostname,
     );
 
     return {
@@ -720,7 +723,7 @@ class BusinessController extends Controller {
 
   private async updateDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateUpdateRequestDto;
+      body: DriverUpdateRequestDto;
       params: DriverRequestParameters;
       user: UserEntityObjectWithGroupT;
     }>,
@@ -874,7 +877,7 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /trucks:
+   * /business/trucks:
    *   post:
    *     summary: Create a new truck
    *     tags:

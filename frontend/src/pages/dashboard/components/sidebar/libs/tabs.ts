@@ -1,24 +1,20 @@
-import {
-  IconName,
-  SidebarTabsName,
-  SidebarTabsPath,
-} from '~/libs/enums/enums.js';
+import { AppRoute, IconName, SidebarTabsName } from '~/libs/enums/enums.js';
 import { type TabsType } from '~/libs/types/types.js';
 
 const BUSINESS_TABS: TabsType[] = [
   {
     name: SidebarTabsName.ORDERS,
-    path: SidebarTabsPath.ORDERS,
+    path: AppRoute.DASHBOARD_ORDERS,
     icon: IconName.LIST,
   },
   {
     name: SidebarTabsName.TRUCKS,
-    path: SidebarTabsPath.TRUCKS,
+    path: AppRoute.DASHBOARD_TRUCKS,
     icon: IconName.TRUCK,
   },
   {
     name: SidebarTabsName.DRIVERS,
-    path: SidebarTabsPath.DRIVERS,
+    path: AppRoute.DASHBOARD_DRIVERS,
     icon: IconName.USERS,
   },
 ];
@@ -26,17 +22,17 @@ const BUSINESS_TABS: TabsType[] = [
 const DRIVER_TABS: TabsType[] = [
   {
     name: SidebarTabsName.ORDERS,
-    path: SidebarTabsPath.ORDERS,
+    path: AppRoute.ORDERS,
     icon: IconName.LIST,
   },
   {
     name: SidebarTabsName.TRUCK,
-    path: SidebarTabsPath.CHOOSE_TRUCK,
+    path: AppRoute.AVAILABLE_TRUCKS,
     icon: IconName.TRUCK,
   },
   {
     name: SidebarTabsName.PROFILE,
-    path: SidebarTabsPath.PROFILE,
+    path: AppRoute.EDIT_PROFILE,
     icon: IconName.USER_PEN,
   },
 ];

@@ -12,6 +12,7 @@ export {
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
   type UserGetAllResponseDto,

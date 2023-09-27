@@ -5,16 +5,20 @@ import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
 import { ClientToServerEvent } from '~/libs/packages/socket/socket.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
-import { type AsyncThunkConfig, type ValueOf } from '~/libs/types/types.js';
+import {
+  type AsyncThunkConfig,
+  type AuthUser,
+  type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupT,
+  type ValueOf,
+} from '~/libs/types/types.js';
 import { UserNotificationMessage } from '~/packages/users/libs/enums/enums.js';
 import {
   type BusinessEditDto,
   type BusinessEditResponseDto,
   type BusinessSignUpRequestDto,
-  type BusinessSignUpResponseDto,
   type CustomerEditDto,
   type CustomerSignUpRequestDto,
-  type CustomerSignUpResponseDto,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
 } from '~/packages/users/users.js';
@@ -22,7 +26,7 @@ import {
 import { name as sliceName } from './auth.slice.js';
 
 const signUp = createAsyncThunk<
-  CustomerSignUpResponseDto | BusinessSignUpResponseDto,
+  UserEntityObjectWithGroupT | UserEntityObjectWithGroupAndBusinessT,
   {
     payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto;
     mode: ValueOf<typeof AuthMode>;
@@ -134,21 +138,20 @@ const signIn = createAsyncThunk<
   }
 });
 
-const getCurrent = createAsyncThunk<
-  CustomerSignUpResponseDto | BusinessSignUpResponseDto,
-  undefined,
-  AsyncThunkConfig
->(`${sliceName}/current`, async (_, { extra }) => {
-  const { authApi, notification, localStorage } = extra;
+const getCurrent = createAsyncThunk<AuthUser, undefined, AsyncThunkConfig>(
+  `${sliceName}/current`,
+  async (_, { extra }) => {
+    const { authApi, notification, localStorage } = extra;
 
-  try {
-    return await authApi.getCurrentUser();
-  } catch (error) {
-    notification.warning(getErrorMessage(error));
-    await localStorage.drop(StorageKey.TOKEN);
-    throw error;
-  }
-});
+    try {
+      return await authApi.getCurrentUser();
+    } catch (error) {
+      notification.warning(getErrorMessage(error));
+      await localStorage.drop(StorageKey.TOKEN);
+      throw error;
+    }
+  },
+);
 
 const logOut = createAsyncThunk<unknown, undefined, AsyncThunkConfig>(
   `${sliceName}/logout`,

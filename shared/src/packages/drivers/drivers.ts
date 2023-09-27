@@ -4,7 +4,7 @@ export {
   type DriverAddResponseWithGroup,
   type DriverBusinessIdPayload,
   type DriverCommonDetails,
-  type DriverCreateUpdateRequestDto,
+  type DriverCreateRequestDto,
   type DriverCreateUpdateResponseDto,
   type DriverDto,
   type DriverEntityT,
@@ -13,11 +13,14 @@ export {
   type DriverGetDriversPayloadWithBusinessId,
   type DriverRequestParameters,
   type DriverUpdatePayload,
+  type DriverUpdateRequestDto,
+  type DriverWithAvatarUrl,
   type DriverWithUserData,
   DriverApiPath,
   DriverValidationMessage,
 } from './libs/types/types.js';
 export {
-  driverCreateUpdateRequestBody,
+  driverCreateRequestBody,
   driverParameters,
+  driverUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';

@@ -3,10 +3,8 @@ import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
 import {
-  type BusinessSignUpResponseDto,
-  type CustomerSignUpResponseDto,
+  type AuthUser,
   type UserEntityObjectWithGroupAndBusinessT,
-  type UserSignInResponseDto,
   type ValueOf,
 } from '~/libs/types/types.js';
 
@@ -24,11 +22,7 @@ type State = {
   error: HttpError | null;
   dataStatus: ValueOf<typeof DataStatus>;
   socketDriverAuthStatus: ValueOf<typeof DataStatus>;
-  user:
-    | UserSignInResponseDto
-    | CustomerSignUpResponseDto
-    | BusinessSignUpResponseDto
-    | null;
+  user: AuthUser | null;
 };
 
 const initialState: State = {

@@ -1,5 +1,4 @@
 import { useAppDispatch, useCallback } from '~/libs/hooks/hooks.js';
-import { type UserEntityObjectWithGroupAndBusinessT } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/users/libs/enums/enums.js';
 import {
   type BusinessEditDto,
@@ -12,10 +11,10 @@ import styles from './styles.module.scss';
 
 const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
-  const user = useAuthUser() as UserEntityObjectWithGroupAndBusinessT;
+  const user = useAuthUser();
   const handleSubmit = useCallback(
     (payload: CustomerEditDto | BusinessEditDto): void => {
-      switch (user.group.key) {
+      switch (user?.group.key) {
         case UserGroupKey.CUSTOMER: {
           void dispatch(authActions.editCustomer(payload));
           break;

@@ -1,6 +1,8 @@
 @import "src/assets/css/vars.scss";
 
 .container {
+  display: flex;
+  flex-direction: column;
   width: 210px;
   height: calc(100% - 20px);
   margin: 10px;
@@ -20,11 +22,20 @@
   padding: 0;
 }
 
+.item {
+  position: relative;
+
+  &:not(:first-child) {
+    margin-top: 12px;
+  }
+}
+
 .item.active::after {
+  position: absolute;
   display: block;
   width: 100%;
   height: 2px;
-  margin: 3px 0 12px;
+  margin-top: 9px;
   background-color: $white-blue;
   content: "";
 }
@@ -33,7 +44,6 @@
   position: relative;
   width: 100%;
   height: 100%;
-  margin-bottom: 9px;
   padding: 16px 0;
   color: $grey;
   font-weight: $font-weight-bold;
