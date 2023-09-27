@@ -1,4 +1,5 @@
 export {
+  avatarInputDefaultsConfig,
   fileInputAddDriverLicenseConfig,
   fileInputDefaultsConfig,
 } from './libs/config/config.js';

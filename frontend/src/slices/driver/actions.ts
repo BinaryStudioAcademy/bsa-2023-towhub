@@ -1,18 +1,17 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+
+import { type AsyncThunkConfig } from '~/libs/types/types.js';
+
+import { name as sliceName } from './driver.slice.js';
 import {
   type ClientToServerEventParameter,
   type FirstParameter,
+  type ShiftStatusValue,
   type TruckEntityT,
   type TruckGetItemResponseDto,
   ClientToServerEvent,
   ServerToClientResponseStatus,
-} from 'shared/build';
-
-import { notification } from '~/libs/packages/notification/notification.js';
-import { type AsyncThunkConfig } from '~/libs/types/async-thunk-config.type';
-
-import { name as sliceName } from './driver.slice.js';
-import { type ShiftStatusValue } from './libs/types/types.js';
+} from './libs/types/types.js';
 
 const setVerificationCompleted = createAction(
   `${sliceName}/set-verification-completed`,
@@ -47,7 +46,7 @@ const startShift = createAsyncThunk<
 >(
   `${sliceName}/start-shift`,
   async (payload, { getState, extra, rejectWithValue }) => {
-    const { socketClient } = extra;
+    const { socketClient, notification } = extra;
 
     const { truckId } = payload;
     const result = await socketClient.emitWithAck({

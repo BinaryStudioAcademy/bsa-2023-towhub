@@ -27,9 +27,10 @@
     "@rollup/pluginutils": "5.0.4",
     "@svgr/core": "8.1.0",
     "@tanstack/react-table": "8.9.3",
-    "balloon-css": "1.2.0",
     "@vitejs/plugin-react": "4.0.4",
+    "balloon-css": "1.2.0",
     "clsx": "2.0.0",
+    "croppie": "2.6.5",
     "modern-normalize": "2.0.0",
     "object-to-formdata": "4.5.1",
     "react": "18.2.0",
@@ -44,6 +45,7 @@
     "vite-plugin-svgr": "3.2.0"
   },
   "devDependencies": {
+    "@types/croppie": "2.6.2",
     "@types/google.maps": "3.54.0",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",

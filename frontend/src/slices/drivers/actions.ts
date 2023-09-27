@@ -11,7 +11,7 @@ import { DriverCreationMessage } from '~/packages/drivers/libs/enums/enums.js';
 import { getFileFromFileObject } from '~/slices/files/libs/helpers/get-file-from-file-object.helper';
 import { type FileObject } from '~/slices/files/libs/types/types.js';
 
-import { ACTIONS_TYPES } from './libs/enums/driver-action.js';
+import { ACTIONS_TYPES } from './libs/enums/enums.js';
 import {
   type DriverAddResponseWithGroup,
   type DriverCreateRequestDto,

@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { type TruckEntityT } from '~/slices/trucks/libs/types/types.js';
-
 import {
   setShiftStatus,
   setStartShiftSuccess,
@@ -13,6 +11,7 @@ import { ShiftStatus, TruckChoiceStatus } from './libs/enums/enums.js';
 import {
   type ShiftStatusValue,
   type TruckChoiceStatusValues,
+  type TruckEntityT,
 } from './libs/types/types.js';
 
 type State = {

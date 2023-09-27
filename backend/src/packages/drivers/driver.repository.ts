@@ -12,7 +12,12 @@ import { type OperationResult } from '~/libs/types/types.js';
 
 import { DriverEntity } from './driver.entity.js';
 import { type DriverEntityT } from './drivers.js';
-import { SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS } from './libs/constants/constants.js';
+import {
+  SELECT_FILTER_DRIVER,
+  SELECT_FILTER_JOIN_AVATAR,
+  SELECT_FILTER_JOIN_FILE_VERIFICATION_STATUS,
+  SELECT_FILTER_JOIN_USER,
+} from './libs/constants/constants.js';
 import { countOffsetByQuery } from './libs/helpers/helpers.js';
 import { type GetPaginatedPageQuery } from './libs/types/types.js';
 
@@ -32,7 +37,7 @@ class DriverRepository implements IRepository {
 
   public async find(
     partial: Partial<Omit<DriverEntityT, 'user' | 'verificationStatus'>>,
-  ): ReturnType<IRepository<DriverEntityT>['find']> {
+  ): ReturnType<IRepository<DriverEntity>['find']> {
     const queries = Object.entries(partial).map(([key, value]) =>
       eq(
         this.driverSchema[key as keyof typeof partial],
@@ -44,7 +49,12 @@ class DriverRepository implements IRepository {
 
     const drivers = await this.db
       .driver()
-      .select(SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS)
+      .select({
+        ...SELECT_FILTER_DRIVER,
+        ...SELECT_FILTER_JOIN_AVATAR,
+        ...SELECT_FILTER_JOIN_FILE_VERIFICATION_STATUS,
+        ...SELECT_FILTER_JOIN_USER,
+      })
       .from(this.driverSchema)
       .innerJoin(
         schema.fileVerificationStatus,
@@ -54,14 +64,16 @@ class DriverRepository implements IRepository {
         ),
       )
       .innerJoin(schema.users, eq(this.driverSchema.userId, schema.users.id))
+      .leftJoin(schema.files, eq(this.driverSchema.avatarId, schema.files.id))
       .where(finalQuery)
       .execute();
 
-    return drivers.map(({ createdAt, updatedAt, ...pureDriver }) =>
+    return drivers.map(({ createdAt, avatar, ...pureDriver }) =>
       DriverEntity.initialize({
         ...pureDriver,
+        avatar: avatar ?? undefined,
         createdAt: createdAt.toISOString(),
-      }).toObject(),
+      }),
     );
   }
 
@@ -72,7 +84,12 @@ class DriverRepository implements IRepository {
     const offset = countOffsetByQuery(query);
     const drivers = await this.db
       .driver()
-      .select(SELECT_DRIVER_JOIN_FILE_VERIFICATION_STATUS)
+      .select({
+        ...SELECT_FILTER_DRIVER,
+        ...SELECT_FILTER_JOIN_AVATAR,
+        ...SELECT_FILTER_JOIN_FILE_VERIFICATION_STATUS,
+        ...SELECT_FILTER_JOIN_USER,
+      })
       .from(this.driverSchema)
       .innerJoin(
         schema.fileVerificationStatus,
@@ -82,15 +99,17 @@ class DriverRepository implements IRepository {
         ),
       )
       .innerJoin(schema.users, eq(this.driverSchema.userId, schema.users.id))
+      .leftJoin(schema.files, eq(this.driverSchema.avatarId, schema.files.id))
       .limit(query.size)
       .offset(offset)
       .where(eq(this.driverSchema.businessId, businessId))
       .orderBy(desc(this.driverSchema.createdAt));
 
-    return drivers.map(({ createdAt, ...pureDriver }) =>
+    return drivers.map(({ createdAt, avatar, ...pureDriver }) =>
       DriverEntity.initialize({
         ...pureDriver,
-        createdAt: new Date(createdAt).toISOString(),
+        avatar: avatar ?? undefined,
+        createdAt: createdAt.toISOString(),
       }),
     );
   }
@@ -156,7 +175,7 @@ class DriverRepository implements IRepository {
     payload,
   }: {
     id: number;
-    payload: Partial<Pick<DriverEntityT, 'driverLicenseNumber'>>;
+    payload: Partial<Pick<DriverEntityT, 'driverLicenseNumber' | 'avatarId'>>;
   }): Promise<DriverEntity> {
     const [{ createdAt, ...pureDriver }] = await this.db
       .driver()
