@@ -18,6 +18,7 @@ type Constructor = MapServiceParameters & {
     routes: google.maps.DistanceMatrixService;
     directionsService: google.maps.DirectionsService;
     directionsRenderer: google.maps.DirectionsRenderer;
+    placesLibrary: google.maps.PlacesLibrary;
   };
   map: google.maps.Map | null;
   markers: google.maps.Marker[];
@@ -36,6 +37,8 @@ class MapService implements IMapService {
   private geocoder!: google.maps.Geocoder;
 
   private routes!: google.maps.DistanceMatrixService;
+
+  private placesLibrary!: google.maps.PlacesLibrary;
 
   private setMap: (map: google.maps.Map) => void;
 
@@ -57,6 +60,7 @@ class MapService implements IMapService {
       this.routes = extraLibraries.routes;
       this.directionsRenderer = extraLibraries.directionsRenderer;
       this.directionsService = extraLibraries.directionsService;
+      this.placesLibrary = extraLibraries.placesLibrary;
 
       if (mapElement && center && zoom) {
         if (this.map) {
@@ -212,7 +216,7 @@ class MapService implements IMapService {
       const [element] = row.elements;
       const distance = element.distance.value;
 
-      if (!distance) {
+      if (!distance && distance !== 0) {
         throw new ApplicationError({
           message: 'Distance value not found in the response',
         });
@@ -274,6 +278,18 @@ class MapService implements IMapService {
         : undefined,
     });
     this.markers.push(marker);
+  }
+
+  public createAutocomplete(
+    input: HTMLInputElement,
+  ): google.maps.places.Autocomplete {
+    return new this.placesLibrary.Autocomplete(input);
+  }
+
+  public setZoom(zoom: number): void {
+    this.throwIfMapNotInitialized();
+
+    this.map?.setZoom(zoom);
   }
 }
 
