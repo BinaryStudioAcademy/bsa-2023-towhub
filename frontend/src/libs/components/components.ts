@@ -15,6 +15,7 @@ export { Form } from './form/form.jsx';
 export { Header } from './header/header.js';
 export { Icon } from './icon/icon.js';
 export { Image } from './image/image.js';
+export { ImageSelector } from './image-selector/image-selector.js';
 export { Input } from './input/input.js';
 export { Link } from './link/link.js';
 export { LocationInput } from './location-input/location-input.js';
