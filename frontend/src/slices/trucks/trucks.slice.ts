@@ -12,6 +12,7 @@ import { type ServerToClientEvent } from '~/libs/packages/socket/socket.js';
 import { type FirstParameter, type ValueOf } from '~/libs/types/types.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
 import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
+import { type TruckWithDistance } from '~/pages/homepage/libs/types/truck-with-distance.js';
 
 import {
   addTruck,
@@ -25,7 +26,7 @@ import { type TruckArrivalTime, type TruckLocation } from './types/types.js';
 
 type State = {
   trucks: TruckGetItemResponseDto[];
-  chosenTruck: TruckGetItemResponseDto | null;
+  chosenTruck: TruckWithDistance | null;
   dataStatus: ValueOf<typeof DataStatus>;
   total: number;
   error: HttpError | null;
@@ -83,7 +84,7 @@ const { reducer, actions, name } = createSlice({
   reducers: {
     truckChosen,
     truckAvailable,
-    setChosenTruck: (state, action: PayloadAction<TruckGetItemResponseDto>) => {
+    setChosenTruck: (state, action: PayloadAction<TruckWithDistance>) => {
       state.chosenTruck = action.payload;
     },
   },
