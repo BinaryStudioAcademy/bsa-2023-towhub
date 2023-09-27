@@ -28,7 +28,7 @@ class DriverRepository implements IRepository {
 
   public async find(
     partial: Partial<Omit<DriverEntityT, 'user'>>,
-  ): ReturnType<IRepository<DriverEntityT>['find']> {
+  ): ReturnType<IRepository<DriverEntity>['find']> {
     const queries = Object.entries(partial).map(([key, value]) =>
       eq(
         this.driverSchema[key as keyof typeof partial],
@@ -40,14 +40,18 @@ class DriverRepository implements IRepository {
 
     const drivers = await this.db
       .driver()
-      .query.drivers.findMany({ where: finalQuery, with: { user: true } })
+      .query.drivers.findMany({
+        where: finalQuery,
+        with: { user: true, avatar: true },
+      })
       .execute();
 
-    return drivers.map(({ createdAt, updatedAt, ...pureDriver }) =>
+    return drivers.map(({ createdAt, avatar, ...pureDriver }) =>
       DriverEntity.initialize({
         ...pureDriver,
+        avatar: avatar ?? undefined,
         createdAt: createdAt.toISOString(),
-      }).toObject(),
+      }),
     );
   }
 
@@ -62,15 +66,16 @@ class DriverRepository implements IRepository {
         limit: query.size,
         offset,
         where: eq(this.driverSchema.businessId, businessId),
-        with: { user: true },
+        with: { user: true, avatar: true },
         orderBy: [desc(this.driverSchema.createdAt)],
       })
       .execute();
 
-    return drivers.map(({ createdAt, ...pureDriver }) =>
+    return drivers.map(({ createdAt, avatar, ...pureDriver }) =>
       DriverEntity.initialize({
         ...pureDriver,
-        createdAt: new Date(createdAt).toISOString(),
+        avatar: avatar ?? undefined,
+        createdAt: createdAt.toISOString(),
       }),
     );
   }
@@ -79,19 +84,19 @@ class DriverRepository implements IRepository {
     driverLicenseNumber,
     userId,
   }: Partial<DriverEntityT>): Promise<OperationResult<boolean>> {
-    const filterClause: SQL[] = [];
+    const filterClauses: SQL[] = [];
 
     if (driverLicenseNumber) {
-      filterClause.push(
+      filterClauses.push(
         eq(this.driverSchema.driverLicenseNumber, driverLicenseNumber),
       );
     }
 
     if (userId) {
-      filterClause.push(eq(this.driverSchema.userId, userId));
+      filterClauses.push(eq(this.driverSchema.userId, userId));
     }
 
-    if (filterClause.length === 0) {
+    if (filterClauses.length === 0) {
       throw new ApplicationError({
         message: AppErrorMessage.INVALID_QUERY,
       });
@@ -101,7 +106,7 @@ class DriverRepository implements IRepository {
       .driver()
       .select()
       .from(this.driverSchema)
-      .where(or(...filterClause));
+      .where(or(...filterClauses));
 
     return {
       result: Boolean(driver),
@@ -111,17 +116,16 @@ class DriverRepository implements IRepository {
   public async create(entity: DriverEntity): Promise<DriverEntity> {
     const { driverLicenseNumber, userId, businessId } = entity.toNewObject();
 
-    const [{ createdAt, ...pureDriver }] = await this.db
+    const [driver] = await this.db
       .driver()
       .insert(this.driverSchema)
       .values({ driverLicenseNumber, userId, businessId })
       .returning()
       .execute();
 
-    return DriverEntity.initialize({
-      ...pureDriver,
-      createdAt: new Date(createdAt).toISOString(),
-    });
+    const [result] = await this.find({ id: driver.id });
+
+    return result;
   }
 
   public async update({
@@ -129,9 +133,9 @@ class DriverRepository implements IRepository {
     payload,
   }: {
     id: number;
-    payload: Partial<Pick<DriverEntityT, 'driverLicenseNumber'>>;
+    payload: Partial<Pick<DriverEntityT, 'driverLicenseNumber' | 'avatarId'>>;
   }): Promise<DriverEntity> {
-    const [{ createdAt, ...pureDriver }] = await this.db
+    await this.db
       .driver()
       .update(this.driverSchema)
       .set(payload)
@@ -139,10 +143,9 @@ class DriverRepository implements IRepository {
       .returning()
       .execute();
 
-    return DriverEntity.initialize({
-      ...pureDriver,
-      createdAt: new Date(createdAt).toISOString(),
-    });
+    const [result] = await this.find({ id });
+
+    return result;
   }
 
   public async delete(id: number): Promise<boolean> {

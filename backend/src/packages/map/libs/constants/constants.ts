@@ -1,3 +1,4 @@
 const METERS_IN_ONE_KM = 1000;
+const PRECISION = 2;
 
-export { METERS_IN_ONE_KM };
+export { METERS_IN_ONE_KM, PRECISION };

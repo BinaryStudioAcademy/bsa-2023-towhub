@@ -10,9 +10,12 @@ export {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderEntityT,
-  type OrderFindByIdResponseDto,
+  type OrderEntity,
   type OrderResponseDto,
+  type OrderStatusValues,
+  type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusRequestParameter,
+  type OrderUpdateAcceptStatusResponseDto,
   type OrderUpdateRequestDto,
 } from 'shared/build/index.js';
 export { type OrderDatabaseModel };

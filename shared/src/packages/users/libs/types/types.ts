@@ -4,7 +4,9 @@ export { type CustomerSignUpRequestDto } from './customer-sign-up-request-dto.ty
 export { type CustomerSignUpResponseDto } from './customer-sign-up-response-dto.type.js';
 export { type UserCommonDetails } from './user-common-details.type.js';
 export {
+  type AuthUser,
   type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
 } from './user-entity.type.js';

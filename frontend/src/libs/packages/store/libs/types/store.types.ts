@@ -1,8 +1,11 @@
+import { type MapServiceParameters } from '~/libs/packages/map/libs/types/types.js';
+import { type MapService } from '~/libs/packages/map/map.package.js';
 import { type notification } from '~/libs/packages/notification/notification.js';
 import { type socket as socketClient } from '~/libs/packages/socket/socket.js';
 import { type LocalStorage } from '~/libs/packages/storage/storage.js';
 import { type authApi } from '~/packages/auth/auth.js';
 import { type businessApi } from '~/packages/business/business.js';
+import { type driverApi } from '~/packages/driver/driver.js';
 import { type driversApi } from '~/packages/drivers/drivers.js';
 import { type filesApi } from '~/packages/files/files.js';
 import { type ordersApi } from '~/packages/orders/orders.js';
@@ -19,9 +22,9 @@ type RootReducer = {
   auth: ReturnType<typeof authReducer>;
   trucks: ReturnType<typeof truckReducer>;
   files: ReturnType<typeof filesReducer>;
-  drivers: ReturnType<typeof driversReducer>;
   driver: ReturnType<typeof driverReducer>;
   orders: ReturnType<typeof orderReducer>;
+  drivers: ReturnType<typeof driversReducer>;
 };
 
 type ExtraArguments = {
@@ -33,7 +36,9 @@ type ExtraArguments = {
   localStorage: typeof LocalStorage;
   businessApi: typeof businessApi;
   ordersApi: typeof ordersApi;
+  mapServiceFactory: (parameters: MapServiceParameters) => Promise<MapService>;
   driversApi: typeof driversApi;
+  driverApi: typeof driverApi;
   socketClient: typeof socketClient;
 };
 
