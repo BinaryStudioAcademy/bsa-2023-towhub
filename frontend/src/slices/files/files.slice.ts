@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { type HttpError } from '~/libs/packages/http/libs/exceptions/exceptions.js';
 import { type ValueOf } from '~/libs/types/types.js';
 
-import { uploadFile } from './actions.js';
+import { uploadAvatar, uploadFile } from './actions.js';
 import { FileStatus } from './libs/enums/enums.js';
 
 type State = {
@@ -27,6 +27,19 @@ const { reducer, actions, name } = createSlice({
       state.fileStatus = FileStatus.UPLOADED;
     });
     builder.addCase(uploadFile.rejected, (state, { payload }) => {
+      state.fileStatus = FileStatus.REJECTED;
+
+      if (payload) {
+        state.error = payload;
+      }
+    });
+    builder.addCase(uploadAvatar.pending, (state) => {
+      state.fileStatus = FileStatus.UPLOADING;
+    });
+    builder.addCase(uploadAvatar.fulfilled, (state) => {
+      state.fileStatus = FileStatus.UPLOADED;
+    });
+    builder.addCase(uploadAvatar.rejected, (state, { payload }) => {
       state.fileStatus = FileStatus.REJECTED;
 
       if (payload) {
