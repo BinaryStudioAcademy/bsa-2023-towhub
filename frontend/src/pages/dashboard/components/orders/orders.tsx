@@ -29,7 +29,7 @@ import {
   type OrderResponseDto,
   type OrderStatusValues,
 } from '~/libs/types/types.js';
-import { actions as ordersActions } from '~/slices/orders/orders.js';
+import { actions as ordersActions } from '~/slices/orders/order.js';
 import { selectOrdersBusiness } from '~/slices/orders/selectors.js';
 
 import styles from './styles.module.scss';
