@@ -157,7 +157,9 @@ const Orders: React.FC = () => {
         />
       </div>
       <div className={styles.mapArea}>
-        <div ref={mapReference} id="map" className={styles.mapWrapper} />
+        <div className={styles.mapWrapper}>
+          <div className={styles.map} ref={mapReference} id="map" />
+        </div>
       </div>
     </div>
   );

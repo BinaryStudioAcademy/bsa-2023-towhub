@@ -30,10 +30,13 @@
 .mapWrapper {
   position: sticky;
   top: 0;
-  height: calc(100vh - 160px);
   overflow: hidden;
   border-radius: 20px;
   box-shadow: $shadow-light;
+}
+
+.map {
+  height: calc(100vh - 160px);
 }
 
 .textSign {
