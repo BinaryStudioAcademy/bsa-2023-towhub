@@ -8,12 +8,26 @@
 .locationFilter {
   display: flex;
   align-items: baseline;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   padding-left: 8px;
 }
 
-.filterTitle {
-  margin-right: 35px;
+.title {
+  margin-right: 20px;
+}
+
+.input {
+  padding: 10px;
+  color: $grey;
+  font-weight: $font-weight-regular;
+  font-size: 14px;
+  font-family: $font-family;
+  border: none;
+  border-radius: 10px;
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .filterBar {
@@ -32,10 +46,10 @@
   &:first-child {
     width: calc(50% - 23px);
     margin-right: 23px;
-    border-right: 1px solid #c3d4e9;
+    border-right: 1px solid $grey-light;
   }
 }
 
-.dropdownWrapper {
+.wrapper {
   min-width: 150px;
 }

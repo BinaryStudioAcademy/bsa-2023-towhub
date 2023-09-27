@@ -1,86 +1,144 @@
 import { type SingleValue } from 'react-select';
 
-import { useCallback, useEffect, useState } from '~/libs/hooks/hooks.js';
+import {
+  useAppForm,
+  useCallback,
+  useFormController,
+} from '~/libs/hooks/hooks.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 import { type TruckFilters } from '~/libs/types/truck-filters.type.js';
+import {
+  type LocationChangeHandler,
+  type ValueOf,
+} from '~/libs/types/types.js';
 
+import { Autocomplete } from '../components.js';
 import { Dropdown } from '../dropdown/dropdown.js';
-import { TruckFilterField } from './libs/truck-filter-field.enum.js';
+import {
+  FilterOption,
+  FilterValue,
+  TruckFilterField,
+} from './libs/enums/enums.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onChange: (filters: TruckFilters) => void;
+  onFilterChange: (filters: TruckFilters) => void;
+  onLocationChange: LocationChangeHandler;
 };
 
-const TruckFilter = ({ onChange }: Properties): JSX.Element => {
-  const [filters, setFilters] = useState<TruckFilters>({
-    location: null,
-    price: null,
-    capacity: null,
+const TruckFilter = ({
+  onFilterChange,
+  onLocationChange,
+}: Properties): JSX.Element => {
+  const {
+    control: priceControl,
+    setValue: setPriceValue,
+    resetField: resetPriceField,
+  } = useAppForm<{
+    priceDropdown: ValueOf<typeof FilterValue>;
+  }>({
+    defaultValues: { priceDropdown: undefined },
+    mode: 'onChange',
+  });
+
+  const {
+    control: capacityControl,
+    setValue: setCapacityValue,
+    resetField: resetCapacityField,
+  } = useAppForm<{
+    capacityDropdown: ValueOf<typeof FilterValue>;
+  }>({
+    defaultValues: { capacityDropdown: undefined },
+    mode: 'onChange',
+  });
+
+  const { field: priceDropdownField } = useFormController({
+    name: 'priceDropdown',
+    control: priceControl,
+  });
+
+  const { field: capacityDropdownField } = useFormController({
+    name: 'capacityDropdown',
+    control: capacityControl,
   });
 
   const handleSelectChange = useCallback(
     (fieldName: string, option: SingleValue<SelectOption>) => {
-      const newFilters = {
-        ...filters,
-        [fieldName]: option?.value ?? null,
-      };
-
-      setFilters(newFilters);
+      onFilterChange({
+        id: fieldName,
+        desc: option?.value === FilterValue.DESC,
+      });
     },
-    [filters],
+    [onFilterChange],
   );
 
-  const handleLocationChange = useCallback(
-    (option: SingleValue<SelectOption>) =>
-      handleSelectChange(TruckFilterField.LOCATION, option),
-    [handleSelectChange],
-  );
   const handlePriceChange = useCallback(
-    (option: SingleValue<SelectOption>) =>
-      handleSelectChange(TruckFilterField.PRICE, option),
-    [handleSelectChange],
+    (option: SingleValue<SelectOption>) => {
+      handleSelectChange(TruckFilterField.PRICE, option);
+      setPriceValue(
+        'priceDropdown',
+        option?.value === FilterValue.DESC ? FilterValue.DESC : FilterValue.ASC,
+      );
+      resetCapacityField('capacityDropdown', { defaultValue: undefined });
+    },
+    [handleSelectChange, resetCapacityField, setPriceValue],
   );
   const handleCapacityChange = useCallback(
-    (option: SingleValue<SelectOption>) =>
-      handleSelectChange(TruckFilterField.CAPACITY, option),
-    [handleSelectChange],
+    (option: SingleValue<SelectOption>) => {
+      handleSelectChange(TruckFilterField.CAPACITY, option);
+      setCapacityValue(
+        'capacityDropdown',
+        option?.value === FilterValue.DESC ? FilterValue.DESC : FilterValue.ASC,
+      );
+      resetPriceField('priceDropdown', { defaultValue: undefined });
+    },
+    [handleSelectChange, resetPriceField, setCapacityValue],
   );
-
-  useEffect(() => {
-    onChange(filters);
-  }, [filters, onChange]);
 
   return (
     <form className={styles.truckFilter}>
       <div className={styles.locationFilter}>
-        <span className={styles.filterTitle}>Location</span>
-        <div className={styles.dropdownWrapper}>
-          <Dropdown
-            options={[{ label: 'option', value: 'option' }]}
+        <span className={styles.title}>Location</span>
+        <div className={styles.wrapper}>
+          <Autocomplete
             placeholder="Select location..."
-            onChange={handleLocationChange}
+            inputStyles={styles.input}
+            handlePlaceChanged={onLocationChange}
           />
         </div>
       </div>
       <div className={styles.filterBar}>
         <div className={styles.filterBlock}>
-          <span className={styles.filterTitle}>Price</span>
-          <div className={styles.dropdownWrapper}>
+          <span className={styles.title}>Price</span>
+          <div className={styles.wrapper}>
             <Dropdown
-              options={[{ label: 'option', value: 'option' }]}
+              name="priceDropdown"
+              control={priceControl}
+              field={priceDropdownField}
+              options={[
+                { label: FilterOption.LOW_TO_HIGH, value: FilterValue.ASC },
+                { label: FilterOption.HIGH_TO_LOW, value: FilterValue.DESC },
+              ]}
               placeholder="Select price..."
               onChange={handlePriceChange}
+              isValueRenderControlled
             />
           </div>
         </div>
         <div className={styles.filterBlock}>
-          <span className={styles.filterTitle}>Capacity</span>
-          <div className={styles.dropdownWrapper}>
+          <span className={styles.title}>Capacity</span>
+          <div className={styles.wrapper}>
             <Dropdown
-              options={[{ label: 'option', value: 'option' }]}
+              name="capacityDropdown"
+              control={capacityControl}
+              field={capacityDropdownField}
+              options={[
+                { label: FilterOption.LOW_TO_HIGH, value: FilterValue.ASC },
+                { label: FilterOption.HIGH_TO_LOW, value: FilterValue.DESC },
+              ]}
               placeholder="Select capacity..."
               onChange={handleCapacityChange}
+              isValueRenderControlled
             />
           </div>
         </div>
