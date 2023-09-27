@@ -38,6 +38,7 @@ const HomePage: React.FC = () => {
     },
     [],
   );
+
   const { connectToHomeRoom, disconnectFromHomeRoom } =
     useHomePageSocketService();
 
@@ -48,6 +49,15 @@ const HomePage: React.FC = () => {
       disconnectFromHomeRoom();
     };
   }, [connectToHomeRoom, disconnectFromHomeRoom]);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((location) => {
+      setLocation({
+        lng: location.coords.longitude,
+        lat: location.coords.latitude,
+      });
+    });
+  }, []);
 
   return (
     <div className={styles.container}>
