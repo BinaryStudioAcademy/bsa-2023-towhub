@@ -29,7 +29,6 @@ import {
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
 import { filesValidationPlugin } from '~/packages/files/files.js';
-import { type ShiftSocketService } from '~/packages/shifts/shift.js';
 import { type UserService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
@@ -50,7 +49,6 @@ type Constructor = {
   apis: IServerAppApi[];
   geolocationCacheSocketService: GeolocationCacheSocketService;
   userService: UserService;
-  shiftSocketService: ShiftSocketService;
 };
 
 class ServerApp implements IServerApp {
@@ -68,8 +66,6 @@ class ServerApp implements IServerApp {
 
   private userService: UserService;
 
-  private shiftSocketService: ShiftSocketService;
-
   public constructor({
     config,
     logger,
@@ -77,7 +73,6 @@ class ServerApp implements IServerApp {
     apis,
     geolocationCacheSocketService,
     userService,
-    shiftSocketService,
   }: Constructor) {
     this.config = config;
     this.logger = logger;
@@ -86,7 +81,6 @@ class ServerApp implements IServerApp {
 
     this.geolocationCacheSocketService = geolocationCacheSocketService;
     this.userService = userService;
-    this.shiftSocketService = shiftSocketService;
 
     this.app = Fastify();
   }
@@ -297,7 +291,6 @@ class ServerApp implements IServerApp {
     await this.initServe();
 
     await socketService.initializeIo({
-      shiftSocketService: this.shiftSocketService,
       app: this.app,
       geolocationCacheSocketService: this.geolocationCacheSocketService,
       userService: this.userService,

@@ -6,7 +6,7 @@ import { type GeolocationCacheSocketService } from '~/libs/packages/geolocation-
 import { logger } from '~/libs/packages/logger/logger.js';
 import { type FirstParameter } from '~/libs/types/types.js';
 import { UserGroupKey } from '~/packages/groups/groups.js';
-import { type ShiftSocketService } from '~/packages/shifts/shift.js';
+import { ShiftSocketService } from '~/packages/shifts/shift.socket-service.js';
 import { type UserService } from '~/packages/users/user.service';
 
 import {
@@ -28,8 +28,6 @@ class SocketService {
 
   private userService!: UserService;
 
-  private shiftSocketService!: ShiftSocketService;
-
   public getIo(): SocketServer {
     return this.io as SocketServer;
   }
@@ -38,21 +36,18 @@ class SocketService {
     app,
     geolocationCacheSocketService,
     userService,
-    shiftSocketService,
   }: {
     app: FastifyInstance;
     geolocationCacheSocketService: GeolocationCacheSocketService;
     userService: UserService;
-    shiftSocketService: ShiftSocketService;
   }): Promise<void> {
     this.geolocationCacheSocketService = geolocationCacheSocketService;
     this.userService = userService;
-    this.shiftSocketService = shiftSocketService;
     this.io = new SocketServer(app.server, {
       cors: { origin: '*' },
     });
 
-    await this.shiftSocketService.fetchStartedShifts();
+    await ShiftSocketService.fetchStartedShifts();
 
     this.io.on(ClientToServerEvent.CONNECTION, (socket: Socket) => {
       logger.info(`${socket.id} connected`);
@@ -129,13 +124,14 @@ class SocketService {
           ClientToServerEventParameter[typeof ClientToServerEvent.AUTHORIZE_DRIVER]
         >) => {
           const user = await this.userService.findById(userId);
+          const shiftSocketService = new ShiftSocketService();
 
           if (!user || user.group.key !== UserGroupKey.DRIVER) {
             socket.emit(ServerToClientEvent.ERROR, SocketError.NOT_AUTHORIZED);
 
             return;
           }
-          await this.shiftSocketService.initializeListeners({
+          await shiftSocketService.initializeListeners({
             user,
             socket,
             io: this.io as Server,
