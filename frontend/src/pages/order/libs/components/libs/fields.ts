@@ -1,13 +1,13 @@
 import { type FormField } from '~/libs/types/form.type.js';
 import { type LocationChangeHandler } from '~/libs/types/location-change-handler.type.js';
-import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
+import { type OrderCreateFormDto } from '~/packages/orders/libs/types/types.js';
 
 import { TruckCarsQuantity } from './enums.js';
 
 const getOrderFormFields = (
   onStartChange: LocationChangeHandler,
   onEndChange: LocationChangeHandler,
-): FormField<OrderCreateRequestDto>[] => [
+): FormField<OrderCreateFormDto>[] => [
   { label: 'Name', name: 'customerName' },
   { label: 'Phone', name: 'customerPhone' },
   {

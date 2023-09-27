@@ -20,6 +20,7 @@ const orderService = new OrderService({
   shiftService,
   truckService,
   userService,
+  mapService,
   socket,
 });
 const orderController = new OrderController({

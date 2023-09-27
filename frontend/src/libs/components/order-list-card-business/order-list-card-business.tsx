@@ -1,11 +1,8 @@
 import { IconName, ImgPath } from '~/libs/enums/enums.js';
-import {
-  getValidClassNames,
-  jsonToLatLngLiteral,
-} from '~/libs/helpers/helpers.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback } from '~/libs/hooks/hooks.js';
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
-import { type OrderResponseDto } from '~/libs/types/types.js';
+import { type Coordinates, type OrderResponseDto } from '~/libs/types/types.js';
 
 import { Badge, Icon } from '../components.js';
 import { getFullName } from '../header/libs/helpers/helpers.js';
@@ -30,10 +27,10 @@ const OrderListCardBusiness: React.FC<Properties> = ({
   } = order;
 
   const handleSelectCard = useCallback(
-    (startPoint: string, endPoint: string) => () => {
+    (startPoint: Coordinates, endPoint: Coordinates) => () => {
       onSelect({
-        startPoint: jsonToLatLngLiteral(startPoint),
-        endPoint: jsonToLatLngLiteral(endPoint),
+        startPoint: startPoint,
+        endPoint: endPoint,
       });
     },
     [onSelect],

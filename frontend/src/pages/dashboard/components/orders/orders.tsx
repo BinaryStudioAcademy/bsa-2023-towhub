@@ -5,10 +5,7 @@ import {
   Spinner,
 } from '~/libs/components/components.js';
 import { DataStatus } from '~/libs/enums/data-status.enum';
-import {
-  getValidClassNames,
-  jsonToLatLngLiteral,
-} from '~/libs/helpers/helpers.js';
+import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppMap,
@@ -26,6 +23,7 @@ import {
 } from '~/libs/hooks/use-app-table/libs/constant.js';
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import {
+  type Coordinates,
   type OrderResponseDto,
   type OrderStatusValues,
 } from '~/libs/types/types.js';
@@ -42,9 +40,7 @@ const Orders: React.FC = () => {
   const { setQueryParameters, removeQueryParameters, searchParameters } =
     useQueryParameters();
 
-  const [endPointMarkers, setEndPointMarkers] = useState<
-    google.maps.LatLngLiteral[]
-  >([]);
+  const [endPointMarkers, setEndPointMarkers] = useState<Coordinates[]>([]);
 
   const [shownRoute, setShownRoute] = useState<PlaceLatLng>();
 
@@ -89,9 +85,7 @@ const Orders: React.FC = () => {
   }, [dispatch, searchParameters]);
 
   useEffect(() => {
-    setEndPointMarkers(
-      orders.map((order) => jsonToLatLngLiteral(order.endPoint)),
-    );
+    setEndPointMarkers(orders.map((order) => order.endPoint));
   }, [orders]);
 
   const totalPages = useMemo(
