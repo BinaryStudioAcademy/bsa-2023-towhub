@@ -32,7 +32,7 @@ class BusinessApi extends HttpApi {
   }): Promise<DriverCreateUpdateResponseDto> {
     const response = await this.load(
       this.getFullEndpoint(BusinessApiPath.DRIVERS, {
-        businessId: businessId.toString(),
+        businessId: businessId,
       }),
       {
         method: 'POST',

@@ -28,7 +28,7 @@ const getDriversPage = createAsyncThunk<
 const addDriver = createAsyncThunk<
   DriverAddResponseWithGroup,
   {
-    payload: DriverCreateRequestDto & { files: FileObject[] };
+    payload: DriverCreateRequestDto<FileObject>;
     queryString?: string;
   },
   AsyncThunkConfig

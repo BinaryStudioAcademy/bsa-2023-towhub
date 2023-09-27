@@ -28,11 +28,9 @@ const columns: ColumnDef<DriverWithUserData>[] = [
   },
   {
     header: 'Verification status',
-    accessorFn: (driver: DriverWithUserData): string => {
-      return driver.driver.verificationStatus
-        ? verificationStatusToReadableFormat[
-            driver.driver.verificationStatus.status
-          ]
+    accessorFn: ({ driver }: DriverWithUserData): string => {
+      return driver.verificationStatus
+        ? verificationStatusToReadableFormat[driver.verificationStatus.status]
         : '';
     },
     footer: 'Verification status',

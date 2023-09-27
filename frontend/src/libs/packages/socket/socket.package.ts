@@ -34,8 +34,8 @@ class SocketService {
     }
   }
 
-  public isConnected(): boolean {
-    return this.io ? this.io.connected : false;
+  public checkIsConnected(): boolean {
+    return this.io?.connected ?? false;
   }
 
   public addListener<

@@ -17,7 +17,7 @@ import { selectSocketDriverAuthStatus } from '~/slices/auth/selectors.js';
 import { RouterOutlet } from '../router/router.js';
 
 const DriverSocketProvider: FC = () => {
-  const isConnected = socket.isConnected();
+  const isConnected = socket.checkIsConnected();
   const socketDriverAuthStatus = useAppSelector(selectSocketDriverAuthStatus);
   const dispatch = useAppDispatch();
   useEffect(() => {

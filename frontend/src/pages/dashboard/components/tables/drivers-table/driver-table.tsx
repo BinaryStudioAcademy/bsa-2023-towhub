@@ -49,11 +49,7 @@ const DriverTable: React.FC = () => {
   });
 
   const handleSubmit = useCallback(
-    (
-      payload: DriverCreateRequestDto & {
-        files: FileObject[];
-      },
-    ) => {
+    (payload: DriverCreateRequestDto<FileObject>) => {
       void dispatch(
         actions.addDriver({
           payload,

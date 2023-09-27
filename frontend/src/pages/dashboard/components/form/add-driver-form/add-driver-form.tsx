@@ -17,7 +17,7 @@ import { getInitialFields } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onSubmit: (payload: DriverCreateRequestDto & { files: FileObject[] }) => void;
+  onSubmit: (payload: DriverCreateRequestDto<FileObject>) => void;
 };
 
 const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {

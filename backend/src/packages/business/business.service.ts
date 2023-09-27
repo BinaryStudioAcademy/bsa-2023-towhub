@@ -204,7 +204,7 @@ class BusinessService implements IService {
     ownerId,
     hostname,
   }: {
-    payload: DriverCreateRequestDto & { files: MultipartParsedFile[] };
+    payload: DriverCreateRequestDto<MultipartParsedFile>;
     ownerId: number;
     hostname: string;
   }): Promise<DriverAddResponseWithGroup> {
@@ -248,7 +248,7 @@ class BusinessService implements IService {
     driverId,
     ownerId,
   }: {
-    payload: DriverUpdateRequestDto & { files: MultipartParsedFile[] };
+    payload: DriverUpdateRequestDto<MultipartParsedFile>;
     driverId: number;
     ownerId: number;
   }): Promise<DriverCreateUpdateResponseDto> {

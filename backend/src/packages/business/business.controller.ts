@@ -318,9 +318,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.createDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateRequestDto & {
-              files: MultipartParsedFile[];
-            };
+            body: DriverCreateRequestDto<MultipartParsedFile>;
             user: UserEntityObjectWithGroupT;
             hostname: string;
           }>,
@@ -346,9 +344,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.updateDriver(
           options as ApiHandlerOptions<{
-            body: DriverUpdateRequestDto & {
-              files: MultipartParsedFile[];
-            };
+            body: DriverUpdateRequestDto<MultipartParsedFile>;
             params: DriverRequestParameters;
             user: UserEntityObjectWithGroupT;
           }>,
@@ -657,7 +653,7 @@ class BusinessController extends Controller {
 
   private async createDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateRequestDto & { files: MultipartParsedFile[] };
+      body: DriverCreateRequestDto<MultipartParsedFile>;
       user: UserEntityObjectWithGroupT;
       hostname: string;
     }>,
@@ -731,7 +727,7 @@ class BusinessController extends Controller {
 
   private async updateDriver(
     options: ApiHandlerOptions<{
-      body: DriverUpdateRequestDto & { files: MultipartParsedFile[] };
+      body: DriverUpdateRequestDto<MultipartParsedFile>;
       params: DriverRequestParameters;
       user: UserEntityObjectWithGroupT;
     }>,

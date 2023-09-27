@@ -7,7 +7,7 @@ import { addDriverFields as initialAddDriverFields } from '../fields.js';
 
 const getInitialFields = (
   trucks: TruckEntityT[],
-): FormField<DriverCreateRequestDto & { files: FileObject[] }>[] => {
+): FormField<DriverCreateRequestDto<FileObject>>[] => {
   const truckOptions = trucks.map((truck) => ({
     label: truck.licensePlateNumber,
     value: truck.id.toString(),

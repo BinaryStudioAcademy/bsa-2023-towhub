@@ -10,9 +10,8 @@ import { type FileObject } from '~/slices/files/libs/types/types.js';
 
 const createDriver = createAsyncThunk<
   null,
-  DriverCreateRequestDto & {
+  DriverCreateRequestDto<FileObject> & {
     businessId: number;
-    files: FileObject[];
   },
   AsyncThunkConfig
 >(

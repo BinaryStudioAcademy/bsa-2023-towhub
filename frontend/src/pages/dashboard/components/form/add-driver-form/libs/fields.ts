@@ -4,9 +4,7 @@ import { type FormField } from '~/libs/types/types.js';
 import { type DriverCreateRequestDto } from '~/packages/drivers/drivers.js';
 import { type FileObject } from '~/slices/files/libs/types/types.js';
 
-const addDriverFields: FormField<
-  DriverCreateRequestDto & { files: FileObject[] }
->[] = [
+const addDriverFields: FormField<DriverCreateRequestDto<FileObject>>[] = [
   {
     id: FormLabel.FIRST_NAME,
     label: FormLabel.FIRST_NAME,

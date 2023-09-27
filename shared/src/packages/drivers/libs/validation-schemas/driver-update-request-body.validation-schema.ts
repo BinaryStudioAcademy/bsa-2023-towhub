@@ -1,5 +1,10 @@
 import joi from 'joi';
 
+import { pluralizeString } from '~/libs/helpers/helpers.js';
+import {
+  type FileObject,
+  type MultipartParsedFile,
+} from '~/packages/files/libs/types/types.js';
 import { commonSignUpRules } from '~/packages/users/libs/validation-schemas/common-rules/common-rules.js';
 import { UserValidationRule } from '~/packages/users/libs/validation-schemas/enums/enums.js';
 
@@ -15,10 +20,21 @@ const driverLicenseNumber = joi
     'string.empty': DriverValidationMessage.DRIVER_LICENSE_NUMBER_REQUIRED,
   });
 
-const driverUpdateRequestBody = joi.object<DriverUpdateRequestDto, true>({
+const driverUpdateRequestBody = joi.object<
+  DriverUpdateRequestDto<MultipartParsedFile | FileObject>,
+  true
+>({
   ...commonSignUpRules,
   driverLicenseNumber,
   truckIds: joi.array().items(joi.number()),
+  files: joi
+    .array()
+    .items(joi.object())
+    .min(1)
+    .required()
+    .messages({
+      'array.min': `Choose at least 1 ${pluralizeString('file', 1)}`,
+    }),
 });
 
 export { driverLicenseNumber, driverUpdateRequestBody };
