@@ -10,7 +10,6 @@ import {
   socketTryAddDriverListeners,
   socketTryRemoveDriverListeners,
 } from '~/libs/packages/socket/libs/helpers/helpers.js';
-import { socket } from '~/libs/packages/socket/socket.js';
 import { actions as authActions } from '~/slices/auth/auth.js';
 import {
   selectSocketDriverAuthStatus,
@@ -20,7 +19,6 @@ import {
 import { RouterOutlet } from '../router/router.js';
 
 const DriverSocketProvider: FC = () => {
-  const isConnected = socket.checkIsConnected();
   const socketDriverAuthStatus = useAppSelector(selectSocketDriverAuthStatus);
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
@@ -34,7 +32,7 @@ const DriverSocketProvider: FC = () => {
     return () => {
       socketTryRemoveDriverListeners();
     };
-  }, [dispatch, socketDriverAuthStatus, isConnected, user]);
+  }, [dispatch, socketDriverAuthStatus, user]);
 
   return <RouterOutlet />;
 };

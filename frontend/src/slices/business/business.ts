@@ -1,5 +1,4 @@
-import { createDriver } from '~/slices/business/actions.js';
-
+import { createDriver } from './actions.js';
 import { actions } from './business.slice.js';
 
 const alLActions = {

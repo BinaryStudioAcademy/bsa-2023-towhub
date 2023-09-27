@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type HttpError } from '~/libs/packages/http/libs/exceptions/exceptions.js';
-import { type AsyncThunkConfig } from '~/libs/types/async-thunk-config.type';
+import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import { type FileEntityT } from '~/packages/files/libs/types/types.js';
 
 import { name as sliceName } from './files.slice.js';

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { type HttpError } from '~/libs/packages/http/libs/exceptions/http-error.exception';
+import { type HttpError } from '~/libs/packages/http/libs/exceptions/exceptions.js';
 
 import { createDriver } from './actions.js';
 

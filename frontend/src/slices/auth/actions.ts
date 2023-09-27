@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
@@ -44,6 +44,10 @@ const signUp = createAsyncThunk<
       return rejectWithValue({ ...error, message: error.message });
     }
   },
+);
+
+const resetAuthorizedDriverSocket = createAction(
+  `${sliceName}/reset-authorized-driver-socket`,
 );
 
 const authorizeDriverSocket = createAsyncThunk<null, number, AsyncThunkConfig>(
@@ -113,4 +117,11 @@ const logOut = createAsyncThunk<unknown, undefined, AsyncThunkConfig>(
   },
 );
 
-export { authorizeDriverSocket, getCurrent, logOut, signIn, signUp };
+export {
+  authorizeDriverSocket,
+  getCurrent,
+  logOut,
+  resetAuthorizedDriverSocket,
+  signIn,
+  signUp,
+};

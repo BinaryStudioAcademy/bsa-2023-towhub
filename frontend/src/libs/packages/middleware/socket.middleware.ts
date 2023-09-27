@@ -27,8 +27,6 @@ import { socket } from '../socket/socket.js';
 import { type ExtraArguments } from '../store/libs/types/store.types.js';
 import { type RootReducer } from '../store/libs/types/types.js';
 
-const socketInstance = socket.getInstance();
-
 const socketMiddleware: ThunkMiddleware<
   RootReducer,
   AnyAction,
@@ -40,6 +38,8 @@ const socketMiddleware: ThunkMiddleware<
   dispatch: ThunkDispatch<RootReducer, ExtraArguments, AnyAction>;
   getState: () => RootReducer;
 }) => {
+  const socketInstance = socket.getInstance();
+
   if (socketInstance) {
     socketInstance.on(
       ServerToClientEvent.ORDER_UPDATED,

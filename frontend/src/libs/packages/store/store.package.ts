@@ -23,6 +23,7 @@ import { reducer as driverReducer } from '~/slices/driver/driver.js';
 import { reducer as driversReducer } from '~/slices/drivers/drivers.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as orderReducer } from '~/slices/orders/order.js';
+import { reducer as socketReducer } from '~/slices/socket/socket.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { type MapServiceParameters } from '../map/libs/types/map-service-parameters.type.js';
@@ -55,6 +56,7 @@ class Store {
         driver: driverReducer,
         files: filesReducer,
         business: businessReducer,
+        socket: socketReducer,
       },
       middleware: (getDefaultMiddleware) => [
         ...getDefaultMiddleware({

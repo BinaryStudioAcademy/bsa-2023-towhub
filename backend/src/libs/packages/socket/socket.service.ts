@@ -123,6 +123,7 @@ class SocketService {
         }: FirstParameter<
           ClientToServerEventParameter[typeof ClientToServerEvent.AUTHORIZE_DRIVER]
         >) => {
+          logger.info(`${socket.id} tries to authorize as a driver`);
           const user = await this.userService.findById(userId);
           const shiftSocketService = new ShiftSocketService();
 

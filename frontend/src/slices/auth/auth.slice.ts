@@ -8,6 +8,7 @@ import {
   authorizeDriverSocket,
   getCurrent,
   logOut,
+  resetAuthorizedDriverSocket,
   signIn,
   signUp,
 } from './actions.js';
@@ -35,6 +36,9 @@ const { reducer, actions, name } = createSlice({
     },
   },
   extraReducers(builder) {
+    builder.addCase(resetAuthorizedDriverSocket, (state) => {
+      state.socketDriverAuthStatus = DataStatus.IDLE;
+    });
     builder.addCase(signUp.pending, (state) => {
       state.dataStatus = DataStatus.PENDING;
     });
