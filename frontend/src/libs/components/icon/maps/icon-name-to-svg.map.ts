@@ -2,6 +2,7 @@ import {
   type IconDefinition,
   faArrowDownLong,
   faBars,
+  faCar,
   faCaretDown,
   faCheck,
   faChevronDown,
@@ -15,6 +16,7 @@ import {
   faListUl,
   faLocationDot,
   faMap,
+  faMobileScreenButton,
   faPen,
   faPlus,
   faRightFromBracket,
@@ -55,6 +57,8 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.USERS]: faUsers,
   [IconName.XMARK]: faXmark,
   [IconName.EYE]: faEye,
+  [IconName.MOBILE]: faMobileScreenButton,
+  [IconName.CAR]: faCar,
 };
 
 export { iconNameToSvg };

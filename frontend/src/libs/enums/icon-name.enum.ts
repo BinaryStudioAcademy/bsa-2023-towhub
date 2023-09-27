@@ -23,6 +23,8 @@ const IconName = {
   RIGHT_FROM_BRACKET: 'right from bracket',
   TRUCK: 'truck',
   USERS: 'users',
+  MOBILE: 'mobile',
+  CAR: 'car',
 } as const;
 
 export { IconName };
