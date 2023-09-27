@@ -117,7 +117,7 @@ const Router = (): JSX.Element => {
           />
 
           <Route
-            path={AppRoute.DRIVER_ORDER_ID}
+            path={AppRoute.DRIVER_ORDER}
             element={
               <PageLayout isSidebarHidden>
                 <DriverOrder />

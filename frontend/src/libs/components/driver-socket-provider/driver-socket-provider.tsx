@@ -31,7 +31,7 @@ const DriverSocketProvider: FC = () => {
 
   useEffect(() => {
     if (currentOrder) {
-      navigate(`${AppRoute.DRIVER_ORDER}/${currentOrder.id}`);
+      navigate(`${AppRoute.ORDERS}/${currentOrder.id}`);
     }
   }, [navigate, currentOrder]);
 
