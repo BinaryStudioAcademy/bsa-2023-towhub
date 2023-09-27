@@ -131,7 +131,7 @@ const Orders: React.FC = () => {
     );
   }
 
-  if (orders.length === 0) {
+  if (orders.length === 0 && !filter.status) {
     return (
       <div className={styles.orders}>
         <p className={getValidClassNames(styles.textSign, 'textMdBold')}>
