@@ -4,4 +4,3 @@ const DriverCreationMessage = {
 };
 
 export { DriverCreationMessage };
-export { DriverApiPath } from 'shared/build/index.js';

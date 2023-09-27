@@ -1,2 +1,8 @@
 export { SocketRoom } from './socket-room.js';
-export { ClientSocketEvent, ServerSocketEvent } from 'shared/build/index.js';
+export {
+  ClientToServerEvent,
+  RoomPrefix,
+  ServerToClientEvent,
+  ServerToClientResponseStatus,
+  SocketError,
+} from 'shared/build/index.js';

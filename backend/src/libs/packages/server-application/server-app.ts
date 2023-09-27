@@ -16,7 +16,7 @@ import { ServerErrorType } from '~/libs/enums/enums.js';
 import { type ValidationError } from '~/libs/exceptions/exceptions.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
-import { GeolocationCacheService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
+import { type GeolocationCacheSocketService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { socket as socketService } from '~/libs/packages/socket/socket.js';
@@ -27,8 +27,8 @@ import {
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
 import { filesValidationPlugin } from '~/packages/files/files.js';
-import { type ShiftService } from '~/packages/shifts/shift.service.js';
-import { userService } from '~/packages/users/users.js';
+import { type ShiftSocketService } from '~/packages/shifts/shift.js';
+import { type UserService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
 import { jwtService } from '../jwt/jwt.js';
@@ -46,7 +46,9 @@ type Constructor = {
   logger: ILogger;
   database: IDatabase;
   apis: IServerAppApi[];
-  shiftService: ShiftService;
+  geolocationCacheSocketService: GeolocationCacheSocketService;
+  userService: UserService;
+  shiftSocketService: ShiftSocketService;
 };
 
 class ServerApp implements IServerApp {
@@ -60,20 +62,29 @@ class ServerApp implements IServerApp {
 
   private app: ReturnType<typeof Fastify>;
 
-  private shiftService: ShiftService;
+  private geolocationCacheSocketService: GeolocationCacheSocketService;
+
+  private userService: UserService;
+
+  private shiftSocketService: ShiftSocketService;
 
   public constructor({
     config,
     logger,
     database,
     apis,
-    shiftService,
+    geolocationCacheSocketService,
+    userService,
+    shiftSocketService,
   }: Constructor) {
     this.config = config;
     this.logger = logger;
     this.database = database;
     this.apis = apis;
-    this.shiftService = shiftService;
+
+    this.geolocationCacheSocketService = geolocationCacheSocketService;
+    this.userService = userService;
+    this.shiftSocketService = shiftSocketService;
 
     this.app = Fastify();
   }
@@ -88,18 +99,18 @@ class ServerApp implements IServerApp {
       validateFilesStrategy,
     } = parameters;
 
-    const preHandler: preHandlerHookHandler[] = [];
+    const preHandlers: preHandlerHookHandler[] = [];
 
     if (authStrategy) {
       const authStrategyHandler = this.resolveAuthStrategy(authStrategy);
 
       if (authStrategyHandler) {
-        preHandler.push(authStrategyHandler);
+        preHandlers.push(authStrategyHandler);
       }
     }
 
     if (validateFilesStrategy) {
-      preHandler.push(
+      preHandlers.push(
         this.resolveFileValidationStrategy(validateFilesStrategy),
       );
     }
@@ -108,7 +119,7 @@ class ServerApp implements IServerApp {
       url: path,
       method,
       handler,
-      preHandler,
+      preHandler: preHandlers,
       schema: {
         body: validation?.body,
         params: validation?.params,
@@ -265,7 +276,7 @@ class ServerApp implements IServerApp {
     await this.app.register(fastifyAuth);
     await this.app.register(authPlugin, {
       config: this.config,
-      userService,
+      userService: this.userService,
       jwtService,
     });
     await this.app.register(fastifyMultipart);
@@ -275,13 +286,15 @@ class ServerApp implements IServerApp {
   public async init(): Promise<void> {
     this.logger.info('Application initialization…');
 
+    this.database.connect();
+
     await this.initServe();
 
-    socketService.initializeIo({
-      config: this.config,
+    await socketService.initializeIo({
+      shiftSocketService: this.shiftSocketService,
       app: this.app,
-      geolocationCacheService: GeolocationCacheService.getInstance(),
-      shiftService: this.shiftService,
+      geolocationCacheSocketService: this.geolocationCacheSocketService,
+      userService: this.userService,
     });
 
     await this.initMiddlewares();
@@ -293,8 +306,6 @@ class ServerApp implements IServerApp {
     this.initErrorHandler();
 
     this.initRoutes();
-
-    this.database.connect();
 
     await this.app
       .listen({

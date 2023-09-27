@@ -2,28 +2,27 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
-import {
-  type BusinessSignUpResponseDto,
-  type CustomerSignUpResponseDto,
-  type UserSignInResponseDto,
-  type ValueOf,
-} from '~/libs/types/types.js';
+import { type AuthUser, type ValueOf } from '~/libs/types/types.js';
 
-import { getCurrent, logOut, signIn, signUp } from './actions.js';
+import {
+  authorizeDriverSocket,
+  getCurrent,
+  logOut,
+  signIn,
+  signUp,
+} from './actions.js';
 
 type State = {
   error: HttpError | null;
   dataStatus: ValueOf<typeof DataStatus>;
-  user:
-    | UserSignInResponseDto
-    | CustomerSignUpResponseDto
-    | BusinessSignUpResponseDto
-    | null;
+  socketDriverAuthStatus: ValueOf<typeof DataStatus>;
+  user: AuthUser | null;
 };
 
 const initialState: State = {
   error: null,
   dataStatus: DataStatus.IDLE,
+  socketDriverAuthStatus: DataStatus.IDLE,
   user: null,
 };
 
@@ -43,6 +42,15 @@ const { reducer, actions, name } = createSlice({
       state.error = null;
       state.user = action.payload;
       state.dataStatus = DataStatus.FULFILLED;
+    });
+    builder.addCase(authorizeDriverSocket.pending, (state) => {
+      state.socketDriverAuthStatus = DataStatus.PENDING;
+    });
+    builder.addCase(authorizeDriverSocket.rejected, (state) => {
+      state.socketDriverAuthStatus = DataStatus.REJECTED;
+    });
+    builder.addCase(authorizeDriverSocket.fulfilled, (state) => {
+      state.socketDriverAuthStatus = DataStatus.FULFILLED;
     });
     builder.addCase(signUp.rejected, (state, { payload }) => {
       state.dataStatus = DataStatus.REJECTED;
@@ -76,6 +84,7 @@ const { reducer, actions, name } = createSlice({
     builder.addCase(logOut.fulfilled, (state) => {
       state.user = initialState.user;
       state.dataStatus = DataStatus.FULFILLED;
+      state.socketDriverAuthStatus = DataStatus.IDLE;
     });
     builder.addCase(logOut.rejected, (state, { payload }) => {
       state.dataStatus = DataStatus.REJECTED;

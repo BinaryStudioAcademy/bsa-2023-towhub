@@ -1,12 +1,12 @@
 import { type UserEntityT } from '~/packages/users/users.js';
 
-import { type DriverEntity } from './driver-entity.type.js';
+import { type DriverWithAvatarUrl } from './driver-with-avatar-url.type.js';
 
 type DriverWithUserData = Omit<
   UserEntityT,
   'passwordHash' | 'passwordSalt' | 'accessToken'
 > & {
-  driver: DriverEntity;
+  driver: DriverWithAvatarUrl;
 };
 
 export { type DriverWithUserData };

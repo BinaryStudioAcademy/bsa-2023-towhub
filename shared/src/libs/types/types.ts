@@ -1,5 +1,7 @@
+export { type Coordinates } from './coordinates.type.js';
 export { type EntityPagination } from './entity-pagination.type.js';
 export { type ErrorConstructor } from './error-constructor.type.js';
+export { type FirstParameter } from './first-parameter.type.js';
 export { type GetPaginatedPageQuery } from './get-page-request-dto.type.js';
 export { type NullableProperties } from './nullable-properties.type.js';
 export { type OperationResult } from './operation-result.type.js';

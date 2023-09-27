@@ -1,5 +1,6 @@
+import { type Coordinates } from '~/libs/types/types.js';
 import { type DriverCommonDetails } from '~/packages/drivers/drivers.js';
-import { type TruckEntity } from '~/packages/trucks/trucks.js';
+import { type TruckEntityT } from '~/packages/trucks/trucks.js';
 import {
   type UserCommonDetails,
   type UserEntityT,
@@ -12,8 +13,8 @@ type OrderEntity = {
   price: number;
   scheduledTime: string;
   carsQty: number;
-  startPoint: string;
-  endPoint: string;
+  startPoint: Coordinates;
+  endPoint: Coordinates;
   status: OrderStatusValues;
   userId: number | null;
   businessId: number | null;
@@ -21,7 +22,7 @@ type OrderEntity = {
   customerPhone: string | null;
   shiftId: number;
   driver: DriverInfo | null;
-  truck: Pick<TruckEntity, 'id' | 'licensePlateNumber'> | null;
+  truck: Pick<TruckEntityT, 'id' | 'licensePlateNumber'> | null;
 };
 
 type DriverInfo = DriverCommonDetails &

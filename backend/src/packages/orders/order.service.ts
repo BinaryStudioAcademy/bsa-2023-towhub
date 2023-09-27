@@ -1,18 +1,24 @@
 import { HttpMessage } from '~/libs/enums/enums.js';
 import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
+import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
+import { type MapService } from '../map/map.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
+import { checkIsCustomer, checkIsDriver } from './libs/helpers/helpers.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
   type OrderResponseDto,
+  type OrderStatusValues,
+  type OrderUpdateAcceptStatusRequestDto,
+  type OrderUpdateAcceptStatusResponseDto,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import { OrderEntity } from './order.entity.js';
@@ -31,6 +37,10 @@ class OrderService implements Omit<IService, 'find'> {
 
   private userService: UserService;
 
+  private socketService: SocketService;
+
+  private mapService: MapService;
+
   public constructor({
     businessService,
     orderRepository,
@@ -38,6 +48,8 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService,
     truckService,
     userService,
+    mapService,
+    socket,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
@@ -45,6 +57,8 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService: ShiftService;
     truckService: TruckService;
     userService: UserService;
+    mapService: MapService;
+    socket: SocketService;
   }) {
     this.orderRepository = orderRepository;
 
@@ -54,14 +68,20 @@ class OrderService implements Omit<IService, 'find'> {
 
     this.shiftService = shiftService;
 
+    this.socketService = socket;
+
     this.truckService = truckService;
 
     this.userService = userService;
+
+    this.mapService = mapService;
+
+    this.socketService = socket;
   }
 
   public async create(
     payload: OrderCreateRequestDto & {
-      userId: number | null;
+      user: UserEntityObjectWithGroupT | null;
     },
   ): Promise<OrderResponseDto> {
     const {
@@ -72,8 +92,12 @@ class OrderService implements Omit<IService, 'find'> {
       customerName,
       customerPhone,
       truckId,
-      userId,
+      user,
     } = payload;
+
+    const { firstName = null, phone = null, id: userId = null } = user ?? {};
+    const nameInOrder = customerName ?? firstName;
+    const phoneInOrder = customerPhone ?? phone;
 
     const truck = await this.truckService.findById(truckId);
 
@@ -97,8 +121,14 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
+    const { price } = await this.mapService.getPriceByDistance({
+      startAddress: startPoint,
+      endAddress: endPoint,
+      pricePerKm: truck.pricePerKm,
+    });
+
     const order = await this.orderRepository.create({
-      price: 100, //Mock, get price from truck and calculated distance
+      price,
       scheduledTime,
       carsQty,
       startPoint,
@@ -107,8 +137,8 @@ class OrderService implements Omit<IService, 'find'> {
       userId,
       businessId: shift.businessId,
       shiftId: shift.id,
-      customerName,
-      customerPhone,
+      customerName: nameInOrder,
+      customerPhone: phoneInOrder,
     });
 
     return OrderEntity.initialize({
@@ -216,7 +246,73 @@ class OrderService implements Omit<IService, 'find'> {
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     };
 
-    return OrderEntity.initialize(orderExtended).toObject();
+    const order = OrderEntity.initialize(orderExtended).toObject();
+
+    this.socketService.notifyOrderUpdate(order.id, order);
+
+    return order;
+  }
+
+  public async updateAcceptStatusByDriver({
+    orderId,
+    payload,
+    user,
+  }: {
+    orderId: OrderEntityT['id'];
+    payload: OrderUpdateAcceptStatusRequestDto;
+    user: UserEntityObjectWithGroupT;
+  }): Promise<OrderUpdateAcceptStatusResponseDto> {
+    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+
+    await this.shiftService.checkDriverStartShift(user.id);
+
+    const updatedOrder = await this.orderRepository.update({
+      id: orderId,
+      payload: { status: statusForUpdate },
+    });
+
+    if (!updatedOrder) {
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
+    }
+
+    const { id, status } =
+      OrderEntity.initializeUpdate(updatedOrder).toObject();
+
+    this.socketService.notifyOrderUpdate(id, { status });
+
+    return { id, status };
+  }
+
+  public async updateAcceptStatusByCustomer({
+    orderId,
+    payload,
+    user,
+  }: {
+    orderId: OrderEntityT['id'];
+    payload: OrderUpdateAcceptStatusRequestDto;
+    user: UserEntityObjectWithGroupT | null;
+  }): Promise<OrderUpdateAcceptStatusResponseDto> {
+    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+
+    const updatedOrder = await this.orderRepository.update({
+      id: orderId,
+      payload: { status: statusForUpdate },
+    });
+
+    if (!updatedOrder) {
+      throw new NotFoundError({
+        message: HttpMessage.ORDER_DOES_NOT_EXIST,
+      });
+    }
+
+    const { id, status } =
+      OrderEntity.initializeUpdate(updatedOrder).toObject();
+
+    this.socketService.notifyOrderUpdate(id, { status });
+
+    return { id, status };
   }
 
   public async findAllBusinessOrders(
@@ -300,6 +396,23 @@ class OrderService implements Omit<IService, 'find'> {
         message: HttpMessage.ORDER_DOES_NOT_EXIST,
       });
     }
+  }
+
+  private checkIsOrderAccepted(
+    isAccepted: boolean,
+    user: UserEntityObjectWithGroupT | null,
+  ): OrderStatusValues {
+    if (user && checkIsDriver(user.group.key)) {
+      return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REJECTED;
+    }
+
+    if ((!user || checkIsCustomer(user.group.key)) && !isAccepted) {
+      return OrderStatus.CANCELED;
+    }
+
+    throw new NotFoundError({
+      message: HttpMessage.USER_CAN_NOT_ACCEPT_OR_DECLINE_ORDER,
+    });
   }
 }
 

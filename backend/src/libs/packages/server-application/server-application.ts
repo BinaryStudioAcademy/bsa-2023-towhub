@@ -1,13 +1,18 @@
 import { config } from '~/libs/packages/config/config.js';
 import { database } from '~/libs/packages/database/database.js';
+import { geolocationCacheSocketService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { logger } from '~/libs/packages/logger/logger.js';
 import { authController } from '~/packages/auth/auth.js';
 import { businessController } from '~/packages/business/business.js';
+import { driverController } from '~/packages/drivers/drivers.js';
 import { filesController } from '~/packages/files/files.js';
 import { orderController } from '~/packages/orders/orders.js';
-import { shiftController, shiftService } from '~/packages/shifts/shift.js';
+import {
+  shiftController,
+  shiftSocketService,
+} from '~/packages/shifts/shift.js';
 import { truckController } from '~/packages/trucks/trucks.js';
-import { userController } from '~/packages/users/users.js';
+import { userController, userService } from '~/packages/users/users.js';
 
 import { ServerApp } from './server-app.js';
 import { ServerAppApi } from './server-app-api.js';
@@ -22,6 +27,7 @@ const apiV1 = new ServerAppApi(
   ...truckController.routes,
   ...shiftController.routes,
   ...orderController.routes,
+  ...driverController.routes,
 );
 
 const serverApp = new ServerApp({
@@ -29,7 +35,9 @@ const serverApp = new ServerApp({
   logger,
   database,
   apis: [apiV1],
-  shiftService,
+  geolocationCacheSocketService,
+  userService,
+  shiftSocketService,
 });
 
 export { type ServerAppRouteParameters } from './libs/types/types.js';

@@ -1,24 +1,31 @@
 import { relations } from 'drizzle-orm';
 import {
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   primaryKey,
   real,
   serial,
   timestamp,
+  unique,
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { ORDER_STATUSES } from 'shared/build/index.js';
+import {
+  type Coordinates,
+  ORDER_STATUSES,
+  TruckStatus,
+} from 'shared/build/index.js';
 
 const orderStatus = pgEnum('order_status', ORDER_STATUSES);
+
 const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
-  price: integer('price').notNull(),
+  price: real('price').notNull(),
   scheduledTime: timestamp('scheduled_time', { mode: 'string' }).notNull(),
-  startPoint: varchar('start_point').notNull(),
-  endPoint: varchar('end_point').notNull(),
+  startPoint: jsonb('start_point').$type<Coordinates>().notNull(),
+  endPoint: jsonb('end_point').$type<Coordinates>().notNull(),
   status: orderStatus('status').notNull(),
   userId: integer('user_id').references(() => users.id),
   businessId: integer('business_id').references(() => business.id),
@@ -118,9 +125,16 @@ const drivers = pgTable('driver_details', {
   businessId: integer('business_id')
     .notNull()
     .references(() => business.id),
+  avatarId: integer('avatar_id').references(() => files.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
+
+const truckStatusEnum = pgEnum('truck_status', [
+  TruckStatus.AVAILABLE,
+  TruckStatus.ACTIVE,
+  TruckStatus.BUSY,
+]);
 
 const trucks = pgTable(
   'trucks',
@@ -137,6 +151,7 @@ const trucks = pgTable(
     licensePlateNumber: varchar('license_plate_number').notNull(),
     year: integer('year').notNull(),
     towType: varchar('tow_type').notNull(),
+    status: truckStatusEnum('status').notNull().default(TruckStatus.AVAILABLE),
   },
   (trucks) => {
     return {
@@ -154,6 +169,7 @@ const trucksRelations = relations(trucks, ({ many }) => ({
 const usersTrucks = pgTable(
   'users_trucks',
   {
+    id: serial('id').primaryKey(),
     userId: integer('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
@@ -163,7 +179,11 @@ const usersTrucks = pgTable(
   },
   (table) => {
     return {
-      pk: primaryKey(table.userId, table.truckId),
+      unique_user_id_truck_id: unique('unique_user_id_truck_id').on(
+        table.userId,
+        table.truckId,
+      ),
+      pk: primaryKey(table.id),
     };
   },
 );
@@ -217,6 +237,10 @@ const driversRelations = relations(drivers, ({ one, many }) => ({
     fields: [drivers.businessId],
     references: [business.id],
   }),
+  avatar: one(files, {
+    fields: [drivers.avatarId],
+    references: [files.id],
+  }),
   orders: many(orders),
 }));
 
@@ -234,6 +258,7 @@ export {
   shiftsRelations,
   trucks,
   trucksRelations,
+  truckStatusEnum,
   users,
   usersRelations,
   usersTrucks,

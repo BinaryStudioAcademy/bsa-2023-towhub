@@ -1,0 +1,25 @@
+@import "src/assets/css/vars.scss";
+
+$section-max-width: 416px;
+
+.buttonsSection {
+  display: flex;
+  justify-content: space-between;
+  max-width: $section-max-width;
+  margin: 20px 0;
+}
+
+.buttonDecline {
+  font-weight: $font-weight-normal;
+  background-color: $red-light;
+}
+
+.buttonPayNow {
+  font-weight: $font-weight-normal;
+  background-color: $green;
+}
+
+.buttonHomepage {
+  font-weight: $font-weight-normal;
+  background-color: $blue-extra-dark;
+}
