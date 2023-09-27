@@ -13,6 +13,7 @@ export { type ColumnDef } from '@tanstack/react-table';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
 export { type SingleValue } from 'react-select';
 export {
+  type AuthUser,
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
@@ -33,6 +34,7 @@ export {
   type TruckEntityT,
   type TruckTowType,
   type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
   type UserGroupEntityT,

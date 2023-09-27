@@ -1,8 +1,9 @@
-import { uploadFile } from './actions.js';
+import { uploadAvatar, uploadFile } from './actions.js';
 import { actions } from './files.slice.js';
 
 const allActions = {
   ...actions,
+  uploadAvatar,
   uploadFile,
 };
 
