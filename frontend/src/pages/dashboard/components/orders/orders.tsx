@@ -1,5 +1,4 @@
 import { OrderList } from '~/libs/components/components.js';
-import { jsonToLatLngLiteral } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppMap,
@@ -32,9 +31,7 @@ const Orders: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setEndPointMarkers(
-      orders.map((order) => jsonToLatLngLiteral(order.endPoint)),
-    );
+    setEndPointMarkers(orders.map((order) => order.endPoint));
   }, [orders]);
 
   useAppMap({
