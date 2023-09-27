@@ -1,4 +1,6 @@
 export { buildPaymetnsRequestQuery } from './build-payments-request-query.helper.js';
+export { calculateApplicationFee } from './calculate-application-fee.helper.js';
+export { calculateTotal } from './calculate-total.helper.js';
 export { constructUrl } from './construct-url.helper.js';
 export { convertCentsToCurrency } from './convert-cents-to-currency.helper.js';
 export { convertCurrencyToCents } from './convert-currency-to-cents.helper.js';

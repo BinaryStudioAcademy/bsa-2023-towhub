@@ -34,3 +34,4 @@ export {
   businessUpdateParameters,
   businessUpdateRequestBody,
 } from './libs/validation-schemas/validation-schemas.js';
+export { type BusinessService } from '~/packages/business/business.service.js';

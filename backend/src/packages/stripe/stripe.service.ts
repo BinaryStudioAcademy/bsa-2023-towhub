@@ -1,35 +1,68 @@
-import { type GetPaymentsResponse } from 'shared/build/index.js';
-import { type Stripe } from 'stripe';
+import Stripe from 'stripe';
 
+import { type IConfig } from '~/libs/packages/config/config.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
+import {
+  type BusinessEntityT,
+  type BusinessService,
+} from '~/packages/business/business.js';
+import {
+  type MapService,
+  convertMetersToKilometers,
+} from '~/packages/map/map.js';
+import { type TruckService } from '~/packages/trucks/trucks.js';
+import {
+  type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupT,
+} from '~/packages/users/users.js';
 
-import { type BusinessService } from '../business/business.service.js';
-import { type BusinessEntityT } from '../business/libs/types/types.js';
-import { convertMetersToKm } from '../map/map.js';
-import { type MapService } from '../map/map.service.js';
-import { type TruckService } from '../trucks/truck.service.js';
-import { type UserEntityObjectWithGroupT } from '../users/users.js';
-import { DEFAULT_PAGE_SIZE } from './libs/constants/constants.js';
-import { UserGroupKey } from './libs/enums/enums.js';
-import { StripeEvent } from './libs/enums/stripe-event.enum.js';
-import { paginateArray } from './libs/helpers/paginate-array.helper.js';
+import {
+  CHECKOUT_MODE,
+  CONNECT_ACCOUNT_BUSINESS_TYPE,
+  CONNECT_ACCOUNT_TYPE,
+  DEFAULT_CURRENCY,
+  DEFAULT_PAGE_SIZE,
+  MAX_PAGINATION_LIMIT,
+  ONBOARDING_LINK_TYPE,
+  SERVICES_NAME,
+  STRIPE_TOWING_SERVICES_MCC,
+  SUPPORTED_PAYMENT_METHODS,
+} from './libs/constants/constants.js';
+import {
+  AppRoute,
+  StripeEvent,
+  StripeOperationStatus,
+  UserGroupKey,
+} from './libs/enums/enums.js';
+import {
+  buildPaymetnsRequestQuery,
+  calculateApplicationFee,
+  calculateTotal,
+  constructUrl,
+  convertCurrencyToCents,
+  paginateArray,
+} from './libs/helpers/helpers.js';
 import {
   type CheckoutMetadata,
+  type CheckoutProperties,
   type GetPaymentsRequest,
+  type GetPaymentsResponse,
   type OrderResponseDto,
+  type PaymentIntentWithMetadata,
 } from './libs/types/types.js';
 import { PaymentEntity } from './payment.entity.js';
-import { type StripeRepository } from './stripe.repository.js';
 
 type StripeServiceProperties = {
-  stripeRepository: StripeRepository;
+  config: IConfig['ENV'];
   businessService: BusinessService;
   truckService: TruckService;
   mapService: MapService;
 };
 
 class StripeService {
-  private stripeRepository: StripeRepository;
+  private stripe: Stripe;
+
+  private config: IConfig['ENV'];
 
   private businessService: BusinessService;
 
@@ -38,12 +71,15 @@ class StripeService {
   private mapService: MapService;
 
   public constructor({
-    stripeRepository,
+    config,
     businessService,
     truckService,
     mapService,
   }: StripeServiceProperties) {
-    this.stripeRepository = stripeRepository;
+    this.config = config;
+    this.stripe = new Stripe(this.config.STRIPE.API_KEY, {
+      apiVersion: this.config.STRIPE.API_VERSION,
+    });
     this.businessService = businessService;
     this.truckService = truckService;
     this.mapService = mapService;
@@ -65,10 +101,28 @@ class StripeService {
 
     await this.attachAccountIfNone(business, account);
 
-    const link =
-      await this.stripeRepository.generateExpressAccountOnboardingLink(account);
+    const { url } = await this.getExpressAccountOnboardingLink(account);
 
-    return link.url;
+    return url;
+  }
+
+  private getExpressAccountOnboardingLink(
+    account: Stripe.Account,
+  ): Promise<Stripe.AccountLink> {
+    return this.stripe.accountLinks.create({
+      account: account.id,
+      refresh_url: constructUrl(
+        this.config.APP.FRONTEND_BASE_URL,
+        AppRoute.SETUP_PAYMENT,
+        { [StripeOperationStatus.REFRESH]: true },
+      ),
+      return_url: constructUrl(
+        this.config.APP.FRONTEND_BASE_URL,
+        AppRoute.SETUP_PAYMENT,
+        { [StripeOperationStatus.SUCCESS]: true },
+      ),
+      type: ONBOARDING_LINK_TYPE,
+    });
   }
 
   private async createNewOrRetrieveFromStripe(
@@ -81,8 +135,47 @@ class StripeService {
     };
 
     return business.stripeId
-      ? await this.stripeRepository.retrieveExpressAccount(business.stripeId)
-      : await this.stripeRepository.createExpressAccount(userWithBusiness);
+      ? await this.retrieveExpressAccount(business.stripeId)
+      : await this.createExpressAccount(userWithBusiness);
+  }
+
+  private retrieveExpressAccount(id: string): Promise<Stripe.Account> {
+    return this.stripe.accounts.retrieve(id);
+  }
+
+  public createExpressAccount(
+    user: UserEntityObjectWithGroupAndBusinessT,
+  ): Promise<Stripe.Account> {
+    const accountParameters: Stripe.AccountCreateParams = {
+      type: CONNECT_ACCOUNT_TYPE,
+      email: user.email,
+      default_currency: DEFAULT_CURRENCY,
+      business_profile: {
+        // TODO: this is temporary, I guess, we would eventually have a personal business page in our app
+        // Anyway, this field will be shown to the enduser during registration unless we prefill it prematurely
+        url:
+          process.env.NODE_ENV === 'production'
+            ? this.config.APP.FRONTEND_BASE_URL
+            : constructUrl(
+                this.config.APP.FRONTEND_BASE_URL,
+                `/business/${user.business.id}`,
+              ),
+        mcc: String(STRIPE_TOWING_SERVICES_MCC),
+        name: user.business.companyName,
+      },
+      business_type: CONNECT_ACCOUNT_BUSINESS_TYPE,
+      individual: {
+        first_name: user.firstName,
+        last_name: user.lastName,
+        email: user.email,
+      },
+      metadata: {
+        userId: user.id,
+        businessId: user.business.id,
+      },
+    };
+
+    return this.stripe.accounts.create(accountParameters);
   }
 
   private async attachAccountIfNone(
@@ -128,6 +221,72 @@ class StripeService {
   public async generateCheckoutLink(
     order: OrderResponseDto,
   ): Promise<string | null> {
+    const { businessStripeId, distance, pricePerUnit, metadata } =
+      await this.collectDataFromOrderForCheckout(order);
+
+    return await this.createCheckoutSession({
+      businessStripeId,
+      distance,
+      pricePerUnit,
+      metadata,
+    });
+  }
+
+  public async createCheckoutSession({
+    businessStripeId,
+    distance,
+    pricePerUnit,
+    metadata,
+  }: CheckoutProperties): Promise<string | null> {
+    const total = calculateTotal({
+      price: pricePerUnit,
+      quantity: distance,
+    });
+
+    const applicationFeeAmount = calculateApplicationFee(total);
+
+    const parameters: Stripe.Checkout.SessionCreateParams = {
+      payment_method_types: [...SUPPORTED_PAYMENT_METHODS],
+      line_items: [
+        {
+          price_data: {
+            currency: DEFAULT_CURRENCY,
+            unit_amount: convertCurrencyToCents(pricePerUnit),
+            product_data: {
+              name: SERVICES_NAME,
+            },
+          },
+          quantity: distance,
+        },
+      ],
+      payment_intent_data: {
+        application_fee_amount: convertCurrencyToCents(applicationFeeAmount),
+        on_behalf_of: businessStripeId,
+        transfer_data: {
+          destination: businessStripeId,
+        },
+        metadata,
+      },
+      mode: CHECKOUT_MODE,
+      success_url: constructUrl(
+        this.config.APP.FRONTEND_BASE_URL,
+        AppRoute.PAYMENTS,
+        { [StripeOperationStatus.SUCCESS]: true },
+      ),
+      cancel_url: constructUrl(
+        this.config.APP.FRONTEND_BASE_URL,
+        AppRoute.PAYMENTS,
+        { [StripeOperationStatus.CANCEL]: true },
+      ),
+    };
+    const { url } = await this.stripe.checkout.sessions.create(parameters);
+
+    return url;
+  }
+
+  private async collectDataFromOrderForCheckout(
+    order: OrderResponseDto,
+  ): Promise<CheckoutProperties> {
     const business = await this.businessService.findById(order.businessId);
 
     if (!business) {
@@ -172,12 +331,14 @@ class StripeService {
       order.endPoint,
     );
 
-    return await this.stripeRepository.createCheckoutSession({
+    const distance = convertMetersToKilometers(distanceInMeters.value);
+
+    return {
       businessStripeId: business.stripeId,
-      distance: convertMetersToKm(distanceInMeters.value),
+      distance,
       pricePerUnit: truck.pricePerKm,
       metadata,
-    });
+    };
   }
 
   public async getPayments(
@@ -192,7 +353,7 @@ class StripeService {
       options.userId = user.id;
     }
 
-    const items = await this.stripeRepository.collectPaymentIntents(options);
+    const items = await this.collectPaymentIntents(options);
 
     const page = options.page ?? 1;
     const limit = options.limit ?? DEFAULT_PAGE_SIZE;
@@ -205,6 +366,16 @@ class StripeService {
       items: itemsAsDto,
       total: items.length,
     };
+  }
+
+  public collectPaymentIntents(
+    options: GetPaymentsRequest,
+  ): Promise<PaymentIntentWithMetadata[]> {
+    return this.stripe.paymentIntents
+      .search(buildPaymetnsRequestQuery(options))
+      .autoPagingToArray({ limit: MAX_PAGINATION_LIMIT }) as Promise<
+      PaymentIntentWithMetadata[]
+    >;
   }
 
   private async checkUserBusinessAndGetId(
@@ -224,6 +395,17 @@ class StripeService {
     }
 
     return business.id;
+  }
+
+  public constructWebhookEvent(
+    payload: string | Buffer,
+    signature: string,
+  ): Stripe.Event {
+    return this.stripe.webhooks.constructEvent(
+      payload,
+      signature,
+      this.config.STRIPE.WEBHOOK_SECRET,
+    );
   }
 }
 

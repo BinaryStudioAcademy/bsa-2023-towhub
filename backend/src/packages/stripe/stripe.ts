@@ -5,18 +5,16 @@ import { businessService } from '../business/business.js';
 import { mapService } from '../map/map.js';
 import { truckService } from '../trucks/trucks.js';
 import { StripeController } from './stripe.controller.js';
-import { StripeRepository } from './stripe.repository.js';
 import { StripeService } from './stripe.service.js';
 
-const stripeRepository = new StripeRepository(config.ENV);
 const stripeService = new StripeService({
-  stripeRepository,
+  config: config.ENV,
   businessService,
   truckService,
   mapService,
 });
 const stripeController = new StripeController(logger, stripeService);
 
-export { stripeController, stripeRepository, stripeService };
+export { stripeController, stripeService };
 export { PaymentEntity } from './payment.entity.js';
 export { type StripeService } from './stripe.service.js';

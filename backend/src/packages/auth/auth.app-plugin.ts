@@ -12,12 +12,12 @@ import { type ValueOf } from '~/libs/types/types.js';
 
 import { AuthStrategy } from './auth.js';
 import { UserGroupKey } from './libs/enums/enums.js';
-import { createUnauthorizedError } from './libs/helpers/create-unauthorized-error.helper.js';
-import { type AuthPluginOptions } from './libs/types/auth-plugin-options.type.js';
+import { createUnauthorizedError } from './libs/helpers/helpers.js';
+import { type AuthPluginOptions } from './libs/types/types.js';
 import { jwtPayloadSchema } from './libs/validation-schemas/validation-schemas.js';
 
 const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
-  const { userService, jwtService, stripeRepository } = options;
+  const { userService, jwtService, stripeService } = options;
 
   fastify.decorateRequest('user', null);
 
@@ -57,7 +57,6 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
         request.user = user;
 
         // Async should not call done() unless error
-        // return done()
       } catch (error) {
         return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED, error));
       }
@@ -96,19 +95,19 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
       _: FastifyReply,
       done: (error?: Error) => void,
     ): void => {
-      const signature = request.headers['stripe-signature'];
+      const signature = request.headers[HttpHeader.STRIPE_SIGNATURE];
 
       if (!(request.rawBody && signature && typeof signature === 'string')) {
         return done(
           new HttpError({
-            message: 'Error parsing stripe webhook request',
+            message: HttpMessage.STRIPE_WEBHOOK_ERROR,
             status: HttpCode.BAD_REQUEST,
           }),
         );
       }
 
       try {
-        const event = stripeRepository.constructWebhookEvent(
+        const event = stripeService.constructWebhookEvent(
           request.rawBody,
           signature,
         );
@@ -116,7 +115,7 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
       } catch (error) {
         done(
           new HttpError({
-            message: 'Error parsing stripe webhook request',
+            message: HttpMessage.STRIPE_WEBHOOK_ERROR,
             status: HttpCode.BAD_REQUEST,
             cause: error,
           }),

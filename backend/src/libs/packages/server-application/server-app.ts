@@ -30,7 +30,7 @@ import {
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
 import { filesValidationPlugin } from '~/packages/files/files.js';
-import { stripeRepository } from '~/packages/stripe/stripe.js';
+import { stripeService } from '~/packages/stripe/stripe.js';
 import { userService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
@@ -271,7 +271,7 @@ class ServerApp implements IServerApp {
       config: this.config,
       userService,
       jwtService,
-      stripeRepository,
+      stripeService,
     });
 
     await this.app.register(fastifyRawBody, {

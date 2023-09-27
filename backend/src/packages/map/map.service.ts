@@ -1,5 +1,5 @@
 import { TravelMode } from './libs/enums/enums.js';
-import { convertMetersToKm } from './libs/helpers/helpers.js';
+import { convertMetersToKilometers } from './libs/helpers/helpers.js';
 import {
   type Client,
   type Distance,
@@ -41,7 +41,7 @@ class MapService {
     pricePerKm,
   }: OrderCalculatePriceRequestDto): Promise<OrderCalculatePriceResponseDto> {
     const distance = await this.getDistance(startAddress, endAddress);
-    const km = convertMetersToKm(distance.value);
+    const km = convertMetersToKilometers(distance.value);
     const orderPrice = (pricePerKm * km).toFixed(2);
 
     return { price: Number(orderPrice) };

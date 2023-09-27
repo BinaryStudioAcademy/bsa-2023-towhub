@@ -15,3 +15,4 @@ const truckService = new TruckService(truckRepository);
 const truckController = new TruckController(logger, truckService);
 
 export { truckController, truckService };
+export { type TruckService } from './truck.service.js';
