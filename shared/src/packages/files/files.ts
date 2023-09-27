@@ -1,4 +1,7 @@
-export { fileInputDefaultsConfig } from './libs/config/config.js';
+export {
+  avatarInputDefaultsConfig,
+  fileInputDefaultsConfig,
+} from './libs/config/config.js';
 export { FilesApiPath } from './libs/enums/enums.js';
 export { checkValidFileName } from './libs/helpers/helpers.js';
 export {

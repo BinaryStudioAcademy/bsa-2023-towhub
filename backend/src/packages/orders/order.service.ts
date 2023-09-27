@@ -128,7 +128,7 @@ class OrderService implements Omit<IService, 'find'> {
     });
 
     const order = await this.orderRepository.create({
-      price: Math.ceil(price),
+      price,
       scheduledTime,
       carsQty,
       startPoint,

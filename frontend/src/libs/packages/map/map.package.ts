@@ -15,6 +15,7 @@ type Constructor = MapServiceParameters & {
     routes: google.maps.DistanceMatrixService;
     directionsService: google.maps.DirectionsService;
     directionsRenderer: google.maps.DirectionsRenderer;
+    autocomplete: google.maps.places.AutocompleteService;
     infoWindow: google.maps.InfoWindow;
   };
   map: google.maps.Map | null;
@@ -35,6 +36,8 @@ class MapService implements IMapService {
   private geocoder!: google.maps.Geocoder;
 
   private routes!: google.maps.DistanceMatrixService;
+
+  private autocomplete!: google.maps.places.AutocompleteService;
 
   private infoWindow: google.maps.InfoWindow;
 

@@ -1,0 +1,3 @@
+const COLUMN_AVATAR_SIZE = 180;
+
+export { COLUMN_AVATAR_SIZE };

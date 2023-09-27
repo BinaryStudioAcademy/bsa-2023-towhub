@@ -1,1 +1,4 @@
-export { type FileUploadResponseDto } from 'shared/build/index.js';
+export {
+  type FileEntityT,
+  type FileUploadResponseDto,
+} from 'shared/build/index.js';

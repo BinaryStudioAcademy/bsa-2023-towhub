@@ -1,14 +1,20 @@
-import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
+import { type OrderCreateFormDto } from '~/packages/orders/libs/types/types.js';
 
 import { TruckCarsQuantity } from './enums.js';
 
+const getCurrentDate = (): string => {
+  const currentDatetime = new Date();
+
+  return currentDatetime.toISOString();
+};
+
 const getCreateOrderDefaultPayload = (
   selectedTruckId: number,
-): OrderCreateRequestDto => {
+): OrderCreateFormDto => {
   return {
     customerName: '',
     customerPhone: '',
-    scheduledTime: '',
+    scheduledTime: getCurrentDate(),
     startPoint: '',
     endPoint: '',
     carsQty: TruckCarsQuantity.MIN,
