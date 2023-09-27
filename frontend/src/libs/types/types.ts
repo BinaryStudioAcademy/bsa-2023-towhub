@@ -4,6 +4,7 @@ export { type AsyncThunkConfig } from './async-thunk-config.type.js';
 export { type BurgerMenuItem } from './burger-menu-item.type.js';
 export { type DarkColor, type LightColor } from './color.type.js';
 export { type FormField } from './form.type.js';
+export { type LocationChangeHandler } from './location-change-handler.type.js';
 export { type SelectOption } from './select-option.type.js';
 export { type ServerErrorHandling } from './server-error-handling.type.js';
 export { type TabName, type TabsType } from './sidebar.type.js';

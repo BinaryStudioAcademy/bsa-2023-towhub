@@ -1,7 +1,6 @@
 type TruckFilters = {
-  location: string | null;
-  price: string | null;
-  capacity: string | null;
+  id: string;
+  desc: boolean;
 };
 
 export { type TruckFilters };
