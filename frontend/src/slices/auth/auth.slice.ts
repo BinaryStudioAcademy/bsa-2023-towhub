@@ -2,12 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
-import {
-  type BusinessSignUpResponseDto,
-  type CustomerSignUpResponseDto,
-  type UserSignInResponseDto,
-  type ValueOf,
-} from '~/libs/types/types.js';
+import { type AuthUser, type ValueOf } from '~/libs/types/types.js';
 
 import {
   authorizeDriverSocket,
@@ -21,11 +16,7 @@ type State = {
   error: HttpError | null;
   dataStatus: ValueOf<typeof DataStatus>;
   socketDriverAuthStatus: ValueOf<typeof DataStatus>;
-  user:
-    | UserSignInResponseDto
-    | CustomerSignUpResponseDto
-    | BusinessSignUpResponseDto
-    | null;
+  user: AuthUser | null;
 };
 
 const initialState: State = {

@@ -10,6 +10,7 @@ const fileInputDefaultsConfig: FileInputConfig = {
     'image/jpg': ['.jpg'],
     'image/jpeg': ['.jpeg'],
     'image/bmp': ['.bmp'],
+    'image/webp': ['.webp'],
   },
 };
 

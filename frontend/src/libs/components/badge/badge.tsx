@@ -44,7 +44,7 @@ const Badge: React.FC<Properties> = ({
   const badgeStyles = [
     styles.badge,
     `background-${backgroundColor}`,
-    ...getTextColor(colorNormalized, styles),
+    ...getTextColor(color, styles),
     hasEvent && styles.pointer,
     hasClassName && className,
   ];
