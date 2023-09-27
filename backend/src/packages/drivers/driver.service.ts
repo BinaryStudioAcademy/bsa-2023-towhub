@@ -13,17 +13,21 @@ import {
   type DriverAddPayloadWithBusinessId,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
-  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetDriversPayloadWithBusinessId,
   type DriverUpdatePayload,
+  type DriverWithAvatarUrl,
+  type DriverWithUserData,
 } from '../drivers/libs/types/types.js';
+import { type FilesService, S3PublicFolder } from '../files/files.js';
+import { type MultipartParsedFile } from '../files/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
 import { TemplateName } from '../mail/libs/enums/enums.js';
 import { type DriverCredentialsViewRenderParameter } from '../mail/libs/views/driver-credentials/libs/types/types.js';
 import { mailService } from '../mail/mail.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
+import { type UserEntityT } from '../users/users.js';
 import { AuthApiPath } from './libs/enums/enums.js';
 import {
   convertToDriverUser,
@@ -44,24 +48,29 @@ class DriverService implements IService {
 
   private truckService: TruckService;
 
+  private filesService: FilesService;
+
   public constructor({
     driverRepository,
     userService,
     groupService,
     geolocationCacheService,
     truckService,
+    filesService,
   }: {
     driverRepository: DriverRepository;
     userService: UserService;
     groupService: GroupService;
     geolocationCacheService: GeolocationCacheService;
     truckService: TruckService;
+    filesService: FilesService;
   }) {
     this.driverRepository = driverRepository;
     this.userService = userService;
     this.groupService = groupService;
     this.geolocationCacheService = geolocationCacheService;
     this.truckService = truckService;
+    this.filesService = filesService;
   }
 
   public async getGeolocationById(id: number): Promise<GeolocationLatLng> {
@@ -86,16 +95,18 @@ class DriverService implements IService {
     return geolocation;
   }
 
-  public async findById(id: number): Promise<DriverEntityT | null> {
+  public async findById(id: number): Promise<DriverWithAvatarUrl | null> {
     const [driver = null] = await this.driverRepository.find({ id });
 
-    return driver ? DriverEntity.initialize(driver).toObject() : null;
+    return driver ? driver.toObject() : null;
   }
 
-  public async findByUserId(userId: number): Promise<DriverEntityT | null> {
+  public async findByUserId(
+    userId: number,
+  ): Promise<DriverWithAvatarUrl | null> {
     const [driver = null] = await this.driverRepository.find({ userId });
 
-    return driver ? DriverEntity.initialize(driver).toObject() : null;
+    return driver ? driver.toObject() : null;
   }
 
   public async findAllByBusinessId({
@@ -161,6 +172,7 @@ class DriverService implements IService {
         driverLicenseNumber,
         businessId,
         userId: user.id,
+        avatarId: null,
       }),
     );
 
@@ -279,6 +291,40 @@ class DriverService implements IService {
         status: HttpCode.BAD_REQUEST,
       });
     }
+  }
+
+  public async setAvatar(
+    userId: UserEntityT['id'],
+    parsedFile: MultipartParsedFile,
+  ): Promise<DriverWithUserData> {
+    const [driver = null] = await this.driverRepository.find({ userId });
+
+    if (!driver) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
+
+    const driverEntity = driver.toObjectWithAvatar();
+    const { avatar, id } = driverEntity;
+
+    if (avatar) {
+      await this.filesService.update(avatar.id, parsedFile);
+
+      return convertToDriverUser(driver);
+    }
+
+    const file = await this.filesService.create(
+      parsedFile,
+      S3PublicFolder.AVATARS,
+    );
+    const newDriver = await this.driverRepository.update({
+      id,
+      payload: { avatarId: file.id },
+    });
+
+    return convertToDriverUser(newDriver);
   }
 }
 
