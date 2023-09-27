@@ -10,8 +10,7 @@ import {
 } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
 
-import { type InputType } from '~/libs/enums/enums.js';
-import { IconName } from '~/libs/enums/icon-name.enum.js';
+import { type InputType, IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useCallback,
@@ -152,9 +151,7 @@ const Input = <T extends FieldValues>({
         )}
         buttonClass={styles.phoneButton}
         dropdownClass={styles.phoneDropdown}
-        inputProps={{
-          id,
-        }}
+        inputProps={{ id }}
       />
     );
   }, [controlledInputStyles, field, handlePhoneChange, id]);
