@@ -129,37 +129,6 @@ const getRouteData = createAsyncThunk<
   };
 });
 
-const getRouteDataFromAddresses = createAsyncThunk<
-  RouteData,
-  { origin: string; destination: string },
-  AsyncThunkConfig
->(ActionName.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
-  const { mapServiceFactory } = extra;
-
-  const mapService = await mapServiceFactory({ mapElement: null });
-
-  const startPoint = await mapService.getAddressPoint(origin);
-  const endPoint = await mapService.getAddressPoint(destination);
-
-  const routeData = {
-    origin: startPoint,
-    destination: endPoint,
-  };
-
-  const distanceAndDuration = await mapService.calculateDistanceAndDuration(
-    routeData.origin,
-    routeData.destination,
-  );
-
-  return {
-    origin,
-    destination,
-    distanceAndDuration,
-    startPoint,
-    endPoint,
-  };
-});
-
 const createOrderFromSocket = createAsyncThunk<
   OrderResponseDto,
   OrderResponseDto,
@@ -210,7 +179,6 @@ export {
   getBusinessOrders,
   getOrder,
   getRouteData,
-  getRouteDataFromAddresses,
   removeOrder,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
