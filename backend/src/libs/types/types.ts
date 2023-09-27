@@ -1,4 +1,5 @@
 export {
+  type AuthUser,
   type EntityPagination,
   type ErrorConstructor,
   type FileInputConfig,

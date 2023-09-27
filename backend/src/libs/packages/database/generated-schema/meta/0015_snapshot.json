@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "e052d384-99e5-44b1-8c48-d938af3dfe6e",
+  "id": "70218b21-e562-46f8-a077-7a485158ad66",
   "prevId": "bc68497b-b34d-47a7-9ef5-3be730d8a970",
   "tables": {
     "business_details": {
@@ -130,6 +130,15 @@
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "driver_details_avatar_id_files_id_fk": {
+          "name": "driver_details_avatar_id_files_id_fk",
+          "tableFrom": "driver_details",
+          "tableTo": "files",
+          "columnsFrom": ["avatar_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -249,7 +258,7 @@
         },
         "price": {
           "name": "price",
-          "type": "real",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -701,7 +710,6 @@
         "pending": "pending",
         "confirmed": "confirmed",
         "canceled": "canceled",
-        "rejected": "rejected",
         "picking_up": "picking_up",
         "done": "done"
       }

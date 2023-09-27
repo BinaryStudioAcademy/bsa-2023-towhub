@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "0d14dcfd-a9f0-4598-8b84-807265ee5822",
-  "prevId": "e052d384-99e5-44b1-8c48-d938af3dfe6e",
+  "id": "2e49084a-7f42-42e6-b01e-252c95259360",
+  "prevId": "70218b21-e562-46f8-a077-7a485158ad66",
   "tables": {
     "business_details": {
       "name": "business_details",
@@ -96,6 +96,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "avatar_id": {
+          "name": "avatar_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -127,6 +133,15 @@
           "tableFrom": "driver_details",
           "tableTo": "business_details",
           "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "driver_details_avatar_id_files_id_fk": {
+          "name": "driver_details_avatar_id_files_id_fk",
+          "tableFrom": "driver_details",
+          "tableTo": "files",
+          "columnsFrom": ["avatar_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"

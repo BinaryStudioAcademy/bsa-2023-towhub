@@ -10,7 +10,6 @@ const getOrderFormFields = (
 ): FormField<OrderCreateFormDto>[] => [
   { label: 'Name', name: 'customerName' },
   { label: 'Phone', name: 'customerPhone' },
-  { label: 'Time', name: 'scheduledTime', type: 'date' },
   {
     label: 'Location',
     name: 'startPoint',
