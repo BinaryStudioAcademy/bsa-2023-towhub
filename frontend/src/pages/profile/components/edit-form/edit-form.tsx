@@ -61,7 +61,7 @@ const EditForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
 
   return (
     <div className={styles.formWrapper}>
-      <h3 className={getValidClassNames('h4', 'uppercase', styles.title)}>
+      <h3 className={getValidClassNames('h3', 'uppercase', styles.title)}>
         Edit profile
       </h3>
       {getScreen()}

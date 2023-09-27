@@ -54,11 +54,11 @@ const editCustomer = createAsyncThunk<
   const { userApi, notification } = extra;
 
   try {
-    const editCustomer = await userApi.editCustomer(payload);
+    const editedCustomer = await userApi.editCustomer(payload);
 
     notification.success(UserNotificationMessage.SUCCESS_EDIT_USER);
 
-    return editCustomer;
+    return editedCustomer;
   } catch (error_: unknown) {
     const error = error_ as HttpError;
 
@@ -76,11 +76,11 @@ const editBusiness = createAsyncThunk<
   const { businessApi, notification } = extra;
 
   try {
-    const editBusiness = await businessApi.editBusiness(payload);
+    const editedBusiness = await businessApi.editBusiness(payload);
 
     notification.success(UserNotificationMessage.SUCCESS_EDIT_USER);
 
-    return editBusiness;
+    return editedBusiness;
   } catch (error_: unknown) {
     const error = error_ as HttpError;
 

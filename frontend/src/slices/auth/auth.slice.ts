@@ -68,21 +68,20 @@ const { reducer, actions, name } = createSlice({
       .addCase(editBusiness.fulfilled, (state, action) => {
         const { firstName, lastName, phone, email, business } = action.payload;
 
-        if (state.user) {
-          const user = state.user as UserEntityObjectWithGroupAndBusinessT;
-          state.user = {
-            ...user,
-            firstName,
-            lastName,
-            phone,
-            email,
-            business: {
-              ...user.business,
-              taxNumber: business.taxNumber,
-              companyName: business.companyName,
-            },
-          };
-        }
+        const user = state.user as UserEntityObjectWithGroupAndBusinessT;
+        state.user = {
+          ...user,
+          firstName,
+          lastName,
+          phone,
+          email,
+          business: {
+            ...user.business,
+            taxNumber: business.taxNumber,
+            companyName: business.companyName,
+          },
+        };
+
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(editCustomer.fulfilled, (state, action) => {
