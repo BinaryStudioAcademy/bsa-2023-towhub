@@ -716,6 +716,7 @@
         "pending": "pending",
         "confirmed": "confirmed",
         "canceled": "canceled",
+        "rejected": "rejected",
         "picking_up": "picking_up",
         "done": "done"
       }
