@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
-import { type AsyncThunkConfig,type Coordinates } from '~/libs/types/types.js';
+import { type AsyncThunkConfig, type Coordinates } from '~/libs/types/types.js';
 import {
   type OrderCreateFormDto,
   type OrderUpdateAcceptStatusRequestDto,
