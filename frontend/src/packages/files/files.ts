@@ -10,4 +10,5 @@ const filesApi = new FilesApi({
   http,
 });
 
+export { changeFileExtension } from './libs/helpers/helpers.js';
 export { filesApi };
