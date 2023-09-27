@@ -1,6 +1,5 @@
 import joi from 'joi';
 
-import { pluralizeString } from '~/libs/helpers/helpers.js';
 import {
   type FileObject,
   type MultipartParsedFile,
@@ -26,14 +25,9 @@ const driverCreateRequestBody = joi.object<
     'any.required': DriverValidationMessage.TRUCK_IS_REQUIRED,
     'array.min': DriverValidationMessage.TRUCK_IS_REQUIRED,
   }),
-  files: joi
-    .array()
-    .items(joi.object())
-    .min(1)
-    .required()
-    .messages({
-      'array.min': `Choose at least 1 ${pluralizeString('file', 1)}`,
-    }),
+  files: joi.array().items(joi.object()).min(1).required().messages({
+    'array.min': DriverValidationMessage.FILES_MIN_LENGTH,
+  }),
 });
 
 export { driverCreateRequestBody };
