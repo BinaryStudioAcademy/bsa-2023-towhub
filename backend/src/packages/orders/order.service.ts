@@ -322,15 +322,14 @@ class OrderService implements Omit<IService, 'find'> {
       query,
     );
 
-    const total =
-      query.status === 'all'
-        ? await this.orderRepository.getTotalBusiness({
-            businessId: business.id,
-          })
-        : await this.orderRepository.getTotalBusiness({
-            businessId: business.id,
-            status: query.status,
-          });
+    const total = query.status
+      ? await this.orderRepository.getTotalBusiness({
+          businessId: business.id,
+          status: query.status,
+        })
+      : await this.orderRepository.getTotalBusiness({
+          businessId: business.id,
+        });
 
     return {
       items: usersOrders.map((it) => OrderEntity.initialize(it).toObject()),

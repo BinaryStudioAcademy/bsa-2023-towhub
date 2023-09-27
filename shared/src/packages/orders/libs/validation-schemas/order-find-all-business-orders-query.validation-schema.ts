@@ -6,7 +6,7 @@ import { OrderStatus } from '../enums/order-status.enum.js';
 import { type OrderQueryParameters } from '../types/types.js';
 
 const orderFindAllBusinessOrdersQuery = joi.object<OrderQueryParameters, true>({
-  status: joi.string().valid(...Object.values(OrderStatus), 'all'),
+  status: joi.string().valid(...Object.values(OrderStatus)),
   size: joi.number().min(0).messages({
     'number.base': CommonValidationMessage.PAGE_SIZE_MUST_BE_NUMBER,
   }),

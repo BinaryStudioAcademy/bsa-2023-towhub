@@ -106,13 +106,12 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     query: OrderQueryParameters,
   ): Promise<OrderEntityT[]> {
     const { status, size, page } = query;
-    const whereClause =
-      status === 'all'
-        ? combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search)
-        : combineFilters<DatabaseSchema['orders']>(this.ordersSchema, {
-            ...search,
-            status: status,
-          });
+    const whereClause = status
+      ? combineFilters<DatabaseSchema['orders']>(this.ordersSchema, {
+          ...search,
+          status: status,
+        })
+      : combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search);
 
     const offset = page * size;
 

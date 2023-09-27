@@ -23,8 +23,8 @@ import {
 } from '~/libs/hooks/use-app-table/libs/constant.js';
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import {
-  type OrderQueryParameters,
   type OrderResponseDto,
+  type OrderStatusValues,
 } from '~/libs/types/types.js';
 import { actions as ordersActions } from '~/slices/orders/orders.js';
 import { selectOrdersBusiness } from '~/slices/orders/selectors.js';
@@ -36,7 +36,8 @@ const Orders: React.FC = () => {
 
   const { orders, total, dataStatus } = useAppSelector(selectOrdersBusiness);
 
-  const { setQueryParameters, searchParameters } = useQueryParameters();
+  const { setQueryParameters, removeQueryParameters, searchParameters } =
+    useQueryParameters();
 
   const [endPointMarkers, setEndPointMarkers] = useState<
     google.maps.LatLngLiteral[]
@@ -45,9 +46,9 @@ const Orders: React.FC = () => {
   const [shownRoute, setShownRoute] = useState<PlaceLatLng>();
 
   const [filter, setFilter] = useState<{
-    status: OrderQueryParameters['status'];
+    status: OrderStatusValues | null;
   }>({
-    status: 'all',
+    status: null,
   });
 
   const [pageIndex, setPageIndex] = useState<number>(DEFAULT_PAGE_INDEX);
@@ -57,9 +58,20 @@ const Orders: React.FC = () => {
     setQueryParameters({
       size: DEFAULT_PAGE_SIZE,
       page: pageIndex,
-      status: filter.status,
     });
-  }, [dispatch, filter.status, pageIndex, setQueryParameters]);
+  }, [pageIndex, setQueryParameters]);
+
+  useEffect(() => {
+    if (filter.status) {
+      setQueryParameters({
+        size: DEFAULT_PAGE_SIZE,
+        page: DEFAULT_PAGE_INDEX,
+        status: filter.status,
+      });
+    } else {
+      removeQueryParameters('status');
+    }
+  }, [filter.status, removeQueryParameters, setQueryParameters]);
 
   useEffect(() => {
     void dispatch(ordersActions.getBusinessOrders(searchParameters.toString()));
@@ -81,7 +93,7 @@ const Orders: React.FC = () => {
   }, []);
 
   const handleChangeFilter = useCallback(
-    (filter: { status: OrderQueryParameters['status'] }) => {
+    (filter: { status: OrderStatusValues | null }) => {
       setFilter(filter);
       setPageIndex(DEFAULT_PAGE_INDEX);
     },
@@ -119,7 +131,10 @@ const Orders: React.FC = () => {
   return (
     <div className={styles.orders}>
       <div className={styles.orderlistArea}>
-        <OrderFilter onChange={handleChangeFilter} label={filter.status} />
+        <OrderFilter
+          onChange={handleChangeFilter}
+          label={filter.status ?? 'all'}
+        />
         <OrderList orders={sortOrders} onSelect={setShownRoute} />
         <Pagination
           pageCount={totalPages}

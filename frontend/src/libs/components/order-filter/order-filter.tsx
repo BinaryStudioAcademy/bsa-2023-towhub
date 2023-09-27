@@ -9,7 +9,7 @@ import { dropdownOptions } from './libs/constants/constants.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onChange: (filters: { status: OrderStatusValues | 'all' }) => void;
+  onChange: (filters: { status: OrderStatusValues | null }) => void;
   label: string;
 };
 
@@ -19,7 +19,10 @@ const OrderFilter = ({ onChange, label }: Properties): JSX.Element => {
       if (!option) {
         return;
       }
-      onChange({ status: option.value as OrderStatusValues | 'all' });
+      onChange({
+        status:
+          option.value === 'all' ? null : (option.value as OrderStatusValues),
+      });
     },
     [onChange],
   );
