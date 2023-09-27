@@ -10,7 +10,8 @@ import { type OrderResponseDto } from '~/packages/orders/orders.js';
 import { Badge } from '../badge/badge.jsx';
 import { Icon } from '../icon/icon.jsx';
 import { ProgressStatus } from './libs/enums/enums.js';
-import { convertDate, getBadgeColorByStatus } from './libs/helpers/helpers.js';
+import { convertDate } from './libs/helpers/helpers.js';
+import { mapOrderStatusToBadgeStatus } from './libs/map/map-order-status-to-badge-status.map.js';
 import styles from './styles.module.scss';
 
 type Properties = {
@@ -28,7 +29,7 @@ const CustomerOrderCard: React.FC<Properties> = ({ order }: Properties) => {
     customerPhone,
     shift,
   } = order;
-  const { badgeBg, progress } = getBadgeColorByStatus(status);
+  const { badgeBg, progress } = mapOrderStatusToBadgeStatus[status];
   const isInProcess = progress === ProgressStatus.IN_PROCESS;
 
   return (

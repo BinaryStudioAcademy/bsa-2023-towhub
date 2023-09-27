@@ -30,14 +30,6 @@ const CustomerOrderList: React.FC<Properties> = ({
 }: Properties) => {
   const pagesRange = Math.ceil(totalElements / pageSize);
 
-  const createCustomerOrderCards = (): JSX.Element[] => {
-    return orders.map((order) => (
-      <li key={order.id} className={styles.item}>
-        <CustomerOrderCard order={order} />
-      </li>
-    ));
-  };
-
   const handleChangePageSize = useCallback(
     (value: number) => {
       changePageIndex(0);
@@ -64,7 +56,13 @@ const CustomerOrderList: React.FC<Properties> = ({
 
   return (
     <div>
-      <ul>{createCustomerOrderCards()}</ul>
+      <ul>
+        {orders.map((order) => (
+          <li key={order.id} className={styles.item}>
+            <CustomerOrderCard order={order} />
+          </li>
+        ))}
+      </ul>
       <Pagination
         pageCount={pagesRange}
         onClick={changePageIndex}

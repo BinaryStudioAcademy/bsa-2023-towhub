@@ -1,10 +1,10 @@
 import { capitalizeFirstLetter } from '~/libs/helpers/helpers.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 
-import { options } from '../options/options.js';
+import { orderStatusOptions } from '../options/order-status-options.js';
 
-const getFilterByName = (label: string | null): SelectOption | undefined => {
-  const [any, pending, done, canceled] = options;
+const getFilterByLabel = (label: string | null): SelectOption | undefined => {
+  const [any, pending, done, canceled] = orderStatusOptions;
 
   if (!label) {
     return any;
@@ -26,4 +26,4 @@ const getFilterByName = (label: string | null): SelectOption | undefined => {
   }
 };
 
-export { getFilterByName };
+export { getFilterByLabel };

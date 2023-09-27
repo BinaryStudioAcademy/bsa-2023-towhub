@@ -4,7 +4,7 @@ import { LocalStorage } from '~/libs/packages/storage/storage.js';
 
 import { OrdersApi } from './orders-api.js';
 
-export { OrderStatus } from './enums/enums.js';
+export { OrderStatus } from './libs/enums/enums.js';
 export {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,

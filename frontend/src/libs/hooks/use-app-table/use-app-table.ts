@@ -35,7 +35,7 @@ const useAppTable = <T, K>({
   sort,
   filterName,
 }: Properties<T, K>): ReturnValue => {
-  const [queries, setQueries] = useState<string>();
+  const [query, setQuery] = useState<string>();
   const [pageSize, changePageSize] = useState(
     initialPageSize ?? DEFAULT_PAGE_SIZE,
   );
@@ -67,11 +67,11 @@ const useAppTable = <T, K>({
     }
 
     setQueryParameters(queryParameters);
-    const newQueries = searchParameters.toString();
+    const newQuery = searchParameters.toString();
 
-    if (queries !== newQueries) {
-      setQueries(newQueries);
-      void dispatch(tableFetchCall(newQueries));
+    if (query !== newQuery && newQuery) {
+      setQuery(newQuery);
+      void dispatch(tableFetchCall(newQuery));
     }
   }, [
     dispatch,
@@ -80,7 +80,7 @@ const useAppTable = <T, K>({
     pageIndex,
     pageSize,
     payload,
-    queries,
+    query,
     searchParameters,
     setQueryParameters,
     sort,

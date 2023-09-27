@@ -10,6 +10,7 @@ import {
   useAppTable,
   useCallback,
   useQueryParameters,
+  useState,
 } from '~/libs/hooks/hooks.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
@@ -20,8 +21,8 @@ import {
 } from '~/packages/orders/orders.js';
 import { getUserOrdersPage } from '~/slices/orders/actions.js';
 
-import { getFilterByName } from './libs/helpers/helpers.js';
-import { options } from './libs/options/options.js';
+import { getFilterByLabel } from './libs/helpers/helpers.js';
+import { orderStatusOptions } from './libs/options/order-status-options.js';
 import styles from './styles.module.scss';
 
 const CustomerHistory: React.FC = () => {
@@ -29,7 +30,7 @@ const CustomerHistory: React.FC = () => {
     useQueryParameters();
 
   const { orders, total, dataStatus } = useAppSelector((state) => state.orders);
-  const filterName = getQueryParameters('status') as string | null;
+  const [activeFilter, setActiveFilter] = useState<SelectOption>();
 
   const { size: initialSize, page: initialPage } = getQueryParameters(
     'size',
@@ -55,6 +56,7 @@ const CustomerHistory: React.FC = () => {
           page: 0,
           status: option.value,
         });
+        setActiveFilter(getFilterByLabel(option.value));
       } else {
         removeQueryParameters('status');
       }
@@ -74,8 +76,8 @@ const CustomerHistory: React.FC = () => {
         <label htmlFor="status">Filter by status:</label>
         <Dropdown
           onChange={handleChangeFilter}
-          options={options}
-          defaultValue={getFilterByName(filterName)}
+          options={orderStatusOptions}
+          defaultValue={activeFilter}
         />
       </div>
       <CustomerOrderList
