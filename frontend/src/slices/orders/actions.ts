@@ -126,8 +126,6 @@ const getRouteData = createAsyncThunk<
     origin: originName,
     destination: destinationName,
     distanceAndDuration,
-    startPoint: null,
-    endPoint: null,
   };
 });
 

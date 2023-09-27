@@ -6,7 +6,6 @@ import {
   useAppMap,
   useAppSelector,
   useCallback,
-  useEffect,
   useParams,
   useRef,
 } from '~/libs/hooks/hooks.js';
@@ -29,28 +28,19 @@ const MOCK_ORDER_DETAILS = {
 const DriverOrder = (): JSX.Element => {
   const { orderId } = useParams();
   const order = useAppSelector(selectOrder);
-  const { timespanLeft, distanceLeft, startPoint, endPoint } =
+  const { timespanLeft, distanceLeft, origin, destination } =
     useGetRouteData(order);
   const dispatch = useAppDispatch();
 
   const mapReference = useRef<HTMLDivElement>(null);
+
   useAppMap({
-    center: startPoint as google.maps.LatLngLiteral,
-    destination: endPoint as google.maps.LatLngLiteral,
+    center: order?.startPoint as google.maps.LatLngLiteral,
+    destination: order?.endPoint as google.maps.LatLngLiteral,
     mapReference: mapReference,
+    onMapLoad: () => true,
   });
   useSubscribeUpdates(`${orderId as string}`);
-
-  useEffect(() => {
-    if (order) {
-      void dispatch(
-        orderActions.getRouteData({
-          origin: order.startPoint,
-          destination: order.endPoint,
-        }),
-      );
-    }
-  }, [dispatch, order]);
 
   const handleAccept = useCallback(() => {
     void dispatch(
@@ -189,15 +179,14 @@ const DriverOrder = (): JSX.Element => {
             </p>
             <p className={styles.detail}>
               <Icon className={styles.locationIcon} iconName="location dot" />{' '}
-              Location: <span className={styles.value}>{order.startPoint}</span>
+              Location: <span className={styles.value}>{origin}</span>
             </p>
             <p className={styles.detail}>
               <Icon
                 className={styles.destinationIcon}
                 iconName="location dot"
               />{' '}
-              Destination:{' '}
-              <span className={styles.value}>{order.endPoint}</span>
+              Destination: <span className={styles.value}>{destination}</span>
             </p>
             <p className={styles.detail}>
               <Icon className={styles.carIcon} iconName="car" /> Cars need to be

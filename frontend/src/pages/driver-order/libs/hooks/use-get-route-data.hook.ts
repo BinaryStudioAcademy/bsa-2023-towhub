@@ -12,28 +12,28 @@ const useGetRouteData = (
 ): {
   distanceLeft: string;
   timespanLeft: string;
-  startPoint?: google.maps.LatLngLiteral | null;
-  endPoint?: google.maps.LatLngLiteral | null;
+  origin?: string | null;
+  destination?: string | null;
 } => {
   const routeData = useAppSelector(selectOrderData);
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (order) {
       void dispatch(
-        orderActions.getRouteDataFromAddresses({
+        orderActions.getRouteData({
           origin: order.startPoint,
           destination: order.endPoint,
         }),
       );
     }
   }, [dispatch, order]);
-  const { distanceAndDuration, startPoint, endPoint } = routeData ?? {};
+  const { distanceAndDuration, origin, destination } = routeData ?? {};
 
   const { distance, duration } = distanceAndDuration ?? {};
   const { text: distanceLeft = '' } = distance ?? {};
   const { text: timespanLeft = '' } = duration ?? {};
 
-  return { distanceLeft, timespanLeft, startPoint, endPoint };
+  return { distanceLeft, timespanLeft, origin, destination };
 };
 
 export { useGetRouteData };
