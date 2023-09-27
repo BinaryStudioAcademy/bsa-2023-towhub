@@ -65,6 +65,7 @@ const useAppMap = ({
       mapService.current.fitMap(bounds);
 
       for (const point of points) {
+        mapService.current.removeMarkers();
         mapService.current.addMarker(point, false);
       }
     }

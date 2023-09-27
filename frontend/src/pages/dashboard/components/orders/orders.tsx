@@ -8,13 +8,11 @@ import { DataStatus } from '~/libs/enums/data-status.enum';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
-  useAppMap,
   useAppSelector,
   useCallback,
   useEffect,
   useMemo,
   useQueryParameters,
-  useRef,
   useState,
 } from '~/libs/hooks/hooks.js';
 import {
@@ -30,6 +28,7 @@ import {
 import { actions as ordersActions } from '~/slices/orders/order.js';
 import { selectOrdersBusiness } from '~/slices/orders/selectors.js';
 
+import { MapOrders } from './map-orders.js';
 import styles from './styles.module.scss';
 
 const Orders: React.FC = () => {
@@ -51,15 +50,6 @@ const Orders: React.FC = () => {
   });
 
   const [pageIndex, setPageIndex] = useState<number>(DEFAULT_PAGE_INDEX);
-  const mapReference = useRef<HTMLDivElement>(null);
-
-  useAppMap({
-    mapReference: mapReference,
-    points: endPointMarkers,
-    shownRoute,
-    center: null,
-    destination: null,
-  });
 
   useEffect(() => {
     setQueryParameters({
@@ -151,9 +141,7 @@ const Orders: React.FC = () => {
         />
       </div>
       <div className={styles.mapArea}>
-        <div className={styles.mapWrapper}>
-          <div className={styles.map} ref={mapReference} id="map" />
-        </div>
+        <MapOrders points={endPointMarkers} shownRoute={shownRoute} />
       </div>
     </div>
   );
