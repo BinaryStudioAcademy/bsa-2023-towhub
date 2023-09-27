@@ -1,4 +1,5 @@
 import { type FastifyInstance } from 'fastify/types/instance';
+import { type ServerToClientEventParameter } from 'shared/build/index.js';
 import { type Server, type Socket, Server as SocketServer } from 'socket.io';
 
 import { type GeolocationCacheSocketService } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
@@ -10,11 +11,13 @@ import { type UserService } from '~/packages/users/user.service';
 
 import {
   ClientToServerEvent,
+  RoomPrefix,
   SocketError,
   SocketRoom,
 } from './libs/enums/enums.js';
 import {
   type ClientToServerEventParameter,
+  type OrderResponseDto,
   ServerToClientEvent,
 } from './libs/types/types.js';
 
@@ -69,6 +72,54 @@ class SocketService {
       socket.on(ClientToServerEvent.LEAVE_HOME_ROOM, () =>
         socket.leave(SocketRoom.HOME_ROOM),
       );
+      socket.on(
+        ClientToServerEvent.SUBSCRIBE_ORDER_UPDATES,
+        async ({
+          orderId,
+        }: FirstParameter<
+          ClientToServerEventParameter[typeof ClientToServerEvent.SUBSCRIBE_ORDER_UPDATES]
+        >) => {
+          await socket.join(`${RoomPrefix.ORDER}${orderId}`);
+          logger.info(
+            `${socket.id} connected to ${RoomPrefix.ORDER}${orderId}`,
+          );
+        },
+      );
+      socket.on(
+        ClientToServerEvent.UNSUBSCRIBE_ORDER_UPDATES,
+        async ({
+          orderId,
+        }: FirstParameter<
+          ClientToServerEventParameter[typeof ClientToServerEvent.UNSUBSCRIBE_ORDER_UPDATES]
+        >) => {
+          await socket.leave(`${RoomPrefix.ORDER}${orderId}`);
+          logger.info(`${socket.id} left ${RoomPrefix.ORDER}${orderId}`);
+        },
+      );
+      socket.on(
+        ClientToServerEvent.SUBSCRIBE_TRUCK_UPDATES,
+        async ({
+          truckId,
+        }: FirstParameter<
+          ClientToServerEventParameter[typeof ClientToServerEvent.SUBSCRIBE_TRUCK_UPDATES]
+        >) => {
+          await socket.join(`${RoomPrefix.TRUCK}${truckId}`);
+          logger.info(
+            `${socket.id} connected to ${RoomPrefix.TRUCK}${truckId}`,
+          );
+        },
+      );
+      socket.on(
+        ClientToServerEvent.UNSUBSCRIBE_TRUCK_UPDATES,
+        async ({
+          truckId,
+        }: FirstParameter<
+          ClientToServerEventParameter[typeof ClientToServerEvent.UNSUBSCRIBE_TRUCK_UPDATES]
+        >) => {
+          await socket.leave(`${RoomPrefix.TRUCK}${truckId}`);
+          logger.info(`${socket.id} left ${RoomPrefix.TRUCK}${truckId}`);
+        },
+      );
 
       socket.on(
         ClientToServerEvent.AUTHORIZE_DRIVER,
@@ -93,6 +144,26 @@ class SocketService {
         },
       );
     });
+  }
+
+  public notifyOrderUpdate(
+    id: OrderResponseDto['id'],
+    order: Partial<OrderResponseDto>,
+  ): void {
+    this.io
+      ?.to(`${RoomPrefix.ORDER}${id}`)
+      .emit(ServerToClientEvent.ORDER_UPDATED, order);
+  }
+
+  public notifyCustomerForTruckLocationUpdate(
+    truckId: number,
+    truckLocation: Parameters<
+      ServerToClientEventParameter[typeof ServerToClientEvent.TRUCK_LOCATION_UPDATED]
+    >[0],
+  ): void {
+    this.io
+      ?.to(`${RoomPrefix.TRUCK}${truckId}`)
+      .emit(ServerToClientEvent.TRUCK_LOCATION_UPDATED, truckLocation);
   }
 }
 

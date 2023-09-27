@@ -12,6 +12,8 @@ import {
   createOption,
   createOptions,
   getMiddle,
+  getNextPageIndex,
+  getPreviousPageIndex,
 } from './libs/helpers.js';
 import styles from './styles.module.scss';
 
@@ -68,11 +70,11 @@ const Pagination: React.FC<Properties> = ({
   );
 
   const handlePreviousClick = useCallback(() => {
-    onClick(pageIndex - 1);
+    onClick(getPreviousPageIndex(pageIndex));
   }, [onClick, pageIndex]);
 
   const handleNextClick = useCallback(() => {
-    onClick(pageIndex + 1);
+    onClick(getNextPageIndex(pageIndex));
   }, [onClick, pageIndex]);
 
   const createButtons = useCallback(

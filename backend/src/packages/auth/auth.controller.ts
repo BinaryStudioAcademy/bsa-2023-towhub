@@ -390,3 +390,26 @@ export { AuthController };
  *                     type: string
  *                     example: This email is not registered
  */
+
+/**
+ * @swagger
+ * /auth/logout:
+ *    get:
+ *      tags:
+ *      - auth
+ *      description: Log out of the system
+ *      security:
+ *        - {}
+ *        - bearerAuth: []
+ *      responses:
+ *        204:
+ *          description: Successful operation
+ *        401:
+ *          UnauthorizedError:
+ *            description:
+ *              You are not authorized
+ *          content:
+ *            plain/text:
+ *              schema:
+ *                $ref: '#/components/schemas/UnauthorizedError'
+ */
