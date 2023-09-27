@@ -49,8 +49,8 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService,
     truckService,
     userService,
-    socket,
     mapService,
+    socket,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
@@ -58,8 +58,8 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService: ShiftService;
     truckService: TruckService;
     userService: UserService;
-    socket: SocketService;
     mapService: MapService;
+    socket: SocketService;
   }) {
     this.orderRepository = orderRepository;
 
@@ -74,6 +74,8 @@ class OrderService implements Omit<IService, 'find'> {
     this.truckService = truckService;
 
     this.userService = userService;
+
+    this.mapService = mapService;
 
     this.socketService = socket;
 
@@ -122,14 +124,14 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
-    const price = await this.mapService.getPriceByDistance({
+    const { price } = await this.mapService.getPriceByDistance({
       startAddress: startPoint,
       endAddress: endPoint,
       pricePerKm: truck.pricePerKm,
     });
 
     const order = await this.orderRepository.create({
-      price: convertCurrencyToCents(price.price),
+      price: convertCurrencyToCents(price),
       scheduledTime,
       carsQty,
       startPoint,

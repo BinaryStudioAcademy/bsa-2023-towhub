@@ -1,3 +1,4 @@
+import { type Coordinates } from '~/libs/types/types.js';
 import { type DriverCommonDetails } from '~/packages/drivers/drivers.js';
 import { type TruckEntityT } from '~/packages/trucks/trucks.js';
 import {
@@ -12,8 +13,8 @@ type OrderEntity = {
   price: number;
   scheduledTime: string;
   carsQty: number;
-  startPoint: string;
-  endPoint: string;
+  startPoint: Coordinates;
+  endPoint: Coordinates;
   status: OrderStatusValues;
   userId: number | null;
   businessId: number;

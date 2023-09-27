@@ -6,10 +6,7 @@ import {
   type BusinessEntityT,
   type BusinessService,
 } from '~/packages/business/business.js';
-import {
-  type MapService,
-  convertMetersToKilometers,
-} from '~/packages/map/map.js';
+import { type MapService, convertMetersToKm } from '~/packages/map/map.js';
 import { type TruckService } from '~/packages/trucks/trucks.js';
 import {
   type UserEntityObjectWithGroupAndBusinessT,
@@ -336,7 +333,7 @@ class StripeService {
       order.endPoint,
     );
 
-    const distance = convertMetersToKilometers(distanceInMeters.value);
+    const distance = convertMetersToKm(distanceInMeters.value);
 
     return {
       businessStripeId: business.stripeId,

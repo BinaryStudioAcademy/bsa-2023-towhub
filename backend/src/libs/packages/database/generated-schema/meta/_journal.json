@@ -117,15 +117,22 @@
     {
       "idx": 16,
       "version": "5",
-      "when": 1695829111725,
-      "tag": "0016_add_stripe_fields_to_business",
+      "when": 1695810246647,
+      "tag": "0016_change_orders_point_type_to_jsonb",
       "breakpoints": true
     },
     {
       "idx": 17,
       "version": "5",
-      "when": 1695829126950,
-      "tag": "0017_make_orders_businessid_non_nullable",
+      "when": 1695838307227,
+      "tag": "0017_add_stripe_fields_to_business",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1695838323939,
+      "tag": "0018_make_orders_businessid_non_nullable",
       "breakpoints": true
     }
   ]

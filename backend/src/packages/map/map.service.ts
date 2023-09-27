@@ -1,6 +1,8 @@
+import { type Coordinates } from '~/libs/types/types.js';
+
 import { PRECISION } from './libs/constants/constants.js';
 import { TravelMode } from './libs/enums/enums.js';
-import { convertMetersToKilometers } from './libs/helpers/helpers.js';
+import { convertMetersToKm } from './libs/helpers/helpers.js';
 import {
   type Client,
   type Distance,
@@ -19,8 +21,8 @@ class MapService {
   }
 
   public async getDistance(
-    startPoint: string,
-    endPoint: string,
+    startPoint: string | Coordinates,
+    endPoint: string | Coordinates,
   ): Promise<Distance> {
     const response = await this.client.distancematrix({
       params: {
@@ -42,8 +44,9 @@ class MapService {
     pricePerKm, // TODO kilometer
   }: OrderCalculatePriceRequestDto): Promise<OrderCalculatePriceResponseDto> {
     const distance = await this.getDistance(startAddress, endAddress);
-    const kilometers = convertMetersToKilometers(distance.value);
-    const orderPrice = (pricePerKm * kilometers).toFixed(PRECISION);
+
+    const km = convertMetersToKm(distance.value);
+    const orderPrice = (pricePerKm * km).toFixed(PRECISION);
 
     return { price: Number(orderPrice) };
   }

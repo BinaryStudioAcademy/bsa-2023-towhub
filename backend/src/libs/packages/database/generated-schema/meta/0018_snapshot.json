@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "2e49084a-7f42-42e6-b01e-252c95259360",
-  "prevId": "70218b21-e562-46f8-a077-7a485158ad66",
+  "id": "62ffadf5-1554-4717-b79a-313418fb6958",
+  "prevId": "651cf85d-56cc-4064-a45f-5c3401d8b2c2",
   "tables": {
     "business_details": {
       "name": "business_details",
@@ -25,6 +25,19 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "stripe_id": {
+          "name": "stripe_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_stripe_activated": {
+          "name": "is_stripe_activated",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "owner_id": {
           "name": "owner_id",
@@ -65,6 +78,11 @@
           "name": "business_details_tax_number_unique",
           "nullsNotDistinct": false,
           "columns": ["tax_number"]
+        },
+        "business_details_stripe_id_unique": {
+          "name": "business_details_stripe_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["stripe_id"]
         }
       }
     },
@@ -302,7 +320,7 @@
           "name": "business_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "shift_id": {
           "name": "shift_id",
