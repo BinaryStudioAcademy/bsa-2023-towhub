@@ -1,6 +1,8 @@
+import { type Coordinates } from '~/libs/types/types.js';
+
 type OrderCalculatePriceRequestDto = {
-  startAddress: string | google.maps.LatLngLiteral;
-  endAddress: string | google.maps.LatLngLiteral;
+  startAddress: string | Coordinates;
+  endAddress: string | Coordinates;
   pricePerKm: number;
 };
 

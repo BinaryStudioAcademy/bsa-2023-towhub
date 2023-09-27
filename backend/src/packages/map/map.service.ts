@@ -1,3 +1,5 @@
+import { type Coordinates } from '~/libs/types/types.js';
+
 import { PRECISION } from './libs/constants/constants.js';
 import { TravelMode } from './libs/enums/enums.js';
 import { convertMetersToKm } from './libs/helpers/helpers.js';
@@ -19,8 +21,8 @@ class MapService {
   }
 
   public async getDistance(
-    startPoint: string | google.maps.LatLngLiteral,
-    endPoint: string | google.maps.LatLngLiteral,
+    startPoint: string | Coordinates,
+    endPoint: string | Coordinates,
   ): Promise<Distance> {
     const response = await this.client.distancematrix({
       params: {

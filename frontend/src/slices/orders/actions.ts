@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
-import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import { type AsyncThunkConfig,type Coordinates } from '~/libs/types/types.js';
 import {
   type OrderCreateFormDto,
   type OrderUpdateAcceptStatusRequestDto,
@@ -102,7 +102,7 @@ const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
 
 const getRouteData = createAsyncThunk<
   RouteData,
-  { origin: google.maps.LatLngLiteral; destination: google.maps.LatLngLiteral },
+  { origin: Coordinates; destination: Coordinates },
   AsyncThunkConfig
 >(ActionName.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
   const { mapServiceFactory } = extra;

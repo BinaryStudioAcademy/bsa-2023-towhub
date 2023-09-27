@@ -41,6 +41,7 @@ export {
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
+  type Coordinates,
   type EntityPagination,
   type ErrorConstructor,
   type FirstParameter,
