@@ -14,7 +14,6 @@ import {
   useRef,
 } from '~/libs/hooks/hooks.js';
 import { DEFAULT_CENTER } from '~/libs/packages/map/libs/constants/constants.js';
-import { jsonToLatLngLiteral } from '~/slices/orders/libs/helpers/json-to-lat-lng-literal.helper.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectDataStatus, selectOrder } from '~/slices/orders/selectors.js';
 import {
@@ -33,6 +32,7 @@ import styles from './styles.module.scss';
 const OrderStatusPage: React.FC = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
+  const mapReference = useRef<HTMLDivElement>(null);
   const order = useAppSelector(selectOrder);
 
   const dataStatus = useAppSelector(selectDataStatus);
@@ -57,13 +57,13 @@ const OrderStatusPage: React.FC = () => {
   useSubscribeUpdates(orderId, truckId);
 
   const truckLocation = useAppSelector(selectTruckLocation);
-  const mapReference = useRef<HTMLDivElement>(null);
 
   useAppMap({
     center: truckLocation ?? DEFAULT_CENTER,
-    destination: order ? jsonToLatLngLiteral(order.startPoint) : null,
+    destination: order ? order.startPoint : null,
     className: styles.map,
     mapReference: mapReference,
+    onMapLoad: () => true,
   });
 
   const handleHomepageClick = useCallback(() => {

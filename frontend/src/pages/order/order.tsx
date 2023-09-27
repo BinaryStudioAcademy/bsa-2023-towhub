@@ -9,7 +9,7 @@ import {
   useState,
 } from '~/libs/hooks/hooks.js';
 import { DEFAULT_CENTER } from '~/libs/packages/map/libs/constants/constants.js';
-import { type OrderCreateRequestDto } from '~/packages/orders/orders.js';
+import { type OrderCreateFormDto } from '~/packages/orders/libs/types/types.js';
 import { actions as orderActions, selectPrice } from '~/slices/orders/order.js';
 import { selectChosenTruck } from '~/slices/trucks/selectors.js';
 
@@ -51,7 +51,7 @@ const Order = (): JSX.Element => {
   }, [dispatch]);
 
   const handleSubmit = useCallback(
-    (payload: OrderCreateRequestDto) => {
+    (payload: OrderCreateFormDto) => {
       if (chosenTruck) {
         void dispatch(orderActions.createOrder(payload));
       }

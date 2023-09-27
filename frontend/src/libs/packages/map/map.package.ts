@@ -1,15 +1,12 @@
-import truckImg from '~/assets/img/tow-truck.png';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 
-import {
-  TRUCK_IMG_ANCHOR_X,
-  TRUCK_IMG_ANCHOR_Y,
-  TRUCK_IMG_HEIGHT,
-  TRUCK_IMG_WIDTH,
-} from './libs/constants/constants.js';
-import { rotateImg } from './libs/helpers/rotate-img.helper.js';
+import { MAP_INFO_WINDOW_WIDTH } from './libs/constants/constants.js';
+import { createIcon } from './libs/helpers/helpers.js';
 import { type IMapService } from './libs/interfaces/interfaces.js';
-import { type MapServiceParameters } from './libs/types/types.js';
+import {
+  type MapServiceParameters,
+  type PlaceLatLng,
+} from './libs/types/types.js';
 import mapStyle from './map.config.json';
 
 type Constructor = MapServiceParameters & {
@@ -19,9 +16,11 @@ type Constructor = MapServiceParameters & {
     directionsService: google.maps.DirectionsService;
     directionsRenderer: google.maps.DirectionsRenderer;
     autocomplete: google.maps.places.AutocompleteService;
+    infoWindow: google.maps.InfoWindow;
   };
   map: google.maps.Map | null;
   markers: google.maps.Marker[];
+  bounds?: google.maps.LatLngBounds;
   setMap: (map: google.maps.Map) => void;
 };
 
@@ -40,6 +39,8 @@ class MapService implements IMapService {
 
   private autocomplete!: google.maps.places.AutocompleteService;
 
+  private infoWindow: google.maps.InfoWindow;
+
   private setMap: (map: google.maps.Map) => void;
 
   public constructor({
@@ -48,6 +49,7 @@ class MapService implements IMapService {
     zoom,
     extraLibraries,
     map,
+    bounds,
     markers,
     setMap,
   }: Constructor) {
@@ -55,22 +57,35 @@ class MapService implements IMapService {
     this.setMap = setMap;
     this.markers = markers;
 
-    if (extraLibraries) {
-      this.geocoder = extraLibraries.geocoding;
-      this.routes = extraLibraries.routes;
-      this.directionsRenderer = extraLibraries.directionsRenderer;
-      this.directionsService = extraLibraries.directionsService;
-      this.autocomplete = extraLibraries.autocomplete;
-
+    const init = (): void => {
       if (mapElement && center && zoom) {
         if (this.map) {
           this.map.panTo(center);
 
           return;
         }
-
         this.initMap(mapElement, center, zoom);
       }
+
+      if (mapElement && bounds && zoom) {
+        if (this.map) {
+          this.map.fitBounds(bounds);
+
+          return;
+        }
+
+        this.initMapBounds(mapElement, bounds, zoom);
+      }
+    };
+
+    if (extraLibraries) {
+      this.geocoder = extraLibraries.geocoding;
+      this.routes = extraLibraries.routes;
+      this.directionsRenderer = extraLibraries.directionsRenderer;
+      this.directionsService = extraLibraries.directionsService;
+      this.infoWindow = extraLibraries.infoWindow;
+
+      init();
 
       return;
     }
@@ -78,10 +93,11 @@ class MapService implements IMapService {
     this.directionsRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
     });
+    this.infoWindow = new google.maps.InfoWindow({
+      maxWidth: MAP_INFO_WINDOW_WIDTH,
+    });
 
-    if (mapElement && center && zoom) {
-      this.initMap(mapElement, center, zoom);
-    }
+    init();
   }
 
   private initMap(
@@ -98,6 +114,23 @@ class MapService implements IMapService {
       mapTypeControl: false,
       streetViewControl: false,
     });
+    this.setMap(this.map);
+  }
+
+  private initMapBounds(
+    mapElement: HTMLDivElement,
+    bounds: google.maps.LatLngBounds,
+    zoom?: number,
+  ): void {
+    this.map = new google.maps.Map(mapElement, {
+      zoom,
+      styles: mapStyle as google.maps.MapTypeStyle[],
+      disableDefaultUI: true,
+      fullscreenControl: true,
+      mapTypeControl: false,
+      streetViewControl: false,
+    });
+    this.map.fitBounds(bounds);
     this.setMap(this.map);
   }
 
@@ -274,31 +307,55 @@ class MapService implements IMapService {
     }
   }
 
+  public fitMap(bounds: google.maps.LatLngBounds): void {
+    this.map?.fitBounds(bounds);
+  }
+
   public addMarker(
     position: google.maps.LatLngLiteral,
     isOrigin = false,
     angle = 0,
-  ): void {
+  ): google.maps.Marker {
     this.throwIfMapNotInitialized();
-
-    const rotatedIconUrl = rotateImg(truckImg, angle);
 
     const marker = new google.maps.Marker({
       position,
       map: this.map,
-      icon: isOrigin
-        ? {
-            url: rotatedIconUrl,
-            anchor: new google.maps.Point(
-              TRUCK_IMG_ANCHOR_X,
-              TRUCK_IMG_ANCHOR_Y,
-            ),
-            size: new google.maps.Size(TRUCK_IMG_WIDTH, TRUCK_IMG_HEIGHT),
-            scale: 1,
-          }
-        : undefined,
+      icon: createIcon(isOrigin, angle),
     });
     this.markers.push(marker);
+
+    return marker;
+  }
+
+  public async addRoute({ startPoint, endPoint }: PlaceLatLng): Promise<void> {
+    this.throwIfMapNotInitialized();
+
+    const path = await this.directionsService.route({
+      destination: endPoint,
+      origin: startPoint,
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+
+    this.directionsRenderer.setOptions({
+      directions: path,
+      map: this.map,
+      preserveViewport: true,
+    });
+    await this.showInfoWindow({ startPoint, endPoint });
+  }
+
+  public async showInfoWindow({
+    startPoint,
+    endPoint,
+  }: PlaceLatLng): Promise<void> {
+    const anchor = this.addMarker(endPoint, false);
+
+    const startAddress = await this.getPointAddress(startPoint);
+    const endAddress = await this.getPointAddress(endPoint);
+
+    this.infoWindow.setContent(`${startAddress} → ${endAddress}`);
+    this.infoWindow.open({ map: this.map, anchor });
   }
 
   public async autocompleteAddress(

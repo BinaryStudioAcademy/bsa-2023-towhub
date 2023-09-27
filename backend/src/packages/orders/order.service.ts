@@ -11,11 +11,7 @@ import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
 import { OrderStatus, UserGroupKey } from './libs/enums/enums.js';
-import {
-  checkIsCustomer,
-  checkIsDriver,
-  jsonToLatLngLiteral,
-} from './libs/helpers/helpers.js';
+import { checkIsCustomer, checkIsDriver } from './libs/helpers/helpers.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
@@ -126,8 +122,8 @@ class OrderService implements Omit<IService, 'find'> {
     }
 
     const { price } = await this.mapService.getPriceByDistance({
-      startAddress: jsonToLatLngLiteral(startPoint),
-      endAddress: jsonToLatLngLiteral(endPoint),
+      startAddress: startPoint,
+      endAddress: endPoint,
       pricePerKm: truck.pricePerKm,
     });
 

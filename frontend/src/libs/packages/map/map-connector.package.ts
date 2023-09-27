@@ -1,6 +1,7 @@
 import { Loader } from '@googlemaps/js-api-loader';
 
 import { config } from '../config/config.js';
+import { MAP_INFO_WINDOW_WIDTH } from './libs/constants/constants.js';
 import { type MapServiceParameters } from './libs/types/types.js';
 import { MapService } from './map.package.js';
 
@@ -10,6 +11,7 @@ type Libraries = {
   directionsService: google.maps.DirectionsService;
   directionsRenderer: google.maps.DirectionsRenderer;
   autocomplete: google.maps.places.AutocompleteService;
+  infoWindow: google.maps.InfoWindow;
 };
 
 interface IMapConnector {
@@ -42,6 +44,9 @@ class MapConnector implements IMapConnector {
         directionsService: new RoutesLibrary.DirectionsService(),
         directionsRenderer: new RoutesLibrary.DirectionsRenderer({
           suppressMarkers: true,
+        }),
+        infoWindow: new google.maps.InfoWindow({
+          maxWidth: MAP_INFO_WINDOW_WIDTH,
         }),
       };
     }

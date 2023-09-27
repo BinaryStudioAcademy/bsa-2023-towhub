@@ -12,8 +12,8 @@ type OrderEntity = {
   price: number;
   scheduledTime: string;
   carsQty: number;
-  startPoint: string;
-  endPoint: string;
+  startPoint: google.maps.LatLngLiteral;
+  endPoint: google.maps.LatLngLiteral;
   status: OrderStatusValues;
   userId: number | null;
   businessId: number | null;
