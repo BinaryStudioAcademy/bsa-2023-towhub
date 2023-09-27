@@ -1,0 +1,9 @@
+@import "src/assets/css/vars.scss";
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  padding-block: 57px;
+}
