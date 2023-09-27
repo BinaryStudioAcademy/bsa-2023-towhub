@@ -41,6 +41,7 @@ export {
 } from './libs/packages/socket/socket.js';
 export { type IStorage } from './libs/packages/storage/storage.js';
 export {
+  type Coordinates,
   type EntityPagination,
   type ErrorConstructor,
   type FirstParameter,
@@ -91,6 +92,7 @@ export {
   type DriverRequestParameters,
   type DriverUpdatePayload,
   type DriverUpdateRequestDto,
+  type DriverWithAvatarUrl,
   type DriverWithUserData,
   DriverApiPath,
   driverCreateRequestBody,
@@ -106,6 +108,7 @@ export {
   type GetFileRequestParameters,
   type UpdateFileKeyRequestDto,
   type UpdateFileKeyRequestParameters,
+  avatarInputDefaultsConfig,
   checkValidFileName,
   fileInputDefaultsConfig,
   FilesApiPath,
@@ -118,6 +121,7 @@ export {
   type DriverInfo,
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
+  type OrderCreateFormDto,
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderFindByIdResponseDto,
@@ -128,6 +132,7 @@ export {
   type OrderUpdateAcceptStatusResponseDto,
   type OrderUpdateRequestDto,
   ORDER_STATUSES,
+  orderCreateForm,
   orderCreateRequestBody,
   orderGetParameter,
   OrdersApiPath,
@@ -168,11 +173,14 @@ export {
   TruckYear,
 } from './packages/trucks/trucks.js';
 export {
+  type AuthUser,
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
+  type UserCommonDetails,
   type UserEntityObjectWithGroupAndBusinessT,
+  type UserEntityObjectWithGroupAndDriverT,
   type UserEntityObjectWithGroupT,
   type UserEntityT,
   type UserGetAllItemResponseDto,
