@@ -1,3 +1,4 @@
+export { type Coordinates } from './coordinates.type.js';
 export { type EntityPagination } from './entity-pagination.type.js';
 export { type ErrorConstructor } from './error-constructor.type.js';
 export { type FirstParameter } from './first-parameter.type.js';
