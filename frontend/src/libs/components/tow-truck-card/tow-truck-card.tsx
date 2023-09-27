@@ -1,16 +1,19 @@
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { type TruckEntityT } from '~/libs/types/types.js';
 import { manufacturerKeyToReadableName } from '~/packages/trucks/libs/maps/maps.js';
+import { type TruckWithDistance } from '~/pages/homepage/libs/types/types.js';
 
 import { Badge } from '../badge/badge.js';
 import { Button } from '../button/button.js';
 import { Icon } from '../icon/icon.js';
-import { getTowTruckImage } from './lib/helpers/helpers.js';
+import {
+  formatDistanceIntoKilometers,
+  getTowTruckImage,
+} from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  truck: TruckEntityT;
+  truck: TruckWithDistance;
   distance?: number;
   hasButton?: boolean;
   onOrderButtonClick?: () => void;
@@ -18,7 +21,6 @@ type Properties = {
 
 const TowTruckCard: React.FC<Properties> = ({
   truck,
-  distance,
   hasButton = true,
   onOrderButtonClick,
 }: Properties) => {
@@ -27,9 +29,12 @@ const TowTruckCard: React.FC<Properties> = ({
     capacity,
     pricePerKm,
     towType,
+    distance,
   } = truck;
   const img = getTowTruckImage(towType);
   const manufacturer = manufacturerKeyToReadableName[manufacturerRaw];
+  const distanceInKilometers =
+    distance && formatDistanceIntoKilometers(distance);
 
   return (
     <div className={getValidClassNames(styles.container)}>
@@ -54,7 +59,7 @@ const TowTruckCard: React.FC<Properties> = ({
           </div>
           <Badge color="grey">
             <Icon iconName={IconName.LOCATION_DOT} />
-            <span className={styles.km}>{distance} km</span>
+            <span className={styles.km}>{distanceInKilometers} km</span>
           </Badge>
         </div>
         {hasButton && <Button label="order now" onClick={onOrderButtonClick} />}
