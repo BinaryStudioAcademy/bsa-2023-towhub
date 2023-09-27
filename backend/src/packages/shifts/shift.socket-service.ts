@@ -33,6 +33,12 @@ class ShiftSocketService {
 
   private truckService: TruckService;
 
+  private currentUser!: UserEntityObjectWithGroupT;
+
+  private currentSocket!: Socket;
+
+  private currentIo!: Server;
+
   public constructor({
     shiftService,
     truckService,
@@ -62,11 +68,15 @@ class ShiftSocketService {
     socket: Socket;
     io: Server;
   }): Promise<void> {
+    this.currentUser = user;
+    this.currentSocket = socket;
+    this.currentIo = io;
+
     if (socket.eventNames().includes(ClientToServerEvent.END_SHIFT)) {
       await socketSyncShift({
         startedShiftsStore: this.startedShiftsStore,
-        userId: user.id,
-        socket,
+        userId: this.currentUser.id,
+        socket: this.currentSocket,
         truckService: this.truckService,
       });
 
@@ -84,18 +94,18 @@ class ShiftSocketService {
           message?: string,
         ) => void,
       ): Promise<void> => {
-        await this.startShift(payload, callback, { socket, io, user });
+        await this.startShift(payload, callback);
       },
     );
 
     socket.on(ClientToServerEvent.END_SHIFT, async () => {
-      await this.endShift({ io, user, socket });
+      await this.endShift();
     });
 
     await socketSyncShift({
       startedShiftsStore: this.startedShiftsStore,
-      userId: user.id,
-      socket,
+      userId: this.currentUser.id,
+      socket: this.currentSocket,
       truckService: this.truckService,
     });
   }
@@ -108,15 +118,6 @@ class ShiftSocketService {
       status: ValueOf<typeof ServerToClientResponseStatus>,
       message?: string,
     ) => void,
-    {
-      user,
-      socket,
-      io,
-    }: {
-      user: UserEntityObjectWithGroupT;
-      socket: Socket;
-      io: Server;
-    },
   ): Promise<void> {
     const { truckId } = payload;
     const isTruckNotAvailable =
@@ -130,49 +131,41 @@ class ShiftSocketService {
     }
 
     const timer = setTimeout(() => {
-      socket.emit(ServerToClientEvent.DRIVER_TIMED_OUT);
+      this.currentSocket.emit(ServerToClientEvent.DRIVER_TIMED_OUT);
       void socketEndShift({
-        io,
+        io: this.currentIo,
         startedShiftsStore: this.startedShiftsStore,
         shiftService: this.shiftService,
         truckService: this.truckService,
-        user,
+        user: this.currentUser,
       });
     }, SHIFT_TIMEOUT_TIME_IN_MS);
 
-    await socketChooseTruck(truckId, this.truckService, io);
+    await socketChooseTruck(truckId, this.truckService, this.currentIo);
 
     await createShift({
-      user,
+      user: this.currentUser,
       shiftService: this.shiftService,
       startedShiftsStore: this.startedShiftsStore,
       truckId,
-      startedShift: { socket, timer },
+      startedShift: { socket: this.currentSocket, timer },
     });
 
     callback(ServerToClientResponseStatus.OK);
   }
 
-  private async endShift({
-    user,
-    io,
-    socket,
-  }: {
-    user: UserEntityObjectWithGroupT;
-    io: Server;
-    socket: Socket;
-  }): Promise<void> {
-    if (!this.startedShiftsStore.has(user.id)) {
-      socket.emit(ServerToClientEvent.SHIFT_ENDED);
+  private async endShift(): Promise<void> {
+    if (!this.startedShiftsStore.has(this.currentUser.id)) {
+      this.currentSocket.emit(ServerToClientEvent.SHIFT_ENDED);
 
       return;
     }
     await socketEndShift({
-      io,
+      io: this.currentIo,
       startedShiftsStore: this.startedShiftsStore,
       truckService: this.truckService,
       shiftService: this.shiftService,
-      user,
+      user: this.currentUser,
     });
   }
 }

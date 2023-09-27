@@ -46,24 +46,15 @@ const signUp = createAsyncThunk<
   },
 );
 
-const authorizeDriverSocket = createAsyncThunk<
-  null,
-  undefined,
-  AsyncThunkConfig
->(
+const authorizeDriverSocket = createAsyncThunk<null, number, AsyncThunkConfig>(
   `${sliceName}/socket-driver-authorize`,
-  (_, { extra, getState, rejectWithValue }) => {
+  (userId, { extra }) => {
     const { socketClient } = extra;
-    const user = getState().auth.user;
-
-    if (!user) {
-      return rejectWithValue(null);
-    }
 
     socketClient.emit({
       event: ClientToServerEvent.AUTHORIZE_DRIVER,
       eventPayload: {
-        userId: user.id,
+        userId,
       },
     });
 

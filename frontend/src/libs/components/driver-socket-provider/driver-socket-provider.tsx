@@ -12,25 +12,29 @@ import {
 } from '~/libs/packages/socket/libs/helpers/helpers.js';
 import { socket } from '~/libs/packages/socket/socket.js';
 import { actions as authActions } from '~/slices/auth/auth.js';
-import { selectSocketDriverAuthStatus } from '~/slices/auth/selectors.js';
+import {
+  selectSocketDriverAuthStatus,
+  selectUser,
+} from '~/slices/auth/selectors.js';
 
 import { RouterOutlet } from '../router/router.js';
 
 const DriverSocketProvider: FC = () => {
   const isConnected = socket.checkIsConnected();
   const socketDriverAuthStatus = useAppSelector(selectSocketDriverAuthStatus);
+  const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   useEffect(() => {
     socketTryAddDriverListeners(dispatch);
 
-    if (socketDriverAuthStatus === DataStatus.IDLE) {
-      void dispatch(authActions.authorizeDriverSocket());
+    if (socketDriverAuthStatus === DataStatus.IDLE && user) {
+      void dispatch(authActions.authorizeDriverSocket(user.id));
     }
 
     return () => {
       socketTryRemoveDriverListeners();
     };
-  }, [dispatch, socketDriverAuthStatus, isConnected]);
+  }, [dispatch, socketDriverAuthStatus, isConnected, user]);
 
   return <RouterOutlet />;
 };

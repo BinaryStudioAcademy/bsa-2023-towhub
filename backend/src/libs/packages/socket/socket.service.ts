@@ -135,7 +135,6 @@ class SocketService {
 
             return;
           }
-
           await this.shiftSocketService.initializeListeners({
             user,
             socket,
