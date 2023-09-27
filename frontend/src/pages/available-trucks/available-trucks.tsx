@@ -9,7 +9,6 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
 import { selectUser } from '~/slices/auth/selectors.js';
-import { actions as driverActions } from '~/slices/driver/driver.js';
 import {
   ShiftStatus,
   TruckChoiceStatus,
@@ -43,7 +42,10 @@ const AvailableTrucks: React.FC = () => {
 
   const handleClick = useCallback(
     (truckId: number) => {
-      void dispatch(driverActions.startShift({ truckId }));
+      const isStartShift = true;
+      void dispatch(
+        truckActions.startWatchTruckLocation({ truckId, isStartShift }),
+      );
     },
     [dispatch],
   );
