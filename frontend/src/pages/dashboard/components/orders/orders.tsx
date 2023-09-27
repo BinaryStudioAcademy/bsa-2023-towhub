@@ -5,7 +5,10 @@ import {
   Spinner,
 } from '~/libs/components/components.js';
 import { DataStatus } from '~/libs/enums/data-status.enum';
-import { jsonToLatLngLiteral } from '~/libs/helpers/helpers.js';
+import {
+  getValidClassNames,
+  jsonToLatLngLiteral,
+} from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppMap,
@@ -124,6 +127,16 @@ const Orders: React.FC = () => {
     return (
       <div className={styles.orders}>
         <Spinner />
+      </div>
+    );
+  }
+
+  if (orders.length === 0) {
+    return (
+      <div className={styles.orders}>
+        <p className={getValidClassNames(styles.textSign, 'textMdBold')}>
+          There is not any orders yet
+        </p>
       </div>
     );
   }

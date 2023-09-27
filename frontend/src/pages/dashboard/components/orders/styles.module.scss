@@ -35,3 +35,13 @@
   border-radius: 20px;
   box-shadow: $shadow-light;
 }
+
+.textSign {
+  height: max-content;
+  padding: 2.25vmin;
+  color: $blue-extra-dark;
+  background-color: $white;
+  border: 1px solid $grey-border;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+}
