@@ -61,7 +61,6 @@ const OrderStatusPage: React.FC = () => {
   useAppMap({
     center: truckLocation ?? DEFAULT_CENTER,
     destination: order ? order.startPoint : null,
-    className: styles.map,
     mapReference: mapReference,
     onMapLoad: () => true,
   });

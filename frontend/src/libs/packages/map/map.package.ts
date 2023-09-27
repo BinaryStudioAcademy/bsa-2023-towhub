@@ -357,36 +357,6 @@ class MapService implements IMapService {
     this.infoWindow.setContent(`${startAddress} → ${endAddress}`);
     this.infoWindow.open({ map: this.map, anchor });
   }
-
-  public async autocompleteAddress(
-    query: string,
-  ): Promise<google.maps.places.QueryAutocompletePrediction[]> {
-    try {
-      const options = {
-        input: query,
-      };
-
-      return await new Promise<
-        google.maps.places.QueryAutocompletePrediction[]
-      >((resolve, reject) => {
-        this.autocomplete.getQueryPredictions(options, (results, status) => {
-          status === google.maps.places.PlacesServiceStatus.OK
-            ? resolve(results ?? [])
-            : reject(
-                new ApplicationError({
-                  message: 'Autocomplete failed',
-                  cause: status,
-                }),
-              );
-        });
-      });
-    } catch (error: unknown) {
-      throw new ApplicationError({
-        message: 'Error during address autocomplete',
-        cause: error,
-      });
-    }
-  }
 }
 
 export { MapService };
