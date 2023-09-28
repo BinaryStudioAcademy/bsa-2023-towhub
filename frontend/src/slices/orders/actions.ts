@@ -18,7 +18,7 @@ import {
 
 import { ActionName } from './libs/enums/enums.js';
 import { notificateOrderStatusChange } from './libs/helpers/notificate-order-status-change.helper.js';
-import { type RouteAddresses,type RouteData } from './libs/types/types.js';
+import { type RouteAddresses, type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
 const getBusinessOrders = createAsyncThunk<
