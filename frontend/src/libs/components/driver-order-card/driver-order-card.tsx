@@ -47,7 +47,7 @@ const DriverOrderCard: React.FC<Properties> = ({ order }: Properties) => {
       <div className={styles.header}>
         <div>Order {id}</div>
         {isActive && (
-          <Link to={`${AppRoute.ORDER}/${id}`} className={styles.link}>
+          <Link to={`${AppRoute.DRIVER_ORDER}/${id}`} className={styles.link}>
             Open to view order details
           </Link>
         )}

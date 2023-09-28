@@ -1,3 +1,5 @@
+export { type BusinessEditDto } from './business-edit-dto.type.js';
+export { type BusinessEditResponseDto } from './business-edit-response-dto.type.js';
 export { type BusinessSignUpRequestDto } from './business-sign-up-request-dto.type.js';
 export { type BusinessSignUpResponseDto } from './business-sign-up-response-dto.type.js';
 export { type CustomerSignUpRequestDto } from './customer-sign-up-request-dto.type.js';

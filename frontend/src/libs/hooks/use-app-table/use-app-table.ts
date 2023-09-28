@@ -89,6 +89,10 @@ const useAppTable = <T, K, RejectValue extends HttpError | null>({
     updatePage();
   }, [tableFetchCall, pageSize, pageIndex, dispatch, payload, updatePage]);
 
+  useEffect(() => {
+    void dispatch(tableFetchCall(searchParameters.toString()));
+  }, [dispatch, searchParameters, tableFetchCall]);
+
   return {
     pageSize,
     pageIndex,

@@ -25,6 +25,9 @@ const IconName = {
   USERS: 'users',
   CAR: 'car',
   MOBILE: 'mobile',
+  USER: 'user',
+  PHONE: 'phone',
+  CLOCK: 'clock',
 } as const;
 
 export { IconName };

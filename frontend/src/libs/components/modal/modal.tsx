@@ -11,12 +11,16 @@ type Properties = {
   isCentered: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  dialogContentClassName?: string;
+  dialogClassName?: string;
 };
 
 const Modal: React.FC<Properties> = ({
   isOpen,
   isCentered,
   onClose,
+  dialogContentClassName,
+  dialogClassName,
   children,
 }: Properties) => {
   const {
@@ -36,6 +40,7 @@ const Modal: React.FC<Properties> = ({
       className={getValidClassNames(
         styles.modal,
         isCentered && styles.centered,
+        dialogClassName,
       )}
       onClick={handleOutsideClick}
       onKeyDown={handleExitKeydown}
@@ -43,7 +48,7 @@ const Modal: React.FC<Properties> = ({
       tabIndex={0}
     >
       <div
-        className={styles.content}
+        className={getValidClassNames(styles.content, dialogContentClassName)}
         onClick={handleDisableContentContainerClick}
         onKeyDown={handleExitKeydown}
         role="button"

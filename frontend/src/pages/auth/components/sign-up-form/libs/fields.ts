@@ -28,6 +28,7 @@ const signUpCustomerFields: FormField<CustomerSignUpRequestDto>[] = [
     placeholder: 'Enter your phone',
     name: FormName.PHONE,
     associateServerErrors: [HttpMessage.USER_PHONE_EXISTS],
+    type: 'phone',
   },
   {
     type: 'password',
@@ -60,6 +61,7 @@ const signUpBusinessFields: FormField<BusinessSignUpRequestDto>[] = [
     placeholder: 'Enter your phone',
     name: FormName.PHONE,
     associateServerErrors: [HttpMessage.USER_PHONE_EXISTS],
+    type: 'phone',
   },
   {
     label: FormLabel.COMPANY_NAME,

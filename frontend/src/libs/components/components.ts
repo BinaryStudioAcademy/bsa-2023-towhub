@@ -28,6 +28,7 @@ export { PageLayout } from './page-layout/page-layout.js';
 export { Pagination } from './pagination/pagination.js';
 export { PlainSvgIcon } from './plain-svg-icon/plain-svg-icon.js';
 export { ProtectedRoute } from './protected-route/protected-route.js';
+export { ProtectedRouteBusinessCustomer } from './protected-route-for-business-customer/protected-route-for-business-customer.js';
 export { Radio } from './radio/radio.js';
 export { Router } from './router/router.jsx';
 export { RouterProvider } from './router-provider/router-provider.js';
