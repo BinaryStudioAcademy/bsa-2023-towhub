@@ -117,7 +117,7 @@ const Router = (): JSX.Element => {
           <Route
             path={AppRoute.EDIT_PROFILE}
             element={
-              <PageLayout isSidebarHidden>
+              <PageLayout>
                 <EditDriverProfilePage />
               </PageLayout>
             }
