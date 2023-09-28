@@ -57,9 +57,17 @@ $zoom-out-speed: 600ms;
   align-items: center;
 }
 
+.rowContentName {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .rowContentDetails {
   display: flex;
   flex-direction: column;
+  width: 20vmin;
   margin-left: 3vmin;
 }
 

@@ -16,6 +16,7 @@ import {
   useToggle,
 } from '~/libs/hooks/hooks.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
+import { type HttpError } from '~/libs/packages/http/libs/exceptions/http-error.exception';
 import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import {
   type TruckAddRequestDto,
@@ -50,7 +51,8 @@ const TruckTable: React.FC = () => {
 
   const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
     TruckGetAllResponseDto,
-    PaginationWithSortingParameters
+    PaginationWithSortingParameters,
+    HttpError
   >({
     tableFetchCall: findAllTrucksForBusiness,
     initialPageIndex: initialPage ? Number(initialPage) : null,

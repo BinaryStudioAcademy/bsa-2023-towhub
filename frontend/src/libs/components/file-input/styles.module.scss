@@ -4,13 +4,9 @@
 .wrapper {
   display: grid;
   flex-direction: column;
-  width: 90vmin;
   min-height: 10vmin;
-  margin: 5vmin;
-  padding: 7vmin;
   background: $white;
   border-radius: 1.2vmin;
-  box-shadow: $shadow-light;
 }
 
 @keyframes line-inserted {

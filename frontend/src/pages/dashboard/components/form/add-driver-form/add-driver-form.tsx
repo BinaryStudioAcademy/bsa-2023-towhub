@@ -9,6 +9,7 @@ import {
   type DriverCreateRequestDto,
   driverCreateRequestBody,
 } from '~/packages/drivers/drivers.js';
+import { type FileObject } from '~/slices/files/libs/types/types.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { DEFAULT_ADD_DRIVER_PAYLOAD } from './libs/constants.js';
@@ -16,7 +17,7 @@ import { getInitialFields } from './libs/helpers/helpers.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  onSubmit: (payload: DriverCreateRequestDto) => void;
+  onSubmit: (payload: DriverCreateRequestDto<FileObject>) => void;
 };
 
 const AddDriverForm: React.FC<Properties> = ({ onSubmit }: Properties) => {
