@@ -141,7 +141,7 @@ class OrderService implements Omit<IService, 'find'> {
       customerPhone: phoneInOrder,
     });
 
-    return OrderEntity.initialize({
+    const orderObject = OrderEntity.initialize({
       ...order,
       shiftId: shift.id,
       driver: {
@@ -154,6 +154,10 @@ class OrderService implements Omit<IService, 'find'> {
       },
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     }).toObject();
+
+    this.socketService.notifyOrderCreate(driver.id, orderObject);
+
+    return orderObject;
   }
 
   public async findById({
@@ -262,7 +266,7 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT;
   }): Promise<OrderUpdateAcceptStatusResponseDto> {
-    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+    const statusForUpdate = this.checkIsOrderAccepted(payload.newStatus, user);
 
     await this.shiftService.checkDriverStartShift(user.id);
 
@@ -294,7 +298,7 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT | null;
   }): Promise<OrderUpdateAcceptStatusResponseDto> {
-    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+    const statusForUpdate = this.checkIsOrderAccepted(payload.newStatus, user);
 
     const updatedOrder = await this.orderRepository.update({
       id: orderId,
@@ -399,14 +403,17 @@ class OrderService implements Omit<IService, 'find'> {
   }
 
   private checkIsOrderAccepted(
-    isAccepted: boolean,
+    newStatus: OrderStatusValues,
     user: UserEntityObjectWithGroupT | null,
   ): OrderStatusValues {
     if (user && checkIsDriver(user.group.key)) {
-      return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REJECTED;
+      return newStatus;
     }
 
-    if ((!user || checkIsCustomer(user.group.key)) && !isAccepted) {
+    if (
+      (!user || checkIsCustomer(user.group.key)) &&
+      newStatus !== OrderStatus.PICKING_UP
+    ) {
       return OrderStatus.CANCELED;
     }
 

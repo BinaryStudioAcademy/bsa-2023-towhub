@@ -4,9 +4,12 @@ $error-font-size: 12px;
 $line-height-coefficient: 1.54;
 $error-message-height: calc($error-font-size * $line-height-coefficient);
 
-.inputComponentWrapper {
+.inputComponentWrapper,
+:global(.form-control).phoneInput {
   display: flex;
   flex-direction: column;
+  width: auto;
+  max-width: 327px;
   color: $grey-dark;
   font-weight: $font-weight-semibold;
   font-size: 16px;
@@ -15,9 +18,13 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   line-height: 140.5%;
 }
 
-.input {
+:global(.form-control).phoneInput {
+  height: 38px;
+}
+
+.input,
+:global(.form-control).input {
   width: 100%;
-  padding: 8px;
   color: $grey-dark;
   font-weight: $font-weight-regular;
   font-size: 14px;
@@ -30,22 +37,30 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   outline: none;
 }
 
-.input.filled {
+.inputPadding {
+  padding: 8px;
+}
+
+.input.filled,
+:global(.form-control).input {
   color: $black;
 }
 
-.input:focus {
+.input:focus,
+:global(.form-control).input:focus {
   border-color: $blue;
   box-shadow:
     0 2px 4px -2px rgb(0 44 132 / 6%),
     0 4px 8px -2px rgb(0 85 255 / 16%);
 }
 
-.input.disabled {
+.input.disabled,
+:global(.form-control).input.disabled {
   color: $grey-light;
 }
 
-.input.error {
+.input.error,
+:global(.form-control).input.error {
   border-color: $red;
 }
 
@@ -84,7 +99,7 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
 
 .passwordEye {
   position: absolute;
-  top: 8px;
+  top: 11px;
   right: 10px;
   color: $grey-dark;
   background-color: transparent;
@@ -101,4 +116,41 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   position: relative;
   display: block;
   width: 100%;
+}
+
+:global(.flag-dropdown).phoneButton {
+  top: 3px;
+  left: 2px;
+  height: 80%;
+  background-color: $white;
+  border: none;
+}
+
+:global(.country-list).phoneDropdown {
+  color: $grey-dark;
+  font-weight: $font-weight-semibold;
+  font-size: 14px;
+  font-family: $font-family;
+  border: 2px solid $grey-light;
+  border-radius: 4px;
+  box-shadow: $shadow;
+}
+
+:global(.country-list).phoneDropdown::-webkit-scrollbar {
+  width: 10px;
+  background: $scroll-bar;
+  border-radius: 5px;
+  opacity: 0.5;
+}
+
+:global(.country-list).phoneDropdown::-webkit-scrollbar-thumb {
+  background: $scroll-bar-thumb;
+  border-radius: 5px;
+}
+
+:global(.react-tel-input)
+  :global(.country-list)
+  :global(.country):global(.highlight),
+:global(.react-tel-input) :global(.country-list) :global(.country):hover {
+  background-color: $grey-extra-light;
 }
