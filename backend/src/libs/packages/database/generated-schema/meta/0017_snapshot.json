@@ -87,8 +87,7 @@
         "driver_license_file_id": {
           "name": "driver_license_file_id",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": true
+          "primaryKey": false
         },
         "user_id": {
           "name": "user_id",
