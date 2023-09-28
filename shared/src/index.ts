@@ -188,6 +188,8 @@ export {
 } from './packages/trucks/trucks.js';
 export {
   type AuthUser,
+  type BusinessEditDto,
+  type BusinessEditResponseDto,
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
@@ -203,7 +205,9 @@ export {
   type UserGroupKeyT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
+  businessEditValidationSchema,
   businessSignUpValidationSchema,
+  customerEditValidationSchema,
   customerSignUpValidationSchema,
   UserGroupKey,
   UsersApiPath,

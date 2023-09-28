@@ -26,6 +26,7 @@ import {
   type TruckGetAllResponseDto,
 } from '../trucks/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
+import { type UserService } from '../users/user.service.js';
 import {
   type UserEntityObjectWithGroupT,
   type UserEntityT,
@@ -35,9 +36,9 @@ import { type BusinessRepository } from './business.repository.js';
 import {
   type BusinessAddResponseDto,
   type BusinessCreatePayload,
+  type BusinessEditDto,
+  type BusinessEditResponseDto,
   type BusinessEntityT,
-  type BusinessUpdateRequestDto,
-  type BusinessUpdateResponseDto,
   type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 
@@ -47,6 +48,8 @@ type Constructor = {
   driverService: DriverService;
 
   truckService: TruckService;
+
+  userService: UserService;
 
   filesService: FilesService;
 
@@ -60,6 +63,8 @@ class BusinessService implements IService {
 
   private truckService: TruckService;
 
+  private userService: UserService;
+
   private fileService: FilesService;
 
   private fileVerificationStatusService: FileVerificationStatusService;
@@ -68,12 +73,14 @@ class BusinessService implements IService {
     businessRepository,
     driverService,
     truckService,
+    userService,
     filesService,
     fileVerificationStatusService,
   }: Constructor) {
     this.businessRepository = businessRepository;
     this.driverService = driverService;
     this.truckService = truckService;
+    this.userService = userService;
     this.fileService = filesService;
     this.fileVerificationStatusService = fileVerificationStatusService;
   }
@@ -157,36 +164,46 @@ class BusinessService implements IService {
   }
 
   public async update({
+    userId,
     payload,
-    owner,
   }: {
-    payload: BusinessUpdateRequestDto;
-    owner: UserEntityObjectWithGroupT;
-  }): Promise<BusinessUpdateResponseDto> {
-    const foundBusiness = await this.findByOwnerId(owner.id);
+    userId: number;
+    payload: BusinessEditDto;
+  }): Promise<BusinessEditResponseDto> {
+    const foundBusinessByUserId = await this.findByOwnerId(userId);
+    const { taxNumber, companyName, firstName, lastName, phone, email } =
+      payload;
 
-    if (!foundBusiness) {
+    if (!foundBusinessByUserId) {
       throw new NotFoundError({});
     }
 
-    const { result: doesBusinessExist } =
-      await this.businessRepository.checkExists({
-        companyName: payload.companyName,
-      });
+    const [existingBusiness = null] = await this.businessRepository.find({
+      taxNumber,
+    });
 
-    if (doesBusinessExist) {
+    if (existingBusiness && existingBusiness.ownerId !== userId) {
       throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.NAME_ALREADY_REGISTERED,
+        message: HttpMessage.BUSINESS_EXISTS,
+        status: HttpCode.CONFLICT,
       });
     }
 
     const business = await this.businessRepository.update({
-      id: foundBusiness.id,
-      payload,
+      id: foundBusinessByUserId.id,
+      payload: { taxNumber, companyName },
     });
 
-    return business.toObject();
+    const updatedBusiness = business.toObject();
+
+    const updatedUser = await this.userService.update(userId, {
+      firstName,
+      lastName,
+      phone,
+      email,
+    });
+
+    return { ...updatedUser, business: updatedBusiness };
   }
 
   public async delete(owner: UserEntityObjectWithGroupT): Promise<boolean> {

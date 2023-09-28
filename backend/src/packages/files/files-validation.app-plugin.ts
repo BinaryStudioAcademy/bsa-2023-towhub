@@ -30,6 +30,7 @@ const filesValidationPlugin = fp((fastify, _, done) => {
             fileInputConfig,
           });
           request.body = { ...parsedFields, files: parsedFiles };
+          request.parsedFiles = parsedFiles;
         } catch (error) {
           return done(error as HttpError);
         }

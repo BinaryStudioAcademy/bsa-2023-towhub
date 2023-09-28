@@ -1,6 +1,8 @@
 export { UserGroupKey, UsersApiPath } from './libs/enums/enums.js';
 export {
   type AuthUser,
+  type BusinessEditDto,
+  type BusinessEditResponseDto,
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
@@ -18,7 +20,9 @@ export {
   type UserSignInResponseDto,
 } from './libs/types/types.js';
 export {
+  businessEdit as businessEditValidationSchema,
   businessSignUp as businessSignUpValidationSchema,
+  customerEdit as customerEditValidationSchema,
   customerSignUp as customerSignUpValidationSchema,
   userSignIn as userSignInValidationSchema,
 } from './libs/validation-schemas/validation-schemas.js';
