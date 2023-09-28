@@ -2,6 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
+import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import { TruckNotificationMessage } from '~/packages/trucks/libs/enums/enums.js';
 import {
@@ -10,6 +11,8 @@ import {
   type TruckGetAllResponseDto,
   type UsersTrucksEntityT,
 } from '~/packages/trucks/libs/types/types.js';
+import { setVerificationCompleted } from '~/slices/driver/actions.js';
+import { selectIsVerificationCompleted } from '~/slices/driver/selectors.js';
 
 import { ActionName } from './enums/action-name.enum.js';
 import { name as sliceName } from './trucks.slice.js';
@@ -23,7 +26,7 @@ import {
 const addTruck = createAsyncThunk<
   TruckEntityT,
   TruckAddRequestDto & { queryString?: string },
-  AsyncThunkConfig
+  AsyncThunkConfig<HttpError>
 >(
   `${sliceName}/add-truck`,
   async ({ queryString, ...payload }, { rejectWithValue, extra, dispatch }) => {
@@ -50,7 +53,7 @@ const addTruck = createAsyncThunk<
 const updateTruckLocationFromSocket = createAsyncThunk<
   TruckLocationPayload,
   TruckLocationPayload,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(ActionName.SOCKET.UPDATE_TRUCK_LOCATION, (location) => {
   return location;
 });
@@ -85,7 +88,7 @@ const unsubscribeTruckUpdates = createAction(
 const calculateArrivalTime = createAsyncThunk<
   TruckArrivalTime,
   CalculateArrivalTimeParameter,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(
   ActionName.CALCULATE_ARRIVAL_TIME,
   async ({ origin, destination }, { extra }) => {
@@ -108,17 +111,34 @@ const calculateArrivalTime = createAsyncThunk<
 const getAllTrucksByUserId = createAsyncThunk<
   TruckEntityT[],
   Pick<UsersTrucksEntityT, 'userId'>,
-  AsyncThunkConfig
->(`${sliceName}/get-all-trucks-by-user-id`, (payload, { extra }) => {
-  const { truckApi } = extra;
+  AsyncThunkConfig<HttpError>
+>(
+  `${sliceName}/get-all-trucks-by-user-id`,
+  async (payload, { extra, rejectWithValue, dispatch, getState }) => {
+    const { truckApi } = extra;
 
-  return truckApi.getAllTrucksByUserId(payload);
-});
+    try {
+      return await truckApi.getAllTrucksByUserId(payload);
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
+
+      const isVerificationCompleted = selectIsVerificationCompleted(getState());
+
+      if (!isVerificationCompleted) {
+        notification.error(getErrorMessage(error.message));
+      }
+
+      return rejectWithValue({ ...error, message: error.message });
+    } finally {
+      dispatch(setVerificationCompleted());
+    }
+  },
+);
 
 const findAllTrucksForBusiness = createAsyncThunk<
   TruckGetAllResponseDto,
   string | undefined,
-  AsyncThunkConfig
+  AsyncThunkConfig<HttpError>
 >(
   `${sliceName}/find-all-trucks-for-business`,
   async (payload, { rejectWithValue, extra }) => {
