@@ -162,6 +162,11 @@ class SocketService {
             return;
           }
 
+          await socket.join(`${RoomPrefix.DRIVER_ORDER}${user.id}`);
+          logger.info(
+            `${socket.id} connected to ${RoomPrefix.DRIVER_ORDER}${user.id}`,
+          );
+
           await shiftSocketService.initializeListeners({
             user,
             socket,
@@ -172,6 +177,15 @@ class SocketService {
         },
       );
     });
+  }
+
+  public notifyOrderCreate(
+    driverId: OrderResponseDto['id'],
+    order: OrderResponseDto,
+  ): void {
+    this.io
+      ?.to(`${RoomPrefix.DRIVER_ORDER}${driverId}`)
+      .emit(ServerToClientEvent.ORDER_CREATED, order);
   }
 
   public notifyOrderUpdate(

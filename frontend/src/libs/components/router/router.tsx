@@ -17,6 +17,7 @@ import {
   AvailableTrucks,
   CustomerHistory,
   Dashboard,
+  DriverOrder,
   EditDriverProfilePage,
   HomePage,
   NotFound,
@@ -112,6 +113,15 @@ const Router = (): JSX.Element => {
             element={
               <PageLayout>
                 <Orders />
+              </PageLayout>
+            }
+          />
+
+          <Route
+            path={AppRoute.DRIVER_ORDER}
+            element={
+              <PageLayout isSidebarHidden>
+                <DriverOrder />
               </PageLayout>
             }
           />
