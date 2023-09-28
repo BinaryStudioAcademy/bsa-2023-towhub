@@ -10,7 +10,6 @@ import {
   useAppTable,
   useCallback,
   useQueryParameters,
-  useState,
 } from '~/libs/hooks/hooks.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
@@ -21,7 +20,6 @@ import {
 } from '~/packages/orders/orders.js';
 import { getUserOrdersPage } from '~/slices/orders/actions.js';
 
-import { getFilterByLabel } from './libs/helpers/helpers.js';
 import { orderStatusOptions } from './libs/options/order-status-options.js';
 import styles from './styles.module.scss';
 
@@ -30,14 +28,13 @@ const CustomerHistory: React.FC = () => {
     useQueryParameters();
 
   const { orders, total, dataStatus } = useAppSelector((state) => state.orders);
-  const [activeFilter, setActiveFilter] = useState<SelectOption>();
 
   const { size: initialSize, page: initialPage } = getQueryParameters(
     'size',
     'page',
   ) as Queries;
 
-  const listHook = useAppTable<
+  const { pageIndex, pageSize, changePageIndex, changePageSize } = useAppTable<
     OrderFindAllUserOrdersResponseDto,
     { status?: typeof OrderStatus }
   >({
@@ -50,18 +47,17 @@ const CustomerHistory: React.FC = () => {
   const handleChangeFilter = useCallback(
     (option: SingleValue<SelectOption>) => {
       if (option?.value) {
-        listHook.changePageIndex(0);
+        changePageIndex(0);
         setQueryParameters({
-          size: listHook.pageSize,
+          size: pageSize,
           page: 0,
           status: option.value,
         });
-        setActiveFilter(getFilterByLabel(option.value));
       } else {
         removeQueryParameters('status');
       }
     },
-    [listHook, removeQueryParameters, setQueryParameters],
+    [changePageIndex, pageSize, removeQueryParameters, setQueryParameters],
   );
 
   return (
@@ -74,14 +70,13 @@ const CustomerHistory: React.FC = () => {
       <h2 className={styles.title}>Orders History</h2>
       <div className={styles.filter}>
         <label htmlFor="status">Filter by status:</label>
-        <Dropdown
-          onChange={handleChangeFilter}
-          options={orderStatusOptions}
-          defaultValue={activeFilter}
-        />
+        <Dropdown onChange={handleChangeFilter} options={orderStatusOptions} />
       </div>
       <CustomerOrderList
-        {...listHook}
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        onChangePageIndex={changePageIndex}
+        onChangePageSize={changePageSize}
         orders={orders}
         totalElements={total}
         isLoading={dataStatus === DataStatus.PENDING}

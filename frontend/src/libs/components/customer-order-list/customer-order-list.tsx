@@ -14,8 +14,8 @@ type Properties = {
   pageSize: number;
   totalElements: number;
   pageIndex: number;
-  changePageIndex: React.Dispatch<React.SetStateAction<number>>;
-  changePageSize: React.Dispatch<React.SetStateAction<number>>;
+  onChangePageIndex: React.Dispatch<React.SetStateAction<number>>;
+  onChangePageSize: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const CustomerOrderList: React.FC<Properties> = ({
@@ -25,17 +25,17 @@ const CustomerOrderList: React.FC<Properties> = ({
   pageSize,
   emptyListMessage,
   totalElements,
-  changePageIndex,
-  changePageSize,
+  onChangePageIndex,
+  onChangePageSize,
 }: Properties) => {
   const pagesRange = Math.ceil(totalElements / pageSize);
 
   const handleChangePageSize = useCallback(
     (value: number) => {
-      changePageIndex(0);
-      changePageSize(value);
+      onChangePageIndex(0);
+      onChangePageSize(value);
     },
-    [changePageSize, changePageIndex],
+    [onChangePageSize, onChangePageIndex],
   );
 
   if (isLoading) {
@@ -65,7 +65,7 @@ const CustomerOrderList: React.FC<Properties> = ({
       </ul>
       <Pagination
         pageCount={pagesRange}
-        onClick={changePageIndex}
+        onClick={onChangePageIndex}
         onChangePageSize={handleChangePageSize}
         pageIndex={pageIndex}
         pageSize={pageSize}
