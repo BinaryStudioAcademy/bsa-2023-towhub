@@ -56,7 +56,7 @@ class DriverRepository implements IRepository {
         ...SELECT_FILTER_JOIN_USER,
       })
       .from(this.driverSchema)
-      .innerJoin(
+      .leftJoin(
         schema.fileVerificationStatus,
         eq(
           this.driverSchema.driverLicenseFileId,
@@ -91,7 +91,7 @@ class DriverRepository implements IRepository {
         ...SELECT_FILTER_JOIN_USER,
       })
       .from(this.driverSchema)
-      .innerJoin(
+      .leftJoin(
         schema.fileVerificationStatus,
         eq(
           this.driverSchema.driverLicenseFileId,
