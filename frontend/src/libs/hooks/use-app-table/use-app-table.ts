@@ -1,6 +1,7 @@
 import { type AsyncThunk } from '@reduxjs/toolkit';
 import { useCallback, useEffect, useState } from 'react';
 
+import { type HttpError } from '~/libs/packages/http/http.js';
 import {
   type AsyncThunkConfig,
   type SortMethodValue,
@@ -10,8 +11,12 @@ import { useQueryParameters } from '../hooks.js';
 import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
 
-type Properties<T, K> = {
-  tableFetchCall: AsyncThunk<T, string | undefined, AsyncThunkConfig>;
+type Properties<T, K, RejectValue extends HttpError | null> = {
+  tableFetchCall: AsyncThunk<
+    T,
+    string | undefined,
+    AsyncThunkConfig<RejectValue>
+  >;
   payload?: K;
   initialPageSize?: number | null;
   initialPageIndex?: number | null;
@@ -26,13 +31,13 @@ type ReturnValue = {
   updatePage: () => void;
 };
 
-const useAppTable = <T, K>({
+const useAppTable = <T, K, RejectValue extends HttpError | null>({
   tableFetchCall,
   payload,
   initialPageSize,
   initialPageIndex,
   sort,
-}: Properties<T, K>): ReturnValue => {
+}: Properties<T, K, RejectValue>): ReturnValue => {
   const [pageSize, changePageSize] = useState(
     initialPageSize ?? DEFAULT_PAGE_SIZE,
   );

@@ -7,7 +7,12 @@ import {
 import { type ClientToServerEvent } from '../enums/enums.js';
 
 type ClientToServerEventParameter = {
-  [ClientToServerEvent.AUTHORIZE_DRIVER]: (payload: { userId: number }) => void;
+  [ClientToServerEvent.AUTHORIZE_DRIVER]: (
+    payload: { userId: number },
+    callback: EventAckCollback<
+      ServerToClientEventResponse[typeof ClientToServerEvent.AUTHORIZE_DRIVER]
+    >,
+  ) => void;
   [ClientToServerEvent.TRUCK_LOCATION_UPDATE]: (payload: {
     latLng: GeolocationLatLng;
     truckId: number;
