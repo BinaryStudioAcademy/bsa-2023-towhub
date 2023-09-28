@@ -13,7 +13,6 @@ import {
   type ValueOf,
 } from '~/libs/types/types.js';
 
-import { Autocomplete } from '../components.js';
 import { Dropdown } from '../dropdown/dropdown.js';
 import { FilterOption, FilterValue } from './libs/enums/enums.js';
 import styles from './styles.module.scss';
@@ -23,10 +22,7 @@ type Properties = {
   onLocationChange: LocationChangeHandler;
 };
 
-const TruckFilter = ({
-  onFilterChange,
-  onLocationChange,
-}: Properties): JSX.Element => {
+const TruckFilter = ({ onFilterChange }: Properties): JSX.Element => {
   const {
     control: priceControl,
     setValue: setPriceValue,
@@ -100,11 +96,11 @@ const TruckFilter = ({
       <div className={styles.locationFilter}>
         <span className={styles.title}>Location</span>
         <div className={styles.wrapper}>
-          <Autocomplete
+          {/* <Autocomplete
             placeholder="Select location..."
             inputStyles={styles.input}
             handlePlaceChanged={onLocationChange}
-          />
+          /> */}
         </div>
       </div>
       <div className={styles.filterBar}>

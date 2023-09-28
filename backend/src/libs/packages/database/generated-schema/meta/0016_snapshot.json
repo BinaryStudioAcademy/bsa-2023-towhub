@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "70218b21-e562-46f8-a077-7a485158ad66",
-  "prevId": "bc68497b-b34d-47a7-9ef5-3be730d8a970",
+  "id": "2e49084a-7f42-42e6-b01e-252c95259360",
+  "prevId": "70218b21-e562-46f8-a077-7a485158ad66",
   "tables": {
     "business_details": {
       "name": "business_details",
@@ -264,7 +264,7 @@
         },
         "price": {
           "name": "price",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true
         },
@@ -276,13 +276,13 @@
         },
         "start_point": {
           "name": "start_point",
-          "type": "varchar",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
         "end_point": {
           "name": "end_point",
-          "type": "varchar",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },

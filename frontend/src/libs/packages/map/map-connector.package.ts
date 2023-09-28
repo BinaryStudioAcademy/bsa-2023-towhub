@@ -10,8 +10,8 @@ type Libraries = {
   routes: google.maps.DistanceMatrixService;
   directionsService: google.maps.DirectionsService;
   directionsRenderer: google.maps.DirectionsRenderer;
+  autocomplete: google.maps.places.AutocompleteService;
   infoWindow: google.maps.InfoWindow;
-  placesLibrary: google.maps.PlacesLibrary;
 };
 
 interface IMapConnector {
@@ -31,7 +31,7 @@ class MapConnector implements IMapConnector {
       const loader = new Loader({
         apiKey,
       });
-      const [GeocodingLibrary, RoutesLibrary, PlacesLibrary] =
+      const [GeocodingLibrary, RoutesLibrary, AutocompleLibrary] =
         await Promise.all([
           loader.importLibrary('geocoding'),
           loader.importLibrary('routes'),
@@ -40,6 +40,7 @@ class MapConnector implements IMapConnector {
       MapConnector.libraries = {
         geocoding: new GeocodingLibrary.Geocoder(),
         routes: new RoutesLibrary.DistanceMatrixService(),
+        autocomplete: new AutocompleLibrary.AutocompleteService(),
         directionsService: new RoutesLibrary.DirectionsService(),
         directionsRenderer: new RoutesLibrary.DirectionsRenderer({
           suppressMarkers: true,
@@ -47,7 +48,6 @@ class MapConnector implements IMapConnector {
         infoWindow: new google.maps.InfoWindow({
           maxWidth: MAP_INFO_WINDOW_WIDTH,
         }),
-        placesLibrary: PlacesLibrary,
       };
     }
 

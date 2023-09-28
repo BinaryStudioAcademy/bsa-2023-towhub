@@ -8,8 +8,8 @@ import { type OrderUpdateRequestDto } from '../types/types.js';
 const orderUpdateRequestBody = joi.object<OrderUpdateRequestDto, true>({
   scheduledTime: joi.string().isoDate(),
   carsQty: joi.number().integer().positive(),
-  startPoint: joi.string(),
-  endPoint: joi.string(),
+  startPoint: joi.object(),
+  endPoint: joi.object(),
   truckId: joi.number().integer().positive(),
   userId: joi.number().integer().positive().messages({
     'number': OrdersValidationMessage.USER_ID_MUST_BE_NUMBER,

@@ -15,8 +15,8 @@ type Constructor = MapServiceParameters & {
     routes: google.maps.DistanceMatrixService;
     directionsService: google.maps.DirectionsService;
     directionsRenderer: google.maps.DirectionsRenderer;
+    autocomplete: google.maps.places.AutocompleteService;
     infoWindow: google.maps.InfoWindow;
-    placesLibrary: google.maps.PlacesLibrary;
   };
   map: google.maps.Map | null;
   markers: google.maps.Marker[];
@@ -37,9 +37,9 @@ class MapService implements IMapService {
 
   private routes!: google.maps.DistanceMatrixService;
 
-  private infoWindow: google.maps.InfoWindow;
+  private autocomplete!: google.maps.places.AutocompleteService;
 
-  private placesLibrary!: google.maps.PlacesLibrary;
+  private infoWindow: google.maps.InfoWindow;
 
   private setMap: (map: google.maps.Map) => void;
 
@@ -84,7 +84,6 @@ class MapService implements IMapService {
       this.directionsRenderer = extraLibraries.directionsRenderer;
       this.directionsService = extraLibraries.directionsService;
       this.infoWindow = extraLibraries.infoWindow;
-      this.placesLibrary = extraLibraries.placesLibrary;
 
       init();
 
@@ -194,6 +193,26 @@ class MapService implements IMapService {
       } = await this.geocoder.geocode({ location: point });
 
       return result.formatted_address;
+    } catch (error: unknown) {
+      throw new ApplicationError({
+        message: 'Error decoding coordinates',
+        cause: error,
+      });
+    }
+  }
+
+  public async getAddressPoint(
+    address: string,
+  ): Promise<google.maps.LatLngLiteral> {
+    try {
+      const {
+        results: [result],
+      } = await this.geocoder.geocode({ address: address });
+
+      return {
+        lat: result.geometry.location.lat(),
+        lng: result.geometry.location.lng(),
+      };
     } catch (error: unknown) {
       throw new ApplicationError({
         message: 'Error decoding coordinates',
@@ -337,12 +356,6 @@ class MapService implements IMapService {
 
     this.infoWindow.setContent(`${startAddress} → ${endAddress}`);
     this.infoWindow.open({ map: this.map, anchor });
-  }
-
-  public createAutocomplete(
-    input: HTMLInputElement,
-  ): google.maps.places.Autocomplete {
-    return new this.placesLibrary.Autocomplete(input);
   }
 
   public setZoom(zoom: number): void {

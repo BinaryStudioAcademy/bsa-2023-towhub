@@ -16,6 +16,7 @@ export {
   type AuthUser,
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
+  type Coordinates,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type DriverGetAllResponseDto,
