@@ -15,6 +15,7 @@ type Constructor = MapServiceParameters & {
     routes: google.maps.DistanceMatrixService;
     directionsService: google.maps.DirectionsService;
     directionsRenderer: google.maps.DirectionsRenderer;
+    autocomplete: google.maps.places.AutocompleteService;
     infoWindow: google.maps.InfoWindow;
   };
   map: google.maps.Map | null;
@@ -35,6 +36,8 @@ class MapService implements IMapService {
   private geocoder!: google.maps.Geocoder;
 
   private routes!: google.maps.DistanceMatrixService;
+
+  private autocomplete!: google.maps.places.AutocompleteService;
 
   private infoWindow: google.maps.InfoWindow;
 
@@ -190,6 +193,26 @@ class MapService implements IMapService {
       } = await this.geocoder.geocode({ location: point });
 
       return result.formatted_address;
+    } catch (error: unknown) {
+      throw new ApplicationError({
+        message: 'Error decoding coordinates',
+        cause: error,
+      });
+    }
+  }
+
+  public async getAddressPoint(
+    address: string,
+  ): Promise<google.maps.LatLngLiteral> {
+    try {
+      const {
+        results: [result],
+      } = await this.geocoder.geocode({ address: address });
+
+      return {
+        lat: result.geometry.location.lat(),
+        lng: result.geometry.location.lng(),
+      };
     } catch (error: unknown) {
       throw new ApplicationError({
         message: 'Error decoding coordinates',

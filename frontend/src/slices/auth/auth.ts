@@ -1,7 +1,10 @@
 import {
   authorizeDriverSocket,
+  editBusiness,
+  editCustomer,
   getCurrent,
   logOut,
+  resetAuthorizedDriverSocket,
   signIn,
   signUp,
 } from './actions.js';
@@ -9,8 +12,11 @@ import { actions } from './auth.slice.js';
 
 const allActions = {
   ...actions,
+  editBusiness,
+  editCustomer,
   signIn,
   authorizeDriverSocket,
+  resetAuthorizedDriverSocket,
   signUp,
   getCurrent,
   logOut,

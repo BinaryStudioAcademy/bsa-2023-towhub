@@ -1,1 +1,1 @@
-export { jsonToLatLngLiteral } from './json-to-lat-lng-literal.helper.js';
+export { notificateOrderStatusChange } from './notificate-order-status-change.helper.js';

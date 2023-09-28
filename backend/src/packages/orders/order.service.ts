@@ -5,6 +5,7 @@ import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
+import { type MapService } from '../map/map.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
@@ -38,6 +39,8 @@ class OrderService implements Omit<IService, 'find'> {
 
   private socketService: SocketService;
 
+  private mapService: MapService;
+
   public constructor({
     businessService,
     orderRepository,
@@ -45,6 +48,7 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService,
     truckService,
     userService,
+    mapService,
     socket,
   }: {
     orderRepository: OrderRepository;
@@ -53,6 +57,7 @@ class OrderService implements Omit<IService, 'find'> {
     shiftService: ShiftService;
     truckService: TruckService;
     userService: UserService;
+    mapService: MapService;
     socket: SocketService;
   }) {
     this.orderRepository = orderRepository;
@@ -68,6 +73,8 @@ class OrderService implements Omit<IService, 'find'> {
     this.truckService = truckService;
 
     this.userService = userService;
+
+    this.mapService = mapService;
 
     this.socketService = socket;
   }
@@ -114,8 +121,14 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
+    const { price } = await this.mapService.getPriceByDistance({
+      startAddress: startPoint,
+      endAddress: endPoint,
+      pricePerKm: truck.pricePerKm,
+    });
+
     const order = await this.orderRepository.create({
-      price: 100, //Mock, get price from truck and calculated distance
+      price,
       scheduledTime,
       carsQty,
       startPoint,
@@ -128,7 +141,7 @@ class OrderService implements Omit<IService, 'find'> {
       customerPhone: phoneInOrder,
     });
 
-    return OrderEntity.initialize({
+    const orderObject = OrderEntity.initialize({
       ...order,
       shiftId: shift.id,
       driver: {
@@ -141,6 +154,10 @@ class OrderService implements Omit<IService, 'find'> {
       },
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     }).toObject();
+
+    this.socketService.notifyOrderCreate(driver.id, orderObject);
+
+    return orderObject;
   }
 
   public async findById({
@@ -249,7 +266,7 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT;
   }): Promise<OrderUpdateAcceptStatusResponseDto> {
-    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+    const statusForUpdate = this.checkIsOrderAccepted(payload.newStatus, user);
 
     await this.shiftService.checkDriverStartShift(user.id);
 
@@ -281,7 +298,7 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT | null;
   }): Promise<OrderUpdateAcceptStatusResponseDto> {
-    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+    const statusForUpdate = this.checkIsOrderAccepted(payload.newStatus, user);
 
     const updatedOrder = await this.orderRepository.update({
       id: orderId,
@@ -386,14 +403,17 @@ class OrderService implements Omit<IService, 'find'> {
   }
 
   private checkIsOrderAccepted(
-    isAccepted: boolean,
+    newStatus: OrderStatusValues,
     user: UserEntityObjectWithGroupT | null,
   ): OrderStatusValues {
     if (user && checkIsDriver(user.group.key)) {
-      return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REJECTED;
+      return newStatus;
     }
 
-    if ((!user || checkIsCustomer(user.group.key)) && !isAccepted) {
+    if (
+      (!user || checkIsCustomer(user.group.key)) &&
+      newStatus !== OrderStatus.PICKING_UP
+    ) {
       return OrderStatus.CANCELED;
     }
 
