@@ -15,7 +15,7 @@ export {
   type OrderResponseDto,
   type OrderStatusValues,
 } from './libs/types/types.js';
-export { orderCreateRequestBody } from './libs/validation-schemas/validation-schemas.js';
+export { orderCreateForm } from './libs/validation-schemas/validation-schemas.js';
 
 const ordersApi = new OrdersApi({
   baseUrl: config.ENV.API.ORIGIN_URL,

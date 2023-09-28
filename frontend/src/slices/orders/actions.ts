@@ -3,8 +3,9 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
 import { notification } from '~/libs/packages/notification/notification.js';
-import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import { type AsyncThunkConfig, type Coordinates } from '~/libs/types/types.js';
 import {
+  type OrderCreateFormDto,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusResponseDto,
 } from '~/packages/orders/libs/types/types.js';
@@ -59,13 +60,22 @@ const changeAcceptOrderStatusByCustomer = createAsyncThunk<
 
 const createOrder = createAsyncThunk<
   OrderResponseDto,
-  OrderCreateRequestDto,
+  OrderCreateFormDto,
   AsyncThunkConfig
 >(`${sliceName}/create-order`, async (payload, { extra }) => {
-  const { ordersApi } = extra;
+  const { ordersApi, mapServiceFactory } = extra;
+
+  const mapService = await mapServiceFactory({ mapElement: null });
+
+  const startPoint = await mapService.getAddressPoint(payload.startPoint);
+  const endPoint = await mapService.getAddressPoint(payload.endPoint);
 
   try {
-    const result = await ordersApi.createOrder(payload);
+    const result = await ordersApi.createOrder({
+      ...payload,
+      endPoint,
+      startPoint,
+    });
 
     notification.success('Order successfully created');
 
@@ -107,22 +117,22 @@ const getUserOrdersPage = createAsyncThunk<
 
 const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
   ActionName.GET_ORDER,
-  async (orderId, { extra }) => {
+  (orderId, { extra }) => {
     const { ordersApi } = extra;
 
-    return await ordersApi.getOrder(orderId);
+    return ordersApi.getOrder(orderId);
   },
 );
 
 const getRouteData = createAsyncThunk<
   RouteData,
-  { origin: string; destination: string },
+  { origin: Coordinates; destination: Coordinates },
   AsyncThunkConfig
 >(ActionName.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
   const { mapServiceFactory } = extra;
   const routeData = {
-    origin: jsonToLatLngLiteral(origin),
-    destination: jsonToLatLngLiteral(destination),
+    origin,
+    destination,
   };
 
   const mapService = await mapServiceFactory({ mapElement: null });
