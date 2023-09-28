@@ -7,6 +7,7 @@ import {
 } from '~/libs/hooks/hooks.js';
 import { type ReturnValue } from '~/libs/hooks/use-app-table/libs/types/types.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 import { getDriverOrdersPage } from '~/slices/orders/actions.js';
 
@@ -26,7 +27,8 @@ const useFilter = (): {
 
   const listHook = useAppTable<
     OrderFindAllDriverOrdersResponseDto,
-    { status?: typeof OrderStatus }
+    { status?: typeof OrderStatus },
+    HttpError
   >({
     tableFetchCall: getDriverOrdersPage,
     initialPageIndex: initialPage ? Number(initialPage) : null,

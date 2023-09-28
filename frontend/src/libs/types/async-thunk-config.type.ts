@@ -1,3 +1,5 @@
+import { type SocketErrorValues } from 'shared/build/index.js';
+
 import { type HttpError } from '~/libs/packages/http/libs/exceptions/exceptions.js';
 import {
   type AppDispatch,
@@ -5,11 +7,13 @@ import {
   type store,
 } from '~/libs/packages/store/store.js';
 
-type AsyncThunkConfig = {
+type AsyncThunkConfig<
+  RejectValue extends HttpError | null | SocketErrorValues,
+> = {
   state: RootState;
   dispatch: AppDispatch;
   extra: typeof store.extraArguments;
-  rejectValue: HttpError | null;
+  rejectValue: RejectValue;
 };
 
 export { type AsyncThunkConfig };

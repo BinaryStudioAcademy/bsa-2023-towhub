@@ -2,6 +2,7 @@ import {
   authorizeDriverSocket,
   getCurrent,
   logOut,
+  resetAuthorizedDriverSocket,
   signIn,
   signUp,
 } from './actions.js';
@@ -11,6 +12,7 @@ const allActions = {
   ...actions,
   signIn,
   authorizeDriverSocket,
+  resetAuthorizedDriverSocket,
   signUp,
   getCurrent,
   logOut,

@@ -35,6 +35,7 @@ export {
   type ServerErrorDetail,
   type ServerErrorResponse,
   type ServerValidationErrorResponse,
+  type SocketErrorValues,
   type SortMethodValue,
   type TruckEntityT,
   type TruckTowType,

@@ -1,8 +1,8 @@
-type FileEntity = {
+type FileEntityT = {
   id: number;
   key: string;
   name: string;
   contentType: string;
 };
 
-export { type FileEntity as FileEntityT };
+export { type FileEntityT };

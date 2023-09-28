@@ -3,6 +3,7 @@ import {
   type FieldPath,
   type FieldValues,
 } from 'react-hook-form';
+import { type FileInputConfig } from 'shared/build/index.js';
 
 import { type FormLabel, type HttpMessage } from '~/libs/enums/enums.js';
 
@@ -25,6 +26,7 @@ type ErrorDescriptor =
 
 type FormField<T extends FieldValues> = {
   type?: ValueOf<typeof InputType>;
+  fileInputConfig?: FileInputConfig;
   label: string;
   placeholder?: string;
   name: FieldPath<T>;
