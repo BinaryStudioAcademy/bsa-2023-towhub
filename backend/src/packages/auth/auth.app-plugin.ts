@@ -89,6 +89,11 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
   );
 
   fastify.decorate(
+    AuthStrategy.VERIFY_CUSTOMER_GROUP,
+    verifyGroup(UserGroupKey.CUSTOMER),
+  );
+
+  fastify.decorate(
     AuthStrategy.VERIFY_STRIPE_WEBHOOK,
     (
       request: FastifyRequest<{ Body: { stripeWebhookEvent?: Stripe.Event } }>,

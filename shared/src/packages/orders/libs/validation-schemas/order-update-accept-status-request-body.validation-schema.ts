@@ -6,7 +6,7 @@ const orderUpdateAcceptStatusRequestBody = joi.object<
   OrderUpdateAcceptStatusRequestDto,
   true
 >({
-  isAccepted: joi.boolean(),
+  newStatus: joi.string(),
 });
 
 export { orderUpdateAcceptStatusRequestBody };

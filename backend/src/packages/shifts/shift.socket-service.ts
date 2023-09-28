@@ -1,3 +1,4 @@
+import { type ServerToClientEventResponse } from 'shared/build';
 import { type Server, type Socket } from 'socket.io';
 
 import {
@@ -7,9 +8,10 @@ import {
   SocketError,
 } from '~/libs/packages/socket/libs/enums/enums.js';
 import { type ClientToServerEventParameter } from '~/libs/packages/socket/libs/types/types.js';
-import { type FirstParameter, type ValueOf } from '~/libs/types/types.js';
+import { type FirstParameter } from '~/libs/types/types.js';
 
 import { type TruckService } from '../trucks/truck.service.js';
+import { truckService } from '../trucks/trucks.js';
 import { type UserEntityObjectWithGroupT } from '../users/libs/types/types.js';
 import { SHIFT_TIMEOUT_TIME_IN_MS } from './libs/constants/constants.js';
 import {
@@ -24,32 +26,29 @@ import {
   type StartedShift,
   type StartedShiftsStore,
 } from './libs/types/types.js';
+import { shiftService } from './shift.js';
 import { type ShiftService } from './shift.service.js';
 
 class ShiftSocketService {
-  private startedShiftsStore: StartedShiftsStore;
+  private static startedShiftsStore: StartedShiftsStore = new Map<
+    ShiftEntityT['truckId'],
+    StartedShift
+  >();
 
-  private shiftService: ShiftService;
+  private static shiftService: ShiftService = shiftService;
 
-  private truckService: TruckService;
+  private static truckService: TruckService = truckService;
 
-  public constructor({
-    shiftService,
-    truckService,
-  }: {
-    shiftService: ShiftService;
-    truckService: TruckService;
-  }) {
-    this.shiftService = shiftService;
-    this.truckService = truckService;
+  private currentUser!: UserEntityObjectWithGroupT;
 
-    this.startedShiftsStore = new Map<ShiftEntityT['truckId'], StartedShift>();
-  }
+  private currentSocket!: Socket;
 
-  public async fetchStartedShifts(): Promise<void> {
+  private currentIo!: Server;
+
+  public static async fetchStartedShifts(): Promise<void> {
     await syncStartedShifts({
-      startedShiftsStore: this.startedShiftsStore,
-      shiftService: this.shiftService,
+      startedShiftsStore: ShiftSocketService.startedShiftsStore,
+      shiftService: ShiftSocketService.shiftService,
     });
   }
 
@@ -62,12 +61,16 @@ class ShiftSocketService {
     socket: Socket;
     io: Server;
   }): Promise<void> {
+    this.currentUser = user;
+    this.currentSocket = socket;
+    this.currentIo = io;
+
     if (socket.eventNames().includes(ClientToServerEvent.END_SHIFT)) {
       await socketSyncShift({
-        startedShiftsStore: this.startedShiftsStore,
-        userId: user.id,
-        socket,
-        truckService: this.truckService,
+        startedShiftsStore: ShiftSocketService.startedShiftsStore,
+        userId: this.currentUser.id,
+        socket: this.currentSocket,
+        truckService: ShiftSocketService.truckService,
       });
 
       return;
@@ -80,23 +83,22 @@ class ShiftSocketService {
           ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT]
         >,
         callback: (
-          status: ValueOf<typeof ServerToClientResponseStatus>,
-          message?: string,
+          response: ServerToClientEventResponse[typeof ClientToServerEvent.START_SHIFT],
         ) => void,
       ): Promise<void> => {
-        await this.startShift(payload, callback, { socket, io, user });
+        await this.startShift(payload, callback);
       },
     );
 
     socket.on(ClientToServerEvent.END_SHIFT, async () => {
-      await this.endShift({ io, user, socket });
+      await this.endShift();
     });
 
     await socketSyncShift({
-      startedShiftsStore: this.startedShiftsStore,
-      userId: user.id,
-      socket,
-      truckService: this.truckService,
+      startedShiftsStore: ShiftSocketService.startedShiftsStore,
+      userId: this.currentUser.id,
+      socket: this.currentSocket,
+      truckService: ShiftSocketService.truckService,
     });
   }
 
@@ -105,74 +107,60 @@ class ShiftSocketService {
       ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT]
     >,
     callback: (
-      status: ValueOf<typeof ServerToClientResponseStatus>,
-      message?: string,
+      response: ServerToClientEventResponse[typeof ClientToServerEvent.START_SHIFT],
     ) => void,
-    {
-      user,
-      socket,
-      io,
-    }: {
-      user: UserEntityObjectWithGroupT;
-      socket: Socket;
-      io: Server;
-    },
   ): Promise<void> {
     const { truckId } = payload;
     const isTruckNotAvailable =
-      await this.truckService.checkIsNotAvailableById(truckId);
+      await ShiftSocketService.truckService.checkIsNotAvailableById(truckId);
 
     if (isTruckNotAvailable) {
-      return callback(
-        ServerToClientResponseStatus.BAD_EMIT,
-        SocketError.TRUCK_NOT_AVAILABLE,
-      );
+      return callback({
+        status: ServerToClientResponseStatus.BAD_EMIT,
+        message: SocketError.TRUCK_NOT_AVAILABLE,
+      });
     }
 
     const timer = setTimeout(() => {
-      socket.emit(ServerToClientEvent.DRIVER_TIMED_OUT);
+      this.currentSocket.emit(ServerToClientEvent.DRIVER_TIMED_OUT);
       void socketEndShift({
-        io,
-        startedShiftsStore: this.startedShiftsStore,
-        shiftService: this.shiftService,
-        truckService: this.truckService,
-        user,
+        io: this.currentIo,
+        startedShiftsStore: ShiftSocketService.startedShiftsStore,
+        shiftService: ShiftSocketService.shiftService,
+        truckService: ShiftSocketService.truckService,
+        user: this.currentUser,
       });
     }, SHIFT_TIMEOUT_TIME_IN_MS);
 
-    await socketChooseTruck(truckId, this.truckService, io);
+    await socketChooseTruck(
+      truckId,
+      ShiftSocketService.truckService,
+      this.currentIo,
+    );
 
     await createShift({
-      user,
-      shiftService: this.shiftService,
-      startedShiftsStore: this.startedShiftsStore,
+      user: this.currentUser,
+      shiftService: ShiftSocketService.shiftService,
+      startedShiftsStore: ShiftSocketService.startedShiftsStore,
       truckId,
-      startedShift: { socket, timer },
+      startedShift: { socket: this.currentSocket, timer },
     });
 
-    callback(ServerToClientResponseStatus.OK);
+    callback({ status: ServerToClientResponseStatus.OK });
   }
 
-  private async endShift({
-    user,
-    io,
-    socket,
-  }: {
-    user: UserEntityObjectWithGroupT;
-    io: Server;
-    socket: Socket;
-  }): Promise<void> {
-    if (!this.startedShiftsStore.has(user.id)) {
-      socket.emit(ServerToClientEvent.SHIFT_ENDED);
+  private async endShift(): Promise<void> {
+    if (!ShiftSocketService.startedShiftsStore.has(this.currentUser.id)) {
+      this.currentSocket.emit(ServerToClientEvent.SHIFT_ENDED);
 
       return;
     }
     await socketEndShift({
-      io,
-      startedShiftsStore: this.startedShiftsStore,
-      truckService: this.truckService,
-      shiftService: this.shiftService,
-      user,
+      io: this.currentIo,
+      startedShiftsStore: ShiftSocketService.startedShiftsStore,
+      truckService: ShiftSocketService.truckService,
+      shiftService: ShiftSocketService.shiftService,
+      user: this.currentUser,
     });
   }
 }

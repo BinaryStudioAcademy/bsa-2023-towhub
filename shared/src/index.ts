@@ -25,6 +25,7 @@ export {
   getPreviousPageIndex,
   pluralizeString,
 } from './libs/helpers/helpers.js';
+export { type IEventEmitter } from './libs/interfaces/interfaces.js';
 export { type IConfig, FormatRegex } from './libs/packages/config/config.js';
 export { type GeolocationLatLng } from './libs/packages/geolocation/geolocation.js';
 export {
@@ -39,6 +40,7 @@ export {
   type ClientToServerEventParameter,
   type ServerToClientEventParameter,
   type ServerToClientEventResponse,
+  type SocketErrorValues,
   ClientToServerEvent,
   RoomPrefix,
   ServerToClientEvent,
@@ -107,15 +109,27 @@ export {
   DriverValidationMessage,
 } from './packages/drivers/drivers.js';
 export {
+  type FileVerificationNameValues,
+  type FileVerificationStatusEntityT,
+  type FileVerificationStatusValues,
+  FILE_VERIFICATION_NAMES,
+  FILE_VERIFICATION_STATUSES,
+  FileVerificationName,
+  FileVerificationStatus,
+} from './packages/file-verification-status/file-verification-status.js';
+export {
   type DeleteFileRequestParameters,
   type FileEntityT,
   type FileInputConfig,
+  type FileObject,
   type FileUploadResponseDto,
   type GetFileRequestParameters,
+  type MultipartParsedFile,
   type UpdateFileKeyRequestDto,
   type UpdateFileKeyRequestParameters,
   avatarInputDefaultsConfig,
   checkValidFileName,
+  fileInputAddDriverLicenseConfig,
   fileInputDefaultsConfig,
   FilesApiPath,
   filesDeleteRequestParameters,
@@ -193,6 +207,8 @@ export {
 } from './packages/trucks/trucks.js';
 export {
   type AuthUser,
+  type BusinessEditDto,
+  type BusinessEditResponseDto,
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
   type CustomerSignUpRequestDto,
@@ -208,7 +224,9 @@ export {
   type UserGroupKeyT,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
+  businessEditValidationSchema,
   businessSignUpValidationSchema,
+  customerEditValidationSchema,
   customerSignUpValidationSchema,
   UserGroupKey,
   UsersApiPath,

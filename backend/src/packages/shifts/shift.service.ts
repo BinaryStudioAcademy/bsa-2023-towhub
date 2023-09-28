@@ -163,7 +163,7 @@ class ShiftService implements IService {
     return ShiftEntity.initialize(updShift).toObject();
   }
 
-  public async updateByOwnerId({
+  public async update({
     id,
     payload,
   }: {

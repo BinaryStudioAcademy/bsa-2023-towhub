@@ -19,10 +19,12 @@ import { stripeApi } from '~/packages/stripe/stripe.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
+import { reducer as businessReducer } from '~/slices/business/business.js';
 import { reducer as driverReducer } from '~/slices/driver/driver.js';
 import { reducer as driversReducer } from '~/slices/drivers/drivers.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as orderReducer } from '~/slices/orders/order.js';
+import { reducer as socketReducer } from '~/slices/socket/socket.js';
 import { reducer as stripeReducer } from '~/slices/stripe/stripe.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
@@ -55,6 +57,8 @@ class Store {
         drivers: driversReducer,
         driver: driverReducer,
         files: filesReducer,
+        business: businessReducer,
+        socket: socketReducer,
         stripe: stripeReducer,
       },
       middleware: (getDefaultMiddleware) => [
@@ -72,11 +76,11 @@ class Store {
       authApi,
       userApi,
       filesApi,
+      businessApi,
       notification,
       truckApi,
       driverApi,
       driversApi,
-      businessApi,
       ordersApi,
       localStorage: LocalStorage,
       socketClient,

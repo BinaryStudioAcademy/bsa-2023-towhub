@@ -5,6 +5,8 @@ import {
 } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { MailContent } from '~/libs/packages/mailer/libs/enums/enums.js';
+import { FileVerificationStatus } from '~/packages/file-verification-status/libs/enums/enums.js';
+import { type UsersTrucksService } from '~/packages/users-trucks/users-trucks.service';
 
 import { UserGroupKey } from '../auth/libs/enums/enums.js';
 import { DriverEntity } from '../drivers/driver.entity.js';
@@ -13,19 +15,20 @@ import {
   type DriverAddPayloadWithBusinessId,
   type DriverAddResponseWithGroup,
   type DriverCreateUpdateResponseDto,
+  type DriverEntityT,
   type DriverGetAllResponseDto,
   type DriverGetDriversPayloadWithBusinessId,
   type DriverUpdatePayload,
   type DriverWithAvatarUrl,
   type DriverWithUserData,
 } from '../drivers/libs/types/types.js';
+import { type FileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
 import { type FilesService, S3PublicFolder } from '../files/files.js';
 import { type MultipartParsedFile } from '../files/libs/types/types.js';
 import { type GroupService } from '../groups/group.service.js';
 import { TemplateName } from '../mail/libs/enums/enums.js';
 import { type DriverCredentialsViewRenderParameter } from '../mail/libs/views/driver-credentials/libs/types/types.js';
 import { mailService } from '../mail/mail.js';
-import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityT } from '../users/users.js';
 import { AuthApiPath } from './libs/enums/enums.js';
@@ -46,7 +49,9 @@ class DriverService implements IService {
 
   private geolocationCacheService: GeolocationCacheService;
 
-  private truckService: TruckService;
+  private fileVerificationStatusService: FileVerificationStatusService;
+
+  private usersTrucksService: UsersTrucksService;
 
   private filesService: FilesService;
 
@@ -55,22 +60,40 @@ class DriverService implements IService {
     userService,
     groupService,
     geolocationCacheService,
-    truckService,
+    usersTrucksService,
+    fileVerificationStatusService,
     filesService,
   }: {
     driverRepository: DriverRepository;
     userService: UserService;
     groupService: GroupService;
     geolocationCacheService: GeolocationCacheService;
-    truckService: TruckService;
+    usersTrucksService: UsersTrucksService;
+    fileVerificationStatusService: FileVerificationStatusService;
     filesService: FilesService;
   }) {
     this.driverRepository = driverRepository;
     this.userService = userService;
     this.groupService = groupService;
     this.geolocationCacheService = geolocationCacheService;
-    this.truckService = truckService;
+    this.usersTrucksService = usersTrucksService;
+    this.fileVerificationStatusService = fileVerificationStatusService;
     this.filesService = filesService;
+  }
+
+  public async checkIsVerifiedByUserId(userId: number): Promise<boolean> {
+    const driver = await this.findByUserId(userId);
+
+    if (!driver) {
+      throw new HttpError({
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+        status: HttpCode.NOT_FOUND,
+      });
+    }
+
+    return (
+      driver.verificationStatus?.status === FileVerificationStatus.VERIFIED
+    );
   }
 
   public async getGeolocationById(id: number): Promise<GeolocationLatLng> {
@@ -93,6 +116,16 @@ class DriverService implements IService {
     }
 
     return geolocation;
+  }
+
+  public async findByLicenseFileId(
+    driverLicenseFileId: number,
+  ): Promise<DriverEntityT | null> {
+    const [driver = null] = await this.driverRepository.find({
+      driverLicenseFileId,
+    });
+
+    return driver ? driver.toObject() : null;
   }
 
   public async findById(id: number): Promise<DriverWithAvatarUrl | null> {
@@ -128,9 +161,11 @@ class DriverService implements IService {
   public async create({
     payload,
     businessId,
-    reference,
+    hostname,
+    driverLicenseFileId,
   }: DriverAddPayloadWithBusinessId & {
-    reference: string;
+    hostname: string;
+    driverLicenseFileId: DriverEntity['driverLicenseFileId'];
   }): Promise<DriverAddResponseWithGroup> {
     const { email, lastName, firstName, phone, driverLicenseNumber, truckIds } =
       payload;
@@ -144,15 +179,34 @@ class DriverService implements IService {
     if (doesDriverExist) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.DRIVER_ALREADY_EXISTS,
+        message: HttpMessage.DRIVER_LICENSE_ALREADY_EXISTS,
       });
     }
+
+    const userByPhone = await this.userService.findByPhone(phone);
+
+    if (userByPhone) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.USER_PHONE_ALREADY_EXISTS,
+      });
+    }
+
+    const userByEmail = await this.userService.findByEmail(email);
+
+    if (userByEmail) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.USER_EMAIL_ALREADY_EXISTS,
+      });
+    }
+
     const group = await this.groupService.findByKey(UserGroupKey.DRIVER);
 
     if (!group) {
       throw new HttpError({
-        message: HttpMessage.INVALID_GROUP,
         status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.INVALID_GROUP,
       });
     }
 
@@ -166,12 +220,12 @@ class DriverService implements IService {
       phone,
       groupId: group.id,
     });
-
     const driver = await this.driverRepository.create(
       DriverEntity.initializeNew({
         driverLicenseNumber,
         businessId,
         userId: user.id,
+        driverLicenseFileId,
         avatarId: null,
       }),
     );
@@ -182,7 +236,7 @@ class DriverService implements IService {
       name: getFullName(firstName, lastName),
       email: email,
       password: password,
-      signInLink: getFullPath(reference, AuthApiPath.SIGN_IN),
+      signInLink: getFullPath(hostname, AuthApiPath.SIGN_IN),
     };
 
     await mailService.sendPage(
@@ -191,7 +245,7 @@ class DriverService implements IService {
       emailData,
     );
 
-    await this.truckService.addTrucksToDriver(user.id, truckIds);
+    await this.usersTrucksService.addTrucksToDriver(user.id, truckIds);
 
     return {
       ...user,
@@ -237,10 +291,15 @@ class DriverService implements IService {
     return password;
   }
 
-  public async updateByOwnerId({
+  public async update({
     driverId,
     payload,
-  }: DriverUpdatePayload): Promise<DriverCreateUpdateResponseDto> {
+  }: {
+    driverId: DriverUpdatePayload['driverId'];
+    payload: DriverUpdatePayload['payload'] & {
+      driverLicenseFileId: DriverEntity['driverLicenseFileId'];
+    };
+  }): Promise<DriverCreateUpdateResponseDto> {
     const { password, email, lastName, firstName, phone, driverLicenseNumber } =
       payload;
 
@@ -253,7 +312,7 @@ class DriverService implements IService {
       });
     }
 
-    const user = await this.userService.updateByOwnerId(foundDriver.userId, {
+    const user = await this.userService.update(foundDriver.userId, {
       password,
       email,
       lastName,
@@ -307,10 +366,11 @@ class DriverService implements IService {
     }
 
     const driverEntity = driver.toObjectWithAvatar();
+
     const { avatar, id } = driverEntity;
 
     if (avatar) {
-      await this.filesService.updateByOwnerId(avatar.id, parsedFile);
+      await this.filesService.update(avatar.id, parsedFile);
 
       return convertToDriverUser(driver);
     }
@@ -319,10 +379,19 @@ class DriverService implements IService {
       parsedFile,
       S3PublicFolder.AVATARS,
     );
-    const newDriver = await this.driverRepository.update({
+    await this.driverRepository.update({
       id,
       payload: { avatarId: file.id },
     });
+
+    const [newDriver = null] = await this.driverRepository.find({ userId });
+
+    if (!newDriver) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
 
     return convertToDriverUser(newDriver);
   }

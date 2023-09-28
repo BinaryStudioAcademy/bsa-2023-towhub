@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "62ffadf5-1554-4717-b79a-313418fb6958",
-  "prevId": "651cf85d-56cc-4064-a45f-5c3401d8b2c2",
+  "id": "2a6e388f-6d02-4003-b7c5-b9f25efcd7fc",
+  "prevId": "9a1e0b5e-192e-475a-a96e-0e66d11669d5",
   "tables": {
     "business_details": {
       "name": "business_details",
@@ -102,6 +102,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "driver_license_file_id": {
+          "name": "driver_license_file_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "user_id": {
           "name": "user_id",
           "type": "integer",
@@ -137,6 +143,15 @@
       },
       "indexes": {},
       "foreignKeys": {
+        "driver_details_driver_license_file_id_files_id_fk": {
+          "name": "driver_details_driver_license_file_id_files_id_fk",
+          "tableFrom": "driver_details",
+          "tableTo": "files",
+          "columnsFrom": ["driver_license_file_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "driver_details_user_id_users_id_fk": {
           "name": "driver_details_user_id_users_id_fk",
           "tableFrom": "driver_details",
@@ -173,6 +188,56 @@
           "columns": ["driver_license_number"]
         }
       }
+    },
+    "file_verification_status": {
+      "name": "file_verification_status",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "file_id": {
+          "name": "file_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "verification_name",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "verification_status",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "file_verification_status_file_id_files_id_fk": {
+          "name": "file_verification_status_file_id_files_id_fk",
+          "tableFrom": "file_verification_status",
+          "tableTo": "files",
+          "columnsFrom": ["file_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "files": {
       "name": "files",
@@ -320,7 +385,7 @@
           "name": "business_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "shift_id": {
           "name": "shift_id",
@@ -745,6 +810,21 @@
         "Available": "Available",
         "Active": "Active",
         "Busy": "Busy"
+      }
+    },
+    "verification_name": {
+      "name": "verification_name",
+      "values": {
+        "driver_license_scan": "driver_license_scan"
+      }
+    },
+    "verification_status": {
+      "name": "verification_status",
+      "values": {
+        "pending": "pending",
+        "verified": "verified",
+        "failed": "failed",
+        "not_started": "not_started"
       }
     }
   },

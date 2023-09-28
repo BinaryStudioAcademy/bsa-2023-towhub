@@ -1,0 +1,27 @@
+@import "src/assets/css/vars.scss";
+
+.formWrapper {
+  width: 100%;
+  max-width: 448px;
+  padding: 30px 60px 50px;
+  background-color: $white;
+  border-radius: 8px;
+}
+
+.title {
+  margin-bottom: 17px;
+  color: $title-color;
+}
+
+.text {
+  margin-top: 25px;
+  color: $grey;
+  text-align: center;
+}
+
+.link {
+  color: inherit;
+  font-weight: $font-weight-semibold;
+  text-align: center;
+  text-decoration: none;
+}

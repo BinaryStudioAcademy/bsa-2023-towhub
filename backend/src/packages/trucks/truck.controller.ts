@@ -243,10 +243,7 @@ class TruckController extends Controller {
   ): Promise<ApiHandlerResponse> {
     const { params, body } = options;
 
-    const updatedTruck = await this.truckService.updateByOwnerId(
-      params.id,
-      body,
-    );
+    const updatedTruck = await this.truckService.update(params.id, body);
 
     return {
       status: HttpCode.OK,

@@ -9,7 +9,7 @@ const socketReleaseTruck = async (
   truckService: TruckService,
   io: Server | null,
 ): Promise<void> => {
-  await truckService.updateByOwnerId(truckId, {
+  await truckService.update(truckId, {
     status: TruckStatus.AVAILABLE,
   });
 

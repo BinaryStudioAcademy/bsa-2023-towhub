@@ -180,13 +180,12 @@ class StripeService {
     business: BusinessEntityT,
     account: Stripe.Account,
   ): Promise<void> {
-    const { isStripeActivated, companyName, stripeId, id } = business;
+    const { stripeId, id } = business;
 
     if (!stripeId) {
-      await this.businessService.updateById(id, {
+      await this.businessService.updateStripeData(id, {
+        isStripeActivated: true,
         stripeId: account.id,
-        isStripeActivated,
-        companyName,
       });
     }
   }
@@ -201,11 +200,8 @@ class StripeService {
             );
 
             if (business && !business.isStripeActivated) {
-              const { companyName, stripeId, id } = business;
-              await this.businessService.updateById(id, {
-                stripeId,
+              await this.businessService.updateStripeData(business.id, {
                 isStripeActivated: true,
-                companyName,
               });
             }
           }

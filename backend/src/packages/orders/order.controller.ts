@@ -584,7 +584,7 @@ class OrderController extends Controller {
   ): Promise<ApiHandlerResponse<OrderResponseDto>> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.updateByOwnerId({
+      payload: await this.orderService.update({
         id: options.params.id,
         payload: options.body,
         user: options.user,

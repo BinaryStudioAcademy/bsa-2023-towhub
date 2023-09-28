@@ -64,38 +64,6 @@ class FilesService
     return await this.s3ClientService.getObjectPresignedUrl(fileRecord.key);
   }
 
-  public async create(
-    parsedFile: MultipartParsedFile,
-    folder?: ValueOf<typeof S3PublicFolder>,
-  ): Promise<FileEntityObjectT> {
-    const key = constructKey(v4(), folder);
-    const name = parsedFile.filename;
-    const body = parsedFile.content;
-    let S3OperationSuccess = false;
-
-    try {
-      await this.s3ClientService.putObject(key, body);
-
-      S3OperationSuccess = true;
-
-      const result = await this.fileRepository.create({
-        contentType: parsedFile.mimetype,
-        name,
-        key,
-      });
-
-      return FilesEntity.initialize(result).toObject();
-    } catch (error_) {
-      const error = error_ as Error;
-
-      if (S3OperationSuccess) {
-        await this.s3ClientService.deleteObject(parsedFile.filename);
-      }
-
-      throw new FileTransactionError({ message: error.message });
-    }
-  }
-
   public async createMany(
     parsedFiles: MultipartParsedFile[],
     folder?: ValueOf<typeof S3PublicFolder>,
@@ -133,7 +101,39 @@ class FilesService
     return filesRecords;
   }
 
-  public async updateByOwnerId(
+  public async create(
+    parsedFile: MultipartParsedFile,
+    folder?: ValueOf<typeof S3PublicFolder>,
+  ): Promise<FileEntityObjectT> {
+    const key = constructKey(v4(), folder);
+    const name = parsedFile.filename;
+    const body = parsedFile.content;
+    let S3OperationSuccess = false;
+
+    try {
+      await this.s3ClientService.putObject(key, body);
+
+      S3OperationSuccess = true;
+
+      const result = await this.fileRepository.create({
+        contentType: parsedFile.mimetype,
+        name,
+        key,
+      });
+
+      return FilesEntity.initialize(result).toObject();
+    } catch (error_) {
+      const error = error_ as Error;
+
+      if (S3OperationSuccess) {
+        await this.s3ClientService.deleteObject(parsedFile.filename);
+      }
+
+      throw new FileTransactionError({ message: error.message });
+    }
+  }
+
+  public async update(
     id: FileEntityT['id'],
     parsedFile: MultipartParsedFile,
   ): Promise<FileEntityObjectT> {
