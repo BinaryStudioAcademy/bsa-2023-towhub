@@ -51,7 +51,7 @@ class OrdersApi extends HttpApi {
         method: 'POST',
         contentType: ContentType.JSON,
         payload: JSON.stringify(payload),
-        hasAuth: false,
+        hasAuth: true,
       },
     );
 
