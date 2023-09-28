@@ -5,12 +5,14 @@ import {
   useHomePageSocketService,
   useRef,
 } from '~/libs/hooks/hooks.js';
+import { selectSocketStatus } from '~/slices/socket/selectors.js';
 import { selectTrucks } from '~/slices/trucks/selectors.js';
 
 import { TruckList } from './components/truck-list/truck-list.js';
 import styles from './styles.module.scss';
 
 const HomePage: React.FC = () => {
+  const socketStatus = useAppSelector(selectSocketStatus);
   const trucks = useAppSelector(selectTrucks);
 
   const mapReference = useRef<HTMLDivElement | null>(null);
@@ -31,7 +33,7 @@ const HomePage: React.FC = () => {
     return () => {
       disconnectFromHomeRoom();
     };
-  }, [connectToHomeRoom, disconnectFromHomeRoom]);
+  }, [connectToHomeRoom, disconnectFromHomeRoom, socketStatus]);
 
   return (
     <div className={styles.container}>

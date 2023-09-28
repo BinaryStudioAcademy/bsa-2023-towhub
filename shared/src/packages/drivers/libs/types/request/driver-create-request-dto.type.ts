@@ -1,7 +1,8 @@
 import { type DriverDto } from '../types.js';
 
-type DriverCreateRequestDto = DriverDto & {
+type DriverCreateRequestDto<FileType> = DriverDto & {
   truckIds: number[];
+  files: FileType[];
 };
 
 export { type DriverCreateRequestDto };

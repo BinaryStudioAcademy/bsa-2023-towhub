@@ -14,9 +14,13 @@ class DriverEntity implements IEntity {
 
   private driverLicenseNumber: DriverEntityT['driverLicenseNumber'];
 
+  private driverLicenseFileId: DriverEntityT['driverLicenseFileId'];
+
   private userId: DriverEntityT['userId'];
 
   private businessId: DriverEntityT['businessId'];
+
+  private verificationStatus: DriverEntityT['verificationStatus'] | null;
 
   private createdAt: DriverEntityT['createdAt'] | null;
 
@@ -31,11 +35,16 @@ class DriverEntity implements IEntity {
     driverLicenseNumber,
     userId,
     businessId,
+    driverLicenseFileId,
+    verificationStatus,
     createdAt,
     user,
     avatarId,
     avatar,
-  }: NullableProperties<DriverEntityT, 'id' | 'createdAt'> & {
+  }: NullableProperties<
+    DriverEntityT,
+    'id' | 'verificationStatus' | 'createdAt'
+  > & {
     user?: UserEntityT;
     avatar?: FileEntityT;
   }) {
@@ -43,6 +52,8 @@ class DriverEntity implements IEntity {
     this.driverLicenseNumber = driverLicenseNumber;
     this.userId = userId;
     this.businessId = businessId;
+    this.driverLicenseFileId = driverLicenseFileId;
+    this.verificationStatus = verificationStatus;
     this.createdAt = createdAt;
     this.user = user ?? null;
     this.avatarId = avatarId;
@@ -54,11 +65,13 @@ class DriverEntity implements IEntity {
     driverLicenseNumber,
     userId,
     businessId,
-    createdAt,
-    user,
+    driverLicenseFileId,
+    verificationStatus,
     avatarId,
     avatar,
-  }: DriverEntityT & {
+    createdAt,
+    user,
+  }: NullableProperties<DriverEntityT, 'verificationStatus'> & {
     user?: UserEntityT;
     avatar?: FileEntityT;
   }): DriverEntity {
@@ -67,6 +80,8 @@ class DriverEntity implements IEntity {
       driverLicenseNumber,
       userId,
       businessId,
+      driverLicenseFileId,
+      verificationStatus,
       createdAt,
       user,
       avatarId,
@@ -78,13 +93,19 @@ class DriverEntity implements IEntity {
     driverLicenseNumber,
     userId,
     businessId,
-  }: Omit<DriverEntityT, 'id' | 'createdAt'>): DriverEntity {
+    driverLicenseFileId,
+  }: Omit<
+    DriverEntityT,
+    'id' | 'verificationStatus' | 'createdAt'
+  >): DriverEntity {
     return new DriverEntity({
       id: null,
       driverLicenseNumber,
       userId,
       businessId,
+      driverLicenseFileId,
       avatarId: null,
+      verificationStatus: null,
       createdAt: null,
     });
   }
@@ -95,17 +116,20 @@ class DriverEntity implements IEntity {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
+      driverLicenseFileId: this.driverLicenseFileId,
+      verificationStatus: this.verificationStatus,
       createdAt: this.createdAt as string,
       avatarId: this.avatarId ?? null,
       avatarUrl: getAvatarUrl(this.avatar),
     };
   }
 
-  public toNewObject(): Omit<DriverEntityT, 'id'> {
+  public toNewObject(): Omit<DriverEntityT, 'id' | 'verificationStatus'> {
     return {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
+      driverLicenseFileId: this.driverLicenseFileId,
       createdAt: this.createdAt as string,
       avatarId: this.avatarId,
     };
@@ -120,6 +144,8 @@ class DriverEntity implements IEntity {
       driverLicenseNumber: this.driverLicenseNumber,
       userId: this.userId,
       businessId: this.businessId,
+      driverLicenseFileId: this.driverLicenseFileId,
+      verificationStatus: this.verificationStatus,
       createdAt: this.createdAt as string,
       avatarId: this.avatarId,
       user: this.user as UserEntityT,
@@ -140,6 +166,8 @@ class DriverEntity implements IEntity {
       avatarId: this.avatarId,
       avatar: this.avatar,
       avatarUrl: getAvatarUrl(this.avatar),
+      driverLicenseFileId: this.driverLicenseFileId,
+      verificationStatus: this.verificationStatus,
     };
   }
 }

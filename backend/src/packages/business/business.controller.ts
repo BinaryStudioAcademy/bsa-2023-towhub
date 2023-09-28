@@ -17,6 +17,9 @@ import {
   driverParameters,
   driverUpdateRequestBody,
 } from '../drivers/drivers.js';
+import { fileInputAddDriverLicenseConfig } from '../files/libs/config/config.js';
+import { FilesValidationStrategy } from '../files/libs/enums/enums.js';
+import { type MultipartParsedFile } from '../files/libs/types/types.js';
 import { type TruckAddRequestDto } from '../trucks/libs/types/types.js';
 import { truckCreateRequestBody } from '../trucks/trucks.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
@@ -301,13 +304,21 @@ class BusinessController extends Controller {
       path: BusinessApiPath.DRIVERS,
       method: 'POST',
       authStrategy: defaultStrategies,
+      validateFilesStrategy: {
+        strategy: FilesValidationStrategy.BASIC,
+        filesInputConfig: {
+          maxSizeBytes: fileInputAddDriverLicenseConfig.maxSizeBytes,
+          maxFiles: fileInputAddDriverLicenseConfig.maxFiles,
+          accept: fileInputAddDriverLicenseConfig.accept,
+        },
+      },
       validation: {
         body: driverCreateRequestBody,
       },
       handler: (options) =>
         this.createDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateRequestDto;
+            body: DriverCreateRequestDto<MultipartParsedFile>;
             user: UserEntityObjectWithGroupT;
             hostname: string;
           }>,
@@ -318,6 +329,14 @@ class BusinessController extends Controller {
       path: BusinessApiPath.DRIVER_$ID,
       method: 'PUT',
       authStrategy: defaultStrategies,
+      validateFilesStrategy: {
+        strategy: FilesValidationStrategy.BASIC,
+        filesInputConfig: {
+          maxSizeBytes: fileInputAddDriverLicenseConfig.maxSizeBytes,
+          maxFiles: fileInputAddDriverLicenseConfig.maxFiles,
+          accept: fileInputAddDriverLicenseConfig.accept,
+        },
+      },
       validation: {
         body: driverUpdateRequestBody,
         params: driverParameters,
@@ -325,7 +344,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.updateDriver(
           options as ApiHandlerOptions<{
-            body: DriverUpdateRequestDto;
+            body: DriverUpdateRequestDto<MultipartParsedFile>;
             params: DriverRequestParameters;
             user: UserEntityObjectWithGroupT;
           }>,
@@ -577,7 +596,7 @@ class BusinessController extends Controller {
    *      description: Create driver
    *      requestBody:
    *        content:
-   *          application/json:
+   *          multipart/formdata:
    *            schema:
    *              type: object
    *              required:
@@ -608,6 +627,11 @@ class BusinessController extends Controller {
    *                  type: array
    *                  items:
    *                    type: number
+   *                files:
+   *                  type: array
+   *                  items:
+   *                    type: string
+   *                    format: binary
    *      security:
    *        - bearerAuth: []
    *      responses:
@@ -629,16 +653,16 @@ class BusinessController extends Controller {
 
   private async createDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateRequestDto;
+      body: DriverCreateRequestDto<MultipartParsedFile>;
       user: UserEntityObjectWithGroupT;
       hostname: string;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const createdDriver = await this.businessService.createDriver(
-      options.body,
-      options.user.id,
-      options.hostname,
-    );
+    const createdDriver = await this.businessService.createDriver({
+      payload: options.body,
+      ownerId: options.user.id,
+      hostname: options.hostname,
+    });
 
     return {
       status: HttpCode.CREATED,
@@ -703,16 +727,16 @@ class BusinessController extends Controller {
 
   private async updateDriver(
     options: ApiHandlerOptions<{
-      body: DriverUpdateRequestDto;
+      body: DriverUpdateRequestDto<MultipartParsedFile>;
       params: DriverRequestParameters;
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const updatedDriver = await this.businessService.updateDriver(
-      options.body,
-      options.params.driverId,
-      options.user.id,
-    );
+    const updatedDriver = await this.businessService.updateDriver({
+      driverId: options.params.driverId,
+      ownerId: options.user.id,
+      payload: options.body,
+    });
 
     return {
       status: HttpCode.OK,
@@ -754,10 +778,10 @@ class BusinessController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const drivers = await this.businessService.findAllDriversByBusinessId(
-      options.user.id,
-      options.query,
-    );
+    const drivers = await this.businessService.findAllDriversByBusinessId({
+      ownerId: options.user.id,
+      query: options.query,
+    });
 
     return {
       status: HttpCode.OK,
@@ -806,10 +830,10 @@ class BusinessController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const deletionResult = await this.businessService.deleteDriver(
-      options.params.driverId,
-      options.user.id,
-    );
+    const deletionResult = await this.businessService.deleteDriver({
+      driverId: options.params.driverId,
+      ownerId: options.user.id,
+    });
 
     return {
       status: HttpCode.OK,

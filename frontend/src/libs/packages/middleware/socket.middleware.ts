@@ -24,10 +24,8 @@ import {
 } from '../socket/libs/enums/enums.js';
 import { type ServerToClientEventParameter } from '../socket/libs/types/types.js';
 import { socket } from '../socket/socket.js';
-import { type RootReducer } from '../store/libs/types/root-reducer.type.js';
 import { type ExtraArguments } from '../store/libs/types/store.types.js';
-
-const socketInstance = socket.getInstance();
+import { type RootReducer } from '../store/libs/types/types.js';
 
 const socketMiddleware: ThunkMiddleware<
   RootReducer,
@@ -40,6 +38,8 @@ const socketMiddleware: ThunkMiddleware<
   dispatch: ThunkDispatch<RootReducer, ExtraArguments, AnyAction>;
   getState: () => RootReducer;
 }) => {
+  const socketInstance = socket.getInstance();
+
   if (socketInstance) {
     socketInstance.on(
       ServerToClientEvent.ORDER_UPDATED,
