@@ -41,7 +41,7 @@ const driverUpdateRequestBody = joi.object<
   driverLicenseNumber,
   truckIds: joi.array().items(joi.number()),
   files: joi.array().items(joi.object()).min(1).required().messages({
-    'array.min': DriverValidationMessage.FILES_MIN_LENGTH,
+    'array.min': Message.FILES_MIN_LENGTH,
   }),
 });
 
