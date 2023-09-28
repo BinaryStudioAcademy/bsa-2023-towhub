@@ -270,9 +270,11 @@ class BusinessService implements IService {
       });
     }
 
-    await this.fileVerificationStatusService.deleteByFileId(
-      driverToUpdate.driverLicenseFileId,
-    );
+    if (driverToUpdate.driverLicenseFileId) {
+      await this.fileVerificationStatusService.deleteByFileId(
+        driverToUpdate.driverLicenseFileId,
+      );
+    }
 
     const newLicenseFile = await this.fileService.create(payload.files[0]);
 
@@ -290,7 +292,9 @@ class BusinessService implements IService {
         name: FileVerificationName.DRIVER_LICENSE_SCAN,
       });
 
-    await this.fileService.delete(driverToUpdate.driverLicenseFileId);
+    if (driverToUpdate.driverLicenseFileId) {
+      await this.fileService.delete(driverToUpdate.driverLicenseFileId);
+    }
 
     return {
       ...updatedDriver,
@@ -347,10 +351,12 @@ class BusinessService implements IService {
 
     const result = await this.driverService.delete(driverId);
 
-    await this.fileVerificationStatusService.deleteByFileId(
-      driverToDelete.driverLicenseFileId,
-    );
-    await this.fileService.delete(driverToDelete.driverLicenseFileId);
+    if (driverToDelete.driverLicenseFileId) {
+      await this.fileVerificationStatusService.deleteByFileId(
+        driverToDelete.driverLicenseFileId,
+      );
+      await this.fileService.delete(driverToDelete.driverLicenseFileId);
+    }
 
     return result;
   }

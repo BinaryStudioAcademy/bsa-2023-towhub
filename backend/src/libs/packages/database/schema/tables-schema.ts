@@ -147,9 +147,9 @@ const files = pgTable('files', {
 const drivers = pgTable('driver_details', {
   id: serial('id').primaryKey(),
   driverLicenseNumber: varchar('driver_license_number').unique().notNull(),
-  driverLicenseFileId: integer('driver_license_file_id')
-    .references(() => files.id)
-    .notNull(),
+  driverLicenseFileId: integer('driver_license_file_id').references(
+    () => files.id,
+  ),
   userId: integer('user_id')
     .notNull()
     .references(() => users.id),
