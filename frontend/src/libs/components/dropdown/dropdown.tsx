@@ -77,6 +77,7 @@ const Dropdown = <T extends FieldValues>({
   className,
   placeholder,
   isCustomValueContainer = false,
+  label,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -112,7 +113,7 @@ const Dropdown = <T extends FieldValues>({
       onMenuClose={handleCloseMenu}
       onChange={onChange}
       defaultValue={defaultValue}
-      value={findOptionByValue(field?.value)}
+      value={findOptionByValue(field ? field.value : label)}
       placeholder={placeholder}
     />
   );

@@ -84,6 +84,11 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
     verifyGroup(UserGroupKey.DRIVER),
   );
 
+  fastify.decorate(
+    AuthStrategy.VERIFY_CUSTOMER_GROUP,
+    verifyGroup(UserGroupKey.CUSTOMER),
+  );
+
   done();
 });
 

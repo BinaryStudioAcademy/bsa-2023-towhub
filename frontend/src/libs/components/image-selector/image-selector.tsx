@@ -166,7 +166,12 @@ const ImageSelector = <
         width={width}
         height={height}
       />
-      <Modal isOpen={isSelecting} isCentered onClose={handleModalClose}>
+      <Modal
+        dialogContentClassName={styles.dialogContent}
+        isOpen={isSelecting}
+        isCentered
+        onClose={handleModalClose}
+      >
         <ModalPopup
           onSuccess={handleCropSuccess}
           imageWidth={modalImageWidth}

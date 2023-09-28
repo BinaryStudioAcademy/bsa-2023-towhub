@@ -31,10 +31,15 @@ const selectTruckArrivalTime = (
   return state.trucks.truckArrivalTime;
 };
 
+const selectTruckServerError = (
+  store: RootState,
+): RootState[typeof TruckSliceName]['error'] => store[TruckSliceName].error;
+
 export {
   selectChosenTruck,
   selectDataStatus,
   selectTruckArrivalTime,
   selectTruckLocation,
   selectTrucks,
+  selectTruckServerError,
 };

@@ -14,6 +14,7 @@ export {
   AppEnvironment,
   AuthMode,
   ContentType,
+  HttpCode,
   HttpMessage,
   OrderStatus,
   ServerErrorType,
