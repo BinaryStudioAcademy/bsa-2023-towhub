@@ -40,9 +40,9 @@ const useAppTable = <T, K, RejectValue extends HttpError | null>({
   sort,
 
   filterName,
-}: Properties<T, K>): ReturnValue => {
+}: Properties<T, K, RejectValue>): ReturnValue => {
   const [query, setQuery] = useState<string>();
-  const [pageSize, changePageSize] = useState(
+  const [pageSize, changePageSize] = useState<number>(
     initialPageSize ?? DEFAULT_PAGE_SIZE,
   );
   const [pageIndex, changePageIndex] = useState(

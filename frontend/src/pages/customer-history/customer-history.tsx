@@ -12,6 +12,7 @@ import {
   useQueryParameters,
 } from '~/libs/hooks/hooks.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 import { type SingleValue } from '~/libs/types/types.js';
 import {
@@ -36,7 +37,8 @@ const CustomerHistory: React.FC = () => {
 
   const { pageIndex, pageSize, changePageIndex, changePageSize } = useAppTable<
     OrderFindAllUserOrdersResponseDto,
-    { status?: typeof OrderStatus }
+    { status?: typeof OrderStatus },
+    HttpError
   >({
     tableFetchCall: getUserOrdersPage,
     initialPageIndex: initialPage ? Number(initialPage) : null,
@@ -55,6 +57,7 @@ const CustomerHistory: React.FC = () => {
         });
       } else {
         removeQueryParameters('status');
+        changePageIndex(0);
       }
     },
     [changePageIndex, pageSize, removeQueryParameters, setQueryParameters],

@@ -97,7 +97,7 @@ const calculateOrderPrice = createAsyncThunk<
 const getUserOrdersPage = createAsyncThunk<
   OrderFindAllUserOrdersResponseDto,
   string | undefined,
-  AsyncThunkConfig
+  AsyncThunkConfig<HttpError>
 >(
   ACTIONS_TYPES.GET_USER_ORDERS_PAGE,
   async (payload, { rejectWithValue, extra }) => {
