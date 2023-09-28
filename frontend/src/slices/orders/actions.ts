@@ -133,7 +133,7 @@ const getRouteData = createAsyncThunk<
 const createOrderFromSocket = createAsyncThunk<
   OrderResponseDto,
   OrderResponseDto,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(ActionName.SOCKET.CREATE_ORDER, (order) => {
   return order;
 });
