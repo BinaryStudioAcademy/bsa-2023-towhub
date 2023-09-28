@@ -21,8 +21,12 @@ import { type UserService } from '~/packages/users/user.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
-import { UserGroupKey } from './libs/enums/enums.js';
-import { createUnauthorizedError } from './libs/helpers/helpers.js';
+import { TimeConstants, UserGroupKey } from './libs/enums/enums.js';
+import {
+  createUnauthorizedError,
+  getLifetimeInMilliseconds,
+  getTimeDifferenceInMilliseconds,
+} from './libs/helpers/helpers.js';
 import {
   type UserSignInRequestDto,
   type UserSignInResponseDto,
@@ -202,7 +206,11 @@ class AuthService {
       throw createUnauthorizedError(HttpMessage.WRONG_PASSWORD);
     }
 
-    const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
+    const updatedUser =
+      user.accessToken &&
+      (await this.isValidToken(user.accessToken, this.config.ACCESS_LIFETIME))
+        ? user
+        : await this.generateAccessTokenAndUpdateUser(user.id);
     const group = GroupEntity.initialize(user.group).toObject();
 
     return await this.getCurrent({ ...updatedUser, group });
@@ -241,6 +249,26 @@ class AuthService {
     );
 
     return await this.userService.setAccessToken(userId, accessToken);
+  }
+
+  private async isValidToken(
+    accessToken: string,
+    accessLifetime: string,
+  ): Promise<boolean> {
+    const payload = await this.jwtService.verifyToken(accessToken);
+
+    if (!payload.iat) {
+      return false;
+    }
+
+    const currentTimestamp = Date.now();
+    const tokenIssuedAtTimestamp =
+      payload.iat * TimeConstants.MILLISECONDS_IN_SECOND;
+
+    return (
+      getLifetimeInMilliseconds(accessLifetime) >=
+      getTimeDifferenceInMilliseconds(currentTimestamp, tokenIssuedAtTimestamp)
+    );
   }
 }
 
