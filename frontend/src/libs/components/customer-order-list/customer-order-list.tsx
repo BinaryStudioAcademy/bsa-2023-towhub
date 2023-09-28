@@ -1,6 +1,7 @@
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import { useCallback } from '~/libs/hooks/hooks.js';
+import { useAppDispatch, useCallback, useEffect } from '~/libs/hooks/hooks.js';
 import { type OrderResponseDto } from '~/packages/orders/orders.js';
+import { actions as orderActions } from '~/slices/orders/order.js';
 
 import { CustomerOrderCard } from '../customer-order-card/customer-order-card.jsx';
 import { Pagination } from '../pagination/pagination.jsx';
@@ -29,6 +30,7 @@ const CustomerOrderList: React.FC<Properties> = ({
   onChangePageSize,
 }: Properties) => {
   const pagesRange = Math.ceil(totalElements / pageSize);
+  const dispatch = useAppDispatch();
 
   const handleChangePageSize = useCallback(
     (value: number) => {
@@ -37,6 +39,20 @@ const CustomerOrderList: React.FC<Properties> = ({
     },
     [onChangePageSize, onChangePageIndex],
   );
+
+  useEffect(() => {
+    const getNames = (): void => {
+      for (const { id, startPoint, endPoint } of orders) {
+        void dispatch(
+          orderActions.getRouteAddresses({
+            orderId: id,
+            points: { origin: startPoint, destination: endPoint },
+          }),
+        );
+      }
+    };
+    getNames();
+  }, [dispatch, orders]);
 
   if (isLoading) {
     return (

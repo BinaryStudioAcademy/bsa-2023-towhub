@@ -5,10 +5,12 @@ import {
   capitalizeFirstLetter,
   getValidClassNames,
 } from '~/libs/helpers/helpers.js';
+import { useAppSelector } from '~/libs/hooks/hooks.js';
 import { type OrderResponseDto } from '~/packages/orders/orders.js';
 
 import { Badge } from '../badge/badge.jsx';
 import { Icon } from '../icon/icon.jsx';
+import { Spinner } from '../spinner/spinner.js';
 import { ProgressStatus } from './libs/enums/enums.js';
 import { convertDate } from './libs/helpers/helpers.js';
 import { mapOrderStatusToBadgeStatus } from './libs/map/map-order-status-to-badge-status.map.js';
@@ -19,18 +21,21 @@ type Properties = {
 };
 
 const CustomerOrderCard: React.FC<Properties> = ({ order }: Properties) => {
-  const {
-    id,
-    scheduledTime,
-    startPoint,
-    endPoint,
-    price,
-    status,
-    customerPhone,
-    shift,
-  } = order;
+  const { id, scheduledTime, price, status, customerPhone, shift } = order;
   const { badgeBg, progress } = mapOrderStatusToBadgeStatus[status];
   const isInProcess = progress === ProgressStatus.IN_PROCESS;
+
+  const points = useAppSelector((state) => state.orders.routeAddresses);
+
+  const { origin, destination } = points[id] ?? {};
+
+  if (!points[id]) {
+    return (
+      <div className={styles.spinnerWrapper}>
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -68,10 +73,10 @@ const CustomerOrderCard: React.FC<Properties> = ({ order }: Properties) => {
         </div>
         <ul className={styles.locations}>
           <li className={getValidClassNames(styles.startPoint, 'textSm')}>
-            {startPoint}
+            {origin}
           </li>
           <li className={getValidClassNames(styles.endPoint, 'textSm')}>
-            {endPoint}
+            {destination}
           </li>
         </ul>
         <div className={styles.contentFooter}>

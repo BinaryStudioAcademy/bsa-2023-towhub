@@ -17,8 +17,7 @@ import {
 } from '~/packages/orders/orders.js';
 
 import { ActionName } from './libs/enums/enums.js';
-import { ACTIONS_TYPES } from './libs/enums/order-action.js';
-import { type RouteData } from './libs/types/types.js';
+import { type RouteAddresses, type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
 const getBusinessOrders = createAsyncThunk<
@@ -99,7 +98,7 @@ const getUserOrdersPage = createAsyncThunk<
   string | undefined,
   AsyncThunkConfig<HttpError>
 >(
-  ACTIONS_TYPES.GET_USER_ORDERS_PAGE,
+  ActionName.GET_USER_ORDERS_PAGE,
   async (payload, { rejectWithValue, extra }) => {
     try {
       return await extra.ordersApi.getAllUserOrders(payload);
@@ -110,6 +109,44 @@ const getUserOrdersPage = createAsyncThunk<
 
       return rejectWithValue({ ...error, message: error.message });
     }
+  },
+);
+
+const getRouteAddresses = createAsyncThunk<
+  Partial<Record<RouteAddresses['orderId'], RouteAddresses['points']>>,
+  {
+    points: { origin: Coordinates; destination: Coordinates };
+    orderId: number;
+  },
+  AsyncThunkConfig<null>
+>(
+  ActionName.GET_ORDER_ADDRESSES,
+  async ({ points, orderId }, { extra, getState }) => {
+    const routeAddresses = getState().orders.routeAddresses;
+
+    if (routeAddresses[orderId]) {
+      return routeAddresses;
+    }
+
+    const { origin, destination } = points;
+    const { mapServiceFactory } = extra;
+    const routeData = {
+      origin: origin,
+      destination: destination,
+    };
+
+    const mapService = await mapServiceFactory({ mapElement: null });
+    const [originName, destinationName] = await Promise.all([
+      mapService.getPointAddress(routeData.origin),
+      mapService.getPointAddress(routeData.destination),
+    ]);
+
+    return {
+      [orderId]: {
+        origin: originName,
+        destination: destinationName,
+      },
+    };
   },
 );
 
@@ -192,6 +229,7 @@ export {
   createOrder,
   getBusinessOrders,
   getOrder,
+  getRouteAddresses,
   getRouteData,
   getUserOrdersPage,
   removeOrder,
