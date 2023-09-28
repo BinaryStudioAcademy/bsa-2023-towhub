@@ -23,11 +23,16 @@ import {
   NotFound,
   Order,
   Orders,
+  Profile,
   WelcomePage,
 } from '~/pages/pages.js';
 import { selectUser } from '~/slices/auth/selectors.js';
 
-import { PageLayout, ProtectedRoute } from '../components.js';
+import {
+  PageLayout,
+  ProtectedRoute,
+  ProtectedRouteBusinessCustomer,
+} from '../components.js';
 import { OrderProvider } from '../order-provider/order-provider.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
@@ -83,6 +88,16 @@ const Router = (): JSX.Element => {
           element={
             <PageLayout>
               <Dashboard />
+            </PageLayout>
+          }
+        />
+      </Route>
+      <Route path={AppRoute.ROOT} element={<ProtectedRouteBusinessCustomer />}>
+        <Route
+          path={AppRoute.PROFILE}
+          element={
+            <PageLayout isSidebarHidden>
+              <Profile />
             </PageLayout>
           }
         />

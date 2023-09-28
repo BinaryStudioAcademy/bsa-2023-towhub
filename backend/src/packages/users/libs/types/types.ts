@@ -8,6 +8,7 @@ export {
 export {
   type BusinessSignUpRequestDto,
   type BusinessSignUpResponseDto,
+  type UserCommonDetails as CustomerEditDto,
   type CustomerSignUpRequestDto,
   type CustomerSignUpResponseDto,
   type UserEntityObjectWithGroupAndBusinessT,

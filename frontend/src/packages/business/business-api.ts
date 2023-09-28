@@ -10,6 +10,10 @@ import {
   type TruckAddRequestDto,
   type TruckGetAllResponseDto,
 } from '../trucks/libs/types/types.js';
+import {
+  type BusinessEditDto,
+  type BusinessEditResponseDto,
+} from '../users/users.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 
 type Constructor = {
@@ -72,6 +76,22 @@ class BusinessApi extends HttpApi {
     );
 
     return await response.json<TruckEntityT>();
+  }
+
+  public async editBusiness(
+    payload: BusinessEditDto,
+  ): Promise<BusinessEditResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(BusinessApiPath.ROOT, {}),
+      {
+        method: 'PUT',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<BusinessEditResponseDto>();
   }
 }
 

@@ -13,8 +13,12 @@ import {
   type UserEntityObjectWithGroupT,
   type ValueOf,
 } from '~/libs/types/types.js';
+import { UserNotificationMessage } from '~/packages/users/libs/enums/enums.js';
 import {
+  type BusinessEditDto,
+  type BusinessEditResponseDto,
   type BusinessSignUpRequestDto,
+  type CustomerEditDto,
   type CustomerSignUpRequestDto,
   type UserSignInRequestDto,
   type UserSignInResponseDto,
@@ -50,6 +54,46 @@ const signUp = createAsyncThunk<
     }
   },
 );
+
+const editCustomer = createAsyncThunk<
+  CustomerEditDto,
+  CustomerEditDto,
+  AsyncThunkConfig<HttpError>
+>(`${sliceName}/edit-customer`, async (payload, { extra, rejectWithValue }) => {
+  const { userApi, notification } = extra;
+
+  try {
+    const editedCustomer = await userApi.editCustomer(payload);
+
+    notification.success(UserNotificationMessage.SUCCESS_EDIT_USER);
+
+    return editedCustomer;
+  } catch (error_: unknown) {
+    const error = error_ as HttpError;
+
+    return rejectWithValue({ ...error, message: error.message });
+  }
+});
+
+const editBusiness = createAsyncThunk<
+  BusinessEditResponseDto,
+  BusinessEditDto,
+  AsyncThunkConfig<HttpError>
+>(`${sliceName}/edit-business`, async (payload, { extra, rejectWithValue }) => {
+  const { businessApi, notification } = extra;
+
+  try {
+    const editedBusiness = await businessApi.editBusiness(payload);
+
+    notification.success(UserNotificationMessage.SUCCESS_EDIT_USER);
+
+    return editedBusiness;
+  } catch (error_: unknown) {
+    const error = error_ as HttpError;
+
+    return rejectWithValue({ ...error, message: error.message });
+  }
+});
 
 const resetAuthorizedDriverSocket = createAction(
   `${sliceName}/reset-authorized-driver-socket`,
@@ -138,6 +182,8 @@ const logOut = createAsyncThunk<
 
 export {
   authorizeDriverSocket,
+  editBusiness,
+  editCustomer,
   getCurrent,
   logOut,
   resetAuthorizedDriverSocket,
