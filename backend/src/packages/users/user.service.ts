@@ -1,3 +1,5 @@
+import { HttpCode, HttpMessage } from '~/libs/enums/enums.js';
+import { HttpError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { encryptService } from '~/libs/packages/packages.js';
 import { type UserRepository } from '~/packages/users/user.repository.js';
@@ -120,6 +122,26 @@ class UserService implements IService<UserEntityObjectT> {
     id: UserEntityT['id'],
     payload: Partial<UserEntityCreateUpdate>,
   ): ReturnType<IService<UserEntityObjectT>['update']> {
+    const { phone, email } = payload;
+
+    const existingUserByEmail = email ? await this.findByEmail(email) : null;
+
+    if (existingUserByEmail && id !== existingUserByEmail.id) {
+      throw new HttpError({
+        message: HttpMessage.USER_EMAIL_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
+
+    const existingUserByPhone = phone ? await this.findByPhone(phone) : null;
+
+    if (existingUserByPhone && id !== existingUserByPhone.id) {
+      throw new HttpError({
+        message: HttpMessage.USER_PHONE_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
+
     const { password, ...updated } = payload;
 
     if (password) {

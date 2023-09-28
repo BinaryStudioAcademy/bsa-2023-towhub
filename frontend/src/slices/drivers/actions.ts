@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { serialize } from 'object-to-formdata';
 
+import { FILES_FORMDATA_FIELD_NAME } from '~/libs/constants/constants.js';
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import {
   type AsyncThunkConfig,
@@ -44,7 +45,10 @@ const addDriver = createAsyncThunk<
       const formData = serialize(payload);
 
       for (const file of files) {
-        formData.append('files[]', await getFileFromFileObject(file));
+        formData.append(
+          FILES_FORMDATA_FIELD_NAME,
+          await getFileFromFileObject(file),
+        );
       }
 
       const result = await driversApi.addDriver(formData);

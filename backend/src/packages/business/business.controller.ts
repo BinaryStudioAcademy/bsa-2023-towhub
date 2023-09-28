@@ -27,12 +27,12 @@ import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 import {
   type BusinessAddRequestDto,
-  type BusinessUpdateRequestDto,
+  type BusinessEditDto,
   type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 import {
   businessAddRequestBody,
-  businessUpdateRequestBody,
+  businessEditValidationSchema,
   commonGetPageQuery,
 } from './libs/validation-schemas/validation-schemas.js';
 
@@ -278,12 +278,13 @@ class BusinessController extends Controller {
       path: BusinessApiPath.ROOT,
       method: 'PUT',
       validation: {
-        body: businessUpdateRequestBody,
+        body: businessEditValidationSchema,
       },
       handler: (options) =>
         this.update(
           options as ApiHandlerOptions<{
-            body: BusinessUpdateRequestDto;
+            body: BusinessEditDto;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -471,7 +472,7 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business:
+   * /business/:
    *    put:
    *      security:
    *        - bearerAuth: []
@@ -484,34 +485,53 @@ class BusinessController extends Controller {
    *          application/json:
    *            schema:
    *              type: object
-   *              required:
-   *               - companyName
    *              properties:
+   *                phone:
+   *                  type: string
+   *                  length: 13
+   *                  pattern: ^\+\d{8,19}$
+   *                  example: +380505555555
+   *                email:
+   *                  type: string
+   *                  format: email
+   *                  minLength: 5
+   *                  maxLength: 254
+   *                firstName:
+   *                  type: string
+   *                  minLength: 1
+   *                  maxLength: 40
+   *                  pattern: ^['A-Za-z-]{1,40}$
+   *                  example: Bob
+   *                lastName:
+   *                  type: string
+   *                  minLength: 1
+   *                  maxLength: 40
+   *                  pattern: ^['A-Za-z-]{1,40}$
+   *                  example: Sponge
    *                companyName:
    *                  $ref: '#/components/schemas/Business/properties/companyName'
+   *                taxNumber:
+   *                  $ref: '#/components/schemas/Business/properties/taxNumber'
    *      responses:
    *        200:
    *          description: Successful business update.
    *          content:
    *            application/json:
    *              schema:
-   *                $ref: '#/components/schemas/Business'
-   *        400:
-   *          description:
-   *            Business with such ID does not exist or name is already registered
-   *          content:
-   *            plain/text:
-   *              schema:
-   *                $ref: '#/components/schemas/BusinessDoesNotExist'
+   *                $ref: '#/components/schemas/User'
+   *                properties:
+   *                  business:
+   *                    $ref: '#/components/schemas/Business'
    */
   private async update(
     options: ApiHandlerOptions<{
-      body: BusinessUpdateRequestDto;
+      body: BusinessEditDto;
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
     const updatedBusiness = await this.businessService.update({
       payload: options.body,
-      owner: options.user,
+      userId: options.user.id,
     });
 
     return {
