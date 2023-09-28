@@ -34,6 +34,7 @@ export {
   type ClientToServerEventParameter,
   type ServerToClientEventParameter,
   type ServerToClientEventResponse,
+  type SocketErrorValues,
   ClientToServerEvent,
   RoomPrefix,
   ServerToClientEvent,

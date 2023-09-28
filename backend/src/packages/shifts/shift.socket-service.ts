@@ -1,3 +1,4 @@
+import { type ServerToClientEventResponse } from 'shared/build';
 import { type Server, type Socket } from 'socket.io';
 
 import {
@@ -7,7 +8,7 @@ import {
   SocketError,
 } from '~/libs/packages/socket/libs/enums/enums.js';
 import { type ClientToServerEventParameter } from '~/libs/packages/socket/libs/types/types.js';
-import { type FirstParameter, type ValueOf } from '~/libs/types/types.js';
+import { type FirstParameter } from '~/libs/types/types.js';
 
 import { type TruckService } from '../trucks/truck.service.js';
 import { truckService } from '../trucks/trucks.js';
@@ -82,8 +83,7 @@ class ShiftSocketService {
           ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT]
         >,
         callback: (
-          status: ValueOf<typeof ServerToClientResponseStatus>,
-          message?: string,
+          response: ServerToClientEventResponse[typeof ClientToServerEvent.START_SHIFT],
         ) => void,
       ): Promise<void> => {
         await this.startShift(payload, callback);
@@ -107,8 +107,7 @@ class ShiftSocketService {
       ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT]
     >,
     callback: (
-      status: ValueOf<typeof ServerToClientResponseStatus>,
-      message?: string,
+      response: ServerToClientEventResponse[typeof ClientToServerEvent.START_SHIFT],
     ) => void,
   ): Promise<void> {
     const { truckId } = payload;
@@ -116,10 +115,10 @@ class ShiftSocketService {
       await ShiftSocketService.truckService.checkIsNotAvailableById(truckId);
 
     if (isTruckNotAvailable) {
-      return callback(
-        ServerToClientResponseStatus.BAD_EMIT,
-        SocketError.TRUCK_NOT_AVAILABLE,
-      );
+      return callback({
+        status: ServerToClientResponseStatus.BAD_EMIT,
+        message: SocketError.TRUCK_NOT_AVAILABLE,
+      });
     }
 
     const timer = setTimeout(() => {
@@ -147,7 +146,7 @@ class ShiftSocketService {
       startedShift: { socket: this.currentSocket, timer },
     });
 
-    callback(ServerToClientResponseStatus.OK);
+    callback({ status: ServerToClientResponseStatus.OK });
   }
 
   private async endShift(): Promise<void> {

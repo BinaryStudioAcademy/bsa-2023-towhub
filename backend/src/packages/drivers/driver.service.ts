@@ -5,6 +5,7 @@ import {
 } from '~/libs/packages/geolocation-cache/geolocation-cache.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { MailContent } from '~/libs/packages/mailer/libs/enums/enums.js';
+import { FileVerificationStatus } from '~/packages/file-verification-status/libs/enums/enums.js';
 import { type UsersTrucksService } from '~/packages/users-trucks/users-trucks.service';
 
 import { UserGroupKey } from '../auth/libs/enums/enums.js';
@@ -78,6 +79,21 @@ class DriverService implements IService {
     this.usersTrucksService = usersTrucksService;
     this.fileVerificationStatusService = fileVerificationStatusService;
     this.filesService = filesService;
+  }
+
+  public async checkIsVerifiedByUserId(userId: number): Promise<boolean> {
+    const driver = await this.findByUserId(userId);
+
+    if (!driver) {
+      throw new HttpError({
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+        status: HttpCode.NOT_FOUND,
+      });
+    }
+
+    return (
+      driver.verificationStatus?.status === FileVerificationStatus.VERIFIED
+    );
   }
 
   public async getGeolocationById(id: number): Promise<GeolocationLatLng> {

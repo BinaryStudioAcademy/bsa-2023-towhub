@@ -1,6 +1,9 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import {
+  type AsyncThunkConfig,
+  type SocketErrorValues,
+} from '~/libs/types/types.js';
 
 import { name as sliceName } from './driver.slice.js';
 import {
@@ -17,7 +20,7 @@ const setVerificationCompleted = createAction(
   `${sliceName}/set-verification-completed`,
 );
 
-const endShift = createAsyncThunk<null, undefined, AsyncThunkConfig>(
+const endShift = createAsyncThunk<null, undefined, AsyncThunkConfig<null>>(
   `${sliceName}/end-shift`,
   (_, { extra }) => {
     const { socketClient } = extra;
@@ -42,7 +45,7 @@ const startShift = createAsyncThunk<
   FirstParameter<
     ClientToServerEventParameter[typeof ClientToServerEvent.START_SHIFT]
   >,
-  AsyncThunkConfig
+  AsyncThunkConfig<SocketErrorValues | null>
 >(
   `${sliceName}/start-shift`,
   async (payload, { getState, extra, rejectWithValue }) => {

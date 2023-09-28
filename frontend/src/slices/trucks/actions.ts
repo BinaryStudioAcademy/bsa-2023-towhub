@@ -25,7 +25,7 @@ import {
 const addTruck = createAsyncThunk<
   TruckEntityT,
   TruckAddRequestDto & { queryString?: string },
-  AsyncThunkConfig
+  AsyncThunkConfig<HttpError>
 >(
   `${sliceName}/add-truck`,
   async ({ queryString, ...payload }, { rejectWithValue, extra, dispatch }) => {
@@ -52,7 +52,7 @@ const addTruck = createAsyncThunk<
 const updateTruckLocationFromSocket = createAsyncThunk<
   TruckLocationPayload,
   TruckLocationPayload,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(ActionName.SOCKET.UPDATE_TRUCK_LOCATION, (location) => {
   return location;
 });
@@ -78,7 +78,7 @@ const unsubscribeTruckUpdates = createAction(
 const calculateArrivalTime = createAsyncThunk<
   TruckArrivalTime,
   CalculateArrivalTimeParameter,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(
   ActionName.CALCULATE_ARRIVAL_TIME,
   async ({ origin, destination }, { extra }) => {
@@ -101,7 +101,7 @@ const calculateArrivalTime = createAsyncThunk<
 const getAllTrucksByUserId = createAsyncThunk<
   TruckEntityT[],
   Pick<UsersTrucksEntityT, 'userId'>,
-  AsyncThunkConfig
+  AsyncThunkConfig<HttpError>
 >(
   `${sliceName}/get-all-trucks-by-user-id`,
   async (payload, { extra, rejectWithValue, dispatch, getState }) => {
@@ -128,7 +128,7 @@ const getAllTrucksByUserId = createAsyncThunk<
 const findAllTrucksForBusiness = createAsyncThunk<
   TruckGetAllResponseDto,
   string | undefined,
-  AsyncThunkConfig
+  AsyncThunkConfig<HttpError>
 >(
   `${sliceName}/find-all-trucks-for-business`,
   async (payload, { rejectWithValue, extra }) => {

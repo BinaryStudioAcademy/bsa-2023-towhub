@@ -41,7 +41,8 @@ const DriverTable: React.FC = () => {
 
   const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
     DriverGetAllResponseDto,
-    PaginationParameters
+    PaginationParameters,
+    null
   >({
     tableFetchCall: getDriversPage,
     initialPageIndex: initialPage ? Number(initialPage) : null,

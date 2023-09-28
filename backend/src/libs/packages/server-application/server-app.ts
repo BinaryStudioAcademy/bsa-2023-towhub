@@ -28,6 +28,7 @@ import {
   type ValidationSchema,
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
+import { type DriverService } from '~/packages/drivers/drivers.js';
 import { filesValidationPlugin } from '~/packages/files/files.js';
 import { type UserService } from '~/packages/users/users.js';
 
@@ -49,6 +50,7 @@ type Constructor = {
   apis: IServerAppApi[];
   geolocationCacheSocketService: GeolocationCacheSocketService;
   userService: UserService;
+  driverService: DriverService;
 };
 
 class ServerApp implements IServerApp {
@@ -66,6 +68,8 @@ class ServerApp implements IServerApp {
 
   private userService: UserService;
 
+  private driverService: DriverService;
+
   public constructor({
     config,
     logger,
@@ -73,6 +77,7 @@ class ServerApp implements IServerApp {
     apis,
     geolocationCacheSocketService,
     userService,
+    driverService,
   }: Constructor) {
     this.config = config;
     this.logger = logger;
@@ -81,6 +86,7 @@ class ServerApp implements IServerApp {
 
     this.geolocationCacheSocketService = geolocationCacheSocketService;
     this.userService = userService;
+    this.driverService = driverService;
 
     this.app = Fastify();
   }
@@ -294,6 +300,7 @@ class ServerApp implements IServerApp {
       app: this.app,
       geolocationCacheSocketService: this.geolocationCacheSocketService,
       userService: this.userService,
+      driverService: this.driverService,
     });
 
     await this.initMiddlewares();

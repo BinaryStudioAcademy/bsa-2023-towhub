@@ -4,7 +4,7 @@ import { geolocationCacheSocketService } from '~/libs/packages/geolocation-cache
 import { logger } from '~/libs/packages/logger/logger.js';
 import { authController } from '~/packages/auth/auth.js';
 import { businessController } from '~/packages/business/business.js';
-import { driverController } from '~/packages/drivers/drivers.js';
+import { driverController, driverService } from '~/packages/drivers/drivers.js';
 import { filesController } from '~/packages/files/files.js';
 import { orderController } from '~/packages/orders/orders.js';
 import { shiftController } from '~/packages/shifts/shift.js';
@@ -34,6 +34,7 @@ const serverApp = new ServerApp({
   apis: [apiV1],
   geolocationCacheSocketService,
   userService,
+  driverService,
 });
 
 export { type ServerAppRouteParameters } from './libs/types/types.js';

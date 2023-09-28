@@ -20,7 +20,7 @@ import {
 const getDriversPage = createAsyncThunk<
   DriverGetAllResponseDto,
   string | undefined,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(ACTIONS_TYPES.GET_DRIVERS_PAGE, async (payload, { extra }) => {
   return await extra.driversApi.getPageOfDrivers(payload);
 });
@@ -31,7 +31,7 @@ const addDriver = createAsyncThunk<
     payload: DriverCreateRequestDto<FileObject>;
     queryString?: string;
   },
-  AsyncThunkConfig
+  AsyncThunkConfig<HttpError>
 >(
   ACTIONS_TYPES.ADD_DRIVER,
   async (
