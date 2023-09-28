@@ -14,7 +14,7 @@ class DriverEntity implements IEntity {
 
   private driverLicenseNumber: DriverEntityT['driverLicenseNumber'];
 
-  private driverLicenseFileId: DriverEntityT['driverLicenseFileId'] | null;
+  private driverLicenseFileId: DriverEntityT['driverLicenseFileId'];
 
   private userId: DriverEntityT['userId'];
 
