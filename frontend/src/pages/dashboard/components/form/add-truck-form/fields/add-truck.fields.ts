@@ -1,4 +1,4 @@
-import { FormLabel, FormName } from '~/libs/enums/enums.js';
+import { FormLabel, FormName, HttpMessage } from '~/libs/enums/enums.js';
 import { type FormField } from '~/libs/types/form.type.js';
 import { type SelectOption } from '~/libs/types/select-option.type.js';
 import {
@@ -55,6 +55,7 @@ const ADD_TRUCK_FIELDS: FormField<
     label: FormLabel.LICENSE_PLATE,
     placeholder: PLACEHOLDER_LICENSE_PLATE,
     name: FormName.LICENSE_PLATE,
+    associateServerErrors: [HttpMessage.TRUCK_EXISTS],
   },
   {
     id: FormLabel.CAPACITY,
