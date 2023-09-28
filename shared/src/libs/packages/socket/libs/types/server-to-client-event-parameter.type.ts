@@ -21,5 +21,6 @@ type ServerToClientEventParameter = {
     latLng: GeolocationLatLng;
   }) => void;
   [ServerToClientEvent.ORDER_UPDATED]: (order: OrderResponseDto) => void;
+  [ServerToClientEvent.ORDER_CREATED]: (order: OrderResponseDto) => void;
 };
 export { type ServerToClientEventParameter };

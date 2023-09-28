@@ -1,10 +1,12 @@
 import { type FC } from 'react';
 
 import { DataStatus } from '~/libs/enums/data-status.enum';
+import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppSelector,
   useEffect,
+  useNavigate,
 } from '~/libs/hooks/hooks.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import {
@@ -17,6 +19,7 @@ import {
   selectSocketDriverAuthStatus,
   selectUser,
 } from '~/slices/auth/selectors.js';
+import { selectOrder } from '~/slices/orders/selectors.js';
 
 import { RouterOutlet } from '../router/router.js';
 
@@ -27,6 +30,9 @@ const DriverSocketProvider: FC = () => {
   );
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const currentOrder = useAppSelector(selectOrder);
   useEffect(() => {
     socketTryAddDriverListeners(dispatch);
 
@@ -43,6 +49,12 @@ const DriverSocketProvider: FC = () => {
       socketTryRemoveDriverListeners();
     };
   }, [dispatch, socketDriverAuthStatus, user, socketDriverAuthErrorMessage]);
+
+  useEffect(() => {
+    if (currentOrder) {
+      navigate(`${AppRoute.ORDERS}/${currentOrder.id}`);
+    }
+  }, [navigate, currentOrder]);
 
   return <RouterOutlet />;
 };
