@@ -2,6 +2,7 @@
 
 .container {
   display: flex;
+  justify-content: center;
   align-items: stretch;
   height: calc(100% - 40px);
   margin: 20px;
@@ -9,8 +10,7 @@
 
 .mainSection {
   flex-grow: 1;
-  max-width: 800px;
-  margin-left: 70px;
+  max-width: 80%;
   padding: 0;
   padding: 10px 60px 60px;
   overflow-y: scroll;

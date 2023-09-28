@@ -88,7 +88,7 @@ const DriverOrderCard: React.FC<Properties> = ({ order }: Properties) => {
         <div className={styles.contentFooter}>
           <div className={styles.price}>
             <img src={money} alt="money" />
-            {price} $
+            <span>{price}$</span>
           </div>
           <div className={styles.date}>{convertDate(scheduledTime)}</div>
         </div>

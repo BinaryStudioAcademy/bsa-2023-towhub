@@ -340,7 +340,9 @@ class OrderService implements Omit<IService, 'find'> {
     const driver = await this.driverService.findByUserId(user.id);
 
     if (!driver) {
-      throw new NotFoundError({});
+      throw new NotFoundError({
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
     }
     const search = {
       driverId: user.id,
