@@ -1,1 +1,5 @@
-export { fileInputDefaultsConfig } from 'shared/build/index.js';
+export {
+  avatarInputDefaultsConfig,
+  fileInputAddDriverLicenseConfig,
+  fileInputDefaultsConfig,
+} from 'shared/build/index.js';

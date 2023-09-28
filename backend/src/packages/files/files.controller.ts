@@ -176,6 +176,8 @@ class FilesController extends Controller {
    * @swagger
    * /files/:
    *    post:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - files
    *      summary: Upload files
@@ -216,13 +218,15 @@ class FilesController extends Controller {
       parsedFiles: MultipartParsedFile[];
     }>,
   ): Promise<ApiHandlerResponse<FileUploadResponseDto>> {
-    const result = await this.fileService.create(options.parsedFiles);
+    const uploadedFiles = await this.fileService.createMany(
+      options.parsedFiles,
+    );
 
     return {
       status: HttpCode.CREATED,
       payload: {
-        items: result,
-        totalCount: result.length,
+        items: uploadedFiles,
+        totalCount: uploadedFiles.length,
       },
     };
   }
@@ -231,6 +235,8 @@ class FilesController extends Controller {
    * @swagger
    * /files/{id}:
    *    put:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - files
    *      summary: Update stored file name
@@ -278,7 +284,7 @@ class FilesController extends Controller {
       body: UpdateFileKeyRequestDto;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const updatedFileRecord = await this.fileService.update(
+    const updatedFileRecord = await this.fileService.softUpdate(
       options.params.id,
       options.body,
     );
@@ -295,6 +301,8 @@ class FilesController extends Controller {
    * @swagger
    * /files/{id}:
    *    delete:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - files
    *      summary: Delete stored file
@@ -346,6 +354,8 @@ class FilesController extends Controller {
    * @swagger
    * /files/url/{id}:
    *    get:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - files
    *      summary: Get stored file's temporary URL
@@ -393,6 +403,8 @@ class FilesController extends Controller {
    * @swagger
    * /files/{id}:
    *    get:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - files
    *      summary: Get stored file's database record

@@ -5,7 +5,7 @@ import { type ShiftEntityT } from '../shifts/shift.js';
 import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import {
   type DriverInfo,
-  type OrderEntityT,
+  type OrderEntity as OrderEntityT,
   type OrderResponseDto,
 } from './libs/types/types.js';
 
@@ -116,11 +116,47 @@ class OrderEntity implements IEntity {
     shiftId,
     customerName,
     customerPhone,
-  }: Omit<OrderEntityT, 'id' | 'driver' | 'truck'> & {
+    driver,
+    truck,
+  }: Omit<OrderEntityT, 'id'> & {
     shiftId: number;
   }): OrderEntity {
     return new OrderEntity({
       id: null,
+      price,
+      scheduledTime,
+      carsQty,
+      startPoint,
+      endPoint,
+      status,
+      userId,
+      businessId,
+      customerName,
+      customerPhone,
+      shiftId,
+      driver,
+      truck,
+    });
+  }
+
+  public static initializeUpdate({
+    id,
+    price,
+    scheduledTime,
+    carsQty,
+    startPoint,
+    endPoint,
+    status,
+    userId,
+    businessId,
+    shiftId,
+    customerName,
+    customerPhone,
+  }: Omit<OrderEntityT, 'driver' | 'truck'> & {
+    shiftId: number;
+  }): OrderEntity {
+    return new OrderEntity({
+      id,
       price,
       scheduledTime,
       carsQty,

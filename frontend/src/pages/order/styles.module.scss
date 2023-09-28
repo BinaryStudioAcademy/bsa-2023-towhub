@@ -3,18 +3,19 @@
 .page {
   display: flex;
   height: 100%;
-  padding: 10px 18px 10px 47px;
+  padding: 10px 20px;
   overflow: hidden;
 }
 
 .left {
-  width: 35%;
-  height: inherit;
+  display: flex;
+  flex-flow: column;
+  width: 100%;
   margin-right: 15px;
 }
 
 .right {
-  width: 65%;
+  width: 100%;
   height: inherit;
   border: 5px solid $white;
   border-radius: 10px;

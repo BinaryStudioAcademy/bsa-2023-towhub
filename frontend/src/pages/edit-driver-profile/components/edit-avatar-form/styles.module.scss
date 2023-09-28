@@ -1,0 +1,37 @@
+@import "src/assets/css/vars.scss";
+
+.wrapper {
+  display: flex;
+}
+
+.form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 35px;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .button {
+    height: 45px;
+    text-transform: capitalize;
+    border-radius: 20px;
+  }
+
+  .button.outlined {
+    font-weight: $font-weight-light;
+  }
+
+  .button.contained:not(:disabled) {
+    background-color: $blue-dark;
+  }
+
+  .button.contained:not(:disabled):hover,
+  .button.contained:not(:disabled):focus {
+    background-color: rgba($blue-dark, 0.9);
+  }
+}

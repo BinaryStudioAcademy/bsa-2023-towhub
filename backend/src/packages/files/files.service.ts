@@ -8,9 +8,12 @@ import {
 import { type IService } from '~/libs/interfaces/service.interface.js';
 import { type ILogger } from '~/libs/packages/logger/libs/interfaces/logger.interface.js';
 import { type S3ClientService } from '~/libs/packages/s3-client-service/s3-client-service.package.js';
+import { type ValueOf } from '~/libs/types/types.js';
 
 import { FilesEntity } from './files.entity.js';
 import { type FilesRepository } from './files.repository.js';
+import { type S3PublicFolder } from './libs/enums/enums.js';
+import { constructKey } from './libs/helpers/helpers.js';
 import {
   type FileEntityObjectT,
   type FileEntityT,
@@ -61,19 +64,20 @@ class FilesService
     return await this.s3ClientService.getObjectPresignedUrl(fileRecord.key);
   }
 
-  public async create(
+  public async createMany(
     parsedFiles: MultipartParsedFile[],
+    folder?: ValueOf<typeof S3PublicFolder>,
   ): Promise<FileEntityObjectT[]> {
     const filesRecords: FileEntityObjectT[] = [];
 
     for (const parsedFile of parsedFiles) {
-      const key = v4();
+      const key = constructKey(v4(), folder);
       const name = parsedFile.filename;
       const body = parsedFile.content;
       let S3OperationSuccess = false;
 
       try {
-        await this.s3ClientService.putObject(key, body);
+        await this.s3ClientService.putObject(key, body, parsedFile.mimetype);
 
         S3OperationSuccess = true;
 
@@ -97,7 +101,103 @@ class FilesService
     return filesRecords;
   }
 
+  public async create(
+    parsedFile: MultipartParsedFile,
+    folder?: ValueOf<typeof S3PublicFolder>,
+  ): Promise<FileEntityObjectT> {
+    const key = constructKey(v4(), folder);
+    const name = parsedFile.filename;
+    const body = parsedFile.content;
+    let S3OperationSuccess = false;
+
+    try {
+      await this.s3ClientService.putObject(key, body);
+
+      S3OperationSuccess = true;
+
+      const result = await this.fileRepository.create({
+        contentType: parsedFile.mimetype,
+        name,
+        key,
+      });
+
+      return FilesEntity.initialize(result).toObject();
+    } catch (error_) {
+      const error = error_ as Error;
+
+      if (S3OperationSuccess) {
+        await this.s3ClientService.deleteObject(parsedFile.filename);
+      }
+
+      throw new FileTransactionError({ message: error.message });
+    }
+  }
+
   public async update(
+    id: FileEntityT['id'],
+    parsedFile: MultipartParsedFile,
+  ): Promise<FileEntityObjectT> {
+    const [file = null] = await this.fileRepository.find({ id });
+
+    if (!file) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.FILE_DOES_NOT_EXIST,
+      });
+    }
+
+    const { filename, content, mimetype } = parsedFile;
+
+    try {
+      await this.s3ClientService.putObject(file.key, content, mimetype);
+
+      const result = await this.fileRepository.update(id, {
+        name: filename,
+        contentType: mimetype,
+      });
+
+      return FilesEntity.initialize(result).toObject();
+    } catch {
+      this.logger.error(
+        `[UPDATE_FILE]: File transaction error. Key: ${file.key}`,
+      );
+      throw new FileTransactionError({});
+    }
+  }
+
+  public async updateByFileKey(
+    key: FileEntityT['key'],
+    parsedFile: MultipartParsedFile,
+  ): Promise<FileEntityObjectT> {
+    const [file = null] = await this.fileRepository.find({ key });
+
+    if (!file) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.FILE_DOES_NOT_EXIST,
+      });
+    }
+
+    const { filename, content, mimetype } = parsedFile;
+
+    try {
+      await this.s3ClientService.putObject(file.key, content, mimetype);
+
+      const result = await this.fileRepository.update(file.id, {
+        name: filename,
+        contentType: mimetype,
+      });
+
+      return FilesEntity.initialize(result).toObject();
+    } catch {
+      this.logger.error(
+        `[UPDATE_FILE_BY_KEY]: File transaction error. Key: ${file.key}`,
+      );
+      throw new FileTransactionError({});
+    }
+  }
+
+  public async softUpdate(
     id: FileEntityT['id'],
     payload: Pick<FileEntityT, 'key'>,
   ): Promise<FileEntityObjectT> {

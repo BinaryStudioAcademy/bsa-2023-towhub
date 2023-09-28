@@ -1,5 +1,6 @@
 export {
   ClientToServerEvent,
+  RoomPrefix,
   ServerToClientEvent,
   ServerToClientResponseStatus,
   SocketError,
@@ -8,4 +9,5 @@ export {
   type ClientToServerEventParameter,
   type ServerToClientEventParameter,
   type ServerToClientEventResponse,
+  type SocketErrorValues,
 } from './libs/types/types.js';

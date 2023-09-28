@@ -1,5 +1,9 @@
 import joi from 'joi';
 
+import {
+  type FileObject,
+  type MultipartParsedFile,
+} from '~/packages/files/libs/types/types.js';
 import { commonSignUpRules } from '~/packages/users/libs/validation-schemas/common-rules/common-rules.js';
 
 import {
@@ -29,10 +33,16 @@ const driverLicenseNumber = joi
     'string.custom': Message.DRIVER_LICENSE_NUMBER_INVALID,
   });
 
-const driverUpdateRequestBody = joi.object<DriverUpdateRequestDto, true>({
+const driverUpdateRequestBody = joi.object<
+  DriverUpdateRequestDto<MultipartParsedFile | FileObject>,
+  true
+>({
   ...commonSignUpRules,
   driverLicenseNumber,
   truckIds: joi.array().items(joi.number()),
+  files: joi.array().items(joi.object()).min(1).required().messages({
+    'array.min': DriverValidationMessage.FILES_MIN_LENGTH,
+  }),
 });
 
 export { driverLicenseNumber, driverUpdateRequestBody };

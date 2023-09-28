@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { serialize } from 'object-to-formdata';
 
 import { HttpCode, HttpError } from '~/libs/packages/http/http.js';
 import {
@@ -7,32 +8,50 @@ import {
   ServerErrorType,
 } from '~/libs/types/types.js';
 import { DriverCreationMessage } from '~/packages/drivers/libs/enums/enums.js';
-import { type DriverAddPayload } from '~/packages/drivers/libs/types/types.js';
+import { getFileFromFileObject } from '~/slices/files/libs/helpers/get-file-from-file-object.helper';
+import { type FileObject } from '~/slices/files/libs/types/types.js';
 
-import { ACTIONS_TYPES } from './libs/enums/driver-action.js';
-import { type DriverAddResponseWithGroup } from './libs/types/types.js';
+import { ACTIONS_TYPES } from './libs/enums/enums.js';
+import {
+  type DriverAddResponseWithGroup,
+  type DriverCreateRequestDto,
+} from './libs/types/types.js';
 
 const getDriversPage = createAsyncThunk<
   DriverGetAllResponseDto,
   string | undefined,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(ACTIONS_TYPES.GET_DRIVERS_PAGE, async (payload, { extra }) => {
   return await extra.driversApi.getPageOfDrivers(payload);
 });
 
 const addDriver = createAsyncThunk<
   DriverAddResponseWithGroup,
-  DriverAddPayload & { queryString?: string },
-  AsyncThunkConfig
+  {
+    payload: DriverCreateRequestDto<FileObject>;
+    queryString?: string;
+  },
+  AsyncThunkConfig<HttpError>
 >(
   ACTIONS_TYPES.ADD_DRIVER,
-  async ({ queryString, ...payload }, { rejectWithValue, extra, dispatch }) => {
+  async (
+    { queryString, payload: { files, ...payload } },
+    { rejectWithValue, extra, dispatch },
+  ) => {
     try {
-      const result = await extra.driversApi.addDriver(payload);
+      const { driversApi, notification } = extra;
+
+      const formData = serialize(payload);
+
+      for (const file of files) {
+        formData.append('files[]', await getFileFromFileObject(file));
+      }
+
+      const result = await driversApi.addDriver(formData);
 
       await dispatch(getDriversPage(queryString));
 
-      extra.notification.success(DriverCreationMessage.SUCCESS);
+      notification.success(DriverCreationMessage.SUCCESS);
 
       return result;
     } catch (error: unknown) {

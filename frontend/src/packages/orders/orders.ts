@@ -8,10 +8,11 @@ export {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
-  type OrderEntityT,
+  type OrderEntity,
   type OrderResponseDto,
-} from './types/types.js';
-export { orderCreateRequestBody } from './validation-schemas/validation-schemas.js';
+  type OrderStatusValues,
+} from './libs/types/types.js';
+export { orderCreateForm } from './libs/validation-schemas/validation-schemas.js';
 
 const ordersApi = new OrdersApi({
   baseUrl: config.ENV.API.ORIGIN_URL,

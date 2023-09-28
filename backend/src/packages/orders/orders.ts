@@ -1,5 +1,6 @@
 import { database, schema } from '~/libs/packages/database/database.js';
 import { logger } from '~/libs/packages/logger/logger.js';
+import { socket } from '~/libs/packages/socket/socket.js';
 
 import { businessService } from '../business/business.js';
 import { driverService } from '../drivers/drivers.js';
@@ -19,6 +20,8 @@ const orderService = new OrderService({
   shiftService,
   truckService,
   userService,
+  mapService,
+  socket,
 });
 const orderController = new OrderController({
   logger,

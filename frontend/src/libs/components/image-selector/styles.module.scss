@@ -1,0 +1,46 @@
+@import "src/assets/css/vars.scss";
+
+.wrapper {
+  position: relative;
+  width: fit-content;
+}
+
+.tooltip {
+  font-size: 18px;
+  text-align: center;
+  transform: translateY(-16px);
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+
+  .modalButton {
+    max-width: fit-content;
+  }
+}
+
+.editIcon {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 5px;
+  color: rgba($black-light, 0.85);
+  background-color: rgba($white, 0.5);
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+.editIcon:hover,
+.editIcon:focus {
+  color: $black-light;
+}
+
+.croppedImageCircle {
+  border-radius: 2000px;
+}
+
+.image :global .cr-viewport {
+  border: 2px solid $black;
+  box-shadow: 0 0 2000px 2000px rgba($white, 50%);
+}
