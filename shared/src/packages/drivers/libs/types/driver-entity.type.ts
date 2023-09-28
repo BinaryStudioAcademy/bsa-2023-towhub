@@ -10,7 +10,7 @@ type DriverEntityT = {
   businessId: BusinessEntityT['id'];
   createdAt: string;
   avatarId: FileEntityT['id'] | null;
-  driverLicenseFileId: FileEntityT['id'];
+  driverLicenseFileId: FileEntityT['id'] | null;
   verificationStatus: Omit<FileVerificationStatusEntityT, 'fileId'> | null;
 };
 

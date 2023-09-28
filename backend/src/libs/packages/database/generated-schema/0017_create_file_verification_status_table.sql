@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS
 
 --> statement-breakpoint
 ALTER TABLE "driver_details"
-ADD COLUMN "driver_license_file_id" integer NOT NULL;
+ADD COLUMN "driver_license_file_id" integer;
 
 --> statement-breakpoint
 DO $$ BEGIN
