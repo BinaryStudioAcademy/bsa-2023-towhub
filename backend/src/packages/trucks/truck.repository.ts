@@ -7,7 +7,6 @@ import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 
 import {
-  type DriverHaveAccessToTruck,
   type TruckDatabaseModel,
   type TruckEntityT,
 } from './libs/types/types.js';
@@ -17,16 +16,12 @@ class TruckRepository implements IRepository {
 
   private trucksSchema: DatabaseSchema['trucks'];
 
-  private usersTrucksSchema: DatabaseSchema['usersTrucks'];
-
   public constructor(
     database: Pick<IDatabase, 'driver'>,
     trucksSchema: DatabaseSchema['trucks'],
-    usersTrucksSchema: DatabaseSchema['usersTrucks'],
   ) {
     this.db = database;
     this.trucksSchema = trucksSchema;
-    this.usersTrucksSchema = usersTrucksSchema;
   }
 
   public async findById(id: number): Promise<TruckDatabaseModel[]> {
@@ -131,31 +126,6 @@ class TruckRepository implements IRepository {
       .select()
       .from(this.trucksSchema)
       .where(eq(this.trucksSchema.businessId, id));
-  }
-
-  public async addTruckToDriver(
-    driverTruckIds: DriverHaveAccessToTruck[],
-  ): Promise<void> {
-    const preparedQuery = this.db
-      .driver()
-      .insert(this.usersTrucksSchema)
-      .values(driverTruckIds)
-      .prepare('addTruckToDriver');
-
-    await preparedQuery.execute();
-  }
-
-  public async getTrucksByUserId(
-    userId: number,
-  ): Promise<DriverHaveAccessToTruck[]> {
-    const preparedQuery = this.db
-      .driver()
-      .select()
-      .from(this.usersTrucksSchema)
-      .where(eq(this.usersTrucksSchema.userId, userId))
-      .prepare('getTrucksByUserId');
-
-    return await preparedQuery.execute();
   }
 }
 

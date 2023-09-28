@@ -10,6 +10,10 @@ const selectTruckChoiceStatus = (state: RootState): TruckChoiceStatusValues => {
   return state.driver.truckChoiceStatus;
 };
 
+const selectIsVerificationCompleted = (state: RootState): boolean => {
+  return state.driver.isVerificationCompleted;
+};
+
 const selectActiveTruck = (state: RootState): TruckEntityT | null => {
   return state.driver.activeTruck;
 };
@@ -18,4 +22,9 @@ const selectShiftStatus = (state: RootState): ShiftStatusValue => {
   return state.driver.shiftStatus;
 };
 
-export { selectActiveTruck, selectShiftStatus, selectTruckChoiceStatus };
+export {
+  selectActiveTruck,
+  selectIsVerificationCompleted,
+  selectShiftStatus,
+  selectTruckChoiceStatus,
+};

@@ -176,6 +176,8 @@ class FilesController extends Controller {
    * @swagger
    * /files/:
    *    post:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - files
    *      summary: Upload files
@@ -233,6 +235,8 @@ class FilesController extends Controller {
    * @swagger
    * /files/{id}:
    *    put:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - files
    *      summary: Update stored file name
@@ -297,6 +301,8 @@ class FilesController extends Controller {
    * @swagger
    * /files/{id}:
    *    delete:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - files
    *      summary: Delete stored file
@@ -348,6 +354,8 @@ class FilesController extends Controller {
    * @swagger
    * /files/url/{id}:
    *    get:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - files
    *      summary: Get stored file's temporary URL
@@ -395,6 +403,8 @@ class FilesController extends Controller {
    * @swagger
    * /files/{id}:
    *    get:
+   *      security:
+   *        - bearerAuth: []
    *      tags:
    *       - files
    *      summary: Get stored file's database record

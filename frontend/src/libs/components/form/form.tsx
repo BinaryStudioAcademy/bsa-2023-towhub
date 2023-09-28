@@ -19,7 +19,10 @@ import { DropdownInput } from '../dropdown-input/dropdown-input.js';
 import { DropdownMultiSelect } from '../dropdown-multi-select/dropdown-multi-select.js';
 import { FileInput } from '../file-input/file-input.js';
 import { fileInputDefaultsConfig } from '../file-input/libs/config/config.js';
-import { type FileFormType } from '../file-input/libs/types/types.js';
+import {
+  type FileFormType,
+  type FileInputConfig,
+} from '../file-input/libs/types/types.js';
 import { Input } from '../input/input.jsx';
 import { LocationInput } from '../location-input/location-input.js';
 import { handleServerError } from './libs/helpers/handle-server-error.helper.js';
@@ -43,6 +46,7 @@ type RenderFieldProperties<T extends FieldValues = FieldValues> = {
   setError: UseFormSetError<T>;
   clearErrors: UseFormClearErrors<T>;
   clearServerError?: ServerErrorHandling['clearError'];
+  fileInputConfig?: FileInputConfig;
 };
 
 const renderField = <T extends FieldValues = FieldValues>({
@@ -52,13 +56,16 @@ const renderField = <T extends FieldValues = FieldValues>({
   setError,
   clearErrors,
   clearServerError,
+  fileInputConfig,
 }: RenderFieldProperties<T>): JSX.Element => {
+  const { options } = field;
+
   switch (field.type) {
     case 'dropdown': {
       return (
         <DropdownInput
           {...field}
-          options={field.options ?? []}
+          options={options ?? []}
           control={control}
           errors={errors}
         />
@@ -68,7 +75,7 @@ const renderField = <T extends FieldValues = FieldValues>({
       return (
         <DropdownMultiSelect
           {...field}
-          options={field.options ?? []}
+          options={options ?? []}
           control={control}
           errors={errors}
         />
@@ -102,7 +109,7 @@ const renderField = <T extends FieldValues = FieldValues>({
           control={control as unknown as Control<FileFormType, null>}
           errors={errors}
           isDisabled={false}
-          fileInputCustomConfig={fileInputDefaultsConfig}
+          fileInputCustomConfig={fileInputConfig ?? fileInputDefaultsConfig}
         />
       );
     }

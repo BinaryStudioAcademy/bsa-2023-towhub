@@ -1,1 +1,4 @@
-export { fileInputDefaultsConfig } from 'shared/build/index.js';
+export {
+  fileInputAddDriverLicenseConfig,
+  fileInputDefaultsConfig,
+} from 'shared/build/index.js';

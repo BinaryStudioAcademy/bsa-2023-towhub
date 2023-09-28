@@ -14,9 +14,37 @@ import {
 } from 'drizzle-orm/pg-core';
 import {
   type Coordinates,
+  FILE_VERIFICATION_NAMES,
+  FILE_VERIFICATION_STATUSES,
   ORDER_STATUSES,
   TruckStatus,
 } from 'shared/build/index.js';
+
+const verificationName = pgEnum('verification_name', FILE_VERIFICATION_NAMES);
+const verificationStatus = pgEnum(
+  'verification_status',
+  FILE_VERIFICATION_STATUSES,
+);
+
+const fileVerificationStatus = pgTable('file_verification_status', {
+  id: serial('id').primaryKey(),
+  fileId: integer('file_id')
+    .references(() => files.id)
+    .notNull(),
+  name: verificationName('name').notNull(),
+  status: verificationStatus('status').notNull(),
+  message: varchar('message'),
+});
+
+const fileVerificationStatusRelations = relations(
+  fileVerificationStatus,
+  ({ one }) => ({
+    file: one(files, {
+      fields: [fileVerificationStatus.fileId],
+      references: [files.id],
+    }),
+  }),
+);
 
 const orderStatus = pgEnum('order_status', ORDER_STATUSES);
 
@@ -119,6 +147,9 @@ const files = pgTable('files', {
 const drivers = pgTable('driver_details', {
   id: serial('id').primaryKey(),
   driverLicenseNumber: varchar('driver_license_number').unique().notNull(),
+  driverLicenseFileId: integer('driver_license_file_id')
+    .references(() => files.id)
+    .notNull(),
   userId: integer('user_id')
     .notNull()
     .references(() => users.id),
@@ -237,6 +268,10 @@ const driversRelations = relations(drivers, ({ one, many }) => ({
     fields: [drivers.businessId],
     references: [business.id],
   }),
+  driverLicenseFile: one(files, {
+    fields: [drivers.driverLicenseFileId],
+    references: [files.id],
+  }),
   avatar: one(files, {
     fields: [drivers.avatarId],
     references: [files.id],
@@ -250,6 +285,8 @@ export {
   drivers,
   driversRelations,
   files,
+  fileVerificationStatus,
+  fileVerificationStatusRelations,
   groups,
   orders,
   ordersRelations,
@@ -263,4 +300,6 @@ export {
   usersRelations,
   usersTrucks,
   usersTrucksRelations,
+  verificationName,
+  verificationStatus,
 };
