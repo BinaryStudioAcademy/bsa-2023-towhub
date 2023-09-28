@@ -52,14 +52,18 @@
 }
 
 .orderDetails .header {
-  margin-bottom: 20px;
+  margin-bottom: 36px;
   font-size: 24px;
+}
+
+.details {
+  margin-bottom: 180px;
 }
 
 .detail {
   margin-bottom: 20px;
   color: $grey;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .detail .value {
@@ -95,20 +99,6 @@
   color: $title-color;
 }
 
-.commentHeader {
-  margin-bottom: 25px;
-  font-size: 20px;
-  text-align: center;
-}
-
-.commentContent {
-  margin-bottom: 30px;
-  padding: 22px 25px;
-  font-size: 18px;
-  background: $grey-light;
-  border-radius: 10px;
-}
-
 .buttons {
   display: flex;
   justify-content: space-between;
@@ -116,6 +106,7 @@
 
 .button {
   width: 40%;
+  margin-top: auto;
 }
 
 .button.accept {

@@ -17,11 +17,6 @@ import { NotFound } from '../pages.js';
 import { OrderStatus } from './libs/enums/order-status.enum.js';
 import { useGetRouteData, useSubscribeUpdates } from './libs/hooks/hooks.js';
 import styles from './styles.module.scss';
-// TODO: REMOVE MOCK
-const MOCK_ORDER_DETAILS = {
-  comment:
-    'Hi! I`m near the bridge. There was a small accident. The car must be towed out of the ditch.',
-};
 
 const DriverOrder = (): JSX.Element => {
   const { orderId } = useParams();
@@ -30,7 +25,7 @@ const DriverOrder = (): JSX.Element => {
     useGetRouteData(order);
   const dispatch = useAppDispatch();
 
-  const mapReference = useRef<HTMLDivElement>(null);
+  const mapReference = useRef<HTMLDivElement | null>(null);
 
   useAppMap({
     center: order?.startPoint as google.maps.LatLngLiteral,
@@ -47,7 +42,6 @@ const DriverOrder = (): JSX.Element => {
         orderId: orderId as string,
       }),
     );
-    notification.success('Order Accepted');
   }, [dispatch, orderId]);
 
   const handleConfirm = useCallback(() => {
@@ -57,7 +51,6 @@ const DriverOrder = (): JSX.Element => {
         orderId: orderId as string,
       }),
     );
-    notification.success('Order Confirmed');
   }, [dispatch, orderId]);
 
   const handleComplete = useCallback(() => {
@@ -67,7 +60,6 @@ const DriverOrder = (): JSX.Element => {
         orderId: orderId as string,
       }),
     );
-    notification.success('Order Completed');
   }, [dispatch, orderId]);
 
   const handleDecline = useCallback(() => {
@@ -82,39 +74,39 @@ const DriverOrder = (): JSX.Element => {
 
   const getButtons = useCallback(() => {
     switch (order?.status) {
-      case 'pending': {
+      case OrderStatus.PENDING: {
         return (
           <>
             <Button
               className={styles.button}
-              label={'Decline'}
+              label="Decline"
               onClick={handleDecline}
             />
             <Button
               className={getValidClassNames(styles.button, styles.accept)}
-              label={'Accept'}
+              label="Accept"
               onClick={handleAccept}
             />
           </>
         );
       }
-      case 'confirmed': {
+      case OrderStatus.CONFIRMED: {
         return (
           <>
             <Button
               className={styles.button}
-              label={'Cancel order'}
+              label="Cancel order"
               onClick={handleDecline}
             />
             <Button
               className={getValidClassNames(styles.button, styles.accept)}
-              label={'I am in a place'}
+              label="I am in a place"
               onClick={handleConfirm}
             />
           </>
         );
       }
-      case 'picking_up': {
+      case OrderStatus.PICKING_UP: {
         return (
           <Button
             className={getValidClassNames(
@@ -122,16 +114,16 @@ const DriverOrder = (): JSX.Element => {
               styles.accept,
               styles.complete,
             )}
-            label={'Complete order'}
+            label="Complete order"
             onClick={handleComplete}
           />
         );
       }
-      case 'rejected':
-      case 'canceled': {
+      case OrderStatus.CANCELED:
+      case OrderStatus.REJECTED: {
         return <p className={styles.message}>Order is cancelled</p>;
       }
-      case 'done': {
+      case OrderStatus.DONE: {
         return <p className={styles.message}>Order is completed</p>;
       }
     }
@@ -160,7 +152,7 @@ const DriverOrder = (): JSX.Element => {
         </div>
         <div className={styles.orderDetails}>
           <p className={styles.header}>ORDER DETAILS</p>
-          <div>
+          <div className={styles.details}>
             <p className={styles.detail}>
               <Icon className={styles.userIcon} iconName="user" /> Customer
               name: <span className={styles.value}>{order.customerName}</span>
@@ -191,8 +183,6 @@ const DriverOrder = (): JSX.Element => {
               towed: <span className={styles.value}>{order.carsQty}</span>
             </p>
           </div>
-          <p className={styles.commentHeader}>Comment:</p>
-          <p className={styles.commentContent}>{MOCK_ORDER_DETAILS.comment}</p>
           <div className={styles.buttons}>{getButtons()}</div>
         </div>
       </div>

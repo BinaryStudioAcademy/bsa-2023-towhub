@@ -15,6 +15,7 @@ import {
 } from '~/packages/orders/orders.js';
 
 import { ActionName } from './libs/enums/enums.js';
+import { notificateOrderStatusChange } from './libs/helpers/notificate-order-status-change.helper.js';
 import { type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
@@ -35,6 +36,8 @@ const changeAcceptOrderStatusByDriver = createAsyncThunk<
   ActionName.CHANGE_ACCEPT_ORDER_STATUS,
   ({ newStatus, orderId }, { extra }) => {
     const { ordersApi } = extra;
+
+    notificateOrderStatusChange(newStatus);
 
     return ordersApi.changeAcceptOrderStatusByDriver(orderId, { newStatus });
   },
