@@ -47,10 +47,7 @@ const AvailableTrucks: React.FC = () => {
 
   const handleClick = useCallback(
     (truckId: number) => {
-      const isStartShift = true;
-      void dispatch(
-        truckActions.startWatchTruckLocation({ truckId, isStartShift }),
-      );
+      void dispatch(truckActions.startWatchTruckLocation({ truckId }));
     },
     [dispatch],
   );

@@ -6,11 +6,17 @@ import {
 } from '@reduxjs/toolkit';
 
 import { shiftEnded, startShift } from '~/slices/driver/actions.js';
-import { startWatchTruckLocation } from '~/slices/trucks/actions.js';
+import { ShiftStatus } from '~/slices/driver/libs/enums/shift-status.enum.js';
+import {
+  restartWatchTruckLocation,
+  startWatchTruckLocation,
+} from '~/slices/trucks/actions.js';
 import { type StartWatchTruckLocation } from '~/slices/trucks/types/start-watch-truck-location.type.js';
 
-import { type RootReducer } from '../store/libs/types/root-reducer.type.js';
-import { type ExtraArguments } from '../store/libs/types/store.types.js';
+import {
+  type ExtraArguments,
+  type RootReducer,
+} from '../store/libs/types/store.types.js';
 import { updateGeolocation } from './libs/helpers/update-geolocation.helper.js';
 
 const geolocationMiddleware: ThunkMiddleware<
@@ -19,6 +25,7 @@ const geolocationMiddleware: ThunkMiddleware<
   ExtraArguments
 > = ({
   dispatch,
+  getState,
 }: {
   dispatch: ThunkDispatch<RootReducer, ExtraArguments, AnyAction>;
   getState: () => RootReducer;
@@ -33,6 +40,9 @@ const geolocationMiddleware: ThunkMiddleware<
   };
 
   return (next: Dispatch) => async (action: AnyAction) => {
+    const { driver } = getState();
+    const truckId = driver.activeTruck?.id;
+
     if (action.type === startWatchTruckLocation.type) {
       const payload = action.payload as StartWatchTruckLocation;
       const receivedLocation = await updateGeolocation(
@@ -41,8 +51,16 @@ const geolocationMiddleware: ThunkMiddleware<
       );
 
       if (receivedLocation) {
-        void dispatch(startShift({ truckId: payload.truckId }));
+        void dispatch(startShift(payload));
       }
+    }
+
+    if (
+      action.type === restartWatchTruckLocation.type &&
+      truckId &&
+      driver.shiftStatus === ShiftStatus.ACTIVE
+    ) {
+      await updateGeolocation({ truckId }, setLocationUpdateInterval);
     }
 
     if (action.type === shiftEnded.type) {

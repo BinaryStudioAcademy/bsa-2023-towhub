@@ -19,13 +19,8 @@ import {
   selectSocketDriverAuthStatus,
   selectUser,
 } from '~/slices/auth/selectors.js';
-import { ShiftStatus } from '~/slices/driver/libs/enums/enums.js';
-import {
-  selectActiveTruck,
-  selectShiftStatus,
-} from '~/slices/driver/selectors.js';
 import { selectOrder } from '~/slices/orders/selectors.js';
-import { startWatchTruckLocation } from '~/slices/trucks/actions.js';
+import { restartWatchTruckLocation } from '~/slices/trucks/actions.js';
 
 import { RouterOutlet } from '../router/router.js';
 
@@ -36,16 +31,12 @@ const DriverSocketProvider: FC = () => {
   );
   const user = useAppSelector(selectUser);
   const currentOrder = useAppSelector(selectOrder);
-  const shiftStatus = useAppSelector(selectShiftStatus);
-  const activeTruck = useAppSelector(selectActiveTruck);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (shiftStatus === ShiftStatus.ACTIVE && activeTruck) {
-      void dispatch(startWatchTruckLocation({ truckId: activeTruck.id }));
-    }
-  }, [activeTruck, dispatch, shiftStatus]);
+    void dispatch(restartWatchTruckLocation());
+  });
 
   useEffect(() => {
     socketTryAddDriverListeners(dispatch);

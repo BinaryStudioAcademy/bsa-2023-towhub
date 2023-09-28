@@ -8,6 +8,7 @@ const ActionName = {
   },
   CALCULATE_ARRIVAL_TIME: `${sliceName}/calculate-arrival-time`,
   START_WATCH_TRUCK_LOCATION: `${sliceName}/start-watch-truck-location`,
+  RESTART_WATCH_TRUCK_LOCATION: `${sliceName}/restart-watch-truck-location`,
 } as const;
 
 export { ActionName };

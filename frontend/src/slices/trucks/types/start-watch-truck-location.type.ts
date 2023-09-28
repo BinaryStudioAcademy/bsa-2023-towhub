@@ -1,3 +1,3 @@
-type StartWatchTruckLocation = { truckId: number; isStartShift?: boolean };
+type StartWatchTruckLocation = { truckId: number };
 
 export { type StartWatchTruckLocation };

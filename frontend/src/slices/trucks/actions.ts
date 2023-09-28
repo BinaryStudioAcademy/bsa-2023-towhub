@@ -19,7 +19,6 @@ import { name as sliceName } from './trucks.slice.js';
 import { type TruckArrivalTime } from './types/truck-arrival-time.type.js';
 import {
   type CalculateArrivalTimeParameter,
-  type StartWatchTruckLocation,
   type TruckLocationPayload,
 } from './types/types.js';
 
@@ -60,9 +59,18 @@ const updateTruckLocationFromSocket = createAsyncThunk<
 
 const startWatchTruckLocation = createAction(
   ActionName.START_WATCH_TRUCK_LOCATION,
-  ({ truckId, isStartShift }: StartWatchTruckLocation) => {
+  ({ truckId }: { truckId: number }) => {
     return {
-      payload: { truckId, isStartShift: isStartShift ?? false },
+      payload: { truckId },
+    };
+  },
+);
+
+const restartWatchTruckLocation = createAction(
+  ActionName.RESTART_WATCH_TRUCK_LOCATION,
+  () => {
+    return {
+      payload: null,
     };
   },
 );
@@ -166,6 +174,7 @@ export {
   calculateArrivalTime,
   findAllTrucksForBusiness,
   getAllTrucksByUserId,
+  restartWatchTruckLocation,
   setTrucks,
   startWatchTruckLocation,
   subscribeTruckUpdates,
