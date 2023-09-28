@@ -142,8 +142,13 @@ const FileInput = <T extends FieldValues & FileFormType>({
       if (dataTransfer) {
         files = [...dataTransfer.files];
       } else {
-        const fileHandles = event as unknown as FileSystemFileHandle[];
-        files = await Promise.all(fileHandles.map((file) => file.getFile()));
+        const fileHandles = event as unknown as
+          | FileSystemFileHandle[]
+          | FileSystemFileHandle;
+
+        files = Array.isArray(fileHandles)
+          ? await Promise.all(fileHandles.map((file) => file.getFile()))
+          : [await fileHandles.getFile()];
       }
 
       for (const file of files) {
