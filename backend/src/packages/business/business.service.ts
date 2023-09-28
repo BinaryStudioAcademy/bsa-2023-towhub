@@ -178,6 +178,17 @@ class BusinessService implements IService {
       throw new NotFoundError({});
     }
 
+    const [existingBusiness = null] = await this.businessRepository.find({
+      taxNumber,
+    });
+
+    if (existingBusiness && existingBusiness.ownerId !== userId) {
+      throw new HttpError({
+        message: HttpMessage.BUSINESS_EXISTS,
+        status: HttpCode.CONFLICT,
+      });
+    }
+
     const business = await this.businessRepository.update({
       id: foundBusinessByUserId.id,
       payload: { taxNumber, companyName },

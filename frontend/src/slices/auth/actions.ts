@@ -71,8 +71,6 @@ const editCustomer = createAsyncThunk<
   } catch (error_: unknown) {
     const error = error_ as HttpError;
 
-    notification.error(getErrorMessage(error.message));
-
     return rejectWithValue({ ...error, message: error.message });
   }
 });
@@ -92,8 +90,6 @@ const editBusiness = createAsyncThunk<
     return editedBusiness;
   } catch (error_: unknown) {
     const error = error_ as HttpError;
-
-    notification.error(getErrorMessage(error.message));
 
     return rejectWithValue({ ...error, message: error.message });
   }

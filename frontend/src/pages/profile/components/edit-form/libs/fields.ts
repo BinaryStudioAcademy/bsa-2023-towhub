@@ -64,6 +64,7 @@ const editBusinessFields: FormField<BusinessEditDto>[] = [
     label: FormLabel.TAX_NUMBER,
     placeholder: 'Enter the tax number of company',
     name: FormName.TAX_NUMBER,
+    associateServerErrors: [HttpMessage.BUSINESS_EXISTS],
   },
 ];
 
