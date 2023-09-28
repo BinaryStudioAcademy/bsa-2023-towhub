@@ -51,7 +51,7 @@ class HttpApi implements IHttpApi {
     return (await this.checkResponse(response)) as HttpApiResponse;
   }
 
-  protected getFullEndpoint<T extends Record<string, string>>(
+  protected getFullEndpoint<T extends Record<string, string | number>>(
     ...parameters: [...string[], T]
   ): string {
     const copiedParameters = [...parameters];
