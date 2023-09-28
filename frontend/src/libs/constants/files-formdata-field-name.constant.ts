@@ -1,0 +1,3 @@
+const FILES_FORMDATA_FIELD_NAME = 'files[]';
+
+export { FILES_FORMDATA_FIELD_NAME };
