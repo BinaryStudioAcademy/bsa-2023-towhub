@@ -15,10 +15,8 @@ import { selectOrder } from '~/slices/orders/selectors.js';
 
 import { NotFound } from '../pages.js';
 import { OrderStatus } from './libs/enums/order-status.enum.js';
-import { useGetRouteData } from './libs/hooks/use-get-route-data.hook.js';
-import { useSubscribeUpdates } from './libs/hooks/use-subscribe-order.hook.js';
+import { useGetRouteData, useSubscribeUpdates } from './libs/hooks/hooks.js';
 import styles from './styles.module.scss';
-
 // TODO: REMOVE MOCK
 const MOCK_ORDER_DETAILS = {
   comment:
