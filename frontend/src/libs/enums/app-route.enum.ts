@@ -7,6 +7,7 @@ const AppRoute = {
   SIGN_UP_CUSTOMER: '/sign-up/customer',
   ORDER_HISTORY: '/order-history',
   EDIT_PROFILE: '/edit-profile',
+  PROFILE: '/profile',
   TRUCKS: '/trucks',
   DASHBOARD: '/dashboard',
   AVAILABLE_TRUCKS: '/available-trucks',
