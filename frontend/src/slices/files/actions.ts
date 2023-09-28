@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+import { FILES_FORMDATA_FIELD_NAME } from '~/libs/constants/constants.js';
 import { type HttpError } from '~/libs/packages/http/libs/exceptions/exceptions.js';
 import { type AsyncThunkConfig } from '~/libs/types/types.js';
 import { type FileEntityT } from '~/packages/files/libs/types/types.js';
@@ -19,7 +20,7 @@ const uploadFile = createAsyncThunk<
     const formData = new FormData();
 
     for (const [, file] of Object.entries(files)) {
-      formData.append('file', file);
+      formData.append(FILES_FORMDATA_FIELD_NAME, file);
     }
 
     try {
@@ -43,7 +44,7 @@ const uploadAvatar = createAsyncThunk<
 
     const formData = new FormData();
 
-    formData.append('file', file);
+    formData.append(FILES_FORMDATA_FIELD_NAME, file);
 
     try {
       return await driverApi.uploadAvatar(formData);
