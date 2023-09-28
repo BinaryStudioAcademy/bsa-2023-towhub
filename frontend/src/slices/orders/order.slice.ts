@@ -31,7 +31,6 @@ type State = {
   routeAddresses: Partial<
     Record<RouteAddresses['orderId'], RouteAddresses['points']>
   >;
-  total: number;
 };
 
 const initialState: State = {
