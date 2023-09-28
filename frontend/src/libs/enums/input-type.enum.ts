@@ -9,6 +9,7 @@ const InputType = {
   FORM: 'form',
   FILE: 'file',
   MULTI_SELECT: 'multi-select',
+  PHONE: 'phone',
 } as const;
 
 export { InputType };
