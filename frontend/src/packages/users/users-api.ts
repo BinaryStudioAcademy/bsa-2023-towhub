@@ -5,6 +5,7 @@ import { type IStorage } from '~/libs/packages/storage/storage.js';
 
 import { UsersApiPath } from './libs/enums/enums.js';
 import { type UserGetAllResponseDto } from './libs/types/types.js';
+import { type CustomerEditDto } from './users.js';
 
 type Constructor = {
   baseUrl: string;
@@ -28,6 +29,22 @@ class UserApi extends HttpApi {
     );
 
     return await response.json<UserGetAllResponseDto>();
+  }
+
+  public async editCustomer(
+    payload: CustomerEditDto,
+  ): Promise<CustomerEditDto> {
+    const response = await this.load(
+      this.getFullEndpoint(UsersApiPath.ROOT, {}),
+      {
+        method: 'PUT',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<CustomerEditDto>();
   }
 }
 

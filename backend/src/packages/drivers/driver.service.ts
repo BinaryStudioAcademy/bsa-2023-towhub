@@ -366,6 +366,7 @@ class DriverService implements IService {
     }
 
     const driverEntity = driver.toObjectWithAvatar();
+
     const { avatar, id } = driverEntity;
 
     if (avatar) {
@@ -378,10 +379,19 @@ class DriverService implements IService {
       parsedFile,
       S3PublicFolder.AVATARS,
     );
-    const newDriver = await this.driverRepository.update({
+    await this.driverRepository.update({
       id,
       payload: { avatarId: file.id },
     });
+
+    const [newDriver = null] = await this.driverRepository.find({ userId });
+
+    if (!newDriver) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
 
     return convertToDriverUser(newDriver);
   }
