@@ -23,14 +23,15 @@ const authPlugin = fp<AuthPluginOptions>((fastify, options, done) => {
       done: (error?: Error) => void,
     ): Promise<void> => {
       try {
-        const token = request.headers[HttpHeader.AUTHORIZATION]?.replace(
-          'Bearer ',
-          '',
-        );
+        const token = request.headers[HttpHeader.AUTHORIZATION]
+          ?.replace('Bearer', '')
+          .trim();
 
         if (!token && isJwtRequired) {
           return done(createUnauthorizedError(HttpMessage.UNAUTHORIZED));
-        } else if (!token) {
+        }
+
+        if (!token) {
           return;
         }
 
