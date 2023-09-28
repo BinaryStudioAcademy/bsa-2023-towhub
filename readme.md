@@ -146,6 +146,7 @@ erDiagram
     users one or many -- one groups: "users(group_id) belongs to groups(id)"
     business_details zero or one -- one users: "business_details(owner_id) belongs to users(id)"
     driver_details one -- one files: "driver_details(driver_license_file_id) has files(id)"
+    file_verification_status one -- one files: "file_verification_status(file_id) has files(id)"
     driver_details zero or one -- one users: "driver_details(user_id) belongs to users(id)"
     trucks one or many -- one business_details: "trucks(business_id) belongs to business_details(id)"
     driver_details one or many -- one business_details: "driver_details(business_id) belongs to business_details(id)"

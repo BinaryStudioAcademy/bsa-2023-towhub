@@ -5,6 +5,7 @@ const ActionName = {
   REMOVE_ORDER: `${sliceName}/remove-order`,
   CHANGE_ACCEPT_ORDER_STATUS: `${sliceName}/change-accept-order-status`,
   SOCKET: {
+    CREATE_ORDER: `${sliceName}/socket/create-order`,
     UPDATE_ORDER: `${sliceName}/socket/update-order`,
     UPDATE_ORDER_STATUS: `${sliceName}/socket/update-order-status`,
     SUBSCRIBE_ORDER_UPDATES: `${sliceName}/subscribe-order-updates`,

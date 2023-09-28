@@ -86,11 +86,23 @@ const { reducer, actions, name } = createSlice({
     setChosenTruck: (state, action: PayloadAction<TruckGetItemResponseDto>) => {
       state.chosenTruck = action.payload;
     },
+    clearTruckServerError: (state: State): void => {
+      state.error = null;
+    },
   },
   extraReducers(builder) {
     builder
       .addCase(addTruck.fulfilled, (state, action) => {
-        state.trucks.unshift(action.payload);
+        const newTruck = action.payload;
+
+        const isTruckUnique = !state.trucks.some(
+          (truck) => truck.id === newTruck.id,
+        );
+
+        if (isTruckUnique) {
+          state.trucks.unshift(newTruck);
+        }
+
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(setTrucks.fulfilled, (state, action) => {
@@ -120,12 +132,9 @@ const { reducer, actions, name } = createSlice({
       .addCase(calculateArrivalTime.fulfilled, (state, action) => {
         state.truckArrivalTime = action.payload;
       })
-      .addMatcher(
-        isAnyOf(findAllTrucksForBusiness.pending, addTruck.pending),
-        (state) => {
-          state.dataStatus = DataStatus.PENDING;
-        },
-      )
+      .addCase(findAllTrucksForBusiness.pending, (state) => {
+        state.dataStatus = DataStatus.PENDING;
+      })
       .addMatcher(
         isAnyOf(addTruck.rejected, findAllTrucksForBusiness.rejected),
         (state, action) => {

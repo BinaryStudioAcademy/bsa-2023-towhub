@@ -15,7 +15,9 @@
 }
 
 .wrapper {
-  overflow: hidden;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
   border: 1px solid $white-blue;
   border-radius: 8px;
 }

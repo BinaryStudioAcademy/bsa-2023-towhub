@@ -10,6 +10,7 @@ declare module 'fastify' {
     [AuthStrategy.VERIFY_JWT]: FastifyAuthFunction;
     [AuthStrategy.VERIFY_BUSINESS_GROUP]: FastifyAuthFunction;
     [AuthStrategy.VERIFY_DRIVER_GROUP]: FastifyAuthFunction;
+    [AuthStrategy.VERIFY_CUSTOMER_GROUP]: FastifyAuthFunction;
     [FilesValidationStrategy.BASIC]: FastifyFileValidationFunction;
   }
 

@@ -15,7 +15,9 @@ import { checkIsCustomer, checkIsDriver } from './libs/helpers/helpers.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
+  type OrderQueryParameters,
   type OrderResponseDto,
+  type OrdersListResponseDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusResponseDto,
@@ -141,7 +143,7 @@ class OrderService implements Omit<IService, 'find'> {
       customerPhone: phoneInOrder,
     });
 
-    return OrderEntity.initialize({
+    const orderObject = OrderEntity.initialize({
       ...order,
       shiftId: shift.id,
       driver: {
@@ -154,6 +156,10 @@ class OrderService implements Omit<IService, 'find'> {
       },
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     }).toObject();
+
+    this.socketService.notifyOrderCreate(driver.id, orderObject);
+
+    return orderObject;
   }
 
   public async findById({
@@ -262,7 +268,7 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT;
   }): Promise<OrderUpdateAcceptStatusResponseDto> {
-    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+    const statusForUpdate = this.checkIsOrderAccepted(payload.newStatus, user);
 
     await this.shiftService.checkDriverStartShift(user.id);
 
@@ -294,7 +300,7 @@ class OrderService implements Omit<IService, 'find'> {
     payload: OrderUpdateAcceptStatusRequestDto;
     user: UserEntityObjectWithGroupT | null;
   }): Promise<OrderUpdateAcceptStatusResponseDto> {
-    const statusForUpdate = this.checkIsOrderAccepted(payload.isAccepted, user);
+    const statusForUpdate = this.checkIsOrderAccepted(payload.newStatus, user);
 
     const updatedOrder = await this.orderRepository.update({
       id: orderId,
@@ -315,20 +321,37 @@ class OrderService implements Omit<IService, 'find'> {
     return { id, status };
   }
 
-  public async findAllBusinessOrders(
-    user: UserEntityObjectWithGroupT,
-  ): Promise<OrderResponseDto[]> {
+  public async findAllBusinessOrders({
+    user,
+    query,
+  }: {
+    user: UserEntityObjectWithGroupT;
+    query: OrderQueryParameters;
+  }): Promise<OrdersListResponseDto> {
     const business = await this.businessService.findByOwnerId(user.id);
 
     if (!business) {
       throw new NotFoundError({});
     }
 
-    const usersOrders = await this.orderRepository.findAllBusinessOrders({
-      businessId: business.id,
-    });
+    const usersOrders = await this.orderRepository.findAllBusinessOrders(
+      { businessId: business.id },
+      query,
+    );
 
-    return usersOrders.map((it) => OrderEntity.initialize(it).toObject());
+    const total = query.status
+      ? await this.orderRepository.getTotalBusiness({
+          businessId: business.id,
+          status: query.status,
+        })
+      : await this.orderRepository.getTotalBusiness({
+          businessId: business.id,
+        });
+
+    return {
+      items: usersOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      total,
+    };
   }
 
   public async delete({
@@ -399,14 +422,17 @@ class OrderService implements Omit<IService, 'find'> {
   }
 
   private checkIsOrderAccepted(
-    isAccepted: boolean,
+    newStatus: OrderStatusValues,
     user: UserEntityObjectWithGroupT | null,
   ): OrderStatusValues {
     if (user && checkIsDriver(user.group.key)) {
-      return isAccepted ? OrderStatus.CONFIRMED : OrderStatus.REJECTED;
+      return newStatus;
     }
 
-    if ((!user || checkIsCustomer(user.group.key)) && !isAccepted) {
+    if (
+      (!user || checkIsCustomer(user.group.key)) &&
+      newStatus !== OrderStatus.PICKING_UP
+    ) {
       return OrderStatus.CANCELED;
     }
 

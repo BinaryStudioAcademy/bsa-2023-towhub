@@ -1,5 +1,9 @@
 @import "src/assets/css/vars.scss";
 
+div.dialogContent {
+  height: max-content;
+}
+
 .wrapper {
   position: relative;
   width: fit-content;
