@@ -7,7 +7,7 @@ type Table = DatabaseSchema[keyof DatabaseSchema];
 
 const combineFilters = <TSchema extends Table>(
   schema: TSchema,
-  searchBy: Record<PgColumn['name'], number | null>,
+  searchBy: Record<PgColumn['name'], number | string | null>,
 ): SQL | undefined => {
   const eqs = Object.entries(searchBy)
     .filter(([, v]) => v)

@@ -16,13 +16,16 @@ import {
   type Id,
   type OrderCalculatePriceRequestDto,
   type OrderCreateRequestDto,
+  type OrderQueryParameters,
   type OrderResponseDto,
+  type OrdersListResponseDto,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusRequestParameter,
   type OrderUpdateRequestDto,
 } from './libs/types/types.js';
 import {
   orderCreateRequestBody,
+  orderFindAllBusinessOrdersQuery,
   orderGetParameter,
   orderUpdateAcceptStatusRequestBody,
   orderUpdateAcceptStatusRequestParameter,
@@ -283,16 +286,20 @@ class OrderController extends Controller {
     this.mapService = mapService;
 
     this.addRoute({
-      path: OrdersApiPath.ROOT,
+      path: OrdersApiPath.BUSINESS,
       method: 'GET',
       authStrategy: [
         AuthStrategy.VERIFY_JWT,
         AuthStrategy.VERIFY_BUSINESS_GROUP,
       ],
+      validation: {
+        query: orderFindAllBusinessOrdersQuery,
+      },
       handler: (options) =>
         this.findAllBusinessOrders(
           options as ApiHandlerOptions<{
             user: UserEntityObjectWithGroupT;
+            query: OrderQueryParameters;
           }>,
         ),
     });
@@ -748,9 +755,14 @@ class OrderController extends Controller {
    *          content:
    *            application/json:
    *              schema:
-   *                type: array
-   *                items:
-   *                  $ref: '#/components/schemas/Order'
+   *                type: object
+   *                  properties:
+   *                    items:
+   *                      type: array
+   *                        $ref: '#/components/schemas/Order'
+   *                    total:
+   *                      type: number
+   *                      example: 10
    *        401:
    *          UnauthorizedError:
    *            description:
@@ -772,11 +784,12 @@ class OrderController extends Controller {
   private async findAllBusinessOrders(
     options: ApiHandlerOptions<{
       user: UserEntityObjectWithGroupT;
+      query: OrderQueryParameters;
     }>,
-  ): Promise<ApiHandlerResponse<OrderResponseDto[]>> {
+  ): Promise<ApiHandlerResponse<OrdersListResponseDto>> {
     return {
       status: HttpCode.OK,
-      payload: await this.orderService.findAllBusinessOrders(options.user),
+      payload: await this.orderService.findAllBusinessOrders(options),
     };
   }
 

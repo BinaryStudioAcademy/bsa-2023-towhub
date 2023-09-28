@@ -14,6 +14,7 @@ export {
   AppRoute,
   AuthMode,
   ContentType,
+  HttpCode,
   HttpMessage,
   OrderStatus,
   ServerErrorType,
