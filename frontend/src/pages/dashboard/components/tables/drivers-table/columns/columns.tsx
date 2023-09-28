@@ -3,6 +3,7 @@ import { getFullName } from 'shared/build';
 
 import { ImgPath } from '~/libs/enums/enums.js';
 import { type DriverWithUserData } from '~/libs/types/types.js';
+import { verificationStatusToReadableFormat } from '~/slices/driver/libs/maps/maps.js';
 
 import { COLUMN_AVATAR_SIZE } from '../libs/constants/constants.js';
 
@@ -42,6 +43,16 @@ const columns: ColumnDef<DriverWithUserData>[] = [
       return new Date(driver.driver.createdAt).toDateString();
     },
     footer: 'Created At',
+    size: 303,
+  },
+  {
+    header: 'Verification status',
+    accessorFn: ({ driver }: DriverWithUserData): string => {
+      return driver.verificationStatus
+        ? verificationStatusToReadableFormat[driver.verificationStatus.status]
+        : '';
+    },
+    footer: 'Verification status',
     size: 303,
   },
 ];

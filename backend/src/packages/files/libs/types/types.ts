@@ -4,7 +4,6 @@ export {
   type FileDatabaseModelCreateUpdate,
   type FileEntityObjectT,
 } from './file-models.type.js';
-export { type MultipartParsedFile } from './multipart-parsed-file.type.js';
 export { type MultipartFile } from '@fastify/multipart';
 export {
   type DeleteFileRequestParameters,
@@ -12,6 +11,7 @@ export {
   type FileInputConfig,
   type FileUploadResponseDto,
   type GetFileRequestParameters,
+  type MultipartParsedFile,
   type UpdateFileKeyRequestDto,
   type UpdateFileKeyRequestParameters,
   FilesApiPath,

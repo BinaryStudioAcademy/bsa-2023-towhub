@@ -21,9 +21,15 @@ const selectAuthServerError = (
   store: RootState,
 ): RootState[typeof AuthSliceName]['error'] => store[AuthSliceName].error;
 
+const selectSocketDriverAuthErrorMessage = (
+  store: RootState,
+): RootState[typeof AuthSliceName]['socketDriverAuthErrorMessage'] =>
+  store[AuthSliceName].socketDriverAuthErrorMessage;
+
 export {
   selectAuthServerError,
   selectIsLoading,
+  selectSocketDriverAuthErrorMessage,
   selectSocketDriverAuthStatus,
   selectUser,
 };
