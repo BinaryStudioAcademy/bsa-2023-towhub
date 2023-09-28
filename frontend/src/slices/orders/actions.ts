@@ -1,4 +1,5 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { type OrdersListResponseDto } from 'shared/build/index.js';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
@@ -22,14 +23,15 @@ import { type RouteAddresses, type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
 const getBusinessOrders = createAsyncThunk<
-  OrderResponseDto[],
-  undefined,
+  OrdersListResponseDto,
+  string,
   AsyncThunkConfig<null>
->(`${sliceName}/orders`, async (_, { extra }) => {
+>(`${sliceName}/orders`, async (queryString, { extra }) => {
   const { ordersApi } = extra;
 
-  return await ordersApi.getBusinessOrders();
+  return await ordersApi.getBusinessOrders(queryString);
 });
+
 const changeAcceptOrderStatusByDriver = createAsyncThunk<
   OrderUpdateAcceptStatusResponseDto,
   OrderUpdateAcceptStatusRequestDto & { orderId: string },

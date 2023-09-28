@@ -1,18 +1,19 @@
 import { and, desc, eq, sql } from 'drizzle-orm';
 
+import { countOffsetByQuery } from '~/libs/helpers/count-offset-by-query.helper.js';
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
 import { type GetPaginatedPageQuery } from '../business/libs/types/types.js';
 import { type DriverEntityT as DriverEntity } from '../drivers/drivers.js';
-import { countOffsetByQuery } from '../drivers/libs/helpers/helpers.js';
 import { type UserEntityT } from '../users/users.js';
 import { OrderStatus } from './libs/enums/enums.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
   type OrderDatabaseModel,
   type OrderEntity as OrderEntityT,
+  type OrderQueryParameters,
 } from './libs/types/types.js';
 
 class OrderRepository implements Omit<IRepository, 'find'> {
@@ -106,7 +107,18 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       driverId: UserEntityT['id'];
       businessId: OrderEntityT['businessId'];
     }>,
+    query: OrderQueryParameters,
   ): Promise<OrderEntityT[]> {
+    const { status, size, page } = query;
+    const whereClause = status
+      ? combineFilters<DatabaseSchema['orders']>(this.ordersSchema, {
+          ...search,
+          status: status,
+        })
+      : combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search);
+
+    const offset = countOffsetByQuery({ page, size });
+
     return await this.db
       .driver()
       .select({
@@ -152,9 +164,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         this.trucksSchema,
         eq(this.trucksSchema.id, this.shiftsSchema.truckId),
       )
-      .where(
-        combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
-      );
+      .where(whereClause)
+      .offset(offset)
+      .limit(size)
+      .orderBy(desc(this.ordersSchema.createdAt));
   }
 
   public async findAllDriverOrders(
@@ -295,6 +308,23 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .returning();
 
     return Boolean(item);
+  }
+
+  public async getTotalBusiness(
+    search: Partial<{
+      businessId: OrderEntityT['businessId'];
+      status: OrderEntityT['status'];
+    }>,
+  ): Promise<number> {
+    const [order] = await this.db
+      .driver()
+      .select({ count: sql<number>`count(*)` })
+      .from(this.ordersSchema)
+      .where(
+        combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
+      );
+
+    return order.count;
   }
 }
 

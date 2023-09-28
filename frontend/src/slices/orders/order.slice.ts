@@ -80,7 +80,8 @@ const { reducer, actions, name } = createSlice({
         state.currentOrder = null;
       })
       .addCase(getBusinessOrders.fulfilled, (state, action) => {
-        state.orders = action.payload;
+        state.orders = action.payload.items;
+        state.total = action.payload.total;
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(getRouteAddresses.fulfilled, (state, action) => {

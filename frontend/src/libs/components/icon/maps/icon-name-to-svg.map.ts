@@ -60,6 +60,7 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.USER]: faUser,
   [IconName.XMARK]: faXmark,
   [IconName.EYE]: faEye,
+  [IconName.MOBILE]: faMobileScreenButton,
   [IconName.PHONE]: faPhone,
   [IconName.CLOCK]: faClock,
   [IconName.CAR]: faCar,
