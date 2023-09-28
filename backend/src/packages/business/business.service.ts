@@ -15,6 +15,10 @@ import {
   type DriverGetAllResponseDto,
   type DriverUpdateRequestDto,
 } from '../drivers/drivers.js';
+import { type FileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
+import { FileVerificationName } from '../file-verification-status/libs/enums/enums.js';
+import { type FilesService } from '../files/files.js';
+import { type MultipartParsedFile } from '../files/libs/types/types.js';
 import { type ShiftEntityT } from '../shifts/shift.js';
 import {
   type TruckAddRequestDto,
@@ -37,6 +41,18 @@ import {
   type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 
+type Constructor = {
+  businessRepository: BusinessRepository;
+
+  driverService: DriverService;
+
+  truckService: TruckService;
+
+  filesService: FilesService;
+
+  fileVerificationStatusService: FileVerificationStatusService;
+};
+
 class BusinessService implements IService {
   private businessRepository: BusinessRepository;
 
@@ -44,14 +60,22 @@ class BusinessService implements IService {
 
   private truckService: TruckService;
 
-  public constructor(
-    businessRepository: BusinessRepository,
-    driverService: DriverService,
-    truckService: TruckService,
-  ) {
+  private fileService: FilesService;
+
+  private fileVerificationStatusService: FileVerificationStatusService;
+
+  public constructor({
+    businessRepository,
+    driverService,
+    truckService,
+    filesService,
+    fileVerificationStatusService,
+  }: Constructor) {
     this.businessRepository = businessRepository;
     this.driverService = driverService;
     this.truckService = truckService;
+    this.fileService = filesService;
+    this.fileVerificationStatusService = fileVerificationStatusService;
   }
 
   public async findById(
@@ -175,11 +199,15 @@ class BusinessService implements IService {
     return await this.businessRepository.delete(foundBusiness.id);
   }
 
-  public async createDriver(
-    payload: DriverCreateRequestDto,
-    ownerId: number,
-    reference: string,
-  ): Promise<DriverAddResponseWithGroup> {
+  public async createDriver({
+    payload,
+    ownerId,
+    hostname,
+  }: {
+    payload: DriverCreateRequestDto<MultipartParsedFile>;
+    ownerId: number;
+    hostname: string;
+  }): Promise<DriverAddResponseWithGroup> {
     const business = await this.findByOwnerId(ownerId);
 
     if (!business) {
@@ -189,18 +217,41 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.create({
+    const createdFile = await this.fileService.create(payload.files[0]);
+
+    const result = await this.driverService.create({
       payload,
       businessId: business.id,
-      reference,
+      driverLicenseFileId: createdFile.id,
+      hostname,
     });
+
+    const { id, status, name, message } =
+      await this.fileVerificationStatusService.create({
+        fileId: createdFile.id,
+        name: FileVerificationName.DRIVER_LICENSE_SCAN,
+      });
+
+    return {
+      ...result,
+      verificationStatus: {
+        id,
+        status,
+        name,
+        message,
+      },
+    };
   }
 
-  public async updateDriver(
-    payload: DriverUpdateRequestDto,
-    driverId: number,
-    ownerId: number,
-  ): Promise<DriverCreateUpdateResponseDto> {
+  public async updateDriver({
+    payload,
+    driverId,
+    ownerId,
+  }: {
+    payload: DriverUpdateRequestDto<MultipartParsedFile>;
+    driverId: number;
+    ownerId: number;
+  }): Promise<DriverCreateUpdateResponseDto> {
     const business = await this.findByOwnerId(ownerId);
 
     if (!business) {
@@ -210,16 +261,54 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.update({
+    const driverToUpdate = await this.driverService.findById(driverId);
+
+    if (!driverToUpdate) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
+
+    if (driverToUpdate.driverLicenseFileId) {
+      await this.fileVerificationStatusService.deleteByFileId(
+        driverToUpdate.driverLicenseFileId,
+      );
+    }
+
+    const newLicenseFile = await this.fileService.create(payload.files[0]);
+
+    const updatedDriver = await this.driverService.update({
       driverId,
-      payload,
+      payload: {
+        ...payload,
+        driverLicenseFileId: newLicenseFile.id,
+      },
     });
+
+    const { id, status, name, message } =
+      await this.fileVerificationStatusService.create({
+        fileId: newLicenseFile.id,
+        name: FileVerificationName.DRIVER_LICENSE_SCAN,
+      });
+
+    if (driverToUpdate.driverLicenseFileId) {
+      await this.fileService.delete(driverToUpdate.driverLicenseFileId);
+    }
+
+    return {
+      ...updatedDriver,
+      verificationStatus: { id, status, name, message },
+    };
   }
 
-  public async findAllDriversByBusinessId(
-    ownerId: number,
-    query: GetPaginatedPageQuery,
-  ): Promise<DriverGetAllResponseDto> {
+  public async findAllDriversByBusinessId({
+    ownerId,
+    query,
+  }: {
+    ownerId: number;
+    query: GetPaginatedPageQuery;
+  }): Promise<DriverGetAllResponseDto> {
     const business = await this.findByOwnerId(ownerId);
 
     if (!business) {
@@ -235,10 +324,13 @@ class BusinessService implements IService {
     });
   }
 
-  public async deleteDriver(
-    driverId: number,
-    ownerId: number,
-  ): Promise<boolean> {
+  public async deleteDriver({
+    driverId,
+    ownerId,
+  }: {
+    driverId: number;
+    ownerId: number;
+  }): Promise<boolean> {
     const business = await this.findByOwnerId(ownerId);
 
     if (!business) {
@@ -248,7 +340,25 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.delete(driverId);
+    const driverToDelete = await this.driverService.findById(driverId);
+
+    if (!driverToDelete) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
+
+    const result = await this.driverService.delete(driverId);
+
+    if (driverToDelete.driverLicenseFileId) {
+      await this.fileVerificationStatusService.deleteByFileId(
+        driverToDelete.driverLicenseFileId,
+      );
+      await this.fileService.delete(driverToDelete.driverLicenseFileId);
+    }
+
+    return result;
   }
 
   public async findAllTrucksByBusinessId(

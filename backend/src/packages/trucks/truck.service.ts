@@ -1,28 +1,40 @@
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
+import { type DriverService } from '~/packages/drivers/drivers.js';
 
+import { FileVerificationStatus } from '../file-verification-status/libs/enums/enums.js';
+import { VerificationError } from '../file-verification-status/libs/exceptions/exceptions.js';
 import { type UsersTrucksService } from '../users-trucks/users-trucks.js';
 import { TruckStatus } from './libs/enums/enums.js';
 import {
-  type DriverHaveAccessToTruck,
   type TruckEntityT,
   type TruckGetAllResponseDto,
 } from './libs/types/types.js';
 import { TruckEntity } from './truck.entity.js';
 import { type TruckRepository } from './truck.repository.js';
 
+type Constructor = {
+  repository: TruckRepository;
+  usersTrucksService: UsersTrucksService;
+  driverService: DriverService;
+};
+
 class TruckService implements IService {
   private repository: TruckRepository;
 
   private usersTrucksService: UsersTrucksService;
 
-  public constructor(
-    repository: TruckRepository,
-    usersTrucksService: UsersTrucksService,
-  ) {
+  private driverService: DriverService;
+
+  public constructor({
+    repository,
+    usersTrucksService,
+    driverService,
+  }: Constructor) {
     this.repository = repository;
     this.usersTrucksService = usersTrucksService;
+    this.driverService = driverService;
   }
 
   public async checkIsNotAvailableById(id: number): Promise<boolean> {
@@ -38,6 +50,21 @@ class TruckService implements IService {
   }
 
   public async findTrucksByUserId(userId: number): Promise<TruckEntityT[]> {
+    const driver = await this.driverService.findByUserId(userId);
+
+    if (!driver?.verificationStatus) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
+
+    if (driver.verificationStatus.status !== FileVerificationStatus.VERIFIED) {
+      throw new VerificationError({
+        verificationStatus: driver.verificationStatus.status,
+      });
+    }
+
     return await this.usersTrucksService.findTrucksByUserId(userId);
   }
 
@@ -99,32 +126,6 @@ class TruckService implements IService {
     const result = await this.repository.findAll();
 
     return result.map((element) => TruckEntity.initialize(element).toObject());
-  }
-
-  public async addTrucksToDriver(
-    userId: number,
-    truckIds: number[],
-  ): Promise<void> {
-    if (truckIds.length === 0) {
-      return;
-    }
-
-    const existingTrucks = await this.repository.getTrucksByUserId(userId);
-
-    const uniqueTruckIds = [...new Set(truckIds)];
-
-    const filteredTruckIds = uniqueTruckIds.filter(
-      (truckId) => !existingTrucks.some((it) => it.truckId === truckId),
-    );
-
-    const driverTrucks: DriverHaveAccessToTruck[] = filteredTruckIds.map(
-      (truckId) => ({
-        userId,
-        truckId,
-      }),
-    );
-
-    await this.repository.addTruckToDriver(driverTrucks);
   }
 }
 
