@@ -38,7 +38,6 @@ const useAppMap = ({
   onMapLoad,
 }: Properties): void => {
   const mapService = useRef<MapService | null>(null);
-
   const dispatch = useAppDispatch();
   useEffect(() => {
     MapConnector.dropMap();
@@ -66,14 +65,17 @@ const useAppMap = ({
       mapService.current.fitMap(bounds);
 
       for (const point of points) {
+        mapService.current.removeMarkers();
         mapService.current.addMarker(point, false);
       }
-
-      if (shownRoute) {
-        void mapService.current.addRoute(shownRoute);
-      }
     }
-  }, [points, shownRoute]);
+  }, [points]);
+
+  useEffect(() => {
+    if (mapService.current && shownRoute) {
+      void mapService.current.addRoute(shownRoute);
+    }
+  }, [shownRoute]);
 
   useEffect(() => {
     if (pricePerKm && startAddress && endAddress) {

@@ -21,6 +21,7 @@ export { Map } from './map/map.js';
 export { Modal } from './modal/modal.js';
 export { Notification } from './notification/notification.js';
 export { OrderCard } from './order-card/order-card.js';
+export { OrderFilter } from './order-filter/order-filter.js';
 export { OrderList } from './order-list/order-list.js';
 export { OrderListCardBusiness } from './order-list-card-business/order-list-card-business.js';
 export { PageLayout } from './page-layout/page-layout.js';
