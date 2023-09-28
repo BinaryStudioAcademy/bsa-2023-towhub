@@ -15,13 +15,7 @@ import {
 import { ChosenFilePreview } from '~/libs/components/chosen-file-preview/chosen-file-preview.js';
 import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import {
-  useBindEnterToClick,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from '~/libs/hooks/hooks.js';
+import { useCallback, useMemo, useState } from '~/libs/hooks/hooks.js';
 
 import { Icon } from '../icon/icon.jsx';
 import { fileInputDefaultsConfig } from './libs/config/config.js';
@@ -55,8 +49,6 @@ const FileInput = <T extends FieldValues & FileFormType>({
   errors,
   clearErrors,
 }: Properties<T>): JSX.Element => {
-  const uploadButtonReference = useRef<HTMLButtonElement>(null);
-  useBindEnterToClick(uploadButtonReference);
   const {
     fields: files,
     append,
@@ -96,6 +88,19 @@ const FileInput = <T extends FieldValues & FileFormType>({
       }
       clearErrors('files');
 
+      if (fileInputConfig.maxFiles) {
+        const currentFilesCount = acceptedFiles.length + files.length;
+        const isMaxFilesExceeded = currentFilesCount > fileInputConfig.maxFiles;
+
+        if (isMaxFilesExceeded) {
+          setError('files', {
+            type: 'max-files-exceeded',
+            message: `Trying to upload ${currentFilesCount}/${fileInputConfig.maxFiles}`,
+          });
+
+          return;
+        }
+      }
       append(
         acceptedFiles.map(
           (file) =>
@@ -109,7 +114,7 @@ const FileInput = <T extends FieldValues & FileFormType>({
         ),
       );
     },
-    [append, clearErrors],
+    [append, clearErrors, files, fileInputConfig.maxFiles, setError],
   );
 
   const handleDropRejected = useCallback(
@@ -225,7 +230,7 @@ const FileInput = <T extends FieldValues & FileFormType>({
             hasError && styles.visible,
           )}
         >
-          {String(validationError)}
+          {validationError && String(validationError)}
         </p>
       </div>
       <div className={styles.uploadedArea}>

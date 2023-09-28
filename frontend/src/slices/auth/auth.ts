@@ -4,6 +4,7 @@ import {
   editCustomer,
   getCurrent,
   logOut,
+  resetAuthorizedDriverSocket,
   signIn,
   signUp,
 } from './actions.js';
@@ -15,6 +16,7 @@ const allActions = {
   editCustomer,
   signIn,
   authorizeDriverSocket,
+  resetAuthorizedDriverSocket,
   signUp,
   getCurrent,
   logOut,

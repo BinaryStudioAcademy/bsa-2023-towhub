@@ -4,6 +4,7 @@ import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
 import {
   type AuthUser,
+  type SocketErrorValues,
   type UserEntityObjectWithGroupAndBusinessT,
   type ValueOf,
 } from '~/libs/types/types.js';
@@ -14,6 +15,7 @@ import {
   editCustomer,
   getCurrent,
   logOut,
+  resetAuthorizedDriverSocket,
   signIn,
   signUp,
 } from './actions.js';
@@ -22,6 +24,7 @@ type State = {
   error: HttpError | null;
   dataStatus: ValueOf<typeof DataStatus>;
   socketDriverAuthStatus: ValueOf<typeof DataStatus>;
+  socketDriverAuthErrorMessage: SocketErrorValues | null;
   user: AuthUser | null;
 };
 
@@ -29,6 +32,7 @@ const initialState: State = {
   error: null,
   dataStatus: DataStatus.IDLE,
   socketDriverAuthStatus: DataStatus.IDLE,
+  socketDriverAuthErrorMessage: null,
   user: null,
 };
 
@@ -42,6 +46,9 @@ const { reducer, actions, name } = createSlice({
   },
   extraReducers(builder) {
     builder
+      .addCase(resetAuthorizedDriverSocket, (state) => {
+        state.socketDriverAuthStatus = DataStatus.IDLE;
+      })
       .addCase(getCurrent.fulfilled, (state, action) => {
         state.user = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
@@ -95,12 +102,19 @@ const { reducer, actions, name } = createSlice({
       .addCase(logOut.fulfilled, (state) => {
         state.user = initialState.user;
         state.dataStatus = DataStatus.FULFILLED;
+        state.socketDriverAuthStatus = DataStatus.IDLE;
       })
-      .addCase(authorizeDriverSocket.rejected, (state) => {
+      .addCase(authorizeDriverSocket.pending, (state) => {
+        state.socketDriverAuthStatus = DataStatus.PENDING;
+        state.socketDriverAuthErrorMessage = null;
+      })
+      .addCase(authorizeDriverSocket.rejected, (state, action) => {
         state.socketDriverAuthStatus = DataStatus.REJECTED;
+        state.socketDriverAuthErrorMessage = action.payload ?? null;
       })
       .addCase(authorizeDriverSocket.fulfilled, (state) => {
         state.socketDriverAuthStatus = DataStatus.FULFILLED;
+        state.socketDriverAuthErrorMessage = null;
       })
       .addMatcher(
         isAnyOf(
@@ -108,7 +122,6 @@ const { reducer, actions, name } = createSlice({
           signIn.pending,
           getCurrent.pending,
           logOut.pending,
-          authorizeDriverSocket.pending,
         ),
         (state) => {
           state.dataStatus = DataStatus.PENDING;

@@ -113,6 +113,20 @@
       "when": 1695730021334,
       "tag": "0015_add_avatar_id_to_driver_details",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "5",
+      "when": 1695810246647,
+      "tag": "0016_change_orders_point_type_to_jsonb",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1695843064730,
+      "tag": "0017_create_file_verification_status_table",
+      "breakpoints": true
     }
   ]
 }

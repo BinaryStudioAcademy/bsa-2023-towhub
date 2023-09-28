@@ -1,5 +1,7 @@
+import { type DriverCreateUpdateResponseDto } from 'shared/build/index.js';
+
 import { ApiPath, ContentType } from '~/libs/enums/enums.js';
-import { HttpApi } from '~/libs/packages/api/http-api.js';
+import { HttpApi } from '~/libs/packages/api/api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 import { type TruckEntityT } from '~/libs/types/types.js';
@@ -23,6 +25,28 @@ type Constructor = {
 class BusinessApi extends HttpApi {
   public constructor({ baseUrl, http, storage }: Constructor) {
     super({ path: ApiPath.BUSINESS, baseUrl, http, storage });
+  }
+
+  public async createDriver({
+    formData,
+    businessId,
+  }: {
+    businessId: number;
+    formData: FormData;
+  }): Promise<DriverCreateUpdateResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(BusinessApiPath.DRIVERS, {
+        businessId: businessId,
+      }),
+      {
+        method: 'POST',
+        contentType: ContentType.FORM_DATA,
+        payload: formData,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<DriverCreateUpdateResponseDto>();
   }
 
   public async findAllTrucksByBusinessId(

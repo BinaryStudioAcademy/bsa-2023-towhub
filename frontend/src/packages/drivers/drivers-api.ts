@@ -4,10 +4,7 @@ import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 import { type DriverGetAllResponseDto } from '~/libs/types/types.js';
 
-import {
-  type DriverAddPayload,
-  type DriverAddResponseWithGroup,
-} from './libs/types/types.js';
+import { type DriverAddResponseWithGroup } from './libs/types/types.js';
 
 type Constructor = {
   baseUrl: string;
@@ -35,15 +32,15 @@ class DriversApi extends HttpApi {
     return await data.json<DriverGetAllResponseDto>();
   }
 
-  public async addDriver({
-    payload,
-  }: DriverAddPayload): Promise<DriverAddResponseWithGroup> {
+  public async addDriver(
+    formData: FormData,
+  ): Promise<DriverAddResponseWithGroup> {
     const data = await this.load(
       this.getFullEndpoint(`${ApiPath.DRIVERS}`, {}),
       {
         method: 'POST',
-        contentType: ContentType.JSON,
-        payload: JSON.stringify(payload),
+        contentType: ContentType.FORM_DATA,
+        payload: formData,
         hasAuth: true,
       },
     );

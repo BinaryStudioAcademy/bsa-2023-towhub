@@ -2,27 +2,26 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
-import { type AsyncThunkConfig } from '~/libs/types/types.js';
+import { type AsyncThunkConfig, type Coordinates } from '~/libs/types/types.js';
 import {
+  type OrderCreateFormDto,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusResponseDto,
 } from '~/packages/orders/libs/types/types.js';
 import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
-  type OrderCreateRequestDto,
   type OrderResponseDto,
 } from '~/packages/orders/orders.js';
 
 import { ActionName } from './libs/enums/enums.js';
-import { jsonToLatLngLiteral } from './libs/helpers/json-to-lat-lng-literal.helper.js';
 import { type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
 const getBusinessOrders = createAsyncThunk<
   OrderResponseDto[],
   undefined,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(`${sliceName}/orders`, async (_, { extra }) => {
   const { ordersApi } = extra;
 
@@ -31,7 +30,7 @@ const getBusinessOrders = createAsyncThunk<
 const changeAcceptOrderStatusByDriver = createAsyncThunk<
   OrderUpdateAcceptStatusResponseDto,
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(
   ActionName.CHANGE_ACCEPT_ORDER_STATUS,
   ({ isAccepted, orderId }, { extra }) => {
@@ -44,7 +43,7 @@ const changeAcceptOrderStatusByDriver = createAsyncThunk<
 const changeAcceptOrderStatusByCustomer = createAsyncThunk<
   OrderUpdateAcceptStatusResponseDto,
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(
   ActionName.CHANGE_ACCEPT_ORDER_STATUS,
   ({ isAccepted, orderId }, { extra }) => {
@@ -56,13 +55,22 @@ const changeAcceptOrderStatusByCustomer = createAsyncThunk<
 
 const createOrder = createAsyncThunk<
   OrderResponseDto,
-  OrderCreateRequestDto,
-  AsyncThunkConfig
+  OrderCreateFormDto,
+  AsyncThunkConfig<null>
 >(`${sliceName}/create-order`, async (payload, { extra }) => {
-  const { ordersApi } = extra;
+  const { ordersApi, mapServiceFactory } = extra;
+
+  const mapService = await mapServiceFactory({ mapElement: null });
+
+  const startPoint = await mapService.getAddressPoint(payload.startPoint);
+  const endPoint = await mapService.getAddressPoint(payload.endPoint);
 
   try {
-    const result = await ordersApi.createOrder(payload);
+    const result = await ordersApi.createOrder({
+      ...payload,
+      endPoint,
+      startPoint,
+    });
 
     notification.success('Order successfully created');
 
@@ -76,31 +84,32 @@ const createOrder = createAsyncThunk<
 const calculateOrderPrice = createAsyncThunk<
   OrderCalculatePriceResponseDto,
   OrderCalculatePriceRequestDto,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(`${sliceName}/calculateOrderPrice`, (payload, { extra }) => {
   const { ordersApi } = extra;
 
   return ordersApi.calculatePrice(payload);
 });
 
-const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
-  ActionName.GET_ORDER,
-  async (orderId, { extra }) => {
-    const { ordersApi } = extra;
+const getOrder = createAsyncThunk<
+  OrderResponseDto,
+  string,
+  AsyncThunkConfig<null>
+>(ActionName.GET_ORDER, (orderId, { extra }) => {
+  const { ordersApi } = extra;
 
-    return await ordersApi.getOrder(orderId);
-  },
-);
+  return ordersApi.getOrder(orderId);
+});
 
 const getRouteData = createAsyncThunk<
   RouteData,
-  { origin: string; destination: string },
-  AsyncThunkConfig
+  { origin: Coordinates; destination: Coordinates },
+  AsyncThunkConfig<null>
 >(ActionName.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
   const { mapServiceFactory } = extra;
   const routeData = {
-    origin: jsonToLatLngLiteral(origin),
-    destination: jsonToLatLngLiteral(destination),
+    origin,
+    destination,
   };
 
   const mapService = await mapServiceFactory({ mapElement: null });
@@ -124,7 +133,7 @@ const getRouteData = createAsyncThunk<
 const updateOrderFromSocket = createAsyncThunk<
   OrderResponseDto,
   OrderResponseDto,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(ActionName.SOCKET.UPDATE_ORDER, (order) => {
   return order;
 });
