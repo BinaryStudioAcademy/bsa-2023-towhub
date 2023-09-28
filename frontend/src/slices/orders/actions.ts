@@ -16,6 +16,7 @@ import {
 } from '~/packages/orders/orders.js';
 
 import { ActionName } from './libs/enums/enums.js';
+import { notificateOrderStatusChange } from './libs/helpers/notificate-order-status-change.helper.js';
 import { type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
@@ -35,10 +36,12 @@ const changeAcceptOrderStatusByDriver = createAsyncThunk<
   AsyncThunkConfig<null>
 >(
   ActionName.CHANGE_ACCEPT_ORDER_STATUS,
-  ({ isAccepted, orderId }, { extra }) => {
+  ({ newStatus, orderId }, { extra }) => {
     const { ordersApi } = extra;
 
-    return ordersApi.changeAcceptOrderStatusByDriver(orderId, { isAccepted });
+    notificateOrderStatusChange(newStatus);
+
+    return ordersApi.changeAcceptOrderStatusByDriver(orderId, { newStatus });
   },
 );
 
@@ -48,10 +51,10 @@ const changeAcceptOrderStatusByCustomer = createAsyncThunk<
   AsyncThunkConfig<null>
 >(
   ActionName.CHANGE_ACCEPT_ORDER_STATUS,
-  ({ isAccepted, orderId }, { extra }) => {
+  ({ newStatus, orderId }, { extra }) => {
     const { ordersApi } = extra;
 
-    return ordersApi.changeAcceptOrderStatusByCustomer(orderId, { isAccepted });
+    return ordersApi.changeAcceptOrderStatusByCustomer(orderId, { newStatus });
   },
 );
 
@@ -132,6 +135,14 @@ const getRouteData = createAsyncThunk<
   };
 });
 
+const createOrderFromSocket = createAsyncThunk<
+  OrderResponseDto,
+  OrderResponseDto,
+  AsyncThunkConfig<null>
+>(ActionName.SOCKET.CREATE_ORDER, (order) => {
+  return order;
+});
+
 const updateOrderFromSocket = createAsyncThunk<
   OrderResponseDto,
   OrderResponseDto,
@@ -170,6 +181,7 @@ export {
   changeAcceptOrderStatusByCustomer,
   changeAcceptOrderStatusByDriver,
   createOrder,
+  createOrderFromSocket,
   getBusinessOrders,
   getOrder,
   getRouteData,

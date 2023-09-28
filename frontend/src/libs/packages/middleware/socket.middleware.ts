@@ -7,6 +7,7 @@ import {
 
 import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
 import {
+  createOrderFromSocket,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,
@@ -41,6 +42,12 @@ const socketMiddleware: ThunkMiddleware<
   const socketInstance = socket.getInstance();
 
   if (socketInstance) {
+    socketInstance.on(
+      ServerToClientEvent.ORDER_CREATED,
+      (order: OrderResponseDto) => {
+        void dispatch(createOrderFromSocket(order));
+      },
+    );
     socketInstance.on(
       ServerToClientEvent.ORDER_UPDATED,
       (order: OrderResponseDto) => {

@@ -9,6 +9,7 @@ import {
   changeAcceptOrderStatusByCustomer,
   changeAcceptOrderStatusByDriver,
   createOrder,
+  createOrderFromSocket,
   getBusinessOrders,
   getOrder,
   getRouteData,
@@ -59,6 +60,9 @@ const { reducer, actions, name } = createSlice({
       })
       .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
         state.currentOrder = { ...state.currentOrder, ...action.payload };
+      })
+      .addCase(createOrderFromSocket.fulfilled, (state, action) => {
+        state.currentOrder = action.payload;
       })
       .addCase(removeOrder, (state) => {
         state.currentOrder = null;

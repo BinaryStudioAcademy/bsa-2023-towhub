@@ -24,6 +24,9 @@ const IconName = {
   TRUCK: 'truck',
   USERS: 'users',
   MOBILE: 'mobile',
+  USER: 'user',
+  PHONE: 'phone',
+  CLOCK: 'clock',
   CAR: 'car',
 } as const;
 
