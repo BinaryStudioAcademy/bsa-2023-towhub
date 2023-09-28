@@ -1,5 +1,6 @@
 import { desc, eq, sql } from 'drizzle-orm';
 
+import { countOffsetByQuery } from '~/libs/helpers/count-offset-by-query.helper.js';
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
@@ -113,7 +114,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         })
       : combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search);
 
-    const offset = page * size;
+    const offset = countOffsetByQuery({ page, size });
 
     return await this.db
       .driver()

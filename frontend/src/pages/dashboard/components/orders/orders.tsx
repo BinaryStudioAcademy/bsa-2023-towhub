@@ -22,7 +22,6 @@ import {
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import {
   type Coordinates,
-  type OrderResponseDto,
   type OrderStatusValues,
 } from '~/libs/types/types.js';
 import { actions as ordersActions } from '~/slices/orders/order.js';
@@ -95,16 +94,6 @@ const Orders: React.FC = () => {
     [],
   );
 
-  const sortOrders = useMemo(
-    () =>
-      [...orders].sort(
-        (a: OrderResponseDto, b: OrderResponseDto) =>
-          new Date(a.scheduledTime).getTime() -
-          new Date(b.scheduledTime).getTime(),
-      ),
-    [orders],
-  );
-
   const isLoading = dataStatus === DataStatus.PENDING;
 
   if (isLoading) {
@@ -132,7 +121,7 @@ const Orders: React.FC = () => {
           onChange={handleChangeFilter}
           label={filter.status ?? 'all'}
         />
-        <OrderList orders={sortOrders} onSelect={setShownRoute} />
+        <OrderList orders={orders} onSelect={setShownRoute} />
         <Pagination
           pageCount={totalPages}
           pageIndex={pageIndex}
