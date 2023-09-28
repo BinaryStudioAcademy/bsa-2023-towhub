@@ -1,3 +1,5 @@
+import { type FileObject } from 'shared/build';
+
 import { Button, Modal, Table } from '~/libs/components/components.js';
 import { DataStatus } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
@@ -39,7 +41,8 @@ const DriverTable: React.FC = () => {
 
   const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
     DriverGetAllResponseDto,
-    PaginationParameters
+    PaginationParameters,
+    null
   >({
     tableFetchCall: getDriversPage,
     initialPageIndex: initialPage ? Number(initialPage) : null,
@@ -47,7 +50,7 @@ const DriverTable: React.FC = () => {
   });
 
   const handleSubmit = useCallback(
-    (payload: DriverCreateRequestDto) => {
+    (payload: DriverCreateRequestDto<FileObject>) => {
       void dispatch(
         actions.addDriver({
           payload,

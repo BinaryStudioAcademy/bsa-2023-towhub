@@ -9,7 +9,9 @@ import swagger, { type StaticDocumentSpec } from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import Fastify, {
   type FastifyError,
+  type onRequestHookHandler,
   type preHandlerHookHandler,
+  type preValidationHookHandler,
 } from 'fastify';
 
 import { ServerErrorType } from '~/libs/enums/enums.js';
@@ -26,8 +28,8 @@ import {
   type ValidationSchema,
 } from '~/libs/types/types.js';
 import { authPlugin } from '~/packages/auth/auth.js';
+import { type DriverService } from '~/packages/drivers/drivers.js';
 import { filesValidationPlugin } from '~/packages/files/files.js';
-import { type ShiftSocketService } from '~/packages/shifts/shift.js';
 import { type UserService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
@@ -48,7 +50,7 @@ type Constructor = {
   apis: IServerAppApi[];
   geolocationCacheSocketService: GeolocationCacheSocketService;
   userService: UserService;
-  shiftSocketService: ShiftSocketService;
+  driverService: DriverService;
 };
 
 class ServerApp implements IServerApp {
@@ -66,7 +68,7 @@ class ServerApp implements IServerApp {
 
   private userService: UserService;
 
-  private shiftSocketService: ShiftSocketService;
+  private driverService: DriverService;
 
   public constructor({
     config,
@@ -75,7 +77,7 @@ class ServerApp implements IServerApp {
     apis,
     geolocationCacheSocketService,
     userService,
-    shiftSocketService,
+    driverService,
   }: Constructor) {
     this.config = config;
     this.logger = logger;
@@ -84,7 +86,7 @@ class ServerApp implements IServerApp {
 
     this.geolocationCacheSocketService = geolocationCacheSocketService;
     this.userService = userService;
-    this.shiftSocketService = shiftSocketService;
+    this.driverService = driverService;
 
     this.app = Fastify();
   }
@@ -99,18 +101,19 @@ class ServerApp implements IServerApp {
       validateFilesStrategy,
     } = parameters;
 
-    const preHandlers: preHandlerHookHandler[] = [];
+    const onRequests: onRequestHookHandler[] = [];
+    const preValidations: preValidationHookHandler[] = [];
 
     if (authStrategy) {
       const authStrategyHandler = this.resolveAuthStrategy(authStrategy);
 
       if (authStrategyHandler) {
-        preHandlers.push(authStrategyHandler);
+        onRequests.push(authStrategyHandler);
       }
     }
 
     if (validateFilesStrategy) {
-      preHandlers.push(
+      preValidations.push(
         this.resolveFileValidationStrategy(validateFilesStrategy),
       );
     }
@@ -119,7 +122,8 @@ class ServerApp implements IServerApp {
       url: path,
       method,
       handler,
-      preHandler: preHandlers,
+      onRequest: onRequests,
+      preValidation: preValidations,
       schema: {
         body: validation?.body,
         params: validation?.params,
@@ -279,7 +283,9 @@ class ServerApp implements IServerApp {
       userService: this.userService,
       jwtService,
     });
-    await this.app.register(fastifyMultipart);
+    await this.app.register(fastifyMultipart, {
+      attachFieldsToBody: true,
+    });
     await this.app.register(filesValidationPlugin);
   }
 
@@ -291,10 +297,10 @@ class ServerApp implements IServerApp {
     await this.initServe();
 
     await socketService.initializeIo({
-      shiftSocketService: this.shiftSocketService,
       app: this.app,
       geolocationCacheSocketService: this.geolocationCacheSocketService,
       userService: this.userService,
+      driverService: this.driverService,
     });
 
     await this.initMiddlewares();
