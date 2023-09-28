@@ -12,6 +12,7 @@ import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
   type OrderDatabaseModel,
   type OrderEntity as OrderEntityT,
+  type OrderQueryParameters,
 } from './libs/types/types.js';
 
 class OrderRepository implements Omit<IRepository, 'find'> {
@@ -105,7 +106,18 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       driverId: UserEntityT['id'];
       businessId: OrderEntityT['businessId'];
     }>,
+    query: OrderQueryParameters,
   ): Promise<OrderEntityT[]> {
+    const { status, size, page } = query;
+    const whereClause = status
+      ? combineFilters<DatabaseSchema['orders']>(this.ordersSchema, {
+          ...search,
+          status: status,
+        })
+      : combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search);
+
+    const offset = countOffsetByQuery({ page, size });
+
     return await this.db
       .driver()
       .select({
@@ -151,9 +163,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         this.trucksSchema,
         eq(this.trucksSchema.id, this.shiftsSchema.truckId),
       )
-      .where(
-        combineFilters<DatabaseSchema['orders']>(this.ordersSchema, search),
-      );
+      .where(whereClause)
+      .offset(offset)
+      .limit(size)
+      .orderBy(desc(this.ordersSchema.createdAt));
   }
 
   public async findAllUserOrders(
@@ -267,9 +280,9 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     return Boolean(item);
   }
 
-  public async getUserTotal(
+  public async getUserOrBusinessTotal(
     search: Partial<{
-      userId: OrderEntityT['userId'];
+      ownerId: number | null;
       status: OrderEntityT['status'];
     }>,
   ): Promise<number> {

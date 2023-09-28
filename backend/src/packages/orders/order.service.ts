@@ -17,7 +17,9 @@ import {
   type OrderEntity as OrderEntityT,
   type OrderFindAllUserOrdersQuery,
   type OrderFindAllUserOrdersResponseDto,
+  type OrderQueryParameters,
   type OrderResponseDto,
+  type OrdersListResponseDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusResponseDto,
@@ -321,20 +323,37 @@ class OrderService implements Omit<IService, 'find'> {
     return { id, status };
   }
 
-  public async findAllBusinessOrders(
-    user: UserEntityObjectWithGroupT,
-  ): Promise<OrderResponseDto[]> {
+  public async findAllBusinessOrders({
+    user,
+    query,
+  }: {
+    user: UserEntityObjectWithGroupT;
+    query: OrderQueryParameters;
+  }): Promise<OrdersListResponseDto> {
     const business = await this.businessService.findByOwnerId(user.id);
 
     if (!business) {
       throw new NotFoundError({});
     }
 
-    const usersOrders = await this.orderRepository.findAllBusinessOrders({
-      businessId: business.id,
-    });
+    const usersOrders = await this.orderRepository.findAllBusinessOrders(
+      { businessId: business.id },
+      query,
+    );
 
-    return usersOrders.map((it) => OrderEntity.initialize(it).toObject());
+    const total = query.status
+      ? await this.orderRepository.getUserOrBusinessTotal({
+          ownerId: business.id,
+          status: query.status,
+        })
+      : await this.orderRepository.getUserOrBusinessTotal({
+          ownerId: business.id,
+        });
+
+    return {
+      items: usersOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      total,
+    };
   }
 
   public async findAllUserOrders(
@@ -349,7 +368,7 @@ class OrderService implements Omit<IService, 'find'> {
       search,
       query,
     );
-    const totalRequest = this.orderRepository.getUserTotal(search);
+    const totalRequest = this.orderRepository.getUserOrBusinessTotal(search);
 
     const [userOrders, total] = await Promise.all([
       userOrdersRequest,
