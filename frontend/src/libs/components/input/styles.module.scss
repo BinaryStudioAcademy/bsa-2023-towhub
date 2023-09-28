@@ -9,7 +9,6 @@ $error-message-height: calc($error-font-size * $line-height-coefficient);
   display: flex;
   flex-direction: column;
   width: auto;
-  max-width: 327px;
   color: $grey-dark;
   font-weight: $font-weight-semibold;
   font-size: 16px;
