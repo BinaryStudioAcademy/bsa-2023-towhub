@@ -33,8 +33,8 @@ type Properties<T> = {
   pageIndex: number;
   sorting?: ColumnSort | null;
   setSorting?: OnChangeFn<ColumnSort | null>;
-  changePageIndex: React.Dispatch<React.SetStateAction<number>>;
-  changePageSize: React.Dispatch<React.SetStateAction<number>>;
+  onChangePageIndex: React.Dispatch<React.SetStateAction<number>>;
+  onChangePageSize: React.Dispatch<React.SetStateAction<number>>;
   onEditClick?: (rowId: string) => void;
   onDeleteClick?: (rowId: string) => void;
 };
@@ -50,8 +50,8 @@ const Table = <T,>({
   isTableEditable = false,
   sorting,
   setSorting,
-  changePageIndex,
-  changePageSize,
+  onChangePageIndex,
+  onChangePageSize,
   ...properties
 }: Properties<T>): JSX.Element => {
   const pagesRange = Math.ceil(totalRow / pageSize);
@@ -92,11 +92,11 @@ const Table = <T,>({
 
   const handleChangePageSize = useCallback(
     (value: number) => {
-      changePageIndex(0);
-      changePageSize(value);
+      onChangePageIndex(0);
+      onChangePageSize(value);
       table.setPageSize(value);
     },
-    [changePageSize, table, changePageIndex],
+    [onChangePageSize, table, onChangePageIndex],
   );
 
   if (data.length === 0 && !isLoading) {
@@ -132,7 +132,7 @@ const Table = <T,>({
       )}
       <Pagination
         pageCount={pagesRange}
-        onClick={changePageIndex}
+        onClick={onChangePageIndex}
         onChangePageSize={handleChangePageSize}
         pageIndex={pageIndex}
         pageSize={pageSize}

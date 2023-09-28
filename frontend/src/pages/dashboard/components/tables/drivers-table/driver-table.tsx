@@ -37,14 +37,12 @@ const DriverTable: React.FC = () => {
     'page',
   ) as Queries;
 
-  const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
-    DriverGetAllResponseDto,
-    PaginationParameters
-  >({
-    tableFetchCall: getDriversPage,
-    initialPageIndex: initialPage ? Number(initialPage) : null,
-    initialPageSize: initialSize ? Number(initialSize) : null,
-  });
+  const { pageSize, pageIndex, onChangePageSize, onChangePageIndex } =
+    useAppTable<DriverGetAllResponseDto, PaginationParameters>({
+      tableFetchCall: getDriversPage,
+      initialPageIndex: initialPage ? Number(initialPage) : null,
+      initialPageSize: initialSize ? Number(initialSize) : null,
+    });
 
   const handleSubmit = useCallback(
     (payload: DriverCreateRequestDto) => {
@@ -81,8 +79,8 @@ const DriverTable: React.FC = () => {
         isLoading={dataStatus === DataStatus.PENDING}
         pageIndex={pageIndex}
         pageSize={pageSize}
-        changePageIndex={changePageIndex}
-        changePageSize={changePageSize}
+        onChangePageIndex={onChangePageIndex}
+        onChangePageSize={onChangePageSize}
         emptyTableMessage={message}
       />
       <Modal isOpen={isToggled} isCentered onClose={handleToggle}>

@@ -47,15 +47,13 @@ const TruckTable: React.FC = () => {
 
   const sortMethod = getSortingMethodValue(sorting);
 
-  const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
-    TruckGetAllResponseDto,
-    PaginationWithSortingParameters
-  >({
-    tableFetchCall: findAllTrucksForBusiness,
-    initialPageIndex: initialPage ? Number(initialPage) : null,
-    initialPageSize: initialSize ? Number(initialSize) : null,
-    sort: sortMethod,
-  });
+  const { pageSize, pageIndex, onChangePageSize, onChangePageIndex } =
+    useAppTable<TruckGetAllResponseDto, PaginationWithSortingParameters>({
+      tableFetchCall: findAllTrucksForBusiness,
+      initialPageIndex: initialPage ? Number(initialPage) : null,
+      initialPageSize: initialSize ? Number(initialSize) : null,
+      sort: sortMethod,
+    });
 
   const handleSubmit = useCallback(
     (payload: TruckAddRequestDto) => {
@@ -95,8 +93,8 @@ const TruckTable: React.FC = () => {
           setSorting={setSorting}
           sorting={sorting}
           isLoading={dataStatus === DataStatus.PENDING}
-          changePageSize={changePageSize}
-          changePageIndex={changePageIndex}
+          onChangePageSize={onChangePageSize}
+          onChangePageIndex={onChangePageIndex}
           emptyTableMessage={message}
         />
       </div>

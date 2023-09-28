@@ -37,7 +37,7 @@ const useFilter = (): {
   const handleChangeFilter = useCallback(
     (option: SingleValue<SelectOption>) => {
       if (option?.value) {
-        listHook.changePageIndex(0);
+        listHook.onChangePageIndex(0);
         setQueryParameters({
           size: listHook.pageSize,
           page: 0,
