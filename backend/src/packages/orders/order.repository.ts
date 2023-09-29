@@ -92,7 +92,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       )
       .innerJoin(
         this.driversSchema,
-        eq(this.shiftsSchema.driverId, this.driversSchema.userId),
+        eq(this.driversSchema.userId, this.shiftsSchema.driverId),
       )
       .innerJoin(
         this.fileSchema,
@@ -165,7 +165,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       )
       .innerJoin(
         this.driversSchema,
-        eq(this.shiftsSchema.driverId, this.driversSchema.userId),
+        eq(this.driversSchema.userId, this.shiftsSchema.driverId),
       )
       .innerJoin(
         this.fileSchema,
