@@ -66,11 +66,6 @@ const useAppMap = ({
         void mapService.current.calculateRouteAndTime(center, destination);
       }
 
-      if (userLocation) {
-        mapService.current.addMarker(userLocation);
-        mapService.current.setZoom(DEFAULT_ZOOM);
-      }
-
       if (markers.length > 0) {
         mapService.current.removeMarkers();
 
@@ -121,6 +116,13 @@ const useAppMap = ({
       );
     }
   }, [dispatch, endAddress, startAddress, pricePerKm]);
+
+  useEffect(() => {
+    if (mapService.current && userLocation) {
+      mapService.current.addMarker(userLocation);
+      mapService.current.setZoom(DEFAULT_ZOOM);
+    }
+  }, [userLocation]);
 };
 
 export { useAppMap };
