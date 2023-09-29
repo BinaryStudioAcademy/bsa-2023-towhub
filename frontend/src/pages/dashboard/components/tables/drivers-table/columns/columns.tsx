@@ -11,7 +11,7 @@ import { verificationStatusToReadableFormat } from '~/slices/driver/libs/maps/ma
 
 import { COLUMN_AVATAR_SIZE } from '../libs/constants/constants.js';
 import { verificationStatusToBadgeColor } from '../libs/maps/maps.js';
-import style from '../styles.module.scss';
+import styles from '../styles.module.scss';
 
 const columns: ColumnDef<DriverWithUserData>[] = [
   {
@@ -61,7 +61,7 @@ const columns: ColumnDef<DriverWithUserData>[] = [
     footer: 'Verification status',
     cell: ({ getValue }): JSX.Element => (
       <Badge
-        className={style.verificationBadge}
+        className={styles.verificationBadge}
         color={
           verificationStatusToBadgeColor[
             getValue() as FileVerificationStatusValues
