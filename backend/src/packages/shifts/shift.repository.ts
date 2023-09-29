@@ -63,10 +63,12 @@ class ShiftRepository implements IRepository {
     return shift;
   }
 
-  public async getOpenedByTruckWithBusiness(
-    truckId: number,
-  ): Promise<
-    | (ShiftDatabaseModel & { businessId: number; driverLicenseNumber: string })
+  public async getOpenedByTruckWithBusiness(truckId: number): Promise<
+    | (ShiftDatabaseModel & {
+        businessId: number;
+        driverLicenseNumber: string;
+        avatarId: number | null;
+      })
     | null
   > {
     const [shift = null] = await this.db
@@ -90,6 +92,7 @@ class ShiftRepository implements IRepository {
           ...shift.shifts,
           businessId: shift.driver_details.businessId,
           driverLicenseNumber: shift.driver_details.driverLicenseNumber,
+          avatarId: shift.driver_details.avatarId,
         }
       : null;
   }

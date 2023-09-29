@@ -5,6 +5,7 @@ import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
+import { type FilesService } from '../files/files.service.js';
 import { type MapService } from '../map/map.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
 import { type TruckService } from '../trucks/truck.service.js';
@@ -43,6 +44,8 @@ class OrderService implements Omit<IService, 'find'> {
 
   private mapService: MapService;
 
+  private filesService: FilesService;
+
   public constructor({
     businessService,
     orderRepository,
@@ -52,6 +55,7 @@ class OrderService implements Omit<IService, 'find'> {
     userService,
     mapService,
     socket,
+    filesService,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
@@ -61,6 +65,7 @@ class OrderService implements Omit<IService, 'find'> {
     userService: UserService;
     mapService: MapService;
     socket: SocketService;
+    filesService: FilesService;
   }) {
     this.orderRepository = orderRepository;
 
@@ -79,6 +84,8 @@ class OrderService implements Omit<IService, 'find'> {
     this.mapService = mapService;
 
     this.socketService = socket;
+
+    this.filesService = filesService;
   }
 
   public async create(
@@ -116,6 +123,9 @@ class OrderService implements Omit<IService, 'find'> {
     }
 
     const driver = await this.userService.findById(shift.driverId);
+    const avatarUrl = shift.avatarId
+      ? await this.filesService.findById(shift.avatarId)
+      : null;
 
     if (!driver) {
       throw new NotFoundError({
@@ -153,6 +163,7 @@ class OrderService implements Omit<IService, 'find'> {
         email: driver.email,
         phone: driver.phone,
         driverLicenseNumber: shift.driverLicenseNumber,
+        avatarUrl: avatarUrl?.key ?? null,
       },
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     }).toObject();
@@ -248,6 +259,7 @@ class OrderService implements Omit<IService, 'find'> {
         email: foundOrder.driver.email,
         phone: foundOrder.driver.phone,
         driverLicenseNumber: driver.driverLicenseNumber,
+        avatarUrl: driver.avatarUrl,
       },
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     };
