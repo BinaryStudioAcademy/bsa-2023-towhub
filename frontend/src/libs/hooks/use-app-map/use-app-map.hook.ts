@@ -22,7 +22,6 @@ type Properties = {
   onPriceChange?: (price: number) => void;
   mapReference: React.RefObject<HTMLDivElement>;
   shownRoute?: PlaceLatLng;
-  onMapLoad?: () => void;
 };
 
 const useAppMap = ({
@@ -35,7 +34,6 @@ const useAppMap = ({
   endAddress,
   mapReference,
   shownRoute,
-  onMapLoad,
 }: Properties): void => {
   const mapService = useRef<MapService | null>(null);
   const dispatch = useAppDispatch();
@@ -57,7 +55,7 @@ const useAppMap = ({
       }
     };
     void configMap();
-  }, [center, destination, mapReference, onMapLoad, points, zoom]);
+  }, [center, destination, mapReference, points, zoom]);
 
   useEffect(() => {
     if (mapService.current && points && points.length > 0) {

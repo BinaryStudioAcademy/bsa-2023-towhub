@@ -5,6 +5,7 @@ import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
 import { type DatabaseSchema } from '~/libs/packages/database/schema/schema.js';
 
+import { type FileEntityT } from '../files/libs/types/types.js';
 import { type UserEntityT } from '../users/users.js';
 import { combineFilters } from './libs/helpers/combine-filters.js';
 import {
@@ -26,6 +27,8 @@ class OrderRepository implements Omit<IRepository, 'find'> {
 
   private driversSchema: DatabaseSchema['drivers'];
 
+  private filesSchema: DatabaseSchema['files'];
+
   public constructor(
     database: Pick<IDatabase, 'driver'>,
     {
@@ -34,9 +37,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       users,
       shifts,
       drivers,
+      files,
     }: Pick<
       DatabaseSchema,
-      'orders' | 'users' | 'trucks' | 'shifts' | 'drivers'
+      'orders' | 'users' | 'trucks' | 'shifts' | 'drivers' | 'files'
     >,
   ) {
     this.db = database;
@@ -45,9 +49,12 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     this.usersSchema = users;
     this.shiftsSchema = shifts;
     this.driversSchema = drivers;
+    this.filesSchema = files;
   }
 
-  public async findById(id: OrderEntityT['id']): Promise<OrderEntityT | null> {
+  public async findById(
+    id: OrderEntityT['id'],
+  ): Promise<{ order: OrderEntityT | null; avatarFile: FileEntityT | null }> {
     const [order = null] = await this.db
       .driver()
       .select({
@@ -71,6 +78,14 @@ class OrderRepository implements Omit<IRepository, 'find'> {
           phone: this.usersSchema.phone,
           driverLicenseNumber: this.driversSchema.driverLicenseNumber,
         },
+        avatar: {
+          id: this.filesSchema.id,
+          key: this.filesSchema.key,
+          name: this.filesSchema.name,
+          contentType: this.filesSchema.contentType,
+          createdAt: this.filesSchema.createdAt,
+          updatedAt: this.filesSchema.updatedAt,
+        },
         truck: {
           id: this.shiftsSchema.truckId,
           licensePlateNumber: this.trucksSchema.licensePlateNumber,
@@ -89,13 +104,27 @@ class OrderRepository implements Omit<IRepository, 'find'> {
         this.driversSchema,
         eq(this.driversSchema.userId, this.shiftsSchema.driverId),
       )
+      .leftJoin(
+        this.filesSchema,
+        eq(this.driversSchema.avatarId, this.filesSchema.id),
+      )
       .innerJoin(
         this.trucksSchema,
         eq(this.trucksSchema.id, this.shiftsSchema.truckId),
       )
       .where(eq(this.ordersSchema.id, id));
 
-    return order;
+    let result = null;
+    let avatarFile = null;
+
+    if (order) {
+      const { avatar, ...pureOrder } = order;
+      avatarFile = avatar;
+      result = pureOrder as OrderEntityT;
+      result.driver = result.driver === null ? null : { ...pureOrder.driver };
+    }
+
+    return { order: result, avatarFile };
   }
 
   public async findAllBusinessOrders(

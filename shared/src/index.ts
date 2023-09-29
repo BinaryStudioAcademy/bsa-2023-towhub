@@ -141,6 +141,7 @@ export {
   type OrderFindByIdResponseDto,
   type OrderQueryParameters,
   type OrderResponseDto,
+  type OrderResponseWithAvatarDto,
   type OrdersListResponseDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,

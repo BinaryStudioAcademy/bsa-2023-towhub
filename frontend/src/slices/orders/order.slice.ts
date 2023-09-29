@@ -2,7 +2,10 @@ import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type ValueOf } from '~/libs/types/types.js';
-import { type OrderResponseDto } from '~/packages/orders/orders.js';
+import {
+  type OrderResponseDto,
+  type OrderResponseWithAvatarDto,
+} from '~/packages/orders/orders.js';
 
 import {
   calculateOrderPrice,
@@ -24,7 +27,7 @@ type State = {
   price: number;
   dataStatus: ValueOf<typeof DataStatus>;
   routeData: RouteData | null;
-  currentOrder: OrderResponseDto | null;
+  currentOrder: (OrderResponseDto | OrderResponseWithAvatarDto) | null;
 };
 
 const initialState: State = {
