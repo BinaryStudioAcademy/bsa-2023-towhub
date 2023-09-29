@@ -1,11 +1,17 @@
 import { type ColumnDef } from '@tanstack/react-table';
-import { getFullName } from 'shared/build';
+import {
+  type FileVerificationStatusValues,
+  getFullName,
+} from 'shared/build/index.js';
 
+import { Badge } from '~/libs/components/components.js';
 import { ImgPath } from '~/libs/enums/enums.js';
 import { type DriverWithUserData } from '~/libs/types/types.js';
 import { verificationStatusToReadableFormat } from '~/slices/driver/libs/maps/maps.js';
 
 import { COLUMN_AVATAR_SIZE } from '../libs/constants/constants.js';
+import { verificationStatusToBadgeColor } from '../libs/maps/maps.js';
+import style from '../styles.module.scss';
 
 const columns: ColumnDef<DriverWithUserData>[] = [
   {
@@ -53,6 +59,18 @@ const columns: ColumnDef<DriverWithUserData>[] = [
         : '';
     },
     footer: 'Verification status',
+    cell: ({ getValue }): JSX.Element => (
+      <Badge
+        className={style.verificationBadge}
+        color={
+          verificationStatusToBadgeColor[
+            getValue() as FileVerificationStatusValues
+          ]
+        }
+      >
+        {getValue() as string}
+      </Badge>
+    ),
     size: 303,
   },
 ];
