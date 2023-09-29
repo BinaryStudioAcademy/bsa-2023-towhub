@@ -1,5 +1,5 @@
 import { Form, Link } from '~/libs/components/components.js';
-import { AppRoute } from '~/libs/enums/app-route.enum.js';
+import { AppRoute } from '~/libs/enums/enums.js';
 import { type ServerErrorHandling } from '~/libs/types/types.js';
 import {
   type UserSignInRequestDto,
@@ -30,9 +30,8 @@ const SignInForm: React.FC<Properties> = ({
       serverError={serverError}
     />
     <p className={styles.text}>
-      Don`t have an account yet?
-      <Link to={AppRoute.WELCOME} className={styles.link}>
-        {' '}
+      Don`t have an account yet?{' '}
+      <Link to={AppRoute.WELCOME} className={'link commonLink'}>
         Sign up
       </Link>
     </p>

@@ -24,6 +24,7 @@ import {
   Order,
   Orders,
   Profile,
+  SetupPayment,
   WelcomePage,
 } from '~/pages/pages.js';
 import { selectUser } from '~/slices/auth/selectors.js';
@@ -73,6 +74,14 @@ const Router = (): JSX.Element => {
         element={<ProtectedRoute allowedUserGroup={UserGroupKey.BUSINESS} />}
       >
         <Route
+          path={AppRoute.SETUP_PAYMENT}
+          element={
+            <PageLayout isSidebarHidden>
+              <SetupPayment />
+            </PageLayout>
+          }
+        />
+        <Route
           path={AppRoute.DASHBOARD_ORDERS}
           element={
             <PageLayout>
@@ -90,6 +99,14 @@ const Router = (): JSX.Element => {
         />
         <Route
           path={AppRoute.DASHBOARD_DRIVERS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_PAYMENTS}
           element={
             <PageLayout>
               <Dashboard />

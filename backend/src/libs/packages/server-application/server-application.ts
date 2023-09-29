@@ -8,6 +8,7 @@ import { driverController, driverService } from '~/packages/drivers/drivers.js';
 import { filesController } from '~/packages/files/files.js';
 import { orderController } from '~/packages/orders/orders.js';
 import { shiftController } from '~/packages/shifts/shift.js';
+import { stripeController } from '~/packages/stripe/stripe.js';
 import { truckController } from '~/packages/trucks/trucks.js';
 import { userController, userService } from '~/packages/users/users.js';
 
@@ -25,6 +26,7 @@ const apiV1 = new ServerAppApi(
   ...shiftController.routes,
   ...orderController.routes,
   ...driverController.routes,
+  ...stripeController.routes,
 );
 
 const serverApp = new ServerApp({

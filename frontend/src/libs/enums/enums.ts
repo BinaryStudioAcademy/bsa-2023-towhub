@@ -1,4 +1,3 @@
-export { AppRoute } from './app-route.enum.js';
 export { BurgerMenuItemsName } from './burger-menu-items-name.enum.js';
 export { DataStatus } from './data-status.enum.js';
 export { FormLabel, FormName } from './form.enum.js';
@@ -12,6 +11,7 @@ export { SidebarTabsPath } from './sidebar-tabs-path.enum.js';
 export {
   ApiPath,
   AppEnvironment,
+  AppRoute,
   AuthMode,
   ContentType,
   HttpCode,

@@ -25,7 +25,7 @@ import {
 const addTruck = createAsyncThunk<
   TruckEntityT,
   TruckAddRequestDto & { queryString?: string },
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(
   `${sliceName}/add-truck`,
   async ({ queryString, ...payload }, { rejectWithValue, extra, dispatch }) => {
@@ -99,7 +99,7 @@ const calculateArrivalTime = createAsyncThunk<
 const getAllTrucksByUserId = createAsyncThunk<
   TruckEntityT[],
   Pick<UsersTrucksEntityT, 'userId'>,
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(
   `${sliceName}/get-all-trucks-by-user-id`,
   async (payload, { extra, rejectWithValue, dispatch, getState }) => {
@@ -126,7 +126,7 @@ const getAllTrucksByUserId = createAsyncThunk<
 const findAllTrucksForBusiness = createAsyncThunk<
   TruckGetAllResponseDto,
   string | undefined,
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(
   `${sliceName}/find-all-trucks-for-business`,
   async (payload, { rejectWithValue, extra }) => {
