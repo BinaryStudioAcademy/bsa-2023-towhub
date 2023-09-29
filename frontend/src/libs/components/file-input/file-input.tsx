@@ -1,5 +1,4 @@
 import {
-  type DropEvent,
   type DropzoneOptions,
   type ErrorCode,
   type FileRejection,
@@ -101,6 +100,20 @@ const FileInput = <T extends FieldValues & FileFormType>({
           return;
         }
       }
+
+      for (const file of acceptedFiles) {
+        const isValidFileName = checkValidFileName(file.name);
+
+        if (!isValidFileName) {
+          setError('files', {
+            type: 'invalid-file-name',
+            message: `File "${file.name}": Invalid name.`,
+          });
+
+          return;
+        }
+      }
+
       append(
         acceptedFiles.map(
           (file) =>
@@ -133,44 +146,9 @@ const FileInput = <T extends FieldValues & FileFormType>({
     [fileInputConfig, setError],
   );
 
-  const handleFilesFromEvent = useCallback(
-    async (event_: DropEvent) => {
-      const event = event_ as DragEvent | FileSystemFileHandle[];
-
-      let files: File[];
-
-      if (Array.isArray(event)) {
-        files = await Promise.all(
-          event.map((fileHandle) => fileHandle.getFile()),
-        );
-      } else {
-        const { dataTransfer } = event;
-
-        files = dataTransfer ? [...dataTransfer.files] : [];
-      }
-
-      for (const file of files) {
-        const isValidFileName = checkValidFileName(file.name);
-
-        if (!isValidFileName) {
-          setError('files', {
-            type: 'invalid-file-name',
-            message: `File "${file.name}": Invalid name.`,
-          });
-
-          return [];
-        }
-      }
-
-      return files;
-    },
-    [setError],
-  );
-
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
     onDropRejected: handleDropRejected,
-    getFilesFromEvent: handleFilesFromEvent,
     noDrag: isDisabled,
     noClick: isDisabled,
     noKeyboard: true,
