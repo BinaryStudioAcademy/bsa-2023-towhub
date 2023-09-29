@@ -190,12 +190,6 @@ const DriverOrder = (): JSX.Element => {
               <span className={styles.value}>{order.customerPhone}</span>
             </p>
             <p className={styles.detail}>
-              <Icon className={styles.timeIcon} iconName="clock" /> Time:{' '}
-              <span className={styles.value}>
-                {new Date(order.scheduledTime).toLocaleString()}
-              </span>
-            </p>
-            <p className={styles.detail}>
               <Icon className={styles.locationIcon} iconName="location dot" />{' '}
               Location: <span className={styles.value}>{origin}</span>
             </p>
