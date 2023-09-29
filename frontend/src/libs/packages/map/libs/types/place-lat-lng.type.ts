@@ -1,6 +1,8 @@
+import { type Coordinates } from '~/libs/types/types.js';
+
 type PlaceLatLng = {
-  startPoint: google.maps.LatLngLiteral;
-  endPoint: google.maps.LatLngLiteral;
+  startPoint: Coordinates;
+  endPoint: Coordinates;
 };
 
 export { type PlaceLatLng };

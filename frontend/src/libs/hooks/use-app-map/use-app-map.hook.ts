@@ -12,17 +12,18 @@ import {
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import { type MapService } from '~/libs/packages/map/map.js';
 import { MapConnector } from '~/libs/packages/map/map-connector.package.js';
+import { type Coordinates } from '~/libs/types/types.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
 import { getBounds, setMapService } from './libs/helpers/helpers.js';
 
 type Properties = {
-  center: google.maps.LatLngLiteral | null;
-  points?: google.maps.LatLngLiteral[];
+  center: Coordinates | null;
+  points?: Coordinates[];
   zoom?: number;
-  userLocation?: google.maps.LatLngLiteral;
-  destination: google.maps.LatLngLiteral | null;
-  markers?: google.maps.LatLngLiteral[];
+  userLocation?: Coordinates;
+  destination: Coordinates | null;
+  markers?: Coordinates[];
   className?: string;
   pricePerKm?: number;
   startAddress?: string;
@@ -64,23 +65,21 @@ const useAppMap = ({
         return;
       }
 
-      if (center && destination) {
+      if (destination || markers.length > 0 || userLocation) {
         mapService.current.removeMarkers();
+      }
+
+      if (center && destination) {
         mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);
       }
 
-      if (markers.length > 0) {
-        mapService.current.removeMarkers();
-
-        for (const marker of markers) {
-          mapService.current.addMarker(marker, true);
-        }
+      for (const marker of markers) {
+        mapService.current.addMarker(marker, true);
       }
 
       if (userLocation) {
-        mapService.current.removeMarkers();
         mapService.current.addMarker(userLocation);
 
         if (!isZoomChanged) {
