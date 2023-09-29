@@ -1,5 +1,5 @@
 import { type FormField } from '~/libs/types/form.type.js';
-import { type LocationChangeHandler } from '~/libs/types/location-change-handler.type.js';
+import { type LocationChangeHandler } from '~/libs/types/types.js';
 import { type OrderCreateFormDto } from '~/packages/orders/libs/types/types.js';
 
 import { TruckCarsQuantity } from './enums.js';
