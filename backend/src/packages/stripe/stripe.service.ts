@@ -149,6 +149,14 @@ class StripeService {
       type: CONNECT_ACCOUNT_TYPE,
       email: user.email,
       default_currency: DEFAULT_CURRENCY,
+      capabilities: {
+        card_payments: {
+          requested: true,
+        },
+        transfers: {
+          requested: true,
+        },
+      },
       business_profile: {
         // TODO: this is temporary, I guess, we would eventually have a personal business page in our app
         // Anyway, this field will be shown to the enduser during registration unless we prefill it prematurely
@@ -181,11 +189,11 @@ class StripeService {
     business: BusinessEntityT,
     account: Stripe.Account,
   ): Promise<void> {
-    const { stripeId, id } = business;
+    const { stripeId, id, isStripeActivated } = business;
 
     if (!stripeId) {
       await this.businessService.updateStripeData(id, {
-        isStripeActivated: true,
+        isStripeActivated,
         stripeId: account.id,
       });
     }
@@ -370,20 +378,20 @@ class StripeService {
     };
   }
 
-  public collectPaymentIntents(
+  public async collectPaymentIntents(
     options: GetPaymentsRequest,
   ): Promise<PaymentIntentWithMetadata[]> {
-    return this.stripe.paymentIntents
+    const result = await this.stripe.paymentIntents
       .search(buildPaymetnsRequestQuery(options))
-      .autoPagingToArray({ limit: MAX_PAGINATION_LIMIT }) as Promise<
-      PaymentIntentWithMetadata[]
-    >;
+      .autoPagingToArray({ limit: MAX_PAGINATION_LIMIT });
+
+    return result as PaymentIntentWithMetadata[];
   }
 
   private async checkUserBusinessAndGetId(
     user: UserEntityObjectWithGroupT,
   ): Promise<BusinessEntityT['id'] | null> {
-    if (user.group.name !== UserGroupKey.BUSINESS) {
+    if (user.group.key !== UserGroupKey.BUSINESS) {
       return null;
     }
 

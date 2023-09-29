@@ -102,7 +102,7 @@ const Table = <T,>({
   if (data.length === 0 && !isLoading) {
     return (
       <div className={getValidClassNames('h4', styles.message)}>
-        {emptyTableMessage ?? 'There are no data here yet.'}
+        {emptyTableMessage ?? 'There is no data here yet.'}
       </div>
     );
   }

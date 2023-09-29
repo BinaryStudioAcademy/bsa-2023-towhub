@@ -116,7 +116,11 @@ const ConnectStripeForm: React.FC = () => {
                 control={control}
                 errors={errors}
               />
-              <Button type="submit" label="" isDisabled={!isLinkRequestAccepted}>
+              <Button
+                type="submit"
+                label=""
+                isDisabled={!isLinkRequestAccepted}
+              >
                 <>
                   {isLinkRequestAccepted && (
                     <Icon iconName={IconName.SYNC} className="fa-spin" />
