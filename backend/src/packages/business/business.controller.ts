@@ -529,10 +529,10 @@ class BusinessController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const updatedBusiness = await this.businessService.update({
-      payload: options.body,
-      userId: options.user.id,
-    });
+    const updatedBusiness = await this.businessService.updateByOwnerId(
+      options.user.id,
+      options.body,
+    );
 
     return {
       status: HttpCode.OK,

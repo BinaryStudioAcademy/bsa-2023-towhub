@@ -7,6 +7,7 @@ import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
 import { type MapService } from '../map/map.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
+import { convertCurrencyToCents } from '../stripe/libs/helpers/helpers.js';
 import { type TruckService } from '../trucks/truck.service.js';
 import { type UserService } from '../users/user.service.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
@@ -79,6 +80,8 @@ class OrderService implements Omit<IService, 'find'> {
     this.mapService = mapService;
 
     this.socketService = socket;
+
+    this.mapService = mapService;
   }
 
   public async create(
@@ -104,7 +107,7 @@ class OrderService implements Omit<IService, 'find'> {
     const truck = await this.truckService.findById(truckId);
 
     if (!truck) {
-      throw new NotFoundError({ message: HttpMessage.TRUCK_DOES_NOT_EXISTS });
+      throw new NotFoundError({ message: HttpMessage.TRUCK_DOES_NOT_EXIST });
     }
     const shift =
       await this.shiftService.findOpenedByTruckWithBusiness(truckId);
@@ -130,7 +133,7 @@ class OrderService implements Omit<IService, 'find'> {
     });
 
     const order = await this.orderRepository.create({
-      price,
+      price: convertCurrencyToCents(price),
       scheduledTime,
       carsQty,
       startPoint,
@@ -226,7 +229,7 @@ class OrderService implements Omit<IService, 'find'> {
 
     if (!truck) {
       throw new NotFoundError({
-        message: HttpMessage.TRUCK_DOES_NOT_EXISTS,
+        message: HttpMessage.TRUCK_DOES_NOT_EXIST,
       });
     }
 

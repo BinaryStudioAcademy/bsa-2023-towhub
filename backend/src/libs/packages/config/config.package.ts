@@ -66,6 +66,12 @@ class Config implements IConfig {
           env: 'PORT',
           default: null,
         },
+        FRONTEND_BASE_URL: {
+          doc: 'Current base url of the frontend',
+          format: String,
+          env: 'FRONTEND_BASE_URL',
+          default: 'http://localhost:3000',
+        },
       },
       AWS: {
         ACCESS_KEY_ID: {
@@ -181,6 +187,34 @@ class Config implements IConfig {
           format: String,
           env: 'GOOGLE_MAPS_API_KEY',
           default: null,
+        },
+      },
+      STRIPE: {
+        API_KEY: {
+          doc: 'Main stripe account api key',
+          format: String,
+          env: 'STRIPE_API_KEY',
+          default: null,
+        },
+        API_VERSION: {
+          doc: 'Supported stripe api version',
+          format: String,
+          env: 'STRIPE_API_VERSION',
+          default: null,
+        },
+        WEBHOOK_SECRET: {
+          doc: 'Stripe webhook secret key',
+          format: String,
+          env: 'STRIPE_WEBHOOK_SECRET',
+          default: null,
+        },
+      },
+      BUSINESS: {
+        APPLICATION_FEE_AMOUNT: {
+          doc: 'Amount of business application fee as fraction',
+          format: Number,
+          env: 'BUSINESS_APPLICATION_FEE_AMOUNT',
+          default: 0,
         },
       },
     });

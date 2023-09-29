@@ -15,7 +15,7 @@ const createDriver = createAsyncThunk<
   DriverCreateRequestDto<FileObject> & {
     businessId: number;
   },
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(
   `${sliceName}/create-driver`,
   async ({ businessId, files, ...payload }, { extra, rejectWithValue }) => {

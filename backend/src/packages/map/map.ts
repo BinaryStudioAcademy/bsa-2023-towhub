@@ -9,4 +9,6 @@ const mapService = new MapService(
   config.ENV.API.GOOGLE_MAPS_API_KEY,
 );
 
+export { convertMetersToKm } from './libs/helpers/helpers.js';
 export { mapService };
+export { type MapService } from './map.service.js';
