@@ -359,11 +359,11 @@ class OrderService implements Omit<IService, 'find'> {
 
     const total = query.status
       ? await this.orderRepository.getUserOrBusinessTotal({
-          ownerId: business.id,
+          businessId: business.id,
           status: query.status,
         })
       : await this.orderRepository.getUserOrBusinessTotal({
-          ownerId: business.id,
+          businessId: business.id,
         });
 
     const items = usersOrders.map((it) => {
