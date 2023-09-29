@@ -1,7 +1,6 @@
 import { type FC } from 'react';
 
 import { DataStatus } from '~/libs/enums/data-status.enum';
-import { AppRoute } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppSelector,
@@ -57,7 +56,7 @@ const DriverSocketProvider: FC = () => {
 
   useEffect(() => {
     if (currentOrder) {
-      navigate(`${AppRoute.ORDERS}/${currentOrder.id}`);
+      navigate(`driver/orders/${currentOrder.id}`);
     }
   }, [navigate, currentOrder]);
 

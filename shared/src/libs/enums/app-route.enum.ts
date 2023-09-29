@@ -11,7 +11,7 @@ const AppRoute = {
   TRUCKS: '/trucks',
   AVAILABLE_TRUCKS: '/available-trucks',
   ORDERS: '/orders',
-  DRIVER_ORDER: '/driver/orders',
+  DRIVER_ORDER: '/driver/orders/:orderId',
   DASHBOARD_ORDERS: '/dashboard/orders',
   DASHBOARD_TRUCKS: '/dashboard/trucks',
   DASHBOARD_DRIVERS: '/dashboard/drivers',
