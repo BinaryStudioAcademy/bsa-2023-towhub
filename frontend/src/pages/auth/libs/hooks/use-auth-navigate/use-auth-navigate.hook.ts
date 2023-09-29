@@ -1,5 +1,5 @@
 import { AppRoute } from '~/libs/enums/enums.js';
-import { useNavigate } from '~/libs/hooks/hooks.js';
+import { useCallback, useNavigate } from '~/libs/hooks/hooks.js';
 import {
   type BusinessSignUpResponseDto,
   type CustomerSignUpResponseDto,
@@ -19,30 +19,33 @@ type AuthNavigateHook = {
 const useAuthNavigate = (): AuthNavigateHook => {
   const navigate = useNavigate();
 
-  const navigateAuthUser = (
-    user:
-      | UserSignInResponseDto
-      | CustomerSignUpResponseDto
-      | BusinessSignUpResponseDto,
-  ): void => {
-    switch (user.group.key) {
-      case UserGroupKey.BUSINESS: {
-        navigate(AppRoute.DASHBOARD_ORDERS);
-        break;
+  const navigateAuthUser = useCallback(
+    (
+      user:
+        | UserSignInResponseDto
+        | CustomerSignUpResponseDto
+        | BusinessSignUpResponseDto,
+    ): void => {
+      switch (user.group.key) {
+        case UserGroupKey.BUSINESS: {
+          navigate(AppRoute.DASHBOARD_ORDERS);
+          break;
+        }
+        case UserGroupKey.CUSTOMER: {
+          navigate(AppRoute.ROOT);
+          break;
+        }
+        case UserGroupKey.DRIVER: {
+          navigate(AppRoute.AVAILABLE_TRUCKS);
+          break;
+        }
+        default: {
+          break;
+        }
       }
-      case UserGroupKey.CUSTOMER: {
-        navigate(AppRoute.ROOT);
-        break;
-      }
-      case UserGroupKey.DRIVER: {
-        navigate(AppRoute.AVAILABLE_TRUCKS);
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  };
+    },
+    [navigate],
+  );
 
   return { navigateAuthUser };
 };
