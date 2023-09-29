@@ -6,7 +6,6 @@ import { type IStorage } from '~/libs/packages/storage/storage.js';
 import { StripeApiPath } from './libs/enums/enums.js';
 import {
   type GenerateCheckoutLinkRequest,
-  type GetPaymentsRequest,
   type GetPaymentsResponse,
 } from './libs/types/types.js';
 
@@ -52,16 +51,18 @@ class StripeApi extends HttpApi {
     return result;
   }
 
-  public async getPayments(
-    payload: GetPaymentsRequest,
-  ): Promise<GetPaymentsResponse> {
+  public async getPayments(query = ''): Promise<GetPaymentsResponse> {
     const response = await this.load(
-      this.getFullEndpoint(StripeApiPath.REQUEST_BUSINESS_PAYMENTS, {}),
+      this.getFullEndpoint(
+        StripeApiPath.REQUEST_BUSINESS_PAYMENTS,
+        '?',
+        query,
+        {},
+      ),
       {
-        method: 'POST',
+        method: 'GET',
         contentType: ContentType.JSON,
         hasAuth: true,
-        payload: JSON.stringify(payload),
       },
     );
 

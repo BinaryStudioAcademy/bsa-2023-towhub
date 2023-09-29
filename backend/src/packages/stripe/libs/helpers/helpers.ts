@@ -7,4 +7,4 @@ export { convertCurrencyToCents } from './convert-currency-to-cents.helper.js';
 export { convertDateToUnixSeconds } from './convert-date-to-unix-seconds.helper.js';
 export { convertUnixSecondsToDate } from './convert-unix-seconds-to-date.helper.js';
 export { paginateArray } from './paginate-array.helper.js';
-export { configureString, convertToIndex } from 'shared/build/index.js';
+export { configureString } from 'shared/build/index.js';

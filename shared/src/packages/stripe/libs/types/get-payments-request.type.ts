@@ -9,7 +9,7 @@ type GetPaymentsRequest = {
   customerPhone?: OrderEntity['customerPhone'];
   intervalFrom?: Date;
   intervalTo?: Date;
-  limit?: number;
+  size?: number;
   page?: number;
 };
 

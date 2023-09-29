@@ -108,6 +108,14 @@ const Router = (): JSX.Element => {
             </PageLayout>
           }
         />
+        <Route
+          path={AppRoute.DASHBOARD_PAYMENTS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
       </Route>
       <Route path={AppRoute.ROOT} element={<ProtectedRouteBusinessCustomer />}>
         <Route

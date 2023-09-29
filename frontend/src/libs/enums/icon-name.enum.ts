@@ -29,6 +29,7 @@ const IconName = {
   CLOCK: 'clock',
   CAR: 'car',
   SYNC: 'sync',
+  PAYMENTS: 'payments',
 } as const;
 
 export { IconName };

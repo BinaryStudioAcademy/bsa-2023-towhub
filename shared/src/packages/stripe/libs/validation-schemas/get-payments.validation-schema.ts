@@ -23,8 +23,8 @@ const getPaymentsValidationSchema = joi.object<GetPaymentsRequest>({
   customerPhone: joi.string(),
   intervalFrom: joi.date().iso().custom(dateCustomValidator),
   intervalTo: joi.date().iso().custom(dateCustomValidator),
-  limit: joi.number().integer().min(1),
-  page: joi.number().integer().min(1),
+  size: joi.number().integer().min(1),
+  page: joi.number().integer().min(0),
 });
 
 export { getPaymentsValidationSchema };

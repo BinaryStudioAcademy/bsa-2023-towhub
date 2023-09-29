@@ -5,7 +5,6 @@ import { type AsyncThunkConfig } from '~/libs/types/types.js';
 
 import {
   type GenerateCheckoutLinkRequest,
-  type GetPaymentsRequest,
   type GetPaymentsResponse,
 } from './libs/types/types.js';
 import { name as sliceName } from './stripe.slice.js';
@@ -42,13 +41,13 @@ const generateCheckoutLink = createAsyncThunk<
 
 const getPayments = createAsyncThunk<
   GetPaymentsResponse,
-  GetPaymentsRequest,
-  AsyncThunkConfig
->(`${sliceName}/get-payments`, async (payload, { extra }) => {
+  string | undefined,
+  AsyncThunkConfig<null>
+>(`${sliceName}/get-payments`, async (query, { extra }) => {
   const { stripeApi, notification } = extra;
 
   try {
-    return await stripeApi.getPayments(payload);
+    return await stripeApi.getPayments(query);
   } catch (error) {
     notification.error(getErrorMessage(error));
     throw error;

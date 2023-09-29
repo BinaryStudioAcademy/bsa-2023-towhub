@@ -16,7 +16,10 @@ import {
   type GetPaymentsResponse,
 } from './libs/types/types.js';
 import { type WebhookBody } from './libs/types/webhook-body.type.js';
-import { getPaymentsBusinessValidationSchema } from './libs/validation-schemas/validation-schemas.js';
+import {
+  getPaymentsBusinessValidationSchema,
+  getPaymentsCustomerValidationSchema,
+} from './libs/validation-schemas/validation-schemas.js';
 import { type StripeService } from './stripe.service.js';
 
 class StripeController extends Controller {
@@ -62,18 +65,18 @@ class StripeController extends Controller {
 
     this.addRoute({
       path: StripeApiPath.REQUEST_BUSINESS_PAYMENTS,
-      method: 'POST',
+      method: 'GET',
       authStrategy: [
         AuthStrategy.VERIFY_JWT,
         AuthStrategy.VERIFY_BUSINESS_GROUP,
       ],
       validation: {
-        body: getPaymentsBusinessValidationSchema,
+        query: getPaymentsBusinessValidationSchema,
       },
       handler: (options) =>
         this.getPayments(
           options as ApiHandlerOptions<{
-            body: GetPaymentsRequest;
+            query: GetPaymentsRequest;
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -81,15 +84,15 @@ class StripeController extends Controller {
 
     this.addRoute({
       path: StripeApiPath.REQUEST_CUSTOMER_PAYMENTS,
-      method: 'POST',
+      method: 'GET',
       authStrategy: [AuthStrategy.VERIFY_JWT],
       validation: {
-        body: getPaymentsBusinessValidationSchema,
+        query: getPaymentsCustomerValidationSchema,
       },
       handler: (options) =>
         this.getPayments(
           options as ApiHandlerOptions<{
-            body: GetPaymentsRequest;
+            query: GetPaymentsRequest;
             user: UserEntityObjectWithGroupT;
           }>,
         ),
@@ -156,13 +159,13 @@ class StripeController extends Controller {
 
   private async getPayments(
     options: ApiHandlerOptions<{
-      body: GetPaymentsRequest;
+      query: GetPaymentsRequest;
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse<GetPaymentsResponse>> {
     const result = await this.stripeService.getPayments(
       options.user,
-      options.body,
+      options.query,
     );
 
     return {

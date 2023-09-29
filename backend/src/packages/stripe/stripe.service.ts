@@ -358,9 +358,9 @@ class StripeService {
     const items = await this.collectPaymentIntents(options);
 
     const page = options.page ?? FIRST_PAGE;
-    const limit = options.limit ?? DEFAULT_PAGE_SIZE;
+    const size = options.size ?? DEFAULT_PAGE_SIZE;
 
-    const itemsAsDto = paginateArray(items, page, limit).map((item) =>
+    const itemsAsDto = paginateArray(items, page, size).map((item) =>
       PaymentEntity.initialize(item, item.metadata).toObject(),
     );
 

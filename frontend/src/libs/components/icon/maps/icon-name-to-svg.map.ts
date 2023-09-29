@@ -18,6 +18,7 @@ import {
   faLocationDot,
   faMap,
   faMobileScreenButton,
+  faMoneyBills,
   faPen,
   faPhone,
   faPlus,
@@ -66,6 +67,7 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.CLOCK]: faClock,
   [IconName.CAR]: faCar,
   [IconName.SYNC]: faSync,
+  [IconName.PAYMENTS]: faMoneyBills,
 };
 
 export { iconNameToSvg };
