@@ -40,9 +40,11 @@
 }
 
 .textSign {
+  width: 100%;
   height: max-content;
   padding: 2.25vmin;
   color: $blue-extra-dark;
+  text-align: center;
   background-color: $white;
   border: 1px solid $grey-border;
   border-radius: 10px;

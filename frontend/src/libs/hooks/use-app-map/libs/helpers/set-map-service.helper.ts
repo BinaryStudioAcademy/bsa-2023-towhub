@@ -31,7 +31,7 @@ const setMapService = ({
       center: center,
       zoom,
     });
-    mapService.current.addMarker(center, false);
+    mapService.current.addMarkerStatic(center);
   } else {
     const bounds = getBounds(points);
 
@@ -41,7 +41,7 @@ const setMapService = ({
       zoom,
     });
     for (const point of points) {
-      mapService.current.addMarker(point, false);
+      mapService.current.addMarkerStatic(point);
     }
   }
 };
