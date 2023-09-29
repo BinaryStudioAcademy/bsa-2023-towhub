@@ -158,15 +158,7 @@ class StripeService {
         },
       },
       business_profile: {
-        // TODO: this is temporary, I guess, we would eventually have a personal business page in our app
-        // Anyway, this field will be shown to the enduser during registration unless we prefill it prematurely
-        url:
-          process.env.NODE_ENV === 'production'
-            ? constructUrl(
-                this.config.APP.FRONTEND_BASE_URL,
-                `/business/${user.business.id}`,
-              )
-            : 'https://towhub.com',
+        url: this.config.APP.FRONTEND_BASE_URL,
         mcc: String(STRIPE_TOWING_SERVICES_MCC),
         name: user.business.companyName,
       },

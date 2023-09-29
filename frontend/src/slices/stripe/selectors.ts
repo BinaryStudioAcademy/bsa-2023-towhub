@@ -14,8 +14,11 @@ const selectExpressAccountLink = (
   return state[name].expressAccountLink;
 };
 
-const selectPayments = (state: RootState): RootState[typeof name]['payments'] =>
-  state[name].payments;
+const selectPayments = (
+  state: RootState,
+): RootState[typeof name]['payments'] => {
+  return state[name].payments;
+};
 
 const selectStripeDataStatus = (
   state: RootState,
