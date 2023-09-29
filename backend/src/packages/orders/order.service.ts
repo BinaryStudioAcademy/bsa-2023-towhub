@@ -16,6 +16,8 @@ import { checkIsCustomer, checkIsDriver } from './libs/helpers/helpers.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
+  type OrderFindAllUserOrdersQuery,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderQueryParameters,
   type OrderResponseDto,
   type OrdersListResponseDto,
@@ -343,16 +345,41 @@ class OrderService implements Omit<IService, 'find'> {
     );
 
     const total = query.status
-      ? await this.orderRepository.getTotalBusiness({
-          businessId: business.id,
+      ? await this.orderRepository.getUserOrBusinessTotal({
+          ownerId: business.id,
           status: query.status,
         })
-      : await this.orderRepository.getTotalBusiness({
-          businessId: business.id,
+      : await this.orderRepository.getUserOrBusinessTotal({
+          ownerId: business.id,
         });
 
     return {
       items: usersOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      total,
+    };
+  }
+
+  public async findAllUserOrders(
+    userId: number,
+    { status, ...query }: OrderFindAllUserOrdersQuery,
+  ): Promise<OrderFindAllUserOrdersResponseDto> {
+    const search = {
+      userId,
+      status,
+    };
+    const userOrdersRequest = this.orderRepository.findAllUserOrders(
+      search,
+      query,
+    );
+    const totalRequest = this.orderRepository.getUserOrBusinessTotal(search);
+
+    const [userOrders, total] = await Promise.all([
+      userOrdersRequest,
+      totalRequest,
+    ]);
+
+    return {
+      items: userOrders.map((it) => OrderEntity.initialize(it).toObject()),
       total,
     };
   }
