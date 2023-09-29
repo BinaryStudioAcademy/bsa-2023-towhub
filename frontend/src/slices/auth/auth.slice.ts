@@ -1,13 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
-import { type AuthUser, type ValueOf } from '~/libs/types/types.js';
+import {
+  type AuthUser,
+  type SocketErrorValues,
+  type UserEntityObjectWithGroupAndBusinessT,
+  type ValueOf,
+} from '~/libs/types/types.js';
 
 import {
   authorizeDriverSocket,
+  editBusiness,
+  editCustomer,
   getCurrent,
   logOut,
+  resetAuthorizedDriverSocket,
   signIn,
   signUp,
 } from './actions.js';
@@ -16,6 +24,7 @@ type State = {
   error: HttpError | null;
   dataStatus: ValueOf<typeof DataStatus>;
   socketDriverAuthStatus: ValueOf<typeof DataStatus>;
+  socketDriverAuthErrorMessage: SocketErrorValues | null;
   user: AuthUser | null;
 };
 
@@ -23,6 +32,7 @@ const initialState: State = {
   error: null,
   dataStatus: DataStatus.IDLE,
   socketDriverAuthStatus: DataStatus.IDLE,
+  socketDriverAuthErrorMessage: null,
   user: null,
 };
 
@@ -35,61 +45,101 @@ const { reducer, actions, name } = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(signUp.pending, (state) => {
-      state.dataStatus = DataStatus.PENDING;
-    });
-    builder.addCase(signUp.fulfilled, (state, action) => {
-      state.error = null;
-      state.user = action.payload;
-      state.dataStatus = DataStatus.FULFILLED;
-    });
-    builder.addCase(authorizeDriverSocket.pending, (state) => {
-      state.socketDriverAuthStatus = DataStatus.PENDING;
-    });
-    builder.addCase(authorizeDriverSocket.rejected, (state) => {
-      state.socketDriverAuthStatus = DataStatus.REJECTED;
-    });
-    builder.addCase(authorizeDriverSocket.fulfilled, (state) => {
-      state.socketDriverAuthStatus = DataStatus.FULFILLED;
-    });
-    builder.addCase(signUp.rejected, (state, { payload }) => {
-      state.dataStatus = DataStatus.REJECTED;
-      state.error = payload ?? null;
-    });
-    builder.addCase(signIn.pending, (state) => {
-      state.dataStatus = DataStatus.PENDING;
-    });
-    builder.addCase(signIn.fulfilled, (state, action) => {
-      state.error = null;
-      state.user = action.payload;
-      state.dataStatus = DataStatus.FULFILLED;
-    });
-    builder.addCase(signIn.rejected, (state, { payload }) => {
-      state.dataStatus = DataStatus.REJECTED;
-      state.error = payload ?? null;
-    });
-    builder.addCase(getCurrent.pending, (state) => {
-      state.dataStatus = DataStatus.PENDING;
-    });
-    builder.addCase(getCurrent.fulfilled, (state, action) => {
-      state.user = action.payload;
-      state.dataStatus = DataStatus.FULFILLED;
-    });
-    builder.addCase(getCurrent.rejected, (state) => {
-      state.dataStatus = DataStatus.REJECTED;
-    });
-    builder.addCase(logOut.pending, (state) => {
-      state.dataStatus = DataStatus.PENDING;
-    });
-    builder.addCase(logOut.fulfilled, (state) => {
-      state.user = initialState.user;
-      state.dataStatus = DataStatus.FULFILLED;
-      state.socketDriverAuthStatus = DataStatus.IDLE;
-    });
-    builder.addCase(logOut.rejected, (state, { payload }) => {
-      state.dataStatus = DataStatus.REJECTED;
-      state.error = payload ?? null;
-    });
+    builder
+      .addCase(resetAuthorizedDriverSocket, (state) => {
+        state.socketDriverAuthStatus = DataStatus.IDLE;
+      })
+      .addCase(getCurrent.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(getCurrent.rejected, (state) => {
+        state.dataStatus = DataStatus.REJECTED;
+      })
+      .addCase(signIn.fulfilled, (state, action) => {
+        state.error = null;
+        state.user = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.error = null;
+        state.user = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(editBusiness.fulfilled, (state, action) => {
+        const { firstName, lastName, phone, email, business } = action.payload;
+
+        const user = state.user as UserEntityObjectWithGroupAndBusinessT;
+        state.user = {
+          ...user,
+          firstName,
+          lastName,
+          phone,
+          email,
+          business: {
+            ...user.business,
+            taxNumber: business.taxNumber,
+            companyName: business.companyName,
+          },
+        };
+
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(editCustomer.fulfilled, (state, action) => {
+        const { firstName, lastName, phone, email } = action.payload;
+
+        if (state.user) {
+          state.user = {
+            ...state.user,
+            firstName,
+            lastName,
+            phone,
+            email,
+          };
+        }
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(logOut.fulfilled, (state) => {
+        state.user = initialState.user;
+        state.dataStatus = DataStatus.FULFILLED;
+        state.socketDriverAuthStatus = DataStatus.IDLE;
+      })
+      .addCase(authorizeDriverSocket.pending, (state) => {
+        state.socketDriverAuthStatus = DataStatus.PENDING;
+        state.socketDriverAuthErrorMessage = null;
+      })
+      .addCase(authorizeDriverSocket.rejected, (state, action) => {
+        state.socketDriverAuthStatus = DataStatus.REJECTED;
+        state.socketDriverAuthErrorMessage = action.payload ?? null;
+      })
+      .addCase(authorizeDriverSocket.fulfilled, (state) => {
+        state.socketDriverAuthStatus = DataStatus.FULFILLED;
+        state.socketDriverAuthErrorMessage = null;
+      })
+      .addMatcher(
+        isAnyOf(
+          signUp.pending,
+          signIn.pending,
+          getCurrent.pending,
+          logOut.pending,
+        ),
+        (state) => {
+          state.dataStatus = DataStatus.PENDING;
+        },
+      )
+      .addMatcher(
+        isAnyOf(
+          signUp.rejected,
+          signIn.rejected,
+          logOut.rejected,
+          editCustomer.rejected,
+          editBusiness.rejected,
+        ),
+        (state, { payload }) => {
+          state.dataStatus = DataStatus.REJECTED;
+          state.error = payload ?? null;
+        },
+      );
   },
 });
 

@@ -1,4 +1,9 @@
-import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
+import {
+  useAppDispatch,
+  useEffect,
+  useRef,
+  useToggle,
+} from '~/libs/hooks/hooks.js';
 import {
   DEFAULT_CENTER,
   DEFAULT_ZOOM,
@@ -42,8 +47,8 @@ const useAppMap = ({
   shownRoute,
   onMapLoad,
 }: Properties): void => {
+  const [isZoomChanged, toggleIsZoomChanged] = useToggle(false);
   const mapService = useRef<MapService | null>(null);
-
   const dispatch = useAppDispatch();
   useEffect(() => {
     MapConnector.dropMap();
@@ -69,12 +74,18 @@ const useAppMap = ({
       if (markers.length > 0) {
         mapService.current.removeMarkers();
 
-        if (userLocation) {
-          mapService.current.addMarker(userLocation);
-        }
-
         for (const marker of markers) {
           mapService.current.addMarker(marker, true);
+        }
+      }
+
+      if (userLocation) {
+        mapService.current.removeMarkers();
+        mapService.current.addMarker(userLocation);
+
+        if (!isZoomChanged) {
+          mapService.current.setZoom(DEFAULT_ZOOM);
+          toggleIsZoomChanged();
         }
       }
     };
@@ -88,6 +99,8 @@ const useAppMap = ({
     points,
     userLocation,
     zoom,
+    isZoomChanged,
+    toggleIsZoomChanged,
   ]);
 
   useEffect(() => {
@@ -96,14 +109,17 @@ const useAppMap = ({
       mapService.current.fitMap(bounds);
 
       for (const point of points) {
+        mapService.current.removeMarkers();
         mapService.current.addMarker(point, false);
       }
-
-      if (shownRoute) {
-        void mapService.current.addRoute(shownRoute);
-      }
     }
-  }, [points, shownRoute]);
+  }, [points]);
+
+  useEffect(() => {
+    if (mapService.current && shownRoute) {
+      void mapService.current.addRoute(shownRoute);
+    }
+  }, [shownRoute]);
 
   useEffect(() => {
     if (pricePerKm && startAddress && endAddress) {
@@ -116,13 +132,6 @@ const useAppMap = ({
       );
     }
   }, [dispatch, endAddress, startAddress, pricePerKm]);
-
-  useEffect(() => {
-    if (mapService.current && userLocation) {
-      mapService.current.addMarker(userLocation);
-      mapService.current.setZoom(DEFAULT_ZOOM);
-    }
-  }, [userLocation]);
 };
 
 export { useAppMap };

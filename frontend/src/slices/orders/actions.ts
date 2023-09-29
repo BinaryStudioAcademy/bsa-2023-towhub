@@ -1,4 +1,5 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { type OrdersListResponseDto } from 'shared/build/index.js';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
 import { notification } from '~/libs/packages/notification/notification.js';
@@ -15,48 +16,52 @@ import {
 } from '~/packages/orders/orders.js';
 
 import { ActionName } from './libs/enums/enums.js';
+import { notificateOrderStatusChange } from './libs/helpers/notificate-order-status-change.helper.js';
 import { type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
 const getBusinessOrders = createAsyncThunk<
-  OrderResponseDto[],
-  undefined,
-  AsyncThunkConfig
->(`${sliceName}/orders`, async (_, { extra }) => {
+  OrdersListResponseDto,
+  string,
+  AsyncThunkConfig<null>
+>(`${sliceName}/orders`, async (queryString, { extra }) => {
   const { ordersApi } = extra;
 
-  return await ordersApi.getBusinessOrders();
+  return await ordersApi.getBusinessOrders(queryString);
 });
+
 const changeAcceptOrderStatusByDriver = createAsyncThunk<
   OrderUpdateAcceptStatusResponseDto,
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(
   ActionName.CHANGE_ACCEPT_ORDER_STATUS,
-  ({ isAccepted, orderId }, { extra }) => {
+  ({ newStatus, orderId }, { extra }) => {
     const { ordersApi } = extra;
 
-    return ordersApi.changeAcceptOrderStatusByDriver(orderId, { isAccepted });
+    notificateOrderStatusChange(newStatus);
+
+    return ordersApi.changeAcceptOrderStatusByDriver(orderId, { newStatus });
   },
 );
 
 const changeAcceptOrderStatusByCustomer = createAsyncThunk<
   OrderUpdateAcceptStatusResponseDto,
   OrderUpdateAcceptStatusRequestDto & { orderId: string },
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(
   ActionName.CHANGE_ACCEPT_ORDER_STATUS,
-  ({ isAccepted, orderId }, { extra }) => {
+  ({ newStatus, orderId }, { extra }) => {
     const { ordersApi } = extra;
 
-    return ordersApi.changeAcceptOrderStatusByCustomer(orderId, { isAccepted });
+    return ordersApi.changeAcceptOrderStatusByCustomer(orderId, { newStatus });
   },
 );
 
 const createOrder = createAsyncThunk<
   OrderResponseDto,
   OrderCreateFormDto,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(`${sliceName}/create-order`, async (payload, { extra }) => {
   const { ordersApi, mapServiceFactory } = extra;
 
@@ -84,26 +89,27 @@ const createOrder = createAsyncThunk<
 const calculateOrderPrice = createAsyncThunk<
   OrderCalculatePriceResponseDto,
   OrderCalculatePriceRequestDto,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(`${sliceName}/calculateOrderPrice`, (payload, { extra }) => {
   const { ordersApi } = extra;
 
   return ordersApi.calculatePrice(payload);
 });
 
-const getOrder = createAsyncThunk<OrderResponseDto, string, AsyncThunkConfig>(
-  ActionName.GET_ORDER,
-  (orderId, { extra }) => {
-    const { ordersApi } = extra;
+const getOrder = createAsyncThunk<
+  OrderResponseDto,
+  string,
+  AsyncThunkConfig<null>
+>(ActionName.GET_ORDER, (orderId, { extra }) => {
+  const { ordersApi } = extra;
 
-    return ordersApi.getOrder(orderId);
-  },
-);
+  return ordersApi.getOrder(orderId);
+});
 
 const getRouteData = createAsyncThunk<
   RouteData,
   { origin: Coordinates; destination: Coordinates },
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(ActionName.GET_ORDER_POINTS, async ({ origin, destination }, { extra }) => {
   const { mapServiceFactory } = extra;
   const routeData = {
@@ -129,10 +135,18 @@ const getRouteData = createAsyncThunk<
   };
 });
 
+const createOrderFromSocket = createAsyncThunk<
+  OrderResponseDto,
+  OrderResponseDto,
+  AsyncThunkConfig<null>
+>(ActionName.SOCKET.CREATE_ORDER, (order) => {
+  return order;
+});
+
 const updateOrderFromSocket = createAsyncThunk<
   OrderResponseDto,
   OrderResponseDto,
-  AsyncThunkConfig
+  AsyncThunkConfig<null>
 >(ActionName.SOCKET.UPDATE_ORDER, (order) => {
   return order;
 });
@@ -167,6 +181,7 @@ export {
   changeAcceptOrderStatusByCustomer,
   changeAcceptOrderStatusByDriver,
   createOrder,
+  createOrderFromSocket,
   getBusinessOrders,
   getOrder,
   getRouteData,

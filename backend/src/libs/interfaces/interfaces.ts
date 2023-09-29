@@ -3,3 +3,4 @@ export { type IEntity } from './entity.interface.js';
 export { type IJwtService } from './jwt.inteface.js';
 export { type IRepository } from './repository.interface.js';
 export { type IService } from './service.interface.js';
+export { type IEventEmitter } from 'shared/build/index.js';

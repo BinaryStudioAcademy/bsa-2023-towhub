@@ -59,13 +59,20 @@ const OrderListCardBusiness: React.FC<Properties> = ({
           <p className={getValidClassNames('textMdBold')}>
             {driver && getFullName(driver.firstName, driver.lastName)}
           </p>
-          <p className={getValidClassNames('textMd', styles.driverPhone)}>
-            {driver?.phone}
-          </p>
         </div>
-        <div className={styles.truck}>
-          <Icon iconName={IconName.TRUCK} className={styles.icon} />
-          <p className={styles.truckNumber}>{truck?.licensePlateNumber}</p>
+        <div className={styles.contacts}>
+          <div className={styles.contactsItem}>
+            <Icon iconName={IconName.MOBILE} className={styles.icon} />
+            <p className={getValidClassNames('textMd', styles.driverPhone)}>
+              {driver?.phone}
+            </p>
+          </div>
+          <div className={styles.contactsItem}>
+            <Icon iconName={IconName.CAR} className={styles.icon} />
+            <p className={getValidClassNames('textMd', styles.truckNumber)}>
+              {truck?.licensePlateNumber}
+            </p>
+          </div>
         </div>
       </div>
     </div>
