@@ -1,4 +1,4 @@
-import { createSlice, isAnyOf } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
@@ -42,6 +42,12 @@ const { reducer, actions, name } = createSlice({
   reducers: {
     clearAuthServerError: (store) => {
       store.error = null;
+    },
+    setDataStatus: (
+      store,
+      action: PayloadAction<ValueOf<typeof DataStatus>>,
+    ) => {
+      store.dataStatus = action.payload;
     },
   },
   extraReducers(builder) {
