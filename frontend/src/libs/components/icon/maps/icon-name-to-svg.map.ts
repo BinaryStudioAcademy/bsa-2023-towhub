@@ -63,12 +63,12 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.XMARK]: faXmark,
   [IconName.EYE]: faEye,
   [IconName.CAR]: faCar,
-  [IconName.MOBILE]: faMobileScreenButton,
   [IconName.PHONE]: faPhone,
   [IconName.CLOCK]: faClock,
   [IconName.CAR]: faCar,
   [IconName.SYNC]: faSync,
   [IconName.PAYMENTS]: faMoneyBills,
+  [IconName.MOBILE]: faMobileScreenButton,
 };
 
 export { iconNameToSvg };
