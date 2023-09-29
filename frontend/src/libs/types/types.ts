@@ -11,6 +11,7 @@ export { type TabName, type TabsType } from './sidebar.type.js';
 export { type TruckFilters } from './truck-filters.type.js';
 export { type ColumnDef } from '@tanstack/react-table';
 export { type DeepPartial, type FieldValues } from 'react-hook-form';
+export { type SingleValue } from 'react-select';
 export {
   type AuthUser,
   type BusinessSignUpRequestDto,
