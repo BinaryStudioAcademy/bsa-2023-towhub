@@ -4,6 +4,7 @@ export {
   type OrderCreateFormDto,
   type OrderCreateRequestDto,
   type OrderEntity,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderFindAllUserOrdersResponseDto,
   type OrderFindByIdResponseDto,
   type OrderFindAllUserOrdersQuery as OrderGetAllUserOrdersPayload,

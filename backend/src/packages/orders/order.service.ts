@@ -18,6 +18,8 @@ import { checkIsCustomer, checkIsDriver } from './libs/helpers/helpers.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
+  type OrderFindAllDriverOrdersQuery,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderFindAllUserOrdersQuery,
   type OrderFindAllUserOrdersResponseDto,
   type OrderQueryParameters,
@@ -406,6 +408,39 @@ class OrderService implements Omit<IService, 'find'> {
 
     return {
       items: userOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      total,
+    };
+  }
+
+  public async findAllDriverOrders(
+    user: UserEntityObjectWithGroupT,
+    { status, ...query }: OrderFindAllDriverOrdersQuery,
+  ): Promise<OrderFindAllDriverOrdersResponseDto> {
+    const driver = await this.driverService.findByUserId(user.id);
+
+    if (!driver) {
+      throw new NotFoundError({
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
+    const search = {
+      driverId: user.id,
+      status,
+    };
+
+    const driverOrdersRequest = this.orderRepository.findAllDriverOrders(
+      search,
+      query,
+    );
+    const totalRequest = this.orderRepository.getDriverTotal(search);
+
+    const [driverOrders, total] = await Promise.all([
+      driverOrdersRequest,
+      totalRequest,
+    ]);
+
+    return {
+      items: driverOrders.map((it) => OrderEntity.initialize(it).toObject()),
       total,
     };
   }

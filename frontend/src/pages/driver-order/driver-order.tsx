@@ -1,18 +1,21 @@
-import { Button } from '~/libs/components/components.js';
+import { Button, Spinner } from '~/libs/components/components.js';
 import { Icon } from '~/libs/components/icon/icon.js';
+import { AppRoute, DataStatus } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppMap,
   useAppSelector,
   useCallback,
+  useEffect,
+  useNavigate,
   useParams,
   useRef,
 } from '~/libs/hooks/hooks.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import { type Coordinates } from '~/libs/types/types.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
-import { selectOrder } from '~/slices/orders/selectors.js';
+import { selectDataStatus, selectOrder } from '~/slices/orders/selectors.js';
 
 import { NotFound } from '../pages.js';
 import { OrderStatus } from './libs/enums/order-status.enum.js';
@@ -22,6 +25,8 @@ import styles from './styles.module.scss';
 const DriverOrder = (): JSX.Element => {
   const { orderId } = useParams();
   const order = useAppSelector(selectOrder);
+  const dataStatus = useAppSelector(selectDataStatus);
+  const navigate = useNavigate();
   const { timespanLeft, distanceLeft, origin, destination } =
     useGetRouteData(order);
   const dispatch = useAppDispatch();
@@ -35,6 +40,12 @@ const DriverOrder = (): JSX.Element => {
     onMapLoad: () => true,
   });
   useSubscribeUpdates(`${orderId as string}`);
+
+  useEffect(() => {
+    if (orderId && !order) {
+      void dispatch(orderActions.getOrder(orderId));
+    }
+  }, [orderId, dispatch, order]);
 
   const handleAccept = useCallback(() => {
     void dispatch(
@@ -72,6 +83,13 @@ const DriverOrder = (): JSX.Element => {
     );
     notification.warning('Order Declined');
   }, [dispatch, orderId]);
+
+  const handleRedirectToHomepage = useCallback(() => {
+    if (orderId) {
+      dispatch(orderActions.removeOrder(orderId));
+      navigate(AppRoute.ORDERS);
+    }
+  }, [dispatch, navigate, orderId]);
 
   const getButtons = useCallback(() => {
     switch (order?.status) {
@@ -121,23 +139,32 @@ const DriverOrder = (): JSX.Element => {
         );
       }
       case OrderStatus.CANCELED:
+      case OrderStatus.DONE:
       case OrderStatus.REJECTED: {
-        return <p className={styles.message}>Order is cancelled</p>;
-      }
-      case OrderStatus.DONE: {
-        return <p className={styles.message}>Order is completed</p>;
+        return (
+          <Button
+            className={styles.complete}
+            label="Homepage"
+            onClick={handleRedirectToHomepage}
+          />
+        );
       }
     }
   }, [
+    order?.status,
+    handleDecline,
     handleAccept,
     handleConfirm,
     handleComplete,
-    handleDecline,
-    order?.status,
+    handleRedirectToHomepage,
   ]);
 
-  if (!order) {
+  if (dataStatus === DataStatus.REJECTED) {
     return <NotFound />;
+  }
+
+  if (!order) {
+    return <Spinner />;
   }
 
   return (

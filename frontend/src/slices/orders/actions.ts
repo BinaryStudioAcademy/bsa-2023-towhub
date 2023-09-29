@@ -13,6 +13,7 @@ import {
 import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
 } from '~/packages/orders/orders.js';
@@ -234,6 +235,24 @@ const removeOrder = createAction(
     payload: orderId,
   }),
 );
+const getDriverOrdersPage = createAsyncThunk<
+  OrderFindAllDriverOrdersResponseDto,
+  string | undefined,
+  AsyncThunkConfig
+>(
+  `${sliceName}/orderFindAllDriverOrdersResponse`,
+  async (payload, { rejectWithValue, extra }) => {
+    try {
+      return await extra.ordersApi.getAllDriverOrders(payload);
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
+
+      notification.error(getErrorMessage(error.message));
+
+      return rejectWithValue({ ...error, message: error.message });
+    }
+  },
+);
 
 export {
   calculateOrderPrice,
@@ -242,6 +261,7 @@ export {
   createOrder,
   createOrderFromSocket,
   getBusinessOrders,
+  getDriverOrdersPage,
   getOrder,
   getRouteAddresses,
   getRouteData,

@@ -10,6 +10,7 @@ export {
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntity,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderFindAllUserOrdersResponseDto,
   type OrderGetAllUserOrdersPayload,
   type OrderResponseDto,

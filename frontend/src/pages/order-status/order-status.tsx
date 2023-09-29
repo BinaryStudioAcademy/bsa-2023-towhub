@@ -53,10 +53,10 @@ const OrderStatusPage: React.FC = () => {
   const isDoneScreenOpen = status === OrderStatusValue.DONE;
 
   useEffect(() => {
-    if (orderId) {
+    if (orderId && !order) {
       void dispatch(orderActions.getOrder(orderId));
     }
-  }, [orderId, dispatch]);
+  }, [orderId, dispatch, order]);
 
   const truckId =
     useAppSelector(selectChosenTruck)?.id ?? order?.shift.truck?.id;
@@ -68,7 +68,6 @@ const OrderStatusPage: React.FC = () => {
     center: truckLocation ?? DEFAULT_CENTER,
     destination: order ? order.startPoint : null,
     mapReference: mapReference,
-    onMapLoad: () => true,
   });
 
   const handleHomepageClick = useCallback(() => {
@@ -124,7 +123,7 @@ const OrderStatusPage: React.FC = () => {
     return <NotFound />;
   }
 
-  if (dataStatus !== DataStatus.FULFILLED) {
+  if (!order) {
     return <Spinner />;
   }
 

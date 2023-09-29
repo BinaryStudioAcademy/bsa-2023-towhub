@@ -39,6 +39,12 @@ const selectOrdersBusiness = (
   dataStatus: ValueOf<typeof DataStatus>;
 } => state.orders;
 
+const selectRouteAddresses = (
+  state: RootState,
+): RootState[typeof OrderSliceName]['routeAddresses'] => {
+  return state.orders.routeAddresses;
+};
+
 export {
   selectDataStatus,
   selectOrder,
@@ -46,4 +52,5 @@ export {
   selectOrders,
   selectOrdersBusiness,
   selectPrice,
+  selectRouteAddresses,
 };

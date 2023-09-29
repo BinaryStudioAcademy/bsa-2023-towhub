@@ -212,11 +212,9 @@ class ShiftService implements IService {
   }
 
   public async checkDriverStartShift(driverId: number): Promise<void> {
-    const [shift] = await this.shiftRepository.find({
-      driverId,
-    });
+    const shift = await this.shiftRepository.getOpenedByDriver(driverId);
 
-    if (shift.endDate) {
+    if (!shift) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpMessage.DRIVER_DOES_NOT_START_SHIFT,

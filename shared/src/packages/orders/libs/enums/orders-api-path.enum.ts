@@ -1,10 +1,11 @@
 const OrdersApiPath = {
   ROOT: '',
+  DRIVER_ORDERS: '/driver',
+  DRIVER: '/driver/:orderId',
   CALCULATE_PRICE: '/calculate-price',
   $ID: '/:id',
   USER: '/user',
   BUSINESS: '/business',
-  DRIVER: '/driver/:orderId',
   CUSTOMER: '/customer/:orderId',
 } as const;
 

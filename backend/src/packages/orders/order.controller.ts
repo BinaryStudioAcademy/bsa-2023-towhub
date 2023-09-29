@@ -16,6 +16,8 @@ import {
   type Id,
   type OrderCalculatePriceRequestDto,
   type OrderCreateRequestDto,
+  type OrderFindAllDriverOrdersQuery,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderFindAllUserOrdersQuery,
   type OrderFindAllUserOrdersResponseDto,
   type OrderQueryParameters,
@@ -28,6 +30,7 @@ import {
 import {
   orderCreateRequestBody,
   orderFindAllBusinessOrdersQuery,
+  orderFindAllDriverOrdersQuery,
   orderFindAllUserOrdersQuery,
   orderGetParameter,
   orderUpdateAcceptStatusRequestBody,
@@ -266,6 +269,15 @@ import {
  *               type: string
  *               enum:
  *                 - Business does not exist!
+ *     DriverNotExistError:
+ *       allOf:
+ *         - $ref: '#/components/schemas/ErrorType'
+ *         - type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               enum:
+ *                 - Driver does not exist!
  *
  */
 
@@ -319,6 +331,22 @@ class OrderController extends Controller {
           options as ApiHandlerOptions<{
             user: UserEntityObjectWithGroupT;
             query: OrderFindAllUserOrdersQuery;
+          }>,
+        ),
+    });
+
+    this.addRoute({
+      path: OrdersApiPath.DRIVER_ORDERS,
+      method: 'GET',
+      authStrategy: [AuthStrategy.VERIFY_JWT, AuthStrategy.VERIFY_DRIVER_GROUP],
+      validation: {
+        query: orderFindAllDriverOrdersQuery,
+      },
+      handler: (options) =>
+        this.findAllDriverOrders(
+          options as ApiHandlerOptions<{
+            user: UserEntityObjectWithGroupT;
+            query: OrderFindAllDriverOrdersQuery;
           }>,
         ),
     });
@@ -865,6 +893,64 @@ class OrderController extends Controller {
       status: HttpCode.OK,
       payload: await this.orderService.findAllUserOrders(
         options.user.id,
+        options.query,
+      ),
+    };
+  }
+
+  /**
+   * @swagger
+   * /orders/driver:
+   *    get:
+   *      tags:
+   *       - orders
+   *      summary: Get all driver orders
+   *      description: Get all driver orders
+   *      security:
+   *        - bearerAuth: []
+   *      responses:
+   *        200:
+   *          description: Orders found
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                    items:
+   *                      type: array
+   *                      items:
+   *                        $ref: '#/components/schemas/Order'
+   *                    total:
+   *                      type: string
+   *                      example: 1
+   *        401:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/UnauthorizedError'
+   *        400:
+   *          UnauthorizedError:
+   *            description:
+   *              You are not authorized
+   *          content:
+   *            plain/text:
+   *              schema:
+   *                $ref: '#/components/schemas/BusinessNotExistError'
+   */
+
+  private async findAllDriverOrders(
+    options: ApiHandlerOptions<{
+      user: UserEntityObjectWithGroupT;
+      query: OrderFindAllDriverOrdersQuery;
+    }>,
+  ): Promise<ApiHandlerResponse<OrderFindAllDriverOrdersResponseDto>> {
+    return {
+      status: HttpCode.OK,
+      payload: await this.orderService.findAllDriverOrders(
+        options.user,
         options.query,
       ),
     };
