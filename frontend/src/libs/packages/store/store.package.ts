@@ -31,6 +31,7 @@ import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 import { type MapServiceParameters } from '../map/libs/types/map-service-parameters.type.js';
 import { type MapService } from '../map/map.package.js';
 import { MapConnector } from '../map/map-connector.package.js';
+import { geolocationMiddleware } from '../middleware/geolocation.middleware.js';
 import { socketMiddleware } from '../middleware/socket.middleware.js';
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
@@ -42,7 +43,11 @@ class Store {
       RootReducer,
       AnyAction,
       MiddlewareArray<
-        [ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>, Middleware]
+        [
+          ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>,
+          Middleware,
+          Middleware,
+        ]
       >
     >
   >;
@@ -66,7 +71,7 @@ class Store {
           thunk: {
             extraArgument: this.extraArguments,
           },
-        }).prepend(socketMiddleware),
+        }).prepend(socketMiddleware, geolocationMiddleware),
       ],
     });
   }

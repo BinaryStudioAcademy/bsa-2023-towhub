@@ -1,0 +1,5 @@
+const DEFAULT = {
+  VITE_DRIVER_GEOLOCATION_UPDATE_INTERVAL: 60_000,
+} as const;
+
+export { DEFAULT };
