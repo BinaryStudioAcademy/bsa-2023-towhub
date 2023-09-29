@@ -64,23 +64,21 @@ const useAppMap = ({
         return;
       }
 
-      if (center && destination) {
+      if (destination || markers.length > 0 || userLocation) {
         mapService.current.removeMarkers();
+      }
+
+      if (center && destination) {
         mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);
       }
 
-      if (markers.length > 0) {
-        mapService.current.removeMarkers();
-
-        for (const marker of markers) {
-          mapService.current.addMarker(marker, true);
-        }
+      for (const marker of markers) {
+        mapService.current.addMarker(marker, true);
       }
 
       if (userLocation) {
-        mapService.current.removeMarkers();
         mapService.current.addMarker(userLocation);
 
         if (!isZoomChanged) {
