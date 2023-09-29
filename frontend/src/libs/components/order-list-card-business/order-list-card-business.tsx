@@ -47,7 +47,9 @@ const OrderListCardBusiness: React.FC<Properties> = ({
         <p className={getValidClassNames('textMdBold', styles.cardName)}>
           Order {id}
         </p>
-        <Badge color={statusBadge.color}>{statusBadge.name}</Badge>
+        <Badge color={statusBadge.color} className={styles.badge}>
+          {statusBadge.name}
+        </Badge>
       </div>
       <div className={styles.content}>
         <img
