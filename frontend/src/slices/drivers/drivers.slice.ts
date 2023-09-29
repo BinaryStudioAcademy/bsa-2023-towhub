@@ -1,6 +1,6 @@
 import { type SerializedError, createSlice, isAnyOf } from '@reduxjs/toolkit';
 
-import { DataStatus } from '~/libs/enums/data-status.enum';
+import { DataStatus } from '~/libs/enums/enums.js';
 import { type DriverWithUserData, type ValueOf } from '~/libs/types/types.js';
 
 import { addDriver, getDriversPage } from './actions.js';

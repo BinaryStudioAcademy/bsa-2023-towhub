@@ -11,7 +11,7 @@ import { type FileUploadResponseDto } from './libs/types/types.js';
 const uploadFile = createAsyncThunk<
   FileUploadResponseDto,
   File[],
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(
   `${sliceName}/upload-file`,
   async (files: File[], { extra, rejectWithValue }) => {
@@ -33,11 +33,7 @@ const uploadFile = createAsyncThunk<
   },
 );
 
-const uploadAvatar = createAsyncThunk<
-  FileEntityT,
-  File,
-  AsyncThunkConfig<HttpError>
->(
+const uploadAvatar = createAsyncThunk<FileEntityT, File, AsyncThunkConfig>(
   `${sliceName}/upload-avatar`,
   async (file: File, { extra, rejectWithValue }) => {
     const { driverApi, notification } = extra;

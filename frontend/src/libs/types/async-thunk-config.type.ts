@@ -8,7 +8,7 @@ import {
 } from '~/libs/packages/store/store.js';
 
 type AsyncThunkConfig<
-  RejectValue extends HttpError | null | SocketErrorValues,
+  RejectValue extends HttpError | null | SocketErrorValues = HttpError,
 > = {
   state: RootState;
   dispatch: AppDispatch;
