@@ -32,7 +32,9 @@ const ConnectStripeForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const isSuccess = Boolean(getQueryParameters(StripeOperationStatus.SUCCESS));
+  const isSuccessful = Boolean(
+    getQueryParameters(StripeOperationStatus.SUCCESS),
+  );
 
   const stripeDataStatus = useAppSelector(selectStripeDataStatus);
   const expressAccountLink = useAppSelector(selectExpressAccountLink);
@@ -77,10 +79,10 @@ const ConnectStripeForm: React.FC = () => {
   }, [expressAccountLink]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccessful) {
       navigate(AppRoute.DASHBOARD_ORDERS, { replace: true });
     }
-  }, [navigate, isSuccess]);
+  }, [navigate, isSuccessful]);
 
   if (user.business.isStripeActivated) {
     return <Navigate to={AppRoute.DASHBOARD_ORDERS} replace />;

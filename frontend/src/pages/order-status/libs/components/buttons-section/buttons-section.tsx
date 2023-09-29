@@ -1,6 +1,12 @@
 import { Button, Icon } from '~/libs/components/components.js';
 import { DataStatus, IconName } from '~/libs/enums/enums.js';
-import { useAppSelector, useQueryParameters } from '~/libs/hooks/hooks.js';
+import {
+  useAppSelector,
+  useEffect,
+  useQueryParameters,
+} from '~/libs/hooks/hooks.js';
+import { notification } from '~/libs/packages/notification/notification.js';
+import { UserNotificationMessage } from '~/packages/users/libs/enums/enums.js';
 import { selectStripeDataStatus } from '~/slices/stripe/selectors.js';
 
 import { OrderStatus, StripeOperationStatus } from '../../enums/enums.js';
@@ -32,10 +38,20 @@ const ButtonsSection = ({
     stripeDataStatus === DataStatus.PENDING ||
     stripeDataStatus === DataStatus.FULFILLED;
 
-  const { getQueryParameters } = useQueryParameters();
-  const isPaymentSuccess = Boolean(
+  const { getQueryParameters, removeQueryParameters } = useQueryParameters();
+  const isPaymentSuccessful = Boolean(
     getQueryParameters(StripeOperationStatus.SUCCESS),
   );
+  const isPaymentCancelled = Boolean(
+    getQueryParameters(StripeOperationStatus.CANCEL),
+  );
+
+  useEffect(() => {
+    if (isPaymentCancelled) {
+      removeQueryParameters(StripeOperationStatus.CANCEL);
+      notification.warning(UserNotificationMessage.CANCELLED_PAYMENT);
+    }
+  }, [isPaymentCancelled, removeQueryParameters]);
 
   return (
     <section className={styles.buttonsSection}>
@@ -50,7 +66,7 @@ const ButtonsSection = ({
       {isPayNowButtonShown && (
         <Button
           label=""
-          isDisabled={isFetching || isPaymentSuccess}
+          isDisabled={isFetching || isPaymentSuccessful}
           className={styles.buttonPayNow}
           size={'md'}
           onClick={onPayClick}
