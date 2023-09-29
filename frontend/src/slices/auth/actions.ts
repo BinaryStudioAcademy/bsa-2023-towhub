@@ -108,6 +108,8 @@ const authorizeDriverSocket = createAsyncThunk<
   async (userId, { extra, rejectWithValue }) => {
     const { socketClient } = extra;
 
+    socketClient.reconnect();
+
     const result = await socketClient.emitWithAck({
       event: ClientToServerEvent.AUTHORIZE_DRIVER,
       eventPayload: {
