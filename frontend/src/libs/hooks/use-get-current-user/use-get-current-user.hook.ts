@@ -1,7 +1,7 @@
 import { DataStatus } from '~/libs/enums/enums.js';
 import { LocalStorage, StorageKey } from '~/libs/packages/storage/storage.js';
 import { actions as authActions } from '~/slices/auth/auth.js';
-import { selectIsLoading } from '~/slices/auth/selectors.js';
+import { selectGetCurrentRequestStatus } from '~/slices/auth/selectors.js';
 
 import {
   useAppDispatch,
@@ -17,13 +17,13 @@ type GetCurrentUser = {
 
 const useGetCurrentUser = (): GetCurrentUser => {
   const dispatch = useAppDispatch();
-  const authDataStatus = useAppSelector(selectIsLoading);
+  const getCurrentRequestStatus = useAppSelector(selectGetCurrentRequestStatus);
 
   const requestCurrentUser = useCallback(async (): Promise<void> => {
     const token = await LocalStorage.get<string>(StorageKey.TOKEN);
 
     if (!token) {
-      void dispatch(authActions.setDataStatus(DataStatus.FULFILLED));
+      void dispatch(authActions.resolveGetCurrentRequestStatus());
 
       return;
     }
@@ -32,9 +32,9 @@ const useGetCurrentUser = (): GetCurrentUser => {
 
   const isRequestFinished = useMemo(
     () =>
-      authDataStatus !== DataStatus.IDLE &&
-      authDataStatus !== DataStatus.PENDING,
-    [authDataStatus],
+      getCurrentRequestStatus !== DataStatus.IDLE &&
+      getCurrentRequestStatus !== DataStatus.PENDING,
+    [getCurrentRequestStatus],
   );
 
   return { requestCurrentUser, isRequestFinished };
