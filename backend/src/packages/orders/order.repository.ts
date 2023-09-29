@@ -29,6 +29,8 @@ class OrderRepository implements Omit<IRepository, 'find'> {
 
   private driversSchema: DatabaseSchema['drivers'];
 
+  private fileSchema: DatabaseSchema['files'];
+
   public constructor(
     database: Pick<IDatabase, 'driver'>,
     {
@@ -37,9 +39,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       users,
       shifts,
       drivers,
+      files,
     }: Pick<
       DatabaseSchema,
-      'orders' | 'users' | 'trucks' | 'shifts' | 'drivers'
+      'orders' | 'users' | 'trucks' | 'shifts' | 'drivers' | 'files'
     >,
   ) {
     this.db = database;
@@ -48,6 +51,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
     this.usersSchema = users;
     this.shiftsSchema = shifts;
     this.driversSchema = drivers;
+    this.fileSchema = files;
   }
 
   public async findById(id: OrderEntityT['id']): Promise<OrderEntityT | null> {
@@ -73,6 +77,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
           email: this.usersSchema.email,
           phone: this.usersSchema.phone,
           driverLicenseNumber: this.driversSchema.driverLicenseNumber,
+          avatarUrl: this.fileSchema.key,
         },
         truck: {
           id: this.shiftsSchema.truckId,
@@ -91,6 +96,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .innerJoin(
         this.driversSchema,
         eq(this.driversSchema.userId, this.shiftsSchema.driverId),
+      )
+      .innerJoin(
+        this.fileSchema,
+        eq(this.driversSchema.avatarId, this.fileSchema.id),
       )
       .innerJoin(
         this.trucksSchema,
@@ -141,6 +150,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
           email: this.usersSchema.email,
           phone: this.usersSchema.phone,
           driverLicenseNumber: this.driversSchema.driverLicenseNumber,
+          avatarUrl: this.fileSchema.key,
         },
         truck: {
           id: this.shiftsSchema.truckId,
@@ -159,6 +169,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .innerJoin(
         this.driversSchema,
         eq(this.driversSchema.userId, this.shiftsSchema.driverId),
+      )
+      .innerJoin(
+        this.fileSchema,
+        eq(this.driversSchema.avatarId, this.fileSchema.id),
       )
       .innerJoin(
         this.trucksSchema,
@@ -201,6 +215,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
           email: this.usersSchema.email,
           phone: this.usersSchema.phone,
           driverLicenseNumber: this.driversSchema.driverLicenseNumber,
+          avatarUrl: this.fileSchema.key,
         },
         truck: {
           id: this.shiftsSchema.truckId,
@@ -219,6 +234,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .innerJoin(
         this.driversSchema,
         eq(this.driversSchema.userId, this.shiftsSchema.driverId),
+      )
+      .innerJoin(
+        this.fileSchema,
+        eq(this.driversSchema.avatarId, this.fileSchema.id),
       )
       .innerJoin(
         this.trucksSchema,
@@ -268,6 +287,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
           email: this.usersSchema.email,
           phone: this.usersSchema.phone,
           driverLicenseNumber: this.driversSchema.driverLicenseNumber,
+          avatarUrl: this.fileSchema.key,
         },
         truck: {
           id: this.shiftsSchema.truckId,
@@ -286,6 +306,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .innerJoin(
         this.driversSchema,
         eq(this.driversSchema.userId, this.shiftsSchema.driverId),
+      )
+      .innerJoin(
+        this.fileSchema,
+        eq(this.driversSchema.avatarId, this.fileSchema.id),
       )
       .innerJoin(
         this.trucksSchema,
@@ -380,6 +404,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
   public async getUserOrBusinessTotal(
     search: Partial<{
       ownerId: number | null;
+      businessId: OrderEntityT['businessId'];
       status: OrderEntityT['status'];
     }>,
   ): Promise<number> {

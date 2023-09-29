@@ -5,6 +5,8 @@ import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
+import { getFilePublicUrl } from '../files/files.js';
+import { type FilesService } from '../files/files.service.js';
 import { type MapService } from '../map/map.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
 import { convertCurrencyToCents } from '../stripe/libs/helpers/helpers.js';
@@ -48,6 +50,8 @@ class OrderService implements Omit<IService, 'find'> {
 
   private mapService: MapService;
 
+  private filesService: FilesService;
+
   public constructor({
     businessService,
     orderRepository,
@@ -57,6 +61,7 @@ class OrderService implements Omit<IService, 'find'> {
     userService,
     mapService,
     socket,
+    filesService,
   }: {
     orderRepository: OrderRepository;
     businessService: BusinessService;
@@ -66,6 +71,7 @@ class OrderService implements Omit<IService, 'find'> {
     userService: UserService;
     mapService: MapService;
     socket: SocketService;
+    filesService: FilesService;
   }) {
     this.orderRepository = orderRepository;
 
@@ -84,6 +90,8 @@ class OrderService implements Omit<IService, 'find'> {
     this.mapService = mapService;
 
     this.socketService = socket;
+
+    this.filesService = filesService;
 
     this.mapService = mapService;
   }
@@ -123,6 +131,9 @@ class OrderService implements Omit<IService, 'find'> {
     }
 
     const driver = await this.userService.findById(shift.driverId);
+    const avatarUrl = shift.avatarId
+      ? await this.filesService.findById(shift.avatarId)
+      : null;
 
     if (!driver) {
       throw new NotFoundError({
@@ -160,6 +171,7 @@ class OrderService implements Omit<IService, 'find'> {
         email: driver.email,
         phone: driver.phone,
         driverLicenseNumber: shift.driverLicenseNumber,
+        avatarUrl: avatarUrl?.key ?? null,
       },
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     }).toObject();
@@ -255,6 +267,7 @@ class OrderService implements Omit<IService, 'find'> {
         email: foundOrder.driver.email,
         phone: foundOrder.driver.phone,
         driverLicenseNumber: driver.driverLicenseNumber,
+        avatarUrl: driver.avatarUrl,
       },
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     };
@@ -348,15 +361,28 @@ class OrderService implements Omit<IService, 'find'> {
 
     const total = query.status
       ? await this.orderRepository.getUserOrBusinessTotal({
-          ownerId: business.id,
+          businessId: business.id,
           status: query.status,
         })
       : await this.orderRepository.getUserOrBusinessTotal({
-          ownerId: business.id,
+          businessId: business.id,
         });
 
+    const items = usersOrders.map((it) => {
+      const order = OrderEntity.initialize(it).toObject();
+
+      if (order.shift.driver) {
+        const avatarUrl = order.shift.driver.avatarUrl;
+        order.shift.driver.avatarUrl = avatarUrl
+          ? getFilePublicUrl(avatarUrl)
+          : null;
+      }
+
+      return order;
+    });
+
     return {
-      items: usersOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      items,
       total,
     };
   }

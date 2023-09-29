@@ -4,7 +4,7 @@ import {
   Pagination,
   Spinner,
 } from '~/libs/components/components.js';
-import { DataStatus } from '~/libs/enums/data-status.enum';
+import { DataStatus } from '~/libs/enums/data-status.enum.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
@@ -96,6 +96,8 @@ const Orders: React.FC = () => {
 
   const isLoading = dataStatus === DataStatus.PENDING;
 
+  const isPagination = total > DEFAULT_PAGE_SIZE;
+
   if (isLoading) {
     return (
       <div className={styles.orders}>
@@ -108,7 +110,7 @@ const Orders: React.FC = () => {
     return (
       <div className={styles.orders}>
         <p className={getValidClassNames(styles.textSign, 'textMdBold')}>
-          There is not any orders yet
+          You have no orders yet
         </p>
       </div>
     );
@@ -122,12 +124,14 @@ const Orders: React.FC = () => {
           label={filter.status ?? 'all'}
         />
         <OrderList orders={orders} onSelect={setShownRoute} />
-        <Pagination
-          pageCount={totalPages}
-          pageIndex={pageIndex}
-          pageSize={DEFAULT_PAGE_SIZE}
-          onClick={handleChangePage}
-        />
+        {isPagination && (
+          <Pagination
+            pageCount={totalPages}
+            pageIndex={pageIndex}
+            pageSize={DEFAULT_PAGE_SIZE}
+            onClick={handleChangePage}
+          />
+        )}
       </div>
       <div className={styles.mapArea}>
         <MapOrders points={endPointMarkers} shownRoute={shownRoute} />

@@ -1,3 +1,4 @@
+import { ImgPath } from '~/libs/enums/img-path.enum.js';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
 import { type Coordinates } from '~/libs/types/types.js';
 
@@ -326,6 +327,18 @@ class MapService implements IMapService {
     return marker;
   }
 
+  public addMarkerStatic(
+    position: google.maps.LatLngLiteral,
+  ): google.maps.Marker {
+    this.throwIfMapNotInitialized();
+
+    return new google.maps.Marker({
+      position,
+      map: this.map,
+      icon: ImgPath.TRUCK_SM,
+    });
+  }
+
   public async addRoute({ startPoint, endPoint }: PlaceLatLng): Promise<void> {
     this.throwIfMapNotInitialized();
 
@@ -347,7 +360,7 @@ class MapService implements IMapService {
     startPoint,
     endPoint,
   }: PlaceLatLng): Promise<void> {
-    const anchor = this.addMarker(endPoint, false);
+    const anchor = this.addMarkerStatic(endPoint);
 
     const startAddress = await this.getPointAddress(startPoint);
     const endAddress = await this.getPointAddress(endPoint);
