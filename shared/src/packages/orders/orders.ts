@@ -13,6 +13,7 @@ export {
   type OrderEntity,
   type OrderFindByIdResponseDto,
   type OrderResponseDto,
+  type OrderResponseWithAvatarDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusRequestParameter,

@@ -1,4 +1,4 @@
-import { OrderCard, Spinner } from '~/libs/components/components.js';
+import { OrderCard } from '~/libs/components/components.js';
 import { OrderStatus } from '~/libs/components/orders-status/order-status.js';
 import { AppRoute } from '~/libs/enums/app-route.enum.js';
 import { DataStatus } from '~/libs/enums/data-status.enum.js';
@@ -30,6 +30,7 @@ import { useSubscribeUpdates } from './libs/hooks/use-subscribe-updates.hook.js'
 import styles from './styles.module.scss';
 
 const OrderStatusPage: React.FC = () => {
+  const avatarURL = useRef<string | null>(null);
   const { orderId } = useParams();
   const navigate = useNavigate();
   const mapReference = useRef<HTMLDivElement>(null);
@@ -62,7 +63,6 @@ const OrderStatusPage: React.FC = () => {
     center: truckLocation ?? DEFAULT_CENTER,
     destination: order ? order.startPoint : null,
     mapReference: mapReference,
-    onMapLoad: () => true,
   });
 
   const handleHomepageClick = useCallback(() => {
@@ -92,11 +92,20 @@ const OrderStatusPage: React.FC = () => {
     isConfirmScreenOpen || isPickingUpScreenOpen || isDoneScreenOpen;
   const isMapShown = !isCancelScreenOpen && !isDoneScreenOpen;
 
-  const { firstName, lastName, licensePlate, price } = useGetOrderData(order);
+  const {
+    firstName,
+    lastName,
+    licensePlate,
+    price,
+    avatarUrl: newAvatarUrl,
+  } = useGetOrderData(order);
+
+  if (!avatarURL.current) {
+    avatarURL.current = newAvatarUrl;
+  }
 
   const { distanceLeft, timespanLeft, startLocation, endLocation } =
     useGetRouteData(order);
-  const profileURL = null;
 
   const isOrderCardShown =
     !isCancelScreenOpen &&
@@ -107,10 +116,6 @@ const OrderStatusPage: React.FC = () => {
 
   if (dataStatus === DataStatus.REJECTED) {
     return <NotFound />;
-  }
-
-  if (dataStatus !== DataStatus.FULFILLED) {
-    return <Spinner />;
   }
 
   return (
@@ -136,7 +141,7 @@ const OrderStatusPage: React.FC = () => {
             isDriverShown={isDriverShown}
             className={styles.card}
             cardData={{
-              profileURL,
+              profileURL: avatarURL.current,
               firstName,
               lastName,
               licensePlate,

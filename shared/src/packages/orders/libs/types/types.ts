@@ -5,6 +5,7 @@ export { type OrderCreateRequestDto } from './order-create-request-dto.type.js';
 export { type DriverInfo, type OrderEntity } from './order-entity.type.js';
 export { type OrderFindByIdResponseDto } from './order-find-by-id-response-dto.type.js';
 export { type OrderResponseDto } from './order-response-dto.type.js';
+export { type OrderResponseWithAvatarDto } from './order-response-with-avatar-dto.type.js';
 export { type OrderStatusValues } from './order-status-values.type.js';
 export { type OrderUpdateAcceptStatusRequestDto } from './order-update-accept-status-request-dto.type.js';
 export { type OrderUpdateAcceptStatusRequestParameter } from './order-update-accept-status-request-parameter.type.js';

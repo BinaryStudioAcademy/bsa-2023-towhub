@@ -10,6 +10,7 @@ export {
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderResponseDto,
+  type OrderResponseWithAvatarDto,
   type OrderStatusValues,
 } from './libs/types/types.js';
 export { orderCreateForm } from './libs/validation-schemas/validation-schemas.js';

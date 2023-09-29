@@ -5,6 +5,7 @@ import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
+import { getAvatarUrl } from '../drivers/libs/helpers/get-avatar-url.helper.js';
 import { type MapService } from '../map/map.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
 import { type TruckService } from '../trucks/truck.service.js';
@@ -16,6 +17,7 @@ import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
   type OrderResponseDto,
+  type OrderResponseWithAvatarDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusResponseDto,
@@ -166,14 +168,29 @@ class OrderService implements Omit<IService, 'find'> {
   }: {
     id: OrderEntityT['id'];
     user: UserEntityObjectWithGroupT | null;
-  }): Promise<OrderResponseDto | null> {
-    const order = await this.orderRepository.findById(id);
+  }): Promise<OrderResponseWithAvatarDto | null> {
+    const { order, avatarFile } = await this.orderRepository.findById(id);
 
     if (!order) {
       throw new NotFoundError({
         message: HttpMessage.ORDER_DOES_NOT_EXIST,
       });
     }
+
+    const avatarUrl = getAvatarUrl(avatarFile);
+    const pureOrder = OrderEntity.initialize(order).toObject();
+    const shift = pureOrder.shift;
+    const driver =
+      shift.driver === null ? null : { ...shift.driver, avatarUrl };
+
+    const newShift = {
+      ...shift,
+      driver,
+    };
+    const orderWithDriverAvatar = {
+      ...pureOrder,
+      shift: newShift,
+    };
 
     if (user?.group.key === UserGroupKey.BUSINESS) {
       const business = await this.businessService.findByOwnerId(user.id);
@@ -185,14 +202,14 @@ class OrderService implements Omit<IService, 'find'> {
       }
       this.verifyOrderBelongsToBusiness(order, business.id);
 
-      return OrderEntity.initialize(order).toObject();
+      return orderWithDriverAvatar;
     }
 
     if (user) {
       this.verifyOrderBelongsToUser(order, user);
     }
 
-    return OrderEntity.initialize(order).toObject();
+    return orderWithDriverAvatar;
   }
 
   public async update(parameters: {
@@ -208,7 +225,9 @@ class OrderService implements Omit<IService, 'find'> {
       });
     }
 
-    const foundOrder = await this.orderRepository.findById(parameters.id);
+    const { order: foundOrder } = await this.orderRepository.findById(
+      parameters.id,
+    );
 
     if (!foundOrder?.driver) {
       throw new NotFoundError({

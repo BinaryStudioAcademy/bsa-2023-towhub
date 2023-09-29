@@ -136,9 +136,7 @@ class MapService implements IMapService {
 
   private throwIfMapNotInitialized(): void {
     if (!this.map) {
-      throw new ApplicationError({
-        message: 'Map is not initialized',
-      });
+      return;
     }
   }
 
