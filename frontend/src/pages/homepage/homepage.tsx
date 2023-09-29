@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
 } from '~/libs/hooks/hooks.js';
-import { type TruckFilters } from '~/libs/types/types.js';
+import { type Coordinates, type TruckFilters } from '~/libs/types/types.js';
 import { selectSocketStatus } from '~/slices/socket/selectors.js';
 
 import { Map } from './components/map/map.js';
@@ -35,7 +35,7 @@ const HomePage: React.FC = () => {
     className: styles.map,
     mapReference: mapReference,
   });
-  const [location, setLocation] = useState<google.maps.LatLngLiteral>();
+  const [location, setLocation] = useState<Coordinates>();
   const [filters, setFilters] = useState<TruckFilters>(initialState);
   const trucks = useGetTrucksWithDistance(location);
 
