@@ -287,6 +287,7 @@ class OrderRepository implements Omit<IRepository, 'find'> {
           email: this.usersSchema.email,
           phone: this.usersSchema.phone,
           driverLicenseNumber: this.driversSchema.driverLicenseNumber,
+          avatarUrl: this.fileSchema.key,
         },
         truck: {
           id: this.shiftsSchema.truckId,
@@ -305,6 +306,10 @@ class OrderRepository implements Omit<IRepository, 'find'> {
       .innerJoin(
         this.driversSchema,
         eq(this.driversSchema.userId, this.shiftsSchema.driverId),
+      )
+      .innerJoin(
+        this.fileSchema,
+        eq(this.driversSchema.avatarId, this.fileSchema.id),
       )
       .innerJoin(
         this.trucksSchema,
