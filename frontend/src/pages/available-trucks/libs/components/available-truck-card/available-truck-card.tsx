@@ -1,5 +1,5 @@
 import { Button, Icon } from '~/libs/components/components.js';
-import { getTowTruckImage } from '~/libs/components/tow-truck-card/lib/helpers/helpers.js';
+import { getTowTruckImage } from '~/libs/components/tow-truck-card/libs/helpers/helpers.js';
 import { IconName } from '~/libs/enums/icon-name.enum';
 import { useCallback } from '~/libs/hooks/hooks.js';
 import { type TruckEntityT } from '~/packages/trucks/libs/types/types.js';

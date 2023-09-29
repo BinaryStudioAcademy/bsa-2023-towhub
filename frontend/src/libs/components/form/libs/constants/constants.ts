@@ -1,1 +1,1 @@
-export { PATH_DELIMITER } from './path-delimiter.const.js';
+export { PATH_DELIMITER } from './path-delimiter.constant.js';

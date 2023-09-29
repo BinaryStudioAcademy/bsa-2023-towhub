@@ -1,5 +1,6 @@
 export { Auth } from './auth/auth.js';
 export { AvailableTrucks } from './available-trucks/available-trucks.js';
+export { CustomerHistory } from './customer-history/customer-history.js';
 export { Dashboard } from './dashboard/dashboard.js';
 export { DriverOrder } from './driver-order/driver-order.js';
 export { EditDriverProfilePage } from './edit-driver-profile/edit-driver-profile.js';
@@ -8,4 +9,5 @@ export { NotFound } from './not-found/not-found.js';
 export { Order } from './order/order.js';
 export { Orders } from './orders/orders.js';
 export { Profile } from './profile/profile.js';
+export { SetupPayment } from './setup-payment/setup-payment.js';
 export { WelcomePage } from './welcome/welcome.js';

@@ -1,0 +1,3 @@
+const MAX_PAGINATION_LIMIT = 1000;
+
+export { MAX_PAGINATION_LIMIT };

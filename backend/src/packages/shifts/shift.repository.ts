@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNull } from 'drizzle-orm';
 
 import { type IRepository } from '~/libs/interfaces/interfaces.js';
 import { type IDatabase } from '~/libs/packages/database/libs/interfaces/database.interface.js';
@@ -7,6 +7,7 @@ import {
   schema,
 } from '~/libs/packages/database/schema/schema.js';
 
+import { TruckStatus } from '../trucks/libs/enums/enums.js';
 import { type TruckEntityT } from '../trucks/libs/types/types.js';
 import { TruckEntity } from '../trucks/truck.entity.js';
 import { type ShiftDatabaseModel } from './libs/types/types.js';
@@ -106,7 +107,17 @@ class ShiftRepository implements IRepository {
 
   public async getAllOpenedWithTrucks(): Promise<TruckEntityT[]> {
     const result = await this.db.driver().query.shifts.findMany({
-      where: isNull(this.shiftSchema.endDate),
+      where: and(
+        isNull(this.shiftSchema.endDate),
+        inArray(
+          this.shiftSchema.truckId,
+          this.db
+            .driver()
+            .select({ id: schema.trucks.id })
+            .from(schema.trucks)
+            .where(eq(schema.trucks.status, TruckStatus.ACTIVE)),
+        ),
+      ),
       with: { truck: true },
     });
 

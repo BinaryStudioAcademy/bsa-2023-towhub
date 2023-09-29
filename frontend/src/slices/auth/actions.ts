@@ -36,7 +36,7 @@ const signUp = createAsyncThunk<
     payload: CustomerSignUpRequestDto | BusinessSignUpRequestDto;
     mode: ValueOf<typeof AuthMode>;
   },
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(
   `${sliceName}/sign-up`,
   async ({ payload, mode }, { extra, rejectWithValue }) => {
@@ -58,7 +58,7 @@ const signUp = createAsyncThunk<
 const editCustomer = createAsyncThunk<
   CustomerEditDto,
   CustomerEditDto,
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(`${sliceName}/edit-customer`, async (payload, { extra, rejectWithValue }) => {
   const { userApi, notification } = extra;
 
@@ -78,7 +78,7 @@ const editCustomer = createAsyncThunk<
 const editBusiness = createAsyncThunk<
   BusinessEditResponseDto,
   BusinessEditDto,
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(`${sliceName}/edit-business`, async (payload, { extra, rejectWithValue }) => {
   const { businessApi, notification } = extra;
 
@@ -108,6 +108,8 @@ const authorizeDriverSocket = createAsyncThunk<
   async (userId, { extra, rejectWithValue }) => {
     const { socketClient } = extra;
 
+    socketClient.reconnect();
+
     const result = await socketClient.emitWithAck({
       event: ClientToServerEvent.AUTHORIZE_DRIVER,
       eventPayload: {
@@ -130,7 +132,7 @@ const authorizeDriverSocket = createAsyncThunk<
 const signIn = createAsyncThunk<
   UserSignInResponseDto,
   UserSignInRequestDto,
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(`${sliceName}/sign-in`, async (signInPayload, { extra, rejectWithValue }) => {
   const { authApi, localStorage } = extra;
 
@@ -146,39 +148,37 @@ const signIn = createAsyncThunk<
   }
 });
 
-const getCurrent = createAsyncThunk<
-  AuthUser,
-  undefined,
-  AsyncThunkConfig<HttpError>
->(`${sliceName}/current`, async (_, { extra }) => {
-  const { authApi, notification, localStorage } = extra;
+const getCurrent = createAsyncThunk<AuthUser, undefined, AsyncThunkConfig>(
+  `${sliceName}/current`,
+  async (_, { extra }) => {
+    const { authApi, notification, localStorage } = extra;
 
-  try {
-    return await authApi.getCurrentUser();
-  } catch (error) {
-    notification.warning(getErrorMessage(error));
-    await localStorage.drop(StorageKey.TOKEN);
-    throw error;
-  }
-});
+    try {
+      return await authApi.getCurrentUser();
+    } catch (error) {
+      notification.warning(getErrorMessage(error));
+      await localStorage.drop(StorageKey.TOKEN);
+      throw error;
+    }
+  },
+);
 
-const logOut = createAsyncThunk<
-  unknown,
-  undefined,
-  AsyncThunkConfig<HttpError>
->(`${sliceName}/logout`, async (_, { extra, rejectWithValue }) => {
-  const { authApi, notification, localStorage } = extra;
+const logOut = createAsyncThunk<unknown, undefined, AsyncThunkConfig>(
+  `${sliceName}/logout`,
+  async (_, { extra, rejectWithValue }) => {
+    const { authApi, notification, localStorage } = extra;
 
-  try {
-    await authApi.logOut();
-    await localStorage.drop(StorageKey.TOKEN);
-  } catch (error_: unknown) {
-    const error = error_ as HttpError;
-    notification.warning(getErrorMessage(error));
+    try {
+      await authApi.logOut();
+      await localStorage.drop(StorageKey.TOKEN);
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
+      notification.warning(getErrorMessage(error));
 
-    return rejectWithValue({ ...error, message: error.message });
-  }
-});
+      return rejectWithValue({ ...error, message: error.message });
+    }
+  },
+);
 
 export {
   authorizeDriverSocket,
