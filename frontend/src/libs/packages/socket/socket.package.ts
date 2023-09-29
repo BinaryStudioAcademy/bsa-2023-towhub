@@ -58,6 +58,12 @@ class SocketService {
     }
   }
 
+  public reconnect(): void {
+    this.io = io(config.ENV.API.SERVER_URL, {
+      transports: ['websocket', 'polling'],
+    });
+  }
+
   public checkIsConnected(): boolean {
     return this.io?.connected ?? false;
   }
