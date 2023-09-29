@@ -20,6 +20,11 @@ const BURGER_MENU_ITEMS = {
   ],
   customerMenu: [
     {
+      name: BurgerMenuItemsName.HISTORY,
+      navigateTo: AppRoute.ORDER_HISTORY,
+      icon: IconName.CLOCK_ROTATE_LEFT,
+    },
+    {
       name: BurgerMenuItemsName.EDIT,
       navigateTo: AppRoute.PROFILE,
       icon: IconName.USER_PEN,

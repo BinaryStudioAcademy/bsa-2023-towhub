@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import money from '~/assets/img/order-card/money.svg';
-import { AppRoute } from '~/libs/enums/app-route.enum.js';
+import { AppRoute } from '~/libs/enums/enums.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { PlainSvgIconName } from '~/libs/enums/plain-svg-icon-name.enum.js';
 import {

@@ -49,17 +49,16 @@ const TruckTable: React.FC = () => {
 
   const sortMethod = getSortingMethodValue(sorting);
 
-  const { pageSize, pageIndex, onChangePageSize, onChangePageIndex } =
-    useAppTable<
-      TruckGetAllResponseDto,
-      PaginationWithSortingParameters,
-      HttpError
-    >({
-      tableFetchCall: findAllTrucksForBusiness,
-      initialPageIndex: initialPage ? Number(initialPage) : null,
-      initialPageSize: initialSize ? Number(initialSize) : null,
-      sort: sortMethod,
-    });
+  const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
+    TruckGetAllResponseDto,
+    PaginationWithSortingParameters,
+    HttpError
+  >({
+    tableFetchCall: findAllTrucksForBusiness,
+    initialPageIndex: initialPage ? Number(initialPage) : null,
+    initialPageSize: initialSize ? Number(initialSize) : null,
+    sort: sortMethod,
+  });
 
   const serverError = useTruckServerError();
 
@@ -101,8 +100,8 @@ const TruckTable: React.FC = () => {
           setSorting={setSorting}
           sorting={sorting}
           isLoading={dataStatus === DataStatus.PENDING}
-          onChangePageSize={onChangePageSize}
-          onChangePageIndex={onChangePageIndex}
+          changePageSize={changePageSize}
+          changePageIndex={changePageIndex}
           emptyTableMessage={message}
         />
       </div>

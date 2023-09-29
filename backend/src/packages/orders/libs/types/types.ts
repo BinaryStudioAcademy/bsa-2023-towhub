@@ -13,6 +13,8 @@ export {
   type OrderEntity,
   type OrderFindAllDriverOrdersQuery,
   type OrderFindAllDriverOrdersResponseDto,
+  type OrderFindAllUserOrdersQuery,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderFindByIdResponseDto,
   type OrderQueryParameters,
   type OrderResponseDto,

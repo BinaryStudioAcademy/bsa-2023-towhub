@@ -20,6 +20,7 @@ import {
   selectUser,
 } from '~/slices/auth/selectors.js';
 import { selectOrder } from '~/slices/orders/selectors.js';
+import { restartWatchTruckLocation } from '~/slices/trucks/actions.js';
 
 import { RouterOutlet } from '../router/router.js';
 
@@ -29,10 +30,14 @@ const DriverSocketProvider: FC = () => {
     selectSocketDriverAuthErrorMessage,
   );
   const user = useAppSelector(selectUser);
+  const currentOrder = useAppSelector(selectOrder);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const currentOrder = useAppSelector(selectOrder);
+  useEffect(() => {
+    void dispatch(restartWatchTruckLocation());
+  });
+
   useEffect(() => {
     socketTryAddDriverListeners(dispatch);
 

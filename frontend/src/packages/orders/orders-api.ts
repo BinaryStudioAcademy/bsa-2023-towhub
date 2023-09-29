@@ -9,12 +9,13 @@ import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
+  type OrderCreateRequestDto,
   type OrderFindAllDriverOrdersResponseDto,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusResponseDto,
 } from './libs/types/types.js';
-import { type OrderCreateRequestDto } from './orders.js';
 
 type Constructor = {
   baseUrl: string;
@@ -56,6 +57,21 @@ class OrdersApi extends HttpApi {
     );
 
     return await response.json<OrderResponseDto>();
+  }
+
+  public async getAllUserOrders(
+    queryString = '',
+  ): Promise<OrderFindAllUserOrdersResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(`${OrdersApiPath.USER}?${queryString}`, {}),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<OrderFindAllUserOrdersResponseDto>();
   }
 
   public async calculatePrice(

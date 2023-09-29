@@ -4,12 +4,15 @@ import { LocalStorage } from '~/libs/packages/storage/storage.js';
 
 import { OrdersApi } from './orders-api.js';
 
+export { OrderStatus } from './libs/enums/enums.js';
 export {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
   type OrderEntity,
   type OrderFindAllDriverOrdersResponseDto,
+  type OrderFindAllUserOrdersResponseDto,
+  type OrderGetAllUserOrdersPayload,
   type OrderResponseDto,
   type OrderStatusValues,
 } from './libs/types/types.js';

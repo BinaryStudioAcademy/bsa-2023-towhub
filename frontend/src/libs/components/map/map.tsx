@@ -58,6 +58,8 @@ const Map: React.FC<Properties> = ({
       }
 
       if (markers.length > 0) {
+        mapService.current.removeMarkers();
+
         for (const marker of markers) {
           mapService.current.addMarker(marker, true);
         }

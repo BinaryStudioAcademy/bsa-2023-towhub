@@ -9,16 +9,16 @@ type Properties = {
   emptyListMessage?: JSX.Element;
   pageSize: number;
   pageIndex: number;
-  onChangePageIndex: React.Dispatch<React.SetStateAction<number>>;
-  onChangePageSize: React.Dispatch<React.SetStateAction<number>>;
+  changePageIndex: React.Dispatch<React.SetStateAction<number>>;
+  changePageSize: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const DriverOrderListWrapper: React.FC<Properties> = ({
   pageIndex,
   pageSize,
   emptyListMessage,
-  onChangePageIndex,
-  onChangePageSize,
+  changePageIndex: onChangePageIndex,
+  changePageSize: onChangePageSize,
 }: Properties) => {
   const { orders, total: totalElements } = useAppSelector(
     (state) => state.orders,

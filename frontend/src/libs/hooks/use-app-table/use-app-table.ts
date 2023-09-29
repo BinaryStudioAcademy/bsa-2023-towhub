@@ -10,7 +10,6 @@ import {
 import { useQueryParameters } from '../hooks.js';
 import { useAppDispatch } from '../use-app-dispatch/use-app-dispatch.hook.js';
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from './libs/constant.js';
-import { type ReturnValue } from './libs/types/types.js';
 
 type Properties<T, K, RejectValue extends HttpError | null> = {
   tableFetchCall: AsyncThunk<
@@ -25,19 +24,28 @@ type Properties<T, K, RejectValue extends HttpError | null> = {
   filterName?: string;
 };
 
+type ReturnValue = {
+  pageSize: number;
+  pageIndex: number;
+  changePageSize: React.Dispatch<React.SetStateAction<number>>;
+  changePageIndex: React.Dispatch<React.SetStateAction<number>>;
+  updatePage: () => void;
+};
+
 const useAppTable = <T, K, RejectValue extends HttpError | null>({
   tableFetchCall,
   payload,
   initialPageSize,
   initialPageIndex,
   sort,
+
   filterName,
 }: Properties<T, K, RejectValue>): ReturnValue => {
   const [query, setQuery] = useState<string>();
-  const [pageSize, onChangePageSize] = useState(
+  const [pageSize, changePageSize] = useState<number>(
     initialPageSize ?? DEFAULT_PAGE_SIZE,
   );
-  const [pageIndex, onChangePageIndex] = useState(
+  const [pageIndex, changePageIndex] = useState(
     initialPageIndex ?? DEFAULT_PAGE_INDEX,
   );
 
@@ -67,7 +75,7 @@ const useAppTable = <T, K, RejectValue extends HttpError | null>({
     setQueryParameters(queryParameters);
     const newQuery = searchParameters.toString();
 
-    if (query !== newQuery) {
+    if (query !== newQuery && newQuery) {
       setQuery(newQuery);
       void dispatch(tableFetchCall(newQuery));
     }
@@ -87,19 +95,13 @@ const useAppTable = <T, K, RejectValue extends HttpError | null>({
 
   useEffect(() => {
     updatePage();
-  }, [tableFetchCall, pageSize, pageIndex, dispatch, payload, updatePage]);
+  }, [pageSize, pageIndex, dispatch, payload, updatePage]);
 
   useEffect(() => {
     void dispatch(tableFetchCall(searchParameters.toString()));
   }, [dispatch, searchParameters, tableFetchCall]);
 
-  return {
-    pageSize,
-    pageIndex,
-    onChangePageSize,
-    onChangePageIndex,
-    updatePage,
-  };
+  return { pageSize, pageIndex, changePageSize, changePageIndex, updatePage };
 };
 
 export { useAppTable };

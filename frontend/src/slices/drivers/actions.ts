@@ -32,7 +32,7 @@ const addDriver = createAsyncThunk<
     payload: DriverCreateRequestDto<FileObject>;
     queryString?: string;
   },
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(
   ACTIONS_TYPES.ADD_DRIVER,
   async (

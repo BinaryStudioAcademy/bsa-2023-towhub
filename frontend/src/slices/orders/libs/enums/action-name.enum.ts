@@ -3,6 +3,7 @@ import { name as sliceName } from '~/slices/orders/order.slice.js';
 const ActionName = {
   GET_ORDER: `${sliceName}/get-order`,
   REMOVE_ORDER: `${sliceName}/remove-order`,
+  GET_USER_ORDERS_PAGE: `${sliceName}/get-user-orders-page`,
   CHANGE_ACCEPT_ORDER_STATUS: `${sliceName}/change-accept-order-status`,
   SOCKET: {
     CREATE_ORDER: `${sliceName}/socket/create-order`,

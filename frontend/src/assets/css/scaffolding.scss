@@ -1,3 +1,5 @@
+@import "./vars.scss";
+
 * {
   box-sizing: border-box;
 }
@@ -67,4 +69,22 @@ img {
   border: 0;
   clip: rect(0 0 0 0);
   clip-path: inset(100%);
+}
+
+.link {
+  color: inherit;
+  font-weight: $font-weight-semibold;
+  text-align: center;
+  text-decoration: none;
+}
+
+.link:hover,
+.link:focus {
+  color: $blue-dark;
+  cursor: pointer;
+}
+
+.link.commonLink:hover,
+.link.commonLink:focus {
+  text-decoration: underline;
 }

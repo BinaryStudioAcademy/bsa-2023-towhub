@@ -1,8 +1,8 @@
 type ReturnValue = {
   pageSize: number;
   pageIndex: number;
-  onChangePageSize: React.Dispatch<React.SetStateAction<number>>;
-  onChangePageIndex: React.Dispatch<React.SetStateAction<number>>;
+  changePageSize: React.Dispatch<React.SetStateAction<number>>;
+  changePageIndex: React.Dispatch<React.SetStateAction<number>>;
   updatePage: () => void;
 };
 

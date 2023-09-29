@@ -1,7 +1,9 @@
+import { type TruckFilterField } from '../enums/enums.js';
+import { type ValueOf } from './types.js';
+
 type TruckFilters = {
-  location: string | null;
-  price: string | null;
-  capacity: string | null;
+  id: ValueOf<typeof TruckFilterField>;
+  desc: boolean;
 };
 
 export { type TruckFilters };

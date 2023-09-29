@@ -33,8 +33,8 @@ type Properties<T> = {
   pageIndex: number;
   sorting?: ColumnSort | null;
   setSorting?: OnChangeFn<ColumnSort | null>;
-  onChangePageIndex: React.Dispatch<React.SetStateAction<number>>;
-  onChangePageSize: React.Dispatch<React.SetStateAction<number>>;
+  changePageIndex: React.Dispatch<React.SetStateAction<number>>;
+  changePageSize: React.Dispatch<React.SetStateAction<number>>;
   onEditClick?: (rowId: string) => void;
   onDeleteClick?: (rowId: string) => void;
 };
@@ -50,8 +50,8 @@ const Table = <T,>({
   isTableEditable = false,
   sorting,
   setSorting,
-  onChangePageIndex,
-  onChangePageSize,
+  changePageIndex,
+  changePageSize,
   ...properties
 }: Properties<T>): JSX.Element => {
   const pagesRange = Math.ceil(totalRow / pageSize);
@@ -92,17 +92,17 @@ const Table = <T,>({
 
   const handleChangePageSize = useCallback(
     (value: number) => {
-      onChangePageIndex(0);
-      onChangePageSize(value);
+      changePageIndex(0);
+      changePageSize(value);
       table.setPageSize(value);
     },
-    [onChangePageSize, table, onChangePageIndex],
+    [changePageSize, table, changePageIndex],
   );
 
   if (data.length === 0 && !isLoading) {
     return (
       <div className={getValidClassNames('h4', styles.message)}>
-        {emptyTableMessage ?? 'There are no data here yet.'}
+        {emptyTableMessage ?? 'There is no data here yet.'}
       </div>
     );
   }
@@ -132,7 +132,7 @@ const Table = <T,>({
       )}
       <Pagination
         pageCount={pagesRange}
-        onClick={onChangePageIndex}
+        onClick={changePageIndex}
         onChangePageSize={handleChangePageSize}
         pageIndex={pageIndex}
         pageSize={pageSize}

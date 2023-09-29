@@ -15,6 +15,7 @@ import {
   getOrder,
   getRouteAddresses,
   getRouteData,
+  getUserOrdersPage,
   removeOrder,
   updateOrderFromSocket,
 } from './actions.js';
@@ -23,6 +24,7 @@ import { type RouteAddresses } from './libs/types/types.js';
 
 type State = {
   orders: OrderResponseDto[];
+  total: number;
   price: number;
   dataStatus: ValueOf<typeof DataStatus>;
   routeData: RouteData | null;
@@ -30,7 +32,6 @@ type State = {
   routeAddresses: Partial<
     Record<RouteAddresses['orderId'], RouteAddresses['points']>
   >;
-  total: number;
 };
 
 const initialState: State = {
@@ -49,6 +50,11 @@ const { reducer, actions, name } = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
+      .addCase(getUserOrdersPage.fulfilled, (state, actions) => {
+        state.dataStatus = DataStatus.FULFILLED;
+        state.orders = actions.payload.items;
+        state.total = actions.payload.total;
+      })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
@@ -105,11 +111,12 @@ const { reducer, actions, name } = createSlice({
       )
       .addMatcher(
         isAnyOf(
+          getRouteAddresses.pending,
+          createOrder.pending,
           getBusinessOrders.pending,
           getDriverOrdersPage.pending,
-          getRouteAddresses.pending,
           calculateOrderPrice.pending,
-          createOrder.pending,
+          getUserOrdersPage.pending,
           changeAcceptOrderStatusByDriver.pending,
           changeAcceptOrderStatusByCustomer.pending,
           getOrder.pending,
@@ -121,11 +128,8 @@ const { reducer, actions, name } = createSlice({
       )
       .addMatcher(
         isAnyOf(
-          createOrder.rejected,
-          getBusinessOrders.rejected,
-          getDriverOrdersPage.rejected,
-          getRouteAddresses.rejected,
           calculateOrderPrice.rejected,
+          createOrder.rejected,
           changeAcceptOrderStatusByDriver.rejected,
           changeAcceptOrderStatusByCustomer.rejected,
           getOrder.rejected,

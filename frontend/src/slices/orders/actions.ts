@@ -14,6 +14,7 @@ import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderFindAllDriverOrdersResponseDto,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
 } from '~/packages/orders/orders.js';
 
@@ -98,6 +99,63 @@ const calculateOrderPrice = createAsyncThunk<
   return ordersApi.calculatePrice(payload);
 });
 
+const getUserOrdersPage = createAsyncThunk<
+  OrderFindAllUserOrdersResponseDto,
+  string | undefined,
+  AsyncThunkConfig
+>(
+  ActionName.GET_USER_ORDERS_PAGE,
+  async (payload, { rejectWithValue, extra }) => {
+    try {
+      return await extra.ordersApi.getAllUserOrders(payload);
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
+
+      notification.error(getErrorMessage(error.message));
+
+      return rejectWithValue({ ...error, message: error.message });
+    }
+  },
+);
+
+const getRouteAddresses = createAsyncThunk<
+  Partial<Record<RouteAddresses['orderId'], RouteAddresses['points']>>,
+  {
+    points: { origin: Coordinates; destination: Coordinates };
+    orderId: number;
+  },
+  AsyncThunkConfig<null>
+>(
+  ActionName.GET_ORDER_ADDRESSES,
+  async ({ points, orderId }, { extra, getState }) => {
+    const routeAddresses = getState().orders.routeAddresses;
+
+    if (routeAddresses[orderId]) {
+      return routeAddresses;
+    }
+
+    const { origin, destination } = points;
+    const { mapServiceFactory } = extra;
+    const routeData = {
+      origin: origin,
+      destination: destination,
+    };
+
+    const mapService = await mapServiceFactory({ mapElement: null });
+    const [originName, destinationName] = await Promise.all([
+      mapService.getPointAddress(routeData.origin),
+      mapService.getPointAddress(routeData.destination),
+    ]);
+
+    return {
+      [orderId]: {
+        origin: originName,
+        destination: destinationName,
+      },
+    };
+  },
+);
+
 const getOrder = createAsyncThunk<
   OrderResponseDto,
   string,
@@ -145,44 +203,6 @@ const createOrderFromSocket = createAsyncThunk<
   return order;
 });
 
-const getRouteAddresses = createAsyncThunk<
-  Partial<Record<RouteAddresses['orderId'], RouteAddresses['points']>>,
-  {
-    points: { origin: Coordinates; destination: Coordinates };
-    orderId: number;
-  },
-  AsyncThunkConfig<null>
->(
-  ActionName.GET_ORDER_ADDRESSES,
-  async ({ points, orderId }, { extra, getState }) => {
-    const routeAddresses = getState().orders.routeAddresses;
-
-    if (routeAddresses[orderId]) {
-      return routeAddresses;
-    }
-
-    const { origin, destination } = points;
-    const { mapServiceFactory } = extra;
-    const routeData = {
-      origin: origin,
-      destination: destination,
-    };
-
-    const mapService = await mapServiceFactory({ mapElement: null });
-    const [originName, destinationName] = await Promise.all([
-      mapService.getPointAddress(routeData.origin),
-      mapService.getPointAddress(routeData.destination),
-    ]);
-
-    return {
-      [orderId]: {
-        origin: originName,
-        destination: destinationName,
-      },
-    };
-  },
-);
-
 const updateOrderFromSocket = createAsyncThunk<
   OrderResponseDto,
   OrderResponseDto,
@@ -218,7 +238,7 @@ const removeOrder = createAction(
 const getDriverOrdersPage = createAsyncThunk<
   OrderFindAllDriverOrdersResponseDto,
   string | undefined,
-  AsyncThunkConfig<HttpError>
+  AsyncThunkConfig
 >(
   `${sliceName}/orderFindAllDriverOrdersResponse`,
   async (payload, { rejectWithValue, extra }) => {
@@ -245,6 +265,7 @@ export {
   getOrder,
   getRouteAddresses,
   getRouteData,
+  getUserOrdersPage,
   removeOrder,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
