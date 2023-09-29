@@ -16,8 +16,10 @@ import { checkIsCustomer, checkIsDriver } from './libs/helpers/helpers.js';
 import {
   type OrderCreateRequestDto,
   type OrderEntity as OrderEntityT,
+  type OrderQueryParameters,
   type OrderResponseDto,
   type OrderResponseWithAvatarDto,
+  type OrdersListResponseDto,
   type OrderStatusValues,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusResponseDto,
@@ -338,20 +340,37 @@ class OrderService implements Omit<IService, 'find'> {
     return { id, status };
   }
 
-  public async findAllBusinessOrders(
-    user: UserEntityObjectWithGroupT,
-  ): Promise<OrderResponseDto[]> {
+  public async findAllBusinessOrders({
+    user,
+    query,
+  }: {
+    user: UserEntityObjectWithGroupT;
+    query: OrderQueryParameters;
+  }): Promise<OrdersListResponseDto> {
     const business = await this.businessService.findByOwnerId(user.id);
 
     if (!business) {
       throw new NotFoundError({});
     }
 
-    const usersOrders = await this.orderRepository.findAllBusinessOrders({
-      businessId: business.id,
-    });
+    const usersOrders = await this.orderRepository.findAllBusinessOrders(
+      { businessId: business.id },
+      query,
+    );
 
-    return usersOrders.map((it) => OrderEntity.initialize(it).toObject());
+    const total = query.status
+      ? await this.orderRepository.getTotalBusiness({
+          businessId: business.id,
+          status: query.status,
+        })
+      : await this.orderRepository.getTotalBusiness({
+          businessId: business.id,
+        });
+
+    return {
+      items: usersOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      total,
+    };
   }
 
   public async delete({

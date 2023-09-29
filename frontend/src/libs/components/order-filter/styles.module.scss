@@ -1,0 +1,30 @@
+@import "src/assets/css/vars.scss";
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 2vmin;
+  padding: 2.25vmin;
+  border: 1px solid $grey-light;
+  border-radius: 10px;
+  box-shadow: $shadow-medium;
+}
+
+.filterItem {
+  display: flex;
+  align-items: baseline;
+}
+
+.filterTitle {
+  margin-right: 35px;
+}
+
+.dropdownWrapper {
+  width: 100%;
+}
+
+.input {
+  border: 1px solid $grey-border;
+  border-radius: 10px;
+}

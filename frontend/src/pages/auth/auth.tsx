@@ -5,6 +5,7 @@ import {
   useAppDispatch,
   useAuthNavigate,
   useCallback,
+  useEffect,
   useLocation,
 } from '~/libs/hooks/hooks.js';
 import {
@@ -49,9 +50,11 @@ const Auth: React.FC = () => {
 
   const user = useAuthUser();
 
-  if (user) {
-    navigateAuthUser(user);
-  }
+  useEffect(() => {
+    if (user) {
+      navigateAuthUser(user);
+    }
+  }, [navigateAuthUser, user]);
 
   const getScreen = useCallback((): React.ReactNode => {
     switch (location.pathname) {

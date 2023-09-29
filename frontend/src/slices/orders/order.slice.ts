@@ -23,6 +23,7 @@ import { type RouteData } from './libs/types/route-data.type.js';
 
 type State = {
   orders: OrderResponseDto[];
+  total: number;
   price: number;
   dataStatus: ValueOf<typeof DataStatus>;
   routeData: RouteData | null;
@@ -31,6 +32,7 @@ type State = {
 
 const initialState: State = {
   orders: [],
+  total: 0,
   price: 0,
   currentOrder: null,
   dataStatus: DataStatus.IDLE,
@@ -68,15 +70,10 @@ const { reducer, actions, name } = createSlice({
       .addCase(removeOrder, (state) => {
         state.currentOrder = null;
       })
-      .addCase(getBusinessOrders.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
       .addCase(getBusinessOrders.fulfilled, (state, action) => {
-        state.orders = action.payload;
+        state.orders = action.payload.items;
+        state.total = action.payload.total;
         state.dataStatus = DataStatus.FULFILLED;
-      })
-      .addCase(getBusinessOrders.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
       })
       .addMatcher(
         isAnyOf(
@@ -101,6 +98,7 @@ const { reducer, actions, name } = createSlice({
           changeAcceptOrderStatusByCustomer.pending,
           getOrder.pending,
           getRouteData.pending,
+          getBusinessOrders.pending,
         ),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
@@ -114,6 +112,7 @@ const { reducer, actions, name } = createSlice({
           changeAcceptOrderStatusByCustomer.rejected,
           getOrder.rejected,
           getRouteData.rejected,
+          getBusinessOrders.rejected,
         ),
         (state) => {
           state.dataStatus = DataStatus.REJECTED;

@@ -31,12 +31,13 @@ import {
   PageLayout,
   ProtectedRoute,
   ProtectedRouteBusinessCustomer,
+  Spinner,
 } from '../components.js';
 import { OrderProvider } from '../order-provider/order-provider.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => {
-  const { getCurrentUser } = useGetCurrentUser();
+  const { requestCurrentUser, isRequestFinished } = useGetCurrentUser();
   const user = useAppSelector(selectUser);
 
   const dispatch = useAppDispatch();
@@ -44,10 +45,14 @@ const Router = (): JSX.Element => {
   useEffect(() => {
     if (!user) {
       socketTryRemoveDriverListeners();
-      void getCurrentUser();
+      void requestCurrentUser();
     }
     socket.connect();
-  }, [getCurrentUser, user, dispatch]);
+  }, [requestCurrentUser, user, dispatch]);
+
+  if (!isRequestFinished) {
+    return <Spinner size="sm" />;
+  }
 
   return (
     <RouterProvider>
@@ -117,7 +122,7 @@ const Router = (): JSX.Element => {
           <Route
             path={AppRoute.EDIT_PROFILE}
             element={
-              <PageLayout isSidebarHidden>
+              <PageLayout>
                 <EditDriverProfilePage />
               </PageLayout>
             }
