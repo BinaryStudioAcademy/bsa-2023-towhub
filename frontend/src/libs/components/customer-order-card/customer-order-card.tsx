@@ -1,5 +1,6 @@
 import money from '~/assets/img/money.svg';
 import { Link } from '~/libs/components/link/link.jsx';
+import { AppRoute } from '~/libs/enums/enums.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import {
   capitalizeFirstLetter,
@@ -47,7 +48,7 @@ const CustomerOrderCard: React.FC<Properties> = ({ order }: Properties) => {
       <div className={styles.header}>
         <div>Order {id}</div>
         {isInProcess && (
-          <Link to={'/'} className={styles.link}>
+          <Link to={`${AppRoute.ORDER}/${id}`} className={styles.link}>
             Open to view order details
           </Link>
         )}

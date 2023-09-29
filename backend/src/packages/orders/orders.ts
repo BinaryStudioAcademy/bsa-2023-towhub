@@ -4,6 +4,7 @@ import { socket } from '~/libs/packages/socket/socket.js';
 
 import { businessService } from '../business/business.js';
 import { driverService } from '../drivers/drivers.js';
+import { filesService } from '../files/files.js';
 import { mapService } from '../map/map.js';
 import { shiftService } from '../shifts/shift.js';
 import { truckService } from '../trucks/trucks.js';
@@ -22,6 +23,7 @@ const orderService = new OrderService({
   userService,
   mapService,
   socket,
+  filesService,
 });
 const orderController = new OrderController({
   logger,
