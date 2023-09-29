@@ -1,6 +1,8 @@
+import { type Coordinates } from '~/libs/types/types.js';
+
 type MapServiceParameters = {
   mapElement: HTMLDivElement | null;
-  center?: google.maps.LatLngLiteral;
+  center?: Coordinates;
   zoom?: number;
   bounds?: google.maps.LatLngBounds;
 };

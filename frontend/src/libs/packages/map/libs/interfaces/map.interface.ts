@@ -1,13 +1,15 @@
+import { type Coordinates } from '~/libs/types/types.js';
+
 interface IMapService {
   calculateRouteAndTime(
-    origin: google.maps.LatLngLiteral,
-    destination: google.maps.LatLngLiteral,
+    origin: Coordinates,
+    destination: Coordinates,
   ): Promise<number>;
   calculateDistance(
-    origin: google.maps.LatLngLiteral,
-    destination: google.maps.LatLngLiteral,
+    origin: Coordinates,
+    destination: Coordinates,
   ): Promise<number>;
-  addMarker(position: google.maps.LatLngLiteral): void;
+  addMarker(position: Coordinates): void;
 }
 
 export { type IMapService };

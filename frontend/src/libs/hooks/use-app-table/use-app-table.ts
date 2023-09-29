@@ -21,6 +21,7 @@ type Properties<T, K, RejectValue extends HttpError | null> = {
   initialPageSize?: number | null;
   initialPageIndex?: number | null;
   sort?: SortMethodValue | null;
+  filterName?: string;
 };
 
 type ReturnValue = {
@@ -37,15 +38,19 @@ const useAppTable = <T, K, RejectValue extends HttpError | null>({
   initialPageSize,
   initialPageIndex,
   sort,
+
+  filterName,
 }: Properties<T, K, RejectValue>): ReturnValue => {
-  const [pageSize, changePageSize] = useState(
+  const [query, setQuery] = useState<string>();
+  const [pageSize, changePageSize] = useState<number>(
     initialPageSize ?? DEFAULT_PAGE_SIZE,
   );
   const [pageIndex, changePageIndex] = useState(
     initialPageIndex ?? DEFAULT_PAGE_INDEX,
   );
 
-  const { setQueryParameters, searchParameters } = useQueryParameters();
+  const { setQueryParameters, searchParameters, getQueryParameters } =
+    useQueryParameters();
   const dispatch = useAppDispatch();
 
   const updatePage = useCallback(() => {
@@ -55,10 +60,38 @@ const useAppTable = <T, K, RejectValue extends HttpError | null>({
       size: pageSize,
     };
 
-    const queryParameters = sort ? { ...actionPayload, sort } : actionPayload;
+    const queryParameters: Record<string, string | number> = sort
+      ? { ...actionPayload, sort }
+      : actionPayload;
+
+    if (filterName) {
+      const filterValue = getQueryParameters(filterName) as string;
+
+      if (filterValue) {
+        queryParameters[filterName] = filterValue;
+      }
+    }
 
     setQueryParameters(queryParameters);
-  }, [pageIndex, pageSize, payload, setQueryParameters, sort]);
+    const newQuery = searchParameters.toString();
+
+    if (query !== newQuery && newQuery) {
+      setQuery(newQuery);
+      void dispatch(tableFetchCall(newQuery));
+    }
+  }, [
+    dispatch,
+    filterName,
+    getQueryParameters,
+    pageIndex,
+    pageSize,
+    payload,
+    query,
+    searchParameters,
+    setQueryParameters,
+    sort,
+    tableFetchCall,
+  ]);
 
   useEffect(() => {
     updatePage();

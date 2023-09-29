@@ -1,5 +1,6 @@
 import { ImgPath } from '~/libs/enums/img-path.enum.js';
 import { ApplicationError } from '~/libs/exceptions/exceptions.js';
+import { type Coordinates } from '~/libs/types/types.js';
 
 import { MAP_INFO_WINDOW_WIDTH } from './libs/constants/constants.js';
 import { createIcon } from './libs/helpers/helpers.js';
@@ -104,7 +105,7 @@ class MapService implements IMapService {
 
   private initMap(
     mapElement: HTMLDivElement,
-    center?: google.maps.LatLngLiteral,
+    center?: Coordinates,
     zoom?: number,
   ): void {
     this.map = new google.maps.Map(mapElement, {
@@ -145,8 +146,8 @@ class MapService implements IMapService {
   }
 
   public async calculateRouteAndTime(
-    origin: google.maps.LatLngLiteral,
-    destination: google.maps.LatLngLiteral,
+    origin: Coordinates,
+    destination: Coordinates,
   ): Promise<number> {
     this.throwIfMapNotInitialized();
 
@@ -186,9 +187,7 @@ class MapService implements IMapService {
     }
   }
 
-  public async getPointAddress(
-    point: google.maps.LatLngLiteral,
-  ): Promise<string> {
+  public async getPointAddress(point: Coordinates): Promise<string> {
     try {
       const {
         results: [result],
@@ -203,9 +202,7 @@ class MapService implements IMapService {
     }
   }
 
-  public async getAddressPoint(
-    address: string,
-  ): Promise<google.maps.LatLngLiteral> {
+  public async getAddressPoint(address: string): Promise<Coordinates> {
     try {
       const {
         results: [result],
@@ -224,8 +221,8 @@ class MapService implements IMapService {
   }
 
   public async calculateDistanceAndDuration(
-    origin: google.maps.LatLngLiteral,
-    destination: google.maps.LatLngLiteral,
+    origin: Coordinates,
+    destination: Coordinates,
   ): Promise<{
     distance: { text: string; value: number };
     duration: { text: string; value: number };
@@ -252,8 +249,8 @@ class MapService implements IMapService {
   }
 
   public async calculateDistance(
-    origin: google.maps.LatLngLiteral,
-    destination: google.maps.LatLngLiteral,
+    origin: Coordinates,
+    destination: Coordinates,
   ): Promise<number> {
     this.throwIfMapNotInitialized();
 
@@ -289,7 +286,7 @@ class MapService implements IMapService {
 
   public findAngle(
     response: google.maps.DirectionsResult,
-    origin: google.maps.LatLngLiteral,
+    origin: Coordinates,
   ): number {
     const [firstRoute] = response.routes;
     const [firstLeg] = firstRoute.legs;
@@ -314,7 +311,7 @@ class MapService implements IMapService {
   }
 
   public addMarker(
-    position: google.maps.LatLngLiteral,
+    position: Coordinates,
     isOrigin = false,
     angle = 0,
   ): google.maps.Marker {

@@ -15,6 +15,7 @@ import { OrderStatus } from '~/pages/order-status/order-status.js';
 import {
   Auth,
   AvailableTrucks,
+  CustomerHistory,
   Dashboard,
   DriverOrder,
   EditDriverProfilePage,
@@ -162,6 +163,19 @@ const Router = (): JSX.Element => {
             }
           />
         </Route>
+      </Route>
+      <Route
+        path={AppRoute.ROOT}
+        element={<ProtectedRoute allowedUserGroup={UserGroupKey.CUSTOMER} />}
+      >
+        <Route
+          path={AppRoute.ORDER_HISTORY}
+          element={
+            <PageLayout isSidebarHidden>
+              <CustomerHistory />
+            </PageLayout>
+          }
+        />
       </Route>
       <Route path={AppRoute.ANY} element={<NotFound />} />
     </RouterProvider>
