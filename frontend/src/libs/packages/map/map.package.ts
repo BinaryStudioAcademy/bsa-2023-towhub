@@ -15,8 +15,8 @@ type Constructor = MapServiceParameters & {
     routes: google.maps.DistanceMatrixService;
     directionsService: google.maps.DirectionsService;
     directionsRenderer: google.maps.DirectionsRenderer;
-    autocomplete: google.maps.places.AutocompleteService;
     infoWindow: google.maps.InfoWindow;
+    placesLibrary: google.maps.PlacesLibrary;
   };
   map: google.maps.Map | null;
   markers: google.maps.Marker[];
@@ -37,9 +37,9 @@ class MapService implements IMapService {
 
   private routes!: google.maps.DistanceMatrixService;
 
-  private autocomplete!: google.maps.places.AutocompleteService;
-
   private infoWindow: google.maps.InfoWindow;
+
+  private placesLibrary!: google.maps.PlacesLibrary;
 
   private setMap: (map: google.maps.Map) => void;
 
@@ -84,6 +84,7 @@ class MapService implements IMapService {
       this.directionsRenderer = extraLibraries.directionsRenderer;
       this.directionsService = extraLibraries.directionsService;
       this.infoWindow = extraLibraries.infoWindow;
+      this.placesLibrary = extraLibraries.placesLibrary;
 
       init();
 
@@ -356,6 +357,14 @@ class MapService implements IMapService {
 
     this.infoWindow.setContent(`${startAddress} → ${endAddress}`);
     this.infoWindow.open({ map: this.map, anchor });
+  }
+
+  public createAutocomplete(
+    input: HTMLInputElement,
+  ): google.maps.places.Autocomplete {
+    return new this.placesLibrary.Autocomplete(input, {
+      types: ['address'],
+    });
   }
 
   public setZoom(zoom: number): void {

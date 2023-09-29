@@ -17,11 +17,14 @@
 }
 
 .input {
+  width: 300px;
+  margin: 0;
   padding: 10px;
   color: $grey;
   font-weight: $font-weight-regular;
   font-size: 14px;
   font-family: $font-family;
+  line-height: $line-height-normal;
   border: none;
   border-radius: 10px;
 
