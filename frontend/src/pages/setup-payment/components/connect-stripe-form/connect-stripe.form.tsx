@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { type UserEntityObjectWithGroupAndBusinessT } from 'shared/build/index.js';
 
 import { Button, Icon, Input } from '~/libs/components/components.js';
-import { DataStatus, IconName } from '~/libs/enums/enums.js';
+import { AppRoute, DataStatus, IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
@@ -9,8 +10,11 @@ import {
   useAppSelector,
   useCallback,
   useEffect,
+  useNavigate,
+  useQueryParameters,
   useState,
 } from '~/libs/hooks/hooks.js';
+import { useAuthUser } from '~/slices/auth/auth.js';
 import {
   generateExpressAccountLink,
   selectExpressAccountLink,
@@ -18,17 +22,26 @@ import {
 } from '~/slices/stripe/stripe.js';
 
 import { STRIPE_URL } from './libs/constants/constants.js';
+import { StripeOperationStatus } from './libs/enums/enums.js';
 import { type SetupPaymentFormData } from './libs/types/types.js';
 import { connectStripeValidationSchema } from './libs/validation-schemas/validation-schemas.js';
 import styles from './styles.module.scss';
 
 const ConnectStripeForm: React.FC = () => {
+  const { getQueryParameters } = useQueryParameters();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const isSuccess = Boolean(getQueryParameters(StripeOperationStatus.SUCCESS));
+
   const stripeDataStatus = useAppSelector(selectStripeDataStatus);
   const expressAccountLink = useAppSelector(selectExpressAccountLink);
 
-  const dispatch = useAppDispatch();
+  const user = useAuthUser<UserEntityObjectWithGroupAndBusinessT>();
 
-  const isFetching = stripeDataStatus === DataStatus.PENDING;
+  const isFetching =
+    stripeDataStatus === DataStatus.PENDING ||
+    stripeDataStatus === DataStatus.FULFILLED;
 
   const [showInput, setShowInput] = useState(false);
   const { control, errors, handleSubmit } = useAppForm<SetupPaymentFormData>({
@@ -62,6 +75,16 @@ const ConnectStripeForm: React.FC = () => {
     }
     window.location.href = expressAccountLink;
   }, [expressAccountLink]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate(AppRoute.DASHBOARD_ORDERS, { replace: true });
+    }
+  }, [navigate, isSuccess]);
+
+  if (user.business.isStripeActivated) {
+    return <Navigate to={AppRoute.DASHBOARD_ORDERS} replace />;
+  }
 
   return (
     <div className={styles.wrapper}>

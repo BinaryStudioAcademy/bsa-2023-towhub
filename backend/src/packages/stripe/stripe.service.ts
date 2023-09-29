@@ -36,6 +36,7 @@ import {
   buildPaymetnsRequestQuery,
   calculateApplicationFee,
   calculateTotal,
+  configureString,
   constructUrl,
   convertCurrencyToCents,
   paginateArray,
@@ -244,6 +245,8 @@ class StripeService {
 
     const applicationFeeAmount = calculateApplicationFee(total);
 
+    const { orderId } = metadata;
+
     const parameters: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: [...SUPPORTED_PAYMENT_METHODS],
       line_items: [
@@ -269,12 +272,12 @@ class StripeService {
       mode: CHECKOUT_MODE,
       success_url: constructUrl(
         this.config.APP.FRONTEND_BASE_URL,
-        AppRoute.PAYMENTS,
+        configureString(AppRoute.ORDER_STATUS, { orderId }),
         { [StripeOperationStatus.SUCCESS]: true },
       ),
       cancel_url: constructUrl(
         this.config.APP.FRONTEND_BASE_URL,
-        AppRoute.PAYMENTS,
+        configureString(AppRoute.ORDER_STATUS, { orderId }),
         { [StripeOperationStatus.CANCEL]: true },
       ),
     };

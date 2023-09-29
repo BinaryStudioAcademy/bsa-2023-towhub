@@ -1,6 +1,9 @@
-import { Button } from '~/libs/components/components.js';
+import { Button, Icon } from '~/libs/components/components.js';
+import { DataStatus, IconName } from '~/libs/enums/enums.js';
+import { useAppSelector, useQueryParameters } from '~/libs/hooks/hooks.js';
+import { selectStripeDataStatus } from '~/slices/stripe/selectors.js';
 
-import { OrderStatus } from '../../enums/enums.js';
+import { OrderStatus, StripeOperationStatus } from '../../enums/enums.js';
 import { type OrderStatusValues } from '../types/types.js';
 import styles from './styles.module.scss';
 
@@ -24,6 +27,16 @@ const ButtonsSection = ({
     status === OrderStatus.DONE ||
     status === OrderStatus.REJECTED;
 
+  const stripeDataStatus = useAppSelector(selectStripeDataStatus);
+  const isFetching =
+    stripeDataStatus === DataStatus.PENDING ||
+    stripeDataStatus === DataStatus.FULFILLED;
+
+  const { getQueryParameters } = useQueryParameters();
+  const isPaymentSuccess = Boolean(
+    getQueryParameters(StripeOperationStatus.SUCCESS),
+  );
+
   return (
     <section className={styles.buttonsSection}>
       {isDeclineButtonShown && (
@@ -36,11 +49,19 @@ const ButtonsSection = ({
       )}
       {isPayNowButtonShown && (
         <Button
-          label="PAY NOW"
+          label=""
+          isDisabled={isFetching || isPaymentSuccess}
           className={styles.buttonPayNow}
           size={'md'}
           onClick={onPayClick}
-        />
+        >
+          <>
+            {isFetching && (
+              <Icon iconName={IconName.SYNC} className="fa-spin" />
+            )}
+            PAY NOW
+          </>
+        </Button>
       )}
       {isHomepageButtonShown && (
         <Button

@@ -1,7 +1,7 @@
 import { Route } from 'react-router-dom';
 
 import { DriverSocketProvider } from '~/libs/components/driver-socket-provider/driver-socket-provider.js';
-import { AppRoute } from '~/libs/enums/enums.js';
+import { AppRoute, DataStatus } from '~/libs/enums/enums.js';
 import {
   useAppDispatch,
   useAppSelector,
@@ -26,12 +26,13 @@ import {
   SetupPayment,
   WelcomePage,
 } from '~/pages/pages.js';
-import { selectUser } from '~/slices/auth/selectors.js';
+import { selectIsLoading, selectUser } from '~/slices/auth/selectors.js';
 
 import {
   PageLayout,
   ProtectedRoute,
   ProtectedRouteBusinessCustomer,
+  Spinner,
 } from '../components.js';
 import { OrderProvider } from '../order-provider/order-provider.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
@@ -39,6 +40,7 @@ import { RouterProvider } from '../router-provider/router-provider.js';
 const Router = (): JSX.Element => {
   const { getCurrentUser } = useGetCurrentUser();
   const user = useAppSelector(selectUser);
+  const isLoading = useAppSelector(selectIsLoading);
 
   const dispatch = useAppDispatch();
 
@@ -49,6 +51,13 @@ const Router = (): JSX.Element => {
     }
     socket.connect();
   }, [getCurrentUser, user, dispatch]);
+
+  if (
+    (localStorage.getItem('token') && isLoading === DataStatus.IDLE) ||
+    isLoading === DataStatus.PENDING
+  ) {
+    return <Spinner size="sm" />;
+  }
 
   return (
     <RouterProvider>

@@ -16,6 +16,8 @@ import {
 import { DEFAULT_CENTER } from '~/libs/packages/map/libs/constants/constants.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectDataStatus, selectOrder } from '~/slices/orders/selectors.js';
+import { generateCheckoutLink } from '~/slices/stripe/actions.js';
+import { selectCheckoutLink } from '~/slices/stripe/selectors.js';
 import {
   selectChosenTruck,
   selectTruckLocation,
@@ -30,13 +32,17 @@ import { useSubscribeUpdates } from './libs/hooks/use-subscribe-updates.hook.js'
 import styles from './styles.module.scss';
 
 const OrderStatusPage: React.FC = () => {
-  const { orderId } = useParams();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const mapReference = useRef<HTMLDivElement>(null);
+
+  const { orderId } = useParams();
   const order = useAppSelector(selectOrder);
 
   const dataStatus = useAppSelector(selectDataStatus);
-  const dispatch = useAppDispatch();
+
+  const checkoutLink = useAppSelector(selectCheckoutLink);
 
   const status = order?.status;
   const isCancelScreenOpen =
@@ -85,8 +91,10 @@ const OrderStatusPage: React.FC = () => {
   }, [dispatch, orderId]);
 
   const handlePayClick = useCallback(() => {
-    //TODO
-  }, []);
+    if (order) {
+      void dispatch(generateCheckoutLink({ order }));
+    }
+  }, [dispatch, order]);
 
   const isDriverShown =
     isConfirmScreenOpen || isPickingUpScreenOpen || isDoneScreenOpen;
@@ -104,6 +112,13 @@ const OrderStatusPage: React.FC = () => {
     startLocation &&
     endLocation &&
     price;
+
+  useEffect(() => {
+    if (!checkoutLink) {
+      return;
+    }
+    window.location.href = checkoutLink;
+  }, [checkoutLink]);
 
   if (dataStatus === DataStatus.REJECTED) {
     return <NotFound />;

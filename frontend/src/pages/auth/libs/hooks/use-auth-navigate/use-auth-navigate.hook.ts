@@ -27,12 +27,6 @@ const useAuthNavigate = (): AuthNavigateHook => {
   ): void => {
     switch (user.group.key) {
       case UserGroupKey.BUSINESS: {
-        {
-          if (!(user as BusinessSignUpResponseDto).business.isStripeActivated) {
-            navigate(AppRoute.SETUP_PAYMENT);
-            break;
-          }
-        }
         navigate(AppRoute.DASHBOARD_ORDERS);
         break;
       }
