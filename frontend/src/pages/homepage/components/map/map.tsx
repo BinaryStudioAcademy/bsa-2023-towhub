@@ -1,11 +1,12 @@
 import { useAppMap, useRef } from '~/libs/hooks/hooks.js';
 import { DEFAULT_CENTER } from '~/libs/packages/map/libs/constants/constants.js';
+import { type Coordinates } from '~/libs/types/types.js';
 
 import styles from './styles.module.scss';
 
 type Properties = {
-  userLocation?: google.maps.LatLngLiteral;
-  markers?: google.maps.LatLngLiteral[];
+  userLocation?: Coordinates;
+  markers?: Coordinates[];
 };
 
 const Map = ({ userLocation, markers }: Properties): JSX.Element => {

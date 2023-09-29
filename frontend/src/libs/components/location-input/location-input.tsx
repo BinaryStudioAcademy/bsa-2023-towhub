@@ -7,7 +7,10 @@ import {
 
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useCallback, useFormController } from '~/libs/hooks/hooks.js';
-import { type LocationChangeHandler } from '~/libs/types/types.js';
+import {
+  type Coordinates,
+  type LocationChangeHandler,
+} from '~/libs/types/types.js';
 
 import { Autocomplete } from '../autocomplete/autocomplete.js';
 import styles from './styles.module.scss';
@@ -45,7 +48,7 @@ const LocationInput = <T extends FieldValues>({
   ];
 
   const handlePlaceChanged = useCallback(
-    (location: google.maps.LatLngLiteral, address: string) => {
+    (location: Coordinates, address: string) => {
       field.onChange(address);
 
       if (onLocationChange) {

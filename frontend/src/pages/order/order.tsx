@@ -9,6 +9,7 @@ import {
   useState,
 } from '~/libs/hooks/hooks.js';
 import { DEFAULT_CENTER } from '~/libs/packages/map/libs/constants/constants.js';
+import { type Coordinates } from '~/libs/types/types.js';
 import { type OrderCreateFormDto } from '~/packages/orders/libs/types/types.js';
 import { actions as orderActions, selectPrice } from '~/slices/orders/order.js';
 import { selectChosenTruck } from '~/slices/trucks/selectors.js';
@@ -20,9 +21,8 @@ import styles from './styles.module.scss';
 const Order = (): JSX.Element => {
   const [startAddress, setStartAddress] = useState<string>();
   const [endAddress, setEndAddress] = useState<string>();
-  const [startLocation, setStartLocation] =
-    useState<google.maps.LatLngLiteral>();
-  const [endLocation, setEndLocation] = useState<google.maps.LatLngLiteral>();
+  const [startLocation, setStartLocation] = useState<Coordinates>();
+  const [endLocation, setEndLocation] = useState<Coordinates>();
 
   const dispatch = useAppDispatch();
 

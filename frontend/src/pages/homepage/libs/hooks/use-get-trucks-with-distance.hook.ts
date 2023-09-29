@@ -1,11 +1,12 @@
 import { useAppSelector, useEffect, useState } from '~/libs/hooks/hooks.js';
 import { MapConnector } from '~/libs/packages/map/map-connector.package.js';
+import { type Coordinates } from '~/libs/types/types.js';
 import { selectTrucks } from '~/slices/trucks/selectors.js';
 
 import { type TruckWithDistance } from '../types/types.js';
 
 const useGetTrucksWithDistance = (
-  userLocation?: google.maps.LatLngLiteral,
+  userLocation?: Coordinates,
 ): TruckWithDistance[] => {
   const [trucksWithDistance, setTrucksWithDistance] = useState<
     TruckWithDistance[]
@@ -21,8 +22,8 @@ const useGetTrucksWithDistance = (
       });
 
       const calculateDistance = async (
-        truckLocation: google.maps.LatLngLiteral,
-        userLocation: google.maps.LatLngLiteral,
+        truckLocation: Coordinates,
+        userLocation: Coordinates,
       ): Promise<number | undefined> => {
         try {
           return await mapService.calculateDistance(
