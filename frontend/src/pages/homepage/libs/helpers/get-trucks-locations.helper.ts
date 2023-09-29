@@ -1,16 +1,11 @@
 import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
 
-type GetTruckLocations = {
-  lat: number;
-  lng: number;
-};
-
-const getTruckLocations = (
+const getTrucksLocations = (
   trucks: TruckGetItemResponseDto[],
-): GetTruckLocations[] => {
-  const locations: GetTruckLocations[] = [];
+): google.maps.LatLngLiteral[] => {
+  const locations: google.maps.LatLngLiteral[] = [];
   for (const truck of trucks) {
-    if (truck.location) {
+    if (truck.location?.lat) {
       locations.push(truck.location);
     }
   }
@@ -18,4 +13,4 @@ const getTruckLocations = (
   return locations;
 };
 
-export { getTruckLocations };
+export { getTrucksLocations };
