@@ -1,0 +1,47 @@
+@import "src/assets/css/vars.scss";
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  height: calc(100% - 40px);
+  margin: 20px;
+}
+
+.mainSection {
+  flex-grow: 1;
+  max-width: 80%;
+  padding: 0;
+  padding: 10px 60px 60px;
+  overflow-y: scroll;
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+}
+
+.header {
+  flex-grow: 1;
+  color: $blue-light;
+  font-weight: $font-weight-bold;
+  font-size: 25px;
+  font-family: $font-family;
+  text-transform: uppercase;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 35px;
+}
+
+.filterText {
+  color: $grey-light;
+  font-weight: $font-weight-semibold;
+  font-size: 18px;
+  font-family: $font-family;
+}
+
+.filter {
+  margin: 0 5px;
+}

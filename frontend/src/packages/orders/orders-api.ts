@@ -10,6 +10,7 @@ import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
   type OrderCreateRequestDto,
+  type OrderFindAllDriverOrdersResponseDto,
   type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
   type OrderUpdateAcceptStatusRequestDto,
@@ -134,6 +135,21 @@ class OrdersApi extends HttpApi {
     );
 
     return await response.json<OrderUpdateAcceptStatusResponseDto>();
+  }
+
+  public async getAllDriverOrders(
+    queryString = '',
+  ): Promise<OrderFindAllDriverOrdersResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(`${OrdersApiPath.DRIVER_ORDERS}?${queryString}`, {}),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<OrderFindAllDriverOrdersResponseDto>();
   }
 }
 

@@ -1,6 +1,7 @@
 export { orderCreateForm } from './order-create-form.validation-schema.js';
 export { orderCreateRequestBody } from './order-create-request-body.validation-schema.js';
 export { orderFindAllBusinessOrdersQuery } from './order-find-all-business-orders-query.validation-schema.js';
+export { orderFindAllDriverOrdersQuery } from './order-find-all-driver-orders-query.validation-schema.js';
 export { orderFindAllUserOrdersQuery } from './order-find-all-user-orders-query.validation-schema.js';
 export { orderGetParameter } from './order-get-parameter.validation-schema.js';
 export { orderUpdateAcceptStatusRequestBody } from './order-update-accept-status-request-body.validation-schema.js';
