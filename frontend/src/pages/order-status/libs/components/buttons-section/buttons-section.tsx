@@ -34,7 +34,7 @@ const ButtonsSection = ({
     status === OrderStatus.REJECTED;
 
   const stripeDataStatus = useAppSelector(selectStripeDataStatus);
-  const isFetching =
+  const isPaymentAccepted =
     stripeDataStatus === DataStatus.PENDING ||
     stripeDataStatus === DataStatus.FULFILLED;
 
@@ -66,13 +66,13 @@ const ButtonsSection = ({
       {isPayNowButtonShown && (
         <Button
           label=""
-          isDisabled={isFetching || isPaymentSuccessful}
+          isDisabled={isPaymentAccepted || isPaymentSuccessful}
           className={styles.buttonPayNow}
           size={'md'}
           onClick={onPayClick}
         >
           <>
-            {isFetching && (
+            {isPaymentAccepted && (
               <Icon iconName={IconName.SYNC} className="fa-spin" />
             )}
             PAY NOW

@@ -41,7 +41,7 @@ const ConnectStripeForm: React.FC = () => {
 
   const user = useAuthUser<UserEntityObjectWithGroupAndBusinessT>();
 
-  const isFetching =
+  const isLinkRequestAccepted =
     stripeDataStatus === DataStatus.PENDING ||
     stripeDataStatus === DataStatus.FULFILLED;
 
@@ -65,11 +65,11 @@ const ConnectStripeForm: React.FC = () => {
   );
 
   const handleRegisterStripeAccountPress = useCallback(() => {
-    if (isFetching) {
+    if (isLinkRequestAccepted) {
       return;
     }
     void dispatch(generateExpressAccountLink());
-  }, [dispatch, isFetching]);
+  }, [dispatch, isLinkRequestAccepted]);
 
   useEffect(() => {
     if (!expressAccountLink) {
@@ -116,9 +116,9 @@ const ConnectStripeForm: React.FC = () => {
                 control={control}
                 errors={errors}
               />
-              <Button type="submit" label="" isDisabled={!isFetching}>
+              <Button type="submit" label="" isDisabled={!isLinkRequestAccepted}>
                 <>
-                  {isFetching && (
+                  {isLinkRequestAccepted && (
                     <Icon iconName={IconName.SYNC} className="fa-spin" />
                   )}
                   Submit
@@ -140,10 +140,10 @@ const ConnectStripeForm: React.FC = () => {
             <Button
               label=""
               onClick={handleRegisterStripeAccountPress}
-              isDisabled={isFetching}
+              isDisabled={isLinkRequestAccepted}
             >
               <>
-                {isFetching && (
+                {isLinkRequestAccepted && (
                   <Icon iconName={IconName.SYNC} className="fa-spin" />
                 )}
                 Register stripe account

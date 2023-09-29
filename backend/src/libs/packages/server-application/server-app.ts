@@ -304,9 +304,9 @@ class ServerApp implements IServerApp {
       field: 'rawBody',
       encoding: 'utf8',
       runFirst: true,
-      routes: this.apis.map((it) =>
-        it.buildFullPath(ApiPath.STRIPE + StripeApiPath.WEBHOOK),
-      ),
+      routes: this.apis.map((it) => {
+        return it.buildFullPath(ApiPath.STRIPE + StripeApiPath.WEBHOOK);
+      }),
     });
     await this.app.register(fastifyMultipart, {
       attachFieldsToBody: true,

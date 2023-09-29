@@ -4,12 +4,15 @@ import { name } from './stripe.slice.js';
 
 const selectCheckoutLink = (
   state: RootState,
-): RootState[typeof name]['checkoutLink'] => state[name].checkoutLink;
+): RootState[typeof name]['checkoutLink'] => {
+  return state[name].checkoutLink;
+};
 
 const selectExpressAccountLink = (
   state: RootState,
-): RootState[typeof name]['expressAccountLink'] =>
-  state[name].expressAccountLink;
+): RootState[typeof name]['expressAccountLink'] => {
+  return state[name].expressAccountLink;
+};
 
 const selectPayments = (state: RootState): RootState[typeof name]['payments'] =>
   state[name].payments;

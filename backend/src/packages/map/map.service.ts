@@ -41,7 +41,7 @@ class MapService {
   public async getPriceByDistance({
     startAddress,
     endAddress,
-    pricePerKm, // TODO kilometer
+    pricePerKm,
   }: OrderCalculatePriceRequestDto): Promise<OrderCalculatePriceResponseDto> {
     const distance = await this.getDistance(startAddress, endAddress);
 
