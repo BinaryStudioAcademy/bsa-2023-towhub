@@ -67,8 +67,7 @@ const EditForm: React.FC<Properties> = ({
       }
     }
   }, [
-    business.companyName,
-    business.taxNumber,
+    business,
     email,
     firstName,
     group.key,

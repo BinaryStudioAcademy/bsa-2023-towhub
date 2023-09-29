@@ -7,7 +7,7 @@ const userGroupToRedirectLink: Record<
   ValueOf<typeof AppRoute>
 > = {
   [UserGroupKey.CUSTOMER]: AppRoute.ROOT,
-  [UserGroupKey.BUSINESS]: AppRoute.DASHBOARD,
+  [UserGroupKey.BUSINESS]: AppRoute.DASHBOARD_ORDERS,
   [UserGroupKey.DRIVER]: AppRoute.ORDERS,
 };
 
