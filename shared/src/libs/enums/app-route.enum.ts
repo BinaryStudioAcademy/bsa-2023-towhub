@@ -15,9 +15,13 @@ const AppRoute = {
   DASHBOARD_ORDERS: '/dashboard/orders',
   DASHBOARD_TRUCKS: '/dashboard/trucks',
   DASHBOARD_DRIVERS: '/dashboard/drivers',
+  DASHBOARD_PAYMENTS: '/dashboard/payments',
   DASHBOARD_CHOOSE_TRUCK: '/dashboard/choose-truck',
   ORDER: '/order',
   ORDER_STATUS: '/order/:orderId',
+  SETUP_PAYMENT: '/setup-payment',
+  CHECKOUT: '/checkout',
+  PAYMENTS: '/payments',
 } as const;
 
 export { AppRoute };

@@ -4,6 +4,7 @@ const SidebarTabsName = {
   TRUCK: 'truck',
   DRIVERS: 'drivers',
   PROFILE: 'profile',
+  PAYMENTS: 'payments',
 } as const;
 
 export { SidebarTabsName };
