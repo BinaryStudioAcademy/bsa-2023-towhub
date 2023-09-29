@@ -55,6 +55,24 @@ const updateTruckLocationFromSocket = createAsyncThunk<
   return location;
 });
 
+const startWatchTruckLocation = createAction(
+  ActionName.START_WATCH_TRUCK_LOCATION,
+  ({ truckId }: { truckId: number }) => {
+    return {
+      payload: { truckId },
+    };
+  },
+);
+
+const restartWatchTruckLocation = createAction(
+  ActionName.RESTART_WATCH_TRUCK_LOCATION,
+  () => {
+    return {
+      payload: null,
+    };
+  },
+);
+
 const subscribeTruckUpdates = createAction(
   ActionName.SOCKET.SUBSCRIBE_TRUCK_UPDATES,
   (truckId: number) => {
@@ -154,7 +172,9 @@ export {
   calculateArrivalTime,
   findAllTrucksForBusiness,
   getAllTrucksByUserId,
+  restartWatchTruckLocation,
   setTrucks,
+  startWatchTruckLocation,
   subscribeTruckUpdates,
   unsubscribeTruckUpdates,
   updateTruckLocationFromSocket,

@@ -12,7 +12,6 @@ import {
   selectSocketDriverAuthStatus,
   selectUser,
 } from '~/slices/auth/selectors.js';
-import { actions as driverActions } from '~/slices/driver/driver.js';
 import {
   ShiftStatus,
   TruckChoiceStatus,
@@ -48,7 +47,7 @@ const AvailableTrucks: React.FC = () => {
 
   const handleClick = useCallback(
     (truckId: number) => {
-      void dispatch(driverActions.startShift({ truckId }));
+      void dispatch(truckActions.startWatchTruckLocation({ truckId }));
     },
     [dispatch],
   );

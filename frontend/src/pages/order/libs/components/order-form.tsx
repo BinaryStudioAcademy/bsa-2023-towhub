@@ -1,5 +1,5 @@
 import { Form } from '~/libs/components/components.js';
-import { type LocationChangeHandler } from '~/libs/types/location-change-handler.type.js';
+import { type LocationChangeHandler } from '~/libs/types/types.js';
 import { type OrderCreateFormDto } from '~/packages/orders/libs/types/types.js';
 import { orderCreateForm } from '~/packages/orders/orders.js';
 

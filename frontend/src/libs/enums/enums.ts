@@ -8,6 +8,7 @@ export { InputType } from './input-type.enum.js';
 export { PlainSvgIconName } from './plain-svg-icon-name.enum.js';
 export { SidebarTabsName } from './sidebar-tabs-name.enum.js';
 export { SidebarTabsPath } from './sidebar-tabs-path.enum.js';
+export { TruckFilterField } from './truck-filter-field.enum.js';
 export {
   ApiPath,
   AppEnvironment,

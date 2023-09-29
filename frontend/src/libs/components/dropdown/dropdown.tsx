@@ -29,6 +29,7 @@ type Properties<T extends FieldValues> = {
   field?: ControllerRenderProps<T, FieldPath<T>>;
   className?: string;
   isCustomValueContainer?: boolean;
+  controlShouldRenderValue?: boolean;
 };
 
 type GetClassNamesArguments = {
@@ -78,6 +79,7 @@ const Dropdown = <T extends FieldValues>({
   placeholder,
   isCustomValueContainer = false,
   label,
+  controlShouldRenderValue = true,
 }: Properties<T>): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const handleOpenMenu = useCallback(() => {
@@ -114,6 +116,7 @@ const Dropdown = <T extends FieldValues>({
       defaultValue={defaultValue}
       value={findOptionByValue(field ? field.value : label)}
       placeholder={placeholder}
+      controlShouldRenderValue={controlShouldRenderValue}
     />
   );
 };

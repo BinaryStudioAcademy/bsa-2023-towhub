@@ -1,7 +1,13 @@
-import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
+import {
+  useAppDispatch,
+  useEffect,
+  useRef,
+  useToggle,
+} from '~/libs/hooks/hooks.js';
 import {
   DEFAULT_CENTER,
   DEFAULT_ZOOM,
+  ZOOM_WITHOUT_USER_LOCATION,
 } from '~/libs/packages/map/libs/constants/constants.js';
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import { type MapService } from '~/libs/packages/map/map.js';
@@ -14,7 +20,9 @@ type Properties = {
   center: google.maps.LatLngLiteral | null;
   points?: google.maps.LatLngLiteral[];
   zoom?: number;
+  userLocation?: google.maps.LatLngLiteral;
   destination: google.maps.LatLngLiteral | null;
+  markers?: google.maps.LatLngLiteral[];
   className?: string;
   pricePerKm?: number;
   startAddress?: string;
@@ -28,8 +36,10 @@ type Properties = {
 const useAppMap = ({
   points,
   center = DEFAULT_CENTER,
-  zoom = DEFAULT_ZOOM,
+  zoom = ZOOM_WITHOUT_USER_LOCATION,
+  userLocation,
   destination,
+  markers = [],
   pricePerKm,
   startAddress,
   endAddress,
@@ -37,6 +47,7 @@ const useAppMap = ({
   shownRoute,
   onMapLoad,
 }: Properties): void => {
+  const [isZoomChanged, toggleIsZoomChanged] = useToggle(false);
   const mapService = useRef<MapService | null>(null);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -49,15 +60,48 @@ const useAppMap = ({
 
       setMapService({ points, center, mapReference, mapService, zoom });
 
-      if (mapService.current && center && destination) {
+      if (!mapService.current) {
+        return;
+      }
+
+      if (center && destination) {
         mapService.current.removeMarkers();
         mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);
       }
+
+      if (markers.length > 0) {
+        mapService.current.removeMarkers();
+
+        for (const marker of markers) {
+          mapService.current.addMarker(marker, true);
+        }
+      }
+
+      if (userLocation) {
+        mapService.current.removeMarkers();
+        mapService.current.addMarker(userLocation);
+
+        if (!isZoomChanged) {
+          mapService.current.setZoom(DEFAULT_ZOOM);
+          toggleIsZoomChanged();
+        }
+      }
     };
     void configMap();
-  }, [center, destination, mapReference, onMapLoad, points, zoom]);
+  }, [
+    center,
+    destination,
+    mapReference,
+    onMapLoad,
+    markers,
+    points,
+    userLocation,
+    zoom,
+    isZoomChanged,
+    toggleIsZoomChanged,
+  ]);
 
   useEffect(() => {
     if (mapService.current && points && points.length > 0) {
