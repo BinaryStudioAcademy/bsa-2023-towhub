@@ -4,11 +4,13 @@ import {
   Dropdown,
 } from '~/libs/components/components.js';
 import { DataStatus } from '~/libs/enums/data-status.enum.js';
+import { AppRoute } from '~/libs/enums/enums.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import {
   useAppSelector,
   useAppTable,
   useCallback,
+  useNavigate,
   useQueryParameters,
 } from '~/libs/hooks/hooks.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
@@ -25,6 +27,7 @@ import { orderStatusOptions } from './libs/options/order-status-options.js';
 import styles from './styles.module.scss';
 
 const CustomerHistory: React.FC = () => {
+  const navigate = useNavigate();
   const { setQueryParameters, getQueryParameters, removeQueryParameters } =
     useQueryParameters();
 
@@ -63,12 +66,17 @@ const CustomerHistory: React.FC = () => {
     [changePageIndex, pageSize, removeQueryParameters, setQueryParameters],
   );
 
+  const onClickBack = useCallback(() => {
+    navigate(AppRoute.ROOT);
+  }, [navigate]);
+
   return (
     <div className={styles.container}>
       <Button
         label="Back"
         frontIcon={IconName.CHEVRON_LEFT}
         className={styles.btn}
+        onClick={onClickBack}
       />
       <h2 className={styles.title}>Orders History</h2>
       <div className={styles.filter}>
