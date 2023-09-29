@@ -63,6 +63,7 @@ const HomePage: React.FC = () => {
     <div className={styles.container}>
       <section className={styles.trucks}>
         <TruckFilter
+          filters={filters}
           onFilterChange={setFilters}
           onLocationChange={handleLocationChange}
         />
