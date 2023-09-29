@@ -134,21 +134,19 @@ const FileInput = <T extends FieldValues & FileFormType>({
   );
 
   const handleFilesFromEvent = useCallback(
-    async (event: DropEvent) => {
-      const { dataTransfer } = event as DragEvent;
+    async (event_: DropEvent) => {
+      const event = event_ as DragEvent | FileSystemFileHandle[];
 
       let files: File[];
 
-      if (dataTransfer) {
-        files = [...dataTransfer.files];
+      if (Array.isArray(event)) {
+        files = await Promise.all(
+          event.map((fileHandle) => fileHandle.getFile()),
+        );
       } else {
-        const fileHandles = event as unknown as
-          | FileSystemFileHandle[]
-          | FileSystemFileHandle;
+        const { dataTransfer } = event;
 
-        files = Array.isArray(fileHandles)
-          ? await Promise.all(fileHandles.map((file) => file.getFile()))
-          : [await fileHandles.getFile()];
+        files = dataTransfer ? [...dataTransfer.files] : [];
       }
 
       for (const file of files) {
