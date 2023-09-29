@@ -127,6 +127,20 @@
       "when": 1695843064730,
       "tag": "0017_create_file_verification_status_table",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1695933974966,
+      "tag": "0018_add_stripe_fields_to_business",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1695933999706,
+      "tag": "0019_make_orders_businessid_non_nullable",
+      "breakpoints": true
     }
   ]
 }

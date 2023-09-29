@@ -12,11 +12,14 @@ import {
   createOrderFromSocket,
   getBusinessOrders,
   getOrder,
+  getRouteAddresses,
   getRouteData,
+  getUserOrdersPage,
   removeOrder,
   updateOrderFromSocket,
 } from './actions.js';
 import { type RouteData } from './libs/types/route-data.type.js';
+import { type RouteAddresses } from './libs/types/types.js';
 
 type State = {
   orders: OrderResponseDto[];
@@ -25,6 +28,9 @@ type State = {
   dataStatus: ValueOf<typeof DataStatus>;
   routeData: RouteData | null;
   currentOrder: OrderResponseDto | null;
+  routeAddresses: Partial<
+    Record<RouteAddresses['orderId'], RouteAddresses['points']>
+  >;
 };
 
 const initialState: State = {
@@ -34,6 +40,7 @@ const initialState: State = {
   currentOrder: null,
   dataStatus: DataStatus.IDLE,
   routeData: null,
+  routeAddresses: {},
 };
 
 const { reducer, actions, name } = createSlice({
@@ -42,8 +49,17 @@ const { reducer, actions, name } = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
+      .addCase(getUserOrdersPage.fulfilled, (state, actions) => {
+        state.dataStatus = DataStatus.FULFILLED;
+        state.orders = actions.payload.items;
+        state.total = actions.payload.total;
+      })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
+        state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(getRouteAddresses.fulfilled, (state, action) => {
+        state.routeAddresses = { ...state.routeAddresses, ...action.payload };
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(calculateOrderPrice.fulfilled, (state, action) => {
@@ -89,8 +105,10 @@ const { reducer, actions, name } = createSlice({
       )
       .addMatcher(
         isAnyOf(
-          calculateOrderPrice.pending,
+          getRouteAddresses.pending,
           createOrder.pending,
+          calculateOrderPrice.pending,
+          getUserOrdersPage.pending,
           changeAcceptOrderStatusByDriver.pending,
           changeAcceptOrderStatusByCustomer.pending,
           getOrder.pending,
@@ -103,8 +121,10 @@ const { reducer, actions, name } = createSlice({
       )
       .addMatcher(
         isAnyOf(
-          calculateOrderPrice.rejected,
+          getRouteAddresses.rejected,
           createOrder.rejected,
+          calculateOrderPrice.rejected,
+          getUserOrdersPage.rejected,
           changeAcceptOrderStatusByDriver.rejected,
           changeAcceptOrderStatusByCustomer.rejected,
           getOrder.rejected,

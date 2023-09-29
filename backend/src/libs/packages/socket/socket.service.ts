@@ -112,6 +112,26 @@ class SocketService {
           );
         },
       );
+
+      socket.on(
+        ClientToServerEvent.TRUCK_LOCATION_UPDATE,
+        ({
+          truckId,
+          latLng,
+        }: FirstParameter<
+          ClientToServerEventParameter[typeof ClientToServerEvent.TRUCK_LOCATION_UPDATE]
+        >) => {
+          this.notifyCustomerForTruckLocationUpdate(truckId, {
+            truckId: truckId,
+            latLng,
+          });
+          logger.info(
+            `${socket.id} truck ${truckId} location updated to ${JSON.stringify(
+              latLng,
+            )}`,
+          );
+        },
+      );
       socket.on(
         ClientToServerEvent.UNSUBSCRIBE_TRUCK_UPDATES,
         async ({

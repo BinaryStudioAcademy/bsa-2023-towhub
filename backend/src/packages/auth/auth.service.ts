@@ -248,7 +248,6 @@ class AuthService {
     userId: UserEntityT['id'],
   ): Promise<UserEntityObjectT> {
     const jwtPayload = { id: userId };
-
     const accessToken = await this.jwtService.createToken(
       jwtPayload,
       this.config.ACCESS_LIFETIME,

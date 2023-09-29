@@ -18,11 +18,13 @@ import {
   faLocationDot,
   faMap,
   faMobileScreenButton,
+  faMoneyBills,
   faPen,
   faPhone,
   faPlus,
   faRightFromBracket,
   faStar,
+  faSync,
   faTrashCan,
   faTruckPickup,
   faUser,
@@ -60,10 +62,13 @@ const iconNameToSvg: Record<ValueOf<typeof IconName>, IconDefinition> = {
   [IconName.USER]: faUser,
   [IconName.XMARK]: faXmark,
   [IconName.EYE]: faEye,
+  [IconName.CAR]: faCar,
   [IconName.MOBILE]: faMobileScreenButton,
   [IconName.PHONE]: faPhone,
   [IconName.CLOCK]: faClock,
   [IconName.CAR]: faCar,
+  [IconName.SYNC]: faSync,
+  [IconName.PAYMENTS]: faMoneyBills,
 };
 
 export { iconNameToSvg };

@@ -28,6 +28,8 @@ const IconName = {
   PHONE: 'phone',
   CLOCK: 'clock',
   CAR: 'car',
+  SYNC: 'sync',
+  PAYMENTS: 'payments',
 } as const;
 
 export { IconName };

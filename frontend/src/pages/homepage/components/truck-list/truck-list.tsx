@@ -7,13 +7,13 @@ import {
   useCallback,
   useNavigate,
 } from '~/libs/hooks/hooks.js';
-import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
 import { actions as trucksAction } from '~/slices/trucks/trucks.js';
 
+import { type TruckWithDistance } from '../../libs/types/types.js';
 import styles from './styles.module.scss';
 
 type Properties = {
-  trucks: TruckGetItemResponseDto[];
+  trucks: TruckWithDistance[];
 };
 
 const TruckList: React.FC<Properties> = ({ trucks }: Properties) => {

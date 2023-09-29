@@ -17,6 +17,11 @@ const BUSINESS_TABS: TabsType[] = [
     path: AppRoute.DASHBOARD_DRIVERS,
     icon: IconName.USERS,
   },
+  {
+    name: SidebarTabsName.PAYMENTS,
+    path: AppRoute.DASHBOARD_PAYMENTS,
+    icon: IconName.PAYMENTS,
+  },
 ];
 
 const DRIVER_TABS: TabsType[] = [
