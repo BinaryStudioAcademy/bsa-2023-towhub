@@ -13,6 +13,7 @@ import {
   useRef,
 } from '~/libs/hooks/hooks.js';
 import { notification } from '~/libs/packages/notification/notification.js';
+import { type Coordinates } from '~/libs/types/types.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectDataStatus, selectOrder } from '~/slices/orders/selectors.js';
 
@@ -33,8 +34,8 @@ const DriverOrder = (): JSX.Element => {
   const mapReference = useRef<HTMLDivElement | null>(null);
 
   useAppMap({
-    center: order?.startPoint as google.maps.LatLngLiteral,
-    destination: order?.endPoint as google.maps.LatLngLiteral,
+    center: order?.startPoint as Coordinates,
+    destination: order?.endPoint as Coordinates,
     mapReference: mapReference,
     onMapLoad: () => true,
   });

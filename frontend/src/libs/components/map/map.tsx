@@ -8,16 +8,17 @@ import {
 import { DEFAULT_ZOOM } from '~/libs/packages/map/libs/constants/constants.js';
 import { type MapService } from '~/libs/packages/map/map.js';
 import { MapConnector } from '~/libs/packages/map/map-connector.package';
+import { type Coordinates } from '~/libs/types/types.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
 import styles from './styles.module.scss';
 
 type Properties = {
-  center?: google.maps.LatLngLiteral;
+  center?: Coordinates;
   zoom?: number;
-  destination?: google.maps.LatLngLiteral;
+  destination?: Coordinates;
   className?: string;
-  markers?: google.maps.LatLngLiteral[];
+  markers?: Coordinates[];
   pricePerKm?: number;
   startAddress?: string;
   endAddress?: string;
