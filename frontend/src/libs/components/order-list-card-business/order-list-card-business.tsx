@@ -38,6 +38,8 @@ const OrderListCardBusiness: React.FC<Properties> = ({
 
   const statusBadge = mapOrderStatusToReadable[status];
 
+  const driverAratar = driver?.avatarUrl ?? ImgPath.AVATAR_DEFAULT;
+
   return (
     <div
       className={styles.container}
@@ -53,7 +55,7 @@ const OrderListCardBusiness: React.FC<Properties> = ({
       </div>
       <div className={styles.content}>
         <img
-          src={ImgPath.AVATAR_DEFAULT}
+          src={driverAratar}
           alt={driver?.firstName}
           className={styles.avatar}
         />

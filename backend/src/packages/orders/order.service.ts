@@ -5,6 +5,7 @@ import { type SocketService } from '~/libs/packages/socket/socket.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
+import { getFilePublicUrl } from '../files/files.js';
 import { type FilesService } from '../files/files.service.js';
 import { type MapService } from '../map/map.service.js';
 import { type ShiftService } from '../shifts/shift.service.js';
@@ -363,8 +364,21 @@ class OrderService implements Omit<IService, 'find'> {
           businessId: business.id,
         });
 
+    const items = usersOrders.map((it) => {
+      const order = OrderEntity.initialize(it).toObject();
+
+      if (order.shift.driver) {
+        const avatarUrl = order.shift.driver.avatarUrl;
+        order.shift.driver.avatarUrl = avatarUrl
+          ? getFilePublicUrl(avatarUrl)
+          : null;
+      }
+
+      return order;
+    });
+
     return {
-      items: usersOrders.map((it) => OrderEntity.initialize(it).toObject()),
+      items,
       total,
     };
   }
