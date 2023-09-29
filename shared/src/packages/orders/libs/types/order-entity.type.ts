@@ -27,6 +27,6 @@ type OrderEntity = {
 
 type DriverInfo = DriverCommonDetails &
   UserCommonDetails &
-  Pick<UserEntityT, 'id'>;
+  Pick<UserEntityT, 'id'> & { avatarUrl: string | null };
 
 export { type DriverInfo, type OrderEntity };

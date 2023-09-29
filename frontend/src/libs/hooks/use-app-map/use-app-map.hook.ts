@@ -109,7 +109,7 @@ const useAppMap = ({
 
       for (const point of points) {
         mapService.current.removeMarkers();
-        mapService.current.addMarker(point, false);
+        mapService.current.addMarkerStatic(point);
       }
     }
   }, [points]);

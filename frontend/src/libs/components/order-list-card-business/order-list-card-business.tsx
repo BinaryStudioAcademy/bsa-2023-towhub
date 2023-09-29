@@ -38,6 +38,8 @@ const OrderListCardBusiness: React.FC<Properties> = ({
 
   const statusBadge = mapOrderStatusToReadable[status];
 
+  const driverAratar = driver?.avatarUrl ?? ImgPath.AVATAR_DEFAULT;
+
   return (
     <div
       className={styles.container}
@@ -47,11 +49,13 @@ const OrderListCardBusiness: React.FC<Properties> = ({
         <p className={getValidClassNames('textMdBold', styles.cardName)}>
           Order {id}
         </p>
-        <Badge color={statusBadge.color}>{statusBadge.name}</Badge>
+        <Badge color={statusBadge.color} className={styles.badge}>
+          {statusBadge.name}
+        </Badge>
       </div>
       <div className={styles.content}>
         <img
-          src={ImgPath.AVATAR_DEFAULT}
+          src={driverAratar}
           alt={driver?.firstName}
           className={styles.avatar}
         />
