@@ -1,5 +1,4 @@
 export { DatabaseConnectionError } from './database/database.js';
-export { EntityAccessDeniedError } from './entity-access-denied/entity-access-denied.js';
 export {
   FileTransactionError,
   FileValidatorError,

@@ -24,6 +24,8 @@ class GeolocationCacheSocketService {
 
   private appConfig: IConfig;
 
+  private isTruckLocationUpdateIntervalActive = false;
+
   public constructor({
     geolocationCacheService,
     shiftService,
@@ -55,15 +57,16 @@ class GeolocationCacheSocketService {
         this.truckLocationUpdate(payload);
       },
     );
-    setInterval(() => {
-      void getTrucksList(this.shiftService, this.geolocationCacheService).then(
-        (result) => {
-          this.io
-            .to(SocketRoom.HOME_ROOM)
-            .emit(ServerToClientEvent.TRUCKS_LIST_UPDATE, result);
-        },
+
+    this.sendTrucksList();
+
+    if (!this.isTruckLocationUpdateIntervalActive) {
+      this.isTruckLocationUpdateIntervalActive = true;
+      setInterval(
+        () => this.sendTrucksList(),
+        this.appConfig.ENV.SOCKET.TRUCK_LIST_UPDATE_INTERVAL,
       );
-    }, this.appConfig.ENV.SOCKET.TRUCK_LIST_UPDATE_INTERVAL);
+    }
   }
 
   private truckLocationUpdate(
@@ -73,6 +76,16 @@ class GeolocationCacheSocketService {
   ): void {
     const { truckId, latLng } = payload;
     this.geolocationCacheService.setCache(truckId, latLng);
+  }
+
+  private sendTrucksList(): void {
+    void getTrucksList(this.shiftService, this.geolocationCacheService).then(
+      (result) => {
+        this.io
+          .to(SocketRoom.HOME_ROOM)
+          .emit(ServerToClientEvent.TRUCKS_LIST_UPDATE, result);
+      },
+    );
   }
 }
 

@@ -2,6 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { type OrdersListResponseDto } from 'shared/build/index.js';
 
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
+import { type HttpError } from '~/libs/packages/http/http.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import { type AsyncThunkConfig, type Coordinates } from '~/libs/types/types.js';
 import {
@@ -12,12 +13,13 @@ import {
 import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
 } from '~/packages/orders/orders.js';
 
 import { ActionName } from './libs/enums/enums.js';
 import { notificateOrderStatusChange } from './libs/helpers/notificate-order-status-change.helper.js';
-import { type RouteData } from './libs/types/types.js';
+import { type RouteAddresses, type RouteData } from './libs/types/types.js';
 import { name as sliceName } from './order.slice.js';
 
 const getBusinessOrders = createAsyncThunk<
@@ -95,6 +97,63 @@ const calculateOrderPrice = createAsyncThunk<
 
   return ordersApi.calculatePrice(payload);
 });
+
+const getUserOrdersPage = createAsyncThunk<
+  OrderFindAllUserOrdersResponseDto,
+  string | undefined,
+  AsyncThunkConfig
+>(
+  ActionName.GET_USER_ORDERS_PAGE,
+  async (payload, { rejectWithValue, extra }) => {
+    try {
+      return await extra.ordersApi.getAllUserOrders(payload);
+    } catch (error_: unknown) {
+      const error = error_ as HttpError;
+
+      notification.error(getErrorMessage(error.message));
+
+      return rejectWithValue({ ...error, message: error.message });
+    }
+  },
+);
+
+const getRouteAddresses = createAsyncThunk<
+  Partial<Record<RouteAddresses['orderId'], RouteAddresses['points']>>,
+  {
+    points: { origin: Coordinates; destination: Coordinates };
+    orderId: number;
+  },
+  AsyncThunkConfig<null>
+>(
+  ActionName.GET_ORDER_ADDRESSES,
+  async ({ points, orderId }, { extra, getState }) => {
+    const routeAddresses = getState().orders.routeAddresses;
+
+    if (routeAddresses[orderId]) {
+      return routeAddresses;
+    }
+
+    const { origin, destination } = points;
+    const { mapServiceFactory } = extra;
+    const routeData = {
+      origin: origin,
+      destination: destination,
+    };
+
+    const mapService = await mapServiceFactory({ mapElement: null });
+    const [originName, destinationName] = await Promise.all([
+      mapService.getPointAddress(routeData.origin),
+      mapService.getPointAddress(routeData.destination),
+    ]);
+
+    return {
+      [orderId]: {
+        origin: originName,
+        destination: destinationName,
+      },
+    };
+  },
+);
 
 const getOrder = createAsyncThunk<
   OrderResponseDto,
@@ -184,7 +243,9 @@ export {
   createOrderFromSocket,
   getBusinessOrders,
   getOrder,
+  getRouteAddresses,
   getRouteData,
+  getUserOrdersPage,
   removeOrder,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,

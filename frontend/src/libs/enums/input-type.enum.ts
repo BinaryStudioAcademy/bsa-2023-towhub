@@ -5,6 +5,7 @@ const InputType = {
   NUMBER: 'number',
   DROPDOWN: 'dropdown',
   DATE: 'date',
+  DATETIME_LOCAL: 'datetime-local',
   LOCATION: 'location',
   FORM: 'form',
   FILE: 'file',

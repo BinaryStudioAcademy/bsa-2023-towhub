@@ -1,86 +1,105 @@
 import { type SingleValue } from 'react-select';
 
-import { useCallback, useEffect, useState } from '~/libs/hooks/hooks.js';
-import { type SelectOption } from '~/libs/types/select-option.type.js';
-import { type TruckFilters } from '~/libs/types/truck-filters.type.js';
+import { TruckFilterField } from '~/libs/enums/enums.js';
+import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
+import {
+  type LocationChangeHandler,
+  type SelectOption,
+  type TruckFilters,
+  type ValueOf,
+} from '~/libs/types/types.js';
 
+import { Autocomplete } from '../autocomplete/autocomplete.js';
 import { Dropdown } from '../dropdown/dropdown.js';
-import { TruckFilterField } from './libs/truck-filter-field.enum.js';
+import { FilterValue } from './libs/enums/enums.js';
+import { Fields } from './libs/fields/fields.js';
 import styles from './styles.module.scss';
 
-type Properties = {
-  onChange: (filters: TruckFilters) => void;
+const DEFAULT_VALUES = {
+  userLocation: '',
+  priceDropdown: undefined,
+  capacityDropdown: undefined,
 };
 
-const TruckFilter = ({ onChange }: Properties): JSX.Element => {
-  const [filters, setFilters] = useState<TruckFilters>({
-    location: null,
-    price: null,
-    capacity: null,
+type Form = {
+  userLocation: string;
+  priceDropdown: ValueOf<typeof FilterValue>;
+  capacityDropdown: ValueOf<typeof FilterValue>;
+};
+
+type Properties = {
+  filters: TruckFilters;
+  onFilterChange: (filters: TruckFilters) => void;
+  onLocationChange: LocationChangeHandler;
+};
+
+const TruckFilter = ({
+  filters,
+  onFilterChange,
+  onLocationChange,
+}: Properties): JSX.Element => {
+  const { control } = useAppForm<Form>({
+    defaultValues: DEFAULT_VALUES,
+    mode: 'onChange',
   });
 
-  const handleSelectChange = useCallback(
-    (fieldName: string, option: SingleValue<SelectOption>) => {
-      const newFilters = {
-        ...filters,
-        [fieldName]: option?.value ?? null,
-      };
+  const shouldRenderPrice = filters.id === TruckFilterField.PRICE;
+  const shouldRenderCapacity = filters.id === TruckFilterField.CAPACITY;
 
-      setFilters(newFilters);
-    },
-    [filters],
-  );
-
-  const handleLocationChange = useCallback(
-    (option: SingleValue<SelectOption>) =>
-      handleSelectChange(TruckFilterField.LOCATION, option),
-    [handleSelectChange],
-  );
   const handlePriceChange = useCallback(
-    (option: SingleValue<SelectOption>) =>
-      handleSelectChange(TruckFilterField.PRICE, option),
-    [handleSelectChange],
-  );
-  const handleCapacityChange = useCallback(
-    (option: SingleValue<SelectOption>) =>
-      handleSelectChange(TruckFilterField.CAPACITY, option),
-    [handleSelectChange],
+    (option: SingleValue<SelectOption>) => {
+      onFilterChange({
+        id: TruckFilterField.PRICE,
+        desc: option?.value === FilterValue.DESC,
+      });
+    },
+    [onFilterChange],
   );
 
-  useEffect(() => {
-    onChange(filters);
-  }, [filters, onChange]);
+  const handleCapacityChange = useCallback(
+    (option: SingleValue<SelectOption>) => {
+      onFilterChange({
+        id: TruckFilterField.CAPACITY,
+        desc: option?.value === FilterValue.DESC,
+      });
+    },
+    [onFilterChange],
+  );
 
   return (
     <form className={styles.truckFilter}>
       <div className={styles.locationFilter}>
-        <span className={styles.filterTitle}>Location</span>
-        <div className={styles.dropdownWrapper}>
-          <Dropdown
-            options={[{ label: 'option', value: 'option' }]}
-            placeholder="Select location..."
-            onChange={handleLocationChange}
+        <span className={styles.title}>Location</span>
+        <div className={styles.wrapper}>
+          <Autocomplete
+            {...Fields[0]}
+            inputStyles={styles.input}
+            onPlaceChanged={onLocationChange}
           />
         </div>
       </div>
       <div className={styles.filterBar}>
         <div className={styles.filterBlock}>
-          <span className={styles.filterTitle}>Price</span>
-          <div className={styles.dropdownWrapper}>
+          <span className={styles.title}>Price</span>
+          <div className={styles.wrapper}>
             <Dropdown
-              options={[{ label: 'option', value: 'option' }]}
-              placeholder="Select price..."
+              options={[]}
+              {...Fields[1]}
+              control={control}
               onChange={handlePriceChange}
+              controlShouldRenderValue={shouldRenderPrice}
             />
           </div>
         </div>
         <div className={styles.filterBlock}>
-          <span className={styles.filterTitle}>Capacity</span>
-          <div className={styles.dropdownWrapper}>
+          <span className={styles.title}>Capacity</span>
+          <div className={styles.wrapper}>
             <Dropdown
-              options={[{ label: 'option', value: 'option' }]}
-              placeholder="Select capacity..."
+              options={[]}
+              {...Fields[2]}
+              control={control}
               onChange={handleCapacityChange}
+              controlShouldRenderValue={shouldRenderCapacity}
             />
           </div>
         </div>

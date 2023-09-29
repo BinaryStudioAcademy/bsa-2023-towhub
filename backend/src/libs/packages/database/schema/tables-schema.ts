@@ -1,5 +1,6 @@
 import { relations } from 'drizzle-orm';
 import {
+  boolean,
   integer,
   jsonb,
   pgEnum,
@@ -56,7 +57,9 @@ const orders = pgTable('orders', {
   endPoint: jsonb('end_point').$type<Coordinates>().notNull(),
   status: orderStatus('status').notNull(),
   userId: integer('user_id').references(() => users.id),
-  businessId: integer('business_id').references(() => business.id),
+  businessId: integer('business_id')
+    .references(() => business.id)
+    .notNull(),
   shiftId: integer('shift_id')
     .references(() => shifts.id)
     .notNull(),
@@ -128,6 +131,8 @@ const business = pgTable('business_details', {
   id: serial('id').primaryKey(),
   companyName: varchar('company_name').notNull(),
   taxNumber: varchar('tax_number').unique().notNull(),
+  stripeId: varchar('stripe_id').unique(),
+  isStripeActivated: boolean('is_stripe_activated').notNull().default(false),
   ownerId: integer('owner_id')
     .notNull()
     .references(() => users.id),

@@ -15,6 +15,7 @@ import { OrderStatus } from '~/pages/order-status/order-status.js';
 import {
   Auth,
   AvailableTrucks,
+  CustomerHistory,
   Dashboard,
   DriverOrder,
   EditDriverProfilePage,
@@ -23,6 +24,7 @@ import {
   Order,
   Orders,
   Profile,
+  SetupPayment,
   WelcomePage,
 } from '~/pages/pages.js';
 import { selectUser } from '~/slices/auth/selectors.js';
@@ -72,6 +74,14 @@ const Router = (): JSX.Element => {
         element={<ProtectedRoute allowedUserGroup={UserGroupKey.BUSINESS} />}
       >
         <Route
+          path={AppRoute.SETUP_PAYMENT}
+          element={
+            <PageLayout isSidebarHidden>
+              <SetupPayment />
+            </PageLayout>
+          }
+        />
+        <Route
           path={AppRoute.DASHBOARD_ORDERS}
           element={
             <PageLayout>
@@ -89,6 +99,14 @@ const Router = (): JSX.Element => {
         />
         <Route
           path={AppRoute.DASHBOARD_DRIVERS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_PAYMENTS}
           element={
             <PageLayout>
               <Dashboard />
@@ -122,7 +140,7 @@ const Router = (): JSX.Element => {
           <Route
             path={AppRoute.EDIT_PROFILE}
             element={
-              <PageLayout isSidebarHidden>
+              <PageLayout>
                 <EditDriverProfilePage />
               </PageLayout>
             }
@@ -145,6 +163,19 @@ const Router = (): JSX.Element => {
             }
           />
         </Route>
+      </Route>
+      <Route
+        path={AppRoute.ROOT}
+        element={<ProtectedRoute allowedUserGroup={UserGroupKey.CUSTOMER} />}
+      >
+        <Route
+          path={AppRoute.ORDER_HISTORY}
+          element={
+            <PageLayout isSidebarHidden>
+              <CustomerHistory />
+            </PageLayout>
+          }
+        />
       </Route>
       <Route path={AppRoute.ANY} element={<NotFound />} />
     </RouterProvider>
