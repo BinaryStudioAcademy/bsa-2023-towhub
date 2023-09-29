@@ -21,7 +21,7 @@ const DEFAULT_VALUES = {
   capacityDropdown: undefined,
 };
 
-type FormType = {
+type Form = {
   userLocation: string;
   priceDropdown: ValueOf<typeof FilterValue>;
   capacityDropdown: ValueOf<typeof FilterValue>;
@@ -38,7 +38,7 @@ const TruckFilter = ({
   onFilterChange,
   onLocationChange,
 }: Properties): JSX.Element => {
-  const { control } = useAppForm<FormType>({
+  const { control } = useAppForm<Form>({
     defaultValues: DEFAULT_VALUES,
     mode: 'onChange',
   });
