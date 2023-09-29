@@ -8,6 +8,7 @@ const ApiPath = {
   SHIFTS: '/shifts',
   ORDERS: '/orders',
   MAP: '/map',
+  STRIPE: '/stripe',
 } as const;
 
 export { ApiPath };

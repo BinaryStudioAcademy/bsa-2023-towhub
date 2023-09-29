@@ -242,7 +242,6 @@ class AuthService {
     userId: UserEntityT['id'],
   ): Promise<UserEntityObjectT> {
     const jwtPayload = { id: userId };
-
     const accessToken = await this.jwtService.createToken(
       jwtPayload,
       this.config.ACCESS_LIFETIME,
@@ -255,20 +254,27 @@ class AuthService {
     accessToken: string,
     accessLifetime: string,
   ): Promise<boolean> {
-    const payload = await this.jwtService.verifyToken(accessToken);
+    try {
+      const payload = await this.jwtService.verifyToken(accessToken);
 
-    if (!payload.iat) {
+      if (!payload.iat) {
+        return false;
+      }
+
+      const currentTimestamp = Date.now();
+      const tokenIssuedAtTimestamp =
+        payload.iat * TimeConstants.MILLISECONDS_IN_SECOND;
+
+      return (
+        getLifetimeInMilliseconds(accessLifetime) >=
+        getTimeDifferenceInMilliseconds(
+          currentTimestamp,
+          tokenIssuedAtTimestamp,
+        )
+      );
+    } catch {
       return false;
     }
-
-    const currentTimestamp = Date.now();
-    const tokenIssuedAtTimestamp =
-      payload.iat * TimeConstants.MILLISECONDS_IN_SECOND;
-
-    return (
-      getLifetimeInMilliseconds(accessLifetime) >=
-      getTimeDifferenceInMilliseconds(currentTimestamp, tokenIssuedAtTimestamp)
-    );
   }
 }
 

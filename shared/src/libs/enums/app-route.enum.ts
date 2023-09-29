@@ -9,16 +9,19 @@ const AppRoute = {
   EDIT_PROFILE: '/edit-profile',
   PROFILE: '/profile',
   TRUCKS: '/trucks',
-  DASHBOARD: '/dashboard',
   AVAILABLE_TRUCKS: '/available-trucks',
   ORDERS: '/orders',
   DRIVER_ORDER: '/orders/:orderId',
   DASHBOARD_ORDERS: '/dashboard/orders',
   DASHBOARD_TRUCKS: '/dashboard/trucks',
   DASHBOARD_DRIVERS: '/dashboard/drivers',
+  DASHBOARD_PAYMENTS: '/dashboard/payments',
   DASHBOARD_CHOOSE_TRUCK: '/dashboard/choose-truck',
   ORDER: '/order',
   ORDER_STATUS: '/order/:orderId',
+  SETUP_PAYMENT: '/setup-payment',
+  CHECKOUT: '/checkout',
+  PAYMENTS: '/payments',
 } as const;
 
 export { AppRoute };

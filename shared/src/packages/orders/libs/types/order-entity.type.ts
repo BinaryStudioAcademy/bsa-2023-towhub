@@ -17,7 +17,7 @@ type OrderEntity = {
   endPoint: Coordinates;
   status: OrderStatusValues;
   userId: number | null;
-  businessId: number | null;
+  businessId: number;
   customerName: string | null;
   customerPhone: string | null;
   shiftId: number;

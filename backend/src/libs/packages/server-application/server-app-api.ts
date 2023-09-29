@@ -22,8 +22,12 @@ class ServerAppApi implements IServerAppApi {
     this.config = config;
     this.routes = handlers.map((it) => ({
       ...it,
-      path: `/api/${this.version}${it.path}`,
+      path: this.buildFullPath(it.path),
     }));
+  }
+
+  public buildFullPath(path: string): string {
+    return `/api/${this.version}${path}`;
   }
 
   public generateDoc(): ReturnType<typeof swaggerJsdoc> {

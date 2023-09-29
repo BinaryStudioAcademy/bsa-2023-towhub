@@ -25,6 +25,8 @@ const businessCommonRules = {
       'string.empty': Message.FIELD_IS_REQUIRED,
       'string.pattern.base': Message.TAX_NUMBER_NOT_VALID,
     }),
+  stripeId: joi.string().trim(),
+  isStripeActivated: joi.boolean(),
 };
 
 export { businessCommonRules };

@@ -23,6 +23,7 @@ import {
   Order,
   Orders,
   Profile,
+  SetupPayment,
   WelcomePage,
 } from '~/pages/pages.js';
 import { selectUser } from '~/slices/auth/selectors.js';
@@ -31,12 +32,13 @@ import {
   PageLayout,
   ProtectedRoute,
   ProtectedRouteBusinessCustomer,
+  Spinner,
 } from '../components.js';
 import { OrderProvider } from '../order-provider/order-provider.js';
 import { RouterProvider } from '../router-provider/router-provider.js';
 
 const Router = (): JSX.Element => {
-  const { getCurrentUser } = useGetCurrentUser();
+  const { requestCurrentUser, isRequestFinished } = useGetCurrentUser();
   const user = useAppSelector(selectUser);
 
   const dispatch = useAppDispatch();
@@ -44,10 +46,14 @@ const Router = (): JSX.Element => {
   useEffect(() => {
     if (!user) {
       socketTryRemoveDriverListeners();
-      void getCurrentUser();
+      void requestCurrentUser();
     }
     socket.connect();
-  }, [getCurrentUser, user, dispatch]);
+  }, [requestCurrentUser, user, dispatch]);
+
+  if (!isRequestFinished) {
+    return <Spinner size="sm" />;
+  }
 
   return (
     <RouterProvider>
@@ -67,6 +73,14 @@ const Router = (): JSX.Element => {
         element={<ProtectedRoute allowedUserGroup={UserGroupKey.BUSINESS} />}
       >
         <Route
+          path={AppRoute.SETUP_PAYMENT}
+          element={
+            <PageLayout isSidebarHidden>
+              <SetupPayment />
+            </PageLayout>
+          }
+        />
+        <Route
           path={AppRoute.DASHBOARD_ORDERS}
           element={
             <PageLayout>
@@ -84,6 +98,14 @@ const Router = (): JSX.Element => {
         />
         <Route
           path={AppRoute.DASHBOARD_DRIVERS}
+          element={
+            <PageLayout>
+              <Dashboard />
+            </PageLayout>
+          }
+        />
+        <Route
+          path={AppRoute.DASHBOARD_PAYMENTS}
           element={
             <PageLayout>
               <Dashboard />
@@ -117,7 +139,7 @@ const Router = (): JSX.Element => {
           <Route
             path={AppRoute.EDIT_PROFILE}
             element={
-              <PageLayout isSidebarHidden>
+              <PageLayout>
                 <EditDriverProfilePage />
               </PageLayout>
             }

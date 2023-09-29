@@ -9,12 +9,15 @@ import swagger, { type StaticDocumentSpec } from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import Fastify, {
   type FastifyError,
+  type FastifySchema,
   type onRequestHookHandler,
   type preHandlerHookHandler,
   type preValidationHookHandler,
 } from 'fastify';
+import fastifyRawBody from 'fastify-raw-body';
+import { StripeApiPath } from 'shared/build/index.js';
 
-import { ServerErrorType } from '~/libs/enums/enums.js';
+import { ApiPath, ServerErrorType } from '~/libs/enums/enums.js';
 import { type ValidationError } from '~/libs/exceptions/exceptions.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
@@ -30,6 +33,7 @@ import {
 import { authPlugin } from '~/packages/auth/auth.js';
 import { type DriverService } from '~/packages/drivers/drivers.js';
 import { filesValidationPlugin } from '~/packages/files/files.js';
+import { stripeService } from '~/packages/stripe/stripe.js';
 import { type UserService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
@@ -118,17 +122,27 @@ class ServerApp implements IServerApp {
       );
     }
 
+    const schema: FastifySchema = {};
+
+    if (validation?.body) {
+      schema.body = validation.body;
+    }
+
+    if (validation?.params) {
+      schema.params = validation.params;
+    }
+
+    if (validation?.query) {
+      schema.querystring = validation.query;
+    }
+
     this.app.route({
       url: path,
       method,
       handler,
       onRequest: onRequests,
       preValidation: preValidations,
-      schema: {
-        body: validation?.body,
-        params: validation?.params,
-        querystring: validation?.query,
-      },
+      schema,
     });
 
     this.logger.info(`Route: ${method as string} ${path} is registered`);
@@ -278,10 +292,21 @@ class ServerApp implements IServerApp {
 
   private async initPlugins(): Promise<void> {
     await this.app.register(fastifyAuth);
+
     await this.app.register(authPlugin, {
       config: this.config,
       userService: this.userService,
       jwtService,
+      stripeService,
+    });
+
+    await this.app.register(fastifyRawBody, {
+      field: 'rawBody',
+      encoding: 'utf8',
+      runFirst: true,
+      routes: this.apis.map((it) => {
+        return it.buildFullPath(ApiPath.STRIPE + StripeApiPath.WEBHOOK);
+      }),
     });
     await this.app.register(fastifyMultipart, {
       attachFieldsToBody: true,

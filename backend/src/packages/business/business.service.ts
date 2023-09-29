@@ -1,7 +1,4 @@
-import {
-  EntityAccessDeniedError,
-  NotFoundError,
-} from '~/libs/exceptions/exceptions.js';
+import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
@@ -85,23 +82,11 @@ class BusinessService implements IService {
     this.fileVerificationStatusService = fileVerificationStatusService;
   }
 
-  public async findById(
-    id: number,
-    { owner }: { owner: UserEntityObjectWithGroupT },
-  ): Promise<BusinessEntityT | null> {
+  public async findById(id: number): Promise<BusinessEntityT | null> {
     const [foundBusiness = null] = await this.businessRepository.find({ id });
 
     if (!foundBusiness) {
       return null;
-    }
-
-    const isOwner = this.checkIsOwner({
-      userId: owner.id,
-      business: foundBusiness,
-    });
-
-    if (!isOwner) {
-      throw new EntityAccessDeniedError({});
     }
 
     return BusinessEntity.initialize(foundBusiness).toObject();
@@ -109,6 +94,14 @@ class BusinessService implements IService {
 
   public async findByOwnerId(ownerId: number): Promise<BusinessEntityT | null> {
     const [business = null] = await this.businessRepository.find({ ownerId });
+
+    return business ? BusinessEntity.initialize(business).toObject() : null;
+  }
+
+  public async findByStripeId(
+    stripeId: string,
+  ): Promise<BusinessEntityT | null> {
+    const [business = null] = await this.businessRepository.find({ stripeId });
 
     return business ? BusinessEntity.initialize(business).toObject() : null;
   }
@@ -153,57 +146,83 @@ class BusinessService implements IService {
     return business.toObject();
   }
 
-  public checkIsOwner({
-    userId,
-    business,
-  }: {
-    userId: UserEntityObjectWithGroupT['id'];
-    business: BusinessEntityT;
-  }): boolean {
-    return userId === business.ownerId;
+  public async updateByOwnerId(
+    ownerId: UserEntityT['id'],
+    payload: BusinessEditDto,
+  ): Promise<BusinessEditResponseDto> {
+    const foundBusiness = await this.findByOwnerId(ownerId);
+
+    return await this.update(foundBusiness, payload);
   }
 
-  public async update({
-    userId,
-    payload,
-  }: {
-    userId: number;
-    payload: BusinessEditDto;
-  }): Promise<BusinessEditResponseDto> {
-    const foundBusinessByUserId = await this.findByOwnerId(userId);
-    const { taxNumber, companyName, firstName, lastName, phone, email } =
-      payload;
+  public async updateById(
+    businessId: BusinessEntityT['id'],
+    payload: BusinessEditDto,
+  ): Promise<BusinessEditResponseDto> {
+    const foundBusiness = await this.findById(businessId);
 
-    if (!foundBusinessByUserId) {
+    return await this.update(foundBusiness, payload);
+  }
+
+  public async update(
+    business: BusinessEntityT | null,
+    payload: BusinessEditDto,
+  ): Promise<BusinessEditResponseDto> {
+    if (!business) {
       throw new NotFoundError({});
     }
+
+    const { ownerId, id } = business;
+
+    const { taxNumber, companyName, firstName, lastName, phone, email } =
+      payload;
 
     const [existingBusiness = null] = await this.businessRepository.find({
       taxNumber,
     });
 
-    if (existingBusiness && existingBusiness.ownerId !== userId) {
+    if (existingBusiness && existingBusiness.ownerId !== ownerId) {
       throw new HttpError({
         message: HttpMessage.BUSINESS_EXISTS,
         status: HttpCode.CONFLICT,
       });
     }
 
-    const business = await this.businessRepository.update({
-      id: foundBusinessByUserId.id,
+    const updatedBusiness = await this.businessRepository.update({
+      id,
       payload: { taxNumber, companyName },
     });
 
-    const updatedBusiness = business.toObject();
+    const updatedBusinessEntity = updatedBusiness.toObject();
 
-    const updatedUser = await this.userService.update(userId, {
+    const updatedUser = await this.userService.update(ownerId, {
       firstName,
       lastName,
       phone,
       email,
     });
 
-    return { ...updatedUser, business: updatedBusiness };
+    return { ...updatedUser, business: updatedBusinessEntity };
+  }
+
+  public async updateStripeData(
+    businessId: BusinessEntityT['id'],
+    stripeFields: Partial<
+      Pick<BusinessEntityT, 'isStripeActivated' | 'stripeId'>
+    >,
+  ): Promise<BusinessEntityT> {
+    const business = await this.findById(businessId);
+
+    if (!business) {
+      throw new NotFoundError({});
+    }
+
+    const updatedBusiness = await this.businessRepository.update({
+      id: business.id,
+      payload: stripeFields,
+    });
+
+    return updatedBusiness.toObject();
   }
 
   public async delete(owner: UserEntityObjectWithGroupT): Promise<boolean> {

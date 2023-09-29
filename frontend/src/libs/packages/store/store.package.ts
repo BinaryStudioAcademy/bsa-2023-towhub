@@ -15,6 +15,7 @@ import { driverApi } from '~/packages/driver/driver.js';
 import { driversApi } from '~/packages/drivers/drivers.js';
 import { filesApi } from '~/packages/files/files.js';
 import { ordersApi } from '~/packages/orders/orders.js';
+import { stripeApi } from '~/packages/stripe/stripe.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
@@ -24,6 +25,7 @@ import { reducer as driversReducer } from '~/slices/drivers/drivers.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as orderReducer } from '~/slices/orders/order.js';
 import { reducer as socketReducer } from '~/slices/socket/socket.js';
+import { reducer as stripeReducer } from '~/slices/stripe/stripe.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { type MapServiceParameters } from '../map/libs/types/map-service-parameters.type.js';
@@ -62,6 +64,7 @@ class Store {
         files: filesReducer,
         business: businessReducer,
         socket: socketReducer,
+        stripe: stripeReducer,
       },
       middleware: (getDefaultMiddleware) => [
         ...getDefaultMiddleware({
@@ -86,6 +89,7 @@ class Store {
       ordersApi,
       localStorage: LocalStorage,
       socketClient,
+      stripeApi,
       mapServiceFactory: async (
         parameters: MapServiceParameters,
       ): Promise<MapService> => {
