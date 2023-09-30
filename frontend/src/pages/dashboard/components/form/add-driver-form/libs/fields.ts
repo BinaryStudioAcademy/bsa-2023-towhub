@@ -29,6 +29,7 @@ const addDriverFields: FormField<DriverCreateRequestDto<FileObject>>[] = [
     label: FormLabel.PHONE,
     placeholder: 'Enter driver phone',
     name: 'phone',
+    type: 'phone',
   },
   {
     id: FormLabel.DRIVER_LICENSE_NUMBER,
