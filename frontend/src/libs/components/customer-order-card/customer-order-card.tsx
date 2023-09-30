@@ -1,6 +1,6 @@
 import money from '~/assets/img/money.svg';
 import { Link } from '~/libs/components/link/link.jsx';
-import { AppRoute } from '~/libs/enums/enums.js';
+import { AppRoute, PlainSvgIconName } from '~/libs/enums/enums.js';
 import { IconName } from '~/libs/enums/icon-name.enum.js';
 import {
   capitalizeFirstLetter,
@@ -11,6 +11,7 @@ import { type OrderResponseDto } from '~/packages/orders/orders.js';
 
 import { Badge } from '../badge/badge.jsx';
 import { Icon } from '../icon/icon.jsx';
+import { PlainSvgIcon } from '../plain-svg-icon/plain-svg-icon.js';
 import { Spinner } from '../spinner/spinner.js';
 import { ProgressStatus } from './libs/enums/enums.js';
 import { convertDate } from './libs/helpers/helpers.js';
@@ -75,6 +76,9 @@ const CustomerOrderCard: React.FC<Properties> = ({ order }: Properties) => {
         <ul className={styles.locations}>
           <li className={getValidClassNames(styles.startPoint, 'textSm')}>
             {origin}
+          </li>
+          <li className={styles.arrowDown}>
+            <PlainSvgIcon name={PlainSvgIconName.ARROW_DOWN} />
           </li>
           <li className={getValidClassNames(styles.endPoint, 'textSm')}>
             {destination}
