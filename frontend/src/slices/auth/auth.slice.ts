@@ -1,4 +1,4 @@
-import { type PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
 import { DataStatus } from '~/libs/enums/enums.js';
 import { type HttpError } from '~/libs/packages/http/http.js';
@@ -23,6 +23,7 @@ import {
 type State = {
   error: HttpError | null;
   dataStatus: ValueOf<typeof DataStatus>;
+  getCurrentRequestStatus: ValueOf<typeof DataStatus>;
   socketDriverAuthStatus: ValueOf<typeof DataStatus>;
   socketDriverAuthErrorMessage: SocketErrorValues | null;
   user: AuthUser | null;
@@ -31,6 +32,7 @@ type State = {
 const initialState: State = {
   error: null,
   dataStatus: DataStatus.IDLE,
+  getCurrentRequestStatus: DataStatus.IDLE,
   socketDriverAuthStatus: DataStatus.IDLE,
   socketDriverAuthErrorMessage: null,
   user: null,
@@ -43,11 +45,8 @@ const { reducer, actions, name } = createSlice({
     clearAuthServerError: (store) => {
       store.error = null;
     },
-    setDataStatus: (
-      store,
-      action: PayloadAction<ValueOf<typeof DataStatus>>,
-    ) => {
-      store.dataStatus = action.payload;
+    resolveGetCurrentRequestStatus: (store) => {
+      store.getCurrentRequestStatus = DataStatus.FULFILLED;
     },
   },
   extraReducers(builder) {
@@ -58,9 +57,11 @@ const { reducer, actions, name } = createSlice({
       .addCase(getCurrent.fulfilled, (state, action) => {
         state.user = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
+        state.getCurrentRequestStatus = DataStatus.FULFILLED;
       })
       .addCase(getCurrent.rejected, (state) => {
         state.dataStatus = DataStatus.REJECTED;
+        state.getCurrentRequestStatus = DataStatus.REJECTED;
       })
       .addCase(signIn.fulfilled, (state, action) => {
         state.error = null;
@@ -122,13 +123,12 @@ const { reducer, actions, name } = createSlice({
         state.socketDriverAuthStatus = DataStatus.FULFILLED;
         state.socketDriverAuthErrorMessage = null;
       })
+      .addCase(getCurrent.pending, (state) => {
+        state.dataStatus = DataStatus.PENDING;
+        state.getCurrentRequestStatus = DataStatus.PENDING;
+      })
       .addMatcher(
-        isAnyOf(
-          signUp.pending,
-          signIn.pending,
-          getCurrent.pending,
-          logOut.pending,
-        ),
+        isAnyOf(signUp.pending, signIn.pending, logOut.pending),
         (state) => {
           state.dataStatus = DataStatus.PENDING;
         },
