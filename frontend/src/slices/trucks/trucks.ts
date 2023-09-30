@@ -3,7 +3,9 @@ import {
   calculateArrivalTime,
   findAllTrucksForBusiness,
   getAllTrucksByUserId,
+  restartWatchTruckLocation,
   setTrucks,
+  startWatchTruckLocation,
   subscribeTruckUpdates,
   unsubscribeTruckUpdates,
   updateTruckLocationFromSocket,
@@ -16,10 +18,12 @@ const allActions = {
   subscribeTruckUpdates,
   unsubscribeTruckUpdates,
   updateTruckLocationFromSocket,
+  startWatchTruckLocation,
   calculateArrivalTime,
   getAllTrucksByUserId,
   findAllTrucksForBusiness,
   setTrucks,
+  restartWatchTruckLocation,
 };
 
 export { allActions as actions };

@@ -38,6 +38,8 @@ const OrderListCardBusiness: React.FC<Properties> = ({
 
   const statusBadge = mapOrderStatusToReadable[status];
 
+  const driverAratar = driver?.avatarUrl ?? ImgPath.AVATAR_DEFAULT;
+
   return (
     <div
       className={styles.container}
@@ -47,11 +49,13 @@ const OrderListCardBusiness: React.FC<Properties> = ({
         <p className={getValidClassNames('textMdBold', styles.cardName)}>
           Order {id}
         </p>
-        <Badge color={statusBadge.color}>{statusBadge.name}</Badge>
+        <Badge color={statusBadge.color} className={styles.badge}>
+          {statusBadge.name}
+        </Badge>
       </div>
       <div className={styles.content}>
         <img
-          src={ImgPath.AVATAR_DEFAULT}
+          src={driverAratar}
           alt={driver?.firstName}
           className={styles.avatar}
         />
@@ -59,13 +63,20 @@ const OrderListCardBusiness: React.FC<Properties> = ({
           <p className={getValidClassNames('textMdBold')}>
             {driver && getFullName(driver.firstName, driver.lastName)}
           </p>
-          <p className={getValidClassNames('textMd', styles.driverPhone)}>
-            {driver?.phone}
-          </p>
         </div>
-        <div className={styles.truck}>
-          <Icon iconName={IconName.TRUCK} className={styles.icon} />
-          <p className={styles.truckNumber}>{truck?.licensePlateNumber}</p>
+        <div className={styles.contacts}>
+          <div className={styles.contactsItem}>
+            <Icon iconName={IconName.MOBILE} className={styles.icon} />
+            <p className={getValidClassNames('textMd', styles.driverPhone)}>
+              {driver?.phone}
+            </p>
+          </div>
+          <div className={styles.contactsItem}>
+            <Icon iconName={IconName.CAR} className={styles.icon} />
+            <p className={getValidClassNames('textMd', styles.truckNumber)}>
+              {truck?.licensePlateNumber}
+            </p>
+          </div>
         </div>
       </div>
     </div>

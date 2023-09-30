@@ -1,7 +1,13 @@
 import { type Socket, io } from 'socket.io-client';
 
 import { config } from '~/libs/packages/config/config.js';
+import { type Store } from '~/libs/packages/store/store.package.js';
 import { type FirstParameter } from '~/libs/types/types.js';
+import { actions as authActions } from '~/slices/auth/auth.js';
+import {
+  actions as socketActions,
+  SocketStatus,
+} from '~/slices/socket/socket.js';
 
 import {
   type ClientToServerEvent,
@@ -26,12 +32,40 @@ class SocketService {
     return this.io ? this.io.hasListeners(event) : false;
   }
 
+  public initializeStoreState(store: Store): void {
+    if (!this.io) {
+      return;
+    }
+
+    this.io.on('disconnect', () => {
+      store.instance.dispatch(
+        socketActions.setSocketStatus(SocketStatus.DISCONNECTED),
+      );
+      store.instance.dispatch(authActions.resetAuthorizedDriverSocket());
+    });
+    this.io.on('connect', () => {
+      store.instance.dispatch(
+        socketActions.setSocketStatus(SocketStatus.CONNECTED),
+      );
+    });
+  }
+
   public connect(): void {
     if (!this.io) {
       this.io = io(config.ENV.API.SERVER_URL, {
         transports: ['websocket', 'polling'],
       });
     }
+  }
+
+  public reconnect(): void {
+    this.io = io(config.ENV.API.SERVER_URL, {
+      transports: ['websocket', 'polling'],
+    });
+  }
+
+  public checkIsConnected(): boolean {
+    return this.io?.connected ?? false;
   }
 
   public addListener<

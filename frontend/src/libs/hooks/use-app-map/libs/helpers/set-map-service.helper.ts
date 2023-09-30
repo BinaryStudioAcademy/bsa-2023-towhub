@@ -1,6 +1,7 @@
 import { DEFAULT_CENTER } from '~/libs/packages/map/libs/constants/constants.js';
 import { type MapService } from '~/libs/packages/map/map.package.js';
 import { MapConnector } from '~/libs/packages/map/map-connector.package.js';
+import { type Coordinates } from '~/libs/types/types.js';
 
 import { getBounds } from './get-bounds.helper.js';
 
@@ -11,8 +12,8 @@ const setMapService = ({
   mapService,
   zoom,
 }: {
-  points: google.maps.LatLngLiteral[] | undefined;
-  center: google.maps.LatLngLiteral | null;
+  points: Coordinates[] | undefined;
+  center: Coordinates | null;
   mapReference: React.RefObject<HTMLDivElement>;
   mapService: { current: MapService | null };
   zoom: number;
@@ -30,7 +31,7 @@ const setMapService = ({
       center: center,
       zoom,
     });
-    mapService.current.addMarker(center, false);
+    mapService.current.addMarkerStatic(center);
   } else {
     const bounds = getBounds(points);
 
@@ -40,7 +41,7 @@ const setMapService = ({
       zoom,
     });
     for (const point of points) {
-      mapService.current.addMarker(point, false);
+      mapService.current.addMarkerStatic(point);
     }
   }
 };

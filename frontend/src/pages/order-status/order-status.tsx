@@ -1,7 +1,7 @@
-import { OrderCard, Spinner } from '~/libs/components/components.js';
+import { OrderCard } from '~/libs/components/components.js';
 import { OrderStatus } from '~/libs/components/orders-status/order-status.js';
-import { AppRoute } from '~/libs/enums/app-route.enum.js';
 import { DataStatus } from '~/libs/enums/data-status.enum.js';
+import { AppRoute } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
@@ -16,6 +16,8 @@ import {
 import { DEFAULT_CENTER } from '~/libs/packages/map/libs/constants/constants.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 import { selectDataStatus, selectOrder } from '~/slices/orders/selectors.js';
+import { generateCheckoutLink } from '~/slices/stripe/actions.js';
+import { selectCheckoutLink } from '~/slices/stripe/selectors.js';
 import {
   selectChosenTruck,
   selectTruckLocation,
@@ -30,13 +32,17 @@ import { useSubscribeUpdates } from './libs/hooks/use-subscribe-updates.hook.js'
 import styles from './styles.module.scss';
 
 const OrderStatusPage: React.FC = () => {
-  const { orderId } = useParams();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const mapReference = useRef<HTMLDivElement>(null);
+
+  const { orderId } = useParams();
   const order = useAppSelector(selectOrder);
 
   const dataStatus = useAppSelector(selectDataStatus);
-  const dispatch = useAppDispatch();
+
+  const checkoutLink = useAppSelector(selectCheckoutLink);
 
   const status = order?.status;
   const isCancelScreenOpen =
@@ -47,10 +53,10 @@ const OrderStatusPage: React.FC = () => {
   const isDoneScreenOpen = status === OrderStatusValue.DONE;
 
   useEffect(() => {
-    if (orderId) {
+    if (orderId && !order) {
       void dispatch(orderActions.getOrder(orderId));
     }
-  }, [orderId, dispatch]);
+  }, [orderId, dispatch, order]);
 
   const truckId =
     useAppSelector(selectChosenTruck)?.id ?? order?.shift.truck?.id;
@@ -62,7 +68,6 @@ const OrderStatusPage: React.FC = () => {
     center: truckLocation ?? DEFAULT_CENTER,
     destination: order ? order.startPoint : null,
     mapReference: mapReference,
-    onMapLoad: () => true,
   });
 
   const handleHomepageClick = useCallback(() => {
@@ -78,15 +83,17 @@ const OrderStatusPage: React.FC = () => {
       void dispatch(
         orderActions.changeAcceptOrderStatusByCustomer({
           orderId,
-          isAccepted: false,
+          newStatus: OrderStatusValue.REJECTED,
         }),
       );
     }
   }, [dispatch, orderId]);
 
   const handlePayClick = useCallback(() => {
-    //TODO
-  }, []);
+    if (order) {
+      void dispatch(generateCheckoutLink({ order }));
+    }
+  }, [dispatch, order]);
 
   const isDriverShown =
     isConfirmScreenOpen || isPickingUpScreenOpen || isDoneScreenOpen;
@@ -105,12 +112,15 @@ const OrderStatusPage: React.FC = () => {
     endLocation &&
     price;
 
+  useEffect(() => {
+    if (!checkoutLink) {
+      return;
+    }
+    window.location.href = checkoutLink;
+  }, [checkoutLink]);
+
   if (dataStatus === DataStatus.REJECTED) {
     return <NotFound />;
-  }
-
-  if (dataStatus !== DataStatus.FULFILLED) {
-    return <Spinner />;
   }
 
   return (

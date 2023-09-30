@@ -15,19 +15,25 @@ import { driverApi } from '~/packages/driver/driver.js';
 import { driversApi } from '~/packages/drivers/drivers.js';
 import { filesApi } from '~/packages/files/files.js';
 import { ordersApi } from '~/packages/orders/orders.js';
+import { stripeApi } from '~/packages/stripe/stripe.js';
 import { truckApi } from '~/packages/trucks/trucks.js';
 import { userApi } from '~/packages/users/users.js';
 import { reducer as authReducer } from '~/slices/auth/auth.js';
+import { reducer as businessReducer } from '~/slices/business/business.js';
 import { reducer as driverReducer } from '~/slices/driver/driver.js';
 import { reducer as driversReducer } from '~/slices/drivers/drivers.js';
 import { reducer as filesReducer } from '~/slices/files/files.js';
 import { reducer as orderReducer } from '~/slices/orders/order.js';
+import { reducer as socketReducer } from '~/slices/socket/socket.js';
+import { reducer as stripeReducer } from '~/slices/stripe/stripe.js';
 import { reducer as truckReducer } from '~/slices/trucks/trucks.js';
 
 import { type MapServiceParameters } from '../map/libs/types/map-service-parameters.type.js';
 import { type MapService } from '../map/map.package.js';
 import { MapConnector } from '../map/map-connector.package.js';
+import { geolocationMiddleware } from '../middleware/geolocation.middleware.js';
 import { socketMiddleware } from '../middleware/socket.middleware.js';
+import { watchOrderCreateMiddleware } from '../middleware/watch-order-create.middleware.js';
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
 import { type ExtraArguments, type RootReducer } from './libs/types/types.js';
@@ -38,7 +44,12 @@ class Store {
       RootReducer,
       AnyAction,
       MiddlewareArray<
-        [ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>, Middleware]
+        [
+          ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>,
+          Middleware,
+          Middleware,
+          Middleware,
+        ]
       >
     >
   >;
@@ -53,13 +64,20 @@ class Store {
         drivers: driversReducer,
         driver: driverReducer,
         files: filesReducer,
+        business: businessReducer,
+        socket: socketReducer,
+        stripe: stripeReducer,
       },
       middleware: (getDefaultMiddleware) => [
         ...getDefaultMiddleware({
           thunk: {
             extraArgument: this.extraArguments,
           },
-        }).prepend(socketMiddleware),
+        }).prepend(
+          socketMiddleware,
+          geolocationMiddleware,
+          watchOrderCreateMiddleware,
+        ),
       ],
     });
   }
@@ -69,14 +87,15 @@ class Store {
       authApi,
       userApi,
       filesApi,
+      businessApi,
       notification,
       truckApi,
       driverApi,
       driversApi,
-      businessApi,
       ordersApi,
       localStorage: LocalStorage,
       socketClient,
+      stripeApi,
       mapServiceFactory: async (
         parameters: MapServiceParameters,
       ): Promise<MapService> => {

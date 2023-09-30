@@ -1,0 +1,138 @@
+@import "src/assets/css/vars.scss";
+
+.page {
+  display: flex;
+  height: 100%;
+  padding: 30px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin-right: 24px;
+}
+
+.tripInfo {
+  height: 120px;
+  margin-bottom: 20px;
+  padding: 7px 24px;
+  background-color: $white;
+  border: 5px solid $white;
+  border-radius: 10px;
+}
+
+.header {
+  margin-bottom: 10px;
+  color: $title-color;
+  font-weight: $font-weight-bold;
+  font-size: 20px;
+  text-align: center;
+}
+
+.tripInfoContent {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.tripInfoContent .item {
+  width: 50%;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.orderDetails {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  padding: 24px 65px 20px 80px;
+  overflow: auto;
+  background-color: $white;
+  border: 5px solid $white;
+  border-radius: 10px;
+}
+
+.orderDetails .header {
+  margin-bottom: 36px;
+  font-size: 24px;
+}
+
+.details {
+  flex-grow: 1;
+}
+
+.detail {
+  margin-bottom: 20px;
+  color: $grey;
+  font-size: 20px;
+}
+
+.detail .value {
+  color: $black;
+}
+
+.detail svg {
+  width: 25px;
+  margin-right: 15px;
+}
+
+.userIcon {
+  color: $title-color;
+}
+
+.phoneIcon {
+  color: $title-color;
+}
+
+.timeIcon {
+  color: $red;
+}
+
+.locationIcon {
+  color: $blue-light;
+}
+
+.destinationIcon {
+  color: $red-light;
+}
+
+.carIcon {
+  color: $title-color;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  width: 40%;
+  margin-top: auto;
+}
+
+.button.accept {
+  background-color: $green;
+}
+
+.right {
+  width: 50%;
+  height: 100%;
+  border: 5px solid $white;
+  border-radius: 10px;
+}
+
+.map {
+  width: 100%;
+  height: inherit;
+}
+
+.message {
+  width: 100%;
+  font-size: 20px;
+  text-align: center;
+}
+
+.complete {
+  margin: 0 auto;
+}

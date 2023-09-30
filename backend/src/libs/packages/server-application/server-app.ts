@@ -9,10 +9,15 @@ import swagger, { type StaticDocumentSpec } from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import Fastify, {
   type FastifyError,
+  type FastifySchema,
+  type onRequestHookHandler,
   type preHandlerHookHandler,
+  type preValidationHookHandler,
 } from 'fastify';
+import fastifyRawBody from 'fastify-raw-body';
+import { StripeApiPath } from 'shared/build/index.js';
 
-import { ServerErrorType } from '~/libs/enums/enums.js';
+import { ApiPath, ServerErrorType } from '~/libs/enums/enums.js';
 import { type ValidationError } from '~/libs/exceptions/exceptions.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
 import { type IDatabase } from '~/libs/packages/database/database.js';
@@ -25,9 +30,10 @@ import {
   type ServerValidationErrorResponse,
   type ValidationSchema,
 } from '~/libs/types/types.js';
-import { authPlugin } from '~/packages/auth/auth.js';
+import { authPlugin, AuthStrategy } from '~/packages/auth/auth.js';
+import { type DriverService } from '~/packages/drivers/drivers.js';
 import { filesValidationPlugin } from '~/packages/files/files.js';
-import { type ShiftSocketService } from '~/packages/shifts/shift.js';
+import { stripeService } from '~/packages/stripe/stripe.js';
 import { type UserService } from '~/packages/users/users.js';
 
 import { type AuthStrategyHandler } from '../controller/controller.js';
@@ -48,7 +54,7 @@ type Constructor = {
   apis: IServerAppApi[];
   geolocationCacheSocketService: GeolocationCacheSocketService;
   userService: UserService;
-  shiftSocketService: ShiftSocketService;
+  driverService: DriverService;
 };
 
 class ServerApp implements IServerApp {
@@ -66,7 +72,7 @@ class ServerApp implements IServerApp {
 
   private userService: UserService;
 
-  private shiftSocketService: ShiftSocketService;
+  private driverService: DriverService;
 
   public constructor({
     config,
@@ -75,7 +81,7 @@ class ServerApp implements IServerApp {
     apis,
     geolocationCacheSocketService,
     userService,
-    shiftSocketService,
+    driverService,
   }: Constructor) {
     this.config = config;
     this.logger = logger;
@@ -84,7 +90,7 @@ class ServerApp implements IServerApp {
 
     this.geolocationCacheSocketService = geolocationCacheSocketService;
     this.userService = userService;
-    this.shiftSocketService = shiftSocketService;
+    this.driverService = driverService;
 
     this.app = Fastify();
   }
@@ -99,32 +105,50 @@ class ServerApp implements IServerApp {
       validateFilesStrategy,
     } = parameters;
 
-    const preHandlers: preHandlerHookHandler[] = [];
+    const onRequests: onRequestHookHandler[] = [];
+    const preHandler: preHandlerHookHandler[] = [];
+    const preValidations: preValidationHookHandler[] = [];
 
     if (authStrategy) {
       const authStrategyHandler = this.resolveAuthStrategy(authStrategy);
 
       if (authStrategyHandler) {
-        preHandlers.push(authStrategyHandler);
+        if (authStrategy === AuthStrategy.VERIFY_STRIPE_WEBHOOK) {
+          preHandler.push(authStrategyHandler);
+        } else {
+          onRequests.push(authStrategyHandler);
+        }
       }
     }
 
     if (validateFilesStrategy) {
-      preHandlers.push(
+      preValidations.push(
         this.resolveFileValidationStrategy(validateFilesStrategy),
       );
+    }
+
+    const schema: FastifySchema = {};
+
+    if (validation?.body) {
+      schema.body = validation.body;
+    }
+
+    if (validation?.params) {
+      schema.params = validation.params;
+    }
+
+    if (validation?.query) {
+      schema.querystring = validation.query;
     }
 
     this.app.route({
       url: path,
       method,
       handler,
-      preHandler: preHandlers,
-      schema: {
-        body: validation?.body,
-        params: validation?.params,
-        querystring: validation?.query,
-      },
+      onRequest: onRequests,
+      preHandler,
+      preValidation: preValidations,
+      schema,
     });
 
     this.logger.info(`Route: ${method as string} ${path} is registered`);
@@ -274,12 +298,25 @@ class ServerApp implements IServerApp {
 
   private async initPlugins(): Promise<void> {
     await this.app.register(fastifyAuth);
+
     await this.app.register(authPlugin, {
       config: this.config,
       userService: this.userService,
       jwtService,
+      stripeService,
     });
-    await this.app.register(fastifyMultipart);
+
+    await this.app.register(fastifyRawBody, {
+      field: 'rawBody',
+      encoding: 'utf8',
+      runFirst: true,
+      routes: this.apis.map((it) => {
+        return it.buildFullPath(ApiPath.STRIPE + StripeApiPath.WEBHOOK);
+      }),
+    });
+    await this.app.register(fastifyMultipart, {
+      attachFieldsToBody: true,
+    });
     await this.app.register(filesValidationPlugin);
   }
 
@@ -291,10 +328,10 @@ class ServerApp implements IServerApp {
     await this.initServe();
 
     await socketService.initializeIo({
-      shiftSocketService: this.shiftSocketService,
       app: this.app,
       geolocationCacheSocketService: this.geolocationCacheSocketService,
       userService: this.userService,
+      driverService: this.driverService,
     });
 
     await this.initMiddlewares();

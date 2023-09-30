@@ -17,6 +17,9 @@ import {
   driverParameters,
   driverUpdateRequestBody,
 } from '../drivers/drivers.js';
+import { fileInputAddDriverLicenseConfig } from '../files/libs/config/config.js';
+import { FilesValidationStrategy } from '../files/libs/enums/enums.js';
+import { type MultipartParsedFile } from '../files/libs/types/types.js';
 import { type TruckAddRequestDto } from '../trucks/libs/types/types.js';
 import { truckCreateRequestBody } from '../trucks/trucks.js';
 import { type UserEntityObjectWithGroupT } from '../users/users.js';
@@ -24,12 +27,12 @@ import { type BusinessService } from './business.service.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 import {
   type BusinessAddRequestDto,
-  type BusinessUpdateRequestDto,
+  type BusinessEditDto,
   type GetPaginatedPageQuery,
 } from './libs/types/types.js';
 import {
   businessAddRequestBody,
-  businessUpdateRequestBody,
+  businessEditValidationSchema,
   commonGetPageQuery,
 } from './libs/validation-schemas/validation-schemas.js';
 
@@ -275,12 +278,13 @@ class BusinessController extends Controller {
       path: BusinessApiPath.ROOT,
       method: 'PUT',
       validation: {
-        body: businessUpdateRequestBody,
+        body: businessEditValidationSchema,
       },
       handler: (options) =>
         this.update(
           options as ApiHandlerOptions<{
-            body: BusinessUpdateRequestDto;
+            body: BusinessEditDto;
+            user: UserEntityObjectWithGroupT;
           }>,
         ),
     });
@@ -301,13 +305,21 @@ class BusinessController extends Controller {
       path: BusinessApiPath.DRIVERS,
       method: 'POST',
       authStrategy: defaultStrategies,
+      validateFilesStrategy: {
+        strategy: FilesValidationStrategy.BASIC,
+        filesInputConfig: {
+          maxSizeBytes: fileInputAddDriverLicenseConfig.maxSizeBytes,
+          maxFiles: fileInputAddDriverLicenseConfig.maxFiles,
+          accept: fileInputAddDriverLicenseConfig.accept,
+        },
+      },
       validation: {
         body: driverCreateRequestBody,
       },
       handler: (options) =>
         this.createDriver(
           options as ApiHandlerOptions<{
-            body: DriverCreateRequestDto;
+            body: DriverCreateRequestDto<MultipartParsedFile>;
             user: UserEntityObjectWithGroupT;
             hostname: string;
           }>,
@@ -318,6 +330,14 @@ class BusinessController extends Controller {
       path: BusinessApiPath.DRIVER_$ID,
       method: 'PUT',
       authStrategy: defaultStrategies,
+      validateFilesStrategy: {
+        strategy: FilesValidationStrategy.BASIC,
+        filesInputConfig: {
+          maxSizeBytes: fileInputAddDriverLicenseConfig.maxSizeBytes,
+          maxFiles: fileInputAddDriverLicenseConfig.maxFiles,
+          accept: fileInputAddDriverLicenseConfig.accept,
+        },
+      },
       validation: {
         body: driverUpdateRequestBody,
         params: driverParameters,
@@ -325,7 +345,7 @@ class BusinessController extends Controller {
       handler: (options) =>
         this.updateDriver(
           options as ApiHandlerOptions<{
-            body: DriverUpdateRequestDto;
+            body: DriverUpdateRequestDto<MultipartParsedFile>;
             params: DriverRequestParameters;
             user: UserEntityObjectWithGroupT;
           }>,
@@ -452,7 +472,7 @@ class BusinessController extends Controller {
 
   /**
    * @swagger
-   * /business:
+   * /business/:
    *    put:
    *      security:
    *        - bearerAuth: []
@@ -465,35 +485,54 @@ class BusinessController extends Controller {
    *          application/json:
    *            schema:
    *              type: object
-   *              required:
-   *               - companyName
    *              properties:
+   *                phone:
+   *                  type: string
+   *                  length: 13
+   *                  pattern: ^\+\d{8,19}$
+   *                  example: +380505555555
+   *                email:
+   *                  type: string
+   *                  format: email
+   *                  minLength: 5
+   *                  maxLength: 254
+   *                firstName:
+   *                  type: string
+   *                  minLength: 1
+   *                  maxLength: 40
+   *                  pattern: ^['A-Za-z-]{1,40}$
+   *                  example: Bob
+   *                lastName:
+   *                  type: string
+   *                  minLength: 1
+   *                  maxLength: 40
+   *                  pattern: ^['A-Za-z-]{1,40}$
+   *                  example: Sponge
    *                companyName:
    *                  $ref: '#/components/schemas/Business/properties/companyName'
+   *                taxNumber:
+   *                  $ref: '#/components/schemas/Business/properties/taxNumber'
    *      responses:
    *        200:
    *          description: Successful business update.
    *          content:
    *            application/json:
    *              schema:
-   *                $ref: '#/components/schemas/Business'
-   *        400:
-   *          description:
-   *            Business with such ID does not exist or name is already registered
-   *          content:
-   *            plain/text:
-   *              schema:
-   *                $ref: '#/components/schemas/BusinessDoesNotExist'
+   *                $ref: '#/components/schemas/User'
+   *                properties:
+   *                  business:
+   *                    $ref: '#/components/schemas/Business'
    */
   private async update(
     options: ApiHandlerOptions<{
-      body: BusinessUpdateRequestDto;
+      body: BusinessEditDto;
+      user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const updatedBusiness = await this.businessService.update({
-      payload: options.body,
-      owner: options.user,
-    });
+    const updatedBusiness = await this.businessService.updateByOwnerId(
+      options.user.id,
+      options.body,
+    );
 
     return {
       status: HttpCode.OK,
@@ -577,7 +616,7 @@ class BusinessController extends Controller {
    *      description: Create driver
    *      requestBody:
    *        content:
-   *          application/json:
+   *          multipart/formdata:
    *            schema:
    *              type: object
    *              required:
@@ -608,6 +647,11 @@ class BusinessController extends Controller {
    *                  type: array
    *                  items:
    *                    type: number
+   *                files:
+   *                  type: array
+   *                  items:
+   *                    type: string
+   *                    format: binary
    *      security:
    *        - bearerAuth: []
    *      responses:
@@ -629,16 +673,16 @@ class BusinessController extends Controller {
 
   private async createDriver(
     options: ApiHandlerOptions<{
-      body: DriverCreateRequestDto;
+      body: DriverCreateRequestDto<MultipartParsedFile>;
       user: UserEntityObjectWithGroupT;
       hostname: string;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const createdDriver = await this.businessService.createDriver(
-      options.body,
-      options.user.id,
-      options.hostname,
-    );
+    const createdDriver = await this.businessService.createDriver({
+      payload: options.body,
+      ownerId: options.user.id,
+      hostname: options.hostname,
+    });
 
     return {
       status: HttpCode.CREATED,
@@ -703,16 +747,16 @@ class BusinessController extends Controller {
 
   private async updateDriver(
     options: ApiHandlerOptions<{
-      body: DriverUpdateRequestDto;
+      body: DriverUpdateRequestDto<MultipartParsedFile>;
       params: DriverRequestParameters;
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const updatedDriver = await this.businessService.updateDriver(
-      options.body,
-      options.params.driverId,
-      options.user.id,
-    );
+    const updatedDriver = await this.businessService.updateDriver({
+      driverId: options.params.driverId,
+      ownerId: options.user.id,
+      payload: options.body,
+    });
 
     return {
       status: HttpCode.OK,
@@ -754,10 +798,10 @@ class BusinessController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const drivers = await this.businessService.findAllDriversByBusinessId(
-      options.user.id,
-      options.query,
-    );
+    const drivers = await this.businessService.findAllDriversByBusinessId({
+      ownerId: options.user.id,
+      query: options.query,
+    });
 
     return {
       status: HttpCode.OK,
@@ -806,10 +850,10 @@ class BusinessController extends Controller {
       user: UserEntityObjectWithGroupT;
     }>,
   ): Promise<ApiHandlerResponse> {
-    const deletionResult = await this.businessService.deleteDriver(
-      options.params.driverId,
-      options.user.id,
-    );
+    const deletionResult = await this.businessService.deleteDriver({
+      driverId: options.params.driverId,
+      ownerId: options.user.id,
+    });
 
     return {
       status: HttpCode.OK,

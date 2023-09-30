@@ -18,6 +18,7 @@ const authService = new AuthService({
   businessService,
   driverService,
   config: config.ENV.JWT,
+  logger,
 });
 
 const authController = new AuthController(logger, authService);

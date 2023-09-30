@@ -9,28 +9,39 @@ import {
   changeAcceptOrderStatusByCustomer,
   changeAcceptOrderStatusByDriver,
   createOrder,
+  createOrderFromSocket,
   getBusinessOrders,
+  getDriverOrdersPage,
   getOrder,
+  getRouteAddresses,
   getRouteData,
+  getUserOrdersPage,
   removeOrder,
   updateOrderFromSocket,
 } from './actions.js';
 import { type RouteData } from './libs/types/route-data.type.js';
+import { type RouteAddresses } from './libs/types/types.js';
 
 type State = {
   orders: OrderResponseDto[];
+  total: number;
   price: number;
   dataStatus: ValueOf<typeof DataStatus>;
   routeData: RouteData | null;
   currentOrder: OrderResponseDto | null;
+  routeAddresses: Partial<
+    Record<RouteAddresses['orderId'], RouteAddresses['points']>
+  >;
 };
 
 const initialState: State = {
   orders: [],
   price: 0,
+  total: 0,
   currentOrder: null,
   dataStatus: DataStatus.IDLE,
   routeData: null,
+  routeAddresses: {},
 };
 
 const { reducer, actions, name } = createSlice({
@@ -39,6 +50,11 @@ const { reducer, actions, name } = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
+      .addCase(getUserOrdersPage.fulfilled, (state, actions) => {
+        state.dataStatus = DataStatus.FULFILLED;
+        state.orders = actions.payload.items;
+        state.total = actions.payload.total;
+      })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
         state.dataStatus = DataStatus.FULFILLED;
@@ -46,6 +62,11 @@ const { reducer, actions, name } = createSlice({
       .addCase(calculateOrderPrice.fulfilled, (state, action) => {
         state.price = action.payload.price;
         state.dataStatus = DataStatus.FULFILLED;
+      })
+      .addCase(getDriverOrdersPage.fulfilled, (state, actions) => {
+        state.dataStatus = DataStatus.FULFILLED;
+        state.orders = actions.payload.items;
+        state.total = actions.payload.total;
       })
       .addCase(getOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
@@ -58,18 +79,20 @@ const { reducer, actions, name } = createSlice({
       .addCase(updateOrderFromSocket.fulfilled, (state, action) => {
         state.currentOrder = { ...state.currentOrder, ...action.payload };
       })
+      .addCase(createOrderFromSocket.fulfilled, (state, action) => {
+        state.currentOrder = action.payload;
+      })
       .addCase(removeOrder, (state) => {
         state.currentOrder = null;
       })
-      .addCase(getBusinessOrders.pending, (state) => {
-        state.dataStatus = DataStatus.PENDING;
-      })
       .addCase(getBusinessOrders.fulfilled, (state, action) => {
-        state.orders = action.payload;
+        state.orders = action.payload.items;
+        state.total = action.payload.total;
         state.dataStatus = DataStatus.FULFILLED;
       })
-      .addCase(getBusinessOrders.rejected, (state) => {
-        state.dataStatus = DataStatus.REJECTED;
+      .addCase(getRouteAddresses.fulfilled, (state, action) => {
+        state.routeAddresses = { ...state.routeAddresses, ...action.payload };
+        state.dataStatus = DataStatus.FULFILLED;
       })
       .addMatcher(
         isAnyOf(
@@ -88,8 +111,12 @@ const { reducer, actions, name } = createSlice({
       )
       .addMatcher(
         isAnyOf(
-          calculateOrderPrice.pending,
+          getRouteAddresses.pending,
           createOrder.pending,
+          getBusinessOrders.pending,
+          getDriverOrdersPage.pending,
+          calculateOrderPrice.pending,
+          getUserOrdersPage.pending,
           changeAcceptOrderStatusByDriver.pending,
           changeAcceptOrderStatusByCustomer.pending,
           getOrder.pending,

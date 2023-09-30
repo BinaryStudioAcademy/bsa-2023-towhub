@@ -8,8 +8,10 @@ import {
   useNavigate,
 } from '~/libs/hooks/hooks.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
-import { selectUser } from '~/slices/auth/selectors.js';
-import { actions as driverActions } from '~/slices/driver/driver.js';
+import {
+  selectSocketDriverAuthStatus,
+  selectUser,
+} from '~/slices/auth/selectors.js';
 import {
   ShiftStatus,
   TruckChoiceStatus,
@@ -21,12 +23,14 @@ import {
 import { selectDataStatus, selectTrucks } from '~/slices/trucks/selectors.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
-import { AvailableTruckCard } from './components/components.js';
+import { AvailableTruckCard } from './libs/components/components.js';
 import styles from './styles.module.scss';
 
 const AvailableTrucks: React.FC = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  const socketDriverAuthStatus = useAppSelector(selectSocketDriverAuthStatus);
+  const isAuthenticatedDriver = socketDriverAuthStatus === DataStatus.FULFILLED;
   const dataStatus = useAppSelector(selectDataStatus);
   const trucks = useAppSelector(selectTrucks);
   const areTrucksLoading = dataStatus === DataStatus.PENDING;
@@ -36,14 +40,14 @@ const AvailableTrucks: React.FC = () => {
   const shiftStatus = useAppSelector(selectShiftStatus);
 
   useEffect(() => {
-    if (user) {
+    if (user && isAuthenticatedDriver) {
       void dispatch(truckActions.getAllTrucksByUserId({ userId: user.id }));
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, isAuthenticatedDriver]);
 
   const handleClick = useCallback(
     (truckId: number) => {
-      void dispatch(driverActions.startShift({ truckId }));
+      void dispatch(truckActions.startWatchTruckLocation({ truckId }));
     },
     [dispatch],
   );
@@ -60,15 +64,16 @@ const AvailableTrucks: React.FC = () => {
         <Spinner isFullScreen />
       ) : (
         <div className={styles.cardsContainer}>
-          {trucks
-            .filter((truck) => truck.status === TruckStatus.AVAILABLE)
-            .map((truck) => (
-              <AvailableTruckCard
-                key={truck.id}
-                truck={truck}
-                onClick={handleClick}
-              />
-            ))}
+          {isAuthenticatedDriver &&
+            trucks
+              .filter((truck) => truck.status === TruckStatus.AVAILABLE)
+              .map((truck) => (
+                <AvailableTruckCard
+                  key={truck.id}
+                  truck={truck}
+                  onClick={handleClick}
+                />
+              ))}
         </div>
       )}
     </div>

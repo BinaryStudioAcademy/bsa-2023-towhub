@@ -5,6 +5,7 @@ import {
   type IJwtService,
 } from '~/libs/interfaces/interfaces.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
+import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type AuthUser } from '~/libs/types/types.js';
 import { type GroupService } from '~/packages/groups/group.service.js';
 import { GroupEntity } from '~/packages/groups/groups.js';
@@ -21,8 +22,12 @@ import { type UserService } from '~/packages/users/user.service.js';
 
 import { type BusinessService } from '../business/business.service.js';
 import { type DriverService } from '../drivers/driver.service.js';
-import { UserGroupKey } from './libs/enums/enums.js';
-import { createUnauthorizedError } from './libs/helpers/helpers.js';
+import { TimeConstants, UserGroupKey } from './libs/enums/enums.js';
+import {
+  createUnauthorizedError,
+  getLifetimeInMilliseconds,
+  getTimeDifferenceInMilliseconds,
+} from './libs/helpers/helpers.js';
 import {
   type UserSignInRequestDto,
   type UserSignInResponseDto,
@@ -36,6 +41,7 @@ type AuthServiceConstructorProperties = {
   businessService: BusinessService;
   driverService: DriverService;
   config: IConfig['ENV']['JWT'];
+  logger: ILogger;
 };
 
 class AuthService {
@@ -53,6 +59,8 @@ class AuthService {
 
   private config: AuthServiceConstructorProperties['config'];
 
+  private logger: AuthServiceConstructorProperties['logger'];
+
   public constructor({
     userService,
     groupService,
@@ -61,6 +69,7 @@ class AuthService {
     businessService,
     driverService,
     config,
+    logger,
   }: AuthServiceConstructorProperties) {
     this.userService = userService;
     this.groupService = groupService;
@@ -69,6 +78,7 @@ class AuthService {
     this.businessService = businessService;
     this.driverService = driverService;
     this.config = config;
+    this.logger = logger;
   }
 
   private async checkIsExistingUser({
@@ -202,7 +212,11 @@ class AuthService {
       throw createUnauthorizedError(HttpMessage.WRONG_PASSWORD);
     }
 
-    const updatedUser = await this.generateAccessTokenAndUpdateUser(user.id);
+    const updatedUser =
+      user.accessToken &&
+      (await this.isValidToken(user.accessToken, this.config.ACCESS_LIFETIME))
+        ? user
+        : await this.generateAccessTokenAndUpdateUser(user.id);
     const group = GroupEntity.initialize(user.group).toObject();
 
     return await this.getCurrent({ ...updatedUser, group });
@@ -234,13 +248,41 @@ class AuthService {
     userId: UserEntityT['id'],
   ): Promise<UserEntityObjectT> {
     const jwtPayload = { id: userId };
-
     const accessToken = await this.jwtService.createToken(
       jwtPayload,
       this.config.ACCESS_LIFETIME,
     );
 
     return await this.userService.setAccessToken(userId, accessToken);
+  }
+
+  private async isValidToken(
+    accessToken: string,
+    accessLifetime: string,
+  ): Promise<boolean> {
+    try {
+      const payload = await this.jwtService.verifyToken(accessToken);
+
+      if (!payload.iat) {
+        return false;
+      }
+
+      const currentTimestamp = Date.now();
+      const tokenIssuedAtTimestamp =
+        payload.iat * TimeConstants.MILLISECONDS_IN_SECOND;
+
+      return (
+        getLifetimeInMilliseconds(accessLifetime) >=
+        getTimeDifferenceInMilliseconds(
+          currentTimestamp,
+          tokenIssuedAtTimestamp,
+        )
+      );
+    } catch (error) {
+      this.logger.info((error as Error).message);
+
+      return false;
+    }
   }
 }
 

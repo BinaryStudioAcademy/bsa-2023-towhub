@@ -12,6 +12,7 @@ import { type ServerToClientEvent } from '~/libs/packages/socket/socket.js';
 import { type FirstParameter, type ValueOf } from '~/libs/types/types.js';
 import { TruckStatus } from '~/packages/trucks/libs/enums/enums.js';
 import { type TruckGetItemResponseDto } from '~/packages/trucks/libs/types/types.js';
+import { type TruckWithDistance } from '~/pages/homepage/libs/types/truck-with-distance.js';
 
 import {
   addTruck,
@@ -25,7 +26,7 @@ import { type TruckArrivalTime, type TruckLocation } from './types/types.js';
 
 type State = {
   trucks: TruckGetItemResponseDto[];
-  chosenTruck: TruckGetItemResponseDto | null;
+  chosenTruck: TruckWithDistance | null;
   dataStatus: ValueOf<typeof DataStatus>;
   total: number;
   error: HttpError | null;
@@ -83,14 +84,26 @@ const { reducer, actions, name } = createSlice({
   reducers: {
     truckChosen,
     truckAvailable,
-    setChosenTruck: (state, action: PayloadAction<TruckGetItemResponseDto>) => {
+    setChosenTruck: (state, action: PayloadAction<TruckWithDistance>) => {
       state.chosenTruck = action.payload;
+    },
+    clearTruckServerError: (state: State): void => {
+      state.error = null;
     },
   },
   extraReducers(builder) {
     builder
       .addCase(addTruck.fulfilled, (state, action) => {
-        state.trucks.unshift(action.payload);
+        const newTruck = action.payload;
+
+        const isTruckUnique = !state.trucks.some(
+          (truck) => truck.id === newTruck.id,
+        );
+
+        if (isTruckUnique) {
+          state.trucks.unshift(newTruck);
+        }
+
         state.dataStatus = DataStatus.FULFILLED;
       })
       .addCase(setTrucks.fulfilled, (state, action) => {
@@ -120,12 +133,9 @@ const { reducer, actions, name } = createSlice({
       .addCase(calculateArrivalTime.fulfilled, (state, action) => {
         state.truckArrivalTime = action.payload;
       })
-      .addMatcher(
-        isAnyOf(findAllTrucksForBusiness.pending, addTruck.pending),
-        (state) => {
-          state.dataStatus = DataStatus.PENDING;
-        },
-      )
+      .addCase(findAllTrucksForBusiness.pending, (state) => {
+        state.dataStatus = DataStatus.PENDING;
+      })
       .addMatcher(
         isAnyOf(addTruck.rejected, findAllTrucksForBusiness.rejected),
         (state, action) => {

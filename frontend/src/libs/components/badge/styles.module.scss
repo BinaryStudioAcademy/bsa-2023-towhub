@@ -15,25 +15,40 @@
 }
 
 $colors: (
-  black: $black,
+  green-extra-light: $green-extra-light,
+  black-normal: $black,
   grey-dark: $grey-dark,
   red-dark: $red-dark,
   blue-dark: $blue-dark,
-  grey: $grey,
-  red: $red,
-  blue: $blue,
-  white: $white,
+  grey-normal: $grey,
+  red-normal: $red,
+  red-extra-light: $red-extra-light,
+  blue-normal: $blue,
+  white-normal: $white,
   red-light: $red-light,
   blue-light: $blue-light,
+  blue-extra-light: $blue-extra-light,
   grey-light: $grey-light,
   grey-extra-light: $grey-extra-light,
-  green: $green,
+  green-normal: $green,
 );
 
 @each $color, $value in $colors {
   .badge[class*="background-#{'' + $color}"] {
     background-color: $value;
   }
+}
+
+.color-red-extra-light {
+  color: $red-dark;
+}
+
+.color-blue-extra-light {
+  color: $blue;
+}
+
+.color-green-extra-light {
+  color: $green;
 }
 
 .textColorLight {

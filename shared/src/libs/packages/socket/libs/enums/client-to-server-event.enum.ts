@@ -9,6 +9,7 @@ const ClientToServerEvent = {
   START_SHIFT: 'start_shift',
   AUTHORIZE_DRIVER: 'authorize_driver',
   BASE_EVENT: 'base_event',
+  SUBSCRIBE_DRIVER_ORDER_CREATED: 'subscribe_driver_order_created',
   SUBSCRIBE_ORDER_UPDATES: 'subscribe_order_updates',
   SUBSCRIBE_TRUCK_UPDATES: 'subscribe_truck_updates',
   UNSUBSCRIBE_ORDER_UPDATES: 'unsubscribe_order_updates',

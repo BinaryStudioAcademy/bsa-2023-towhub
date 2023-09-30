@@ -1,7 +1,7 @@
 import { type ColumnSort } from '@tanstack/react-table';
 
 import { Button, Modal, Table } from '~/libs/components/components.js';
-import { DataStatus } from '~/libs/enums/enums.js';
+import { DataStatus, HttpCode } from '~/libs/enums/enums.js';
 import {
   getSortingMethodValue,
   getValidClassNames,
@@ -16,12 +16,14 @@ import {
   useToggle,
 } from '~/libs/hooks/hooks.js';
 import { type Queries } from '~/libs/hooks/use-query-parameters/use-query-parameters.hook.js';
+import { type HttpError } from '~/libs/packages/http/libs/exceptions/http-error.exception';
 import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
 import {
   type TruckAddRequestDto,
   type TruckGetAllResponseDto,
 } from '~/packages/trucks/libs/types/types.js';
 import { findAllTrucksForBusiness } from '~/slices/trucks/actions.js';
+import { useTruckServerError } from '~/slices/trucks/libs/hooks/use-truck-server-error.hook.js';
 import { actions as truckActions } from '~/slices/trucks/trucks.js';
 
 import { AddTruckForm } from '../../form/form.js';
@@ -49,13 +51,16 @@ const TruckTable: React.FC = () => {
 
   const { pageSize, pageIndex, changePageSize, changePageIndex } = useAppTable<
     TruckGetAllResponseDto,
-    PaginationWithSortingParameters
+    PaginationWithSortingParameters,
+    HttpError
   >({
     tableFetchCall: findAllTrucksForBusiness,
     initialPageIndex: initialPage ? Number(initialPage) : null,
     initialPageSize: initialSize ? Number(initialSize) : null,
     sort: sortMethod,
   });
+
+  const serverError = useTruckServerError();
 
   const handleSubmit = useCallback(
     (payload: TruckAddRequestDto) => {
@@ -64,9 +69,9 @@ const TruckTable: React.FC = () => {
           ...payload,
           queryString: searchParameters.toString(),
         }),
-      );
-
-      handleToggle();
+      ).then((response) => {
+        response.payload?.status !== HttpCode.BAD_REQUEST && handleToggle();
+      });
     },
     [dispatch, searchParameters, handleToggle],
   );
@@ -102,7 +107,11 @@ const TruckTable: React.FC = () => {
       </div>
       <Modal isOpen={isToggled} isCentered onClose={handleToggle}>
         <div className={styles.formWrapper}>
-          <AddTruckForm onSubmit={handleSubmit} onClose={handleToggle} />
+          <AddTruckForm
+            onSubmit={handleSubmit}
+            onClose={handleToggle}
+            serverError={serverError}
+          />
         </div>
       </Modal>
     </>

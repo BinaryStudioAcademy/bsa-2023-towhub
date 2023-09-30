@@ -1,5 +1,7 @@
+import { type DriverCreateUpdateResponseDto } from 'shared/build/index.js';
+
 import { ApiPath, ContentType } from '~/libs/enums/enums.js';
-import { HttpApi } from '~/libs/packages/api/http-api.js';
+import { HttpApi } from '~/libs/packages/api/api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
 import { type IStorage } from '~/libs/packages/storage/storage.js';
 import { type TruckEntityT } from '~/libs/types/types.js';
@@ -8,6 +10,10 @@ import {
   type TruckAddRequestDto,
   type TruckGetAllResponseDto,
 } from '../trucks/libs/types/types.js';
+import {
+  type BusinessEditDto,
+  type BusinessEditResponseDto,
+} from '../users/users.js';
 import { BusinessApiPath } from './libs/enums/enums.js';
 
 type Constructor = {
@@ -19,6 +25,28 @@ type Constructor = {
 class BusinessApi extends HttpApi {
   public constructor({ baseUrl, http, storage }: Constructor) {
     super({ path: ApiPath.BUSINESS, baseUrl, http, storage });
+  }
+
+  public async createDriver({
+    formData,
+    businessId,
+  }: {
+    businessId: number;
+    formData: FormData;
+  }): Promise<DriverCreateUpdateResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(BusinessApiPath.DRIVERS, {
+        businessId: businessId,
+      }),
+      {
+        method: 'POST',
+        contentType: ContentType.FORM_DATA,
+        payload: formData,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<DriverCreateUpdateResponseDto>();
   }
 
   public async findAllTrucksByBusinessId(
@@ -48,6 +76,22 @@ class BusinessApi extends HttpApi {
     );
 
     return await response.json<TruckEntityT>();
+  }
+
+  public async editBusiness(
+    payload: BusinessEditDto,
+  ): Promise<BusinessEditResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(BusinessApiPath.ROOT, {}),
+      {
+        method: 'PUT',
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload),
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<BusinessEditResponseDto>();
   }
 }
 

@@ -1,4 +1,4 @@
-import { type FileObject } from './file-object.type.js';
+import { type FileObject } from 'shared/build/index.js';
 
 type FileFormType = { files: FileObject[] };
 

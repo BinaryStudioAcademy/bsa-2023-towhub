@@ -10,7 +10,7 @@ import {
 import { type Icon } from '../types/types.js';
 import { rotateImg } from './helpers.js';
 
-const createIcon = (isOrigin: boolean, angle: number): string | Icon => {
+const createIcon = (isOrigin: boolean, angle: number): Icon | undefined => {
   const rotatedIconUrl = rotateImg(ImgPath.TRUCK_SM, angle);
 
   return isOrigin
@@ -20,7 +20,7 @@ const createIcon = (isOrigin: boolean, angle: number): string | Icon => {
         size: new google.maps.Size(TRUCK_IMG_WIDTH, TRUCK_IMG_HEIGHT),
         scale: TRUCK_IMG_SCALE,
       }
-    : ImgPath.TRUCK_SM;
+    : undefined;
 };
 
 export { createIcon };

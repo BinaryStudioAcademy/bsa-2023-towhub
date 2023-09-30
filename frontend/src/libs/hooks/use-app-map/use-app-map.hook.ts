@@ -1,20 +1,29 @@
-import { useAppDispatch, useEffect, useRef } from '~/libs/hooks/hooks.js';
+import {
+  useAppDispatch,
+  useEffect,
+  useRef,
+  useToggle,
+} from '~/libs/hooks/hooks.js';
 import {
   DEFAULT_CENTER,
   DEFAULT_ZOOM,
+  ZOOM_WITHOUT_USER_LOCATION,
 } from '~/libs/packages/map/libs/constants/constants.js';
 import { type PlaceLatLng } from '~/libs/packages/map/libs/types/types.js';
 import { type MapService } from '~/libs/packages/map/map.js';
 import { MapConnector } from '~/libs/packages/map/map-connector.package.js';
+import { type Coordinates } from '~/libs/types/types.js';
 import { actions as orderActions } from '~/slices/orders/order.js';
 
 import { getBounds, setMapService } from './libs/helpers/helpers.js';
 
 type Properties = {
-  center: google.maps.LatLngLiteral | null;
-  points?: google.maps.LatLngLiteral[];
+  center: Coordinates | null;
+  points?: Coordinates[];
   zoom?: number;
-  destination: google.maps.LatLngLiteral | null;
+  userLocation?: Coordinates;
+  destination: Coordinates | null;
+  markers?: Coordinates[];
   className?: string;
   pricePerKm?: number;
   startAddress?: string;
@@ -22,23 +31,23 @@ type Properties = {
   onPriceChange?: (price: number) => void;
   mapReference: React.RefObject<HTMLDivElement>;
   shownRoute?: PlaceLatLng;
-  onMapLoad?: () => void;
 };
 
 const useAppMap = ({
   points,
   center = DEFAULT_CENTER,
-  zoom = DEFAULT_ZOOM,
+  zoom = ZOOM_WITHOUT_USER_LOCATION,
+  userLocation,
   destination,
+  markers = [],
   pricePerKm,
   startAddress,
   endAddress,
   mapReference,
   shownRoute,
-  onMapLoad,
 }: Properties): void => {
+  const [isZoomChanged, toggleIsZoomChanged] = useToggle(false);
   const mapService = useRef<MapService | null>(null);
-
   const dispatch = useAppDispatch();
   useEffect(() => {
     MapConnector.dropMap();
@@ -50,15 +59,45 @@ const useAppMap = ({
 
       setMapService({ points, center, mapReference, mapService, zoom });
 
-      if (mapService.current && center && destination) {
+      if (!mapService.current) {
+        return;
+      }
+
+      if (destination || markers.length > 0 || userLocation) {
         mapService.current.removeMarkers();
+      }
+
+      if (center && destination) {
         mapService.current.addMarker(destination);
 
         void mapService.current.calculateRouteAndTime(center, destination);
       }
+
+      for (const marker of markers) {
+        mapService.current.addMarker(marker, true);
+      }
+
+      if (userLocation) {
+        mapService.current.addMarker(userLocation);
+
+        if (!isZoomChanged) {
+          mapService.current.setZoom(DEFAULT_ZOOM);
+          toggleIsZoomChanged();
+        }
+      }
     };
     void configMap();
-  }, [center, destination, mapReference, onMapLoad, points, zoom]);
+  }, [
+    center,
+    destination,
+    mapReference,
+    markers,
+    points,
+    userLocation,
+    zoom,
+    isZoomChanged,
+    toggleIsZoomChanged,
+  ]);
 
   useEffect(() => {
     if (mapService.current && points && points.length > 0) {
@@ -66,14 +105,17 @@ const useAppMap = ({
       mapService.current.fitMap(bounds);
 
       for (const point of points) {
-        mapService.current.addMarker(point, false);
-      }
-
-      if (shownRoute) {
-        void mapService.current.addRoute(shownRoute);
+        mapService.current.removeMarkers();
+        mapService.current.addMarkerStatic(point);
       }
     }
-  }, [points, shownRoute]);
+  }, [points]);
+
+  useEffect(() => {
+    if (mapService.current && shownRoute) {
+      void mapService.current.addRoute(shownRoute);
+    }
+  }, [shownRoute]);
 
   useEffect(() => {
     if (pricePerKm && startAddress && endAddress) {

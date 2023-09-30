@@ -17,7 +17,7 @@ type OrderEntity = {
   endPoint: Coordinates;
   status: OrderStatusValues;
   userId: number | null;
-  businessId: number | null;
+  businessId: number;
   customerName: string | null;
   customerPhone: string | null;
   shiftId: number;
@@ -27,6 +27,6 @@ type OrderEntity = {
 
 type DriverInfo = DriverCommonDetails &
   UserCommonDetails &
-  Pick<UserEntityT, 'id'>;
+  Pick<UserEntityT, 'id'> & { avatarUrl: string | null };
 
 export { type DriverInfo, type OrderEntity };

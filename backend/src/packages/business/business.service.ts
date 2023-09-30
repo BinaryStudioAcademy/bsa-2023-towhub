@@ -1,7 +1,4 @@
-import {
-  EntityAccessDeniedError,
-  NotFoundError,
-} from '~/libs/exceptions/exceptions.js';
+import { NotFoundError } from '~/libs/exceptions/exceptions.js';
 import { type IService } from '~/libs/interfaces/interfaces.js';
 import { HttpCode, HttpError, HttpMessage } from '~/libs/packages/http/http.js';
 import { type PaginationWithSortingParameters } from '~/libs/types/types.js';
@@ -15,6 +12,10 @@ import {
   type DriverGetAllResponseDto,
   type DriverUpdateRequestDto,
 } from '../drivers/drivers.js';
+import { type FileVerificationStatusService } from '../file-verification-status/file-verification-status.js';
+import { FileVerificationName } from '../file-verification-status/libs/enums/enums.js';
+import { type FilesService } from '../files/files.js';
+import { type MultipartParsedFile } from '../files/libs/types/types.js';
 import { type ShiftEntityT } from '../shifts/shift.js';
 import {
   type TruckAddRequestDto,
@@ -22,6 +23,7 @@ import {
   type TruckGetAllResponseDto,
 } from '../trucks/libs/types/types.js';
 import { type TruckService } from '../trucks/truck.service.js';
+import { type UserService } from '../users/user.service.js';
 import {
   type UserEntityObjectWithGroupT,
   type UserEntityT,
@@ -31,11 +33,25 @@ import { type BusinessRepository } from './business.repository.js';
 import {
   type BusinessAddResponseDto,
   type BusinessCreatePayload,
+  type BusinessEditDto,
+  type BusinessEditResponseDto,
   type BusinessEntityT,
-  type BusinessUpdateRequestDto,
-  type BusinessUpdateResponseDto,
   type GetPaginatedPageQuery,
 } from './libs/types/types.js';
+
+type Constructor = {
+  businessRepository: BusinessRepository;
+
+  driverService: DriverService;
+
+  truckService: TruckService;
+
+  userService: UserService;
+
+  filesService: FilesService;
+
+  fileVerificationStatusService: FileVerificationStatusService;
+};
 
 class BusinessService implements IService {
   private businessRepository: BusinessRepository;
@@ -44,33 +60,33 @@ class BusinessService implements IService {
 
   private truckService: TruckService;
 
-  public constructor(
-    businessRepository: BusinessRepository,
-    driverService: DriverService,
-    truckService: TruckService,
-  ) {
+  private userService: UserService;
+
+  private fileService: FilesService;
+
+  private fileVerificationStatusService: FileVerificationStatusService;
+
+  public constructor({
+    businessRepository,
+    driverService,
+    truckService,
+    userService,
+    filesService,
+    fileVerificationStatusService,
+  }: Constructor) {
     this.businessRepository = businessRepository;
     this.driverService = driverService;
     this.truckService = truckService;
+    this.userService = userService;
+    this.fileService = filesService;
+    this.fileVerificationStatusService = fileVerificationStatusService;
   }
 
-  public async findById(
-    id: number,
-    { owner }: { owner: UserEntityObjectWithGroupT },
-  ): Promise<BusinessEntityT | null> {
+  public async findById(id: number): Promise<BusinessEntityT | null> {
     const [foundBusiness = null] = await this.businessRepository.find({ id });
 
     if (!foundBusiness) {
       return null;
-    }
-
-    const isOwner = this.checkIsOwner({
-      userId: owner.id,
-      business: foundBusiness,
-    });
-
-    if (!isOwner) {
-      throw new EntityAccessDeniedError({});
     }
 
     return BusinessEntity.initialize(foundBusiness).toObject();
@@ -78,6 +94,14 @@ class BusinessService implements IService {
 
   public async findByOwnerId(ownerId: number): Promise<BusinessEntityT | null> {
     const [business = null] = await this.businessRepository.find({ ownerId });
+
+    return business ? BusinessEntity.initialize(business).toObject() : null;
+  }
+
+  public async findByStripeId(
+    stripeId: string,
+  ): Promise<BusinessEntityT | null> {
+    const [business = null] = await this.businessRepository.find({ stripeId });
 
     return business ? BusinessEntity.initialize(business).toObject() : null;
   }
@@ -122,47 +146,83 @@ class BusinessService implements IService {
     return business.toObject();
   }
 
-  public checkIsOwner({
-    userId,
-    business,
-  }: {
-    userId: UserEntityObjectWithGroupT['id'];
-    business: BusinessEntityT;
-  }): boolean {
-    return userId === business.ownerId;
+  public async updateByOwnerId(
+    ownerId: UserEntityT['id'],
+    payload: BusinessEditDto,
+  ): Promise<BusinessEditResponseDto> {
+    const foundBusiness = await this.findByOwnerId(ownerId);
+
+    return await this.update(foundBusiness, payload);
   }
 
-  public async update({
-    payload,
-    owner,
-  }: {
-    payload: BusinessUpdateRequestDto;
-    owner: UserEntityObjectWithGroupT;
-  }): Promise<BusinessUpdateResponseDto> {
-    const foundBusiness = await this.findByOwnerId(owner.id);
+  public async updateById(
+    businessId: BusinessEntityT['id'],
+    payload: BusinessEditDto,
+  ): Promise<BusinessEditResponseDto> {
+    const foundBusiness = await this.findById(businessId);
 
-    if (!foundBusiness) {
+    return await this.update(foundBusiness, payload);
+  }
+
+  public async update(
+    business: BusinessEntityT | null,
+    payload: BusinessEditDto,
+  ): Promise<BusinessEditResponseDto> {
+    if (!business) {
       throw new NotFoundError({});
     }
 
-    const { result: doesBusinessExist } =
-      await this.businessRepository.checkExists({
-        companyName: payload.companyName,
-      });
+    const { ownerId, id } = business;
 
-    if (doesBusinessExist) {
+    const { taxNumber, companyName, firstName, lastName, phone, email } =
+      payload;
+
+    const [existingBusiness = null] = await this.businessRepository.find({
+      taxNumber,
+    });
+
+    if (existingBusiness && existingBusiness.ownerId !== ownerId) {
       throw new HttpError({
-        status: HttpCode.BAD_REQUEST,
-        message: HttpMessage.NAME_ALREADY_REGISTERED,
+        message: HttpMessage.BUSINESS_EXISTS,
+        status: HttpCode.CONFLICT,
       });
     }
 
-    const business = await this.businessRepository.update({
-      id: foundBusiness.id,
-      payload,
+    const updatedBusiness = await this.businessRepository.update({
+      id,
+      payload: { taxNumber, companyName },
     });
 
-    return business.toObject();
+    const updatedBusinessEntity = updatedBusiness.toObject();
+
+    const updatedUser = await this.userService.update(ownerId, {
+      firstName,
+      lastName,
+      phone,
+      email,
+    });
+
+    return { ...updatedUser, business: updatedBusinessEntity };
+  }
+
+  public async updateStripeData(
+    businessId: BusinessEntityT['id'],
+    stripeFields: Partial<
+      Pick<BusinessEntityT, 'isStripeActivated' | 'stripeId'>
+    >,
+  ): Promise<BusinessEntityT> {
+    const business = await this.findById(businessId);
+
+    if (!business) {
+      throw new NotFoundError({});
+    }
+
+    const updatedBusiness = await this.businessRepository.update({
+      id: business.id,
+      payload: stripeFields,
+    });
+
+    return updatedBusiness.toObject();
   }
 
   public async delete(owner: UserEntityObjectWithGroupT): Promise<boolean> {
@@ -175,11 +235,15 @@ class BusinessService implements IService {
     return await this.businessRepository.delete(foundBusiness.id);
   }
 
-  public async createDriver(
-    payload: DriverCreateRequestDto,
-    ownerId: number,
-    reference: string,
-  ): Promise<DriverAddResponseWithGroup> {
+  public async createDriver({
+    payload,
+    ownerId,
+    hostname,
+  }: {
+    payload: DriverCreateRequestDto<MultipartParsedFile>;
+    ownerId: number;
+    hostname: string;
+  }): Promise<DriverAddResponseWithGroup> {
     const business = await this.findByOwnerId(ownerId);
 
     if (!business) {
@@ -189,18 +253,41 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.create({
+    const createdFile = await this.fileService.create(payload.files[0]);
+
+    const result = await this.driverService.create({
       payload,
       businessId: business.id,
-      reference,
+      driverLicenseFileId: createdFile.id,
+      hostname,
     });
+
+    const { id, status, name, message } =
+      await this.fileVerificationStatusService.create({
+        fileId: createdFile.id,
+        name: FileVerificationName.DRIVER_LICENSE_SCAN,
+      });
+
+    return {
+      ...result,
+      verificationStatus: {
+        id,
+        status,
+        name,
+        message,
+      },
+    };
   }
 
-  public async updateDriver(
-    payload: DriverUpdateRequestDto,
-    driverId: number,
-    ownerId: number,
-  ): Promise<DriverCreateUpdateResponseDto> {
+  public async updateDriver({
+    payload,
+    driverId,
+    ownerId,
+  }: {
+    payload: DriverUpdateRequestDto<MultipartParsedFile>;
+    driverId: number;
+    ownerId: number;
+  }): Promise<DriverCreateUpdateResponseDto> {
     const business = await this.findByOwnerId(ownerId);
 
     if (!business) {
@@ -210,16 +297,54 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.update({
+    const driverToUpdate = await this.driverService.findById(driverId);
+
+    if (!driverToUpdate) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
+
+    if (driverToUpdate.driverLicenseFileId) {
+      await this.fileVerificationStatusService.deleteByFileId(
+        driverToUpdate.driverLicenseFileId,
+      );
+    }
+
+    const newLicenseFile = await this.fileService.create(payload.files[0]);
+
+    const updatedDriver = await this.driverService.update({
       driverId,
-      payload,
+      payload: {
+        ...payload,
+        driverLicenseFileId: newLicenseFile.id,
+      },
     });
+
+    const { id, status, name, message } =
+      await this.fileVerificationStatusService.create({
+        fileId: newLicenseFile.id,
+        name: FileVerificationName.DRIVER_LICENSE_SCAN,
+      });
+
+    if (driverToUpdate.driverLicenseFileId) {
+      await this.fileService.delete(driverToUpdate.driverLicenseFileId);
+    }
+
+    return {
+      ...updatedDriver,
+      verificationStatus: { id, status, name, message },
+    };
   }
 
-  public async findAllDriversByBusinessId(
-    ownerId: number,
-    query: GetPaginatedPageQuery,
-  ): Promise<DriverGetAllResponseDto> {
+  public async findAllDriversByBusinessId({
+    ownerId,
+    query,
+  }: {
+    ownerId: number;
+    query: GetPaginatedPageQuery;
+  }): Promise<DriverGetAllResponseDto> {
     const business = await this.findByOwnerId(ownerId);
 
     if (!business) {
@@ -235,10 +360,13 @@ class BusinessService implements IService {
     });
   }
 
-  public async deleteDriver(
-    driverId: number,
-    ownerId: number,
-  ): Promise<boolean> {
+  public async deleteDriver({
+    driverId,
+    ownerId,
+  }: {
+    driverId: number;
+    ownerId: number;
+  }): Promise<boolean> {
     const business = await this.findByOwnerId(ownerId);
 
     if (!business) {
@@ -248,7 +376,25 @@ class BusinessService implements IService {
       });
     }
 
-    return await this.driverService.delete(driverId);
+    const driverToDelete = await this.driverService.findById(driverId);
+
+    if (!driverToDelete) {
+      throw new HttpError({
+        status: HttpCode.BAD_REQUEST,
+        message: HttpMessage.DRIVER_DOES_NOT_EXIST,
+      });
+    }
+
+    const result = await this.driverService.delete(driverId);
+
+    if (driverToDelete.driverLicenseFileId) {
+      await this.fileVerificationStatusService.deleteByFileId(
+        driverToDelete.driverLicenseFileId,
+      );
+      await this.fileService.delete(driverToDelete.driverLicenseFileId);
+    }
+
+    return result;
   }
 
   public async findAllTrucksByBusinessId(

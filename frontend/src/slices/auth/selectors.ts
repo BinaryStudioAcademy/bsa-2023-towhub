@@ -8,6 +8,12 @@ const selectIsLoading = (state: RootState): ValueOf<typeof DataStatus> => {
   return state.auth.dataStatus;
 };
 
+const selectGetCurrentRequestStatus = (
+  state: RootState,
+): ValueOf<typeof DataStatus> => {
+  return state.auth.getCurrentRequestStatus;
+};
+
 const selectUser = (
   store: RootState,
 ): RootState[typeof AuthSliceName]['user'] => store[AuthSliceName].user;
@@ -21,9 +27,16 @@ const selectAuthServerError = (
   store: RootState,
 ): RootState[typeof AuthSliceName]['error'] => store[AuthSliceName].error;
 
+const selectSocketDriverAuthErrorMessage = (
+  store: RootState,
+): RootState[typeof AuthSliceName]['socketDriverAuthErrorMessage'] =>
+  store[AuthSliceName].socketDriverAuthErrorMessage;
+
 export {
   selectAuthServerError,
+  selectGetCurrentRequestStatus,
   selectIsLoading,
+  selectSocketDriverAuthErrorMessage,
   selectSocketDriverAuthStatus,
   selectUser,
 };

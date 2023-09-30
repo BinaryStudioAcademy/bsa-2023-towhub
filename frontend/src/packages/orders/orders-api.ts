@@ -1,3 +1,5 @@
+import { type OrdersListResponseDto } from 'shared/build/index.js';
+
 import { ApiPath, ContentType } from '~/libs/enums/enums.js';
 import { HttpApi } from '~/libs/packages/api/http-api.js';
 import { type IHttp } from '~/libs/packages/http/http.js';
@@ -7,11 +9,13 @@ import { OrdersApiPath } from './libs/enums/enums.js';
 import {
   type OrderCalculatePriceRequestDto,
   type OrderCalculatePriceResponseDto,
+  type OrderCreateRequestDto,
+  type OrderFindAllDriverOrdersResponseDto,
+  type OrderFindAllUserOrdersResponseDto,
   type OrderResponseDto,
   type OrderUpdateAcceptStatusRequestDto,
   type OrderUpdateAcceptStatusResponseDto,
 } from './libs/types/types.js';
-import { type OrderCreateRequestDto } from './orders.js';
 
 type Constructor = {
   baseUrl: string;
@@ -24,9 +28,11 @@ class OrdersApi extends HttpApi {
     super({ path: ApiPath.ORDERS, baseUrl, http, storage });
   }
 
-  public async getBusinessOrders(): Promise<OrderResponseDto[]> {
+  public async getBusinessOrders(
+    queryString: string,
+  ): Promise<OrdersListResponseDto> {
     const response = await this.load(
-      this.getFullEndpoint(OrdersApiPath.ROOT, {}),
+      this.getFullEndpoint(OrdersApiPath.BUSINESS, '?', queryString, {}),
       {
         method: 'GET',
         contentType: ContentType.JSON,
@@ -34,7 +40,7 @@ class OrdersApi extends HttpApi {
       },
     );
 
-    return await response.json<OrderResponseDto[]>();
+    return await response.json<OrdersListResponseDto>();
   }
 
   public async createOrder(
@@ -46,11 +52,26 @@ class OrdersApi extends HttpApi {
         method: 'POST',
         contentType: ContentType.JSON,
         payload: JSON.stringify(payload),
-        hasAuth: false,
+        hasAuth: true,
       },
     );
 
     return await response.json<OrderResponseDto>();
+  }
+
+  public async getAllUserOrders(
+    queryString = '',
+  ): Promise<OrderFindAllUserOrdersResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(`${OrdersApiPath.USER}?${queryString}`, {}),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<OrderFindAllUserOrdersResponseDto>();
   }
 
   public async calculatePrice(
@@ -114,6 +135,21 @@ class OrdersApi extends HttpApi {
     );
 
     return await response.json<OrderUpdateAcceptStatusResponseDto>();
+  }
+
+  public async getAllDriverOrders(
+    queryString = '',
+  ): Promise<OrderFindAllDriverOrdersResponseDto> {
+    const response = await this.load(
+      this.getFullEndpoint(`${OrdersApiPath.DRIVER_ORDERS}?${queryString}`, {}),
+      {
+        method: 'GET',
+        contentType: ContentType.JSON,
+        hasAuth: true,
+      },
+    );
+
+    return await response.json<OrderFindAllDriverOrdersResponseDto>();
   }
 }
 

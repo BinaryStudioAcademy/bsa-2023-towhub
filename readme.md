@@ -67,7 +67,8 @@ erDiagram
     }
     driver_details {
         id serial PK "not null"
-        driverLicenseNumber varchar "not null, unique"
+        driver_license_number varchar "not null, unique"
+        driver_license_file_id integer FK "not null"
         user_id integer FK "not null"
         business_id integer FK "not null"
         created_at timestamp "not null"
@@ -123,6 +124,13 @@ erDiagram
       created_at timestamp "not null"
       updated_at timestamp "not null"
     }
+    file_verification_status {
+        id serial PK "not null"
+        file_id integer FK "not null"
+        name enum "not null"
+        status enum "not null"
+        message varchar
+    }
     shifts {
         id serial PK "not null"
         start_date timestamp "not null"
@@ -137,6 +145,8 @@ erDiagram
     users_trucks one or many -- one users: "users_trucks(user_id) belongs to users(id)"
     users one or many -- one groups: "users(group_id) belongs to groups(id)"
     business_details zero or one -- one users: "business_details(owner_id) belongs to users(id)"
+    driver_details one -- one files: "driver_details(driver_license_file_id) has files(id)"
+    file_verification_status one -- one files: "file_verification_status(file_id) has files(id)"
     driver_details zero or one -- one users: "driver_details(user_id) belongs to users(id)"
     trucks one or many -- one business_details: "trucks(business_id) belongs to business_details(id)"
     driver_details one or many -- one business_details: "driver_details(business_id) belongs to business_details(id)"

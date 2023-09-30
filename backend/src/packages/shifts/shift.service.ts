@@ -79,10 +79,13 @@ class ShiftService implements IService {
     return shift ? ShiftEntity.initialize(shift).toObject() : null;
   }
 
-  public async findOpenedByTruckWithBusiness(
-    truckId: number,
-  ): Promise<
-    (ShiftEntityT & { businessId: number; driverLicenseNumber: string }) | null
+  public async findOpenedByTruckWithBusiness(truckId: number): Promise<
+    | (ShiftEntityT & {
+        businessId: number;
+        driverLicenseNumber: string;
+        avatarId: number | null;
+      })
+    | null
   > {
     const shiftDatabase =
       await this.shiftRepository.getOpenedByTruckWithBusiness(truckId);
@@ -96,6 +99,7 @@ class ShiftService implements IService {
       ...shift,
       businessId: shiftDatabase.businessId,
       driverLicenseNumber: shiftDatabase.driverLicenseNumber,
+      avatarId: shiftDatabase.avatarId,
     };
   }
 
@@ -208,11 +212,9 @@ class ShiftService implements IService {
   }
 
   public async checkDriverStartShift(driverId: number): Promise<void> {
-    const [shift] = await this.shiftRepository.find({
-      driverId,
-    });
+    const shift = await this.shiftRepository.getOpenedByDriver(driverId);
 
-    if (shift.endDate) {
+    if (!shift) {
       throw new HttpError({
         status: HttpCode.BAD_REQUEST,
         message: HttpMessage.DRIVER_DOES_NOT_START_SHIFT,

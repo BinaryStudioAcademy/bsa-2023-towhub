@@ -3,7 +3,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  min-width: 400px;
+  min-width: 450px;
   background-color: $white;
   border: 1px solid $grey-border;
   border-radius: 10px;
@@ -34,29 +34,37 @@
   border-radius: 50%;
 }
 
+.badge {
+  width: 100px;
+}
+
 .driver {
-  align-self: center;
-  margin-left: 15px;
-}
-
-.driverPhone {
-  margin-top: 15px;
-  color: $grey-dark;
-}
-
-.truck {
   display: flex;
-  align-items: center;
+  margin-left: 25px;
+}
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  gap: 10px;
   margin-left: auto;
 }
 
-.icon {
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
-  color: $scroll-bar-thumb;
+.contactsItem {
+  display: flex;
+  align-items: center;
 }
 
+.driverPhone,
 .truckNumber {
-  align-self: center;
+  color: $grey-dark;
+}
+
+.icon {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+  color: $blue-dark;
 }

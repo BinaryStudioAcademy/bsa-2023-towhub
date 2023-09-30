@@ -14,7 +14,7 @@
 }
 
 .orderlistArea {
-  min-width: 400px;
+  min-width: 450px;
 }
 
 .mapArea {
@@ -30,8 +30,23 @@
 .mapWrapper {
   position: sticky;
   top: 0;
-  height: calc(100vh - 160px);
   overflow: hidden;
   border-radius: 20px;
+  box-shadow: $shadow-light;
+}
+
+.map {
+  height: calc(100vh - 160px);
+}
+
+.textSign {
+  width: 100%;
+  height: max-content;
+  padding: 2.25vmin;
+  color: $blue-extra-dark;
+  text-align: center;
+  background-color: $white;
+  border: 1px solid $grey-border;
+  border-radius: 10px;
   box-shadow: $shadow-light;
 }

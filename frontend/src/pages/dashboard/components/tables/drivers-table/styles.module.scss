@@ -1,5 +1,9 @@
 @import "src/assets/css/vars.scss";
 
+.verificationBadge {
+  padding: 1vmin;
+}
+
 .container {
   height: 100%;
   padding: 60px 100px 0;
@@ -25,5 +29,5 @@
 }
 
 .formWrapper {
-  width: 448px;
+  width: max-content;
 }

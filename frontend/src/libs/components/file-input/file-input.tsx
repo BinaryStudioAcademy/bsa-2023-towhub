@@ -1,5 +1,4 @@
 import {
-  type DropEvent,
   type DropzoneOptions,
   type ErrorCode,
   type FileRejection,
@@ -15,13 +14,7 @@ import {
 import { ChosenFilePreview } from '~/libs/components/chosen-file-preview/chosen-file-preview.js';
 import { IconName } from '~/libs/enums/enums.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
-import {
-  useBindEnterToClick,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from '~/libs/hooks/hooks.js';
+import { useCallback, useMemo, useState } from '~/libs/hooks/hooks.js';
 
 import { Icon } from '../icon/icon.jsx';
 import { fileInputDefaultsConfig } from './libs/config/config.js';
@@ -55,8 +48,6 @@ const FileInput = <T extends FieldValues & FileFormType>({
   errors,
   clearErrors,
 }: Properties<T>): JSX.Element => {
-  const uploadButtonReference = useRef<HTMLButtonElement>(null);
-  useBindEnterToClick(uploadButtonReference);
   const {
     fields: files,
     append,
@@ -96,6 +87,33 @@ const FileInput = <T extends FieldValues & FileFormType>({
       }
       clearErrors('files');
 
+      if (fileInputConfig.maxFiles) {
+        const currentFilesCount = acceptedFiles.length + files.length;
+        const isMaxFilesExceeded = currentFilesCount > fileInputConfig.maxFiles;
+
+        if (isMaxFilesExceeded) {
+          setError('files', {
+            type: 'max-files-exceeded',
+            message: `Trying to upload ${currentFilesCount}/${fileInputConfig.maxFiles}`,
+          });
+
+          return;
+        }
+      }
+
+      for (const file of acceptedFiles) {
+        const isValidFileName = checkValidFileName(file.name);
+
+        if (!isValidFileName) {
+          setError('files', {
+            type: 'invalid-file-name',
+            message: `File "${file.name}": Invalid name.`,
+          });
+
+          return;
+        }
+      }
+
       append(
         acceptedFiles.map(
           (file) =>
@@ -109,7 +127,7 @@ const FileInput = <T extends FieldValues & FileFormType>({
         ),
       );
     },
-    [append, clearErrors],
+    [append, clearErrors, files, fileInputConfig.maxFiles, setError],
   );
 
   const handleDropRejected = useCallback(
@@ -128,41 +146,9 @@ const FileInput = <T extends FieldValues & FileFormType>({
     [fileInputConfig, setError],
   );
 
-  const handleFilesFromEvent = useCallback(
-    async (event: DropEvent) => {
-      const { dataTransfer } = event as DragEvent;
-
-      let files: File[];
-
-      if (dataTransfer) {
-        files = [...dataTransfer.files];
-      } else {
-        const fileHandles = event as unknown as FileSystemFileHandle[];
-        files = await Promise.all(fileHandles.map((file) => file.getFile()));
-      }
-
-      for (const file of files) {
-        const isValidFileName = checkValidFileName(file.name);
-
-        if (!isValidFileName) {
-          setError('files', {
-            type: 'invalid-file-name',
-            message: `File "${file.name}": Invalid name.`,
-          });
-
-          return [];
-        }
-      }
-
-      return files;
-    },
-    [setError],
-  );
-
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
     onDropRejected: handleDropRejected,
-    getFilesFromEvent: handleFilesFromEvent,
     noDrag: isDisabled,
     noClick: isDisabled,
     noKeyboard: true,
@@ -225,7 +211,7 @@ const FileInput = <T extends FieldValues & FileFormType>({
             hasError && styles.visible,
           )}
         >
-          {String(validationError)}
+          {validationError && String(validationError)}
         </p>
       </div>
       <div className={styles.uploadedArea}>
