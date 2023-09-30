@@ -43,7 +43,7 @@ class StripeController extends Controller {
     this.addRoute({
       path: StripeApiPath.WEBHOOK,
       method: 'POST',
-      authStrategy: [AuthStrategy.VERIFY_STRIPE_WEBHOOK],
+      authStrategy: AuthStrategy.VERIFY_STRIPE_WEBHOOK,
       handler: (options) =>
         this.processWebhook(
           options as ApiHandlerOptions<{

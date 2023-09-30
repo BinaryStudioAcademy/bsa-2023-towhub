@@ -220,6 +220,15 @@ const subscribeOrderUpdates = createAction(
   },
 );
 
+const subscribeDriverOrderCreated = createAction(
+  ActionName.SOCKET.SUBSCRIBE_DRIVER_ORDER_CREATED,
+  (driverId: number) => {
+    return {
+      payload: `${driverId}`,
+    };
+  },
+);
+
 const unsubscribeOrderUpdates = createAction(
   ActionName.SOCKET.UNSUBSCRIBE_ORDER_UPDATES,
   (orderId: string) => {
@@ -267,6 +276,7 @@ export {
   getRouteData,
   getUserOrdersPage,
   removeOrder,
+  subscribeDriverOrderCreated,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,

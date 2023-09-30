@@ -37,7 +37,6 @@ const DriverOrder = (): JSX.Element => {
     center: order?.startPoint as Coordinates,
     destination: order?.endPoint as Coordinates,
     mapReference: mapReference,
-    onMapLoad: () => true,
   });
   useSubscribeUpdates(`${orderId as string}`);
 
@@ -188,12 +187,6 @@ const DriverOrder = (): JSX.Element => {
             <p className={styles.detail}>
               <Icon className={styles.phoneIcon} iconName="phone" /> Phone:{' '}
               <span className={styles.value}>{order.customerPhone}</span>
-            </p>
-            <p className={styles.detail}>
-              <Icon className={styles.timeIcon} iconName="clock" /> Time:{' '}
-              <span className={styles.value}>
-                {new Date(order.scheduledTime).toLocaleString()}
-              </span>
             </p>
             <p className={styles.detail}>
               <Icon className={styles.locationIcon} iconName="location dot" />{' '}
