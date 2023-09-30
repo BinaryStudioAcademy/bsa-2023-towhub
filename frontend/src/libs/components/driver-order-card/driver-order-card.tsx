@@ -13,8 +13,8 @@ import { type OrderResponseDto } from '~/packages/orders/orders.js';
 import { selectRouteAddresses } from '~/slices/orders/selectors.js';
 
 import { Badge } from '../badge/badge.js';
-import { PlainSvgIcon, Spinner } from '../components.js';
 import { Icon } from '../icon/icon.js';
+import { PlainSvgIcon } from '../plain-svg-icon/plain-svg-icon.js';
 import { OrderStatus } from './libs/enums/enums.js';
 import { convertDate } from './libs/helpers/helpers.js';
 import { statusToBadgeColorMap } from './libs/maps/maps.js';
@@ -32,10 +32,6 @@ const DriverOrderCard: React.FC<Properties> = ({ order }: Properties) => {
   const points = useAppSelector(selectRouteAddresses);
 
   const { origin, destination } = points[id] ?? {};
-
-  if (!points[id]) {
-    return <Spinner />;
-  }
 
   return (
     <div
