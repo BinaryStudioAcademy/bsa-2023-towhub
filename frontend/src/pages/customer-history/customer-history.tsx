@@ -31,7 +31,9 @@ const CustomerHistory: React.FC = () => {
   const { setQueryParameters, getQueryParameters, removeQueryParameters } =
     useQueryParameters();
 
-  const { orders, total, dataStatus } = useAppSelector((state) => state.orders);
+  const { orders, total, dataStatus, routeAddresses } = useAppSelector(
+    (state) => state.orders,
+  );
 
   const { size: initialSize, page: initialPage } = getQueryParameters(
     'size',
@@ -48,6 +50,10 @@ const CustomerHistory: React.FC = () => {
     initialPageSize: initialSize ? Number(initialSize) : null,
     filterName: 'status',
   });
+
+  const isLoading =
+    dataStatus === DataStatus.PENDING &&
+    Object.values(routeAddresses).length === orders.length;
 
   const handleChangeFilter = useCallback(
     (option: SingleValue<SelectOption>) => {
@@ -90,7 +96,7 @@ const CustomerHistory: React.FC = () => {
         onChangePageSize={changePageSize}
         orders={orders}
         totalElements={total}
-        isLoading={dataStatus === DataStatus.PENDING}
+        isLoading={isLoading}
       />
     </div>
   );
