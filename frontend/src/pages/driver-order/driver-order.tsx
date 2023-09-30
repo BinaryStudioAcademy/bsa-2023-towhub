@@ -37,7 +37,6 @@ const DriverOrder = (): JSX.Element => {
     center: order?.startPoint as Coordinates,
     destination: order?.endPoint as Coordinates,
     mapReference: mapReference,
-    onMapLoad: () => true,
   });
   useSubscribeUpdates(`${orderId as string}`);
 

@@ -105,8 +105,7 @@
   border-radius: 100%;
 }
 
-.startPoint::after {
-  content: url("src/assets/img/arrow.svg");
+.arrowDown {
   position: absolute;
   top: 19px;
   left: 0;

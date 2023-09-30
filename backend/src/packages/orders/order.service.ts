@@ -176,7 +176,7 @@ class OrderService implements Omit<IService, 'find'> {
       truck: { id: truck.id, licensePlateNumber: truck.licensePlateNumber },
     }).toObject();
 
-    this.socketService.notifyOrderCreate(driver.id, orderObject);
+    this.socketService.notifyDriverOrderUpdate(driver.id, orderObject);
 
     return orderObject;
   }
@@ -275,6 +275,7 @@ class OrderService implements Omit<IService, 'find'> {
     const order = OrderEntity.initialize(orderExtended).toObject();
 
     this.socketService.notifyOrderUpdate(order.id, order);
+    this.socketService.notifyDriverOrderUpdate(driver.id, order);
 
     return order;
   }

@@ -89,6 +89,19 @@ class SocketService {
         },
       );
       socket.on(
+        ClientToServerEvent.SUBSCRIBE_DRIVER_ORDER_CREATED,
+        async ({
+          driverId,
+        }: FirstParameter<
+          ClientToServerEventParameter[typeof ClientToServerEvent.SUBSCRIBE_DRIVER_ORDER_CREATED]
+        >) => {
+          await socket.join(`${RoomPrefix.DRIVER_ORDER}${driverId}`);
+          logger.info(
+            `${socket.id} connected to ${RoomPrefix.DRIVER_ORDER}${driverId}`,
+          );
+        },
+      );
+      socket.on(
         ClientToServerEvent.UNSUBSCRIBE_ORDER_UPDATES,
         async ({
           orderId,
@@ -199,7 +212,7 @@ class SocketService {
     });
   }
 
-  public notifyOrderCreate(
+  public notifyDriverOrderUpdate(
     driverId: OrderResponseDto['id'],
     order: OrderResponseDto,
   ): void {
