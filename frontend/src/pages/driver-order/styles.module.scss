@@ -43,7 +43,9 @@
 }
 
 .orderDetails {
+  display: flex;
   flex-grow: 1;
+  flex-direction: column;
   padding: 24px 65px 20px 80px;
   overflow: auto;
   background-color: $white;
@@ -57,7 +59,7 @@
 }
 
 .details {
-  margin-bottom: 180px;
+  flex-grow: 1;
 }
 
 .detail {
