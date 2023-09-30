@@ -5,7 +5,6 @@ import {
   useAppDispatch,
   useAppSelector,
   useEffect,
-  useNavigate,
 } from '~/libs/hooks/hooks.js';
 import { notification } from '~/libs/packages/notification/notification.js';
 import {
@@ -18,7 +17,6 @@ import {
   selectSocketDriverAuthStatus,
   selectUser,
 } from '~/slices/auth/selectors.js';
-import { selectOrder } from '~/slices/orders/selectors.js';
 import { restartWatchTruckLocation } from '~/slices/trucks/actions.js';
 
 import { RouterOutlet } from '../router/router.js';
@@ -29,9 +27,7 @@ const DriverSocketProvider: FC = () => {
     selectSocketDriverAuthErrorMessage,
   );
   const user = useAppSelector(selectUser);
-  const currentOrder = useAppSelector(selectOrder);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     void dispatch(restartWatchTruckLocation());
@@ -53,12 +49,6 @@ const DriverSocketProvider: FC = () => {
       socketTryRemoveDriverListeners();
     };
   }, [dispatch, socketDriverAuthStatus, user, socketDriverAuthErrorMessage]);
-
-  useEffect(() => {
-    if (currentOrder) {
-      navigate(`driver/orders/${currentOrder.id}`);
-    }
-  }, [navigate, currentOrder]);
 
   return <RouterOutlet />;
 };

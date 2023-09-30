@@ -8,6 +8,7 @@ import {
 import { type OrderResponseDto } from '~/packages/orders/libs/types/types.js';
 import {
   createOrderFromSocket,
+  subscribeDriverOrderCreated,
   subscribeOrderUpdates,
   unsubscribeOrderUpdates,
   updateOrderFromSocket,
@@ -46,6 +47,7 @@ const socketMiddleware: ThunkMiddleware<
       ServerToClientEvent.ORDER_CREATED,
       (order: OrderResponseDto) => {
         void dispatch(createOrderFromSocket(order));
+        window.location.assign(`/driver/orders/${order.id}`);
       },
     );
     socketInstance.on(
@@ -84,6 +86,16 @@ const socketMiddleware: ThunkMiddleware<
           socketInstance.emit(ClientToServerEvent.SUBSCRIBE_ORDER_UPDATES, {
             orderId: `${action.payload as string}`,
           });
+          break;
+        }
+
+        case subscribeDriverOrderCreated.type: {
+          socketInstance.emit(
+            ClientToServerEvent.SUBSCRIBE_DRIVER_ORDER_CREATED,
+            {
+              driverId: `${action.payload as string}`,
+            },
+          );
           break;
         }
 

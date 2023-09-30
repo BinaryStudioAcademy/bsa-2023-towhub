@@ -33,6 +33,7 @@ import { type MapService } from '../map/map.package.js';
 import { MapConnector } from '../map/map-connector.package.js';
 import { geolocationMiddleware } from '../middleware/geolocation.middleware.js';
 import { socketMiddleware } from '../middleware/socket.middleware.js';
+import { watchOrderCreateMiddleware } from '../middleware/watch-order-create.middleware.js';
 import { notification } from '../notification/notification.js';
 import { LocalStorage } from '../storage/storage.js';
 import { type ExtraArguments, type RootReducer } from './libs/types/types.js';
@@ -45,6 +46,7 @@ class Store {
       MiddlewareArray<
         [
           ThunkMiddleware<RootReducer, AnyAction, ExtraArguments>,
+          Middleware,
           Middleware,
           Middleware,
         ]
@@ -71,7 +73,11 @@ class Store {
           thunk: {
             extraArgument: this.extraArguments,
           },
-        }).prepend(socketMiddleware, geolocationMiddleware),
+        }).prepend(
+          socketMiddleware,
+          geolocationMiddleware,
+          watchOrderCreateMiddleware,
+        ),
       ],
     });
   }

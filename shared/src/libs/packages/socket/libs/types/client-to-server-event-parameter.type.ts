@@ -33,6 +33,9 @@ type ClientToServerEventParameter = {
   [ClientToServerEvent.SUBSCRIBE_ORDER_UPDATES]: (payload: {
     orderId: string;
   }) => void;
+  [ClientToServerEvent.SUBSCRIBE_DRIVER_ORDER_CREATED]: (payload: {
+    driverId: string;
+  }) => void;
   [ClientToServerEvent.UNSUBSCRIBE_ORDER_UPDATES]: (payload: {
     orderId: string;
   }) => void;
