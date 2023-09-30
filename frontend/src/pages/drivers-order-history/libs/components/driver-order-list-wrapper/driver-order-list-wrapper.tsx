@@ -1,5 +1,4 @@
-import { Pagination, Spinner } from '~/libs/components/components.js';
-import { DataStatus } from '~/libs/enums/data-status.enum.js';
+import { Pagination } from '~/libs/components/components.js';
 import { getValidClassNames } from '~/libs/helpers/helpers.js';
 import { useAppSelector, useCallback } from '~/libs/hooks/hooks.js';
 
@@ -21,17 +20,10 @@ const DriverOrderListWrapper: React.FC<Properties> = ({
   changePageIndex: onChangePageIndex,
   changePageSize: onChangePageSize,
 }: Properties) => {
-  const {
-    orders,
-    total: totalElements,
-    dataStatus,
-    routeAddresses,
-  } = useAppSelector((state) => state.orders);
+  const { orders, total: totalElements } = useAppSelector(
+    (state) => state.orders,
+  );
   const pagesRange = Math.ceil(totalElements / pageSize);
-
-  const isLoading =
-    dataStatus === DataStatus.PENDING &&
-    Object.values(routeAddresses).length === orders.length;
 
   const handleChangePageSize = useCallback(
     (value: number) => {
@@ -40,14 +32,6 @@ const DriverOrderListWrapper: React.FC<Properties> = ({
     },
     [onChangePageSize, onChangePageIndex],
   );
-
-  if (isLoading) {
-    return (
-      <div className={styles.spinnerWrapper}>
-        <Spinner />
-      </div>
-    );
-  }
 
   if (orders.length === 0) {
     return (

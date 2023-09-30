@@ -13,6 +13,7 @@ import { type OrderResponseDto } from '~/packages/orders/orders.js';
 import { Badge } from '../badge/badge.jsx';
 import { Icon } from '../icon/icon.jsx';
 import { PlainSvgIcon } from '../plain-svg-icon/plain-svg-icon.js';
+import { Spinner } from '../spinner/spinner.js';
 import { ProgressStatus } from './libs/enums/enums.js';
 import { convertDate } from './libs/helpers/helpers.js';
 import { mapOrderStatusToBadgeStatus } from './libs/map/map-order-status-to-badge-status.map.js';
@@ -30,6 +31,14 @@ const CustomerOrderCard: React.FC<Properties> = ({ order }: Properties) => {
   const points = useAppSelector((state) => state.orders.routeAddresses);
 
   const { origin, destination } = points[id] ?? {};
+
+  if (!points[id]) {
+    return (
+      <div className={styles.spinnerWrapper}>
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div
