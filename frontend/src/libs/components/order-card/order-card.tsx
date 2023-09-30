@@ -1,5 +1,8 @@
 import { PlainSvgIconName } from '~/libs/enums/enums.js';
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import {
+  getPriceToString,
+  getValidClassNames,
+} from '~/libs/helpers/helpers.js';
 
 import { PlainSvgIcon } from '../plain-svg-icon/plain-svg-icon.js';
 import { CardHeader } from './libs/components/components.js';
@@ -101,7 +104,9 @@ const OrderCard: React.FC<Properties> = ({
             </span>
           </div>
           <div className={styles.priceContainer}>
-            <span className={styles.price}>Total price: {price}$</span>
+            <span className={styles.price}>
+              Total price: {getPriceToString(price)}
+            </span>
           </div>
         </div>
       </div>

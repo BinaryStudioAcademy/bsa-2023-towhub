@@ -1,3 +1,5 @@
+import { type Coordinates } from 'shared/build/index.js';
+
 import { OrderCard } from '~/libs/components/components.js';
 import { OrderStatus } from '~/libs/components/orders-status/order-status.js';
 import { DataStatus } from '~/libs/enums/data-status.enum.js';
@@ -64,9 +66,21 @@ const OrderStatusPage: React.FC = () => {
 
   const truckLocation = useAppSelector(selectTruckLocation);
 
+  const getDestinationPoint = useCallback((): Coordinates | null => {
+    if (order) {
+      if (isPickingUpScreenOpen) {
+        return order.endPoint;
+      }
+
+      return order.startPoint;
+    }
+
+    return null;
+  }, [isPickingUpScreenOpen, order]);
+
   useAppMap({
     center: truckLocation ?? DEFAULT_CENTER,
-    destination: order ? order.startPoint : null,
+    destination: getDestinationPoint(),
     mapReference: mapReference,
   });
 

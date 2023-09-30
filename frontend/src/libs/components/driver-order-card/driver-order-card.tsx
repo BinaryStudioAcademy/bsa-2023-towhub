@@ -5,6 +5,7 @@ import { IconName } from '~/libs/enums/icon-name.enum.js';
 import { PlainSvgIconName } from '~/libs/enums/plain-svg-icon-name.enum.js';
 import {
   capitalizeFirstLetter,
+  getPriceToString,
   getValidClassNames,
 } from '~/libs/helpers/helpers.js';
 import { useAppSelector } from '~/libs/hooks/hooks.js';
@@ -87,7 +88,7 @@ const DriverOrderCard: React.FC<Properties> = ({ order }: Properties) => {
         <div className={styles.contentFooter}>
           <div className={styles.price}>
             <img src={money} alt="money" />
-            <span>{price}$</span>
+            <span>{getPriceToString(price)}</span>
           </div>
           <div className={styles.date}>{convertDate(scheduledTime)}</div>
         </div>
