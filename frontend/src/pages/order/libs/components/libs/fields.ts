@@ -9,7 +9,7 @@ const getOrderFormFields = (
   onEndChange: LocationChangeHandler,
 ): FormField<OrderCreateFormDto>[] => [
   { label: 'Name', name: 'customerName' },
-  { label: 'Phone', name: 'customerPhone' },
+  { label: 'Phone', name: 'customerPhone', type: 'phone' },
   {
     label: 'Location',
     name: 'startPoint',

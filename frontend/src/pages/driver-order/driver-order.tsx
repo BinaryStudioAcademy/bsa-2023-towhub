@@ -1,7 +1,10 @@
 import { Button, Spinner } from '~/libs/components/components.js';
 import { Icon } from '~/libs/components/icon/icon.js';
 import { AppRoute, DataStatus } from '~/libs/enums/enums.js';
-import { getValidClassNames } from '~/libs/helpers/helpers.js';
+import {
+  getPriceToString,
+  getValidClassNames,
+} from '~/libs/helpers/helpers.js';
 import {
   useAppDispatch,
   useAppMap,
@@ -174,7 +177,9 @@ const DriverOrder = (): JSX.Element => {
           <div className={styles.tripInfoContent}>
             <span className={styles.item}>Distance: {distanceLeft}</span>
             <span className={styles.item}>Time: {timespanLeft}</span>
-            <span className={styles.item}>Price: ${order.price}</span>
+            <span className={styles.item}>
+              Price: ${getPriceToString(order.price)}
+            </span>
           </div>
         </div>
         <div className={styles.orderDetails}>
