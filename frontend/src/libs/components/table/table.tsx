@@ -115,12 +115,7 @@ const Table = <T,>({
         </div>
       ) : (
         <div className={styles.wrapper}>
-          <table
-            className={styles.table}
-            style={{
-              width: table.getCenterTotalSize(),
-            }}
-          >
+          <table className={styles.table}>
             <Thead table={table} />
             <Tbody
               table={table}

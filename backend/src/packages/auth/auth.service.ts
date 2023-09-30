@@ -5,6 +5,7 @@ import {
   type IJwtService,
 } from '~/libs/interfaces/interfaces.js';
 import { type IConfig } from '~/libs/packages/config/config.js';
+import { type ILogger } from '~/libs/packages/logger/logger.js';
 import { type AuthUser } from '~/libs/types/types.js';
 import { type GroupService } from '~/packages/groups/group.service.js';
 import { GroupEntity } from '~/packages/groups/groups.js';
@@ -40,6 +41,7 @@ type AuthServiceConstructorProperties = {
   businessService: BusinessService;
   driverService: DriverService;
   config: IConfig['ENV']['JWT'];
+  logger: ILogger;
 };
 
 class AuthService {
@@ -57,6 +59,8 @@ class AuthService {
 
   private config: AuthServiceConstructorProperties['config'];
 
+  private logger: AuthServiceConstructorProperties['logger'];
+
   public constructor({
     userService,
     groupService,
@@ -65,6 +69,7 @@ class AuthService {
     businessService,
     driverService,
     config,
+    logger,
   }: AuthServiceConstructorProperties) {
     this.userService = userService;
     this.groupService = groupService;
@@ -73,6 +78,7 @@ class AuthService {
     this.businessService = businessService;
     this.driverService = driverService;
     this.config = config;
+    this.logger = logger;
   }
 
   private async checkIsExistingUser({
@@ -272,7 +278,9 @@ class AuthService {
           tokenIssuedAtTimestamp,
         )
       );
-    } catch {
+    } catch (error) {
+      this.logger.info((error as Error).message);
+
       return false;
     }
   }
