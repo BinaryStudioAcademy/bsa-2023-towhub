@@ -1,4 +1,4 @@
-import { OrderCard, Spinner } from '~/libs/components/components.js';
+import { OrderCard } from '~/libs/components/components.js';
 import { OrderStatus } from '~/libs/components/orders-status/order-status.js';
 import { DataStatus } from '~/libs/enums/data-status.enum.js';
 import { AppRoute } from '~/libs/enums/enums.js';
@@ -121,10 +121,6 @@ const OrderStatusPage: React.FC = () => {
 
   if (dataStatus === DataStatus.REJECTED) {
     return <NotFound />;
-  }
-
-  if (!order) {
-    return <Spinner />;
   }
 
   return (

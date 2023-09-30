@@ -31,7 +31,6 @@ type Properties = {
   onPriceChange?: (price: number) => void;
   mapReference: React.RefObject<HTMLDivElement>;
   shownRoute?: PlaceLatLng;
-  onMapLoad?: () => void;
 };
 
 const useAppMap = ({
@@ -46,7 +45,6 @@ const useAppMap = ({
   endAddress,
   mapReference,
   shownRoute,
-  onMapLoad,
 }: Properties): void => {
   const [isZoomChanged, toggleIsZoomChanged] = useToggle(false);
   const mapService = useRef<MapService | null>(null);
@@ -93,7 +91,6 @@ const useAppMap = ({
     center,
     destination,
     mapReference,
-    onMapLoad,
     markers,
     points,
     userLocation,
