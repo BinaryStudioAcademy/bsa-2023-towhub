@@ -30,7 +30,7 @@ import {
   type ServerValidationErrorResponse,
   type ValidationSchema,
 } from '~/libs/types/types.js';
-import { authPlugin } from '~/packages/auth/auth.js';
+import { authPlugin, AuthStrategy } from '~/packages/auth/auth.js';
 import { type DriverService } from '~/packages/drivers/drivers.js';
 import { filesValidationPlugin } from '~/packages/files/files.js';
 import { stripeService } from '~/packages/stripe/stripe.js';
@@ -106,13 +106,18 @@ class ServerApp implements IServerApp {
     } = parameters;
 
     const onRequests: onRequestHookHandler[] = [];
+    const preHandler: preHandlerHookHandler[] = [];
     const preValidations: preValidationHookHandler[] = [];
 
     if (authStrategy) {
       const authStrategyHandler = this.resolveAuthStrategy(authStrategy);
 
       if (authStrategyHandler) {
-        onRequests.push(authStrategyHandler);
+        if (authStrategy === AuthStrategy.VERIFY_STRIPE_WEBHOOK) {
+          preHandler.push(authStrategyHandler);
+        } else {
+          onRequests.push(authStrategyHandler);
+        }
       }
     }
 
@@ -141,6 +146,7 @@ class ServerApp implements IServerApp {
       method,
       handler,
       onRequest: onRequests,
+      preHandler,
       preValidation: preValidations,
       schema,
     });
