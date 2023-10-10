@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { type AuthMode } from '~/libs/enums/enums.js';
 import { getErrorMessage } from '~/libs/helpers/helpers.js';
-import { type HttpError } from '~/libs/packages/http/http.js';
+import { type HttpError, HttpCode } from '~/libs/packages/http/http.js';
 import { ClientToServerEvent } from '~/libs/packages/socket/socket.js';
 import { StorageKey } from '~/libs/packages/storage/storage.js';
 import {
@@ -157,7 +157,12 @@ const getCurrent = createAsyncThunk<AuthUser, undefined, AsyncThunkConfig>(
       return await authApi.getCurrentUser();
     } catch (error) {
       notification.warning(getErrorMessage(error));
-      await localStorage.drop(StorageKey.TOKEN);
+
+      const httpError = error as HttpError;
+
+      if (httpError.status === HttpCode.UNAUTHORIZED) {
+        await localStorage.drop(StorageKey.TOKEN);
+      }
       throw error;
     }
   },
